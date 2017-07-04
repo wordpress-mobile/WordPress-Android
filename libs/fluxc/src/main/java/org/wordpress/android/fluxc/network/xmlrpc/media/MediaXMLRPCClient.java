@@ -268,7 +268,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                             AppLog.w(T.MEDIA, "could not parse XMLRPC.GET_MEDIA_LIBRARY response: "
                                     + Arrays.toString(response));
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            notifyMediaListFetched(site, error);
+                            notifyMediaListFetched(site, error, mimeType);
                         }
                     }
                 }, new BaseErrorListener() {
@@ -276,7 +276,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AppLog.e(T.MEDIA, "XMLRPC.GET_MEDIA_LIBRARY error response:", error.volleyError);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                        notifyMediaListFetched(site, mediaError);
+                        notifyMediaListFetched(site, mediaError, mimeType);
                     }
                 }
         ));
@@ -442,8 +442,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, MediaError error) {
-        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error);
+    private void notifyMediaListFetched(SiteModel site, MediaError error, String mimeType) {
+        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
