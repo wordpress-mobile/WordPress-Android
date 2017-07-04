@@ -240,7 +240,7 @@ public class SiteXMLRPCClientTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 // Expect UPDATE_SITES to be dispatched with an INVALID_RESPONSE error
                 Action action = invocation.getArgumentAt(0, Action.class);
-                assertEquals(SiteAction.UPDATE_SITES, action.getType());
+                assertEquals(SiteAction.FETCHED_SITES, action.getType());
 
                 SitesModel result = (SitesModel) action.getPayload();
                 assertTrue(result.isError());
