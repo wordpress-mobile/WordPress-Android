@@ -1,20 +1,15 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.AppCompatTextView;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.EditText;
 
 import org.wordpress.android.R;
 
 /**
- * Custom TextInputLayout to provide a usable getBaseline()
+ * Custom TextInputLayout to provide a usable getBaseline() and error view padding
  */
 public class WPTextInputLayout extends TextInputLayout {
     public WPTextInputLayout(Context context) {
@@ -34,5 +29,18 @@ public class WPTextInputLayout extends TextInputLayout {
     {
         EditText editText = getEditText();
         return editText != null ? editText.getBaseline() - editText.getPaddingBottom() + getResources().getDimensionPixelSize(R.dimen.textinputlayout_baseline_correction) : 0;
+    }
+
+    @Override
+    public void setErrorEnabled(boolean enabled) {
+        super.setErrorEnabled(enabled);
+
+        // remove hardcoded side padding of the error view
+        if (enabled) {
+            View errorView = findViewById(android.support.design.R.id.textinput_error);
+            if (errorView != null && errorView.getParent() != null) {
+                ((View) errorView.getParent()).setPadding(0, errorView.getPaddingTop(), 0, errorView.getPaddingBottom());
+            }
+        }
     }
 }

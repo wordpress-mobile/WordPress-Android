@@ -50,6 +50,7 @@
                     android:id="@+id/login_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:translationX="@dimen/textinputlayout_correction_padding"
                     android:hint="@string/email_address"
                     android:inputType="textEmailAddress"/>
             </org.wordpress.android.widgets.WPTextInputLayout>
