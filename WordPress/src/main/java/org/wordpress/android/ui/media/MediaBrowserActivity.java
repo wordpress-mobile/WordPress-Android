@@ -328,32 +328,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         switch (requestCode) {
             case RequestCodes.PICTURE_LIBRARY:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    final Uri imageUri = data.getData();
-                    final String mimeType = getContentResolver().getType(imageUri);
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
-                        WPMediaUtils.advertiseImageOptimization(this, mSite,
-                                new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
-                                    @Override
-                                    public void done() {
-                                        fetchMedia(imageUri, mimeType);
-                                        trackAddMediaFromDeviceEvents(
-                                                false,
-                                                false,
-                                                imageUri
-                                        );
-                                    }
-                                });
-                    } else {
-                        fetchMedia(imageUri, mimeType);
-                        trackAddMediaFromDeviceEvents(
-                                false,
-                                false,
-                                imageUri
-                        );
-                    }
-                }
-                break;
             case RequestCodes.VIDEO_LIBRARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     Uri imageUri = data.getData();
@@ -361,7 +335,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     fetchMedia(imageUri, mimeType);
                     trackAddMediaFromDeviceEvents(
                             false,
-                            true,
+                            requestCode == RequestCodes.VIDEO_LIBRARY,
                             imageUri
                     );
                 }
