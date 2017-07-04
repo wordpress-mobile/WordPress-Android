@@ -183,7 +183,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
         call.enqueue(new Callback() {
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     // HTTP_OK code doesn't mean the upload is successful, XML-RPC API returns code 200 with an
                     // xml field "faultCode" on error.
@@ -226,7 +226,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 if (!mCurrentUploadCalls.containsKey(media.getId())) {
                     // This call has already been removed from the in-progress list - probably because it was cancelled
