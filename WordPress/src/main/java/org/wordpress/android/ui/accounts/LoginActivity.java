@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -9,6 +11,7 @@ import android.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.login.Login2FaFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
@@ -23,6 +26,8 @@ import org.wordpress.android.util.ToastUtils;
 public class LoginActivity extends AppCompatActivity implements LoginListener {
     private static final String FORGOT_PASSWORD_URL = "https://wordpress.com/wp-login.php?action=lostpassword";
 
+    private LoginMode mLoginMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,14 +36,24 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         setContentView(R.layout.login_activity);
 
         if (savedInstanceState == null) {
-            addLoginPrologueFragment();
+            switch (getLoginMode()) {
+                case FULL:
+                    showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
+                    break;
+                case SELFHOSTED_ONLY:
+                    showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
+                    break;
+                case JETPACK_STATS:
+                case WPCOM_LOGIN_DEEPLINK:
+                    showFragment(new LoginEmailFragment(), LoginEmailFragment.TAG);
+                    break;
+            }
         }
     }
 
-    private void addLoginPrologueFragment() {
-        LoginPrologueFragment loginSignupFragment = new LoginPrologueFragment();
+    private void showFragment(Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, loginSignupFragment, LoginPrologueFragment.TAG);
+        fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
         fragmentTransaction.commit();
     }
 
@@ -67,9 +82,47 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         return false;
     }
 
-    private void launchEpilogueAndFinish() {
-        ActivityLauncher.showMainActivityAndLoginEpilogue(this);
-        finish();
+    @Override
+    public LoginMode getLoginMode() {
+        if (mLoginMode != null) {
+            // returned the cached value
+            return mLoginMode;
+        }
+
+        // compute and cache the Login mode
+        mLoginMode = LoginMode.fromIntent(getIntent());
+
+        return mLoginMode;
+    }
+
+    private void loggedInAndFinish() {
+        switch (getLoginMode()) {
+            case FULL:
+                ActivityLauncher.showMainActivityAndLoginEpilogue(this);
+                setResult(Activity.RESULT_OK);
+                finish();
+                break;
+            case JETPACK_STATS:
+            case WPCOM_LOGIN_DEEPLINK:
+                ActivityLauncher.showLoginEpilogueForResult(this, true);
+                break;
+            case SELFHOSTED_ONLY:
+                // skip the epilogue when only added a selfhosted site
+                setResult(Activity.RESULT_OK);
+                finish();
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN) {
+            // we showed the epilogue screen as informational and sites got loaded so, just return to login caller now
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 
     // LoginListener implementation methods
@@ -83,8 +136,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void showEmailLoginScreen() {
-        LoginEmailFragment loginEmailFragment = new LoginEmailFragment();
-        slideInFragment(loginEmailFragment, true, LoginEmailFragment.TAG);
+        slideInFragment(new LoginEmailFragment(), true, LoginEmailFragment.TAG);
     }
 
     @Override
@@ -93,15 +145,27 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void showMagicLinkRequestScreen(String email) {
-        LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(email);
-        slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
+    public void gotWpcomEmail(String email) {
+        if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK) {
+            LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(email);
+            slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
+        } else {
+            LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email);
+            slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
+        }
     }
 
     @Override
     public void loginViaSiteAddress() {
         LoginSiteAddressFragment loginSiteAddressFragment = new LoginSiteAddressFragment();
         slideInFragment(loginSiteAddressFragment, true, LoginSiteAddressFragment.TAG);
+    }
+
+    @Override
+    public void loginViaWpcomUsernameInstead() {
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
+                "wordpress.com", "wordpress.com", "WordPress.com", "https://s0.wp.com/i/webclip.png", true);
+        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
     @Override
@@ -134,13 +198,13 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void loggedInViaPassword() {
-        launchEpilogueAndFinish();
+        loggedInAndFinish();
     }
 
     @Override
     public void alreadyLoggedInWpcom() {
         ToastUtils.showToast(this, R.string.already_logged_in_wpcom, ToastUtils.Duration.LONG);
-        launchEpilogueAndFinish();
+        loggedInAndFinish();
     }
 
     public void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl) {
@@ -163,7 +227,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void loggedInViaUsernamePassword() {
-        launchEpilogueAndFinish();
+        loggedInAndFinish();
     }
 
     @Override

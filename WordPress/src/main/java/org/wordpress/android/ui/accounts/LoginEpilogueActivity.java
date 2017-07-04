@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpilogueFragment.LoginEpilogueListener {
+    public static final String EXTRA_SHOW_AND_RETURN = "EXTRA_SHOW_AND_RETURN";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -15,12 +17,14 @@ public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpi
         setContentView(R.layout.login_epilogue_activity);
 
         if (savedInstanceState == null) {
-            addPostLoginFragment();
+            boolean showAndReturn = getIntent().getBooleanExtra(EXTRA_SHOW_AND_RETURN, false);
+
+            addPostLoginFragment(showAndReturn);
         }
     }
 
-    protected void addPostLoginFragment() {
-        LoginEpilogueFragment loginEpilogueFragment = new LoginEpilogueFragment();
+    protected void addPostLoginFragment(boolean showAndReturn) {
+        LoginEpilogueFragment loginEpilogueFragment = LoginEpilogueFragment.newInstance(showAndReturn);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, loginEpilogueFragment, LoginEpilogueFragment.TAG);
         fragmentTransaction.commit();

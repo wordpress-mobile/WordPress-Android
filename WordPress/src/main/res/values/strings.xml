@@ -1787,7 +1787,8 @@
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
-    <string name="enter_username_password_instead">Log in to your site by entering your site address instead.</string>
+    <string name="enter_site_address_instead">Log in to your site by entering your site address instead.</string>
+    <string name="enter_username_instead">Log in with username instead.</string>
     <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="login_text_otp">Text a code instead.</string>

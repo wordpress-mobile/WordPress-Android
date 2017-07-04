@@ -37,6 +37,8 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
 
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
 
+    private static final String ARG_SHOW_AND_RETURN = "ARG_SHOW_AND_RETURN";
+
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
@@ -48,6 +50,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
 
     private boolean mInProgress;
     private SitePickerAdapter mAdapter;
+    private boolean mShowAndReturn;
 
     public interface LoginEpilogueListener {
         void onConnectAnotherSite();
@@ -55,10 +58,20 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     }
     private LoginEpilogueListener mLoginEpilogueListener;
 
+    public static LoginEpilogueFragment newInstance(boolean showAndReturn) {
+        LoginEpilogueFragment fragment = new LoginEpilogueFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_SHOW_AND_RETURN, showAndReturn);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+
+        mShowAndReturn = getArguments().getBoolean(ARG_SHOW_AND_RETURN);
     }
 
     @Override
@@ -71,7 +84,9 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
 
         mSitesProgress = rootView.findViewById(R.id.sites_progress);
 
-        rootView.findViewById(R.id.login_connect_more).setOnClickListener(new View.OnClickListener() {
+        View connectMore = rootView.findViewById(R.id.login_connect_more);
+        connectMore.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
+        connectMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginEpilogueListener != null) {
@@ -105,8 +120,10 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
-            mInProgress = true;
-            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+            if (mAccountStore.hasAccessToken()) {
+                mInProgress = true;
+                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+            }
         } else {
             mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
         }
