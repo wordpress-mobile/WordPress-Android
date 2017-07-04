@@ -1088,7 +1088,7 @@
     <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
-    <string name="error_refresh_media">Something went wrong while refreshing the media library. Try again later.</string>
+    <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
 
     <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>

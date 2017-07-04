@@ -56,7 +56,6 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
@@ -580,18 +579,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 break;
         }
 
-        updateViews();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaListFetched(OnMediaListFetched event) {
-        if (event.isError()) {
-            AppLog.w(AppLog.T.MEDIA, "Received OnMediaListFetched error: " + event.error.type
-                    + " - " + event.error.message);
-            ToastUtils.showToast(this, "Media fetch error occurred: " + event.error.message, ToastUtils.Duration.LONG);
-            return;
-        }
         updateViews();
     }
 
