@@ -671,8 +671,14 @@ public class SiteStore extends Store {
             case FETCH_SITES:
                 mSiteRestClient.fetchSites();
                 break;
+            case FETCHED_SITES:
+                handleFetchedSitesWPComRest((SitesModel) action.getPayload());
+                break;
             case FETCH_SITES_XML_RPC:
                 fetchSitesXmlRpc((RefreshSitesXMLRPCPayload) action.getPayload());
+                break;
+            case FETCHED_SITES_XML_RPC:
+                updateSites((SitesModel) action.getPayload());
                 break;
             case UPDATE_SITE:
                 updateSite((SiteModel) action.getPayload());
@@ -743,13 +749,10 @@ public class SiteStore extends Store {
             case SUGGESTED_DOMAINS:
                 handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
                 break;
-            case FETCHED_SITES:
-                handleFetchedSites((SitesModel) action.getPayload());
-                break;
         }
     }
 
-    private void handleFetchedSites(SitesModel fetchedSites) {
+    private void handleFetchedSitesWPComRest(SitesModel fetchedSites) {
         OnSiteChanged event = new OnSiteChanged(0);
         if (fetchedSites.isError()) {
             // TODO: what kind of error could we get here?
