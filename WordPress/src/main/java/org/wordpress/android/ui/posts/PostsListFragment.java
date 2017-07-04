@@ -703,6 +703,27 @@ public class PostsListFragment extends Fragment
     public void onPostUploaded(OnPostUploaded event) {
         if (isAdded() && event.post.getLocalSiteId() == mSite.getId()) {
             loadPosts(LoadMode.FORCED);
+
+            final PostModel post = event.post;
+            boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
+            if (isDraft) {
+                if (PostUtils.isPublishable(post)) {
+                    View.OnClickListener publishPostListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            PostModel postUpdated = mPostStore.getPostByLocalPostId(post.getId());
+                            if (PostUtils.isPublishable(postUpdated)) {
+                                publishPost(postUpdated);
+                            }
+                        }
+                    };
+                    showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
+                }
+            } else {
+                String message = post.isPage() ? getString(R.string.page_published) :
+                        getString(R.string.post_published);
+                showSnackbar(message);
+            }
         }
     }
 
