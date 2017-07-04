@@ -128,7 +128,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * full post
      */
     class ReaderPostViewHolder extends RecyclerView.ViewHolder {
-        private final CardView cardView;
+        public final CardView cardView;
 
         private final TextView txtTitle;
         private final TextView txtText;
@@ -142,6 +142,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final ImageView imgMore;
         private final ImageView imgVideoOverlay;
         private final ImageView imgVisit;
+        private final LinearLayout visit;
 
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatarOrBlavatar;
@@ -179,6 +180,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             imgAvatarOrBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar_or_blavatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
             imgVisit = (ImageView) itemView.findViewById(R.id.image_visit_icon);
+            visit = (LinearLayout) itemView.findViewById(R.id.visit);
 
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
             imgDiscoverAvatar = (WPNetworkImageView) layoutDiscover.findViewById(R.id.image_discover_avatar);
@@ -200,8 +202,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
             };
-            txtVisit.setOnClickListener(visitListener);
-            imgVisit.setOnClickListener(visitListener);
+            visit.setOnClickListener(visitListener);
 
             // show author/blog link as disabled if we're previewing a blog, otherwise show
             // blog preview when the post header is clicked
@@ -757,6 +758,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.likeCount.setCount(post.numLikes);
             holder.likeCount.setSelected(post.isLikedByCurrentUser);
             holder.likeCount.setVisibility(View.VISIBLE);
+            holder.likeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.cardView.getContext(), post.numLikes, post.isLikedByCurrentUser));
             // can't like when logged out
             if (!mIsLoggedOutReader) {
                 holder.likeCount.setOnClickListener(new View.OnClickListener() {

@@ -43,8 +43,6 @@ Language: az
 	<string name="reader_toast_err_follow_blog_not_authorized">Bu bloqa giriş izniniz yoxdur</string>
 	<string name="reader_toast_err_follow_blog_not_found">Bloq tapılmadı</string>
 	<string name="undo">Geri al</string>
-	<string name="tabbar_accessibility_label_my_site">Saytım</string>
-	<string name="tabbar_accessibility_label_me">Mən</string>
 	<string name="passcodelock_prompt_message">PIN kodunuzu daxil edin</string>
 	<string name="editor_toast_changes_saved">Dəyişikliklər qeyd edildi</string>
 	<string name="stats_insights_best_ever">Bü Günə Qədərki Ən Yaxşı Baxış</string>
@@ -518,6 +516,7 @@ Language: az
 	<string name="passcode_enter_old_passcode">Əvvəlki PIN kodunu daxil et</string>
 	<string name="passcode_manage">PIN bloklamasının idarəetməsi</string>
 	<string name="upload">Yüklə</string>
+	<string name="manage">İdarəetmə</string>
 	<string name="discard">Ləğv et</string>
 	<string name="notifications">Bildirişlər</string>
 	<string name="note_reply_successful">Cavab dərc edildi</string>

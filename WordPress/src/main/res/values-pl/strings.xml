@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-08 20:39:50+0000
+Translation-Revision-Date: 2017-06-27 17:03:56+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="permission_location">Lokalizacja</string>
+	<string name="permission_camera">Aparat</string>
+	<string name="permission_storage">Pamięć</string>
+	<string name="permissions_denied_message">Aby to zmienić, edytuj uprawnienia i upewnij się, że %s jest uaktywnione</string>
+	<string name="permissions_denied_title">Prawdopodobnie wyłączyłeś uprawnienia wymagane dla tej funkcjonalności</string>
+	<string name="button_edit_permissions">Edytuj uprawnienia</string>
+	<string name="photo_picker_soft_ask_allow">Zezwalaj</string>
+	<string name="photo_picker_soft_ask_label">%s potrzebuje uprawnień dostępu do twoich zdjęć</string>
+	<string name="sharing_twitter_message">Będzie to zawarte w tweetach kiedy ludzie udostępniają treści używając  przycisku Twitter</string>
+	<string name="sharing_label_message">Zmień opis dla przycisków udostępniania. Opis pojawi się dopiero gdy dodasz przynajmniej jeden przycisk udostępniania.</string>
+	<string name="connecting_account">Łączenie konta</string>
+	<string name="cannot_connect_account_error">Połączenie %s nie mogło być ustanowione ponieważ nie wybrano konta.</string>
+	<string name="connected">Połączono</string>
+	<string name="twitter">Twitter</string>
+	<string name="likes">Polubienia</string>
+	<string name="sharing_comment_likes_description">Zezwalaj na dodawanie polubień do wszystkich swoich komentarzy</string>
+	<string name="visual">Wizualny</string>
+	<string name="buttons">Przyciski</string>
+	<string name="sharing_edit_more_buttons">Edytuj przyciski dodatkowe</string>
+	<string name="sharing_more_description">Przycisk "Więcej" zawiera listę rozwijaną wyświetlającą przyciski udostępniania</string>
+	<string name="sharing_sharing_buttons_description">Wybierz przyciski, które będą wyświetlone pod twoimi wpisami</string>
+	<string name="twitter_username">Nazwa użytkownika na Twitterze</string>
+	<string name="sharing_comment_likes">Polubienia komentarzy</string>
+	<string name="button_style">Styl przycisku</string>
+	<string name="label">Etykieta</string>
+	<string name="more_buttons">"Więcej" przycisków</string>
+	<string name="sharing_buttons">Przyciski udostępniania</string>
+	<string name="site_settings_like">Pokaż przycisk polubienia</string>
+	<string name="site_settings_reblog">Pokaż przycisk reblogowania</string>
+	<string name="site_settings_reblog_and_like_header">Rebloguj i dodaj polubienie</string>
+	<string name="publicize_text_only">Tylko tekst</string>
+	<string name="publicize_icon_and_text">Ikony i Tekst</string>
+	<string name="publicize_icon_only">Tylko ikony</string>
+	<string name="publicize_official_buttons">Oficjalne przyciski</string>
+	<string name="official_buttons_display">Oficjalne przyciski</string>
+	<string name="text_only_display">Tylko tekst</string>
+	<string name="icon_only_display">Tylko ikony</string>
+	<string name="icon_and_text_display">Ikony i Tekst</string>
+	<string name="connection_chooser_message">Wybierz konto które chcesz autoryzować. Zauważ że twoje wpisy będą automatycznie udostępniane na wybrane konto.</string>
+	<string name="connecting_social_network">Podłączanie %s</string>
+	<string name="dlg_confirm_publicize_disconnect">Rozłączyć z %s?</string>
+	<string name="share_btn_connect_another_account">Połącz inne konto</string>
+	<string name="share_btn_reconnect">Połącz ponownie</string>
+	<string name="share_btn_disconnect">Rozłącz</string>
+	<string name="share_btn_connect">Połącz</string>
+	<string name="connection_service_description">Połącz aby automatycznie udostępniać wpisy blogu na %s.</string>
+	<string name="connection_service_label">Publikuj na %s</string>
+	<string name="connected_accounts_label">Konta połączone</string>
+	<string name="connections_description">Połącz ze swoim ulubionym  medium społecznościowym aby automatycznie udostępniać nowe wpisy swoim znajomym.</string>
+	<string name="connections_label">Połączenia</string>
+	<string name="sharing">Udostępnianie</string>
+	<string name="tabbar_accessibility_label_notifications">Powiadomienia. Zarządzaj powiadomieniami.</string>
+	<string name="tabbar_accessibility_label_reader">Czytnik. Śledź treści z innych witryn.</string>
+	<string name="tabbar_accessibility_label_me">Ja. Zobacz swój profil i wprowadź zmiany.</string>
+	<string name="tabbar_accessibility_label_my_site">Moja witryna. Zobacz swoją witrynę i zarządzaj ją.</string>
+	<string name="fab_content_description_write">Napisz</string>
+	<string name="my_site_btn_sharing">Udostępnianie</string>
+	<string name="button_not_now">Nie teraz</string>
 	<string name="media_error_timeout">Czas odpowiedzi serwera został przekroczony, możliwe że masz problemy z połączeniem lub jest to błąd serwera</string>
 	<string name="media_error_internal_server_error">Błąd przesyłania. Spróbuj włączyć funkcję optymalizacji obrazków w ustawieniach witryny</string>
 	<string name="media_error_too_large_upload">Plik zbyt duży aby go przesłać. Spróbuj włączyć funkcję optymalizacji obrazków w ustawieniach witryny</string>
@@ -659,8 +717,6 @@ Language: pl
 	<string name="reader_toast_err_follow_blog_not_authorized">Nie masz uprawnień do tego blogu</string>
 	<string name="reader_toast_err_follow_blog_not_found">Nie można odnaleźć blogu</string>
 	<string name="undo">Cofnij</string>
-	<string name="tabbar_accessibility_label_me">Ja</string>
-	<string name="tabbar_accessibility_label_my_site">Moja witryna</string>
 	<string name="editor_toast_changes_saved">Zmiany zostały zapisane</string>
 	<string name="passcodelock_prompt_message">Wprowadź PIN</string>
 	<string name="push_auth_expired">Zapytanie wygasło. Zaloguj się na WordPress.com aby spróbować ponownie.</string>
@@ -1160,6 +1216,7 @@ Language: pl
 	<string name="all">Wszystkie</string>
 	<string name="themes">Motywy</string>
 	<string name="discard">Odrzuć</string>
+	<string name="manage">Zarządzaj</string>
 	<string name="upload">Załaduj</string>
 	<string name="more_notifications">i %d więcej.</string>
 	<string name="new_notifications">%d nowych powiadomień</string>

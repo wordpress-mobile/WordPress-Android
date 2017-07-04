@@ -36,7 +36,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_medium"
-                    android:background="?attr/selectableItemBackgroundBorderless" >
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/me_profile_photo">
 
                     <org.wordpress.android.widgets.WPNetworkImageView
                         android:id="@+id/me_avatar"

@@ -307,7 +307,7 @@ public class PostsListFragment extends Fragment
 
     private void newPost() {
         if (!isAdded()) return;
-        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage);
+        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage, false);
     }
 
     public void onResume() {

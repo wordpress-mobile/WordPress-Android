@@ -78,6 +78,7 @@
     <string name="immediately">Immediately</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="refresh">Refresh</string>
+    <string name="report_bug">Report bug</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="sign_in">Log in</string>
@@ -263,6 +264,7 @@
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
+    <string name="draft_uploaded">Draft uploaded</string>
     <string name="post_published">Post published</string>
     <string name="page_published">Page published</string>
     <string name="post_updated">Post updated</string>
@@ -650,6 +652,8 @@
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
     <string name="preference_editor">Editor</string>
+    <string name="preference_editor_footer">Editor release notes and bug reporting</string>
+    <string name="preference_editor_footer_description">Info Icon</string>
     <string name="preference_editor_type">Set editor type</string>
 
     <string name="preference_editor_beta" translatable="false">Beta</string>
@@ -976,8 +980,17 @@
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
     <string name="aztec_editor_disabled" translatable="false">Aztec Editor disabled</string>
     <string name="aztec_editor_available" translatable="false">Aztec Editor available</string>
-    <string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post.</string>
-    <string name="new_editor_promo_title">New editor</string>
+    <string name="new_editor_beta_action">Read More</string>
+    <string name="new_editor_beta_message">New Editor in Open Beta!</string>
+    <string name="new_editor_promo_button_negative">Not Now</string>
+    <string name="new_editor_promo_button_positive">Try It</string>
+    <string name="new_editor_promo_confirmation_action">Settings</string>
+    <string name="new_editor_promo_confirmation_message">New Editor enabled!</string>
+    <string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post!</string>
+    <string name="new_editor_promo_description_image">Hand Write Image</string>
+    <string name="new_editor_promo_link">What\'s new?</string>
+    <string name="new_editor_promo_title">Try the new Editor</string>
+    <string name="new_editor_promo_title_beta">Beta</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
 
@@ -1228,6 +1241,7 @@
     <string name="reader_label_image_count_multi">%d images</string>
     <string name="reader_label_visit">Visit</string>
     <string name="reader_photo_by">Photo by %s</string>
+    <string name="reader_view_comments">View comments</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
@@ -1446,6 +1460,7 @@
     <string name="hs__invalid_email_error">Enter a valid email address</string>
 
     <!--Me-->
+    <string name="me_profile_photo">Profile Photo</string>
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
@@ -1722,17 +1737,23 @@
     <string name="image_width">Width</string>
 
     <!-- Editor: Accessibility - format bar button descriptions -->
+    <string name="format_bar_description_media">Media</string>
+    <string name="format_bar_description_heading">Heading</string>
+    <string name="format_bar_description_list">List</string>
+    <string name="format_bar_description_ol">Ordered List</string>
+    <string name="format_bar_description_ul">Unordered List</string>
+    <string name="format_bar_description_quote">Block Quote</string>
     <string name="format_bar_description_bold">Bold</string>
     <string name="format_bar_description_italic">Italic</string>
+    <string name="format_bar_description_link">Link</string>
     <string name="format_bar_description_underline">Underline</string>
     <string name="format_bar_description_strike">Strikethrough</string>
-    <string name="format_bar_description_quote">Block quote</string>
-    <string name="format_bar_description_link">Insert link</string>
-    <string name="format_bar_description_more">Insert more</string>
-    <string name="format_bar_description_media">Insert media</string>
-    <string name="format_bar_description_ul">Unordered list</string>
-    <string name="format_bar_description_ol">Ordered list</string>
-    <string name="format_bar_description_html">HTML mode</string>
+    <string name="format_bar_description_horizontal_rule">Horizontal Rule</string>
+    <string name="format_bar_description_more">Read More</string>
+    <string name="format_bar_description_page">Page Break</string>
+    <string name="format_bar_description_html">HTML</string>
+    <string name="format_bar_description_ellipsis_collapse">Collapse Toolbar</string>
+    <string name="format_bar_description_ellipsis_expand">Expand Toolbar</string>
     <string name="visual_editor">Visual editor</string>
     <string name="image_thumbnail">Image thumbnail</string>
 
