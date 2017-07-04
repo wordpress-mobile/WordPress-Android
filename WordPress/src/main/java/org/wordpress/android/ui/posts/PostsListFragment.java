@@ -566,6 +566,9 @@ public class PostsListFragment extends Fragment
 
         post.setStatus(PostStatus.PUBLISHED.toString());
 
+        // save the post in the DB so the PostUploadService will get the latest change
+        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
+
         PostUploadService.addPostToUpload(post);
         getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
@@ -711,10 +714,7 @@ public class PostsListFragment extends Fragment
                     View.OnClickListener publishPostListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            PostModel postUpdated = mPostStore.getPostByLocalPostId(post.getId());
-                            if (PostUtils.isPublishable(postUpdated)) {
-                                publishPost(postUpdated);
-                            }
+                            publishPost(post);
                         }
                     };
                     showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
