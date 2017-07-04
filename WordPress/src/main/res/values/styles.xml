@@ -80,6 +80,10 @@
         <item name="colorControlHighlight">@color/blue_medium</item>
     </style>
 
+    <style name="LoginTheme.EditText.Input" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey</item>
+    </style>
+
     <style name="LoginTheme.PromoText" parent="TextAppearance.AppCompat.Title">
         <item name="android:gravity">center</item>
         <item name="android:lineSpacingExtra">2dp</item>

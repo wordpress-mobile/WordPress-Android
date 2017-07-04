@@ -47,6 +47,7 @@
                 android:layout_marginTop="@dimen/margin_extra_large">
 
                 <android.support.design.widget.TextInputEditText
+                    app:theme="@style/LoginTheme.EditText.Input"
                     android:id="@+id/login_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
