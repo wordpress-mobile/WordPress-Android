@@ -40,6 +40,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -674,6 +675,7 @@ public class EditPostSettingsFragment extends Fragment {
     private void updateTagsTextView() {
         String tags = TextUtils.join(",", getPost().getTagNameList());
         // If `tags` is empty, the hint "Not Set" will be shown instead
+        tags = StringEscapeUtils.unescapeHtml4(tags);
         mTagsTextView.setText(tags);
     }
 
@@ -721,7 +723,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         }
         // If `sb` is empty, the hint "Not Set" will be shown instead
-        mCategoriesTextView.setText(sb);
+        mCategoriesTextView.setText(StringEscapeUtils.unescapeHtml4(sb.toString()));
     }
 
     // Post Status Helpers
