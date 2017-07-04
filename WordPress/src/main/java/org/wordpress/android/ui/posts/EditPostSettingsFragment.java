@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
@@ -46,7 +47,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -57,7 +57,6 @@ import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
@@ -104,9 +103,7 @@ public class EditPostSettingsFragment extends Fragment {
     private static final int SELECT_LIBRARY_MENU_POSITION = 100;
     private static final int CLEAR_FEATURED_IMAGE_MENU_POSITION = 101;
 
-    private PostModel mPost;
-    private SiteModel mSite;
-
+    private EditPostActivityHook mEditPostActivityHook;
     private SiteSettingsInterface mSiteSettings;
 
     private TextView mExcerptTextView;
@@ -127,19 +124,18 @@ public class EditPostSettingsFragment extends Fragment {
     private ArrayList<String> mPostFormatNames;
 
     @Inject SiteStore mSiteStore;
-    @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
     @Inject FluxCImageLoader mImageLoader;
 
-    public static EditPostSettingsFragment newInstance(SiteModel site, int localPostId) {
-        EditPostSettingsFragment fragment = new EditPostSettingsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(WordPress.SITE, site);
-        bundle.putSerializable(EXTRA_POST_LOCAL_ID, localPostId);
-        fragment.setArguments(bundle);
-        return fragment;
+    interface EditPostActivityHook {
+        PostModel getPost();
+        SiteModel getSite();
+    }
+
+    public static EditPostSettingsFragment newInstance() {
+        return new EditPostSettingsFragment();
     }
 
     @Override
@@ -149,77 +145,59 @@ public class EditPostSettingsFragment extends Fragment {
         mDispatcher.register(this);
         PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
 
-        updateSiteAndFetchPostOrFinishActivity(savedInstanceState);
         updatePostFormatKeysAndNames();
         fetchSiteSettingsAndUpdateDefaultPostFormat();
 
         // Update post formats and categories, in case anything changed.
-        mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
-        if (!mPost.isPage()) {
-            mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(mSite));
-        }
-    }
-
-    private void updateSiteAndFetchPostOrFinishActivity(Bundle savedInstanceState) {
-        int localPostId;
-        if (savedInstanceState == null) {
-            if (getArguments() != null) {
-                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                localPostId = getArguments().getInt(EXTRA_POST_LOCAL_ID);
-            } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                localPostId = getActivity().getIntent().getIntExtra(EXTRA_POST_LOCAL_ID, 0);
-            }
-        } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            localPostId = savedInstanceState.getInt(EXTRA_POST_LOCAL_ID);
-        }
-
-        if (mSite == null) {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            getActivity().finish();
-        }
-
-        if (localPostId != 0) {
-            mPost = mPostStore.getPostByLocalPostId(localPostId);
-        }
-        if (mPost == null) {
-            ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.SHORT);
-            getActivity().finish();
+        SiteModel siteModel = getSite();
+        mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(siteModel));
+        if (!getPost().isPage()) {
+            mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel));
         }
     }
 
     private void fetchSiteSettingsAndUpdateDefaultPostFormat() {
         // we need to fetch site settings in order to get the latest default post format
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, new SiteSettingsListener() {
-            @Override
-            public void onSettingsUpdated(Exception error) {
-                if (error == null && TextUtils.isEmpty(mPost.getPostFormat())) {
-                    updatePostFormat(mSiteSettings.getDefaultPostFormat());
-                }
-            }
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSite(),
+                new SiteSettingsListener() {
+                    @Override
+                    public void onSettingsUpdated(Exception error) {
+                        if (error == null && TextUtils.isEmpty(getPost().getPostFormat())) {
+                            updatePostFormat(mSiteSettings.getDefaultPostFormat());
+                        }
+                    }
 
-            @Override
-            public void onSettingsSaved(Exception error) {
-                // no-op
-            }
+                    @Override
+                    public void onSettingsSaved(Exception error) {
+                        // no-op
+                    }
 
-            @Override
-            public void onCredentialsValidated(Exception error) {
-                // no-op
-            }
-        });
+                    @Override
+                    public void onCredentialsValidated(Exception error) {
+                        // no-op
+                    }
+                });
         if (mSiteSettings != null) {
             // init will fetch remote settings for us
             mSiteSettings.init(true);
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(EXTRA_POST_LOCAL_ID, mPost.getId());
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof EditPostActivityHook) {
+            mEditPostActivityHook = (EditPostActivityHook) activity;
+        } else {
+            throw new RuntimeException(activity.toString() + " must implement PostSettingsListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mEditPostActivityHook = null;
     }
 
     @Override
@@ -232,7 +210,7 @@ public class EditPostSettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.edit_post_settings_fragment, container, false);
 
-        if (rootView == null || mPost == null) {
+        if (rootView == null) {
             return null;
         }
 
@@ -340,15 +318,14 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        if (mPost.isPage()) { // remove post specific views
+        if (getPost().isPage()) { // remove post specific views
             excerptContainer.setVisibility(View.GONE);
             categoriesContainer.setVisibility(View.GONE);
             tagsContainer.setVisibility(View.GONE);
             formatContainer.setVisibility(View.GONE);
         }
 
-        initSettingsFields();
-        initLocation();
+        refreshViews();
         return rootView;
     }
 
@@ -372,18 +349,20 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    private void initSettingsFields() {
+    public void refreshViews() {
         if (!isAdded()) {
             return;
         }
-        mExcerptTextView.setText(mPost.getExcerpt());
-        mSlugTextView.setText(mPost.getSlug());
-        mPasswordTextView.setText(mPost.getPassword());
+        PostModel postModel = getPost();
+        mExcerptTextView.setText(postModel.getExcerpt());
+        mSlugTextView.setText(postModel.getSlug());
+        mPasswordTextView.setText(postModel.getPassword());
         updatePostFormatTextView();
         updateTagsTextView();
         updateStatusTextView();
         updatePublishDateTextView();
         updateCategoriesTextView();
+        initLocation();
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             updateFeaturedImageView();
         }
@@ -432,18 +411,12 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    /**
-     * Updates given post object with current status of settings fields
-     */
-    public void updatePostSettings(PostModel post) {
-    }
-
     private void showPostExcerptDialog() {
         if (!isAdded()) {
             return;
         }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mPost.getExcerpt(), getString(R.string.post_settings_excerpt),
+                getPost().getExcerpt(), getString(R.string.post_settings_excerpt),
                 getString(R.string.post_settings_excerpt_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
@@ -460,7 +433,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mPost.getSlug(), getString(R.string.post_settings_slug),
+                getPost().getSlug(), getString(R.string.post_settings_slug),
                 getString(R.string.post_settings_slug_dialog_hint), true);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
@@ -477,8 +450,8 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
-        categoriesIntent.putExtra(WordPress.SITE, mSite);
-        categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
+        categoriesIntent.putExtra(WordPress.SITE, getSite());
+        categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, getPost().getId());
         startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
     }
 
@@ -487,11 +460,12 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         // Fetch/refresh the tags in preparation for the PostSettingsTagsActivity
-        mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(mSite));
+        SiteModel siteModel = getSite();
+        mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(siteModel));
 
         Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
-        tagsIntent.putExtra(WordPress.SITE, mSite);
-        String tags = TextUtils.join(",", mPost.getTagNameList());
+        tagsIntent.putExtra(WordPress.SITE, siteModel);
+        String tags = TextUtils.join(",", getPost().getTagNameList());
         tagsIntent.putExtra(PostSettingsTagsActivity.KEY_TAGS, tags);
         startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
     }
@@ -519,9 +493,10 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         int checkedItem = 0;
-        if (!TextUtils.isEmpty(mPost.getPostFormat())) {
+        String postFormat = getPost().getPostFormat();
+        if (!TextUtils.isEmpty(postFormat)) {
             for (int i = 0; i < mPostFormatKeys.size(); i++) {
-                if (mPost.getPostFormat().equals(mPostFormatKeys.get(i))) {
+                if (postFormat.equals(mPostFormatKeys.get(i))) {
                     checkedItem = i;
                     break;
                 }
@@ -547,7 +522,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mPost.getPassword(), getString(R.string.password),
+                getPost().getPassword(), getString(R.string.password),
                 getString(R.string.post_settings_password_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
@@ -570,6 +545,7 @@ public class EditPostSettingsFragment extends Fragment {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         Resources resources = getResources();
+        boolean isPublishImmediatelyAvailable = PostUtils.shouldPublishImmediatelyOptionBeAvailable(getPost());
 
         final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, year, month, day);
         datePickerDialog.setTitle(R.string.select_date);
@@ -583,8 +559,8 @@ public class EditPostSettingsFragment extends Fragment {
                         showPostTimeSelectionDialog(selectedYear, selectedMonth, selectedDay);
                     }
                 });
-        String neutralButtonTitle = PostUtils.shouldPublishImmediatelyOptionBeAvailable(mPost)
-                ? resources.getString(R.string.immediately) : resources.getString(R.string.now);
+        String neutralButtonTitle = isPublishImmediatelyAvailable ? resources.getString(R.string.immediately)
+                : resources.getString(R.string.now);
         datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, neutralButtonTitle,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -597,7 +573,7 @@ public class EditPostSettingsFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 });
-        if (PostUtils.shouldPublishImmediatelyOptionBeAvailable(mPost)) {
+        if (isPublishImmediatelyAvailable) {
             // We shouldn't let the user pick a past date since we'll just override it to Immediately if they do
             // We can't set the min date to now, so we need to subtract some amount of time
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
@@ -627,6 +603,14 @@ public class EditPostSettingsFragment extends Fragment {
 
     // Helpers
 
+    private PostModel getPost() {
+        return mEditPostActivityHook.getPost();
+    }
+
+    private SiteModel getSite() {
+        return mEditPostActivityHook.getSite();
+    }
+
     private void updateSaveButton() {
         if (isAdded()) {
             getActivity().invalidateOptionsMenu();
@@ -634,57 +618,36 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateExcerpt(String excerpt) {
-        if (mPost.getExcerpt().equals(excerpt)) {
-            return;
-        }
-        mPost.setExcerpt(excerpt);
-        dispatchUpdatePostAction();
-        mExcerptTextView.setText(mPost.getExcerpt());
+        getPost().setExcerpt(excerpt);
+        mExcerptTextView.setText(excerpt);
     }
 
     private void updateSlug(String slug) {
-        if (mPost.getSlug().equalsIgnoreCase(slug)) {
-            return;
-        }
-        mPost.setSlug(slug);
-        dispatchUpdatePostAction();
-        mSlugTextView.setText(mPost.getSlug());
+        getPost().setSlug(slug);
+        mSlugTextView.setText(slug);
     }
 
     private void updatePassword(String password) {
-        if (mPost.getPassword().equals(password)) {
-            return;
-        }
-        mPost.setPassword(password);
-        dispatchUpdatePostAction();
-        mPasswordTextView.setText(mPost.getPassword());
+        getPost().setPassword(password);
+        mPasswordTextView.setText(password);
     }
 
     private void updateCategories(List<Long> categoryList) {
         if (categoryList == null) {
             return;
         }
-        mPost.setCategoryIdList(categoryList);
-        dispatchUpdatePostAction();
+        getPost().setCategoryIdList(categoryList);
         updateCategoriesTextView();
     }
 
     private void updatePostStatus(String postStatus) {
-        if (mPost.getStatus().equals(postStatus)) {
-            return;
-        }
-        mPost.setStatus(postStatus);
-        dispatchUpdatePostAction();
+        getPost().setStatus(postStatus);
         updateStatusTextView();
         updateSaveButton();
     }
 
     private void updatePostFormat(String postFormat) {
-        if (mPost.getPostFormat().equals(postFormat)) {
-            return;
-        }
-        mPost.setPostFormat(postFormat);
-        dispatchUpdatePostAction();
+        getPost().setPostFormat(postFormat);
         updatePostFormatTextView();
     }
 
@@ -700,18 +663,18 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateTags(String selectedTags) {
+        PostModel postModel = getPost();
         if (!TextUtils.isEmpty(selectedTags)) {
             String tags = selectedTags.replace("\n", " ");
-            mPost.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
+            postModel.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
         } else {
-            mPost.setTagNameList(null);
+            postModel.setTagNameList(null);
         }
-        dispatchUpdatePostAction();
         updateTagsTextView();
     }
 
     private void updateTagsTextView() {
-        String tags = TextUtils.join(",", mPost.getTagNameList());
+        String tags = TextUtils.join(",", getPost().getTagNameList());
         // If `tags` is empty, the hint "Not Set" will be shown instead
         mTagsTextView.setText(tags);
     }
@@ -721,14 +684,13 @@ public class EditPostSettingsFragment extends Fragment {
         if (mPostFormatTextView == null) {
             return;
         }
-        String postFormat = getPostFormatNameFromKey(mPost.getPostFormat());
+        String postFormat = getPostFormatNameFromKey(getPost().getPostFormat());
         mPostFormatTextView.setText(postFormat);
     }
 
     private void updatePublishDate(Calendar calendar) {
-        mPost.setDateCreated(DateTimeUtils.iso8601FromDate(calendar.getTime()));
+        getPost().setDateCreated(DateTimeUtils.iso8601FromDate(calendar.getTime()));
         updatePublishDateTextView();
-        dispatchUpdatePostAction();
         updateSaveButton();
     }
 
@@ -736,17 +698,21 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        if (PostUtils.shouldPublishImmediately(mPost)) {
+        PostModel postModel = getPost();
+        if (PostUtils.shouldPublishImmediately(postModel)) {
             mPublishDateTextView.setText(R.string.immediately);
-        } else if (!TextUtils.isEmpty(mPost.getDateCreated())){
-            String formattedDate = DateUtils.formatDateTime(getActivity(),
-                    DateTimeUtils.timestampFromIso8601Millis(mPost.getDateCreated()), getDateTimeFlags());
-            mPublishDateTextView.setText(formattedDate);
+        } else {
+            String dateCreated = postModel.getDateCreated();
+            if (!TextUtils.isEmpty(dateCreated)){
+                String formattedDate = DateUtils.formatDateTime(getActivity(),
+                        DateTimeUtils.timestampFromIso8601Millis(dateCreated), getDateTimeFlags());
+                mPublishDateTextView.setText(formattedDate);
+            }
         }
     }
 
     private void updateCategoriesTextView() {
-        List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(mPost, mSite);
+        List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(getPost(), getSite());
         StringBuilder sb = new StringBuilder();
         Iterator<TermModel> it = categories.iterator();
         if (it.hasNext()) {
@@ -758,12 +724,6 @@ public class EditPostSettingsFragment extends Fragment {
         }
         // If `sb` is empty, the hint "Not Set" will be shown instead
         mCategoriesTextView.setText(sb);
-    }
-
-    private void dispatchUpdatePostAction() {
-        mPost.setIsLocallyChanged(true);
-        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
-        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
     }
 
     // Post Status Helpers
@@ -784,7 +744,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private int getCurrentPostStatusIndex() {
-        switch (PostStatus.fromPost(mPost)) {
+        switch (PostStatus.fromPost(getPost())) {
             case DRAFT:
                 return 1;
             case PENDING:
@@ -809,7 +769,7 @@ public class EditPostSettingsFragment extends Fragment {
                 .getStringArray(R.array.post_format_display_names)));
 
         // If we have specific values for this site, use them
-        List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
+        List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(getSite());
         for (PostFormatModel postFormatModel : postFormatModels) {
             if (!mPostFormatKeys.contains(postFormatModel.getSlug())) {
                 mPostFormatKeys.add(postFormatModel.getSlug());
@@ -845,12 +805,12 @@ public class EditPostSettingsFragment extends Fragment {
     // Featured Image Helpers
 
     public void updateFeaturedImage(long featuredImageId) {
-        if (mPost.getFeaturedImageId() == featuredImageId) {
+        PostModel postModel = getPost();
+        if (postModel.getFeaturedImageId() == featuredImageId) {
             return;
         }
 
-        mPost.setFeaturedImageId(featuredImageId);
-        dispatchUpdatePostAction();
+        postModel.setFeaturedImageId(featuredImageId);
         updateFeaturedImageView();
     }
 
@@ -862,13 +822,15 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        if (!mPost.hasFeaturedImage()) {
+        PostModel postModel = getPost();
+        if (!postModel.hasFeaturedImage()) {
             mFeaturedImageView.setVisibility(View.GONE);
             mFeaturedImageButton.setVisibility(View.VISIBLE);
             return;
         }
 
-        MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mPost.getFeaturedImageId());
+        SiteModel siteModel = getSite();
+        MediaModel media = mMediaStore.getSiteMediaWithId(siteModel, postModel.getFeaturedImageId());
         if (media == null) {
             return;
         }
@@ -882,7 +844,7 @@ public class EditPostSettingsFragment extends Fragment {
         int size = Math.max(width, height);
 
         String mediaUri = media.getThumbnailUrl();
-        if (SiteUtils.isPhotonCapable(mSite)) {
+        if (SiteUtils.isPhotonCapable(siteModel)) {
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }
 
@@ -894,7 +856,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
-        intent.putExtra(WordPress.SITE, mSite);
+        intent.putExtra(WordPress.SITE, getSite());
         intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
         intent.putExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, true);
         startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
@@ -903,13 +865,15 @@ public class EditPostSettingsFragment extends Fragment {
     // Publish Date Helpers
 
     private Calendar getCurrentPublishDateAsCalendar() {
-        if (PostUtils.shouldPublishImmediately(mPost)) {
+        PostModel postModel = getPost();
+        if (PostUtils.shouldPublishImmediately(postModel)) {
             return Calendar.getInstance();
         }
         Calendar calendar = Calendar.getInstance();
+        String dateCreated = postModel.getDateCreated();
         // Set the currently selected time if available
-        if (!TextUtils.isEmpty(mPost.getDateCreated())) {
-            calendar.setTime(DateTimeUtils.dateFromIso8601(mPost.getDateCreated()));
+        if (!TextUtils.isEmpty(dateCreated)) {
+            calendar.setTime(DateTimeUtils.dateFromIso8601(dateCreated));
         }
         return calendar;
     }
@@ -995,13 +959,14 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
+        PostModel postModel = getPost();
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         // Pre-pick the previous selected location if any
         LatLng latLng = null;
         if (mPostLocation != null) {
             latLng = new LatLng(mPostLocation.getLatitude(), mPostLocation.getLongitude());
-        } else if (mPost.hasLocation()) {
-            PostLocation location = mPost.getLocation();
+        } else if (postModel.hasLocation()) {
+            PostLocation location = postModel.getLocation();
             latLng = new LatLng(location.getLatitude(), location.getLongitude());
         }
         if (latLng != null) {
@@ -1019,8 +984,9 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void setLocation(@Nullable Place place) {
+        PostModel postModel = getPost();
         if (place == null) {
-            mPost.clearLocation();
+            postModel.clearLocation();
             mPostLocation = null;
             return;
         }
@@ -1029,19 +995,20 @@ public class EditPostSettingsFragment extends Fragment {
         }
         mPostLocation.setLatitude(place.getLatLng().latitude);
         mPostLocation.setLongitude(place.getLatLng().longitude);
-        mPost.setLocation(mPostLocation);
+        postModel.setLocation(mPostLocation);
         mLocationTextView.setText(place.getAddress());
     }
 
     private void initLocation() {
-        if (!mPost.hasLocation()) {
+        PostModel postModel = getPost();
+        if (!postModel.hasLocation()) {
             mPostLocation = null;
             mLocationTextView.setText(getString(R.string.post_settings_not_set));
         } else {
-            mPostLocation = mPost.getLocation();
-            mLocationTextView.setText(mPost.getLocation().getLatitude() + ", " + mPost.getLocation().getLongitude());
+            mPostLocation = postModel.getLocation();
+            mLocationTextView.setText(mPostLocation.getLatitude() + ", " + mPostLocation.getLongitude());
             // Asynchronously get the address from the location coordinates
-            new FetchAndSetAddressAsyncTask().execute(mPost.getLocation().getLatitude(), mPost.getLocation().getLongitude());
+            new FetchAndSetAddressAsyncTask().execute(mPostLocation.getLatitude(), mPostLocation.getLongitude());
         }
     }
 
@@ -1051,7 +1018,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         // If the post doesn't have location set, show the picker directly
-        if (!mPost.hasLocation()) {
+        if (!getPost().hasLocation()) {
             showLocationPicker();
             return;
         }

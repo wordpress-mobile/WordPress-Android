@@ -147,7 +147,7 @@ import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
-        PhotoPickerFragment.PhotoPickerListener {
+        PhotoPickerFragment.PhotoPickerListener, EditPostSettingsFragment.EditPostActivityHook {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
@@ -727,6 +727,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else if (itemId == R.id.menu_post_settings) {
             InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
             imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+            if (mEditPostSettingsFragment != null) {
+                mEditPostSettingsFragment.refreshViews();
+            }
             mViewPager.setCurrentItem(PAGE_SETTINGS);
         }
         return false;
@@ -866,11 +869,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
 
-        if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.updatePostSettings(mPost);
-        }
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
-
         mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
     }
 
@@ -1238,7 +1237,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         return new LegacyEditorFragment();
                     }
                 case 1:
-                    return EditPostSettingsFragment.newInstance(mSite, mPost.getId());
+                    return EditPostSettingsFragment.newInstance();
                 default:
                     return EditPostPreviewFragment.newInstance(mSite);
             }
@@ -2337,5 +2336,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         else {
             onUploadProgress(event.media, event.progress);
         }
+    }
+
+    // EditPostActivityHook methods
+
+    @Override
+    public PostModel getPost() {
+        return mPost;
+    }
+
+    @Override
+    public SiteModel getSite() {
+        return mSite;
     }
 }
