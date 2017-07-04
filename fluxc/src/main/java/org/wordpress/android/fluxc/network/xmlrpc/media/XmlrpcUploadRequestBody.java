@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.xmlrpc.media;
 
+import android.support.annotation.NonNull;
 import android.util.Base64;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -95,7 +96,7 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
     }
 
     @Override
-    public void writeTo(BufferedSink sink) throws IOException {
+    public void writeTo(@NonNull BufferedSink sink) throws IOException {
         CountingSink countingSink = new CountingSink(sink);
         BufferedSink bufferedSink = Okio.buffer(countingSink);
 
