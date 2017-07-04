@@ -343,17 +343,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
                     WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
-                        WPMediaUtils.advertiseImageOptimization(this, mSite,
-                                new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
-                                    @Override
-                                    public void done() {
-                                        enqueueLastTakenPicture();
-                                    }
-                                });
-                    } else {
-                        enqueueLastTakenPicture();
-                    }
+                    Uri uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
+                    mMediaCapturePath = null;
+                    queueFileForUpload(uri, getContentResolver().getType(uri));
+                    trackAddMediaFromDeviceEvents(true, false, uri);
                 }
                 break;
             case RequestCodes.TAKE_VIDEO:
@@ -364,13 +357,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
                 break;
         }
-    }
-
-    private void enqueueLastTakenPicture() {
-        Uri uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
-        mMediaCapturePath = null;
-        queueFileForUpload(uri, getContentResolver().getType(uri));
-        trackAddMediaFromDeviceEvents(true, false, uri);
     }
 
     /**
