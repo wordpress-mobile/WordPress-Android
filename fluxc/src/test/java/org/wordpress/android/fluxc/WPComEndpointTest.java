@@ -17,6 +17,8 @@ public class WPComEndpointTest {
         assertEquals("/sites/56/", WPCOMREST.sites.site(56).getEndpoint());
         assertEquals("/sites/56/post-formats/", WPCOMREST.sites.site(56).post_formats.getEndpoint());
 
+        assertEquals("/sites/mysite.wordpress.com/", WPCOMREST.sites.siteUrl("mysite.wordpress.com").getEndpoint());
+
         // Sites - Posts
         assertEquals("/sites/56/posts/", WPCOMREST.sites.site(56).posts.getEndpoint());
         assertEquals("/sites/56/posts/78/", WPCOMREST.sites.site(56).posts.post(78).getEndpoint());
