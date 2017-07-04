@@ -41,6 +41,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
@@ -246,8 +247,16 @@ public class PostsListFragment extends Fragment
         boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
         if (isDraft) {
             if (PostUtils.isPublishable(post)) {
-                int message =  savedLocally ? R.string.editor_draft_saved_locally : R.string.editor_draft_saved_online;
-                showSnackbar(message, R.string.button_publish, publishPostListener);
+                if (savedLocally) {
+                    showSnackbar(R.string.editor_draft_saved_locally, R.string.button_publish, publishPostListener);
+                }
+                else {
+                    if (MediaUploadService.hasPendingMediaUploadsForPost(post) || PostUploadService.isPostUploadingOrQueued(post)) {
+                        showSnackbar(getString(R.string.uploading_post));
+                    } else {
+                        showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
+                    }
+                }
             } else {
                 if (savedLocally) {
                     ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_locally);
@@ -262,6 +271,12 @@ public class PostsListFragment extends Fragment
         Snackbar.make(getActivity().findViewById(R.id.coordinator), messageRes, Snackbar.LENGTH_LONG)
                 .setAction(buttonTitleRes, onClickListener).show();
     }
+
+    private void showSnackbar(String text) {
+        Snackbar.make(getView().findViewById(R.id.coordinator),
+                text, Snackbar.LENGTH_LONG).show();
+    }
+
 
     private void initSwipeToRefreshHelper(View view) {
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(
