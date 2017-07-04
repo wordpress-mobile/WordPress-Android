@@ -12,7 +12,6 @@ Language: sv_SE
 	<string name="permissions_denied_message">För att ändra detta behöver du redigera appens behörigheter och se till att ”%s” är aktiverat</string>
 	<string name="permissions_denied_title">Det verkar som om du har stängt av några behörigheter som krävs för denna funktion</string>
 	<string name="button_edit_permissions">Redigera behörigheter</string>
-	<string name="photo_picker_soft_ask_permissions_denied">%s tilläts inte åtkomst till dina foton</string>
 	<string name="photo_picker_soft_ask_allow">Tillåt</string>
 	<string name="photo_picker_soft_ask_label">%s behöver behörighet för att komma åt dina foton</string>
 	<string name="sharing_twitter_message">Detta kommer att inkluderas i twitter-meddelandena när besökare delar dina sidor med Twitter-knappen</string>

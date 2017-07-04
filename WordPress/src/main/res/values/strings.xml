@@ -1458,6 +1458,7 @@
     <string name="hs__invalid_email_error">Enter a valid email address</string>
 
     <!--Me-->
+    <string name="me_profile_photo">Profile Photo</string>
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
@@ -1798,4 +1799,11 @@
     <!-- Video Optimization -->
     <string name="video_optimization_in_progress">Optimizing your video&#8230;</string>
     <string name="video_optimization_generic_error_message">An error occurred while compressing your video. Using the original file.</string>
+
+
+    <!-- Image Optimization promo -->
+    <string name="turn_on">Turn on</string>
+    <string name="leave_off">Leave off</string>
+    <string name="image_optimization_promo_title">Turn on image optimization?</string>
+    <string name="image_optimization_promo_desc">Image optimization shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
 </resources>

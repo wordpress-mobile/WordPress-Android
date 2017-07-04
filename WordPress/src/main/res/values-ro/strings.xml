@@ -12,7 +12,6 @@ Language: ro
 	<string name="permissions_denied_message">Pentru a modifica asta, editează-ți permisiunile și asigură-te că %s este activat</string>
 	<string name="permissions_denied_title">Se pare că ai oprit permisiunile necesare pentru această funcționalitate</string>
 	<string name="button_edit_permissions">Editează permisiunile</string>
-	<string name="photo_picker_soft_ask_permissions_denied">Lui %s i s-au refuzat permisiunile de a accesa fotografiile tale</string>
 	<string name="photo_picker_soft_ask_allow">Permite</string>
 	<string name="photo_picker_soft_ask_label">%s are nevoie de permisiuni pentru a-ți accesa fotografiile</string>
 	<string name="sharing_twitter_message">Acest lucru va fi inclus în twituri când oamenii partajează folosind butonul Twitter</string>

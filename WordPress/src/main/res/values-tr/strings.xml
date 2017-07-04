@@ -12,7 +12,6 @@ Language: tr
 	<string name="permissions_denied_message">Bunu değiştirmek için izinlerinizi düzenleyin ve %s izninin etkin olduğundan emin olun</string>
 	<string name="permissions_denied_title">Görünen o ki bu özellik için gerekli izinleri kapatmışsınız</string>
 	<string name="button_edit_permissions">İzinleri düzenle</string>
-	<string name="photo_picker_soft_ask_permissions_denied">%s için fotoğraflarınıza erişme izni reddedildi</string>
 	<string name="photo_picker_soft_ask_allow">İzin ver</string>
 	<string name="photo_picker_soft_ask_label">%s fotoğraflarınıza erişebilmek için izin gerektiriyor</string>
 	<string name="sharing_twitter_message">İnsanlar Twitter tuşu ile paylaş yaptığında tweetlerin içine eklenecek</string>
