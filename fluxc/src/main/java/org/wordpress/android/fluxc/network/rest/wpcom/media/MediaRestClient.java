@@ -234,7 +234,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         } else {
                             AppLog.w(T.MEDIA, "could not parse Fetch all media response: " + response);
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            notifyMediaListFetched(site, error);
+                            notifyMediaListFetched(site, error, mimeType);
                         }
                     }
                 }, new BaseErrorListener() {
@@ -242,7 +242,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                        notifyMediaListFetched(site, mediaError);
+                        notifyMediaListFetched(site, mediaError, mimeType);
                     }
                 }
         ));
@@ -429,8 +429,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, MediaError error) {
-        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error);
+    private void notifyMediaListFetched(SiteModel site, MediaError error, String mimeType) {
+        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 

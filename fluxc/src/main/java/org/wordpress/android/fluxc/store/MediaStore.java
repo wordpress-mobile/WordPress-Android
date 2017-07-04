@@ -104,10 +104,13 @@ public class MediaStore extends Store {
             this.mimeType = mimeType;
         }
 
-        public FetchMediaListResponsePayload(SiteModel site, MediaError error) {
+        public FetchMediaListResponsePayload(SiteModel site,
+                                             MediaError error,
+                                             String mimeType) {
             this.mediaList = new ArrayList<>();
             this.site = site;
             this.error = error;
+            this.mimeType = mimeType;
         }
     }
 
