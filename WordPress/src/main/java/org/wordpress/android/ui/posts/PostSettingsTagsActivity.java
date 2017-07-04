@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -85,6 +86,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         if (!TextUtils.isEmpty(tags)) {
             // add a , at the end so the user can start typing a new tag
             tags += ",";
+            tags = StringEscapeUtils.unescapeHtml4(tags);
             mTagsEditText.setText(tags);
             mTagsEditText.setSelection(mTagsEditText.length());
         }
@@ -173,6 +175,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
             updatedText = text.substring(0, endIndex + 1) + selectedTag;
         }
         updatedText += ",";
+        updatedText = StringEscapeUtils.unescapeHtml4(updatedText);
         mTagsEditText.setText(updatedText);
         mTagsEditText.setSelection(mTagsEditText.length());
     }
@@ -206,7 +209,8 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
 
         @Override
         public void onBindViewHolder(final TagViewHolder holder, int position) {
-            holder.nameTextView.setText(mFilteredTags.get(position).getName());
+            String tag = StringEscapeUtils.unescapeHtml4(mFilteredTags.get(position).getName());
+            holder.nameTextView.setText(tag);
         }
 
         @Override
