@@ -34,7 +34,10 @@
     <dimen name="action_bar_spinner_width">312dp</dimen>
     <dimen name="action_bar_spinner_y_offset">-8dp</dimen>
 
+    <dimen name="default_dialog_button_height">48dp</dimen>
     <dimen name="default_dialog_width">280dp</dimen>
+    <dimen name="dialog_beta_padding_horizontal">8dp</dimen>
+    <dimen name="dialog_beta_padding_vertical">6dp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
     <dimen name="post_detail_button_size">48dp</dimen>
@@ -61,6 +64,7 @@
         native reader dimens
     -->
     <dimen name="margin_none">0dp</dimen>
+    <dimen name="margin_dialog">24dp</dimen>
     <dimen name="margin_extra_extra_small">1dp</dimen>
     <dimen name="margin_extra_small">2dp</dimen>
     <dimen name="margin_small">4dp</dimen>
@@ -214,7 +218,8 @@
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
     <dimen name="my_site_list_row_padding_left">8dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
-    <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
+    <dimen name="my_site_switch_site_button_padding_bottom">16dp</dimen>
+    <dimen name="my_site_switch_site_button_padding_top">15dp</dimen>
     <dimen name="my_site_no_site_view_margin">24dp</dimen>
 
     <!--me-->
@@ -295,7 +300,7 @@
     <dimen name="photo_picker_selected_item_padding">4dp</dimen>
     <dimen name="photo_picker_icon">48dp</dimen>
     <dimen name="photo_picker_video_overlay">36dp</dimen>
-    <dimen name="photo_picker_preview_icon">36dp</dimen>
+    <dimen name="photo_picker_preview_icon">28dp</dimen>
 
     <dimen name="smart_toast_offset_y">48dp</dimen>
 

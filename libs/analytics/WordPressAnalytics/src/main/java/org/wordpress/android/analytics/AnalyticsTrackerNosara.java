@@ -71,16 +71,73 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_BOLD:
                 predefinedEventProperties.put("button", "bold");
                 break;
+            case EDITOR_TAPPED_ELLIPSIS_COLLAPSE:
+                predefinedEventProperties.put("button", "overflow_ellipsis");
+                predefinedEventProperties.put("action", "made_hidden");
+                break;
+            case EDITOR_TAPPED_ELLIPSIS_EXPAND:
+                predefinedEventProperties.put("button", "overflow_ellipsis");
+                predefinedEventProperties.put("action", "made_visible");
+                break;
+            case EDITOR_TAPPED_HEADING:
+                predefinedEventProperties.put("button", "header");
+                break;
+            case EDITOR_TAPPED_HEADING_1:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h1");
+                break;
+            case EDITOR_TAPPED_HEADING_2:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h2");
+                break;
+            case EDITOR_TAPPED_HEADING_3:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h3");
+                break;
+            case EDITOR_TAPPED_HEADING_4:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h4");
+                break;
+            case EDITOR_TAPPED_HEADING_5:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h5");
+                break;
+            case EDITOR_TAPPED_HEADING_6:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h6");
+                break;
             case EDITOR_TAPPED_IMAGE:
                 predefinedEventProperties.put("button", "image");
                 break;
             case EDITOR_TAPPED_ITALIC:
                 predefinedEventProperties.put("button", "italic");
                 break;
-            case EDITOR_TAPPED_LINK:
+            case EDITOR_TAPPED_LINK_ADDED:
                 predefinedEventProperties.put("button", "link");
                 break;
-            case EDITOR_TAPPED_MORE:
+            case EDITOR_TAPPED_LINK_REMOVED:
+                predefinedEventProperties.put("button", "unlink");
+                break;
+            case EDITOR_TAPPED_LIST:
+                predefinedEventProperties.put("button", "list");
+                break;
+            case EDITOR_TAPPED_LIST_ORDERED:
+                predefinedEventProperties.put("button", "ordered_list");
+                break;
+            case EDITOR_TAPPED_LIST_UNORDERED:
+                predefinedEventProperties.put("button", "unordered_list");
+                break;
+            case EDITOR_TAPPED_NEXT_PAGE:
+                predefinedEventProperties.put("button", "next_page");
+                break;
+            case EDITOR_TAPPED_PARAGRAPH:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "none");
+                break;
+            case EDITOR_TAPPED_PREFORMAT:
+                predefinedEventProperties.put("button", "preformat");
+                break;
+            case EDITOR_TAPPED_READ_MORE:
                 predefinedEventProperties.put("button", "more");
                 break;
             case EDITOR_TAPPED_STRIKETHROUGH:
@@ -92,14 +149,17 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_HTML:
                 predefinedEventProperties.put("button", "html");
                 break;
-            case EDITOR_TAPPED_ORDERED_LIST:
-                predefinedEventProperties.put("button", "ordered_list");
+            case EDITOR_AZTEC_BETA_LINK:
+                predefinedEventProperties.put("source", "beta_link");
                 break;
-            case EDITOR_TAPPED_UNLINK:
-                predefinedEventProperties.put("button", "unlink");
+            case EDITOR_AZTEC_PROMO_LINK:
+                predefinedEventProperties.put("source", "promo_link");
                 break;
-            case EDITOR_TAPPED_UNORDERED_LIST:
-                predefinedEventProperties.put("button", "unordered_list");
+            case EDITOR_AZTEC_PROMO_NEGATIVE:
+                predefinedEventProperties.put("source", "promo_negative");
+                break;
+            case EDITOR_AZTEC_PROMO_POSITIVE:
+                predefinedEventProperties.put("source", "promo_positive");
                 break;
             case OPENED_POSTS:
                 predefinedEventProperties.put("menu_item", "posts");
@@ -372,6 +432,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_aztec_toggled_off";
             case EDITOR_AZTEC_TOGGLED_ON:
                 return "editor_aztec_toggled_on";
+            case EDITOR_AZTEC_BETA_LINK:
+                return "editor_aztec_beta_link";
+            case EDITOR_AZTEC_PROMO_LINK:
+                return "editor_aztec_promo_link";
+            case EDITOR_AZTEC_PROMO_NEGATIVE:
+                return "editor_aztec_promo_negative";
+            case EDITOR_AZTEC_PROMO_POSITIVE:
+                return "editor_aztec_promo_positive";
             case EDITOR_UPLOAD_MEDIA_FAILED:
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:
@@ -394,6 +462,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_photo_optimized";
             case MEDIA_PHOTO_OPTIMIZE_ERROR:
                 return "media_photo_optimize_error";
+            case MEDIA_VIDEO_OPTIMIZED:
+                return "media_video_optimized";
+            case MEDIA_VIDEO_OPTIMIZE_ERROR:
+                return "media_video_optimize_error";
+            case MEDIA_VIDEO_CANT_OPTIMIZE:
+                return "media_video_cant_optimize";
             case EDITOR_PUBLISHED_POST:
                 return "editor_post_published";
             case EDITOR_UPDATED_POST:
@@ -404,13 +478,41 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_BOLD:
                 return "editor_button_tapped";
+            case EDITOR_TAPPED_ELLIPSIS_COLLAPSE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_ELLIPSIS_EXPAND:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_1:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_2:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_3:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_4:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_5:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_6:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HORIZONTAL_RULE:
+                return "editor_button_tapped";
             case EDITOR_TAPPED_IMAGE:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_ITALIC:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_LINK:
+            case EDITOR_TAPPED_LINK_ADDED:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_MORE:
+            case EDITOR_TAPPED_LIST:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_READ_MORE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_NEXT_PAGE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_PARAGRAPH:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_PREFORMAT:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_STRIKETHROUGH:
                 return "editor_button_tapped";
@@ -418,11 +520,11 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_HTML:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_ORDERED_LIST:
+            case EDITOR_TAPPED_LIST_ORDERED:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_UNLINK:
+            case EDITOR_TAPPED_LINK_REMOVED:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_UNORDERED_LIST:
+            case EDITOR_TAPPED_LIST_UNORDERED:
                 return "editor_button_tapped";
             case NOTIFICATIONS_ACCESSED:
                 return "notifications_accessed";

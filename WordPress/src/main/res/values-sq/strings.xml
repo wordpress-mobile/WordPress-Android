@@ -648,8 +648,6 @@ Language: sq_AL
 	<string name="reader_toast_err_follow_blog_not_authorized">S&amp;#8217;jeni i autorizuar të hyni në këtë blog</string>
 	<string name="reader_toast_err_follow_blog_not_found">Ky blog s&amp;#8217;u gjet dot</string>
 	<string name="undo">Zhbëje</string>
-	<string name="tabbar_accessibility_label_me">Unë</string>
-	<string name="tabbar_accessibility_label_my_site">Sajti Im</string>
 	<string name="editor_toast_changes_saved">Ndryshimet u ruajtën</string>
 	<string name="passcodelock_prompt_message">Jepni PIN-in tuaj</string>
 	<string name="push_auth_expired">Kërkesa skadoi. Hyni te WordPress.com që të riprovoni.</string>

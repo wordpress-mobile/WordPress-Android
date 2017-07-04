@@ -115,12 +115,15 @@ public class ReaderImageScanner {
     }
 
     /*
-     * returns true if the passed image tag has a "size-full" or "size-large" class attribute,
-     * which would make it suitable for use as a featured image
+     * returns true if the passed image tag has a "size-" class attribute which would make it
+     * suitable for use as a featured image
      */
     private boolean hasSuitableClassForFeaturedImage(@NonNull String imageTag) {
         String tagClass = ReaderHtmlUtils.getClassAttrValue(imageTag);
-        return (tagClass != null && (tagClass.contains("size-full") || tagClass.contains("size-large")));
+        return (tagClass != null
+                && (tagClass.contains("size-full")
+                 || tagClass.contains("size-large")
+                 || tagClass.contains("size-medium")));
     }
 
     /*
