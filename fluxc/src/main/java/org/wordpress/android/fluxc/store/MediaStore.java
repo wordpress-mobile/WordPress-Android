@@ -35,7 +35,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class MediaStore extends Store {
-    public static final int NUM_MEDIA_PER_FETCH = 48;
+    public static final int DEFAULT_NUM_MEDIA_PER_FETCH = 50;
 
     //
     // Payloads
@@ -65,20 +65,23 @@ public class MediaStore extends Store {
         public SiteModel site;
         public boolean loadMore;
         public String mimeType;
+        public int number = DEFAULT_NUM_MEDIA_PER_FETCH;
 
         public FetchMediaListPayload(SiteModel site) {
             this.site = site;
         }
 
-        public FetchMediaListPayload(SiteModel site, boolean loadMore) {
+        public FetchMediaListPayload(SiteModel site, int number, boolean loadMore) {
             this.site = site;
             this.loadMore = loadMore;
+            this.number = number;
         }
 
-        public FetchMediaListPayload(SiteModel site, boolean loadMore, String mimeType) {
+        public FetchMediaListPayload(SiteModel site, int number, boolean loadMore, String mimeType) {
             this.site = site;
             this.loadMore = loadMore;
             this.mimeType = mimeType;
+            this.number = number;
         }
     }
 
@@ -633,9 +636,9 @@ public class MediaStore extends Store {
             }
         }
         if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.fetchMediaList(payload.site, offset, payload.mimeType);
+            mMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         } else {
-            mMediaXmlrpcClient.fetchMediaList(payload.site, offset, payload.mimeType);
+            mMediaXmlrpcClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         }
     }
 
