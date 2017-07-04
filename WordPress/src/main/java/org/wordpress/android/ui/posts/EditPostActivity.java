@@ -1783,9 +1783,20 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditor
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
-                    Uri imageUri = data.getData();
-                    fetchMedia(imageUri);
-                    trackAddMediaFromDeviceEvents(false, false, imageUri);
+                    final Uri imageUri = data.getData();
+                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
+                        WPMediaUtils.advertiseImageOptimization(this, mSite,
+                                new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                                    @Override
+                                    public void done() {
+                                        fetchMedia(imageUri);
+                                        trackAddMediaFromDeviceEvents(false, false, imageUri);
+                                    }
+                                });
+                    } else {
+                        fetchMedia(imageUri);
+                        trackAddMediaFromDeviceEvents(false, false, imageUri);
+                    }
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
@@ -1839,7 +1850,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             AppLog.e(T.POSTS, e);
         }
     }
-
 
     private ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
 
