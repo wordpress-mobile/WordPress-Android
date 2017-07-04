@@ -49,6 +49,7 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * MediaRestClient provides an interface for manipulating a WP.com site's media. It provides
@@ -56,7 +57,7 @@ import okhttp3.Response;
  *
  * <ul>
  *     <li>Fetch existing media from a WP.com site
- *     (via {@link #fetchMediaList(SiteModel, int)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
+ *     (via {@link #fetchMediaList(SiteModel, int, String)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
  *     <li>Push new media to a WP.com site
  *     (via {@link #uploadMedia(SiteModel, MediaModel)})</li>
  *     <li>Push updates to existing media to a WP.com site
@@ -162,10 +163,17 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
         call.enqueue(new Callback() {
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
+                    ResponseBody responseBody = response.body();
+                    if (responseBody == null) {
+                        AppLog.e(T.MEDIA, "error uploading media, response body was empty " + response);
+                        notifyMediaUploaded(media, new MediaError(MediaErrorType.PARSE_ERROR));
+                        return;
+                    }
+
                     AppLog.d(T.MEDIA, "media upload successful: " + response);
-                    String jsonBody = response.body().string();
+                    String jsonBody = responseBody.string();
 
                     Gson gson = new Gson();
                     JsonReader reader = new JsonReader(new StringReader(jsonBody));
@@ -190,7 +198,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 if (!mCurrentUploadCalls.containsKey(media.getId())) {
                     // This call has already been removed from the in-progress list - probably because it was cancelled
@@ -212,11 +220,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void fetchMediaList(final SiteModel site, final int offset) {
+    public void fetchMediaList(final SiteModel site, final int offset, final String mimeType) {
         final Map<String, String> params = new HashMap<>();
         params.put("number", String.valueOf(MediaStore.NUM_MEDIA_PER_FETCH));
         if (offset > 0) {
             params.put("offset", String.valueOf(offset));
+        }
+        if (!TextUtils.isEmpty(mimeType)) {
+            params.put("mime_type", mimeType);
         }
         String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
         add(WPComGsonRequest.buildGetRequest(url, params, MultipleMediaResponse.class,
@@ -227,11 +238,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         if (mediaList != null) {
                             AppLog.v(T.MEDIA, "Fetched media list for site with size: " + mediaList.size());
                             boolean canLoadMore = mediaList.size() == MediaStore.NUM_MEDIA_PER_FETCH;
-                            notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore);
+                            notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
                         } else {
                             AppLog.w(T.MEDIA, "could not parse Fetch all media response: " + response);
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            notifyMediaListFetched(site, error);
+                            notifyMediaListFetched(site, error, mimeType);
                         }
                     }
                 }, new BaseErrorListener() {
@@ -239,7 +250,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                        notifyMediaListFetched(site, mediaError);
+                        notifyMediaListFetched(site, mediaError, mimeType);
                     }
                 }
         ));
@@ -362,7 +373,13 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             return mediaError;
         }
         try {
-            JSONObject body = new JSONObject(response.body().string());
+            ResponseBody responseBody = response.body();
+            if (responseBody == null) {
+                AppLog.e(T.MEDIA, "error uploading media, response body was empty " + response);
+                mediaError.type = MediaErrorType.PARSE_ERROR;
+                return mediaError;
+            }
+            JSONObject body = new JSONObject(responseBody.string());
             // Can be an array or errors
             if (body.has("errors")) {
                 JSONArray errors = body.getJSONArray("errors");
@@ -416,15 +433,18 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, @NonNull List<MediaModel> media,
-                                        boolean loadedMore, boolean canLoadMore) {
+    private void notifyMediaListFetched(SiteModel site,
+                                        @NonNull List<MediaModel> media,
+                                        boolean loadedMore,
+                                        boolean canLoadMore,
+                                        String mimeType) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media,
-                loadedMore, canLoadMore);
+                loadedMore, canLoadMore, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, MediaError error) {
-        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error);
+    private void notifyMediaListFetched(SiteModel site, MediaError error, String mimeType) {
+        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 

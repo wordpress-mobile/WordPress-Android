@@ -62,6 +62,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Request.Builder;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
     private static final String[] REQUIRED_UPLOAD_RESPONSE_FIELDS = {
@@ -183,7 +184,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
         call.enqueue(new Callback() {
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     // HTTP_OK code doesn't mean the upload is successful, XML-RPC API returns code 200 with an
                     // xml field "faultCode" on error.
@@ -226,7 +227,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 if (!mCurrentUploadCalls.containsKey(media.getId())) {
                     // This call has already been removed from the in-progress list - probably because it was cancelled
@@ -243,12 +244,15 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary
      */
-    public void fetchMediaList(final SiteModel site, final int offset) {
+    public void fetchMediaList(final SiteModel site, final int offset, final String mimeType) {
         List<Object> params = getBasicParams(site, null);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("number", MediaStore.NUM_MEDIA_PER_FETCH);
         if (offset > 0) {
             queryParams.put("offset", offset);
+        }
+        if (!TextUtils.isEmpty(mimeType)) {
+            queryParams.put("mime_type", mimeType);
         }
         params.add(queryParams);
 
@@ -260,12 +264,12 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         if (mediaList != null) {
                             AppLog.v(T.MEDIA, "Fetched media list for site via XMLRPC.GET_MEDIA_LIBRARY");
                             boolean canLoadMore = mediaList.size() == MediaStore.NUM_MEDIA_PER_FETCH;
-                            notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore);
+                            notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
                         } else {
                             AppLog.w(T.MEDIA, "could not parse XMLRPC.GET_MEDIA_LIBRARY response: "
                                     + Arrays.toString(response));
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            notifyMediaListFetched(site, error);
+                            notifyMediaListFetched(site, error, mimeType);
                         }
                     }
                 }, new BaseErrorListener() {
@@ -273,7 +277,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AppLog.e(T.MEDIA, "XMLRPC.GET_MEDIA_LIBRARY error response:", error.volleyError);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                        notifyMediaListFetched(site, mediaError);
+                        notifyMediaListFetched(site, mediaError, mimeType);
                     }
                 }
         ));
@@ -429,15 +433,18 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, @NonNull List<MediaModel> media,
-                                        boolean loadedMore, boolean canLoadMore) {
+    private void notifyMediaListFetched(SiteModel site,
+                                        @NonNull List<MediaModel> media,
+                                        boolean loadedMore,
+                                        boolean canLoadMore,
+                                        String mimeType) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media,
-                loadedMore, canLoadMore);
+                loadedMore, canLoadMore, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, MediaError error) {
-        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error);
+    private void notifyMediaListFetched(SiteModel site, MediaError error, String mimeType) {
+        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
@@ -562,14 +569,19 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
     private static Map getMapFromUploadResponse(Response response) throws XMLRPCException {
         try {
-            String data = new String(response.body().bytes(), "UTF-8");
+            ResponseBody responseBody = response.body();
+            if (responseBody == null) {
+                AppLog.e(T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response - body was empty: " + response);
+                return null;
+            }
+            String data = new String(responseBody.bytes(), "UTF-8");
             InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
             Object responseObject = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
             if (responseObject instanceof Map) {
                 return (Map) responseObject;
             }
         } catch (IOException | XmlPullParserException e) {
-            AppLog.w(AppLog.T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response: " + response);
+            AppLog.e(T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response: " + response);
             return null;
         }
         return null;
