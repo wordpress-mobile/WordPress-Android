@@ -585,8 +585,34 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
      */
     @Override
-    public void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList) {
+    public void onPhotoPickerMediaChosen(@NonNull final List<Uri> uriList) {
         hidePhotoPicker();
+
+        if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
+            boolean hasSelectedPicture = false;
+            for (Uri uri : uriList) {
+                if (!MediaUtils.isVideo(uri.toString())) {
+                    hasSelectedPicture = true;
+                    break;
+                }
+            }
+            if (hasSelectedPicture) {
+                WPMediaUtils.advertiseImageOptimization(this, mSite,
+                        new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                            @Override
+                            public void done() {
+                                for (Uri uri: uriList) {
+                                    if (addMedia(uri)) {
+                                        boolean isVideo = MediaUtils.isVideo(uri.toString());
+                                        trackAddMediaFromDeviceEvents(false, isVideo, uri);
+                                    }
+                                }
+                            }
+                        });
+                return;
+            }
+        }
+
         for (Uri uri: uriList) {
             if (addMedia(uri)) {
                 boolean isVideo = MediaUtils.isVideo(uri.toString());
@@ -1850,7 +1876,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             AppLog.e(T.POSTS, e);
         }
     }
-
 
     private ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
 
