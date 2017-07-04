@@ -987,8 +987,6 @@
 
 
     <!-- Aztec -->
-    <string name="dialog_link_title">Insert link</string>
-
     <string name="editor_content_hint">Share your story here&#8230;</string>
 
     <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
