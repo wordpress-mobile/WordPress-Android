@@ -166,7 +166,7 @@ public class MySiteFragment extends Fragment
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false);
+                ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false, false);
             }
         });
 

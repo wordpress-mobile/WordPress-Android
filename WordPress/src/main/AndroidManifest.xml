@@ -134,6 +134,9 @@
             android:label="@string/settings"
             android:theme="@style/CalypsoTheme" />
         <activity
+            android:name=".ui.prefs.EditorReleaseNotesActivity"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity

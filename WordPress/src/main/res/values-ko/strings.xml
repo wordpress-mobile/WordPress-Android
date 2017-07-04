@@ -564,8 +564,6 @@ Language: ko_KR
 	<string name="reader_toast_err_follow_blog_not_authorized">이 블로그에 접근할 권한이 없습니다.</string>
 	<string name="reader_toast_err_follow_blog_not_found">블로그를 찾을 수 없습니다.</string>
 	<string name="undo">실행 취소</string>
-	<string name="tabbar_accessibility_label_me">내 계정</string>
-	<string name="tabbar_accessibility_label_my_site">내 사이트</string>
 	<string name="editor_toast_changes_saved">변경사항 저장됨</string>
 	<string name="passcodelock_prompt_message">PIN 입력</string>
 	<string name="push_auth_expired">요청이 만료되었습니다. 다시 시도하려면 WordPress.com에 로그인하십시요.</string>
@@ -1062,6 +1060,7 @@ Language: ko_KR
 	<string name="all">모든</string>
 	<string name="themes">테마</string>
 	<string name="discard">제거</string>
+	<string name="manage">관리</string>
 	<string name="upload">업로드</string>
 	<string name="more_notifications">%d개.</string>
 	<string name="new_notifications">%d개의 새로운 알림</string>

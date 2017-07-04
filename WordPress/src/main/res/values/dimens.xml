@@ -34,7 +34,10 @@
     <dimen name="action_bar_spinner_width">312dp</dimen>
     <dimen name="action_bar_spinner_y_offset">-8dp</dimen>
 
+    <dimen name="default_dialog_button_height">48dp</dimen>
     <dimen name="default_dialog_width">280dp</dimen>
+    <dimen name="dialog_beta_padding_horizontal">8dp</dimen>
+    <dimen name="dialog_beta_padding_vertical">6dp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
     <dimen name="post_detail_button_size">48dp</dimen>
@@ -61,6 +64,7 @@
         native reader dimens
     -->
     <dimen name="margin_none">0dp</dimen>
+    <dimen name="margin_dialog">24dp</dimen>
     <dimen name="margin_extra_extra_small">1dp</dimen>
     <dimen name="margin_extra_small">2dp</dimen>
     <dimen name="margin_small">4dp</dimen>
