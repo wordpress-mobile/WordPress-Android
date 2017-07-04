@@ -62,6 +62,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Request.Builder;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
     private static final String[] REQUIRED_UPLOAD_RESPONSE_FIELDS = {
@@ -568,14 +569,19 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
     private static Map getMapFromUploadResponse(Response response) throws XMLRPCException {
         try {
-            String data = new String(response.body().bytes(), "UTF-8");
+            ResponseBody responseBody = response.body();
+            if (responseBody == null) {
+                AppLog.e(T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response - body was empty: " + response);
+                return null;
+            }
+            String data = new String(responseBody.bytes(), "UTF-8");
             InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
             Object responseObject = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
             if (responseObject instanceof Map) {
                 return (Map) responseObject;
             }
         } catch (IOException | XmlPullParserException e) {
-            AppLog.w(AppLog.T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response: " + response);
+            AppLog.e(T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response: " + response);
             return null;
         }
         return null;
