@@ -590,8 +590,34 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
      */
     @Override
-    public void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList) {
+    public void onPhotoPickerMediaChosen(@NonNull final List<Uri> uriList) {
         hidePhotoPicker();
+
+        if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
+            boolean hasSelectedPicture = false;
+            for (Uri uri : uriList) {
+                if (!MediaUtils.isVideo(uri.toString())) {
+                    hasSelectedPicture = true;
+                    break;
+                }
+            }
+            if (hasSelectedPicture) {
+                WPMediaUtils.advertiseImageOptimization(this, mSite,
+                        new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                            @Override
+                            public void done() {
+                                for (Uri uri: uriList) {
+                                    if (addMedia(uri)) {
+                                        boolean isVideo = MediaUtils.isVideo(uri.toString());
+                                        trackAddMediaFromDeviceEvents(false, isVideo, uri);
+                                    }
+                                }
+                            }
+                        });
+                return;
+            }
+        }
+
         for (Uri uri: uriList) {
             if (addMedia(uri)) {
                 boolean isVideo = MediaUtils.isVideo(uri.toString());
@@ -1797,26 +1823,32 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditor
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
-                    Uri imageUri = data.getData();
-                    fetchMedia(imageUri);
-                    trackAddMediaFromDeviceEvents(false, false, imageUri);
+                    final Uri imageUri = data.getData();
+                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
+                        WPMediaUtils.advertiseImageOptimization(this, mSite,
+                                new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                                    @Override
+                                    public void done() {
+                                        fetchMedia(imageUri);
+                                        trackAddMediaFromDeviceEvents(false, false, imageUri);
+                                    }
+                                });
+                    } else {
+                        fetchMedia(imageUri);
+                        trackAddMediaFromDeviceEvents(false, false, imageUri);
+                    }
                     break;
                 case RequestCodes.TAKE_PHOTO:
-                    try {
-                        WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
-                        File f = new File(mMediaCapturePath);
-                        Uri capturedImageUri = Uri.fromFile(f);
-                        if (!addMedia(capturedImageUri)) {
-                            ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
-                        } else {
-                            trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
-                        }
-                        this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                                + Environment.getExternalStorageDirectory())));
-                    } catch (RuntimeException e) {
-                        AppLog.e(T.POSTS, e);
-                    } catch (OutOfMemoryError e) {
-                        AppLog.e(T.POSTS, e);
+                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
+                        WPMediaUtils.advertiseImageOptimization(this, mSite,
+                                new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                                    @Override
+                                    public void done() {
+                                        addLastTakenPicture();
+                                    }
+                                });
+                    } else {
+                        addLastTakenPicture();
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
@@ -1837,6 +1869,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     }
                     break;
             }
+        }
+    }
+
+    private void addLastTakenPicture() {
+        try {
+            WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
+            File f = new File(mMediaCapturePath);
+            Uri capturedImageUri = Uri.fromFile(f);
+            if (!addMedia(capturedImageUri)) {
+                ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
+            } else {
+                trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
+            }
+            this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                    + Environment.getExternalStorageDirectory())));
+        } catch (RuntimeException e) {
+            AppLog.e(T.POSTS, e);
+        } catch (OutOfMemoryError e) {
+            AppLog.e(T.POSTS, e);
         }
     }
 
