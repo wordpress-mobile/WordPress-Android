@@ -551,8 +551,6 @@ Language: ms
 	<string name="reader_toast_err_follow_blog_not_authorized">Anda tidak dibenarkan mencapai blog ini</string>
 	<string name="reader_toast_err_follow_blog_not_found">Blog ini tidak dapat dijumpai</string>
 	<string name="undo">Kembali ke asal</string>
-	<string name="tabbar_accessibility_label_me">Saya</string>
-	<string name="tabbar_accessibility_label_my_site">Laman Saya</string>
 	<string name="editor_toast_changes_saved">Perubahan disimpan</string>
 	<string name="passcodelock_prompt_message">Masukkan PIN anda</string>
 	<string name="push_auth_expired">Permintaan telah tamat tempoh. Log masuk ke WordPress.com dan cuba lagi.</string>
@@ -1048,6 +1046,7 @@ Language: ms
 	<string name="all">Semua</string>
 	<string name="themes">Tema</string>
 	<string name="discard">Buang</string>
+	<string name="manage">Urus</string>
 	<string name="upload">Muat naik</string>
 	<string name="more_notifications">dan %d lagi.</string>
 	<string name="new_notifications">%d pemberitahuan baharu</string>

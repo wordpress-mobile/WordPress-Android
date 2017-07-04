@@ -49,8 +49,6 @@ Language: da_DK
 	<string name="reader_short_like_count_one">1 Like</string>
 	<string name="reader_label_follow_count">%,d følgere</string>
 	<string name="reader_short_like_count_none">Like</string>
-	<string name="tabbar_accessibility_label_my_site">Mit websted</string>
-	<string name="tabbar_accessibility_label_me">Mig</string>
 	<string name="passcodelock_prompt_message">Indtast din PIN</string>
 	<string name="editor_toast_changes_saved">Ændringer gemt</string>
 	<string name="ignore">Ignorer</string>
@@ -505,6 +503,7 @@ Language: da_DK
 	<string name="passcode_change_passcode">Ændr PIN</string>
 	<string name="passcode_set">PIN ændret</string>
 	<string name="media_gallery_type_slideshow">Slideshow</string>
+	<string name="manage">Håndter</string>
 	<string name="upload">Overfør</string>
 	<string name="notifications">Meddelelser</string>
 	<string name="note_reply_successful">Svar sendt</string>

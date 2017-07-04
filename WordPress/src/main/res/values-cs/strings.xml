@@ -580,8 +580,6 @@ Language: cs_CZ
 	<string name="reader_toast_err_follow_blog_not_authorized">Nemáte oprávnění pro přístup k tomuto webu</string>
 	<string name="reader_toast_err_follow_blog_not_found">Web nebyl nalezen</string>
 	<string name="undo">Zpět</string>
-	<string name="tabbar_accessibility_label_me">Já</string>
-	<string name="tabbar_accessibility_label_my_site">Můj web</string>
 	<string name="editor_toast_changes_saved">Změny byly uloženy</string>
 	<string name="passcodelock_prompt_message">Zadejte PIN</string>
 	<string name="push_auth_expired">Žádost vypršela. Přihlaste se znovu přes WordPress.com </string>
@@ -1078,6 +1076,7 @@ Language: cs_CZ
 	<string name="all">Vše</string>
 	<string name="themes">Šablony</string>
 	<string name="discard">Zahodit</string>
+	<string name="manage">Spravovat</string>
 	<string name="upload">Nahrát</string>
 	<string name="more_notifications">a %d dalších.</string>
 	<string name="new_notifications">%d nových notifikací</string>

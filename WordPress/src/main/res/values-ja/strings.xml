@@ -655,8 +655,6 @@ Language: ja_JP
 	<string name="reader_toast_err_follow_blog_not_authorized">このブログにアクセスする権限がありません</string>
 	<string name="reader_toast_err_follow_blog_not_found">ブログが見つかりませんでした</string>
 	<string name="undo">元に戻す</string>
-	<string name="tabbar_accessibility_label_me">自分</string>
-	<string name="tabbar_accessibility_label_my_site">参加サイト</string>
 	<string name="editor_toast_changes_saved">変更を保存しました</string>
 	<string name="passcodelock_prompt_message">PIN コードを入力</string>
 	<string name="push_auth_expired">リクエストの有効期限が切れています。もう一度試すには WordPress.com にログインしてください。</string>
@@ -1156,6 +1154,7 @@ Language: ja_JP
 	<string name="all">すべて</string>
 	<string name="themes">テーマ</string>
 	<string name="discard">削除</string>
+	<string name="manage">管理</string>
 	<string name="upload">アップロード</string>
 	<string name="more_notifications">あと%d件。</string>
 	<string name="new_notifications">%d件の新しい通知</string>
