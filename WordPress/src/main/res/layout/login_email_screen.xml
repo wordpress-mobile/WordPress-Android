@@ -44,6 +44,8 @@
                 android:layout_below="@+id/label"
                 android:layout_toRightOf="@+id/login_username_icon"
                 android:layout_toEndOf="@+id/login_username_icon"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large">
 
                 <android.support.design.widget.TextInputEditText
