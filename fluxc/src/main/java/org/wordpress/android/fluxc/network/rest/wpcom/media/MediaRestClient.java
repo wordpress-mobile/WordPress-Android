@@ -49,6 +49,7 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * MediaRestClient provides an interface for manipulating a WP.com site's media. It provides
@@ -162,10 +163,17 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
         call.enqueue(new Callback() {
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
+                    ResponseBody responseBody = response.body();
+                    if (responseBody == null) {
+                        AppLog.e(T.MEDIA, "error uploading media, response body was empty " + response);
+                        notifyMediaUploaded(media, new MediaError(MediaErrorType.PARSE_ERROR));
+                        return;
+                    }
+
                     AppLog.d(T.MEDIA, "media upload successful: " + response);
-                    String jsonBody = response.body().string();
+                    String jsonBody = responseBody.string();
 
                     Gson gson = new Gson();
                     JsonReader reader = new JsonReader(new StringReader(jsonBody));
@@ -190,7 +198,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 if (!mCurrentUploadCalls.containsKey(media.getId())) {
                     // This call has already been removed from the in-progress list - probably because it was cancelled
@@ -365,7 +373,13 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             return mediaError;
         }
         try {
-            JSONObject body = new JSONObject(response.body().string());
+            ResponseBody responseBody = response.body();
+            if (responseBody == null) {
+                AppLog.e(T.MEDIA, "error uploading media, response body was empty " + response);
+                mediaError.type = MediaErrorType.PARSE_ERROR;
+                return mediaError;
+            }
+            JSONObject body = new JSONObject(responseBody.string());
             // Can be an array or errors
             if (body.has("errors")) {
                 JSONArray errors = body.getJSONArray("errors");
