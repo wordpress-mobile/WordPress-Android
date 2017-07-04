@@ -10,7 +10,6 @@ import android.content.res.Resources;
 import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -143,7 +142,6 @@ public class EditPostSettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         mDispatcher.register(this);
-        PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
 
         updatePostFormatKeysAndNames();
         fetchSiteSettingsAndUpdateDefaultPostFormat();

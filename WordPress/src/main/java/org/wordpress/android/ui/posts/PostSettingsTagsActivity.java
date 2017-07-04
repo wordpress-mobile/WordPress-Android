@@ -64,7 +64,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
             return;
         }
 
-        setContentView(R.layout.post_settings_tags_fragment);
+        setContentView(R.layout.post_settings_tags_activity);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
