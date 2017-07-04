@@ -141,7 +141,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:fix~hanging-media-uploads-SNAPSHOT') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:4748c6e1ee39ae9c8c9c1fc1a4f503bff7ede7a6') {
         exclude group: "com.android.volley";
     }
 
