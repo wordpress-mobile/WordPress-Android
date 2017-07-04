@@ -20,7 +20,7 @@
             android:padding="@dimen/margin_extra_large">
 
             <TextView
-                style="@style/Base.TextAppearance.AppCompat.Body1"
+                style="@style/LoginTheme.TextLabel"
                 android:id="@+id/label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
