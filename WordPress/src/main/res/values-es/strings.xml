@@ -12,7 +12,6 @@ Language: es
 	<string name="permissions_denied_message">Para cambiar esto modifica tus permisos y asegúrate de que está activo %s</string>
 	<string name="permissions_denied_title">Parece que has desactivado permisos requeridos para esta funcionalidad</string>
 	<string name="button_edit_permissions">Editar permisos</string>
-	<string name="photo_picker_soft_ask_permissions_denied">%s no tiene permisos para acceder a tus fotos</string>
 	<string name="photo_picker_soft_ask_allow">Permitir</string>
 	<string name="photo_picker_soft_ask_label">%s necesita permisos para acceder a tus fotos</string>
 	<string name="sharing_twitter_message">Esto se incluirá en los tuits cuando la gente lo comparta usando el botón de Twitter</string>
