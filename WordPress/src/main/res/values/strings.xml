@@ -1781,6 +1781,8 @@
 
 
     <!-- Image Optimization promo -->
+    <string name="turn_on">Turn on</string>
+    <string name="leave_off">Leave off</string>
     <string name="image_optimization_promo_title">Turn on image optimization?</string>
     <string name="image_optimization_promo_desc">Image optimization shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
 </resources>

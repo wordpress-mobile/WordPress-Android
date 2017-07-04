@@ -144,8 +144,8 @@ public class WPMediaUtils {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(activity);
         builder.setTitle(org.wordpress.android.R.string.image_optimization_promo_title);
         builder.setMessage(org.wordpress.android.R.string.image_optimization_promo_desc);
-        builder.setPositiveButton(org.wordpress.android.R.string.yes, onClickListener);
-        builder.setNegativeButton(R.string.no, onClickListener);
+        builder.setPositiveButton(R.string.turn_on, onClickListener);
+        builder.setNegativeButton(R.string.leave_off, onClickListener);
         builder.setOnCancelListener(onCancelListener);
         builder.show();
         // Do not ask again
