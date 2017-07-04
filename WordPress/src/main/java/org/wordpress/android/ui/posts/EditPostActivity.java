@@ -1243,7 +1243,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowAztecEditor) {
-                        mAztecEditorFragment = AztecEditorFragment.newInstance("", "");
+                        mAztecEditorFragment = AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
                         mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
 
                         // Show confirmation message when coming from editor promotion dialog.
@@ -2291,46 +2291,90 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onTrackableEvent(TrackableEvent event) {
         switch (event) {
+            case BOLD_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BOLD);
+                break;
+            case BLOCKQUOTE_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BLOCKQUOTE);
+                break;
+            case ELLIPSIS_COLLAPSE_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ELLIPSIS_COLLAPSE);
+                AppPrefs.setAztecEditorToolbarExpanded(false);
+                break;
+            case ELLIPSIS_EXPAND_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ELLIPSIS_EXPAND);
+                AppPrefs.setAztecEditorToolbarExpanded(true);
+                break;
+            case HEADING_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING);
+                break;
+            case HEADING_1_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_1);
+                break;
+            case HEADING_2_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_2);
+                break;
+            case HEADING_3_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_3);
+                break;
+            case HEADING_4_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_4);
+                break;
+            case HEADING_5_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_5);
+                break;
+            case HEADING_6_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_6);
+                break;
+            case HORIZONTAL_RULE_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HORIZONTAL_RULE);
+                break;
             case HTML_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_HTML);
-                hidePhotoPicker();
-                break;
-            case MEDIA_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
-                break;
-            case UNLINK_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNLINK);
-                break;
-            case LINK_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK);
                 hidePhotoPicker();
                 break;
             case IMAGE_EDITED:
                 AnalyticsTracker.track(Stat.EDITOR_EDITED_IMAGE);
                 break;
-            case BOLD_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BOLD);
-                break;
             case ITALIC_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_ITALIC);
                 break;
-            case OL_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ORDERED_LIST);
+            case LINK_ADDED_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK_ADDED);
+                hidePhotoPicker();
                 break;
-            case UL_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNORDERED_LIST);
+            case LINK_REMOVED_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK_REMOVED);
                 break;
-            case BLOCKQUOTE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BLOCKQUOTE);
+            case LIST_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LIST);
+                break;
+            case LIST_ORDERED_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LIST_ORDERED);
+                break;
+            case LIST_UNORDERED_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LIST_UNORDERED);
+                break;
+            case MEDIA_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
+                break;
+            case NEXT_PAGE_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_NEXT_PAGE);
+                break;
+            case PARAGRAPH_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_PARAGRAPH);
+                break;
+            case PREFORMAT_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_PREFORMAT);
+                break;
+            case READ_MORE_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_READ_MORE);
                 break;
             case STRIKETHROUGH_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_STRIKETHROUGH);
                 break;
             case UNDERLINE_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDERLINE);
-                break;
-            case MORE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_MORE);
                 break;
         }
     }

@@ -108,8 +108,6 @@ Language: es_CL
 	<string name="reader_toast_err_follow_blog_not_authorized">No tienes autorización para acceder a este blog</string>
 	<string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar dicho blog</string>
 	<string name="undo">Deshacer</string>
-	<string name="tabbar_accessibility_label_my_site">Mi sitio</string>
-	<string name="tabbar_accessibility_label_me">Yo</string>
 	<string name="passcodelock_prompt_message">Escribe tu PIN</string>
 	<string name="editor_toast_changes_saved">Cambios guardados</string>
 	<string name="ignore">Ignorar</string>

@@ -30,8 +30,6 @@ Language: nb_NO
 	<string name="post_trashed">Innlegg lagt i papirkurven</string>
 	<string name="trashed">I papirkurven</string>
 	<string name="undo">Angre</string>
-	<string name="tabbar_accessibility_label_my_site">Mitt nettsted</string>
-	<string name="tabbar_accessibility_label_me">Meg</string>
 	<string name="editor_toast_changes_saved">Endringer ble lagret</string>
 	<string name="passcodelock_prompt_message">Skriv inn PIN</string>
 	<string name="ignore">Ignorer</string>
@@ -280,6 +278,7 @@ Language: nb_NO
 	<string name="passcode_turn_on">Slå PIN-lås på</string>
 	<string name="upload">Last opp</string>
 	<string name="discard">Forkast</string>
+	<string name="manage">Håndter</string>
 	<string name="notifications">Varsler</string>
 	<string name="note_reply_successful">Kommentar publisert</string>
 	<string name="follows">Følg</string>

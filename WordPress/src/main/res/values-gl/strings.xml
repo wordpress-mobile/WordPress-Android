@@ -543,8 +543,6 @@ Language: gl_ES
 	<string name="reader_toast_err_follow_blog_not_authorized">Non tes autorización para acceder a este blogue</string>
 	<string name="reader_toast_err_follow_blog_not_found">Non foi posible atopar este blogue</string>
 	<string name="undo">Desfacer</string>
-	<string name="tabbar_accessibility_label_me">Eu</string>
-	<string name="tabbar_accessibility_label_my_site">O meu sitio</string>
 	<string name="editor_toast_changes_saved">Cambios gardados</string>
 	<string name="passcodelock_prompt_message">Introduce o PIN</string>
 	<string name="push_auth_expired">A solicitude expirou. Inicia sesión en WordPress.com para tentalo de novo.</string>
