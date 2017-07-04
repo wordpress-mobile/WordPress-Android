@@ -104,10 +104,13 @@ public class MediaStore extends Store {
             this.mimeType = mimeType;
         }
 
-        public FetchMediaListResponsePayload(SiteModel site, MediaError error) {
+        public FetchMediaListResponsePayload(SiteModel site,
+                                             MediaError error,
+                                             String mimeType) {
             this.mediaList = new ArrayList<>();
             this.site = site;
             this.error = error;
+            this.mimeType = mimeType;
         }
     }
 
@@ -217,9 +220,10 @@ public class MediaStore extends Store {
             this.canLoadMore = canLoadMore;
             this.mimeType = mimeType;
         }
-        public OnMediaListFetched(SiteModel site, MediaError error) {
+        public OnMediaListFetched(SiteModel site, MediaError error, String mimeType) {
             this.site = site;
             this.error = error;
+            this.mimeType = mimeType;
         }
     }
 
@@ -721,7 +725,7 @@ public class MediaStore extends Store {
         OnMediaListFetched onMediaListFetched;
 
         if (payload.isError()) {
-            onMediaListFetched = new OnMediaListFetched(payload.site, payload.error);
+            onMediaListFetched = new OnMediaListFetched(payload.site, payload.error, payload.mimeType);
         } else {
             // Clear existing media if this is a fresh fetch (loadMore = false in the original request)
             // This is the simplest way of keeping our local media in sync with remote media (in case of deletions)
