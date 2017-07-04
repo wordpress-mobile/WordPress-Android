@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-07 15:04:34+0000
+Translation-Revision-Date: 2017-06-21 13:55:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="permission_location">Din plats</string>
+	<string name="permission_camera">Kamera</string>
+	<string name="permission_storage">Lagring</string>
+	<string name="permissions_denied_message">För att ändra detta behöver du redigera appens behörigheter och se till att ”%s” är aktiverat</string>
+	<string name="permissions_denied_title">Det verkar som om du har stängt av några behörigheter som krävs för denna funktion</string>
+	<string name="button_edit_permissions">Redigera behörigheter</string>
+	<string name="photo_picker_soft_ask_allow">Tillåt</string>
+	<string name="photo_picker_soft_ask_label">%s behöver behörighet för att komma åt dina foton</string>
+	<string name="sharing_twitter_message">Detta kommer att inkluderas i twitter-meddelandena när besökare delar dina sidor med Twitter-knappen</string>
+	<string name="sharing_label_message">Ändra texten på dela-knappen. Denna text kommer inte att synas förrän du lägger till minst en dela-knapp.</string>
+	<string name="connecting_account">Kontoanslutning</string>
+	<string name="cannot_connect_account_error">Anslutningen till %s kunde inte genomföras eftersom inget konto valdes.</string>
+	<string name="connected">Ansluten</string>
+	<string name="twitter">Twitter</string>
+	<string name="likes">Gillande</string>
+	<string name="sharing_comment_likes_description">Tillåt att du och dina läsare kan gilla alla kommentarer</string>
+	<string name="visual">Visuellt</string>
+	<string name="buttons">Knappar</string>
+	<string name="sharing_edit_more_buttons">Redigera knapparna ”Mera”</string>
+	<string name="sharing_more_description">En knapp ”Mer” innehåller en rullista som visar delningsknappar</string>
+	<string name="sharing_sharing_buttons_description">Välj vilka knappar som ska visas under dina inlägg</string>
+	<string name="twitter_username">Användarnamn på Twitter</string>
+	<string name="sharing_comment_likes">”Gilla” för kommentarer</string>
+	<string name="button_style">Knapputseende</string>
+	<string name="label">Etikett</string>
+	<string name="more_buttons">”Mera”-knappar</string>
+	<string name="sharing_buttons">Delningsknappar</string>
+	<string name="site_settings_like">Visa gilla-knapp</string>
+	<string name="site_settings_reblog">Visa knappen ”Återblogga”</string>
+	<string name="site_settings_reblog_and_like_header">Återblogga och gilla</string>
+	<string name="publicize_text_only">Endast text</string>
+	<string name="publicize_icon_and_text">Ikon och text</string>
+	<string name="publicize_icon_only">Endast ikon</string>
+	<string name="publicize_official_buttons">Officiella knappar</string>
+	<string name="official_buttons_display">Officiella knappar</string>
+	<string name="text_only_display">Endast text</string>
+	<string name="icon_only_display">Endast ikon</string>
+	<string name="icon_and_text_display">Ikon och text</string>
+	<string name="connection_chooser_message">Välj vilket konto du vill auktorisera. Observera att dina inlägg automatiskt kommer att delas via det valda kontot.</string>
+	<string name="connecting_social_network">Ansluter %s</string>
+	<string name="dlg_confirm_publicize_disconnect">Koppla bort från %s?</string>
+	<string name="share_btn_connect_another_account">Anslut ett annat konto</string>
+	<string name="share_btn_reconnect">Återanslut</string>
+	<string name="share_btn_disconnect">Koppla bort</string>
+	<string name="share_btn_connect">Anslut</string>
+	<string name="connection_service_description">Anslut för att automatiskt dela dina blogginlägg till %s.</string>
+	<string name="connection_service_label">Offentliggör till %s</string>
+	<string name="connected_accounts_label">Anslutna konton</string>
+	<string name="connections_description">Anslut de sociala nätverk du gillar mest för att automatiskt dela nya inlägg med dina vänner.</string>
+	<string name="connections_label">Kopplingar</string>
+	<string name="sharing">Delning</string>
+	<string name="tabbar_accessibility_label_notifications">Notifieringar. Hantera dina notifieringar.</string>
+	<string name="tabbar_accessibility_label_reader">Läsare. Följ innehåll från andra webbplatser.</string>
+	<string name="tabbar_accessibility_label_me">Jag. Se och redigera din profil.</string>
+	<string name="tabbar_accessibility_label_my_site">Min webbplats. Se och hantera din webbplats, inklusive statistik.</string>
+	<string name="fab_content_description_write">Skriva</string>
+	<string name="my_site_btn_sharing">Delning</string>
+	<string name="button_not_now">Inte just nu.</string>
 	<string name="media_error_timeout">Servern tog för lång tid på sig att svara. Det kan vara en dålig förbindelse eller ett serverfel</string>
 	<string name="media_error_internal_server_error">Fel vid uppladdning. Prova att aktivera ”Optimera bilder” under Webbplats->Inställningar</string>
 	<string name="media_error_too_large_upload">Filen är för stor för att kunna laddas upp. Prova att aktivera ”Optimera bilder” under Webbplats->Inställningar</string>
@@ -659,8 +717,6 @@ Language: sv_SE
 	<string name="reader_toast_err_follow_blog_not_authorized">Du har inte behörighet för åtkomst till denna blogg</string>
 	<string name="reader_toast_err_follow_blog_not_found">Denna blogg kunde inte hittas</string>
 	<string name="undo">Ångra</string>
-	<string name="tabbar_accessibility_label_me">Jag</string>
-	<string name="tabbar_accessibility_label_my_site">Min sida</string>
 	<string name="editor_toast_changes_saved">Ändringar sparades</string>
 	<string name="passcodelock_prompt_message">Ange din PIN</string>
 	<string name="push_auth_expired">Begäran har löpt ut. Logga in på WordPress.com för att försöka igen.</string>
@@ -1160,6 +1216,7 @@ Language: sv_SE
 	<string name="all">Alla</string>
 	<string name="themes">Teman</string>
 	<string name="discard">Kasta bort</string>
+	<string name="manage">Hantera</string>
 	<string name="upload">Ladda upp</string>
 	<string name="more_notifications">och %d mer.</string>
 	<string name="new_notifications">%d nya notifieringar</string>

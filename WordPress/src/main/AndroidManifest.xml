@@ -129,6 +129,9 @@
             android:label="@string/settings"
             android:theme="@style/CalypsoTheme" />
         <activity
+            android:name=".ui.prefs.EditorReleaseNotesActivity"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
@@ -530,13 +533,6 @@
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
-        <receiver
-            android:name=".networking.ConnectionChangeReceiver"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
         <receiver
             android:name=".ui.stats.StatsWidgetProvider"
             android:label="@string/stats_widget_name">

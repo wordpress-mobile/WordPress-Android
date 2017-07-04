@@ -773,10 +773,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             if (!((ToggleButton) v).isChecked()) {
                 // The link button was checked when it was pressed; remove the current link
                 mWebView.execJavaScriptFromString("ZSSEditor.unlink();");
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.UNLINK_BUTTON_TAPPED);
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.LINK_REMOVED_BUTTON_TAPPED);
                 return;
             }
-            mEditorFragmentListener.onTrackableEvent(TrackableEvent.LINK_BUTTON_TAPPED);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.LINK_ADDED_BUTTON_TAPPED);
 
             ((ToggleButton) v).setChecked(false);
 
@@ -1602,9 +1602,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         } else if (id == R.id.format_bar_button_italic) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.ITALIC_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_ol) {
-            mEditorFragmentListener.onTrackableEvent(TrackableEvent.OL_BUTTON_TAPPED);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_ORDERED_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_ul) {
-            mEditorFragmentListener.onTrackableEvent(TrackableEvent.UL_BUTTON_TAPPED);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_UNORDERED_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_quote) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.BLOCKQUOTE_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_strikethrough) {
