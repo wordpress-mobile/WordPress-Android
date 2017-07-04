@@ -34,6 +34,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
+import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -103,15 +104,24 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             }
         });
 
-        View loginViaSiteAddressView = rootView.findViewById(R.id.login_site_address);
+        TextView loginViaSiteAddressView = (TextView) rootView.findViewById(R.id.login_site_address);
         loginViaSiteAddressView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
-                    mLoginListener.loginViaSiteAddress();
+                    if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
+                        mLoginListener.loginViaWpcomUsernameInstead();
+                    } else {
+                        mLoginListener.loginViaSiteAddress();
+                    }
                 }
             }
         });
+
+        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
+            ((TextView) rootView.findViewById(R.id.label)).setText(R.string.stats_sign_in_jetpack_different_com_account);
+            loginViaSiteAddressView.setText(R.string.enter_username_instead);
+        }
 
         switch (mLoginListener.getLoginMode()) {
             case FULL:
