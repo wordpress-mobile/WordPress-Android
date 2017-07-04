@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -100,7 +101,7 @@ public abstract class BaseUploadRequestBody extends RequestBody {
         }
 
         @Override
-        public void write(Buffer source, long byteCount) throws IOException {
+        public void write(@NonNull Buffer source, long byteCount) throws IOException {
             super.write(source, byteCount);
             mBytesWritten += byteCount;
             long currentTimeMillis = System.currentTimeMillis();
