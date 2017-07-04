@@ -2435,6 +2435,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     )
                     .show();
         }
+    }
 
     // EditPostActivityHook methods
 
