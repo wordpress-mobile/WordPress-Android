@@ -536,8 +536,6 @@ Language: zh_CN
 	<string name="reader_toast_err_follow_blog_not_authorized">您无权访问此博客。</string>
 	<string name="reader_toast_err_follow_blog_not_found">找不到此博客</string>
 	<string name="undo">撤消</string>
-	<string name="tabbar_accessibility_label_me">我</string>
-	<string name="tabbar_accessibility_label_my_site">我的站点</string>
 	<string name="editor_toast_changes_saved">更改已保存</string>
 	<string name="passcodelock_prompt_message">输入 PIN</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% 的阅读次数</string>
@@ -1021,6 +1019,7 @@ Language: zh_CN
 	<string name="all">所有</string>
 	<string name="themes">主题</string>
 	<string name="discard">舍弃</string>
+	<string name="manage">管理</string>
 	<string name="upload">上传</string>
 	<string name="more_notifications">以及其他 %d 人。</string>
 	<string name="new_notifications">%d 条新通知</string>

@@ -584,8 +584,6 @@ Language: el_GR
 	<string name="reader_toast_err_follow_blog_not_authorized">Δεν έχετε εξουσιοδότηση για να συνδεθείτε σε αυτό το ιστολόγιο</string>
 	<string name="reader_toast_err_follow_blog_not_found">Αδυναμία εύρεσης αυτού του ιστολογίου</string>
 	<string name="undo">Αναίρεση</string>
-	<string name="tabbar_accessibility_label_me">Εγώ</string>
-	<string name="tabbar_accessibility_label_my_site">Ο ιστότοπος μου</string>
 	<string name="editor_toast_changes_saved">Οι αλλαγές αποθηκεύτηκαν</string>
 	<string name="passcodelock_prompt_message">Εισάγετε το PIN σας</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% των προβολών</string>
@@ -1070,6 +1068,7 @@ Language: el_GR
 	<string name="all">Όλα</string>
 	<string name="themes">Θέμα</string>
 	<string name="discard">Απόρριψη</string>
+	<string name="manage">Διαχείριση</string>
 	<string name="upload">Ανέβασμα</string>
 	<string name="more_notifications">και %d ακόμη.</string>
 	<string name="new_notifications">%d νέες ενημερώσεις</string>

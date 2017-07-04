@@ -659,8 +659,6 @@ Language: zh_TW
 	<string name="reader_toast_err_follow_blog_not_authorized">你沒有存取此網誌的權限</string>
 	<string name="reader_toast_err_follow_blog_not_found">無法找到這個部落格</string>
 	<string name="undo">復原</string>
-	<string name="tabbar_accessibility_label_me">我</string>
-	<string name="tabbar_accessibility_label_my_site">我的網站</string>
 	<string name="editor_toast_changes_saved">變更已儲存</string>
 	<string name="passcodelock_prompt_message">輸入 PIN 碼</string>
 	<string name="push_auth_expired">要求已到期。登入 WordPress.com 再試一次。</string>
@@ -1160,6 +1158,7 @@ Language: zh_TW
 	<string name="all">全部</string>
 	<string name="themes">佈景主題</string>
 	<string name="discard">放棄</string>
+	<string name="manage">管理</string>
 	<string name="upload">上傳</string>
 	<string name="more_notifications">還有 %d 個。</string>
 	<string name="new_notifications">%d 個新通知</string>

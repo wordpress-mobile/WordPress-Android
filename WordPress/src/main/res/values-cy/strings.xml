@@ -591,8 +591,6 @@ Language: cy_GB
 	<string name="reader_toast_err_follow_blog_not_authorized">Nid oes gennych hawl i gael mynediad at y blog hwn</string>
 	<string name="reader_toast_err_follow_blog_not_found">Nid oedd modd canfod y blog hwn</string>
 	<string name="undo">Dadwneud</string>
-	<string name="tabbar_accessibility_label_me">Fi</string>
-	<string name="tabbar_accessibility_label_my_site">Fy Ngwefan</string>
 	<string name="editor_toast_changes_saved">Mae\'r newidiadau wedi eu cadw</string>
 	<string name="passcodelock_prompt_message">Rhowch eich PIN</string>
 	<string name="push_auth_expired">Daeth y cais i ben. Mewngofnodwch i WordPress.com a cheisio eto.</string>
@@ -1089,6 +1087,7 @@ Language: cy_GB
 	<string name="all">Y Cyfan</string>
 	<string name="themes">Themâu</string>
 	<string name="discard">Gwaredu</string>
+	<string name="manage">Rheoli</string>
 	<string name="upload">Llwytho i fyny</string>
 	<string name="more_notifications">a %d yn rhagor.</string>
 	<string name="new_notifications">%d hysbysiadau newydd</string>

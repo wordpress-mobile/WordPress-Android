@@ -62,6 +62,9 @@ public class AppPrefs {
         // aztec editor enabled
         AZTEC_EDITOR_ENABLED,
 
+        // aztec editor toolbar expanded state
+        AZTEC_EDITOR_TOOLBAR_EXPANDED,
+
         // visual editor enabled
         VISUAL_EDITOR_ENABLED,
 
@@ -104,8 +107,14 @@ public class AppPrefs {
         // visual editor available
         VISUAL_EDITOR_AVAILABLE,
 
+        // When we need to show the new editor beta snackbar
+        AZTEC_EDITOR_BETA_REQUIRED,
+
         // When we need to show the new editor promo dialog
         AZTEC_EDITOR_PROMO_REQUIRED,
+
+        // When we need to show the new image optimize promo dialog
+        IMAGE_OPTIMIZE_PROMO_REQUIRED,
 
         // Global plans features
         GLOBAL_PLANS_PLANS_FEATURES,
@@ -417,6 +426,14 @@ public class AppPrefs {
         return BuildConfig.AZTEC_EDITOR_AVAILABLE || getBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, false);
     }
 
+    public static boolean isAztecEditorToolbarExpanded() {
+        return getBoolean(DeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, false);
+    }
+
+    public static void setAztecEditorToolbarExpanded(boolean isExpanded) {
+        setBoolean(DeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, isExpanded);
+    }
+
     // Visual Editor
     public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
         setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
@@ -438,13 +455,29 @@ public class AppPrefs {
         return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
     }
 
-   public static boolean isNewEditorPromoRequired() {
+    public static boolean isNewEditorBetaRequired() {
+        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_BETA_REQUIRED, true);
+    }
+
+    public static boolean isNewEditorPromoRequired() {
        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, true);
    }
 
-   public static void setNewEditorPromoRequired(boolean required) {
+    public static void setNewEditorBetaRequired(boolean required) {
+        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_BETA_REQUIRED, required);
+    }
+
+    public static void setNewEditorPromoRequired(boolean required) {
        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, required);
    }
+
+    public static boolean isImageOptimizePromoRequired() {
+        return getBoolean(UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED, true);
+    }
+
+    public static void setImageOptimizePromoRequired(boolean required) {
+        setBoolean(UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED, required);
+    }
 
     public static boolean isGravatarChangePromoRequired() {
         return getBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, true);

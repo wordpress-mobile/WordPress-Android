@@ -78,6 +78,7 @@
     <string name="immediately">Immediately</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="refresh">Refresh</string>
+    <string name="report_bug">Report bug</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="sign_in">Log in</string>
@@ -656,6 +657,8 @@
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
     <string name="preference_editor">Editor</string>
+    <string name="preference_editor_footer">Editor release notes and bug reporting</string>
+    <string name="preference_editor_footer_description">Info Icon</string>
     <string name="preference_editor_type">Set editor type</string>
 
     <string name="preference_editor_beta" translatable="false">Beta</string>
@@ -982,8 +985,17 @@
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
     <string name="aztec_editor_disabled" translatable="false">Aztec Editor disabled</string>
     <string name="aztec_editor_available" translatable="false">Aztec Editor available</string>
-    <string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post.</string>
-    <string name="new_editor_promo_title">New editor</string>
+    <string name="new_editor_beta_action">Read More</string>
+    <string name="new_editor_beta_message">New Editor in Open Beta!</string>
+    <string name="new_editor_promo_button_negative">Not Now</string>
+    <string name="new_editor_promo_button_positive">Try It</string>
+    <string name="new_editor_promo_confirmation_action">Settings</string>
+    <string name="new_editor_promo_confirmation_message">New Editor enabled!</string>
+    <string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post!</string>
+    <string name="new_editor_promo_description_image">Hand Write Image</string>
+    <string name="new_editor_promo_link">What\'s new?</string>
+    <string name="new_editor_promo_title">Try the new Editor</string>
+    <string name="new_editor_promo_title_beta">Beta</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
 
@@ -1233,6 +1245,7 @@
     <string name="reader_label_image_count_multi">%d images</string>
     <string name="reader_label_visit">Visit</string>
     <string name="reader_photo_by">Photo by %s</string>
+    <string name="reader_view_comments">View comments</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
@@ -1451,6 +1464,7 @@
     <string name="hs__invalid_email_error">Enter a valid email address</string>
 
     <!--Me-->
+    <string name="me_profile_photo">Profile Photo</string>
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
@@ -1791,4 +1805,11 @@
     <!-- Video Optimization -->
     <string name="video_optimization_in_progress">Optimizing your video&#8230;</string>
     <string name="video_optimization_generic_error_message">An error occurred while compressing your video. Using the original file.</string>
+
+
+    <!-- Image Optimization promo -->
+    <string name="turn_on">Turn on</string>
+    <string name="leave_off">Leave off</string>
+    <string name="image_optimization_promo_title">Turn on image optimization?</string>
+    <string name="image_optimization_promo_desc">Image optimization shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
 </resources>

@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-13 18:20:22+0000
+Translation-Revision-Date: 2017-06-23 12:03:08+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+	<string name="permission_location">Konum</string>
+	<string name="permission_camera">Kamera</string>
+	<string name="permission_storage">Depolama</string>
+	<string name="permissions_denied_message">Bunu değiştirmek için izinlerinizi düzenleyin ve %s izninin etkin olduğundan emin olun</string>
+	<string name="permissions_denied_title">Görünen o ki bu özellik için gerekli izinleri kapatmışsınız</string>
+	<string name="button_edit_permissions">İzinleri düzenle</string>
+	<string name="photo_picker_soft_ask_allow">İzin ver</string>
+	<string name="photo_picker_soft_ask_label">%s fotoğraflarınıza erişebilmek için izin gerektiriyor</string>
+	<string name="sharing_twitter_message">İnsanlar Twitter tuşu ile paylaş yaptığında tweetlerin içine eklenecek</string>
+	<string name="sharing_label_message">Paylaşım tuşlarının metnini değiştirin. Bu metin en az bir paylaşım tuşu ekleyene kadar görüntülenmeyecek.</string>
+	<string name="connecting_account">Hesap bağlanıyor</string>
+	<string name="cannot_connect_account_error">Hiç hesap seçilmediği için %s bağlantısı sağlanamadı.</string>
+	<string name="connected">Bağlandı</string>
+	<string name="twitter">Twitter</string>
+	<string name="likes">Beğeni</string>
+	<string name="sharing_comment_likes_description">Tüm yorumların siz ve okuyucularınız tarafından beğenilmesine izin verin</string>
+	<string name="visual">Görsel</string>
+	<string name="buttons">Tuşlar</string>
+	<string name="sharing_edit_more_buttons">"Dahası" tuşlarını düzenle</string>
+	<string name="sharing_more_description">"Dahası" tuşu tıklandığında paylaşım araçlarını gösteren bir açılır menüdür</string>
+	<string name="sharing_sharing_buttons_description">Yazılarınızın altında hangi tuşların görüntüleneceğini seçin</string>
+	<string name="twitter_username">Twitter kullanıcı adı</string>
+	<string name="sharing_comment_likes">Yorum beğenileri</string>
+	<string name="button_style">Tuş stili</string>
+	<string name="label">Etiket</string>
+	<string name="more_buttons">"Dahası" tuşları</string>
+	<string name="sharing_buttons">Paylaşım tuşları</string>
+	<string name="site_settings_like">Beğen tuşunu göster</string>
+	<string name="site_settings_reblog">Yeniden blogla tuşunu göster</string>
+	<string name="site_settings_reblog_and_like_header">Yeniden blogla ve beğen</string>
+	<string name="publicize_text_only">Sadece metin</string>
+	<string name="publicize_icon_and_text">Simge ve metin</string>
+	<string name="publicize_icon_only">Sadece simge</string>
+	<string name="publicize_official_buttons">Resmi tuşlar</string>
+	<string name="official_buttons_display">Resmi tuşlar</string>
+	<string name="text_only_display">Sadece metin</string>
+	<string name="icon_only_display">Sadece simge</string>
+	<string name="icon_and_text_display">Simge ve metin</string>
+	<string name="connection_chooser_message">Yetkilendirmek istediğiniz hesabı seçin. Yazılarınızın seçtiğiniz hesaptan otomatik paylaşılacağını unutmayın.</string>
+	<string name="connecting_social_network">%s bağlantısı kuruluyor</string>
+	<string name="dlg_confirm_publicize_disconnect">%s bağlantısı kesilsin mi?</string>
+	<string name="share_btn_connect_another_account">Başka bir hesap bağla</string>
+	<string name="share_btn_reconnect">Tekrar bağla</string>
+	<string name="share_btn_disconnect">Bağlantıyı kes</string>
+	<string name="share_btn_connect">Bağlan</string>
+	<string name="connection_service_description">%s üzerinde blog yazılarınızı otomatik paylaşmak için bağlayın.</string>
+	<string name="connection_service_label">%s üzerinde yayımlayın</string>
+	<string name="connected_accounts_label">Bağlı hesaplar</string>
+	<string name="connections_description">Sevdiğiniz sosyal medya servislerini bağlayarak yazılarınızı arkadaşlarınızla paylaşın.</string>
+	<string name="connections_label">Bağlantılar</string>
+	<string name="sharing">Paylaşım</string>
+	<string name="tabbar_accessibility_label_notifications">Bildirimler. Bildirimlerinizi yönetin.</string>
+	<string name="tabbar_accessibility_label_reader">Okuyucu. Diğer sitelerden içerikleri takip edin.</string>
+	<string name="tabbar_accessibility_label_me">Ben. Profilinizi görüntüleyin ve değişiklik yapın.</string>
+	<string name="tabbar_accessibility_label_my_site">Sitem. Sitenizi görüntüleyin, yönetin ve istatistikleri inceleyin.</string>
+	<string name="fab_content_description_write">Yaz</string>
+	<string name="my_site_btn_sharing">Paylaşım</string>
+	<string name="button_not_now">Şimdi değil</string>
 	<string name="media_error_timeout">Sunucu cevabı zaman aşımına uğradı, zayıf bir bağlantınız olabilir ya da sunucu hatası</string>
 	<string name="media_error_internal_server_error">Yükleme hatası. Site->Ayarlar bölümünden görsellerin optimize edilmesini etkinleştirin</string>
 	<string name="media_error_too_large_upload">Dosya yüklemek için çok büyük. Site->Ayarlar bölümünden görsellerin optimize edilmesini etkinleştirmeyi deneyin</string>
@@ -659,8 +717,6 @@ Language: tr
 	<string name="reader_toast_err_follow_blog_not_authorized">Bu bloga erişim için yetkiniz yok</string>
 	<string name="reader_toast_err_follow_blog_not_found">Blog bulunamadı</string>
 	<string name="undo">Geri al</string>
-	<string name="tabbar_accessibility_label_me">Ben</string>
-	<string name="tabbar_accessibility_label_my_site">Sitem</string>
 	<string name="editor_toast_changes_saved">Değişiklikler kaydedildi</string>
 	<string name="passcodelock_prompt_message">PIN kodunuzu girin</string>
 	<string name="push_auth_expired">İstek süresi doldu. WordPress.com\'a giriş yaparak tekrar deneyin.</string>
@@ -1160,6 +1216,7 @@ Language: tr
 	<string name="all">Tamamı</string>
 	<string name="themes">Temalar</string>
 	<string name="discard">Vazgeç</string>
+	<string name="manage">Yönet</string>
 	<string name="upload">Yükle</string>
 	<string name="more_notifications">ve %d daha.</string>
 	<string name="new_notifications">%d yeni bildirim</string>
