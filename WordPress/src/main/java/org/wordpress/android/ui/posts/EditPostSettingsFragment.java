@@ -985,6 +985,7 @@ public class EditPostSettingsFragment extends Fragment {
         PostModel postModel = getPost();
         if (place == null) {
             postModel.clearLocation();
+            mLocationTextView.setText("");
             mPostLocation = null;
             return;
         }
@@ -1001,7 +1002,6 @@ public class EditPostSettingsFragment extends Fragment {
         PostModel postModel = getPost();
         if (!postModel.hasLocation()) {
             mPostLocation = null;
-            mLocationTextView.setText(getString(R.string.post_settings_not_set));
         } else {
             mPostLocation = postModel.getLocation();
             mLocationTextView.setText(mPostLocation.getLatitude() + ", " + mPostLocation.getLongitude());
