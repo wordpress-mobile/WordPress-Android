@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/login_email_layout"
                 android:contentDescription="@string/login_email_image"
+                android:tint="@color/grey_lighten_10"
                 app:srcCompat="@drawable/ic_user_grey_24dp"/>
 
             <org.wordpress.android.widgets.WPTextInputLayout
