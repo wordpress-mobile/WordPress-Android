@@ -2438,7 +2438,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (isFinishing()) return;
         // event for unknown media, ignoring
         if (event.media == null) {
-            AppLog.w(AppLog.T.MEDIA, "Media event not recognized: " + event.media);
+            AppLog.w(AppLog.T.MEDIA, "Media event carries null media object, not recognized");
             return;
         }
 
