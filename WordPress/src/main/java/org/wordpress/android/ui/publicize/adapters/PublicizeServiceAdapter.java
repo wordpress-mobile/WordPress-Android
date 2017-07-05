@@ -169,8 +169,6 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            // G+ no longer supports auth in a WebView, so we hide it here unless the user
-            // already has a G+ connection
             boolean hideGPlus = true;
 
             PublicizeConnectionList connections = PublicizeTable.getConnectionsForSite(mSiteId);

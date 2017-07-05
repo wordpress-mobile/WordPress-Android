@@ -241,7 +241,11 @@ public class PublicizeListActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 PublicizeActions.disconnect(publicizeConnection);
-                reloadDetailFragment();
+                if (publicizeConnection.getService().equals(PublicizeConstants.GOOGLE_PLUS_ID)) {
+                    returnToListFragment();
+                } else {
+                    reloadDetailFragment();
+                }
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
