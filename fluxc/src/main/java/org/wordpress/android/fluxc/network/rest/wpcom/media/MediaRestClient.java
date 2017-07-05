@@ -144,7 +144,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (site.hasMaxUploadSize() && body.contentLength() > site.getMaxUploadSize()) {
             AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds site limit of "
                     + site.getMaxUploadSize());
-            MediaError error = new MediaError(MediaErrorType.REQUEST_TOO_LARGE);
+            MediaError error = new MediaError(MediaErrorType.EXCEEDS_FILESIZE_LIMIT);
             notifyMediaUploaded(media, error);
             return;
         }
@@ -154,7 +154,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (site.hasMemoryLimit() && body.contentLength() > maxFilesizeForMemoryLimit) {
             AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds safe memory limit of "
                     + maxFilesizeForMemoryLimit + " for this site");
-            MediaError error = new MediaError(MediaErrorType.REQUEST_TOO_LARGE);
+            MediaError error = new MediaError(MediaErrorType.EXCEEDS_MEMORY_LIMIT);
             notifyMediaUploaded(media, error);
             return;
         }

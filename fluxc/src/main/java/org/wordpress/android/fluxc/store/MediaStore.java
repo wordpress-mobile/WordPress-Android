@@ -256,6 +256,8 @@ public class MediaStore extends Store {
         NULL_MEDIA_ARG,
         MALFORMED_MEDIA_ARG,
         DB_QUERY_FAILURE,
+        EXCEEDS_FILESIZE_LIMIT,
+        EXCEEDS_MEMORY_LIMIT,
 
         // network errors, occur in response to network requests
         AUTHORIZATION_REQUIRED,
