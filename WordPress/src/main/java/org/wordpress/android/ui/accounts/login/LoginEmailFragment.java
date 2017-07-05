@@ -258,12 +258,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        updateNextButton();
         mEmailEditTextLayout.setError(null);
-    }
-
-    private void updateNextButton() {
-        mNextButton.setEnabled(getCleanedEmail().length() > 0);
     }
 
     private void showEmailError(int messageId) {
@@ -306,8 +301,6 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         }
 
         mRequestedEmail = null;
-
-        updateNextButton();
     }
 
     // OnChanged events
