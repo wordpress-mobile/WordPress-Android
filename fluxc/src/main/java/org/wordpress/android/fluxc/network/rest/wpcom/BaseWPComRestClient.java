@@ -56,18 +56,30 @@ public class BaseWPComRestClient {
             request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
         }
         // TODO: If !mAccountToken.exists() then trigger the mOnAuthFailedListener
-        return mRequestQueue.add(setRequestAuthParams(request));
+        return mRequestQueue.add(setRequestAuthParams(request, true));
+    }
+
+    public Request addUnauthedRequest(WPComGsonRequest request) {
+        // Add "locale=xx_XX" query parameter to all request by default
+        return addUnauthedRequest(request, true);
+    }
+
+    public Request addUnauthedRequest(WPComGsonRequest request, boolean addLocaleParameter) {
+        if (addLocaleParameter) {
+            request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
+        }
+        return mRequestQueue.add(setRequestAuthParams(request, false));
     }
 
     protected AccessToken getAccessToken() {
         return mAccessToken;
     }
 
-    private WPComGsonRequest setRequestAuthParams(WPComGsonRequest request) {
+    private WPComGsonRequest setRequestAuthParams(WPComGsonRequest request, boolean shouldAuth) {
         request.setOnAuthFailedListener(mOnAuthFailedListener);
         request.setOnParseErrorListener(mOnParseErrorListener);
         request.setUserAgent(mUserAgent.getUserAgent());
-        request.setAccessToken(mAccessToken.get());
+        request.setAccessToken(shouldAuth ? mAccessToken.get() : null);
         return request;
     }
 }
