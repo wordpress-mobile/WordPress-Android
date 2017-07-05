@@ -102,6 +102,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
 
         setTitle(mService.getLabel());
 
+        // disable the ability to add another G+ connection
         if (mService.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID)) {
             mServiceCardView.setVisibility(View.GONE);
         } else {
