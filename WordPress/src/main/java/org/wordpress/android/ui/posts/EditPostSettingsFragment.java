@@ -505,7 +505,7 @@ public class EditPostSettingsFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.post_settings_post_format);
         builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
-        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 ListView listView = ((AlertDialog)dialog).getListView();
                 String formatName = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
