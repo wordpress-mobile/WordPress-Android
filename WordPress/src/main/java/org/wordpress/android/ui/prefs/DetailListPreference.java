@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.wordpress.android.R;
 
 /**
@@ -179,6 +180,15 @@ public class DetailListPreference extends ListPreference
     @Override
     public void setHint(String hint) {
         mHint = hint;
+    }
+
+    public void remove(int index) {
+        if (index < 0 || index >= mDetails.length) {
+            return;
+        }
+
+        mDetails = ArrayUtils.remove(mDetails, index);
+        mListAdapter = new DetailListAdapter(getContext(), R.layout.detail_list_preference, mDetails);
     }
 
     public void refreshAdapter() {
