@@ -241,7 +241,7 @@ public class PostsListFragment extends Fragment
             if (savedLocally) {
                 showSnackbar(R.string.editor_post_saved_locally, R.string.button_sync, publishPostListener);
             } else {
-                showSnackbar(getString(R.string.uploading_post));
+                showSnackbar(getString(R.string.editor_uploading_post));
             }
             return;
         }
@@ -254,7 +254,7 @@ public class PostsListFragment extends Fragment
                 }
                 else {
                     if (MediaUploadService.hasPendingMediaUploadsForPost(post) || PostUploadService.isPostUploadingOrQueued(post)) {
-                        showSnackbar(getString(R.string.uploading_post));
+                        showSnackbar(getString(R.string.editor_uploading_post));
                     } else {
                         showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
                     }

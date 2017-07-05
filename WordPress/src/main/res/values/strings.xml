@@ -264,7 +264,6 @@
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
-    <string name="uploading_post">Your post is being sent online</string>
     <string name="draft_uploaded">Draft uploaded</string>
     <string name="post_published">Post published</string>
     <string name="page_published">Page published</string>
@@ -976,6 +975,7 @@
     <string name="editor_draft_saved_locally">Draft saved on device</string>
     <string name="editor_scheduled_post_saved_online">Post scheduled</string>
     <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
+    <string name="editor_uploading_post">Your post is being sent online</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
