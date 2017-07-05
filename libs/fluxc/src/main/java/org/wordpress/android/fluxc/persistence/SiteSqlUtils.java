@@ -59,8 +59,8 @@ public class SiteSqlUtils {
      * 1. Exists in the DB already and matches by local id (simple update) -> UPDATE
      * 2. Exists in the DB, is a Jetpack or WordPress site and matches by remote id (SITE_ID) -> UPDATE
      * 3. Exists in the DB, is a pure self hosted and matches by remote id (SITE_ID) + URL -> UPDATE
-     * 4. Exists in the DB, was not a Jetpack site but is now a Jetpack site, and matches by XMLRPC_URL -> UPDATE
-     * 5. Exists in the DB, and matches by XMLRPC_URL -> THROW a DuplicateSiteException
+     * 4. Exists in the DB, originally a WP.com REST site, and matches by XMLRPC_URL -> THROW a DuplicateSiteException
+     * 5. Exists in the DB, originally an XML-RPC site, and matches by XMLRPC_URL -> UPDATE
      * 6. Not matching any previous cases -> INSERT
      */
     public static int insertOrUpdateSite(SiteModel site) throws DuplicateSiteException {
