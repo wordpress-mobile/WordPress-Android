@@ -711,13 +711,17 @@ public class PostsListFragment extends Fragment
             boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
             if (isDraft) {
                 if (PostUtils.isPublishable(post)) {
-                    View.OnClickListener publishPostListener = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            publishPost(post);
-                        }
-                    };
-                    showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
+                    if (event.isError()) {
+                        showSnackbar(getString(R.string.editor_draft_saved_locally));
+                    } else {
+                        View.OnClickListener publishPostListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                publishPost(post);
+                            }
+                        };
+                        showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
+                    }
                 }
             } else {
                 String message = post.isPage() ? getString(R.string.page_published) :
