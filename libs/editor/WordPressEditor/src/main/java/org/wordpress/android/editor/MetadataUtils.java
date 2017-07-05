@@ -167,22 +167,25 @@ public class MetadataUtils {
             return mClasses;
         }
 
-        void updateAttributeClasses() {
-            String classesStr = TextUtils.join(" ", mClasses);
-            mAztecAttributes.setValue("class", classesStr);
-        }
-
         AztecAttributes getAttributes() {
-            updateAttributeClasses();
+            updateClassAttribute();
             return mAztecAttributes;
         }
 
         String getAttribute(String key, String defaultValue) {
+
+            updateClassAttribute();
+
             if (mAztecAttributes.hasAttribute(key)) {
                 return mAztecAttributes.getValue(key);
             } else {
                 return defaultValue;
             }
+        }
+
+        private void updateClassAttribute() {
+            String classesStr = TextUtils.join(" ", mClasses);
+            mAztecAttributes.setValue("class", classesStr);
         }
     }
 }
