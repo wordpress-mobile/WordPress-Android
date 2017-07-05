@@ -726,9 +726,13 @@ public class PostsListFragment extends Fragment
                     }
                 }
             } else {
-                String message = post.isPage() ? getString(R.string.page_published) :
-                        getString(R.string.post_published);
-                showSnackbar(message);
+                if (event.isError()) {
+                    showSnackbar(getString(R.string.editor_draft_saved_locally));
+                } else {
+                    String message = post.isPage() ? getString(R.string.page_published) :
+                            getString(R.string.post_published);
+                    showSnackbar(message);
+                }
             }
         }
     }
