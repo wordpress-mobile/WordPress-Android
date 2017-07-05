@@ -641,7 +641,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void updatePostStatus(String postStatus) {
         getPost().setStatus(postStatus);
-        updateStatusTextView();
+        updatePostStatusRelatedViews();
         updateSaveButton();
     }
 
@@ -650,7 +650,12 @@ public class EditPostSettingsFragment extends Fragment {
         updatePostFormatTextView();
     }
 
-    public void updateStatusTextView() {
+    public void updatePostStatusRelatedViews() {
+        updateStatusTextView();
+        updatePublishDateTextView();
+    }
+
+    private void updateStatusTextView() {
         if (!isAdded()) {
             return;
         }
