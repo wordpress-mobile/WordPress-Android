@@ -648,8 +648,6 @@ Language: he_IL
 	<string name="reader_toast_err_follow_blog_not_authorized">אינך מורשה להיכנס לבלוג</string>
 	<string name="reader_toast_err_follow_blog_not_found">הבלוג לא נמצא</string>
 	<string name="undo">ביטול פעולה אחרונה</string>
-	<string name="tabbar_accessibility_label_me">אני</string>
-	<string name="tabbar_accessibility_label_my_site">האתר שלי</string>
 	<string name="editor_toast_changes_saved">השינויים נשמרו</string>
 	<string name="passcodelock_prompt_message">הזנת קוד PIN</string>
 	<string name="push_auth_expired">פג תוקף הבקשה. יש להיכנס לוורדפרס.קום כדי לנסות שוב.</string>
@@ -1149,6 +1147,7 @@ Language: he_IL
 	<string name="all">הכל</string>
 	<string name="themes">ערכות עיצוב</string>
 	<string name="discard">הסתר</string>
+	<string name="manage">ניהול</string>
 	<string name="upload">העלאה</string>
 	<string name="more_notifications">הוסף %d נוספים.</string>
 	<string name="new_notifications">%d התראות חדשות</string>
