@@ -19,6 +19,8 @@ public class SiteWPComRestResponse implements Response {
         public String frame_nonce;
         public String unmapped_url;
         public String max_upload_size;
+        public String wp_max_memory_limit;
+        public String wp_memory_limit;
     }
 
     public class Plan {
