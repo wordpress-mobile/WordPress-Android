@@ -987,6 +987,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                }
             }
 
+            savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             if (isFirstTimePublish) {
