@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/min_touch_target_sz"
-                    android:layout_toLeftOf="@+id/login_email_next_button"
+                    android:layout_toLeftOf="@+id/login_2fa_next_button"
                     android:layout_marginRight="@dimen/margin_extra_extra_extra_large"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
