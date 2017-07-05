@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -22,8 +23,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -76,17 +79,35 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_email_screen, container, false);
 
-        mEmailEditText = (EditText) rootView.findViewById(R.id.login_email);
+        setupLabel(rootView);
+        setupEmailInputRow(rootView);
+        setupBottomButtons(rootView);
+
+        return rootView;
+    }
+
+    private void setupLabel(ViewGroup rootView) {
+        TextView label = (TextView) rootView.findViewById(R.id.label);
+        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
+            label.setText(R.string.stats_sign_in_jetpack_different_com_account);
+        } else {
+            label.setText(R.string.enter_email_wordpress_com);
+        }
+    }
+
+    private void setupEmailInputRow(ViewGroup rootView) {
+        View emailInputElement = ((ViewStub) rootView.findViewById(R.id.email_input_stub)).inflate();
+
+        mEmailEditTextLayout = (TextInputLayout) emailInputElement.findViewById(R.id.input_layout);
+        mEmailEditTextLayout.setHint(getString(R.string.email_address));
+
+        ImageView icon = (ImageView) emailInputElement.findViewById(R.id.icon);
+        icon.setContentDescription(getString(R.string.login_email_image));
+        icon.setImageResource(R.drawable.ic_user_grey_24dp);
+
+        mEmailEditText = (EditText) emailInputElement.findViewById(R.id.input);
+        mEmailEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mEmailEditText.addTextChangedListener(this);
-
-        mEmailEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.login_email_layout);
-
-        mNextButton = (Button) rootView.findViewById(R.id.login_email_next_button);
-        mNextButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                next(getCleanedEmail());
-            }
-        });
 
         autoFillFromBuildConfig();
 
@@ -103,9 +124,11 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
                 return true;
             }
         });
+    }
 
-        TextView loginViaSiteAddressView = (TextView) rootView.findViewById(R.id.login_site_address);
-        loginViaSiteAddressView.setOnClickListener(new OnClickListener() {
+    private void setupBottomButtons(ViewGroup rootView) {
+        Button loginViaSiteAddress = (Button) rootView.findViewById(R.id.secondary_button);
+        loginViaSiteAddress.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
@@ -118,26 +141,25 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             }
         });
 
-        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
-            ((TextView) rootView.findViewById(R.id.label)).setText(R.string.stats_sign_in_jetpack_different_com_account);
-            loginViaSiteAddressView.setText(R.string.enter_username_instead);
-        }
-
         switch (mLoginListener.getLoginMode()) {
             case FULL:
                 // all features enabled and with typical values
+                loginViaSiteAddress.setText(R.string.enter_site_address_instead);
                 break;
             case JETPACK_STATS:
-                ((TextView) rootView.findViewById(R.id.label))
-                        .setText(R.string.stats_sign_in_jetpack_different_com_account);
-                loginViaSiteAddressView.setVisibility(View.GONE);
+                loginViaSiteAddress.setText(R.string.enter_username_instead);
                 break;
             case WPCOM_LOGIN_DEEPLINK:
-                loginViaSiteAddressView.setVisibility(View.GONE);
+                loginViaSiteAddress.setVisibility(View.GONE);
                 break;
         }
 
-        return rootView;
+        mNextButton = (Button) rootView.findViewById(R.id.primary_button);
+        mNextButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                next(getCleanedEmail());
+            }
+        });
     }
 
     @Override

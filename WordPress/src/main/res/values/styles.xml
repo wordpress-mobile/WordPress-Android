@@ -75,13 +75,10 @@
 
     <style name="LoginTheme.EditText" parent="LoginTheme">
         <item name="colorControlNormal">@color/grey</item>
+        <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textColorHint">@color/grey</item>
         <item name="colorControlActivated">@color/blue_medium</item>
         <item name="colorControlHighlight">@color/blue_medium</item>
-    </style>
-
-    <style name="LoginTheme.EditText.Input" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey</item>
     </style>
 
     <style name="LoginTheme.PromoText" parent="TextAppearance.AppCompat.Title">
@@ -240,6 +237,11 @@
     <style name="WordPress.StandardButton" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@color/white</item>
         <item name="android:textColor">@color/grey_dark</item>
+    </style>
+
+    <style name="LoginTheme.SecondaryButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
     </style>
 
     <!-- NUX Styles -->
