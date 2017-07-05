@@ -45,7 +45,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 10;
+        return 11;
     }
 
     @Override
@@ -104,6 +104,10 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 9:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table SiteModel add MAX_UPLOAD_SIZE integer;");
+                oldVersion++;
+            case 10:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add MEMORY_LIMIT integer;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
