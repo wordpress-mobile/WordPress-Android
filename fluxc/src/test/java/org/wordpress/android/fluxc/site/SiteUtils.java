@@ -34,6 +34,7 @@ public class SiteUtils {
         example.setIsJetpackInstalled(false);
         example.setIsJetpackConnected(false);
         example.setIsVisible(true);
+        example.setUrl("http://some.url");
         example.setXmlRpcUrl("http://some.url/xmlrpc.php");
         example.setOrigin(SiteModel.ORIGIN_XMLRPC);
         return example;
@@ -49,6 +50,7 @@ public class SiteUtils {
         example.setIsVisible(true);
         example.setUsername("ponyuser");
         example.setPassword("ponypass");
+        example.setUrl("http://jetpack.url");
         example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
         example.setOrigin(SiteModel.ORIGIN_XMLRPC);
         return example;
@@ -61,6 +63,7 @@ public class SiteUtils {
         example.setIsJetpackInstalled(true);
         example.setIsJetpackConnected(true);
         example.setIsVisible(true);
+        example.setUrl("http://jetpack2.url");
         example.setXmlRpcUrl("http://jetpack2.url/xmlrpc.php");
         example.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
         return example;
@@ -73,6 +76,7 @@ public class SiteUtils {
         example.setIsJetpackInstalled(false);
         example.setIsJetpackConnected(false);
         example.setIsVisible(true);
+        example.setUrl("http://jetpack2.url");
         example.setXmlRpcUrl("http://jetpack2.url/xmlrpc.php");
         example.setOrigin(SiteModel.ORIGIN_XMLRPC);
         return example;
