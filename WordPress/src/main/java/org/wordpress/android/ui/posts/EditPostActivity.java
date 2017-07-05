@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -23,7 +22,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -987,6 +985,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                }
             }
 
+            savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             if (isFirstTimePublish) {
@@ -1932,46 +1931,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private String getRealPathFromURI(Uri uri) {
-        String path;
-        if ("content".equals(uri.getScheme())) {
-            path = getRealPathFromContentURI(uri);
-        } else if ("file".equals(uri.getScheme())) {
-            path = uri.getPath();
-        } else {
-            path = uri.toString();
-        }
-        return path;
-    }
-
-    private String getRealPathFromContentURI(Uri contentUri) {
-        if (contentUri == null)
-            return null;
-
-        String[] proj = { android.provider.MediaStore.Images.Media.DATA };
-        CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-
-        if (cursor == null)
-            return null;
-
-        int column_index = cursor.getColumnIndex(proj[0]);
-        if (column_index == -1) {
-            cursor.close();
-            return null;
-        }
-
-        String path;
-        if (cursor.moveToFirst()) {
-            path = cursor.getString(column_index);
-        } else {
-            path = null;
-        }
-
-        cursor.close();
-        return path;
-    }
-
     private void handleMediaPickerResult(Intent data) {
         ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
         if (ids == null || ids.size() == 0) {
@@ -2125,7 +2084,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private MediaModel queueFileForUpload(Uri uri, String mimeType, MediaUploadState startingState) {
-        String path = getRealPathFromURI(uri);
+        String path = MediaUtils.getRealPathFromURI(this, uri);
 
         // Invalid file path
         if (TextUtils.isEmpty(path)) {
@@ -2149,7 +2108,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private MediaModel buildMediaModel(Uri uri, String mimeType, MediaUploadState startingState) {
-        String path = getRealPathFromURI(uri);
+        String path = MediaUtils.getRealPathFromURI(this, uri);
 
         MediaModel media = mMediaStore.instantiateMediaModel();
         AppLog.i(T.MEDIA, "New media instantiated localId=" + media.getId());
@@ -2439,7 +2398,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (isFinishing()) return;
         // event for unknown media, ignoring
         if (event.media == null) {
-            AppLog.w(AppLog.T.MEDIA, "Media event not recognized: " + event.media);
+            AppLog.w(AppLog.T.MEDIA, "Media event carries null media object, not recognized");
             return;
         }
 

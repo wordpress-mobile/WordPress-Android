@@ -147,7 +147,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content = (AztecText)view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
 
-        source.setHint("<p>" + getString(R.string.edit_hint) + "</p>");
+        source.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
 
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
         formattingToolbar.setEditor(content, source);
