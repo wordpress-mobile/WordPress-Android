@@ -724,6 +724,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 AztecAttributes attrs = new AztecAttributes();
                 attrs.setValue(ATTR_SRC, remoteUrl);
 
+                addDefaultSizeClassIfMissing(attrs);
+
                 // clear overlay
                 ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
                 content.clearOverlays(predicate);
@@ -1248,7 +1250,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AttributesWithClass attrs = new AttributesWithClass(attributes);
         if (!attrs.hasClassStartingWith("size")) {
             attrs.addClass("size-full");
-            attrs.updateAttributeClasses();
         }
+        attributes.setValue(ATTR_CLASS, attrs.getAttributes().getValue(ATTR_CLASS));
     }
 }
