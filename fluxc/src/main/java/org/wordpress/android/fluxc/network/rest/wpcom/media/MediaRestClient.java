@@ -139,10 +139,21 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         String url = WPCOMREST.sites.site(site.getSiteId()).media.new_.getUrlV1_1();
         RestUploadRequestBody body = new RestUploadRequestBody(media, getEditRequestParams(media), this);
+
+        // Abort upload if it exceeds the site upload limit
         if (site.hasMaxUploadSize() && body.contentLength() > site.getMaxUploadSize()) {
-            // Abort upload if it exceeds the site upload limit
             AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds site limit of "
                     + site.getMaxUploadSize());
+            MediaError error = new MediaError(MediaErrorType.REQUEST_TOO_LARGE);
+            notifyMediaUploaded(media, error);
+            return;
+        }
+
+        // Abort upload if it exceeds the 'safe' memory limit for the site
+        double maxFilesizeForMemoryLimit = MediaUtils.getMaxFilesizeForMemoryLimit(site.getMemoryLimit());
+        if (site.hasMemoryLimit() && body.contentLength() > maxFilesizeForMemoryLimit) {
+            AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds safe memory limit of "
+                    + maxFilesizeForMemoryLimit + " for this site");
             MediaError error = new MediaError(MediaErrorType.REQUEST_TOO_LARGE);
             notifyMediaUploaded(media, error);
             return;
