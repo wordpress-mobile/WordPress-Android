@@ -419,6 +419,38 @@ public class SiteStoreUnitTest {
         assertEquals(1, sitesCount);
     }
 
+    @Test
+    public void testInsertDuplicateXmlRpcJetpackSite() throws DuplicateSiteException {
+        SiteModel jetpackXmlRpcSite = generateJetpackSiteOverXMLRPC();
+
+        jetpackXmlRpcSite.setUrl("http://some.url");
+
+        // Insert a Jetpack powered site over XML-RPC
+        SiteSqlUtils.insertOrUpdateSite(jetpackXmlRpcSite);
+
+        // Set up the same site (by URL/XML-RPC URL), but don't identify it as a Jetpack site
+        // This simulates sites resulting from wp.getUsersBlogs, which don't have the site ID and can't be identified
+        // as Jetpack or not (wp.getOptions is the call that returns that information)
+        SiteModel jetpackXmlRpcSite2 = generateSelfHostedNonJPSite();
+        jetpackXmlRpcSite2.setXmlRpcUrl(jetpackXmlRpcSite.getXmlRpcUrl());
+        jetpackXmlRpcSite2.setUrl(jetpackXmlRpcSite.getUrl());
+        jetpackXmlRpcSite2.setSelfHostedSiteId(jetpackXmlRpcSite.getSelfHostedSiteId());
+        jetpackXmlRpcSite2.setUsername(jetpackXmlRpcSite.getUsername());
+        jetpackXmlRpcSite2.setPassword(jetpackXmlRpcSite.getPassword());
+
+        boolean duplicate = false;
+        try {
+            // Insert the same site but not identified as a Jetpack site
+            // (this should succeed, replacing the existing site, because the site replaced is not using the REST API)
+            SiteSqlUtils.insertOrUpdateSite(jetpackXmlRpcSite2);
+        } catch (DuplicateSiteException e) {
+            // Caught !
+            duplicate = true;
+        }
+        assertFalse(duplicate);
+        int sitesCount = WellSql.select(SiteModel.class).getAsCursor().getCount();
+        assertEquals(1, sitesCount);
+    }
 
     @Test
     public void testGetPostFormats() throws DuplicateSiteException {
@@ -624,6 +656,62 @@ public class SiteStoreUnitTest {
         assertTrue(res2.duplicateSiteFound);
         assertEquals(0, res2.rowsAffected);
         assertEquals(1, mSiteStore.getSitesCount());
+    }
+
+    @Test
+    public void testInsertSiteDuplicateXmlRpcTrailingSlash() throws DuplicateSiteException {
+        // It's possible for the URL in `wp.getOptions` to be different from the URL in `wp.getUsersBlogs`,
+        // sometimes just by a trailing slash
+        // This test checks that we can still identify two sites as being identical in this case, and that we quietly
+        // update the existing site rather than throw a duplicate site exception
+        SiteModel selfhostedSite = generateSelfHostedNonJPSite();
+        selfhostedSite.setUrl("http://some.url");
+
+        SiteSqlUtils.insertOrUpdateSite(selfhostedSite);
+
+        SiteModel selfhostedSite2 = generateSelfHostedNonJPSite();
+        selfhostedSite2.setUrl("http://some.url/");
+
+        boolean duplicate = false;
+        try {
+            // Insert the same site with a trailing slash (this should succeed, replacing the existing site)
+            SiteSqlUtils.insertOrUpdateSite(selfhostedSite2);
+        } catch (DuplicateSiteException e) {
+            // Caught !
+            duplicate = true;
+        }
+        assertFalse(duplicate);
+        int sitesCount = WellSql.select(SiteModel.class).getAsCursor().getCount();
+        assertEquals(1, sitesCount);
+    }
+
+    @Test
+    public void testInsertSiteDuplicateXmlRpcDifferentUrl() throws DuplicateSiteException {
+        // It's possible for the URL in `wp.getOptions` to be different from the URL in `wp.getUsersBlogs`
+        // This test checks that we can still identify two sites as being identical in this case, and that we quietly
+        // update the existing site rather than throw a duplicate site exception
+        SiteModel selfhostedSite = generateSelfHostedNonJPSite();
+        selfhostedSite.setUrl("http://some.url");
+        selfhostedSite.setXmlRpcUrl("http://some.url/xmlrpc.php");
+
+        SiteSqlUtils.insertOrUpdateSite(selfhostedSite);
+
+        SiteModel selfhostedSite2 = generateSelfHostedNonJPSite();
+        selfhostedSite2.setUrl("http://user5242.stagingsite.url");
+        selfhostedSite2.setXmlRpcUrl("http://some.url/xmlrpc.php");
+
+        boolean duplicate = false;
+        try {
+            // Insert the same site with a different URL, but the same XML-RPC URL
+            // (this should succeed, replacing the existing site)
+            SiteSqlUtils.insertOrUpdateSite(selfhostedSite2);
+        } catch (DuplicateSiteException e) {
+            // Caught !
+            duplicate = true;
+        }
+        assertFalse(duplicate);
+        int sitesCount = WellSql.select(SiteModel.class).getAsCursor().getCount();
+        assertEquals(1, sitesCount);
     }
 
     @Test
