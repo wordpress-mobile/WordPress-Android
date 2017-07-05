@@ -29,6 +29,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
     private ConnectButton mConnectBtn;
     private RecyclerView mRecycler;
     private View mConnectionsCardView;
+    private ViewGroup mServiceCardView;
 
     @Inject AccountStore mAccountStore;
 
@@ -75,8 +76,9 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_detail_fragment, container, false);
 
-        mConnectBtn = (ConnectButton) rootView.findViewById(R.id.button_connect);
         mConnectionsCardView = rootView.findViewById(R.id.card_view_connections);
+        mServiceCardView = (ViewGroup) rootView.findViewById(R.id.card_view_service);
+        mConnectBtn = (ConnectButton) mServiceCardView.findViewById(R.id.button_connect);
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         return rootView;
@@ -100,13 +102,17 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
 
         setTitle(mService.getLabel());
 
-        String serviceLabel = String.format(getString(R.string.connection_service_label), mService.getLabel());
-        TextView txtService = (TextView) getView().findViewById(R.id.text_service);
-        txtService.setText(serviceLabel);
+        if (mService.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID)) {
+            mServiceCardView.setVisibility(View.GONE);
+        } else {
+            String serviceLabel = String.format(getString(R.string.connection_service_label), mService.getLabel());
+            TextView txtService = (TextView) mServiceCardView.findViewById(R.id.text_service);
+            txtService.setText(serviceLabel);
 
-        String description = String.format(getString(R.string.connection_service_description), mService.getLabel());
-        TextView txtDescription = (TextView) getView().findViewById(R.id.text_description);
-        txtDescription.setText(description);
+            String description = String.format(getString(R.string.connection_service_description), mService.getLabel());
+            TextView txtDescription = (TextView) mServiceCardView.findViewById(R.id.text_description);
+            txtDescription.setText(description);
+        }
 
         long currentUserId = mAccountStore.getAccount().getUserId();
         PublicizeConnectionAdapter adapter = new PublicizeConnectionAdapter(
