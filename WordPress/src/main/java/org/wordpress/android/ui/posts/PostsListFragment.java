@@ -240,6 +240,8 @@ public class PostsListFragment extends Fragment
             // if it's a published post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
                 showSnackbar(R.string.editor_post_saved_locally, R.string.button_sync, publishPostListener);
+            } else {
+                showSnackbar(getString(R.string.uploading_post));
             }
             return;
         }
