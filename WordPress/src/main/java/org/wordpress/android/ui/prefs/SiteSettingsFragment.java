@@ -1400,6 +1400,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void removeNonJetpackPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_language);
     }
 
     private void removeNonDotComPreferences() {
