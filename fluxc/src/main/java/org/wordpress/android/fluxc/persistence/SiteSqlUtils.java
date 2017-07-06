@@ -60,8 +60,8 @@ public class SiteSqlUtils {
      * 1. Exists in the DB already and matches by local id (simple update) -> UPDATE
      * 2. Exists in the DB, is a Jetpack or WordPress site and matches by remote id (SITE_ID) -> UPDATE
      * 3. Exists in the DB, is a pure self hosted and matches by remote id (SITE_ID) + URL -> UPDATE
-     * 4. Exists in the DB, was not a Jetpack site but is now a Jetpack site, and matches by XMLRPC_URL -> UPDATE
-     * 5. Exists in the DB, and matches by XMLRPC_URL -> THROW a DuplicateSiteException
+     * 4. Exists in the DB, originally a WP.com REST site, and matches by XMLRPC_URL -> THROW a DuplicateSiteException
+     * 5. Exists in the DB, originally an XML-RPC site, and matches by XMLRPC_URL -> UPDATE
      * 6. Not matching any previous cases -> INSERT
      */
     public static int insertOrUpdateSite(SiteModel site) throws DuplicateSiteException {
@@ -131,12 +131,19 @@ public class SiteSqlUtils {
                     .endWhere().getAsModel();
             if (!siteResult.isEmpty()) {
                 AppLog.d(T.DB, "Site found using XML-RPC url: " + site.getXmlRpcUrl());
-                // If the site already in the DB is a self hosted and the new one is a Jetpack connected site, it means
-                // we upgraded from self hosted to jetpack, we want to update the site with the new informations.
-                if (siteResult.get(0).isJetpackConnected() || !site.isJetpackConnected()) {
+                // Four possibilities here:
+                // 1. DB site is WP.com, new site is WP.com:
+                // Something really weird is happening, this should have been caught earlier --> DuplicateSiteException
+                // 2. DB site is WP.com, new site is XML-RPC:
+                // It looks like an existing Jetpack-connected site over the REST API was added again as an XML-RPC
+                // Wed don't allow this --> DuplicateSiteException
+                // 3. DB site is XML-RPC, new site is WP.com:
+                // Upgrading a self-hosted site to Jetpack --> proceed
+                // 4. DB site is XML-RPC, new site is XML-RPC:
+                // An existing self-hosted site was logged-into again, and we couldn't identify it by URL or
+                // by WP.com site ID + URL --> proceed
+                if (siteResult.get(0).getOrigin() == SiteModel.ORIGIN_WPCOM_REST) {
                     AppLog.d(T.DB, "Site is a duplicate");
-                    // In other cases (examples: adding the same self hosted twice or adding self hosted on top of an
-                    // existing jetpack site), we consider it as an error.
                     throw new DuplicateSiteException();
                 }
             }
