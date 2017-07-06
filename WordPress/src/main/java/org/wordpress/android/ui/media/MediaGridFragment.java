@@ -554,6 +554,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (!mIsRefreshing) {
             setRefreshing(true);
             updateEmptyView(EmptyViewMessageType.LOADING);
+            if (loadMore) {
+                mSwipeToRefreshHelper.setRefreshing(true);
+            }
 
             FetchMediaListPayload payload =
                     new FetchMediaListPayload(mSite, NUM_MEDIA_PER_FETCH, loadMore, mFilter.toMimeType());
