@@ -94,7 +94,7 @@ public class UploadService extends Service {
         }
 
         if (sPostUploadManager == null) {
-            sPostUploadManager = new PostUploadManager(this, mPostUploadNotifier);
+            sPostUploadManager = new PostUploadManager(mPostUploadNotifier);
         }
 
         if (intent.hasExtra(MEDIA_LIST_KEY)) {

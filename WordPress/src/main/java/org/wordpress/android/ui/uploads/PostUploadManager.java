@@ -71,7 +71,6 @@ public class PostUploadManager {
 
     private static final Set<Integer> mFirstPublishPosts = new HashSet<>();
 
-    private Context mContext;
     private PostUploadNotifier mPostUploadNotifier;
 
     private SparseArray<CountDownLatch> mMediaLatchMap = new SparseArray<>();
@@ -81,11 +80,10 @@ public class PostUploadManager {
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
 
-    PostUploadManager(Context context, PostUploadNotifier postUploadNotifier) {
+    PostUploadManager(PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext()).component().inject(this);
         AppLog.i(T.MEDIA, "Post Upload Manager > created");
         mDispatcher.register(this);
-        mContext = context;
         mPostUploadNotifier = postUploadNotifier;
     }
 
@@ -93,7 +91,6 @@ public class PostUploadManager {
         synchronized (mQueuedPostsList) {
             mQueuedPostsList.add(post);
         }
-        showNotificationsForPendingMediaPosts();
         uploadNextPost();
     }
 
@@ -101,7 +98,6 @@ public class PostUploadManager {
         synchronized (mFirstPublishPosts) {
             mFirstPublishPosts.add(post.getId());
         }
-        showNotificationsForPendingMediaPosts();
         uploadPost(post);
     }
 
@@ -191,16 +187,6 @@ public class PostUploadManager {
         }
     }
 
-    private void showNotificationsForPendingMediaPosts() {
-        for (PostModel postModel : mQueuedPostsList) {
-            if (UploadService.hasPendingMediaUploadsForPost(postModel)) {
-                if (!mPostUploadNotifier.isDisplayingNotificationForPost(postModel)) {
-                    mPostUploadNotifier.createNotificationForPost(postModel, mContext.getString(R.string.uploading_post_media));
-                }
-            }
-        }
-    }
-
     private void finishUpload() {
         synchronized (mQueuedPostsList) {
             mCurrentTask = null;
@@ -211,6 +197,8 @@ public class PostUploadManager {
     }
 
     private class UploadPostTask extends AsyncTask<PostModel, Boolean, Boolean> {
+        private Context mContext;
+
         private PostModel mPost;
         private SiteModel mSite;
 
@@ -233,6 +221,7 @@ public class PostUploadManager {
 
         @Override
         protected Boolean doInBackground(PostModel... posts) {
+            mContext = WordPress.getContext();
             mPost = posts[0];
 
             String uploadingPostMessage = String.format(
@@ -584,43 +573,46 @@ public class PostUploadManager {
      * Returns an error message string for a failed post upload.
      */
     private @NonNull String getErrorMessageFromPostError(PostModel post, PostError error) {
+        Context context = WordPress.getContext();
         switch (error.type) {
             case UNKNOWN_POST:
-                return mContext.getString(R.string.error_unknown_post);
+                return context.getString(R.string.error_unknown_post);
             case UNKNOWN_POST_TYPE:
-                return mContext.getString(R.string.error_unknown_post_type);
+                return context.getString(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
-                return post.isPage() ? mContext.getString(R.string.error_refresh_unauthorized_pages) :
-                        mContext.getString(R.string.error_refresh_unauthorized_posts);
+                return post.isPage() ? context.getString(R.string.error_refresh_unauthorized_pages) :
+                        context.getString(R.string.error_refresh_unauthorized_posts);
         }
         // In case of a generic or uncaught error, return the message from the API response or the error type
         return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
     }
 
     private @NonNull String getErrorMessageFromMediaError(MediaStore.MediaError error) {
+        Context context = WordPress.getContext();
         switch (error.type) {
             case FS_READ_PERMISSION_DENIED:
-                return mContext.getString(R.string.error_media_insufficient_fs_permissions);
+                return context.getString(R.string.error_media_insufficient_fs_permissions);
             case NOT_FOUND:
-                return mContext.getString(R.string.error_media_not_found);
+                return context.getString(R.string.error_media_not_found);
             case AUTHORIZATION_REQUIRED:
-                return mContext.getString(R.string.error_media_unauthorized);
+                return context.getString(R.string.error_media_unauthorized);
             case PARSE_ERROR:
-                return mContext.getString(R.string.error_media_parse_error);
+                return context.getString(R.string.error_media_parse_error);
             case REQUEST_TOO_LARGE:
-                return mContext.getString(R.string.error_media_request_too_large);
+                return context.getString(R.string.error_media_request_too_large);
             case SERVER_ERROR:
-                return mContext.getString(R.string.media_error_internal_server_error);
+                return context.getString(R.string.media_error_internal_server_error);
             case TIMEOUT:
-                return mContext.getString(R.string.media_error_timeout);
+                return context.getString(R.string.media_error_timeout);
         }
         // In case of a generic or uncaught error, return the message from the API response or the error type
         return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
     }
 
     private @NonNull String getErrorMessage(PostModel post, String specificMessage) {
-        String postType = mContext.getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
-        return String.format(mContext.getResources().getText(R.string.error_upload_params).toString(), postType,
+        Context context = WordPress.getContext();
+        String postType = context.getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
+        return String.format(context.getResources().getText(R.string.error_upload_params).toString(), postType,
                 specificMessage);
     }
 
