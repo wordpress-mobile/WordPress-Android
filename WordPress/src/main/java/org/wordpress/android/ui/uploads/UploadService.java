@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
@@ -152,6 +153,7 @@ public class UploadService extends Service {
                 sPostUploadManager.uploadPost(post);
             } else {
                 sPostsWithPendingMedia.add(post);
+                showNotificationForPostWithPendingMedia(post);
             }
         }
     }
@@ -236,6 +238,12 @@ public class UploadService extends Service {
 
     public static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
         return MediaUploadManager.hasPendingMediaUploadsForPost(postModel);
+    }
+
+    private void showNotificationForPostWithPendingMedia(PostModel post) {
+        if (!mPostUploadNotifier.isDisplayingNotificationForPost(post)) {
+            mPostUploadNotifier.createNotificationForPost(post, getString(R.string.uploading_post_media));
+        }
     }
 
     // this keeps a map for all completed media for each post, so we can process the post easily
