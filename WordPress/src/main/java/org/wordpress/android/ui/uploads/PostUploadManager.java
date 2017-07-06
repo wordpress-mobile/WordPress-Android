@@ -59,15 +59,15 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class PostUploadManager {
-    private static final ArrayList<PostModel> mQueuedPostsList = new ArrayList<>();
-    private static PostModel mCurrentUploadingPost = null;
-    private static Map<String, Object> mCurrentUploadingPostAnalyticsProperties;
-    private static boolean mUseLegacyMode;
-    private UploadPostTask mCurrentTask = null;
+    private static final ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();
+    private static final Set<Integer> sFirstPublishPosts = new HashSet<>();
+    private static PostModel sCurrentUploadingPost = null;
+    private static Map<String, Object> sCurrentUploadingPostAnalyticsProperties;
 
-    private static final Set<Integer> mFirstPublishPosts = new HashSet<>();
+    private static boolean sUseLegacyMode;
 
     private PostUploadNotifier mPostUploadNotifier;
+    private UploadPostTask mCurrentTask = null;
 
     private SparseArray<CountDownLatch> mMediaLatchMap = new SparseArray<>();
 
@@ -83,26 +83,26 @@ public class PostUploadManager {
     }
 
     void uploadPost(PostModel post) {
-        synchronized (mQueuedPostsList) {
-            mQueuedPostsList.add(post);
+        synchronized (sQueuedPostsList) {
+            sQueuedPostsList.add(post);
         }
         uploadNextPost();
     }
 
     void registerPostForAnalyticsTracking(PostModel post) {
-        synchronized (mFirstPublishPosts) {
-            mFirstPublishPosts.add(post.getId());
+        synchronized (sFirstPublishPosts) {
+            sFirstPublishPosts.add(post.getId());
         }
     }
 
     void unregisterPostForAnalyticsTracking(PostModel post) {
-        synchronized (mFirstPublishPosts) {
-            mFirstPublishPosts.remove(post.getId());
+        synchronized (sFirstPublishPosts) {
+            sFirstPublishPosts.remove(post.getId());
         }
     }
 
     static void setLegacyMode(boolean enabled) {
-        mUseLegacyMode = enabled;
+        sUseLegacyMode = enabled;
     }
 
     static boolean isPostUploadingOrQueued(PostModel post) {
@@ -112,9 +112,9 @@ public class PostUploadManager {
         }
 
         // Then check the list of posts waiting to be uploaded
-        if (mQueuedPostsList.size() > 0) {
-            synchronized (mQueuedPostsList) {
-                for (PostModel queuedPost : mQueuedPostsList) {
+        if (sQueuedPostsList.size() > 0) {
+            synchronized (sQueuedPostsList) {
+                for (PostModel queuedPost : sQueuedPostsList) {
                     if (queuedPost.getId() == post.getId()) {
                         return true;
                     }
@@ -125,18 +125,18 @@ public class PostUploadManager {
     }
 
     static boolean isPostUploading(PostModel post) {
-        return mCurrentUploadingPost != null && mCurrentUploadingPost.getId() == post.getId();
+        return sCurrentUploadingPost != null && sCurrentUploadingPost.getId() == post.getId();
     }
 
     private void uploadNextPost() {
-        synchronized (mQueuedPostsList) {
+        synchronized (sQueuedPostsList) {
             if (mCurrentTask == null) { //make sure nothing is running
-                mCurrentUploadingPost = null;
-                mCurrentUploadingPostAnalyticsProperties = null;
-                if (mQueuedPostsList.size() > 0) {
-                    mCurrentUploadingPost = mQueuedPostsList.remove(0);
+                sCurrentUploadingPost = null;
+                sCurrentUploadingPostAnalyticsProperties = null;
+                if (sQueuedPostsList.size() > 0) {
+                    sCurrentUploadingPost = sQueuedPostsList.remove(0);
                     mCurrentTask = new UploadPostTask();
-                    mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mCurrentUploadingPost);
+                    mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, sCurrentUploadingPost);
                 } else {
                     // TODO: Tell UploadService it can stop
                 }
@@ -145,10 +145,10 @@ public class PostUploadManager {
     }
 
     private void finishUpload() {
-        synchronized (mQueuedPostsList) {
+        synchronized (sQueuedPostsList) {
             mCurrentTask = null;
-            mCurrentUploadingPost = null;
-            mCurrentUploadingPostAnalyticsProperties = null;
+            sCurrentUploadingPost = null;
+            sCurrentUploadingPostAnalyticsProperties = null;
         }
         uploadNextPost();
     }
@@ -224,12 +224,12 @@ public class PostUploadManager {
             }
 
             // Support for legacy editor - images are identified as featured as they're being uploaded with the post
-            if (mUseLegacyMode && featuredImageID != -1) {
+            if (sUseLegacyMode && featuredImageID != -1) {
                 mPost.setFeaturedImageId(featuredImageID);
             }
 
             // Track analytics only if the post is newly published
-            if (mFirstPublishPosts.contains(mPost.getId())) {
+            if (sFirstPublishPosts.contains(mPost.getId())) {
                 prepareUploadAnalytics(mPost.getContent());
             }
 
@@ -249,11 +249,11 @@ public class PostUploadManager {
 
         private void prepareUploadAnalytics(String postContent) {
             // Calculate the words count
-            mCurrentUploadingPostAnalyticsProperties = new HashMap<>();
-            mCurrentUploadingPostAnalyticsProperties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
+            sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
+            sCurrentUploadingPostAnalyticsProperties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
 
             if (hasGallery()) {
-                mCurrentUploadingPostAnalyticsProperties.put("with_galleries", true);
+                sCurrentUploadingPostAnalyticsProperties.put("with_galleries", true);
             }
             if (!mHasImage) {
                 // Check if there is a img tag in the post. Media added in any editor other than legacy.
@@ -263,7 +263,7 @@ public class PostUploadManager {
                 mHasImage = matcher.find();
             }
             if (mHasImage) {
-                mCurrentUploadingPostAnalyticsProperties.put("with_photos", true);
+                sCurrentUploadingPostAnalyticsProperties.put("with_photos", true);
             }
             if (!mHasVideo) {
                 // Check if there is a video tag in the post. Media added in any editor other than legacy.
@@ -273,15 +273,15 @@ public class PostUploadManager {
                 mHasVideo = matcher.find();
             }
             if (mHasVideo) {
-                mCurrentUploadingPostAnalyticsProperties.put("with_videos", true);
+                sCurrentUploadingPostAnalyticsProperties.put("with_videos", true);
             }
             if (mHasCategory) {
-                mCurrentUploadingPostAnalyticsProperties.put("with_categories", true);
+                sCurrentUploadingPostAnalyticsProperties.put("with_categories", true);
             }
             if (!mPost.getTagNameList().isEmpty()) {
-                mCurrentUploadingPostAnalyticsProperties.put("with_tags", true);
+                sCurrentUploadingPostAnalyticsProperties.put("with_tags", true);
             }
-            mCurrentUploadingPostAnalyticsProperties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
+            sCurrentUploadingPostAnalyticsProperties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
         }
 
         /**
@@ -537,18 +537,18 @@ public class PostUploadManager {
             String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage);
             mPostUploadNotifier.updateNotificationError(event.post, site, notificationMessage, false);
-            mFirstPublishPosts.remove(event.post.getId());
+            sFirstPublishPosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.cancelNotification(event.post);
-            boolean isFirstTimePublish = mFirstPublishPosts.remove(event.post.getId());
+            boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
             mPostUploadNotifier.updateNotificationSuccess(event.post, site, isFirstTimePublish);
             if (isFirstTimePublish) {
-                if (mCurrentUploadingPostAnalyticsProperties != null){
-                    mCurrentUploadingPostAnalyticsProperties.put("post_id", event.post.getRemotePostId());
+                if (sCurrentUploadingPostAnalyticsProperties != null){
+                    sCurrentUploadingPostAnalyticsProperties.put("post_id", event.post.getRemotePostId());
                 }
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,
                         mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
-                        mCurrentUploadingPostAnalyticsProperties);
+                        sCurrentUploadingPostAnalyticsProperties);
             }
         }
 
@@ -561,26 +561,26 @@ public class PostUploadManager {
         if (event.media == null) {
             return;
         }
-        if (mUseLegacyMode) {
+        if (sUseLegacyMode) {
             handleMediaUploadCompletedLegacy(event);
         }
     }
 
     private void handleMediaUploadCompletedLegacy(OnMediaUploaded event) {
         // Event for unknown media, ignoring
-        if (mCurrentUploadingPost == null || mMediaLatchMap.get(event.media.getId()) == null) {
+        if (sCurrentUploadingPost == null || mMediaLatchMap.get(event.media.getId()) == null) {
             AppLog.w(T.MEDIA, "Media event not recognized: " + event.media);
             return;
         }
 
         if (event.isError()) {
             AppLog.e(T.MEDIA, "Media upload failed. " + event.error.type + ": " + event.error.message);
-            SiteModel site = mSiteStore.getSiteByLocalId(mCurrentUploadingPost.getLocalSiteId());
+            SiteModel site = mSiteStore.getSiteByLocalId(sCurrentUploadingPost.getLocalSiteId());
             Context context = WordPress.getContext();
             String errorMessage = UploadUtils.getErrorMessageFromMediaError(context, event.error);
-            String notificationMessage = UploadUtils.getErrorMessage(context, mCurrentUploadingPost, errorMessage);
-            mPostUploadNotifier.updateNotificationError(mCurrentUploadingPost, site, notificationMessage, true);
-            mFirstPublishPosts.remove(mCurrentUploadingPost.getId());
+            String notificationMessage = UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage);
+            mPostUploadNotifier.updateNotificationError(sCurrentUploadingPost, site, notificationMessage, true);
+            sFirstPublishPosts.remove(sCurrentUploadingPost.getId());
             finishUpload();
             return;
         }
@@ -592,12 +592,12 @@ public class PostUploadManager {
 
         if (event.completed) {
             AppLog.i(T.MEDIA, "Media upload completed for post. Media id: " + event.media.getId()
-                    + ", post id: " + mCurrentUploadingPost.getId());
+                    + ", post id: " + sCurrentUploadingPost.getId());
             mMediaLatchMap.get(event.media.getId()).countDown();
             mMediaLatchMap.remove(event.media.getId());
         } else {
             // Progress update
-            mPostUploadNotifier.updateNotificationProgress(mCurrentUploadingPost, event.progress);
+            mPostUploadNotifier.updateNotificationProgress(sCurrentUploadingPost, event.progress);
         }
     }
 }

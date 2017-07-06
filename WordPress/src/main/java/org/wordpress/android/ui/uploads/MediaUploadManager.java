@@ -33,8 +33,8 @@ import de.greenrobot.event.EventBus;
  * Started with explicit list of media to upload.
  */
 public class MediaUploadManager {
-    private static List<MediaModel> mPendingUploads = new ArrayList<>();
-    private static List<MediaModel> mInProgressUploads = new ArrayList<>();
+    private static final List<MediaModel> sPendingUploads = new ArrayList<>();
+    private static final List<MediaModel> sInProgressUploads = new ArrayList<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -56,13 +56,13 @@ public class MediaUploadManager {
     }
 
     static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
-        for (MediaModel queuedMedia : mInProgressUploads) {
+        for (MediaModel queuedMedia : sInProgressUploads) {
             if (queuedMedia.getLocalPostId() == postModel.getId()) {
                 return true;
             }
         }
 
-        for (MediaModel queuedMedia : mPendingUploads) {
+        for (MediaModel queuedMedia : sPendingUploads) {
             if (queuedMedia.getLocalPostId() == postModel.getId()) {
                 return true;
             }
@@ -134,13 +134,13 @@ public class MediaUploadManager {
     private synchronized void completeUploadWithId(int id) {
         MediaModel media = getMediaFromInProgressQueueById(id);
         if (media != null) {
-            mInProgressUploads.remove(media);
+            sInProgressUploads.remove(media);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
         }
     }
 
     private MediaModel getMediaFromInProgressQueueById(int id) {
-        for (MediaModel media : mInProgressUploads) {
+        for (MediaModel media : sInProgressUploads) {
             if (media.getId() == id)
                 return media;
         }
@@ -148,8 +148,8 @@ public class MediaUploadManager {
     }
 
     private MediaModel getNextMediaToUpload() {
-        if (!mPendingUploads.isEmpty()) {
-            return mPendingUploads.remove(0);
+        if (!sPendingUploads.isEmpty()) {
+            return sPendingUploads.remove(0);
         }
         return null;
     }
@@ -161,7 +161,7 @@ public class MediaUploadManager {
             }
 
             // no match found in queue
-            mPendingUploads.add(media);
+            sPendingUploads.add(media);
         }
     }
 
@@ -180,7 +180,7 @@ public class MediaUploadManager {
     private void dispatchUploadAction(@NonNull final MediaModel media, @NonNull final SiteModel site) {
         AppLog.i(T.MEDIA, "Dispatching upload action for media with local id: " + media.getId() +
                 " and path: " + media.getFilePath());
-        mInProgressUploads.add(media);
+        sInProgressUploads.add(media);
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
         MediaPayload payload = new MediaPayload(site, media);
@@ -196,7 +196,7 @@ public class MediaUploadManager {
 
     private void notifyServiceIfUploadsComplete() {
         AppLog.i(T.MEDIA, "Media Upload Manager > completed");
-        if (mPendingUploads.isEmpty() && mInProgressUploads.isEmpty()) {
+        if (sPendingUploads.isEmpty() && sInProgressUploads.isEmpty()) {
             // TODO: Tell UploadService it can stop
         }
     }
@@ -208,12 +208,12 @@ public class MediaUploadManager {
         if (event.post == null) {
             return;
         }
-        for (MediaModel inProgressUpload : mInProgressUploads) {
+        for (MediaModel inProgressUpload : sInProgressUploads) {
             if (inProgressUpload.getLocalPostId() == event.post.getId()) {
                 cancelUpload(inProgressUpload, true);
             }
         }
-        for (MediaModel pendingUpload : mPendingUploads) {
+        for (MediaModel pendingUpload : sPendingUploads) {
             if (pendingUpload.getLocalPostId() == event.post.getId()) {
                 cancelUpload(pendingUpload, true);
             }
@@ -257,7 +257,7 @@ public class MediaUploadManager {
     }
 
     private boolean mediaAlreadyQueuedOrUploading(MediaModel mediaModel) {
-        for (MediaModel queuedMedia : mInProgressUploads) {
+        for (MediaModel queuedMedia : sInProgressUploads) {
             AppLog.i(T.MEDIA, "Looking to add media with path " + mediaModel.getFilePath() + " and site id " +
                     mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath() + ", " +
                     queuedMedia.getLocalSiteId());
@@ -266,7 +266,7 @@ public class MediaUploadManager {
             }
         }
 
-        for (MediaModel queuedMedia : mPendingUploads) {
+        for (MediaModel queuedMedia : sPendingUploads) {
             AppLog.i(T.MEDIA, "Looking to add media with path " + mediaModel.getFilePath() + " and site id " +
                     mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath() + ", " +
                     queuedMedia.getLocalSiteId());

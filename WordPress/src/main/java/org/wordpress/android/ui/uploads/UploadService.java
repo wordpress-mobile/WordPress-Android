@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.uploads;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -47,7 +48,8 @@ public class UploadService extends Service {
 
     // To avoid conflicts by editing the post each time a single upload completes, this map tracks completed media by
     // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
-    private static HashMap<Integer, List<MediaModel>> mCompletedUploadsByPost = new HashMap<>();
+    @SuppressLint("UseSparseArrays")
+    private static final HashMap<Integer, List<MediaModel>> sCompletedUploadsByPost = new HashMap<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -68,7 +70,7 @@ public class UploadService extends Service {
         // TODO: Cancel in-progress uploads
 
         // update posts with any completed uploads in our post->media map
-        for (Integer postId : mCompletedUploadsByPost.keySet()) {
+        for (Integer postId : sCompletedUploadsByPost.keySet()) {
             PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
         }
@@ -254,13 +256,13 @@ public class UploadService extends Service {
         // updates in one go and save only once
         if (post != null) {
             MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
-            List<MediaModel> mediaList = mCompletedUploadsByPost.get(post.getId());
+            List<MediaModel> mediaList = sCompletedUploadsByPost.get(post.getId());
             if (mediaList != null && !mediaList.isEmpty()) {
                 for (MediaModel media : mediaList) {
                     post = updatePostWithMediaUrl(post, media, processor);
                 }
                 // finally remove all completed uploads for this post, as they've been taken care of
-                mCompletedUploadsByPost.remove(post.getId());
+                sCompletedUploadsByPost.remove(post.getId());
             }
         }
         return post;
@@ -279,12 +281,12 @@ public class UploadService extends Service {
     // this keeps a map for all completed media for each post, so we can process the post easily
     // in one go later
     private void addMediaToPostCompletedMediaListMap(MediaModel media) {
-        List<MediaModel> mediaListForPost = mCompletedUploadsByPost.get(media.getLocalPostId());
+        List<MediaModel> mediaListForPost = sCompletedUploadsByPost.get(media.getLocalPostId());
         if (mediaListForPost == null) {
             mediaListForPost = new ArrayList<>();
         }
         mediaListForPost.add(media);
-        mCompletedUploadsByPost.put(media.getLocalPostId(), mediaListForPost);
+        sCompletedUploadsByPost.put(media.getLocalPostId(), mediaListForPost);
     }
 
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
@@ -311,12 +313,12 @@ public class UploadService extends Service {
         // we only trigger the actual post modification / processing after we've got
         // no other pending/inprogress uploads, and we have some completed uploads still to be processed
         // TODO
-        if (!mCompletedUploadsByPost.isEmpty()) {
+        if (!sCompletedUploadsByPost.isEmpty()) {
             // here we need to edit the corresponding post with all completed uploads
             // also bear in mind the service could be handling media uploads for different posts,
             // so we also need to take into account processing completed uploads in batches through
             // each post
-            for (Integer postId : mCompletedUploadsByPost.keySet()) {
+            for (Integer postId : sCompletedUploadsByPost.keySet()) {
                 PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
                 mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
             }
