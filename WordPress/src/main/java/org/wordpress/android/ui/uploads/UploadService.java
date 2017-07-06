@@ -27,6 +27,7 @@ import org.wordpress.android.util.FluxCUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,6 +38,8 @@ public class UploadService extends Service {
     private static final String MEDIA_LIST_KEY = "mediaList";
 
     private static MediaUploadManager sMediaUploadManager;
+
+    private static final List<PostModel> sPostsWithPendingMedia = new ArrayList<>();
 
     // To avoid conflicts by editing the post each time a single upload completes, this map tracks completed media by
     // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
@@ -129,7 +132,12 @@ public class UploadService extends Service {
      * Adds a post to the queue.
      */
     public static void addPostToUpload(PostModel post) {
-        PostUploadService.addPostToUpload(post);
+        // TODO Show a notification in either case
+        if (!hasPendingMediaUploadsForPost(post)) {
+            PostUploadService.addPostToUpload(post);
+        } else {
+            sPostsWithPendingMedia.add(post);
+        }
     }
 
     /**
@@ -138,7 +146,12 @@ public class UploadService extends Service {
      * to published.
      */
     public static void addPostToUploadAndTrackAnalytics(PostModel post) {
-        PostUploadService.addPostToUploadAndTrackAnalytics(post);
+        // TODO Show a notification in either case
+        if (!hasPendingMediaUploadsForPost(post)) {
+            PostUploadService.addPostToUploadAndTrackAnalytics(post);
+        } else {
+            sPostsWithPendingMedia.add(post);
+        }
     }
 
     public static void setLegacyMode(boolean enabled) {
@@ -266,10 +279,26 @@ public class UploadService extends Service {
             return;
         }
 
+        // TODO Handle errors and cancellations
         if (event.completed) {
             if (event.media.getLocalPostId() != 0) {
                 // add the MediaModel object within the OnMediaUploaded event to our completedMediaList
                 addMediaToPostCompletedMediaListMap(event.media);
+
+                // If this was the last media upload a pending post was waiting for, send it to the PostUploadManager
+                Iterator<PostModel> iterator = sPostsWithPendingMedia.iterator();
+                while (iterator.hasNext()) {
+                    PostModel postModel = iterator.next();
+                    if (!UploadService.hasPendingMediaUploadsForPost(postModel)) {
+                        // Fetch latest version of the post, as it might have been updated by the MediaUploadService
+                        PostModel latestPost = mPostStore.getPostByLocalPostId(postModel.getId());
+                        // TODO Should do some extra validation here
+                        // e.g. what if the post has local media URLs but no pending media uploads?
+                        iterator.remove();
+                        // TODO Need to track analytics here if it was originally added with addPostToUploadAndTrackAnalytics()
+                        addPostToUpload(latestPost);
+                    }
+                }
             }
         }
     }

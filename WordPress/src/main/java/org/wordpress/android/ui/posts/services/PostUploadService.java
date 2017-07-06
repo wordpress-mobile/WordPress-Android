@@ -37,9 +37,9 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -202,41 +202,14 @@ public class PostUploadService extends Service {
                 mCurrentUploadingPost = null;
                 mCurrentUploadingPostAnalyticsProperties = null;
                 if (mQueuedPostsList.size() > 0) {
-                    if (!mUseLegacyMode) {
-                        // Skip any posts with pending media uploads
-                        PostModel nextPost = getNextUploadablePost();
-                        if (nextPost != null) {
-                            mCurrentUploadingPost = nextPost;
-                            mCurrentTask = new UploadPostTask();
-                            mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mCurrentUploadingPost);
-                        }
-                    } else {
-                        mCurrentUploadingPost = mQueuedPostsList.remove(0);
-                        mCurrentTask = new UploadPostTask();
-                        mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mCurrentUploadingPost);
-                    }
+                    mCurrentUploadingPost = mQueuedPostsList.remove(0);
+                    mCurrentTask = new UploadPostTask();
+                    mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mCurrentUploadingPost);
                 } else {
                     stopSelf();
                 }
             }
         }
-    }
-
-    private PostModel getNextUploadablePost() {
-        Iterator<PostModel> iterator = mQueuedPostsList.iterator();
-        while (iterator.hasNext()) {
-            PostModel postModel = iterator.next();
-            if (!UploadService.hasPendingMediaUploadsForPost(postModel)) {
-                // Fetch latest version of the post, as it might have been updated by the MediaUploadService
-                PostModel latestPost = mPostStore.getPostByLocalPostId(postModel.getId());
-                // TODO Should do some extra validation here
-                // e.g. what if the post has local media URLs but no pending media uploads?
-                iterator.remove();
-                return latestPost;
-            }
-        }
-        AppLog.d(T.POSTS, "All posts queued for upload have pending media");
-        return null;
     }
 
     private void showNotificationsForPendingMediaPosts() {
@@ -761,13 +734,6 @@ public class PostUploadService extends Service {
                             + " - a media upload for this post has been cancelled, id: " + event.media.getId());
             cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
             return;
-        }
-
-        if (event.completed) {
-            AppLog.i(T.MEDIA, "Media upload completed for post. Media id: " + event.media.getId()
-                    + ", post id: " + event.media.getLocalPostId());
-            // The media item might belong to a post in our queue, so check if any waiting posts can now be uploaded
-            uploadNextPost();
         }
     }
 
