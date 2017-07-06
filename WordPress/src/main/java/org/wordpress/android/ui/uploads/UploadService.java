@@ -282,6 +282,8 @@ public class UploadService extends Service {
         // TODO Handle errors and cancellations
         if (event.completed) {
             if (event.media.getLocalPostId() != 0) {
+                AppLog.d(T.MEDIA, "Processing completed media with id " + event.media.getId() + " and local post id "
+                        + event.media.getLocalPostId());
                 // add the MediaModel object within the OnMediaUploaded event to our completedMediaList
                 addMediaToPostCompletedMediaListMap(event.media);
 
@@ -290,16 +292,22 @@ public class UploadService extends Service {
                 while (iterator.hasNext()) {
                     PostModel postModel = iterator.next();
                     if (!UploadService.hasPendingMediaUploadsForPost(postModel)) {
-                        // Fetch latest version of the post, as it might have been updated by the MediaUploadService
+                        // Fetch latest version of the post, in case it has been modified elsewhere
                         PostModel latestPost = mPostStore.getPostByLocalPostId(postModel.getId());
+
+                        // Replace local with remote media in the post content
+                        PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(latestPost);
+                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+
                         // TODO Should do some extra validation here
                         // e.g. what if the post has local media URLs but no pending media uploads?
                         iterator.remove();
                         // TODO Need to track analytics here if it was originally added with addPostToUploadAndTrackAnalytics()
-                        addPostToUpload(latestPost);
+                        addPostToUpload(updatedPost);
                     }
                 }
             }
         }
+
     }
 }
