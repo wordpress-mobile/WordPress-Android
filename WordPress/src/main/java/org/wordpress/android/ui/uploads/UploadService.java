@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -335,6 +336,37 @@ public class UploadService extends Service {
         stopSelf();
     }
 
+    private void cancelPostUploadMatchingMedia(MediaModel media, String mediaErrorMessage) {
+        PostModel postToCancel = removeQueuedPostByLocalId(media.getLocalPostId());
+        if (postToCancel == null) return;
+
+        SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
+        String message = UploadUtils.getErrorMessage(this, postToCancel, mediaErrorMessage);
+        mPostUploadNotifier.cancelNotification(postToCancel);
+        mPostUploadNotifier.updateNotificationError(postToCancel, site, message, true);
+
+        sPostUploadManager.unregisterPostForAnalyticsTracking(postToCancel);
+        EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
+    }
+
+    /**
+     * Removes a post from the queued post list given its local ID.
+     * @return the post that was removed - if no post was removed, returns null
+     */
+    private PostModel removeQueuedPostByLocalId(int localPostId) {
+        synchronized (sPostsWithPendingMedia) {
+            Iterator<PostModel> iterator = sPostsWithPendingMedia.iterator();
+            while (iterator.hasNext()) {
+                PostModel postModel = iterator.next();
+                if (postModel.getId() == localPostId) {
+                    iterator.remove();
+                    return postModel;
+                }
+            }
+        }
+        return null;
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 8)
     public void onMediaUploaded(OnMediaUploaded event) {
@@ -342,11 +374,25 @@ public class UploadService extends Service {
             return;
         }
 
-        // TODO Handle errors and cancellations
+        if (event.isError()) {
+            AppLog.e(T.MEDIA, "UploadService: Media upload failed for post " + event.media.getLocalPostId() + " : " +
+                    event.error.type + ": " + event.error.message);
+            String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.error);
+            cancelPostUploadMatchingMedia(event.media, errorMessage);
+            return;
+        }
+
+        if (event.canceled) {
+            AppLog.d(T.MEDIA, "UploadService: Upload cancelled for post with id " + event.media.getLocalPostId()
+                    + " - a media upload for this post has been cancelled, id: " + event.media.getId());
+            cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
+            return;
+        }
+
         if (event.completed) {
             if (event.media.getLocalPostId() != 0) {
-                AppLog.d(T.MEDIA, "Processing completed media with id " + event.media.getId() + " and local post id "
-                        + event.media.getLocalPostId());
+                AppLog.d(T.MEDIA, "UploadService: Processing completed media with id " + event.media.getId() +
+                        " and local post id " + event.media.getLocalPostId());
                 // add the MediaModel object within the OnMediaUploaded event to our completedMediaList
                 addMediaToPostCompletedMediaListMap(event.media);
 

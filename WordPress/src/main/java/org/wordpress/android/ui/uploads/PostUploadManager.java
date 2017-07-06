@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
@@ -30,7 +29,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
-import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -96,6 +94,12 @@ public class PostUploadManager {
     void registerPostForAnalyticsTracking(PostModel post) {
         synchronized (mFirstPublishPosts) {
             mFirstPublishPosts.add(post.getId());
+        }
+    }
+
+    void unregisterPostForAnalyticsTracking(PostModel post) {
+        synchronized (mFirstPublishPosts) {
+            mFirstPublishPosts.remove(post.getId());
         }
     }
 
@@ -524,53 +528,6 @@ public class PostUploadManager {
         }
     }
 
-    /**
-     * Returns an error message string for a failed post upload.
-     */
-    private @NonNull String getErrorMessageFromPostError(PostModel post, PostError error) {
-        Context context = WordPress.getContext();
-        switch (error.type) {
-            case UNKNOWN_POST:
-                return context.getString(R.string.error_unknown_post);
-            case UNKNOWN_POST_TYPE:
-                return context.getString(R.string.error_unknown_post_type);
-            case UNAUTHORIZED:
-                return post.isPage() ? context.getString(R.string.error_refresh_unauthorized_pages) :
-                        context.getString(R.string.error_refresh_unauthorized_posts);
-        }
-        // In case of a generic or uncaught error, return the message from the API response or the error type
-        return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
-    }
-
-    private @NonNull String getErrorMessageFromMediaError(MediaStore.MediaError error) {
-        Context context = WordPress.getContext();
-        switch (error.type) {
-            case FS_READ_PERMISSION_DENIED:
-                return context.getString(R.string.error_media_insufficient_fs_permissions);
-            case NOT_FOUND:
-                return context.getString(R.string.error_media_not_found);
-            case AUTHORIZATION_REQUIRED:
-                return context.getString(R.string.error_media_unauthorized);
-            case PARSE_ERROR:
-                return context.getString(R.string.error_media_parse_error);
-            case REQUEST_TOO_LARGE:
-                return context.getString(R.string.error_media_request_too_large);
-            case SERVER_ERROR:
-                return context.getString(R.string.media_error_internal_server_error);
-            case TIMEOUT:
-                return context.getString(R.string.media_error_timeout);
-        }
-        // In case of a generic or uncaught error, return the message from the API response or the error type
-        return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
-    }
-
-    private @NonNull String getErrorMessage(PostModel post, String specificMessage) {
-        Context context = WordPress.getContext();
-        String postType = context.getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
-        return String.format(context.getResources().getText(R.string.error_upload_params).toString(), postType,
-                specificMessage);
-    }
-
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
@@ -578,8 +535,10 @@ public class PostUploadManager {
 
         if (event.isError()) {
             AppLog.e(T.POSTS, "Post upload failed. " + event.error.type + ": " + event.error.message);
-            String message = getErrorMessage(event.post, getErrorMessageFromPostError(event.post, event.error));
-            mPostUploadNotifier.updateNotificationError(event.post, site, message, false);
+            Context context = WordPress.getContext();
+            String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
+            String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage);
+            mPostUploadNotifier.updateNotificationError(event.post, site, notificationMessage, false);
             mFirstPublishPosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.cancelNotification(event.post);
@@ -619,8 +578,10 @@ public class PostUploadManager {
         if (event.isError()) {
             AppLog.e(T.MEDIA, "Media upload failed. " + event.error.type + ": " + event.error.message);
             SiteModel site = mSiteStore.getSiteByLocalId(mCurrentUploadingPost.getLocalSiteId());
-            String message = getErrorMessage(mCurrentUploadingPost, getErrorMessageFromMediaError(event.error));
-            mPostUploadNotifier.updateNotificationError(mCurrentUploadingPost, site, message, true);
+            Context context = WordPress.getContext();
+            String errorMessage = UploadUtils.getErrorMessageFromMediaError(context, event.error);
+            String notificationMessage = UploadUtils.getErrorMessage(context, mCurrentUploadingPost, errorMessage);
+            mPostUploadNotifier.updateNotificationError(mCurrentUploadingPost, site, notificationMessage, true);
             mFirstPublishPosts.remove(mCurrentUploadingPost.getId());
             finishUpload();
             return;
