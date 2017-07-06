@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
-import org.wordpress.android.ui.posts.services.MediaUploadReadyProcessor;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
