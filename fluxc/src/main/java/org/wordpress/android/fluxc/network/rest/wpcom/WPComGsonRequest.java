@@ -78,10 +78,6 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
         return url;
     }
 
-    public void removeAccessToken() {
-        setAccessToken(null);
-    }
-
     public void setAccessToken(String token) {
         if (token == null) {
             mHeaders.remove(REST_AUTHORIZATION_HEADER);
@@ -89,7 +85,6 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
             mHeaders.put(REST_AUTHORIZATION_HEADER, String.format(REST_AUTHORIZATION_FORMAT, token));
         }
     }
-
     @Override
     public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
         WPComGsonNetworkError returnedError = new WPComGsonNetworkError(error);
