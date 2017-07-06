@@ -24,7 +24,7 @@ public class SmartToast {
 
     private static final int MAX_TIMES_TO_SHOW = 3;
 
-    public static void show(@NonNull Context context, @NonNull SmartToastType type) {
+    public static boolean show(@NonNull Context context, @NonNull SmartToastType type) {
         UndeletablePrefKey keyCounter;
         int stringResId;
         switch (type) {
@@ -41,11 +41,11 @@ public class SmartToast {
                 stringResId = R.string.smart_toast_comments_long_press;
                 break;
             default:
-                return;
+                return false;
         }
         int numTimesShown = AppPrefs.getInt(keyCounter);
         if (numTimesShown >= MAX_TIMES_TO_SHOW) {
-            return;
+            return false;
         }
 
         int yOffset = context.getResources().getDimensionPixelOffset(R.dimen.smart_toast_offset_y);
@@ -55,5 +55,6 @@ public class SmartToast {
 
         numTimesShown++;
         AppPrefs.setInt(keyCounter, numTimesShown);
+        return true;
     }
 }

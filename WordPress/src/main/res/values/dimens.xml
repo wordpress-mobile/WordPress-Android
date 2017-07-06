@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="settings_padding">16dp</dimen>
-    <dimen name="category_row_height">60dp</dimen>
+    <dimen name="category_row_height">48dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
 
     <dimen name="toolbar_height">56dp</dimen>
@@ -311,4 +311,8 @@
     <dimen name="publicize_name_size">16sp</dimen>
     <dimen name="publicize_name_margin">8dp</dimen>
 
+    <!--post settings-->
+    <dimen name="post_settings_input_dialog_edit_text_side_margin">20dp</dimen>
+    <dimen name="post_settings_input_dialog_hint_side_margin">24dp</dimen>
+    <dimen name="tags_list_row_height">40dp</dimen>
 </resources>

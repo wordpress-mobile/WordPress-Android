@@ -566,6 +566,7 @@ public class PostsListFragment extends Fragment
             return;
         }
 
+        PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
 
         // save the post in the DB so the PostUploadService will get the latest change
