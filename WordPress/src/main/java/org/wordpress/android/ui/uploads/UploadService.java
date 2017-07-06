@@ -36,6 +36,7 @@ import de.greenrobot.event.EventBus;
 public class UploadService extends Service {
     private static final String KEY_MEDIA_LIST = "mediaList";
     private static final String KEY_LOCAL_POST_ID = "localPostId";
+    private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
 
     private static MediaUploadManager sMediaUploadManager;
     private static PostUploadManager sPostUploadManager;
@@ -147,8 +148,11 @@ public class UploadService extends Service {
     private void unpackPostIntent(@NonNull Intent intent) {
         PostModel post = mPostStore.getPostByLocalPostId(intent.getIntExtra(KEY_LOCAL_POST_ID, 0));
         if (post != null) {
-            // TODO track analytics
-            // TODO Show a notification in either case
+            boolean shouldTrackAnalytics = intent.getBooleanExtra(KEY_SHOULD_TRACK_ANALYTICS, false);
+            if (shouldTrackAnalytics) {
+                sPostUploadManager.registerPostForAnalyticsTracking(post);
+            }
+
             if (!hasPendingMediaUploadsForPost(post)) {
                 sPostUploadManager.uploadPost(post);
             } else {
@@ -164,6 +168,7 @@ public class UploadService extends Service {
     public static void addPostToUpload(Context context, PostModel post) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(UploadService.KEY_LOCAL_POST_ID, post.getId());
+        intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, false);
         context.startService(intent);
     }
 
@@ -175,6 +180,7 @@ public class UploadService extends Service {
     public static void addPostToUploadAndTrackAnalytics(Context context, PostModel post) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(UploadService.KEY_LOCAL_POST_ID, post.getId());
+        intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, true);
         context.startService(intent);
     }
 
@@ -337,7 +343,6 @@ public class UploadService extends Service {
                             // TODO Should do some extra validation here
                             // e.g. what if the post has local media URLs but no pending media uploads?
                             iterator.remove();
-                            // TODO Need to track analytics here if it was originally added with addPostToUploadAndTrackAnalytics()
                             sPostUploadManager.uploadPost(updatedPost);
                         }
                     }

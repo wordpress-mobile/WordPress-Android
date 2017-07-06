@@ -94,32 +94,10 @@ public class PostUploadManager {
         uploadNextPost();
     }
 
-    void uploadPostAndTrackAnalytics(PostModel post) {
+    void registerPostForAnalyticsTracking(PostModel post) {
         synchronized (mFirstPublishPosts) {
             mFirstPublishPosts.add(post.getId());
         }
-        uploadPost(post);
-    }
-
-    /**
-     * Adds a post to the queue.
-     */
-    static void addPostToUpload(PostModel post) {
-        synchronized (mQueuedPostsList) {
-            mQueuedPostsList.add(post);
-        }
-    }
-
-    /**
-     * Adds a post to the queue and tracks post analytics.
-     * To be used only the first time a post is uploaded, i.e. when its status changes from local draft or remote draft
-     * to published.
-     */
-    public static void addPostToUploadAndTrackAnalytics(PostModel post) {
-        synchronized (mFirstPublishPosts) {
-            mFirstPublishPosts.add(post.getId());
-        }
-        addPostToUpload(post);
     }
 
     static void setLegacyMode(boolean enabled) {
