@@ -500,7 +500,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         media.setDescription(from.description);
         media.setAlt(from.alt);
         if (from.thumbnails != null) {
-            media.setThumbnailUrl(from.thumbnails.thumbnail);
+            if (!TextUtils.isEmpty(from.thumbnails.fmt_std)) {
+                media.setThumbnailUrl(from.thumbnails.fmt_std);
+            } else {
+                media.setThumbnailUrl(from.thumbnails.thumbnail);
+            }
         }
         media.setHeight(from.height);
         media.setWidth(from.width);
