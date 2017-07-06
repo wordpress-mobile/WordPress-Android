@@ -44,10 +44,10 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -1399,8 +1399,19 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void removeNonJetpackPreferences() {
+        removePrivateOptionFromPrivacySetting();
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
+    }
+
+    private void removePrivateOptionFromPrivacySetting() {
+        if (mPrivacyPref == null) {
+            return;
+        }
+
+        final CharSequence[] entries = mPrivacyPref.getEntries();
+        mPrivacyPref.remove(ArrayUtils.indexOf(entries, getString(R.string.site_settings_privacy_private_summary)));
     }
 
     private void removeNonDotComPreferences() {
