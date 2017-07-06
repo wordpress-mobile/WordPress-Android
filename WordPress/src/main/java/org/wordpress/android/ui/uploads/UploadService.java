@@ -34,8 +34,8 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class UploadService extends Service {
-    private static final String MEDIA_LIST_KEY = "mediaList";
-    private static final String LOCAL_POST_ID_KEY = "localPostId";
+    private static final String KEY_MEDIA_LIST = "mediaList";
+    private static final String KEY_LOCAL_POST_ID = "localPostId";
 
     private static MediaUploadManager sMediaUploadManager;
     private static PostUploadManager sPostUploadManager;
@@ -98,11 +98,11 @@ public class UploadService extends Service {
             sPostUploadManager = new PostUploadManager(mPostUploadNotifier);
         }
 
-        if (intent.hasExtra(MEDIA_LIST_KEY)) {
+        if (intent.hasExtra(KEY_MEDIA_LIST)) {
             unpackMediaIntent(intent);
         }
 
-        if (intent.hasExtra(LOCAL_POST_ID_KEY)) {
+        if (intent.hasExtra(KEY_LOCAL_POST_ID)) {
             unpackPostIntent(intent);
         }
 
@@ -138,14 +138,14 @@ public class UploadService extends Service {
 
         // add new media
         @SuppressWarnings("unchecked")
-        List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
+        List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(KEY_MEDIA_LIST);
         if (mediaList != null) {
             sMediaUploadManager.uploadMedia(mediaList);
         }
     }
 
     private void unpackPostIntent(@NonNull Intent intent) {
-        PostModel post = mPostStore.getPostByLocalPostId(intent.getIntExtra(LOCAL_POST_ID_KEY, 0));
+        PostModel post = mPostStore.getPostByLocalPostId(intent.getIntExtra(KEY_LOCAL_POST_ID, 0));
         if (post != null) {
             // TODO track analytics
             // TODO Show a notification in either case
@@ -163,7 +163,7 @@ public class UploadService extends Service {
      */
     public static void addPostToUpload(Context context, PostModel post) {
         Intent intent = new Intent(context, UploadService.class);
-        intent.putExtra(UploadService.LOCAL_POST_ID_KEY, post.getId());
+        intent.putExtra(UploadService.KEY_LOCAL_POST_ID, post.getId());
         context.startService(intent);
     }
 
@@ -174,7 +174,7 @@ public class UploadService extends Service {
      */
     public static void addPostToUploadAndTrackAnalytics(Context context, PostModel post) {
         Intent intent = new Intent(context, UploadService.class);
-        intent.putExtra(UploadService.LOCAL_POST_ID_KEY, post.getId());
+        intent.putExtra(UploadService.KEY_LOCAL_POST_ID, post.getId());
         context.startService(intent);
     }
 
@@ -193,7 +193,7 @@ public class UploadService extends Service {
         }
 
         Intent intent = new Intent(context, UploadService.class);
-        intent.putExtra(UploadService.MEDIA_LIST_KEY, mediaList);
+        intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
         context.startService(intent);
     }
 
