@@ -288,7 +288,7 @@ public class UploadService extends Service {
     }
 
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
-                                                                 MediaUploadReadyListener processor){
+                                                                 MediaUploadReadyListener processor) {
         if (media != null && post != null && processor != null) {
             // actually replace the media ID with the media uri
             PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
@@ -307,7 +307,7 @@ public class UploadService extends Service {
         return post;
     }
 
-    private synchronized void updatePostAndStopServiceIfUploadsComplete(){
+    private synchronized void updatePostAndStopServiceIfUploadsComplete() {
         // we only trigger the actual post modification / processing after we've got
         // no other pending/inprogress uploads, and we have some completed uploads still to be processed
         // TODO
@@ -418,6 +418,5 @@ public class UploadService extends Service {
                 }
             }
         }
-
     }
 }

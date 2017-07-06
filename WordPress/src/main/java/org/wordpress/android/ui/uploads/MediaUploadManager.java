@@ -111,7 +111,6 @@ public class MediaUploadManager {
     }
 
     private synchronized void uploadNextInQueue() {
-
         MediaModel next = getNextMediaToUpload();
 
         if (next == null) {

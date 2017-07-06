@@ -115,6 +115,7 @@ public interface AppComponent {
 
     void inject(UploadService object);
     void inject(MediaUploadManager object);
+    void inject(PostUploadManager object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsWidgetConfigureAdapter object);
@@ -194,7 +195,6 @@ public interface AppComponent {
     void inject(EditorReleaseNotesActivity object);
     void inject(WPWebViewActivity object);
     void inject(WPWebViewClient object);
-    void inject(PostUploadManager object);
 
     void inject(ThemeWebActivity object);
 
