@@ -1978,7 +1978,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(this)) {
-            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, false);
+            FetchMediaListPayload payload = new FetchMediaListPayload(
+                    mSite, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         } else {
             ToastUtils.showToast(this, R.string.error_media_refresh_no_connection, ToastUtils.Duration.SHORT);
