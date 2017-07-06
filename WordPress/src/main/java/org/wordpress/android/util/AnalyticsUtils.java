@@ -60,12 +60,12 @@ public class AnalyticsUtils {
         AnalyticsTracker.refreshMetadata(metadata);
     }
 
-    /***
+    /**
      * @return true if the siteStore has sites accessed via the WPCom Rest API that are not WPCom sites. This only
      * counts Jetpack sites connected via WPCom Rest API. If there are Jetpack sites in the site store and they're
      * all accessed via XMLRPC, this method returns false.
      */
-    private static boolean isJetpackUser(SiteStore siteStore) {
+    static boolean isJetpackUser(SiteStore siteStore) {
         return siteStore.getSitesAccessedViaWPComRestCount() - siteStore.getWPComSitesCount() > 0;
     }
 
