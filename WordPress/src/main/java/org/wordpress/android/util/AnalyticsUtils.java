@@ -65,7 +65,7 @@ public class AnalyticsUtils {
      * counts Jetpack sites connected via WPCom Rest API. If there are Jetpack sites in the site store and they're
      * all accessed via XMLRPC, this method returns false.
      */
-    private static boolean isJetpackUser(SiteStore siteStore) {
+    public static boolean isJetpackUser(SiteStore siteStore) {
         return siteStore.getSitesAccessedViaWPComRestCount() - siteStore.getWPComSitesCount() > 0;
     }
 
