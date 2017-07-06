@@ -225,7 +225,7 @@ public class MediaUploadManager {
     // FluxC events
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
     public void onMediaUploaded(OnMediaUploaded event) {
         // event for unknown media, ignoring
         if (event.media == null) {
