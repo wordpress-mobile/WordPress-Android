@@ -169,12 +169,6 @@ public class AnalyticsUtils {
         }
     }
 
-    /**
-     * Track when a railcar item has been rendered
-     *
-     * @param railcarJson The JSON string of the railcar
-     *
-     */
     public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
         trackWithReaderPostDetails(stat, ReaderPostTable.getBlogPost(blogId, postId, true));
     }
