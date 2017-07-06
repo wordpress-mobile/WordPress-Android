@@ -148,7 +148,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content = (AztecText)view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
 
-        source.setHint("<p>" + getString(R.string.edit_hint) + "</p>");
+        source.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
 
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
         formattingToolbar.setEditor(content, source);
@@ -549,7 +549,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content.setOverlay(predicate, 1, progressDrawable,
                 Gravity.FILL_HORIZONTAL | Gravity.TOP);
 
-        content.refreshText();
+        content.resetAttributedMediaSpan(predicate);
     }
 
     private void overlayFailedMedia() {
@@ -745,8 +745,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // clear overlay
                 content.clearOverlays(predicate);
                 content.updateElementAttributes(predicate, attrs);
-                content.refreshText();
-
+                content.resetAttributedMediaSpan(predicate);
 
                 mUploadingMediaProgressMax.remove(localMediaId);
             } else if (mediaType.equals(MediaType.VIDEO)) {
@@ -801,7 +800,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 try {
                     AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
                     content.setOverlayLevel(localMediaIdPredicate, 1, (int) (progress * 10000));
-                    content.refreshText();
+                    content.resetAttributedMediaSpan(localMediaIdPredicate);
                 } catch (IndexOutOfBoundsException ex) {
                     /*
                      * it could happen that the localMediaId is not found, because FluxC events are not
@@ -826,14 +825,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mediaType != null) {
             switch (mediaType) {
                 case IMAGE:
+                    ImagePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
                     AttributesWithClass attributesWithClass = new AttributesWithClass(
-                            content.getElementAttributes(ImagePredicate.getLocalMediaIdPredicate(localMediaId)));
+                            content.getElementAttributes(localMediaIdPredicate));
 
                     attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
                     attributesWithClass.addClass(ATTR_STATUS_FAILED);
 
                     overlayFailedMedia(localMediaId, attributesWithClass.getAttributes());
-                    content.refreshText();
+                    content.resetAttributedMediaSpan(localMediaIdPredicate);
                     break;
                 case VIDEO:
                     // TODO: mark media as upload-failed
@@ -1121,7 +1121,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         content.setOverlay(mTappedImagePredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
                         content.updateElementAttributes(mTappedImagePredicate, attributesWithClass.getAttributes());
 
-                        content.refreshText();
+                        content.resetAttributedMediaSpan(mTappedImagePredicate);
                         break;
                     case VIDEO:
                         // TODO: unmark video failed

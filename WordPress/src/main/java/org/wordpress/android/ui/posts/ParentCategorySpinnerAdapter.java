@@ -1,20 +1,21 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.util.DisplayUtils;
 
 import java.util.List;
 
+import static org.wordpress.android.WordPress.getContext;
 
 public class ParentCategorySpinnerAdapter extends BaseAdapter implements SpinnerAdapter {
     int mResourceId;
@@ -45,15 +46,12 @@ public class ParentCategorySpinnerAdapter extends BaseAdapter implements Spinner
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(mResourceId, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.categoryRowText);
-        ImageView levelIndicatorView = (ImageView) rowView.findViewById(R.id.categoryRowLevelIndicator);
-        textView.setText(Html.fromHtml(getItem(position).getName()));
-        int level = getItem(position).getLevel();
-        if (level == 1) { // hide ImageView
-            levelIndicatorView.setVisibility(View.GONE);
-        } else {
-            ViewGroup.LayoutParams params = levelIndicatorView.getLayoutParams();
-            params.width = (params.width / 2) * level;
-            levelIndicatorView.setLayoutParams(params);
+        textView.setText(StringEscapeUtils.unescapeHtml4(getItem(position).getName()));
+        CategoryNode node = getItem(position);
+        if (node != null) {
+            textView.setText(StringEscapeUtils.unescapeHtml4(node.getName()));
+            textView.setPadding(DisplayUtils.dpToPx(getContext(), 16) * (node.getLevel() + 1), 0,
+                    DisplayUtils.dpToPx(getContext(), 16), 0);
         }
         return rowView;
     }
@@ -63,9 +61,7 @@ public class ParentCategorySpinnerAdapter extends BaseAdapter implements Spinner
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(mResourceId, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.categoryRowText);
-        ImageView levelIndicatorView = (ImageView) rowView.findViewById(R.id.categoryRowLevelIndicator);
-        textView.setText(Html.fromHtml(getItem(position).getName()));
-        levelIndicatorView.setVisibility(View.GONE);
+        textView.setText(StringEscapeUtils.unescapeHtml4(getItem(position).getName()));
         return rowView;
     }
 }
