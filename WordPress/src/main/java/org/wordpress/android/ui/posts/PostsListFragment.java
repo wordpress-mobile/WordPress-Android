@@ -45,7 +45,7 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
-import org.wordpress.android.ui.posts.services.PostEvents;
+import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;

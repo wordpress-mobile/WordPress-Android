@@ -19,8 +19,6 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.posts.services.MediaUploadReadyProcessor;
-import org.wordpress.android.ui.posts.services.PostUploadNotifier;
-import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -352,7 +350,7 @@ public class UploadService extends Service {
                         // e.g. what if the post has local media URLs but no pending media uploads?
                         iterator.remove();
                         // TODO Need to track analytics here if it was originally added with addPostToUploadAndTrackAnalytics()
-                        addPostToUpload(updatedPost);
+                        addPostToUpload(this, updatedPost);
                     }
                 }
             }

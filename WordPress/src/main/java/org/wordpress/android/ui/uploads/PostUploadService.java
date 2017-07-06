@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.services;
+package org.wordpress.android.ui.uploads;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -33,9 +33,8 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
+import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -82,7 +81,7 @@ public class PostUploadService {
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
 
-    public PostUploadService(Context context, PostUploadNotifier postUploadNotifier) {
+    PostUploadService(Context context, PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext()).component().inject(this);
         AppLog.i(T.MEDIA, "Post Upload Service > created");
         mDispatcher.register(this);
@@ -90,7 +89,7 @@ public class PostUploadService {
         mPostUploadNotifier = postUploadNotifier;
     }
 
-    public void uploadPost(PostModel post) {
+    void uploadPost(PostModel post) {
         synchronized (mQueuedPostsList) {
             mQueuedPostsList.add(post);
         }
@@ -98,7 +97,7 @@ public class PostUploadService {
         uploadNextPost();
     }
 
-    public void uploadPostAndTrackAnalytics(PostModel post) {
+    void uploadPostAndTrackAnalytics(PostModel post) {
         synchronized (mFirstPublishPosts) {
             mFirstPublishPosts.add(post.getId());
         }
@@ -109,7 +108,7 @@ public class PostUploadService {
     /**
      * Adds a post to the queue.
      */
-    public static void addPostToUpload(PostModel post) {
+    static void addPostToUpload(PostModel post) {
         synchronized (mQueuedPostsList) {
             mQueuedPostsList.add(post);
         }
@@ -127,7 +126,7 @@ public class PostUploadService {
         addPostToUpload(post);
     }
 
-    public static void setLegacyMode(boolean enabled) {
+    static void setLegacyMode(boolean enabled) {
         mUseLegacyMode = enabled;
     }
 
@@ -136,7 +135,7 @@ public class PostUploadService {
      * Except for legacy mode, a post counts as 'uploading' if the post content itself is being uploaded - a post
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
-    public static boolean isPostUploadingOrQueued(PostModel post) {
+    static boolean isPostUploadingOrQueued(PostModel post) {
         // First check the currently uploading post
         if (isPostUploading(post)) {
             return true;
@@ -160,11 +159,11 @@ public class PostUploadService {
      * Except for legacy mode, a post counts as 'uploading' if the post content itself is being uploaded - a post
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
-    public static boolean isPostUploading(PostModel post) {
+    static boolean isPostUploading(PostModel post) {
         return mCurrentUploadingPost != null && mCurrentUploadingPost.getId() == post.getId();
     }
 
-    public static void cancelQueuedPostUpload(PostModel post) {
+    static void cancelQueuedPostUpload(PostModel post) {
         synchronized (mQueuedPostsList) {
             Iterator<PostModel> iterator = mQueuedPostsList.iterator();
             while (iterator.hasNext()) {
