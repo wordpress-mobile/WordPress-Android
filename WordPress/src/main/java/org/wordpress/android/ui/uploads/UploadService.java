@@ -160,19 +160,9 @@ public class UploadService extends Service {
      * Adds a post to the queue.
      */
     public static void addPostToUpload(Context context, PostModel post) {
-        if (sPostUploadManager == null) {
-            Intent intent = new Intent(context, UploadService.class);
-            intent.putExtra(UploadService.LOCAL_POST_ID_KEY, post.getId());
-            context.startService(intent);
-            return;
-        }
-
-        // TODO Show a notification in either case
-        if (!hasPendingMediaUploadsForPost(post)) {
-            sPostUploadManager.uploadPost(post);
-        } else {
-            sPostsWithPendingMedia.add(post);
-        }
+        Intent intent = new Intent(context, UploadService.class);
+        intent.putExtra(UploadService.LOCAL_POST_ID_KEY, post.getId());
+        context.startService(intent);
     }
 
     /**
@@ -181,19 +171,9 @@ public class UploadService extends Service {
      * to published.
      */
     public static void addPostToUploadAndTrackAnalytics(Context context, PostModel post) {
-        if (sPostUploadManager == null) {
-            Intent intent = new Intent(context, UploadService.class);
-            intent.putExtra(UploadService.LOCAL_POST_ID_KEY, post.getId());
-            context.startService(intent);
-            return;
-        }
-
-        // TODO Show a notification in either case
-        if (!hasPendingMediaUploadsForPost(post)) {
-            sPostUploadManager.uploadPostAndTrackAnalytics(post);
-        } else {
-            sPostsWithPendingMedia.add(post);
-        }
+        Intent intent = new Intent(context, UploadService.class);
+        intent.putExtra(UploadService.LOCAL_POST_ID_KEY, post.getId());
+        context.startService(intent);
     }
 
     public static void setLegacyMode(boolean enabled) {
