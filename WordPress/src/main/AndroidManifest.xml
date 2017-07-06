@@ -473,9 +473,6 @@
             android:name=".ui.uploads.UploadService"
             android:label="Upload Service" />
         <service
-            android:name=".ui.posts.services.PostUploadService"
-            android:label="Post Upload Service" />
-        <service
             android:name=".ui.media.services.MediaDeleteService"
             android:label="Media Delete Service"
             android:exported="false"

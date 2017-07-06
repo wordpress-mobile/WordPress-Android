@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.StringUtils;
@@ -29,7 +30,7 @@ import java.util.Random;
 
 public class PostUploadNotifier {
     private final Context mContext;
-    private final PostUploadService mService;
+    private final UploadService mService;
 
     private final NotificationManager mNotificationManager;
     private final Notification.Builder mNotificationBuilder;
@@ -45,7 +46,7 @@ public class PostUploadNotifier {
         Bitmap latestIcon;
     }
 
-    public PostUploadNotifier(Context context, PostUploadService service) {
+    public PostUploadNotifier(Context context, UploadService service) {
         // Add the uploader to the notification bar
         mContext = context;
         mService = service;

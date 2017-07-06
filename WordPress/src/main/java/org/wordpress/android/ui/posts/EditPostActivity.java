@@ -983,13 +983,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
-            if (isFirstTimePublish) {
-                UploadService.addPostToUploadAndTrackAnalytics(mPost);
-            } else {
-                UploadService.addPostToUpload(mPost);
-            }
             UploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
-            startService(new Intent(EditPostActivity.this, UploadService.class));
+            if (isFirstTimePublish) {
+                UploadService.addPostToUploadAndTrackAnalytics(EditPostActivity.this, mPost);
+            } else {
+                UploadService.addPostToUpload(EditPostActivity.this, mPost);
+            }
+
             PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
 
             return null;

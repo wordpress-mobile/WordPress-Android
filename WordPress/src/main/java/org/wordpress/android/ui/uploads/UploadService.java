@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.posts.services.MediaUploadReadyProcessor;
+import org.wordpress.android.ui.posts.services.PostUploadNotifier;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -36,8 +37,11 @@ import de.greenrobot.event.EventBus;
 
 public class UploadService extends Service {
     private static final String MEDIA_LIST_KEY = "mediaList";
+    private static final String LOCAL_POST_ID_KEY = "localPostId";
 
     private static MediaUploadManager sMediaUploadManager;
+    private static PostUploadService sPostUploadService;
+    private PostUploadNotifier mPostUploadNotifier;
 
     private static final List<PostModel> sPostsWithPendingMedia = new ArrayList<>();
 
@@ -69,6 +73,9 @@ public class UploadService extends Service {
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
         }
 
+        // TODO revert state of any uploading posts back to draft
+
+        // TODO unregister managers as well
         mDispatcher.unregister(this);
         AppLog.i(T.MAIN, "Upload Service > destroyed");
         super.onDestroy();
@@ -85,11 +92,22 @@ public class UploadService extends Service {
             sMediaUploadManager = new MediaUploadManager();
         }
 
+        if (mPostUploadNotifier == null) {
+            mPostUploadNotifier = new PostUploadNotifier(getApplicationContext(), this);
+        }
+
+        if (sPostUploadService == null) {
+            sPostUploadService = new PostUploadService(this, mPostUploadNotifier);
+        }
+
         if (intent.hasExtra(MEDIA_LIST_KEY)) {
             unpackMediaIntent(intent);
         }
 
-        startService(new Intent(this, PostUploadService.class));
+        if (intent.hasExtra(LOCAL_POST_ID_KEY)) {
+            unpackPostIntent(intent);
+        }
+
         return START_REDELIVER_INTENT;
     }
 
@@ -128,13 +146,33 @@ public class UploadService extends Service {
         }
     }
 
+    private void unpackPostIntent(@NonNull Intent intent) {
+        PostModel post = mPostStore.getPostByLocalPostId(intent.getIntExtra(LOCAL_POST_ID_KEY, 0));
+        if (post != null) {
+            // TODO track analytics
+            // TODO Show a notification in either case
+            if (!hasPendingMediaUploadsForPost(post)) {
+                sPostUploadService.uploadPost(post);
+            } else {
+                sPostsWithPendingMedia.add(post);
+            }
+        }
+    }
+
     /**
      * Adds a post to the queue.
      */
-    public static void addPostToUpload(PostModel post) {
+    public static void addPostToUpload(Context context, PostModel post) {
+        if (sPostUploadService == null) {
+            Intent intent = new Intent(context, UploadService.class);
+            intent.putExtra(UploadService.LOCAL_POST_ID_KEY, post.getId());
+            context.startService(intent);
+            return;
+        }
+
         // TODO Show a notification in either case
         if (!hasPendingMediaUploadsForPost(post)) {
-            PostUploadService.addPostToUpload(post);
+            sPostUploadService.uploadPost(post);
         } else {
             sPostsWithPendingMedia.add(post);
         }
@@ -145,10 +183,17 @@ public class UploadService extends Service {
      * To be used only the first time a post is uploaded, i.e. when its status changes from local draft or remote draft
      * to published.
      */
-    public static void addPostToUploadAndTrackAnalytics(PostModel post) {
+    public static void addPostToUploadAndTrackAnalytics(Context context, PostModel post) {
+        if (sPostUploadService == null) {
+            Intent intent = new Intent(context, UploadService.class);
+            intent.putExtra(UploadService.LOCAL_POST_ID_KEY, post.getId());
+            context.startService(intent);
+            return;
+        }
+
         // TODO Show a notification in either case
         if (!hasPendingMediaUploadsForPost(post)) {
-            PostUploadService.addPostToUploadAndTrackAnalytics(post);
+            sPostUploadService.uploadPostAndTrackAnalytics(post);
         } else {
             sPostsWithPendingMedia.add(post);
         }
@@ -266,9 +311,13 @@ public class UploadService extends Service {
 
     private void stopServiceIfUploadsComplete() {
         // TODO: Stop service if no more media or posts are left to upload
+        if (sPostsWithPendingMedia.isEmpty()) {
+            // TODO
+        }
         AppLog.i(T.MAIN, "Upload Service > completed");
         mDispatcher.unregister(sMediaUploadManager);
         EventBus.getDefault().unregister(sMediaUploadManager);
+        // TODO unregister PostUploadManager
         stopSelf();
     }
 

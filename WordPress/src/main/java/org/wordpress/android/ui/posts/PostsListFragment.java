@@ -552,8 +552,7 @@ public class PostsListFragment extends Fragment
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
 
-        UploadService.addPostToUpload(post);
-        getActivity().startService(new Intent(getActivity(), UploadService.class));
+        UploadService.addPostToUpload(getActivity(), post);
 
         PostUtils.trackSavePostAnalytics(post, mSite);
     }

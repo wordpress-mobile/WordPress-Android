@@ -1,14 +1,11 @@
 package org.wordpress.android.ui.posts.services;
 
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.IBinder;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.annotation.NonNull;
@@ -29,7 +26,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -67,7 +63,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class PostUploadService extends Service {
+public class PostUploadService {
     private static final ArrayList<PostModel> mQueuedPostsList = new ArrayList<>();
     private static PostModel mCurrentUploadingPost = null;
     private static Map<String, Object> mCurrentUploadingPostAnalyticsProperties;
@@ -85,6 +81,30 @@ public class PostUploadService extends Service {
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
+
+    public PostUploadService(Context context, PostUploadNotifier postUploadNotifier) {
+        ((WordPress) WordPress.getContext()).component().inject(this);
+        AppLog.i(T.MEDIA, "Post Upload Service > created");
+        mDispatcher.register(this);
+        mContext = context;
+        mPostUploadNotifier = postUploadNotifier;
+    }
+
+    public void uploadPost(PostModel post) {
+        synchronized (mQueuedPostsList) {
+            mQueuedPostsList.add(post);
+        }
+        showNotificationsForPendingMediaPosts();
+        uploadNextPost();
+    }
+
+    public void uploadPostAndTrackAnalytics(PostModel post) {
+        synchronized (mFirstPublishPosts) {
+            mFirstPublishPosts.add(post.getId());
+        }
+        showNotificationsForPendingMediaPosts();
+        uploadPost(post);
+    }
 
     /**
      * Adds a post to the queue.
@@ -156,46 +176,6 @@ public class PostUploadService extends Service {
         }
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        ((WordPress) getApplication()).component().inject(this);
-        mDispatcher.register(this);
-        mContext = this.getApplicationContext();
-        mPostUploadNotifier = new PostUploadNotifier(mContext, this);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // Cancel current task, it will reset post from "uploading" to "local draft"
-        if (mCurrentTask != null) {
-            AppLog.d(T.POSTS, "cancelling current upload task");
-            mCurrentTask.cancel(true);
-        }
-        mDispatcher.unregister(this);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        synchronized (mQueuedPostsList) {
-            if (mQueuedPostsList.size() == 0 || mContext == null) {
-                stopSelf();
-                return START_NOT_STICKY;
-            }
-        }
-
-        uploadNextPost();
-        showNotificationsForPendingMediaPosts();
-        // We want this service to continue running until it is explicitly stopped, so return sticky.
-        return START_STICKY;
-    }
-
     private void uploadNextPost() {
         synchronized (mQueuedPostsList) {
             if (mCurrentTask == null) { //make sure nothing is running
@@ -206,7 +186,7 @@ public class PostUploadService extends Service {
                     mCurrentTask = new UploadPostTask();
                     mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mCurrentUploadingPost);
                 } else {
-                    stopSelf();
+                    // TODO: Tell UploadService it can stop
                 }
             }
         }
@@ -216,28 +196,10 @@ public class PostUploadService extends Service {
         for (PostModel postModel : mQueuedPostsList) {
             if (UploadService.hasPendingMediaUploadsForPost(postModel)) {
                 if (!mPostUploadNotifier.isDisplayingNotificationForPost(postModel)) {
-                    mPostUploadNotifier.createNotificationForPost(postModel, getString(R.string.uploading_post_media));
+                    mPostUploadNotifier.createNotificationForPost(postModel, mContext.getString(R.string.uploading_post_media));
                 }
             }
         }
-    }
-
-    /**
-     * Removes a post from the queued post list given its local ID.
-     * @return the post that was removed - if no post was removed, returns null
-     */
-    private PostModel removeQueuedPostByLocalId(int localPostId) {
-        synchronized (mQueuedPostsList) {
-            Iterator<PostModel> iterator = mQueuedPostsList.iterator();
-            while (iterator.hasNext()) {
-                PostModel postModel = iterator.next();
-                if (postModel.getId() == localPostId) {
-                    iterator.remove();
-                    return postModel;
-                }
-            }
-        }
-        return null;
     }
 
     private void finishUpload() {
@@ -275,8 +237,9 @@ public class PostUploadService extends Service {
             mPost = posts[0];
 
             String uploadingPostMessage = String.format(
-                    getString(R.string.sending_content),
-                    mPost.isPage() ? getString(R.string.page).toLowerCase() : getString(R.string.post).toLowerCase()
+                    mContext.getString(R.string.sending_content),
+                    mPost.isPage() ? mContext.getString(R.string.page).toLowerCase()
+                            : mContext.getString(R.string.post).toLowerCase()
             );
 
             if (mPostUploadNotifier.isDisplayingNotificationForPost(mPost)) {
@@ -496,7 +459,7 @@ public class PostUploadService extends Service {
             try {
                 mContext.openFileOutput(tempFileName, Context.MODE_PRIVATE);
             } catch (FileNotFoundException e) {
-                mErrorMessage = getResources().getString(R.string.file_error_create);
+                mErrorMessage = mContext.getResources().getString(R.string.file_error_create);
                 return null;
             }
 
@@ -618,59 +581,46 @@ public class PostUploadService extends Service {
         }
     }
 
-    private void cancelPostUploadMatchingMedia(MediaModel media, String mediaErrorMessage) {
-        PostModel postToCancel = removeQueuedPostByLocalId(media.getLocalPostId());
-        if (postToCancel == null) return;
-
-        SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
-        String message = getErrorMessage(postToCancel, mediaErrorMessage);
-        mPostUploadNotifier.updateNotificationError(postToCancel, site, message, true);
-
-        mFirstPublishPosts.remove(postToCancel.getId());
-        EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
-        finishUpload();
-    }
-
     /**
      * Returns an error message string for a failed post upload.
      */
     private @NonNull String getErrorMessageFromPostError(PostModel post, PostError error) {
         switch (error.type) {
             case UNKNOWN_POST:
-                return getString(R.string.error_unknown_post);
+                return mContext.getString(R.string.error_unknown_post);
             case UNKNOWN_POST_TYPE:
-                return getString(R.string.error_unknown_post_type);
+                return mContext.getString(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
-                return post.isPage() ? getString(R.string.error_refresh_unauthorized_pages) :
-                        getString(R.string.error_refresh_unauthorized_posts);
+                return post.isPage() ? mContext.getString(R.string.error_refresh_unauthorized_pages) :
+                        mContext.getString(R.string.error_refresh_unauthorized_posts);
         }
         // In case of a generic or uncaught error, return the message from the API response or the error type
         return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
     }
 
-    private @NonNull String getErrorMessageFromMediaError(MediaError error) {
-         switch (error.type) {
+    private @NonNull String getErrorMessageFromMediaError(MediaStore.MediaError error) {
+        switch (error.type) {
             case FS_READ_PERMISSION_DENIED:
-                return getString(R.string.error_media_insufficient_fs_permissions);
+                return mContext.getString(R.string.error_media_insufficient_fs_permissions);
             case NOT_FOUND:
-                return getString(R.string.error_media_not_found);
+                return mContext.getString(R.string.error_media_not_found);
             case AUTHORIZATION_REQUIRED:
-                return getString(R.string.error_media_unauthorized);
-             case PARSE_ERROR:
-                 return getString(R.string.error_media_parse_error);
+                return mContext.getString(R.string.error_media_unauthorized);
+            case PARSE_ERROR:
+                return mContext.getString(R.string.error_media_parse_error);
             case REQUEST_TOO_LARGE:
-                return getString(R.string.error_media_request_too_large);
-             case SERVER_ERROR:
-                 return getString(R.string.media_error_internal_server_error);
-             case TIMEOUT:
-                 return getString(R.string.media_error_timeout);
+                return mContext.getString(R.string.error_media_request_too_large);
+            case SERVER_ERROR:
+                return mContext.getString(R.string.media_error_internal_server_error);
+            case TIMEOUT:
+                return mContext.getString(R.string.media_error_timeout);
         }
         // In case of a generic or uncaught error, return the message from the API response or the error type
         return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
     }
 
     private @NonNull String getErrorMessage(PostModel post, String specificMessage) {
-        String postType = getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
+        String postType = mContext.getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
         return String.format(mContext.getResources().getText(R.string.error_upload_params).toString(), postType,
                 specificMessage);
     }
@@ -708,32 +658,8 @@ public class PostUploadService extends Service {
         if (event.media == null) {
             return;
         }
-        if (!mUseLegacyMode) {
-            handleMediaUploadCompleted(event);
-        } else {
+        if (mUseLegacyMode) {
             handleMediaUploadCompletedLegacy(event);
-        }
-    }
-
-    private void handleMediaUploadCompleted(OnMediaUploaded event) {
-        if (event.media.getLocalPostId() == 0) {
-            // Only interested in media attached to local posts
-            return;
-        }
-
-        if (event.isError()) {
-            AppLog.e(T.MEDIA, "Media upload failed for post " + event.media.getLocalPostId() + " : " +
-                    event.error.type + ": " + event.error.message);
-            String errorMessage = getErrorMessageFromMediaError(event.error);
-            cancelPostUploadMatchingMedia(event.media, errorMessage);
-            return;
-        }
-
-        if (event.canceled) {
-            AppLog.i(T.MEDIA, "Upload cancelled for post with id " + event.media.getLocalPostId()
-                            + " - a media upload for this post has been cancelled, id: " + event.media.getId());
-            cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
-            return;
         }
     }
 
