@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.media.services;
+package org.wordpress.android.ui.uploads;
 
 import android.support.annotation.NonNull;
 
@@ -9,14 +9,11 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
-import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -36,31 +33,42 @@ import de.greenrobot.event.EventBus;
 /**
  * Started with explicit list of media to upload.
  */
-public class MediaUploadService {
-
-
+public class MediaUploadManager {
     private static List<MediaModel> mPendingUploads = new ArrayList<>();
     private static List<MediaModel> mInProgressUploads = new ArrayList<>();
 
     @Inject Dispatcher mDispatcher;
-    @Inject MediaStore mMediaStore;
-    @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
 
-    public MediaUploadService() {
+    MediaUploadManager() {
         ((WordPress) WordPress.getContext()).component().inject(this);
-        AppLog.i(T.MEDIA, "Media Upload Service > created");
+        AppLog.i(T.MEDIA, "Media Upload Manager > created");
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
 
-    public void uploadMedia(List<MediaModel> mediaList) {
+    void uploadMedia(List<MediaModel> mediaList) {
         if (mediaList != null) {
             for (MediaModel media : mediaList) {
                 addUniqueMediaToQueue(media);
             }
         }
         uploadNextInQueue();
+    }
+
+    static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
+        for (MediaModel queuedMedia : mInProgressUploads) {
+            if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                return true;
+            }
+        }
+
+        for (MediaModel queuedMedia : mPendingUploads) {
+            if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
@@ -108,8 +116,8 @@ public class MediaUploadService {
         MediaModel next = getNextMediaToUpload();
 
         if (next == null) {
-            AppLog.v(T.MEDIA, "No more media items to upload. Skipping this request - MediaUploadService.");
-            stopServiceIfUploadsComplete();
+            AppLog.v(T.MEDIA, "No more media items to upload. Skipping this request - MediaUploadManager.");
+            notifyServiceIfUploadsComplete();
             return;
         }
 
@@ -117,8 +125,8 @@ public class MediaUploadService {
 
         // somehow lost our reference to the site, complete this action
         if (site == null) {
-            AppLog.i(T.MEDIA, "Unexpected state, site is null. Skipping this request - MediaUploadService.");
-            stopServiceIfUploadsComplete();
+            AppLog.i(T.MEDIA, "Unexpected state, site is null. Skipping this request - MediaUploadManager.");
+            notifyServiceIfUploadsComplete();
             return;
         }
 
@@ -166,7 +174,7 @@ public class MediaUploadService {
                 dispatchCancelAction(oneUpload, site, delete);
             } else {
                 AppLog.i(T.MEDIA, "Unexpected state, site is null. Skipping cancellation of " +
-                        "this request - MediaUploadService.");
+                        "this request - MediaUploadManager.");
             }
         }
     }
@@ -188,8 +196,8 @@ public class MediaUploadService {
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 
-    private void stopServiceIfUploadsComplete() {
-        AppLog.i(T.MEDIA, "Media Upload Service > completed");
+    private void notifyServiceIfUploadsComplete() {
+        AppLog.i(T.MEDIA, "Media Upload Manager > completed");
         if (mPendingUploads.isEmpty() && mInProgressUploads.isEmpty()) {
             // TODO: Tell UploadService it can stop
         }
@@ -239,7 +247,7 @@ public class MediaUploadService {
      */
     private void trackUploadMediaEvents(AnalyticsTracker.Stat stat, MediaModel media, Map<String, Object> properties) {
         if (media == null) {
-            AppLog.e(T.MEDIA, "Cannot track media upload service events if the original media is null!!");
+            AppLog.e(T.MEDIA, "Cannot track media upload manager events if the original media is null!!");
             return;
         }
         Map<String, Object> mediaProperties = AnalyticsUtils.getMediaProperties(WordPress.getContext(),
@@ -274,20 +282,5 @@ public class MediaUploadService {
     private boolean compareBySiteAndFilePath(MediaModel media1, MediaModel media2) {
         return (media1.getLocalSiteId() == media2.getLocalSiteId() &&
                 StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
-    }
-
-    public static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
-        for (MediaModel queuedMedia : mInProgressUploads) {
-            if (queuedMedia.getLocalPostId() == postModel.getId()) {
-                return true;
-            }
-        }
-
-        for (MediaModel queuedMedia : mPendingUploads) {
-            if (queuedMedia.getLocalPostId() == postModel.getId()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

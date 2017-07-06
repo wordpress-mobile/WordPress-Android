@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
-import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.posts.services.MediaUploadReadyProcessor;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AppLog;
@@ -35,7 +34,7 @@ import javax.inject.Inject;
 public class UploadService extends Service {
     private static final String MEDIA_LIST_KEY = "mediaList";
 
-    private static MediaUploadService mMediaUploadService;
+    private static MediaUploadManager sMediaUploadManager;
 
     // To avoid conflicts by editing the post each time a single upload completes, this map tracks completed media by
     // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
@@ -77,8 +76,8 @@ public class UploadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (mMediaUploadService == null) {
-            mMediaUploadService = new MediaUploadService();
+        if (sMediaUploadManager == null) {
+            sMediaUploadManager = new MediaUploadManager();
         }
 
         if (intent.hasExtra(MEDIA_LIST_KEY)) {
@@ -120,7 +119,7 @@ public class UploadService extends Service {
         @SuppressWarnings("unchecked")
         List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
         if (mediaList != null) {
-            mMediaUploadService.uploadMedia(mediaList);
+            sMediaUploadManager.uploadMedia(mediaList);
         }
     }
 
@@ -149,8 +148,8 @@ public class UploadService extends Service {
             return;
         }
 
-        if (mMediaUploadService != null) {
-            mMediaUploadService.uploadMedia(mediaList);
+        if (sMediaUploadManager != null) {
+            sMediaUploadManager.uploadMedia(mediaList);
             return;
         }
 
@@ -199,7 +198,7 @@ public class UploadService extends Service {
     }
 
     public static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
-        return MediaUploadService.hasPendingMediaUploadsForPost(postModel);
+        return MediaUploadManager.hasPendingMediaUploadsForPost(postModel);
     }
 
     // this keeps a map for all completed media for each post, so we can process the post easily
