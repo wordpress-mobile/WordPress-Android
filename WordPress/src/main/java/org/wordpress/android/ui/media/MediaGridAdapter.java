@@ -177,6 +177,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             } else {
                 WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView, mImageLoader);
             }
+        } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
+            holder.fileContainer.setVisibility(View.GONE);
+            WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl(), holder.imageView, mImageLoader);
         } else {
             // not an image, so show file name and file type
             holder.imageView.setImageDrawable(null);
