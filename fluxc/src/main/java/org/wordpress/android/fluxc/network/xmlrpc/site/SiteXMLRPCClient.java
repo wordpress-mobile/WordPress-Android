@@ -45,11 +45,11 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                     public void onResponse(Object response) {
                         SitesModel sites = sitesResponseToSitesModel(response, username, password);
                         if (sites != null) {
-                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sites));
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesXmlRpcAction(sites));
                         } else {
                             sites = new SitesModel();
                             sites.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
-                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(sites));
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesXmlRpcAction(sites));
                         }
                     }
                 },
@@ -58,7 +58,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         SitesModel sites = new SitesModel();
                         sites.error = error;
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(sites));
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesXmlRpcAction(sites));
                     }
                 }
         );
