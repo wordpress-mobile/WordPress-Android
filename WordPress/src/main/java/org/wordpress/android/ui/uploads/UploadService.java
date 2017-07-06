@@ -314,22 +314,24 @@ public class UploadService extends Service {
                 addMediaToPostCompletedMediaListMap(event.media);
 
                 // If this was the last media upload a pending post was waiting for, send it to the PostUploadManager
-                Iterator<PostModel> iterator = sPostsWithPendingMedia.iterator();
-                while (iterator.hasNext()) {
-                    PostModel postModel = iterator.next();
-                    if (!UploadService.hasPendingMediaUploadsForPost(postModel)) {
-                        // Fetch latest version of the post, in case it has been modified elsewhere
-                        PostModel latestPost = mPostStore.getPostByLocalPostId(postModel.getId());
+                synchronized (sPostsWithPendingMedia) {
+                    Iterator<PostModel> iterator = sPostsWithPendingMedia.iterator();
+                    while (iterator.hasNext()) {
+                        PostModel postModel = iterator.next();
+                        if (!UploadService.hasPendingMediaUploadsForPost(postModel)) {
+                            // Fetch latest version of the post, in case it has been modified elsewhere
+                            PostModel latestPost = mPostStore.getPostByLocalPostId(postModel.getId());
 
-                        // Replace local with remote media in the post content
-                        PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(latestPost);
-                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+                            // Replace local with remote media in the post content
+                            PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(latestPost);
+                            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
 
-                        // TODO Should do some extra validation here
-                        // e.g. what if the post has local media URLs but no pending media uploads?
-                        iterator.remove();
-                        // TODO Need to track analytics here if it was originally added with addPostToUploadAndTrackAnalytics()
-                        addPostToUpload(this, updatedPost);
+                            // TODO Should do some extra validation here
+                            // e.g. what if the post has local media URLs but no pending media uploads?
+                            iterator.remove();
+                            // TODO Need to track analytics here if it was originally added with addPostToUploadAndTrackAnalytics()
+                            sPostUploadManager.uploadPost(updatedPost);
+                        }
                     }
                 }
             }
