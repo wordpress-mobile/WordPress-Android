@@ -38,7 +38,7 @@ public class UploadService extends Service {
     private static final String LOCAL_POST_ID_KEY = "localPostId";
 
     private static MediaUploadManager sMediaUploadManager;
-    private static PostUploadService sPostUploadService;
+    private static PostUploadManager sPostUploadManager;
     private PostUploadNotifier mPostUploadNotifier;
 
     private static final List<PostModel> sPostsWithPendingMedia = new ArrayList<>();
@@ -94,8 +94,8 @@ public class UploadService extends Service {
             mPostUploadNotifier = new PostUploadNotifier(getApplicationContext(), this);
         }
 
-        if (sPostUploadService == null) {
-            sPostUploadService = new PostUploadService(this, mPostUploadNotifier);
+        if (sPostUploadManager == null) {
+            sPostUploadManager = new PostUploadManager(this, mPostUploadNotifier);
         }
 
         if (intent.hasExtra(MEDIA_LIST_KEY)) {
@@ -150,7 +150,7 @@ public class UploadService extends Service {
             // TODO track analytics
             // TODO Show a notification in either case
             if (!hasPendingMediaUploadsForPost(post)) {
-                sPostUploadService.uploadPost(post);
+                sPostUploadManager.uploadPost(post);
             } else {
                 sPostsWithPendingMedia.add(post);
             }
@@ -161,7 +161,7 @@ public class UploadService extends Service {
      * Adds a post to the queue.
      */
     public static void addPostToUpload(Context context, PostModel post) {
-        if (sPostUploadService == null) {
+        if (sPostUploadManager == null) {
             Intent intent = new Intent(context, UploadService.class);
             intent.putExtra(UploadService.LOCAL_POST_ID_KEY, post.getId());
             context.startService(intent);
@@ -170,7 +170,7 @@ public class UploadService extends Service {
 
         // TODO Show a notification in either case
         if (!hasPendingMediaUploadsForPost(post)) {
-            sPostUploadService.uploadPost(post);
+            sPostUploadManager.uploadPost(post);
         } else {
             sPostsWithPendingMedia.add(post);
         }
@@ -182,7 +182,7 @@ public class UploadService extends Service {
      * to published.
      */
     public static void addPostToUploadAndTrackAnalytics(Context context, PostModel post) {
-        if (sPostUploadService == null) {
+        if (sPostUploadManager == null) {
             Intent intent = new Intent(context, UploadService.class);
             intent.putExtra(UploadService.LOCAL_POST_ID_KEY, post.getId());
             context.startService(intent);
@@ -191,14 +191,14 @@ public class UploadService extends Service {
 
         // TODO Show a notification in either case
         if (!hasPendingMediaUploadsForPost(post)) {
-            sPostUploadService.uploadPostAndTrackAnalytics(post);
+            sPostUploadManager.uploadPostAndTrackAnalytics(post);
         } else {
             sPostsWithPendingMedia.add(post);
         }
     }
 
     public static void setLegacyMode(boolean enabled) {
-        PostUploadService.setLegacyMode(enabled);
+        PostUploadManager.setLegacyMode(enabled);
     }
 
     public static void uploadMedia(Context context, ArrayList<MediaModel> mediaList) {
@@ -222,7 +222,7 @@ public class UploadService extends Service {
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
     public static boolean isPostUploadingOrQueued(PostModel post) {
-        return PostUploadService.isPostUploadingOrQueued(post);
+        return PostUploadManager.isPostUploadingOrQueued(post);
     }
 
     /**
@@ -231,11 +231,11 @@ public class UploadService extends Service {
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
     public static boolean isPostUploading(PostModel post) {
-        return PostUploadService.isPostUploading(post);
+        return PostUploadManager.isPostUploading(post);
     }
 
     public static void cancelQueuedPostUpload(PostModel post) {
-        PostUploadService.cancelQueuedPostUpload(post);
+        PostUploadManager.cancelQueuedPostUpload(post);
     }
 
     public static synchronized PostModel updatePostWithCurrentlyCompletedUploads(PostModel post) {

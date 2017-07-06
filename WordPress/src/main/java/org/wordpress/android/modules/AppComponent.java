@@ -51,7 +51,7 @@ import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.ui.uploads.PostUploadService;
+import org.wordpress.android.ui.uploads.PostUploadManager;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
@@ -194,7 +194,7 @@ public interface AppComponent {
     void inject(EditorReleaseNotesActivity object);
     void inject(WPWebViewActivity object);
     void inject(WPWebViewClient object);
-    void inject(PostUploadService object);
+    void inject(PostUploadManager object);
 
     void inject(ThemeWebActivity object);
 

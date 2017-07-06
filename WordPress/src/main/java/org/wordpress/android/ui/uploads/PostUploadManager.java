@@ -62,7 +62,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class PostUploadService {
+public class PostUploadManager {
     private static final ArrayList<PostModel> mQueuedPostsList = new ArrayList<>();
     private static PostModel mCurrentUploadingPost = null;
     private static Map<String, Object> mCurrentUploadingPostAnalyticsProperties;
@@ -81,9 +81,9 @@ public class PostUploadService {
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
 
-    PostUploadService(Context context, PostUploadNotifier postUploadNotifier) {
+    PostUploadManager(Context context, PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext()).component().inject(this);
-        AppLog.i(T.MEDIA, "Post Upload Service > created");
+        AppLog.i(T.MEDIA, "Post Upload Manager > created");
         mDispatcher.register(this);
         mContext = context;
         mPostUploadNotifier = postUploadNotifier;
