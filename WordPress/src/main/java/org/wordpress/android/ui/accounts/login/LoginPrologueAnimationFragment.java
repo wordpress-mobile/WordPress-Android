@@ -68,17 +68,24 @@ public class LoginPrologueAnimationFragment extends Fragment {
 
         mLottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
             @Override
-            public void onAnimationStart(Animator animation) {}
+            public void onAnimationStart(Animator animation) {
+                mLottieAnimationView.setProgress(0);
+            }
 
             @Override
-            public void onAnimationEnd(Animator animation) {}
+            public void onAnimationEnd(Animator animation) {
+            }
 
             @Override
-            public void onAnimationCancel(Animator animation) {}
+            public void onAnimationCancel(Animator animation) {
+                mLottieAnimationView.setProgress(0);
+            }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
-                if (mLoginListener != null) {
+                mLottieAnimationView.setProgress(0);
+
+                if (mLoginListener != null && getUserVisibleHint()) {
                     mLoginListener.nextPromo();
                 }
             }
