@@ -33,8 +33,8 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -50,7 +50,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -104,11 +103,6 @@ public class PostUploadManager {
         mUseLegacyMode = enabled;
     }
 
-    /**
-     * Returns true if the passed post is either currently uploading or waiting to be uploaded.
-     * Except for legacy mode, a post counts as 'uploading' if the post content itself is being uploaded - a post
-     * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
-     */
     static boolean isPostUploadingOrQueued(PostModel post) {
         // First check the currently uploading post
         if (isPostUploading(post)) {
@@ -128,25 +122,8 @@ public class PostUploadManager {
         return false;
     }
 
-    /**
-     * Returns true if the passed post is currently uploading.
-     * Except for legacy mode, a post counts as 'uploading' if the post content itself is being uploaded - a post
-     * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
-     */
     static boolean isPostUploading(PostModel post) {
         return mCurrentUploadingPost != null && mCurrentUploadingPost.getId() == post.getId();
-    }
-
-    static void cancelQueuedPostUpload(PostModel post) {
-        synchronized (mQueuedPostsList) {
-            Iterator<PostModel> iterator = mQueuedPostsList.iterator();
-            while (iterator.hasNext()) {
-                PostModel postModel = iterator.next();
-                if (postModel.getId() == post.getId()) {
-                    iterator.remove();
-                }
-            }
-        }
     }
 
     private void uploadNextPost() {

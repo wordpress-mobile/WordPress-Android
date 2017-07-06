@@ -209,7 +209,22 @@ public class UploadService extends Service {
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
     public static boolean isPostUploadingOrQueued(PostModel post) {
-        return PostUploadManager.isPostUploadingOrQueued(post);
+        // First check for posts uploading or queued inside the PostUploadManager
+        if (PostUploadManager.isPostUploadingOrQueued(post)) {
+            return true;
+        }
+
+        // Then check the list of posts waiting for media to complete
+        if (sPostsWithPendingMedia.size() > 0) {
+            synchronized (sPostsWithPendingMedia) {
+                for (PostModel queuedPost : sPostsWithPendingMedia) {
+                    if (queuedPost.getId() == post.getId()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -222,7 +237,15 @@ public class UploadService extends Service {
     }
 
     public static void cancelQueuedPostUpload(PostModel post) {
-        PostUploadManager.cancelQueuedPostUpload(post);
+        synchronized (sPostsWithPendingMedia) {
+            Iterator<PostModel> iterator = sPostsWithPendingMedia.iterator();
+            while (iterator.hasNext()) {
+                PostModel postModel = iterator.next();
+                if (postModel.getId() == post.getId()) {
+                    iterator.remove();
+                }
+            }
+        }
     }
 
     public static synchronized PostModel updatePostWithCurrentlyCompletedUploads(PostModel post) {
