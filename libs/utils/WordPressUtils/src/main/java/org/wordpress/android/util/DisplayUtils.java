@@ -2,10 +2,13 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Point;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -87,5 +90,16 @@ public class DisplayUtils {
      */
     public static boolean hasActionBarOverlay(Window window) {
         return window.hasFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+    }
+
+    public static void padWithStatusBarHeight(Resources resources, View view) {
+        if (resources != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            int resId = resources.getIdentifier("status_bar_height", "dimen", "android");
+            int height = resId > 0 ? resources.getDimensionPixelSize(resId) : 0;
+
+            view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + height, view.getPaddingRight(),
+                    view.getPaddingBottom());
+
+        }
     }
 }
