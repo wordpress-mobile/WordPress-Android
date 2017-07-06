@@ -172,6 +172,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
+            holder.imgVideoOverlay.setVisibility(View.GONE);
             if (isLocalFile) {
                 loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
@@ -179,9 +180,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             }
         } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
             holder.fileContainer.setVisibility(View.GONE);
+            holder.imgVideoOverlay.setVisibility(View.VISIBLE);
             WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl(), holder.imageView, mImageLoader);
         } else {
-            // not an image, so show file name and file type
+            // not an image or video, so show file name and file type
+            holder.imgVideoOverlay.setVisibility(View.GONE);
             holder.imageView.setImageDrawable(null);
             String fileName = media.getFileName();
             String title = media.getTitle();
@@ -255,6 +258,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final ViewGroup stateContainer;
         private final ViewGroup fileContainer;
         private final ImageView imgPreview;
+        private final ImageView imgVideoOverlay;
 
         public GridViewHolder(View view) {
             super(view);
@@ -270,6 +274,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             titleView = (TextView) fileContainer.findViewById(R.id.media_grid_item_name);
             fileTypeView = (TextView) fileContainer.findViewById(R.id.media_grid_item_filetype);
             fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
+
+            imgVideoOverlay = (ImageView) view.findViewById(R.id.image_video_overlay);
 
             ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.frame_preview);
             previewContainer.setVisibility(mShowPreviewIcon ? View.VISIBLE : View.GONE);
