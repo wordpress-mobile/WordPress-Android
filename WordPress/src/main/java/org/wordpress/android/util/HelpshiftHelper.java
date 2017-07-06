@@ -301,6 +301,12 @@ public class HelpshiftHelper {
             counter += 1;
         }
 
+        if (AnalyticsUtils.isJetpackUser(siteStore)) {
+            mMetadata.put("jetpack-user", true);
+        } else {
+            mMetadata.put("jetpack-user", false);
+        }
+
         // wpcom user
         mMetadata.put("wpcom-username", wpComUsername);
     }
