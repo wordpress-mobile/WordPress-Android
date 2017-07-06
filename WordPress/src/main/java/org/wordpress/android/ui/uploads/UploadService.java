@@ -31,6 +31,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
+
 public class UploadService extends Service {
     private static final String MEDIA_LIST_KEY = "mediaList";
 
@@ -252,6 +254,8 @@ public class UploadService extends Service {
     private void stopServiceIfUploadsComplete() {
         // TODO: Stop service if no more media or posts are left to upload
         AppLog.i(T.MAIN, "Upload Service > completed");
+        mDispatcher.unregister(sMediaUploadManager);
+        EventBus.getDefault().unregister(sMediaUploadManager);
         stopSelf();
     }
 
