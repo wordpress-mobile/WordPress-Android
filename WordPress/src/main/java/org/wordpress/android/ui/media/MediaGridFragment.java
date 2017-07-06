@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
@@ -44,7 +45,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -64,15 +64,64 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private static final String BUNDLE_SELECTED_STATES = "BUNDLE_SELECTED_STATES";
     private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
-    private static final String BUNDLE_HAS_RETRIEVED_ALL_MEDIA = "BUNDLE_HAS_RETRIEVED_ALL_MEDIA";
-    private static final String BUNDLE_HAS_FETCHED_MEDIA = "BUNDLE_HAS_FETCHED_MEDIA";
+    private static final String BUNDLE_RETRIEVED_ALL_FILTERS = "BUNDLE_RETRIEVED_ALL_FILTERS";
+    private static final String BUNDLE_FETCHED_FILTERS = "BUNDLE_FETCHED_FILTERS";
     private static final String BUNDLE_EMPTY_VIEW_MESSAGE = "BUNDLE_EMPTY_VIEW_MESSAGE";
 
     static final String TAG = "media_grid_fragment";
 
-    static final int FILTER_ALL         = 0;
-    static final int FILTER_IMAGES      = 1;
-    static final int FILTER_UNATTACHED  = 2;
+    // should be a multiple of both the column counts (3 in portrait, 4 in landscape)
+    private static final int NUM_MEDIA_PER_FETCH = 48;
+
+    enum MediaFilter {
+        FILTER_ALL(0),
+        FILTER_IMAGES(1),
+        FILTER_DOCUMENTS(2),
+        FILTER_VIDEOS(3),
+        FILTER_AUDIO(4);
+
+        private final int value;
+        private MediaFilter(int value) {
+            this.value = value;
+        }
+        int getValue() {
+            return value;
+        }
+        private String toMimeType() {
+            switch (this) {
+                case FILTER_AUDIO:
+                    return MediaUtils.MIME_TYPE_AUDIO;
+                case FILTER_DOCUMENTS:
+                    return MediaUtils.MIME_TYPE_APPLICATION;
+                case FILTER_IMAGES:
+                    return MediaUtils.MIME_TYPE_IMAGE;
+                case FILTER_VIDEOS:
+                    return MediaUtils.MIME_TYPE_VIDEO;
+                default:
+                    return null;
+            }
+        }
+        private static MediaFilter fromMimeType(@NonNull String mimeType) {
+            switch (mimeType) {
+                case MediaUtils.MIME_TYPE_APPLICATION:
+                    return MediaFilter.FILTER_DOCUMENTS;
+                case MediaUtils.MIME_TYPE_AUDIO:
+                    return MediaFilter.FILTER_AUDIO;
+                case MediaUtils.MIME_TYPE_IMAGE:
+                    return MediaFilter.FILTER_IMAGES;
+                case MediaUtils.MIME_TYPE_VIDEO:
+                    return MediaFilter.FILTER_VIDEOS;
+                default:
+                    return MediaFilter.FILTER_ALL;
+            }
+        }
+    }
+
+    // describes which filters we've fetched media for
+    private boolean[] mFetchedFilters = new boolean[MediaFilter.values().length];
+
+    // describes which filters we've fetched ALL media for
+    private boolean[] mFetchedAllFilters = new boolean[MediaFilter.values().length];
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -86,12 +135,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private MediaGridListener mListener;
 
     private boolean mIsRefreshing;
-    private boolean mHasRetrievedAllMedia;
-    private boolean mHasFetchedMedia;
 
     private ActionMode mActionMode;
     private String mSearchTerm;
-    private int mFilter = FILTER_ALL;
+    private MediaFilter mFilter = MediaFilter.FILTER_ALL;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
@@ -107,11 +154,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     public static MediaGridFragment newInstance(@NonNull SiteModel site,
                                                 @NonNull MediaBrowserType browserType,
-                                                int filter) {
+                                                @NonNull MediaFilter filter) {
         Bundle args = new Bundle();
         args.putSerializable(WordPress.SITE, site);
         args.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType);
-        args.putInt(MediaBrowserActivity.ARG_FILTER, filter);
+        args.putSerializable(MediaBrowserActivity.ARG_FILTER, filter);
 
         MediaGridFragment fragment = new MediaGridFragment();
         fragment.setArguments(args);
@@ -124,11 +171,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         Bundle args = getArguments();
-        if (args != null) {
-            mSite = (SiteModel) args.getSerializable(WordPress.SITE);
-            mBrowserType = (MediaBrowserType) args.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
-            mFilter = args.getInt(MediaBrowserActivity.ARG_FILTER);
-        }
+        mSite = (SiteModel) args.getSerializable(WordPress.SITE);
+        mBrowserType = (MediaBrowserType) args.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
+        mFilter = (MediaFilter) args.getSerializable(MediaBrowserActivity.ARG_FILTER);
 
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
@@ -140,17 +185,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (!mHasFetchedMedia && NetworkUtils.isNetworkAvailable(getActivity())) {
-            fetchMediaList(false);
-        } else {
-            refresh();
-        }
     }
 
     @Override
@@ -192,7 +226,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         }
                         if (!NetworkUtils.checkConnection(getActivity())) {
                             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-                            mSwipeToRefreshHelper.setRefreshing(false);
+                            setRefreshing(false);
                             return;
                         }
                         fetchMediaList(false);
@@ -202,6 +236,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
         }
+
+        setFilter(mFilter);
 
         return view;
     }
@@ -235,8 +271,18 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         return hasAdapter() && getAdapter().isEmpty();
     }
 
-    int getFilter() {
+    MediaFilter getFilter() {
         return mFilter;
+    }
+
+    /*
+     * called when we know we've retrieved and fetched all media for all filters
+     */
+    private void setHasFetchedMediaForAllFilters() {
+        for (int i = 0; i < mFetchedAllFilters.length; i++) {
+            mFetchedFilters[i] = true;
+            mFetchedAllFilters[i] = true;
+        }
     }
 
     private List<MediaModel> getFilteredMedia() {
@@ -247,48 +293,53 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         switch (mFilter) {
             case FILTER_IMAGES:
                 return mMediaStore.getSiteImages(mSite);
-            case FILTER_UNATTACHED:
-                return mMediaStore.getUnattachedSiteMedia(mSite);
+            case FILTER_DOCUMENTS:
+                return mMediaStore.getSiteDocuments(mSite);
+            case FILTER_VIDEOS:
+                return mMediaStore.getSiteVideos(mSite);
+            case FILTER_AUDIO:
+                return mMediaStore.getSiteAudio(mSite);
             default:
                 return mMediaStore.getAllSiteMedia(mSite);
         }
     }
 
-    void setFilter(int filter) {
+    void setFilter(@NonNull MediaFilter filter) {
         mFilter  = filter;
-        getArguments().putInt(MediaBrowserActivity.ARG_FILTER, filter);
+        getArguments().putSerializable(MediaBrowserActivity.ARG_FILTER, filter);
 
         if (!isAdded()) return;
 
-        if (isEmpty()) {
-            getAdapter().setMediaList(getFilteredMedia());
+        // temporarily disable animation - otherwise the user will see items animate
+        // when they change the filter
+        mRecycler.setItemAnimator(null);
+        getAdapter().setMediaList(getFilteredMedia());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mRecycler.setItemAnimator(new DefaultItemAnimator());
+            }
+        }, 500L);
+
+        if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
+            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
         } else {
-            // temporarily disable animation - otherwise the user will see items animate
-            // when they change the filter
-            mRecycler.setItemAnimator(null);
-            getAdapter().setMediaList(getFilteredMedia());
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mRecycler.setItemAnimator(new DefaultItemAnimator());
-                }
-            }, 500L);
+            updateEmptyView(mEmptyViewMessageType);
         }
 
-        if (isEmpty()) {
-            if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
-                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-            } else {
-                updateEmptyView(mEmptyViewMessageType);
+        boolean hasFetchedThisFilter = mFetchedFilters[filter.value];
+        if (!hasFetchedThisFilter && NetworkUtils.isNetworkAvailable(getActivity())) {
+            if (isEmpty()) {
+                mSwipeToRefreshHelper.setRefreshing(true);
             }
-        } else {
-            hideEmptyView();
+            fetchMediaList(false);
         }
     }
 
     @Override
     public void onAdapterFetchMoreData() {
-        if (!mHasRetrievedAllMedia) {
+        boolean hasFetchedAll = mFetchedAllFilters[mFilter.value];
+        if (!hasFetchedAll) {
             fetchMediaList(true);
         }
     }
@@ -323,16 +374,17 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaListFetched(OnMediaListFetched event) {
         if (event.isError()) {
-            handleFetchAllMediaError(event.error.type);
+            handleFetchAllMediaError(event);
             return;
         }
+
         handleFetchAllMediaSuccess(event);
     }
 
     /*
-     * refresh the adapter from the local store
+     * load the adapter from the local store
      */
-    public void refresh() {
+    void reload() {
         if (isAdded()) {
             getAdapter().setMediaList(getFilteredMedia());
         }
@@ -356,9 +408,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
-    private void setRefreshing(boolean refreshing) {
-        if (isAdded()) {
-            mSwipeToRefreshHelper.setRefreshing(refreshing);
+    private void setRefreshing(boolean isRefreshing) {
+        mIsRefreshing = isRefreshing;
+        if (!isRefreshing) {
+            mSwipeToRefreshHelper.setRefreshing(false);
         }
     }
 
@@ -380,7 +433,23 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     stringId = R.string.media_fetching;
                     break;
                 case NO_CONTENT:
-                    stringId = R.string.media_empty_list;
+                    switch (mFilter) {
+                        case FILTER_IMAGES:
+                            stringId = R.string.media_empty_image_list;
+                            break;
+                        case FILTER_VIDEOS:
+                            stringId = R.string.media_empty_videos_list;
+                            break;
+                        case FILTER_DOCUMENTS:
+                            stringId = R.string.media_empty_documents_list;
+                            break;
+                        case FILTER_AUDIO:
+                            stringId = R.string.media_empty_audio_list;
+                            break;
+                        default:
+                            stringId = R.string.media_empty_list;
+                            break;
+                    }
                     break;
                 case NETWORK_ERROR:
                     stringId = R.string.no_network_message;
@@ -409,10 +478,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void saveState(Bundle outState) {
         outState.putIntArray(BUNDLE_SELECTED_STATES, ListUtils.toIntArray(getAdapter().getSelectedItems()));
         outState.putInt(BUNDLE_SCROLL_POSITION, mGridManager.findFirstCompletelyVisibleItemPosition());
-        outState.putBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
-        outState.putBoolean(BUNDLE_HAS_FETCHED_MEDIA, mHasFetchedMedia);
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, getAdapter().isInMultiSelect());
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
+        outState.putBooleanArray(BUNDLE_FETCHED_FILTERS, mFetchedFilters);
+        outState.putBooleanArray(BUNDLE_RETRIEVED_ALL_FILTERS, mFetchedAllFilters);
     }
 
     private void updateActionModeTitle(int selectCount) {
@@ -456,14 +525,16 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
                 ArrayList<Integer> selectedItems = ListUtils.fromIntArray(savedInstanceState.getIntArray(BUNDLE_SELECTED_STATES));
                 getAdapter().setSelectedItems(selectedItems);
-                mSwipeToRefreshHelper.setEnabled(false);
+                setSwipeToRefreshEnabled(false);
             }
         }
 
-        mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
-        mHasFetchedMedia = savedInstanceState.getBoolean(BUNDLE_HAS_FETCHED_MEDIA, false);
-        mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
+        mFetchedFilters = savedInstanceState.getBooleanArray(BUNDLE_FETCHED_FILTERS);
+        mFetchedAllFilters = savedInstanceState.getBooleanArray(BUNDLE_RETRIEVED_ALL_FILTERS);
+
+        EmptyViewMessageType emptyType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
+        updateEmptyView(emptyType);
     }
 
     private void fetchMediaList(boolean loadMore) {
@@ -481,11 +552,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         if (!mIsRefreshing) {
-            mIsRefreshing = true;
-            updateEmptyView(EmptyViewMessageType.LOADING);
             setRefreshing(true);
+            updateEmptyView(EmptyViewMessageType.LOADING);
 
-            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
+            FetchMediaListPayload payload =
+                    new FetchMediaListPayload(mSite, NUM_MEDIA_PER_FETCH, loadMore, mFilter.toMimeType());
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
     }
@@ -493,58 +564,54 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void handleFetchAllMediaSuccess(OnMediaListFetched event) {
         if (!isAdded()) return;
 
+        // make sure this request was for the current filter
+        if (!TextUtils.isEmpty(event.mimeType)
+                && MediaFilter.fromMimeType(event.mimeType) != mFilter) {
+            return;
+        }
+
         getAdapter().setMediaList(getFilteredMedia());
 
-        mHasRetrievedAllMedia = !event.canLoadMore;
-        getAdapter().setHasRetrievedAll(mHasRetrievedAllMedia);
+        boolean hasRetrievedAll = !event.canLoadMore;
+        getAdapter().setHasRetrievedAll(hasRetrievedAll);
 
-        mHasFetchedMedia = true;
-        mIsRefreshing = false;
+        int position = mFilter.getValue();
+        mFetchedFilters[position] = true;
 
-        // the activity may be gone by the time this finishes, so check for it
-        if (getActivity() != null && isVisible()) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-                    mSwipeToRefreshHelper.setRefreshing(false);
-                }
-            });
-        }
-    }
-
-    private void handleFetchAllMediaError(MediaErrorType errorType) {
-        AppLog.e(AppLog.T.MEDIA, "Media error occurred: " + errorType);
-        final boolean isPermissionError = (errorType == MediaErrorType.AUTHORIZATION_REQUIRED);
-        if (getActivity() != null) {
-            if (!isPermissionError) {
-                ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media),
-                        Duration.LONG);
+        if (hasRetrievedAll) {
+            if (mFilter == MediaFilter.FILTER_ALL) {
+                setHasFetchedMediaForAllFilters();
             } else {
-                if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
-                    ToastUtils.showToast(getActivity(), getString(
-                            R.string.media_error_no_permission));
-                }
+                mFetchedAllFilters[position] = true;
             }
         }
-        mHasRetrievedAllMedia = true;
-        getAdapter().setHasRetrievedAll(true);
 
-        // the activity may be gone by the time we get this, so check for it
-        if (getActivity() != null && MediaGridFragment.this.isVisible()) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mIsRefreshing = false;
-                    mSwipeToRefreshHelper.setRefreshing(false);
-                    if (isPermissionError) {
-                        updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-                    } else {
-                        updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                    }
-                }
-            });
+        setRefreshing(false);
+        updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+    }
+
+    private void handleFetchAllMediaError(OnMediaListFetched event) {
+        MediaErrorType errorType = event.error.type;
+        AppLog.e(AppLog.T.MEDIA, "Media error occurred: " + errorType);
+        if (!isAdded()) return;
+
+        if (!TextUtils.isEmpty(event.mimeType)
+                && MediaFilter.fromMimeType(event.mimeType) != mFilter) {
+            return;
         }
+
+        boolean isPermissionError = (errorType == MediaErrorType.AUTHORIZATION_REQUIRED);
+        if (isPermissionError) {
+            updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
+            ToastUtils.showToast(getActivity(), getString(R.string.media_error_no_permission));
+        } else {
+            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media));
+        }
+
+        setRefreshing(false);
+        setHasFetchedMediaForAllFilters();
+        getAdapter().setHasRetrievedAll(true);
     }
 
     private void setResultIdsAndFinish() {
