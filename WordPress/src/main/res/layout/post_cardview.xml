@@ -69,11 +69,20 @@
             tools:text="text_status"
             tools:visibility="visible" />
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
+            android:orientation="vertical"
             android:background="@color/grey_light">
+
+            <ProgressBar
+                android:id="@+id/post_upload_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/UploadProgressBar"
+                android:indeterminate="false"
+                android:progress="25"/>
 
             <LinearLayout
                 android:id="@+id/layout_buttons"
@@ -143,7 +152,7 @@
                     wp:wpPostButtonType="back" />
 
             </LinearLayout>
-        </FrameLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <RelativeLayout

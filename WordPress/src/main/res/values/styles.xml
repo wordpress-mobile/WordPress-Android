@@ -559,4 +559,13 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="UploadProgressBar" parent="WordPress">
+        <item name="indeterminateOnly">false</item>
+        <item name="progressDrawable">@drawable/wp_progress_horizontal</item>
+        <item name="indeterminateDrawable">@drawable/progress_indeterminate_horizontal</item>
+        <item name="minHeight">2dip</item>
+        <item name="maxHeight">2dip</item>
+        <item name="mirrorForRtl">true</item>
+    </style>
 </resources>
