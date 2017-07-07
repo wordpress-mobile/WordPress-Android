@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.net.URI;
@@ -450,11 +451,24 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setTimezone(from.options.gmt_offset);
             site.setFrameNonce(from.options.frame_nonce);
             site.setUnmappedUrl(from.options.unmapped_url);
+
             try {
                 site.setMaxUploadSize(Long.valueOf(from.options.max_upload_size));
             } catch (NumberFormatException e) {
                 // Do nothing - the value probably wasn't set ('false'), but we don't want to overwrite any existing
                 // value we stored earlier, as /me/sites/ and /sites/$site/ can return different responses for this
+            }
+
+            // Set the memory limit for media uploads on the site. Normally, this is just WP_MAX_MEMORY_LIMIT,
+            // but it's possible for a site to have its php memory_limit > WP_MAX_MEMORY_LIMIT, and have
+            // WP_MEMORY_LIMIT == memory_limit, in which WP_MEMORY_LIMIT reflects the real limit for media uploads.
+            long wpMemoryLimit = StringUtils.stringToLong(from.options.wp_memory_limit);
+            long wpMaxMemoryLimit = StringUtils.stringToLong(from.options.wp_max_memory_limit);
+            if (wpMemoryLimit > 0 || wpMaxMemoryLimit > 0) {
+                // Only update the value if we received one from the server - otherwise, the original value was
+                // probably not set ('false'), but we don't want to overwrite any existing value we stored earlier,
+                // as /me/sites/ and /sites/$site/ can return different responses for this
+                site.setMemoryLimit(Math.max(wpMemoryLimit, wpMaxMemoryLimit));
             }
         }
         if (from.plan != null) {

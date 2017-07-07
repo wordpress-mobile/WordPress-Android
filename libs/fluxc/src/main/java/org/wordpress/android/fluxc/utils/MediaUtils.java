@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import java.io.File;
 
 public class MediaUtils {
+    public static final double MEMORY_LIMIT_FILESIZE_MULTIPLIER = 0.75D;
+
     //
     // MIME types
     //
@@ -126,5 +128,12 @@ public class MediaUtils {
         if (TextUtils.isEmpty(filePath) || !filePath.contains("/")) return null;
         if (filePath.lastIndexOf("/") + 1 >= filePath.length()) return null;
         return filePath.substring(filePath.lastIndexOf("/") + 1);
+    }
+
+    /**
+     * Given the memory limit for media for a site, returns the maximum 'safe' file size we can upload to that site.
+     */
+    public static double getMaxFilesizeForMemoryLimit(double mediaMemoryLimit) {
+        return MEMORY_LIMIT_FILESIZE_MULTIPLIER * mediaMemoryLimit;
     }
 }
