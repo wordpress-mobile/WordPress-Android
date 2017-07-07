@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.DisplayUtils;
 
 public class LoginPrologueAnimationFragment extends Fragment {
     private final static String KEY_ANIMATION_FILENAME = "KEY_ANIMATION_FILENAME";
@@ -57,10 +56,6 @@ public class LoginPrologueAnimationFragment extends Fragment {
         TextView promoText = (TextView) rootView.findViewById(R.id.promo_text);
         promoText.setText(mPromoText);
         promoText.setTextColor(getResources().getColor(mLightBackground ? R.color.blue_dark : R.color.white));
-
-        if (savedInstanceState == null) {
-            DisplayUtils.padWithStatusBarHeight(getResources(), promoText);
-        }
 
         mLottieAnimationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
         mLottieAnimationView.setAnimation(mAnimationFilename, LottieAnimationView.CacheStrategy.Weak);

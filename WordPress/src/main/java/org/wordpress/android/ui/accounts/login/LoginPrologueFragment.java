@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 public class LoginPrologueFragment extends Fragment {
@@ -49,10 +48,6 @@ public class LoginPrologueFragment extends Fragment {
         // Using a TabLayout for simulating a page indicator strip
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout_indicator);
         tabLayout.setupWithViewPager(mPager, true);
-
-        if (savedInstanceState == null) {
-            DisplayUtils.padWithStatusBarHeight(getResources(), tabLayout);
-        }
 
         return view;
     }

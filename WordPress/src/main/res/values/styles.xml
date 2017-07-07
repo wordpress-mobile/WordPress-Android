@@ -56,7 +56,7 @@
     <style name="LoginTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/wp_blue_medium</item>
 
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@color/status_bar_tint</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:actionMenuTextColor">@color/white</item>
     </style>
