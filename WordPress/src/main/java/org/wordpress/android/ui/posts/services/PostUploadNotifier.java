@@ -146,7 +146,7 @@ public class PostUploadNotifier {
         notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
         PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
                 (int)notificationId,
-                notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+                notificationIntent, PendingIntent.FLAG_ONE_SHOT);
         notificationBuilder.setContentIntent(pendingIntentPost);
 
         // Share intent - started if the user tap the share link button - only if the link exist
@@ -176,15 +176,21 @@ public class PostUploadNotifier {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext());
         String postOrPage = (String) (post.isPage() ? mContext.getResources().getText(R.string.page_id)
                 : mContext.getResources().getText(R.string.post_id));
+
+        long notificationId = getNotificationIdForPost(post);
+        // Tap notification intent (open the post list)
         Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
         notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
         notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, errorMessage);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        notificationIntent.setAction(String.valueOf(notificationId));
+
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
-                (int)getNotificationIdForPost(post),
-                notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+                (int)notificationId,
+                notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
         String errorText = mContext.getResources().getText(R.string.upload_failed).toString();
         if (isMediaError) {
