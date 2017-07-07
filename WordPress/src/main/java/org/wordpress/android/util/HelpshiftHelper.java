@@ -57,7 +57,8 @@ public class HelpshiftHelper {
         ORIGIN_LOGIN_SCREEN_JETPACK("origin:jetpack-login-screen"),
         ORIGIN_SIGNUP_SCREEN("origin:signup-screen"),
         ORIGIN_ME_SCREEN_HELP("origin:me-screen-help"),
-        ORIGIN_DELETE_SITE("origin:delete-site");
+        ORIGIN_DELETE_SITE("origin:delete-site"),
+        ORIGIN_FEEDBACK_AZTEC("origin:aztec-feedback");
 
         private final String mStringValue;
 

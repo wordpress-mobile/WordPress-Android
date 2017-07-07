@@ -74,7 +74,7 @@ public class EditorReleaseNotesActivity extends WebViewActivity {
                 startActivity(Intent.createChooser(share, getText(R.string.share_link)));
                 return true;
             case R.id.menu_bug:
-                HelpshiftHelper.Tag origin = HelpshiftHelper.Tag.ORIGIN_UNKNOWN;
+                HelpshiftHelper.Tag origin = HelpshiftHelper.Tag.ORIGIN_FEEDBACK_AZTEC;
                 HelpshiftHelper.getInstance().showConversation(EditorReleaseNotesActivity.this, mSiteStore, origin, mAccountStore.getAccount().getUserName());
                 return true;
         }
