@@ -13,9 +13,11 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
+import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.models.PublicizeServiceList;
+import org.wordpress.android.ui.publicize.PublicizeConstants;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -154,8 +156,8 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
      */
     private boolean mIsTaskRunning = false;
     private class LoadServicesTask extends AsyncTask<Void, Void, Boolean> {
-        private PublicizeServiceList tmpServices;
-        private PublicizeConnectionList tmpConnections;
+        private final PublicizeServiceList tmpServices = new PublicizeServiceList();
+        private final PublicizeConnectionList tmpConnections = new PublicizeConnectionList();
 
         @Override
         protected void onPreExecute() {
@@ -167,8 +169,25 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            tmpServices = PublicizeTable.getServiceList();
-            tmpConnections = PublicizeTable.getConnectionsForSite(mSiteId);
+            // G+ no longers supports authentication via a WebView, so we hide it here unless the
+            // user already has a connection
+            boolean hideGPlus = true;
+
+            PublicizeConnectionList connections = PublicizeTable.getConnectionsForSite(mSiteId);
+            for (PublicizeConnection connection: connections) {
+                if (connection.getService().equals(PublicizeConstants.GOOGLE_PLUS_ID)) {
+                    hideGPlus = false;
+                }
+                tmpConnections.add(connection);
+            }
+
+            PublicizeServiceList services = PublicizeTable.getServiceList();
+            for (PublicizeService service: services) {
+                if (!service.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID) || !hideGPlus) {
+                    tmpServices.add(service);
+                }
+            }
+
             return !(tmpServices.isSameAs(mServices) && tmpConnections.isSameAs(mConnections));
         }
         @Override

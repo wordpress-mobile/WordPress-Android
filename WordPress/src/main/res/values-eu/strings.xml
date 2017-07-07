@@ -322,8 +322,6 @@ Language: eu_ES
 	<string name="my_site_no_sites_view_title">Oraindik ez duzu WordPress gunerik.</string>
 	<string name="reader_toast_err_follow_blog_not_found">Ezin izan da blog hori aurkitu</string>
 	<string name="undo">Desegin</string>
-	<string name="tabbar_accessibility_label_me">Ni</string>
-	<string name="tabbar_accessibility_label_my_site">Nire gunea</string>
 	<string name="editor_toast_changes_saved">Aldaketak gorde dira</string>
 	<string name="passcodelock_prompt_message">Sartu zure PINa</string>
 	<string name="push_auth_expired">Eskaria iraungi da. Hasi saioa WordPress.com-en berriro saiatzeko.</string>
@@ -740,6 +738,7 @@ Language: eu_ES
 	<string name="all">Denak</string>
 	<string name="themes">Itxurak</string>
 	<string name="discard">Baztertu</string>
+	<string name="manage">Kudeatu</string>
 	<string name="upload">Igo</string>
 	<string name="more_notifications">eta %d gehiago.</string>
 	<string name="new_notifications">%d jakinarazpen berri</string>

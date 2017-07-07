@@ -655,8 +655,6 @@ Language: nl
 	<string name="reader_toast_err_follow_blog_not_authorized">Je hebt geen rechten om dit blog te openen</string>
 	<string name="reader_toast_err_follow_blog_not_found">Dit blog kon niet worden gevonden</string>
 	<string name="undo">Ongedaan maken</string>
-	<string name="tabbar_accessibility_label_me">Ik</string>
-	<string name="tabbar_accessibility_label_my_site">Mijn site</string>
 	<string name="editor_toast_changes_saved">De wijzigingen zijn opgeslagen.</string>
 	<string name="passcodelock_prompt_message">Je PIN invullen.</string>
 	<string name="push_auth_expired">Je verzoek is verlopen. Log in bij WordPress.com probeer opnieuw.</string>
@@ -1156,6 +1154,7 @@ Language: nl
 	<string name="all">Alle</string>
 	<string name="themes">Thema\'s</string>
 	<string name="discard">Verwijder</string>
+	<string name="manage">Beheer</string>
 	<string name="upload">Upload</string>
 	<string name="more_notifications">en %d extra.</string>
 	<string name="new_notifications">%d nieuwe notificaties</string>

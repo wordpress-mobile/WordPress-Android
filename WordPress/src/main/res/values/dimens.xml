@@ -3,7 +3,7 @@
     <dimen name="min_touch_target_sz">48dp</dimen>
 
     <dimen name="settings_padding">16dp</dimen>
-    <dimen name="category_row_height">60dp</dimen>
+    <dimen name="category_row_height">48dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
 
     <dimen name="toolbar_height">56dp</dimen>
@@ -36,7 +36,10 @@
     <dimen name="action_bar_spinner_width">312dp</dimen>
     <dimen name="action_bar_spinner_y_offset">-8dp</dimen>
 
+    <dimen name="default_dialog_button_height">48dp</dimen>
     <dimen name="default_dialog_width">280dp</dimen>
+    <dimen name="dialog_beta_padding_horizontal">8dp</dimen>
+    <dimen name="dialog_beta_padding_vertical">6dp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
     <dimen name="post_detail_button_size">48dp</dimen>
@@ -63,6 +66,7 @@
         native reader dimens
     -->
     <dimen name="margin_none">0dp</dimen>
+    <dimen name="margin_dialog">24dp</dimen>
     <dimen name="margin_extra_extra_small">1dp</dimen>
     <dimen name="margin_extra_small">2dp</dimen>
     <dimen name="margin_small">4dp</dimen>
@@ -217,7 +221,8 @@
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
     <dimen name="my_site_list_row_padding_left">8dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
-    <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
+    <dimen name="my_site_switch_site_button_padding_bottom">16dp</dimen>
+    <dimen name="my_site_switch_site_button_padding_top">15dp</dimen>
     <dimen name="my_site_no_site_view_margin">24dp</dimen>
 
     <!--me-->
@@ -298,7 +303,7 @@
     <dimen name="photo_picker_selected_item_padding">4dp</dimen>
     <dimen name="photo_picker_icon">48dp</dimen>
     <dimen name="photo_picker_video_overlay">36dp</dimen>
-    <dimen name="photo_picker_preview_icon">36dp</dimen>
+    <dimen name="photo_picker_preview_icon">28dp</dimen>
 
     <dimen name="smart_toast_offset_y">48dp</dimen>
 
@@ -309,9 +314,13 @@
     <dimen name="publicize_name_size">16sp</dimen>
     <dimen name="publicize_name_margin">8dp</dimen>
 
+    <!--post settings-->
+    <dimen name="post_settings_input_dialog_edit_text_side_margin">20dp</dimen>
+    <dimen name="post_settings_input_dialog_hint_side_margin">24dp</dimen>
+    <dimen name="tags_list_row_height">40dp</dimen>
+
     <!-- login -->
     <dimen name="margin_text_input_layout_baseline">20dp</dimen>
     <dimen name="margin_extra_extra_extra_large">92dp</dimen>
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
-
 </resources>

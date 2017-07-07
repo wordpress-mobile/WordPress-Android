@@ -46,6 +46,14 @@ public final class SiteSettingsTable {
         }
     }
 
+    public static void addVideoResizeWidthAndQualityToSiteSettingsTable(SQLiteDatabase db) {
+        if (db != null) {
+            db.execSQL(SiteSettingsModel.ADD_OPTIMIZED_VIDEO);
+            db.execSQL(SiteSettingsModel.ADD_VIDEO_RESIZE_WIDTH);
+            db.execSQL(SiteSettingsModel.ADD_VIDEO_COMPRESSION_BITRATE);
+        }
+    }
+
     public static void addSharingColumnsToSiteSettingsTable(SQLiteDatabase db) {
         if (db != null) {
             db.execSQL(SiteSettingsModel.ADD_SHARING_LABEL);

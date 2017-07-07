@@ -620,8 +620,6 @@ Language: de
 	<string name="reader_toast_err_follow_blog_not_authorized">Du bist nicht berechtigt auf diesen Blog zuzugreifen</string>
 	<string name="reader_toast_err_follow_blog_not_found">Dieser Blog konnte nicht gefunden werden</string>
 	<string name="undo">Rückgängig</string>
-	<string name="tabbar_accessibility_label_me">Ich</string>
-	<string name="tabbar_accessibility_label_my_site">Meine Website</string>
 	<string name="editor_toast_changes_saved">Änderungen gespeichert</string>
 	<string name="passcodelock_prompt_message">Gib deine PIN ein</string>
 	<string name="push_auth_expired">Die Anfrage ist nicht mehr gültig. Melde dich bei WordPress.com an, um es erneut zu versuchen.</string>
@@ -1117,6 +1115,7 @@ Language: de
 	<string name="all">Alle</string>
 	<string name="themes">Themes</string>
 	<string name="discard">Verwerfen</string>
+	<string name="manage">Verwalten</string>
 	<string name="upload">Hochladen</string>
 	<string name="more_notifications">und %d weitere.</string>
 	<string name="new_notifications">%d neue Benachrichtigungen</string>

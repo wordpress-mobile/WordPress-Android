@@ -241,7 +241,13 @@ public class PublicizeListActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 PublicizeActions.disconnect(publicizeConnection);
-                reloadDetailFragment();
+                // if the user disconnected from G+, return to the list fragment since the
+                // detail fragment would give them the ability to reconnect
+                if (publicizeConnection.getService().equals(PublicizeConstants.GOOGLE_PLUS_ID)) {
+                    returnToListFragment();
+                } else {
+                    reloadDetailFragment();
+                }
             }
         });
         builder.setNegativeButton(R.string.cancel, null);

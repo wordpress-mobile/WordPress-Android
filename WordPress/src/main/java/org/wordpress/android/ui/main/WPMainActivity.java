@@ -53,7 +53,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
-import org.wordpress.android.ui.posts.PromoDialog;
+import org.wordpress.android.ui.posts.PromoDialogEditor;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
@@ -302,11 +302,14 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void showNewEditorPromoDialogIfNeeded() {
         if (AppPrefs.isNewEditorPromoRequired() && AppPrefs.isAztecEditorEnabled()) {
-            AppCompatDialogFragment newFragment = PromoDialog.newInstance(
+            AppCompatDialogFragment newFragment = PromoDialogEditor.newInstance(
                     R.drawable.img_promo_editor,
                     R.string.new_editor_promo_title,
+                    R.string.new_editor_promo_title_beta,
                     R.string.new_editor_promo_description,
-                    android.R.string.ok
+                    R.string.new_editor_promo_link,
+                    R.string.new_editor_promo_button_negative,
+                    R.string.new_editor_promo_button_positive
             );
             newFragment.show(getSupportFragmentManager(), "new-editor-promo");
             AppPrefs.setNewEditorPromoRequired(false);

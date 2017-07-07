@@ -1,13 +1,17 @@
 package org.wordpress.android.util;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 
-import org.wordpress.android.*;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 
 public class WPMediaUtils {
@@ -15,6 +19,8 @@ public class WPMediaUtils {
     // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
     public static final int OPTIMIZE_IMAGE_MAX_WIDTH = 3000;
     public static final int OPTIMIZE_IMAGE_ENCODER_QUALITY = 85;
+    public static final int OPTIMIZE_VIDEO_MAX_WIDTH = 1280;
+    public static final int OPTIMIZE_VIDEO_ENCODER_BITRATE_KB = 3000;
 
     public static Uri getOptimizedMedia(Activity activity, SiteModel siteModel, String path, boolean isVideo) {
         if (isVideo) {
@@ -57,6 +63,92 @@ public class WPMediaUtils {
     }
 
     public static boolean isVideoOptimizationAvailable() {
-        return BuildConfig.VIDEO_OPTIMIZATION_AVAILABLE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
+        return BuildConfig.VIDEO_OPTIMIZATION_AVAILABLE
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
+    }
+
+    public static boolean isVideoOptimizationEnabled(Activity activity, SiteModel siteModel) {
+        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
+        return isVideoOptimizationAvailable() && siteSettings != null && siteSettings.init(false).getOptimizedVideo();
+    }
+
+
+    /**
+     *
+     * Check if we should advertise image optimization feature for the current site.
+     *
+     * The following condition need to be all true:
+     * 1) Image optimization is OFF on the site.
+     * 2) Didn't already ask to enable the feature.
+     * 3) The user has granted storage access to the app.
+     * This is because we don't want to ask so much things to users the first time they try to add a picture to the app.
+     *
+     * @param act The host activity
+     * @param site The site where to check if optimize image is already on or not.
+     * @return true if we should advertise the feature, false otherwise.
+     */
+    public static boolean shouldAdvertiseImageOptimization(final Activity act, final SiteModel site) {
+        boolean isPromoRequired = AppPrefs.isImageOptimizePromoRequired();
+        if (!isPromoRequired) {
+            return false;
+        }
+
+        // Check we can access storage before asking for optimizing image
+        boolean hasStoreAccess = ContextCompat.checkSelfPermission(
+                act, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        if (!hasStoreAccess) {
+            return false;
+        }
+
+        // Check whether image optimization is already available for the site
+        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(act, site, null);
+        if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public interface OnAdvertiseImageOptimizationListener {
+        void done();
+    }
+
+    public static void advertiseImageOptimization(final Activity activity,
+                                                  final SiteModel site,
+                                                  final OnAdvertiseImageOptimizationListener listener) {
+
+        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, site, null);
+                    if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
+                        // null or image optimization already ON. We should not be here though.
+                    } else {
+                        siteSettings.setOptimizedImage(true);
+                        siteSettings.saveSettings();
+                    }
+                }
+
+                listener.done();
+            }
+        };
+
+        DialogInterface.OnCancelListener onCancelListener = new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                listener.done();
+            }
+        };
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(activity);
+        builder.setTitle(org.wordpress.android.R.string.image_optimization_promo_title);
+        builder.setMessage(org.wordpress.android.R.string.image_optimization_promo_desc);
+        builder.setPositiveButton(R.string.turn_on, onClickListener);
+        builder.setNegativeButton(R.string.leave_off, onClickListener);
+        builder.setOnCancelListener(onCancelListener);
+        builder.show();
+        // Do not ask again
+        AppPrefs.setImageOptimizePromoRequired(false);
     }
 }

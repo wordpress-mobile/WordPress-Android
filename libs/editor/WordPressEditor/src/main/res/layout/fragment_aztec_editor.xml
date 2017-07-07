@@ -57,7 +57,7 @@
                 <org.wordpress.aztec.AztecText
                     android:id="@+id/aztec"
                     android:gravity="top|start"
-                    android:hint="@string/edit_hint"
+                    android:hint="@string/editor_content_hint"
                     android:inputType="textCapSentences|textMultiLine"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"

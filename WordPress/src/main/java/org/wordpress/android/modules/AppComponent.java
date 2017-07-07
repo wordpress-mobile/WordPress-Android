@@ -50,11 +50,12 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
-import org.wordpress.android.ui.posts.AddCategoryActivity;
+import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostPreviewFragment;
+import org.wordpress.android.ui.posts.PostSettingsTagsActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
@@ -63,15 +64,16 @@ import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.MyProfileFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
+import org.wordpress.android.ui.publicize.PublicizeButtonPrefsFragment;
 import org.wordpress.android.ui.publicize.PublicizeDetailFragment;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.publicize.PublicizeListFragment;
-import org.wordpress.android.ui.publicize.PublicizeButtonPrefsFragment;
 import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
@@ -175,6 +177,7 @@ public interface AppComponent {
 
     void inject(EditPostActivity object);
     void inject(EditPostSettingsFragment object);
+    void inject(PostSettingsTagsActivity object);
 
     void inject(PostPreviewActivity object);
     void inject(PostPreviewFragment object);
@@ -201,6 +204,7 @@ public interface AppComponent {
     void inject(ReaderWebView object);
     void inject(ReaderPostPagerActivity object);
 
+    void inject(EditorReleaseNotesActivity object);
     void inject(WPWebViewActivity object);
     void inject(WPWebViewClient object);
     void inject(PostUploadService object);
@@ -211,7 +215,7 @@ public interface AppComponent {
     void inject(MediaDeleteService object);
 
     void inject(SelectCategoriesActivity object);
-    void inject(AddCategoryActivity object);
+    void inject(AddCategoryFragment object);
 
     void inject(HtmlToSpannedConverter object);
 }

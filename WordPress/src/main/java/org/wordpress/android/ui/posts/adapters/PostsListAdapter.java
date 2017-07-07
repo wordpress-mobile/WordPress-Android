@@ -389,25 +389,25 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else {
                 switch (PostStatus.fromPost(post)) {
                     case DRAFT:
-                        statusTextResId = R.string.draft;
+                        statusTextResId = R.string.post_status_draft;
                         statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case PRIVATE:
-                        statusTextResId = R.string.post_private;
+                        statusTextResId = R.string.post_status_post_private;
                         break;
                     case PENDING:
-                        statusTextResId = R.string.pending_review;
+                        statusTextResId = R.string.post_status_pending_review;
                         statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case SCHEDULED:
-                        statusTextResId = R.string.scheduled;
+                        statusTextResId = R.string.post_status_scheduled;
                         statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case TRASHED:
-                        statusTextResId = R.string.trashed;
+                        statusTextResId = R.string.post_status_trashed;
                         statusIconResId = R.drawable.ic_pages_alert_red_16dp;
                         statusColorResId = R.color.alert_red;
                         break;
