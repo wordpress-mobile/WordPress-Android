@@ -78,9 +78,9 @@
 
             <ProgressBar
                 android:id="@+id/post_upload_progress"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/UploadProgressBar"
                 android:indeterminate="false"
                 android:progress="25"/>
 
