@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.DragEvent;
@@ -31,7 +32,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -189,7 +189,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         };
 
-        TextView titleBeta = (TextView) view.findViewById(R.id.title_beta);
+        AppCompatTextView titleBeta = (AppCompatTextView) view.findViewById(R.id.title_beta);
         titleBeta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

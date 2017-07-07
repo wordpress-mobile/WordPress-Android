@@ -47,7 +47,7 @@
                     aztec:textColorHint="@color/hint_text" >
                 </org.wordpress.aztec.AztecText>
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/title_beta"
                     android:clickable="true"
                     android:layout_alignParentEnd="true"
@@ -55,7 +55,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/editor_title_beta"
                     style="@style/EditorTitleBeta" >
-                </TextView>
+                </android.support.v7.widget.AppCompatTextView>
 
             </RelativeLayout>
 
