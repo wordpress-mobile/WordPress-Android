@@ -371,7 +371,7 @@ public class UploadService extends Service {
     }
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, priority = 8)
+    @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onMediaUploaded(OnMediaUploaded event) {
         if (event.media == null) {
             return;
