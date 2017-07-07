@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aztec="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:layout_height="match_parent"
-    android:layout_width="match_parent" >
+    android:layout_width="match_parent">
 
     <org.wordpress.aztec.toolbar.AztecToolbar
         android:id="@+id/formatting_toolbar"
@@ -27,20 +26,38 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <org.wordpress.aztec.AztecText
-                android:id="@+id/title"
-                android:hint="@string/post_title"
-                android:inputType="textCapSentences"
+            <RelativeLayout
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:padding="16dp"
-                android:fontFamily="serif"
-                android:textStyle="bold"
-                android:textSize="@dimen/aztec_title_size"
-                aztec:lineSpacingExtra="@dimen/spacing_extra_title"
-                aztec:textColor="@color/grey_dark"
-                aztec:textColorHint="@color/hint_text" >
-            </org.wordpress.aztec.AztecText>
+                android:layout_width="match_parent" >
+
+                <org.wordpress.aztec.AztecText
+                    android:id="@+id/title"
+                    android:hint="@string/post_title"
+                    android:inputType="textCapSentences"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/title_beta"
+                    android:layout_toStartOf="@+id/title_beta"
+                    android:layout_width="match_parent"
+                    android:padding="16dp"
+                    android:fontFamily="serif"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/aztec_title_size"
+                    aztec:lineSpacingExtra="@dimen/spacing_extra_title"
+                    aztec:textColor="@color/grey_dark"
+                    aztec:textColorHint="@color/hint_text" >
+                </org.wordpress.aztec.AztecText>
+
+                <TextView
+                    android:id="@+id/title_beta"
+                    android:clickable="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/editor_title_beta"
+                    style="@style/EditorTitleBeta" >
+                </TextView>
+
+            </RelativeLayout>
 
             <View
                 android:id="@+id/sourceview_horizontal_divider"

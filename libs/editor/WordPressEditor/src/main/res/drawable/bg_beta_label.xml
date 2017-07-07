@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:dither="true"
+    android:shape="rectangle" >
+
+    <corners
+        android:radius="@dimen/radius_corner" >
+    </corners>
+
+    <solid
+        android:color="@color/white" >
+    </solid>
+
+    <stroke
+        android:color="@color/wp_grey_lighten_10"
+        android:width="1dp" >
+    </stroke>
+
+</shape>
