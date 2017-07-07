@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -118,6 +119,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private ImagePredicate mTappedImagePredicate;
 
+    EditorBetaClickListener mEditorBetaClickListener;
+
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -186,7 +189,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         };
 
+        TextView titleBeta = (TextView) view.findViewById(R.id.title_beta);
+        titleBeta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mEditorBetaClickListener.onBetaClicked();
+            }
+        });
+
         return view;
+    }
+
+    public void setEditorBetaClickListener(EditorBetaClickListener listener) {
+        mEditorBetaClickListener = listener;
     }
 
     public void setImageLoader(Html.ImageGetter imageLoader) {
