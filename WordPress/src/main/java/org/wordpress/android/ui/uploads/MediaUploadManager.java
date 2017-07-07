@@ -32,7 +32,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Started with explicit list of media to upload.
  */
-public class MediaUploadManager {
+public class MediaUploadManager extends AbstractUploadManager {
     private static final List<MediaModel> sPendingUploads = new ArrayList<>();
     private static final List<MediaModel> sInProgressUploads = new ArrayList<>();
 
@@ -46,9 +46,22 @@ public class MediaUploadManager {
         EventBus.getDefault().register(this);
     }
 
+    @Override
     void unregister() {
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    boolean hasInProgressUploads() {
+        return !sInProgressUploads.isEmpty() || !sPendingUploads.isEmpty();
+    }
+
+    @Override
+    void cancelInProgressUploads() {
+        for (MediaModel oneUpload : sInProgressUploads) {
+            cancelUpload(oneUpload, false);
+        }
     }
 
     void uploadMedia(List<MediaModel> mediaList) {
@@ -58,16 +71,6 @@ public class MediaUploadManager {
             }
         }
         uploadNextInQueue();
-    }
-
-    boolean hasInProgressUploads() {
-        return !sInProgressUploads.isEmpty() || !sPendingUploads.isEmpty();
-    }
-
-    void cancelInProgressUploads() {
-        for (MediaModel oneUpload : sInProgressUploads) {
-            cancelUpload(oneUpload, false);
-        }
     }
 
     static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
