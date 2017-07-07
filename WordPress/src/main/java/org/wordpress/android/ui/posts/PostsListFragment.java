@@ -523,6 +523,7 @@ public class PostsListFragment extends Fragment
             return;
         }
 
+        PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
 
         PostUploadService.addPostToUpload(post);

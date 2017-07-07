@@ -77,7 +77,7 @@ function printVersion() {
 function checkGradleProperties() {
   /bin/echo -n "Check gradle.properties..."
   checksum=`cat gradle.properties | grep -v "^wp.debug." | grep "^wp."|tr "[A-Z]" "[a-z]" | sed "s/ //g" | sort | sha1sum | cut -d- -f1 | sed "s/ //g"`
-  known_checksum="4058cdf3d784e4b79f63514d4780e92c28b5ab78"
+  known_checksum="fdb31db64e23a859935960ace1fda847d209113b"
   if [ x$checksum != x$known_checksum ]; then
     pFail
     exit 5

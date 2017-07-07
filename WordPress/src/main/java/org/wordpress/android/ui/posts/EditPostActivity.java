@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -23,7 +22,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -149,7 +147,7 @@ import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
-        PhotoPickerFragment.PhotoPickerListener {
+        PhotoPickerFragment.PhotoPickerListener, EditPostSettingsFragment.EditPostActivityHook {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
@@ -477,7 +475,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             case PUBLISHED:
             case UNKNOWN:
                 if (mPost.isLocalDraft()) {
-                    return getString(R.string.publish_post);
+                    return getString(R.string.post_status_publish_post);
                 } else {
                     return getString(R.string.update_verb);
                 }
@@ -703,13 +701,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (allGranted) {
             switch (requestCode) {
-                case WPPermissionUtils.EDITOR_LOCATION_PERMISSION_REQUEST_CODE:
-                    // Permission request was granted, show Location buttons in Settings
-                    mEditPostSettingsFragment.showLocationSearch();
-
-                    // After permission request was granted add GeoTag to the new post (if GeoTagging is enabled)
-                    mEditPostSettingsFragment.searchLocation();
-                    break;
                 case WPPermissionUtils.EDITOR_MEDIA_PERMISSION_REQUEST_CODE:
                     if (mMenuView != null) {
                         super.openContextMenu(mMenuView);
@@ -731,7 +722,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
             if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
-                mPost.setFeaturedImageId(mEditPostSettingsFragment.getFeaturedImageId());
                 mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
             }
             mViewPager.setCurrentItem(PAGE_CONTENT);
@@ -766,8 +756,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else if (itemId == R.id.menu_post_settings) {
             InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
             imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-            if (mShowNewEditor || mShowAztecEditor) {
-                mEditPostSettingsFragment.updateFeaturedImage(mPost.getFeaturedImageId());
+            if (mEditPostSettingsFragment != null) {
+                mEditPostSettingsFragment.refreshViews();
             }
             mViewPager.setCurrentItem(PAGE_SETTINGS);
         }
@@ -908,10 +898,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
 
-        if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.updatePostSettings(mPost);
-        }
-
+        PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
         mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
     }
 
@@ -987,6 +974,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                }
             }
 
+            savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             if (isFirstTimePublish) {
@@ -1186,7 +1174,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mEditPostSettingsFragment.updateStatusSpinner();
+                                    mEditPostSettingsFragment.updatePostStatusRelatedViews();
                                 }
                             });
                         }
@@ -1288,7 +1276,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         return new LegacyEditorFragment();
                     }
                 case 1:
-                    return EditPostSettingsFragment.newInstance(mSite, mPost);
+                    return EditPostSettingsFragment.newInstance();
                 default:
                     return EditPostPreviewFragment.newInstance(mSite);
             }
@@ -1932,46 +1920,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private String getRealPathFromURI(Uri uri) {
-        String path;
-        if ("content".equals(uri.getScheme())) {
-            path = getRealPathFromContentURI(uri);
-        } else if ("file".equals(uri.getScheme())) {
-            path = uri.getPath();
-        } else {
-            path = uri.toString();
-        }
-        return path;
-    }
-
-    private String getRealPathFromContentURI(Uri contentUri) {
-        if (contentUri == null)
-            return null;
-
-        String[] proj = { android.provider.MediaStore.Images.Media.DATA };
-        CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-
-        if (cursor == null)
-            return null;
-
-        int column_index = cursor.getColumnIndex(proj[0]);
-        if (column_index == -1) {
-            cursor.close();
-            return null;
-        }
-
-        String path;
-        if (cursor.moveToFirst()) {
-            path = cursor.getString(column_index);
-        } else {
-            path = null;
-        }
-
-        cursor.close();
-        return path;
-    }
-
     private void handleMediaPickerResult(Intent data) {
         ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
         if (ids == null || ids.size() == 0) {
@@ -2019,7 +1967,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(this)) {
-            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, false);
+            FetchMediaListPayload payload = new FetchMediaListPayload(
+                    mSite, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         } else {
             ToastUtils.showToast(this, R.string.error_media_refresh_no_connection, ToastUtils.Duration.SHORT);
@@ -2124,7 +2073,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private MediaModel queueFileForUpload(Uri uri, String mimeType, MediaUploadState startingState) {
-        String path = getRealPathFromURI(uri);
+        String path = MediaUtils.getRealPathFromURI(this, uri);
 
         // Invalid file path
         if (TextUtils.isEmpty(path)) {
@@ -2148,7 +2097,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private MediaModel buildMediaModel(Uri uri, String mimeType, MediaUploadState startingState) {
-        String path = getRealPathFromURI(uri);
+        String path = MediaUtils.getRealPathFromURI(this, uri);
 
         MediaModel media = mMediaStore.instantiateMediaModel();
         AppLog.i(T.MEDIA, "New media instantiated localId=" + media.getId());
@@ -2460,19 +2409,19 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     protected void showSnackbarBeta() {
         Snackbar.make(
-                    mViewPager,
-                    getString(R.string.new_editor_beta_message),
-                    Snackbar.LENGTH_LONG
-                )
+                mViewPager,
+                getString(R.string.new_editor_beta_message),
+                Snackbar.LENGTH_LONG
+        )
                 .setAction(
-                    R.string.new_editor_beta_action,
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
-                            AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LINK);
+                        R.string.new_editor_beta_action,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+                                AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LINK);
+                            }
                         }
-                    }
                 )
                 .show();
         AppPrefs.setNewEditorBetaRequired(false);
@@ -2481,21 +2430,33 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void showSnackbarConfirmation() {
         if (mViewPager != null) {
             Snackbar.make(
-                        mViewPager,
-                        getString(R.string.new_editor_promo_confirmation_message),
-                        Snackbar.LENGTH_LONG
-                    )
+                    mViewPager,
+                    getString(R.string.new_editor_promo_confirmation_message),
+                    Snackbar.LENGTH_LONG
+            )
                     .setAction(
-                        R.string.new_editor_promo_confirmation_action,
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ActivityLauncher.viewAppSettings(EditPostActivity.this);
-                                finish();
+                            R.string.new_editor_promo_confirmation_action,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    ActivityLauncher.viewAppSettings(EditPostActivity.this);
+                                    finish();
+                                }
                             }
-                        }
                     )
                     .show();
         }
+    }
+
+    // EditPostActivityHook methods
+
+    @Override
+    public PostModel getPost() {
+        return mPost;
+    }
+
+    @Override
+    public SiteModel getSite() {
+        return mSite;
     }
 }

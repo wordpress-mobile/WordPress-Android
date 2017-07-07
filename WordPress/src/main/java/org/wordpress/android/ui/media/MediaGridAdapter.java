@@ -33,6 +33,7 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
@@ -171,13 +172,19 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
+            holder.imgVideoOverlay.setVisibility(View.GONE);
             if (isLocalFile) {
                 loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
                 WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView, mImageLoader);
             }
+        } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
+            holder.fileContainer.setVisibility(View.GONE);
+            holder.imgVideoOverlay.setVisibility(View.VISIBLE);
+            WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl(), holder.imageView, mImageLoader);
         } else {
-            // not an image, so show file name and file type
+            // not an image or video, so show file name and file type
+            holder.imgVideoOverlay.setVisibility(View.GONE);
             holder.imageView.setImageDrawable(null);
             String fileName = media.getFileName();
             String title = media.getTitle();
@@ -251,6 +258,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final ViewGroup stateContainer;
         private final ViewGroup fileContainer;
         private final ImageView imgPreview;
+        private final ImageView imgVideoOverlay;
 
         public GridViewHolder(View view) {
             super(view);
@@ -266,6 +274,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             titleView = (TextView) fileContainer.findViewById(R.id.media_grid_item_name);
             fileTypeView = (TextView) fileContainer.findViewById(R.id.media_grid_item_filetype);
             fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
+
+            imgVideoOverlay = (ImageView) view.findViewById(R.id.image_video_overlay);
 
             ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.frame_preview);
             previewContainer.setVisibility(mShowPreviewIcon ? View.VISIBLE : View.GONE);
@@ -542,8 +552,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         for (MediaModel media: mediaList) {
-            MediaModel thisMedia = getMediaFromId(media.getId());
-            if (thisMedia == null || !thisMedia.equals(media)) {
+            if (getMediaFromMediaId(media.getMediaId()) == null) {
                 return false;
             }
         }
@@ -552,11 +561,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     /*
-     * returns the media item with the passed media ID in the current media list
+     * returns the media item with the passed (remote) media ID in the current media list
      */
-    private MediaModel getMediaFromId(int id) {
+    private MediaModel getMediaFromMediaId(long mediaId) {
         for (int i = 0; i < mMediaList.size(); i++) {
-            if (mMediaList.get(i).getId() == id) {
+            if (mMediaList.get(i).getMediaId() == mediaId) {
                 return mMediaList.get(i);
             }
         }
