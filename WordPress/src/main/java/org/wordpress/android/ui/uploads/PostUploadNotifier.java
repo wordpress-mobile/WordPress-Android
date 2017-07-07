@@ -93,6 +93,7 @@ class PostUploadNotifier {
         if (notificationData != null) {
             mNotificationManager.cancel(notificationData.notificationId);
         }
+        mService.stopForeground(true);
     }
 
     void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstTimePublish) {
