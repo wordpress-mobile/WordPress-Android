@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -36,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
@@ -53,7 +53,7 @@ public class MediaUploadService extends Service {
 
     // To avoid conflicts by editing the post each time a single upload completes, this map tracks completed media by
     // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
-    private static HashMap<Integer, List<MediaModel>> mCompletedUploadsByPost = new HashMap<>();
+    private static ConcurrentHashMap<Integer, List<MediaModel>> mCompletedUploadsByPost = new ConcurrentHashMap<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
