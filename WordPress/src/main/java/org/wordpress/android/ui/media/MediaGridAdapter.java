@@ -33,7 +33,6 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
@@ -172,7 +171,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
-            holder.imgVideoOverlay.setVisibility(View.GONE);
+            holder.videoOverlayContainer.setVisibility(View.GONE);
             if (isLocalFile) {
                 loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
@@ -180,11 +179,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             }
         } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
             holder.fileContainer.setVisibility(View.GONE);
-            holder.imgVideoOverlay.setVisibility(View.VISIBLE);
+            holder.videoOverlayContainer.setVisibility(View.VISIBLE);
             WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl(), holder.imageView, mImageLoader);
         } else {
             // not an image or video, so show file name and file type
-            holder.imgVideoOverlay.setVisibility(View.GONE);
+            holder.videoOverlayContainer.setVisibility(View.GONE);
             holder.imageView.setImageDrawable(null);
             String fileName = media.getFileName();
             String title = media.getTitle();
@@ -195,6 +194,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             int placeholderResId = WordPressMediaUtils.getPlaceholder(fileName);
             holder.fileTypeImageView.setImageResource(placeholderResId);
         }
+
+        holder.previewContainer.setVisibility(mShowPreviewIcon && !media.isVideo() ? View.VISIBLE : View.GONE);
 
         // show selection count when selected
         holder.selectionCountTextView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
@@ -257,8 +258,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final ProgressBar progressUpload;
         private final ViewGroup stateContainer;
         private final ViewGroup fileContainer;
-        private final ImageView imgPreview;
-        private final ImageView imgVideoOverlay;
+        private final ViewGroup previewContainer;
+        private final ViewGroup videoOverlayContainer;
 
         public GridViewHolder(View view) {
             super(view);
@@ -275,27 +276,25 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             fileTypeView = (TextView) fileContainer.findViewById(R.id.media_grid_item_filetype);
             fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
 
-            imgVideoOverlay = (ImageView) view.findViewById(R.id.image_video_overlay);
+            previewContainer = (ViewGroup) view.findViewById(R.id.frame_preview);
+            videoOverlayContainer = (ViewGroup) view.findViewById(R.id.frame_video_overlay);
 
-            ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.frame_preview);
-            previewContainer.setVisibility(mShowPreviewIcon ? View.VISIBLE : View.GONE);
-            imgPreview = (ImageView) previewContainer.findViewById(R.id.image_preview);
-            if (mShowPreviewIcon) {
-                imgPreview.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int position = getAdapterPosition();
-                        if (isValidPosition(position)) {
-                            MediaModel media = mMediaList.get(position);
-                            MediaPreviewActivity.showPreview(
-                                    v.getContext(),
-                                    imgPreview,
-                                    mSite,
-                                    media.getId());
-                        }
+            View.OnClickListener previewListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (isValidPosition(position)) {
+                        MediaModel media = mMediaList.get(position);
+                        MediaPreviewActivity.showPreview(
+                                v.getContext(),
+                                previewContainer,
+                                mSite,
+                                media.getId());
                     }
-                });
-            }
+                }
+            };
+            previewContainer.setOnClickListener(previewListener);
+            videoOverlayContainer.setOnClickListener(previewListener);
 
             // make the progress bar white
             progressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
