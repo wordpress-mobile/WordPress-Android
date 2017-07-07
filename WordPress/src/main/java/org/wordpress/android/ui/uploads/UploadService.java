@@ -76,8 +76,9 @@ public class UploadService extends Service {
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
         }
 
-        // TODO unregister managers as well
         mDispatcher.unregister(this);
+        mMediaUploadManager.unregister();
+        mPostUploadManager.unregister();
         AppLog.i(T.MAIN, "Upload Service > destroyed");
         super.onDestroy();
     }
@@ -334,9 +335,6 @@ public class UploadService extends Service {
         }
 
         AppLog.i(T.MAIN, "Upload Service > completed");
-        mDispatcher.unregister(sMediaUploadManager);
-        EventBus.getDefault().unregister(sMediaUploadManager);
-        // TODO unregister PostUploadManager
         stopSelf();
     }
 

@@ -46,6 +46,11 @@ public class MediaUploadManager {
         EventBus.getDefault().register(this);
     }
 
+    void unregister() {
+        mDispatcher.unregister(this);
+        EventBus.getDefault().unregister(this);
+    }
+
     void uploadMedia(List<MediaModel> mediaList) {
         if (mediaList != null) {
             for (MediaModel media : mediaList) {

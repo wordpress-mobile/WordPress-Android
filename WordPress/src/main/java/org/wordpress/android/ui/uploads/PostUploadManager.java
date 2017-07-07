@@ -82,6 +82,10 @@ public class PostUploadManager {
         mPostUploadNotifier = postUploadNotifier;
     }
 
+    void unregister() {
+        mDispatcher.unregister(this);
+    }
+
     void uploadPost(PostModel post) {
         synchronized (sQueuedPostsList) {
             sQueuedPostsList.add(post);
