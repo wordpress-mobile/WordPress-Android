@@ -103,8 +103,6 @@ public class MediaUploadManager extends AbstractUploadManager {
             completeUploadWithId(event.media.getId());
             uploadNextInQueue();
         } else {
-            // TODO check if we need to re-broadcast event.media, event.progress or we're just fine with
-            // listening to  event.media, event.progress
             AppLog.i(T.MEDIA, "MediaUploadManager > " + event.media.getId() + " - progress: " + event.progress);
         }
     }
@@ -116,8 +114,6 @@ public class MediaUploadManager extends AbstractUploadManager {
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         }
 
-        // TODO: check whether we need to broadcast the error or maybe it is enough to register for FluxC events
-        // event.media, event.error
         Map<String, Object> properties = new HashMap<>();
         properties.put("error_type", event.error.type.name());
         trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_ERROR, media, properties);
@@ -213,7 +209,6 @@ public class MediaUploadManager extends AbstractUploadManager {
     private void notifyServiceIfUploadsComplete() {
         if (sPendingUploads.isEmpty() && sInProgressUploads.isEmpty()) {
             AppLog.i(T.MEDIA, "MediaUploadManager > Completed");
-            // TODO: Tell UploadService it can stop
         }
     }
 

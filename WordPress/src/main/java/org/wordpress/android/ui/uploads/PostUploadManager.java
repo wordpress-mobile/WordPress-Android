@@ -157,7 +157,6 @@ public class PostUploadManager extends AbstractUploadManager {
                     mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, sCurrentUploadingPost);
                 } else {
                     AppLog.i(T.POSTS, "PostUploadManager > Completed");
-                    // TODO: Tell UploadService it can stop
                 }
             }
         }
