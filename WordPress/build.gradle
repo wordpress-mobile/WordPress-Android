@@ -174,18 +174,11 @@ configurations.all {
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
-    def inputFile = file("${rootDir}/gradle.properties")
-    if (!inputFile.exists()) {
-        throw new StopActionException("Build configuration file:" + inputFile
-                + " doesn't exist, follow README instructions")
-    }
+    def inputFile = checkGradlePropertiesFile()
     outputs.file outputFile
     inputs.file inputFile
     doLast {
-        def properties = new Properties()
-        inputFile.withInputStream { stream ->
-            properties.load(stream)
-        }
+        def properties = loadPropertiesFromFile(inputFile)
         def crashlyticsApiKey = properties.getProperty('wp.crashlytics.apikey', '0')
         def writer = new FileWriter(outputFile)
         writer.write("""// auto-generated file from ${rootDir}/gradle.properties do not modify
@@ -201,12 +194,34 @@ android.applicationVariants.all { variant ->
 
 // Add properties named "wp.xxx" to our BuildConfig
 android.buildTypes.all { buildType ->
-    project.properties.any { property ->
+    def inputFile = checkGradlePropertiesFile()
+    def properties = loadPropertiesFromFile(inputFile)
+    properties.any { property ->
         if (property.key.toLowerCase().startsWith("wp.")) {
             buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
                     "\"${property.value}\""
         }
     }
+}
+
+def checkGradlePropertiesFile() {
+    def inputFile = file("${rootDir}/gradle.properties")
+    if (!inputFile.exists()) {
+        // Try the BuddyBuild provided file if it's there
+        inputFile = file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/gradle.properties")
+        if (!inputFile.exists()) {
+            throw new StopActionException("Build configuration file gradle.properties doesn't exist, follow README instructions")
+        }
+    }
+    return inputFile
+}
+
+static def loadPropertiesFromFile(inputFile) {
+    def properties = new Properties()
+    inputFile.withInputStream { stream ->
+        properties.load(stream)
+    }
+    return properties
 }
 
 // For app signing
