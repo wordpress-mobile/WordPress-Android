@@ -61,7 +61,7 @@ public class UploadService extends Service {
     public void onCreate() {
         super.onCreate();
         ((WordPress) getApplication()).component().inject(this);
-        AppLog.i(T.MAIN, "Upload Service > created");
+        AppLog.i(T.MAIN, "UploadService > Created");
         mDispatcher.register(this);
         // TODO: Recover any posts/media uploads that were interrupted by the service being stopped
     }
@@ -80,7 +80,7 @@ public class UploadService extends Service {
         mDispatcher.unregister(this);
         mMediaUploadManager.unregister();
         mPostUploadManager.unregister();
-        AppLog.i(T.MAIN, "Upload Service > destroyed");
+        AppLog.i(T.MAIN, "UploadService > Destroyed");
         super.onDestroy();
     }
 
@@ -93,7 +93,7 @@ public class UploadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Skip this request if no items to upload were given
         if (intent == null || (!intent.hasExtra(KEY_MEDIA_LIST) && !intent.hasExtra(KEY_LOCAL_POST_ID))) {
-            AppLog.e(T.MEDIA, "UploadService was killed and restarted with an empty intent.");
+            AppLog.e(T.MAIN, "UploadService > Killed and restarted with an empty intent");
             stopServiceIfUploadsComplete();
             return START_NOT_STICKY;
         }
@@ -335,7 +335,7 @@ public class UploadService extends Service {
             }
         }
 
-        AppLog.i(T.MAIN, "Upload Service > completed");
+        AppLog.i(T.MAIN, "UploadService > Completed");
         stopSelf();
     }
 
@@ -379,7 +379,7 @@ public class UploadService extends Service {
 
         if (event.isError()) {
             if (event.media.getLocalPostId() > 0) {
-                AppLog.e(T.MEDIA, "UploadService: Media upload failed for post " + event.media.getLocalPostId() + " : "
+                AppLog.w(T.MAIN, "UploadService > Media upload failed for post " + event.media.getLocalPostId() + " : "
                         + event.error.type + ": " + event.error.message);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.error);
                 cancelPostUploadMatchingMedia(event.media, errorMessage);
@@ -390,7 +390,7 @@ public class UploadService extends Service {
 
         if (event.canceled) {
             if (event.media.getLocalPostId() > 0) {
-                AppLog.d(T.MEDIA, "UploadService: Upload cancelled for post with id " + event.media.getLocalPostId()
+                AppLog.i(T.MAIN, "UploadService > Upload cancelled for post with id " + event.media.getLocalPostId()
                         + " - a media upload for this post has been cancelled, id: " + event.media.getId());
                 cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
             }
@@ -400,8 +400,8 @@ public class UploadService extends Service {
 
         if (event.completed) {
             if (event.media.getLocalPostId() != 0) {
-                AppLog.d(T.MEDIA, "UploadService: Processing completed media with id " + event.media.getId() +
-                        " and local post id " + event.media.getLocalPostId());
+                AppLog.i(T.MAIN, "UploadService > Processing completed media with id " + event.media.getId()
+                        + " and local post id " + event.media.getLocalPostId());
                 addMediaToPostCompletedMediaListMap(event.media);
 
                 // If this was the last media upload a pending post was waiting for, send it to the PostUploadManager
