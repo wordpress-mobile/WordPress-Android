@@ -40,8 +40,8 @@ public class UploadService extends Service {
     private static final String KEY_LOCAL_POST_ID = "localPostId";
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
 
-    private static MediaUploadManager sMediaUploadManager;
-    private static PostUploadManager sPostUploadManager;
+    private MediaUploadManager mMediaUploadManager;
+    private PostUploadManager mPostUploadManager;
     private PostUploadNotifier mPostUploadNotifier;
 
     private static final List<PostModel> sPostsWithPendingMedia = new ArrayList<>();
@@ -90,16 +90,16 @@ public class UploadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (sMediaUploadManager == null) {
-            sMediaUploadManager = new MediaUploadManager();
+        if (mMediaUploadManager == null) {
+            mMediaUploadManager = new MediaUploadManager();
         }
 
         if (mPostUploadNotifier == null) {
             mPostUploadNotifier = new PostUploadNotifier(getApplicationContext(), this);
         }
 
-        if (sPostUploadManager == null) {
-            sPostUploadManager = new PostUploadManager(mPostUploadNotifier);
+        if (mPostUploadManager == null) {
+            mPostUploadManager = new PostUploadManager(mPostUploadNotifier);
         }
 
         if (intent.hasExtra(KEY_MEDIA_LIST)) {
@@ -144,7 +144,7 @@ public class UploadService extends Service {
         @SuppressWarnings("unchecked")
         List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(KEY_MEDIA_LIST);
         if (mediaList != null) {
-            sMediaUploadManager.uploadMedia(mediaList);
+            mMediaUploadManager.uploadMedia(mediaList);
         }
     }
 
@@ -153,11 +153,11 @@ public class UploadService extends Service {
         if (post != null) {
             boolean shouldTrackAnalytics = intent.getBooleanExtra(KEY_SHOULD_TRACK_ANALYTICS, false);
             if (shouldTrackAnalytics) {
-                sPostUploadManager.registerPostForAnalyticsTracking(post);
+                mPostUploadManager.registerPostForAnalyticsTracking(post);
             }
 
             if (!hasPendingMediaUploadsForPost(post)) {
-                sPostUploadManager.uploadPost(post);
+                mPostUploadManager.uploadPost(post);
             } else {
                 sPostsWithPendingMedia.add(post);
                 showNotificationForPostWithPendingMedia(post);
@@ -193,11 +193,6 @@ public class UploadService extends Service {
 
     public static void uploadMedia(Context context, ArrayList<MediaModel> mediaList) {
         if (context == null) {
-            return;
-        }
-
-        if (sMediaUploadManager != null) {
-            sMediaUploadManager.uploadMedia(mediaList);
             return;
         }
 
@@ -347,7 +342,7 @@ public class UploadService extends Service {
         mPostUploadNotifier.cancelNotification(postToCancel);
         mPostUploadNotifier.updateNotificationError(postToCancel, site, message, true);
 
-        sPostUploadManager.unregisterPostForAnalyticsTracking(postToCancel);
+        mPostUploadManager.unregisterPostForAnalyticsTracking(postToCancel);
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
     }
 
@@ -414,7 +409,7 @@ public class UploadService extends Service {
                             // TODO Should do some extra validation here
                             // e.g. what if the post has local media URLs but no pending media uploads?
                             iterator.remove();
-                            sPostUploadManager.uploadPost(updatedPost);
+                            mPostUploadManager.uploadPost(updatedPost);
                         }
                     }
                 }
