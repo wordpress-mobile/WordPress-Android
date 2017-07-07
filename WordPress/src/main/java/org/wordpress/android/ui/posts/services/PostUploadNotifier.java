@@ -137,18 +137,19 @@ public class PostUploadNotifier {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
         notificationBuilder.setAutoCancel(true);
 
+        long notificationId = getNotificationIdForPost(post);
         // Tap notification intent (open the post list)
         Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
         notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
-        PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext, 0,
-                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
+                (int)notificationId,
+                notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         notificationBuilder.setContentIntent(pendingIntentPost);
 
         // Share intent - started if the user tap the share link button - only if the link exist
-        long notificationId = getNotificationIdForPost(post);
         if (shareableUrl != null && PostStatus.fromPost(post) == PostStatus.PUBLISHED) {
             Intent shareIntent = new Intent(mContext, ShareAndDismissNotificationReceiver.class);
             shareIntent.putExtra(ShareAndDismissNotificationReceiver.NOTIFICATION_ID_KEY, notificationId);
@@ -181,8 +182,9 @@ public class PostUploadNotifier {
         notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
         notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, errorMessage);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
-                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
+                (int)getNotificationIdForPost(post),
+                notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
 
         String errorText = mContext.getResources().getText(R.string.upload_failed).toString();
         if (isMediaError) {
