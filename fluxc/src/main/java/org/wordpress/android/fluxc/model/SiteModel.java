@@ -47,6 +47,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private String mTimezone; // Expressed as an offset relative to GMT (e.g. '-8')
     @Column private String mFrameNonce; // only wpcom and Jetpack sites
     @Column private long mMaxUploadSize; // only set for Jetpack sites
+    @Column private long mMemoryLimit; // only set for Jetpack sites
     @Column private int mOrigin = ORIGIN_UNKNOWN; // Does this site come from a WPCOM REST or XMLRPC fetch_sites call?
 
     // Self hosted specifics
@@ -427,6 +428,18 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
 
     public boolean hasMaxUploadSize() {
         return mMaxUploadSize > 0;
+    }
+
+    public long getMemoryLimit() {
+        return mMemoryLimit;
+    }
+
+    public void setMemoryLimit(long memoryLimit) {
+        mMemoryLimit = memoryLimit;
+    }
+
+    public boolean hasMemoryLimit() {
+        return mMemoryLimit > 0;
     }
 
     public String getPlanShortName() {
