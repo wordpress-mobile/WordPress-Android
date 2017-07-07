@@ -136,6 +136,13 @@ public class PostUploadManager {
         return mCurrentTask != null || !sQueuedPostsList.isEmpty();
     }
 
+    void cancelInProgressUploads() {
+        if (mCurrentTask != null) {
+            AppLog.d(T.POSTS, "Cancelling current upload task");
+            mCurrentTask.cancel(true);
+        }
+    }
+
     private void uploadNextPost() {
         synchronized (sQueuedPostsList) {
             if (mCurrentTask == null) { //make sure nothing is running

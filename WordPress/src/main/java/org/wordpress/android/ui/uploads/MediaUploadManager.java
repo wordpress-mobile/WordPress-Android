@@ -64,6 +64,12 @@ public class MediaUploadManager {
         return !sInProgressUploads.isEmpty() || !sPendingUploads.isEmpty();
     }
 
+    void cancelInProgressUploads() {
+        for (MediaModel oneUpload : sInProgressUploads) {
+            cancelUpload(oneUpload, false);
+        }
+    }
+
     static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
         for (MediaModel queuedMedia : sInProgressUploads) {
             if (queuedMedia.getLocalPostId() == postModel.getId()) {

@@ -68,7 +68,8 @@ public class UploadService extends Service {
 
     @Override
     public void onDestroy() {
-        // TODO: Cancel in-progress uploads
+        mMediaUploadManager.cancelInProgressUploads();
+        mPostUploadManager.cancelInProgressUploads();
 
         // Update posts with any completed uploads in our post->media map
         for (Integer postId : sCompletedUploadsByPost.keySet()) {
