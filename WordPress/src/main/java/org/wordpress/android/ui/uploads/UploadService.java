@@ -378,18 +378,22 @@ public class UploadService extends Service {
         }
 
         if (event.isError()) {
-            AppLog.e(T.MEDIA, "UploadService: Media upload failed for post " + event.media.getLocalPostId() + " : " +
-                    event.error.type + ": " + event.error.message);
-            String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.error);
-            cancelPostUploadMatchingMedia(event.media, errorMessage);
+            if (event.media.getLocalPostId() > 0) {
+                AppLog.e(T.MEDIA, "UploadService: Media upload failed for post " + event.media.getLocalPostId() + " : "
+                        + event.error.type + ": " + event.error.message);
+                String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.error);
+                cancelPostUploadMatchingMedia(event.media, errorMessage);
+            }
             stopServiceIfUploadsComplete();
             return;
         }
 
         if (event.canceled) {
-            AppLog.d(T.MEDIA, "UploadService: Upload cancelled for post with id " + event.media.getLocalPostId()
-                    + " - a media upload for this post has been cancelled, id: " + event.media.getId());
-            cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
+            if (event.media.getLocalPostId() > 0) {
+                AppLog.d(T.MEDIA, "UploadService: Upload cancelled for post with id " + event.media.getLocalPostId()
+                        + " - a media upload for this post has been cancelled, id: " + event.media.getId());
+                cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
+            }
             stopServiceIfUploadsComplete();
             return;
         }
