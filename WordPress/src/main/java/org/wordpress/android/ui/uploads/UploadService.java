@@ -45,6 +45,7 @@ public class UploadService extends Service {
     private PostUploadManager mPostUploadManager;
     private PostUploadNotifier mPostUploadNotifier;
 
+    // Posts that we're withholding from the PostUploadManager until their pending media uploads are completed
     private static final List<PostModel> sPostsWithPendingMedia = new ArrayList<>();
 
     // To avoid conflicts by editing the post each time a single upload completes, this map tracks completed media by
