@@ -254,18 +254,20 @@ public class UploadService extends Service {
         }
     }
 
-    public static synchronized PostModel updatePostWithCurrentlyCompletedUploads(PostModel post) {
+    public static PostModel updatePostWithCurrentlyCompletedUploads(PostModel post) {
         // now get the list of completed media for this post, so we can make post content
         // updates in one go and save only once
         if (post != null) {
-            MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
-            List<MediaModel> mediaList = sCompletedUploadsByPost.get(post.getId());
-            if (mediaList != null && !mediaList.isEmpty()) {
-                for (MediaModel media : mediaList) {
-                    post = updatePostWithMediaUrl(post, media, processor);
+            synchronized (sCompletedUploadsByPost) {
+                MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
+                List<MediaModel> mediaList = sCompletedUploadsByPost.get(post.getId());
+                if (mediaList != null && !mediaList.isEmpty()) {
+                    for (MediaModel media : mediaList) {
+                        post = updatePostWithMediaUrl(post, media, processor);
+                    }
+                    // finally remove all completed uploads for this post, as they've been taken care of
+                    sCompletedUploadsByPost.remove(post.getId());
                 }
-                // finally remove all completed uploads for this post, as they've been taken care of
-                sCompletedUploadsByPost.remove(post.getId());
             }
         }
         return post;
@@ -284,12 +286,14 @@ public class UploadService extends Service {
     // this keeps a map for all completed media for each post, so we can process the post easily
     // in one go later
     private void addMediaToPostCompletedMediaListMap(MediaModel media) {
-        List<MediaModel> mediaListForPost = sCompletedUploadsByPost.get(media.getLocalPostId());
-        if (mediaListForPost == null) {
-            mediaListForPost = new ArrayList<>();
+        synchronized (sCompletedUploadsByPost) {
+            List<MediaModel> mediaListForPost = sCompletedUploadsByPost.get(media.getLocalPostId());
+            if (mediaListForPost == null) {
+                mediaListForPost = new ArrayList<>();
+            }
+            mediaListForPost.add(media);
+            sCompletedUploadsByPost.put(media.getLocalPostId(), mediaListForPost);
         }
-        mediaListForPost.add(media);
-        sCompletedUploadsByPost.put(media.getLocalPostId(), mediaListForPost);
     }
 
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,

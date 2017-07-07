@@ -74,15 +74,19 @@ public class MediaUploadManager extends AbstractUploadManager {
     }
 
     static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
-        for (MediaModel queuedMedia : sInProgressUploads) {
-            if (queuedMedia.getLocalPostId() == postModel.getId()) {
-                return true;
+        synchronized (sInProgressUploads) {
+            for (MediaModel queuedMedia : sInProgressUploads) {
+                if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                    return true;
+                }
             }
         }
 
-        for (MediaModel queuedMedia : sPendingUploads) {
-            if (queuedMedia.getLocalPostId() == postModel.getId()) {
-                return true;
+        synchronized (sPendingUploads) {
+            for (MediaModel queuedMedia : sPendingUploads) {
+                if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                    return true;
+                }
             }
         }
         return false;
