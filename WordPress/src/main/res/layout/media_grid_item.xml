@@ -39,8 +39,8 @@
 
             <ImageView
                 android:id="@+id/media_grid_item_filetype_image"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
                 android:tint="@color/grey_dark"
                 tools:src="@drawable/media_document" />
