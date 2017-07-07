@@ -135,6 +135,11 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
+    public boolean pagerMovedManually() {
+        return getLoginPrologueFragment().pagerHasMovedManually();
+    }
+
+    @Override
     public void showEmailLoginScreen() {
         slideInFragment(new LoginEmailFragment(), true, LoginEmailFragment.TAG);
     }

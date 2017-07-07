@@ -16,6 +16,11 @@ import org.wordpress.android.util.AppLog.T;
  */
 public class WPViewPager extends ViewPager {
     private boolean mPagingEnabled = true;
+    private boolean mHasMovedManually;
+
+    public boolean hasMovedManually() {
+        return mHasMovedManually;
+    }
 
     public WPViewPager(Context context) {
         super(context);
@@ -29,6 +34,10 @@ public class WPViewPager extends ViewPager {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (mPagingEnabled) {
             try {
+                if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+                    mHasMovedManually = true;
+                }
+
                 return super.onInterceptTouchEvent(ev);
             } catch (IllegalArgumentException e) {
                 AppLog.e(T.UTILS, e);
@@ -41,6 +50,10 @@ public class WPViewPager extends ViewPager {
     public boolean onTouchEvent(MotionEvent ev) {
         if (mPagingEnabled) {
             try {
+                if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+                    mHasMovedManually = true;
+                }
+
                 return super.onTouchEvent(ev);
             } catch (IllegalArgumentException e) {
                 AppLog.e(AppLog.T.UTILS, e);

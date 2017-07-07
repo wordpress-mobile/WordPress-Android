@@ -81,4 +81,8 @@ public class LoginPrologueFragment extends Fragment {
 
         mPager.setCurrentItem(nextItem, true);
     }
+
+    public boolean pagerHasMovedManually() {
+        return mPager != null && mPager.hasMovedManually();
+    }
 }

@@ -85,7 +85,7 @@ public class LoginPrologueAnimationFragment extends Fragment {
             public void onAnimationRepeat(Animator animation) {
                 mLottieAnimationView.setProgress(0);
 
-                if (mLoginListener != null && getUserVisibleHint()) {
+                if (mLoginListener != null && getUserVisibleHint() && !mLoginListener.pagerMovedManually()) {
                     mLoginListener.nextPromo();
                 }
             }

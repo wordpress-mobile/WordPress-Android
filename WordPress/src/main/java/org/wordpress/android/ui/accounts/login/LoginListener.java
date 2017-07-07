@@ -7,6 +7,7 @@ public interface LoginListener {
 
     // Login Prologue callbacks
     void nextPromo();
+    boolean pagerMovedManually();
     void showEmailLoginScreen();
     void doStartSignup();
 
