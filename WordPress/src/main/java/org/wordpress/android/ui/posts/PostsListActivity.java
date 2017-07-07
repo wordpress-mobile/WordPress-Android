@@ -36,22 +36,42 @@ public class PostsListActivity extends AppCompatActivity {
 
         setContentView(R.layout.post_list_activity);
 
-        mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+
+        // get new intent extras and compare whether the running instance of PostsListActivity has
+        // the same values or not. If not, we need to create a new fragment and show the corresponding
+        // requested content
+        boolean bPageHasChanged = false;
+        if (intent.hasExtra(EXTRA_VIEW_PAGES)) {
+            boolean isPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+            bPageHasChanged = isPage != mIsPage;
+        }
+        mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+
+        boolean bSiteHasChanged = false;
+        if (intent.hasExtra(WordPress.SITE)) {
+            SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+            bSiteHasChanged = site.getId() != mSite.getId();
+            mSite = site;
         }
 
         if (mSite == null) {
@@ -60,15 +80,29 @@ public class PostsListActivity extends AppCompatActivity {
             return;
         }
 
-        mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
-        if (mPostList == null) {
-            mPostList = PostsListFragment.newInstance(mSite, mIsPage);
-            getFragmentManager().beginTransaction()
-                    .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
-                    .commit();
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        showErrorDialogIfNeeded(getIntent().getExtras());
+        mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
+        if (mPostList == null || bSiteHasChanged || bPageHasChanged) {
+            PostsListFragment oldFragment = mPostList;
+            mPostList = PostsListFragment.newInstance(mSite, mIsPage);
+            if (oldFragment == null) {
+                getFragmentManager().beginTransaction()
+                        .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                        .commit();
+            } else {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                        .commit();
+            }
+        }
+
+        showErrorDialogIfNeeded(intent.getExtras());
     }
 
     @Override
