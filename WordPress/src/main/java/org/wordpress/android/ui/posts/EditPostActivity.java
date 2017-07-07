@@ -474,6 +474,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onBetaClicked() {
         startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+        AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LABEL);
     }
 
     private String getSaveButtonText() {
