@@ -58,7 +58,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class PostUploadManager extends AbstractUploadManager {
+public class PostUploadHandler extends AbstractUploadHandler {
     private static final ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();
     private static final Set<Integer> sFirstPublishPosts = new HashSet<>();
     private static PostModel sCurrentUploadingPost = null;
@@ -75,9 +75,9 @@ public class PostUploadManager extends AbstractUploadManager {
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
 
-    PostUploadManager(PostUploadNotifier postUploadNotifier) {
+    PostUploadHandler(PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext()).component().inject(this);
-        AppLog.i(T.POSTS, "PostUploadManager > Created");
+        AppLog.i(T.POSTS, "PostUploadHandler > Created");
         mDispatcher.register(this);
         mPostUploadNotifier = postUploadNotifier;
     }
@@ -95,7 +95,7 @@ public class PostUploadManager extends AbstractUploadManager {
     @Override
     void cancelInProgressUploads() {
         if (mCurrentTask != null) {
-            AppLog.i(T.POSTS, "PostUploadManager > Cancelling current upload task");
+            AppLog.i(T.POSTS, "PostUploadHandler > Cancelling current upload task");
             mCurrentTask.cancel(true);
         }
     }
@@ -156,7 +156,7 @@ public class PostUploadManager extends AbstractUploadManager {
                     mCurrentTask = new UploadPostTask();
                     mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, sCurrentUploadingPost);
                 } else {
-                    AppLog.i(T.POSTS, "PostUploadManager > Completed");
+                    AppLog.i(T.POSTS, "PostUploadHandler > Completed");
                 }
             }
         }
@@ -374,7 +374,7 @@ public class PostUploadManager extends AbstractUploadManager {
         }
 
         private String uploadImage(MediaFile mediaFile) {
-            AppLog.i(T.POSTS, "PostUploadManager > UploadImage: " + mediaFile.getFilePath());
+            AppLog.i(T.POSTS, "PostUploadHandler > UploadImage: " + mediaFile.getFilePath());
 
             if (mediaFile.getFilePath() == null) {
                 return null;
@@ -489,7 +489,7 @@ public class PostUploadManager extends AbstractUploadManager {
                 mMediaLatchMap.put(mediaFile.getId(), countDownLatch);
                 countDownLatch.await();
             } catch (InterruptedException e) {
-                AppLog.e(T.POSTS, "PostUploadManager > CountDownLatch await interrupted for media file: "
+                AppLog.e(T.POSTS, "PostUploadHandler > CountDownLatch await interrupted for media file: "
                         + mediaFile.getId() + " - " + e);
                 mIsMediaError = true;
             }
@@ -520,7 +520,7 @@ public class PostUploadManager extends AbstractUploadManager {
                 mMediaLatchMap.put(mediaFile.getId(), countDownLatch);
                 countDownLatch.await();
             } catch (InterruptedException e) {
-                AppLog.e(T.POSTS, "PostUploadManager > CountDownLatch await interrupted for media file: "
+                AppLog.e(T.POSTS, "PostUploadHandler > CountDownLatch await interrupted for media file: "
                         + mediaFile.getId() + " - " + e);
                 mIsMediaError = true;
             }
@@ -552,7 +552,7 @@ public class PostUploadManager extends AbstractUploadManager {
         SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
 
         if (event.isError()) {
-            AppLog.w(T.POSTS, "PostUploadManager > Post upload failed. " + event.error.type + ": "
+            AppLog.w(T.POSTS, "PostUploadHandler > Post upload failed. " + event.error.type + ": "
                     + event.error.message);
             Context context = WordPress.getContext();
             String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
@@ -580,7 +580,7 @@ public class PostUploadManager extends AbstractUploadManager {
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 8)
     public void onMediaUploaded(OnMediaUploaded event) {
         if (event.media == null) {
-            AppLog.w(T.POSTS, "PostUploadManager > Received media event for null media, ignoring");
+            AppLog.w(T.POSTS, "PostUploadHandler > Received media event for null media, ignoring");
             return;
         }
         if (sUseLegacyMode) {
@@ -591,12 +591,12 @@ public class PostUploadManager extends AbstractUploadManager {
     private void handleMediaUploadCompletedLegacy(OnMediaUploaded event) {
         // Event for unknown media, ignoring
         if (sCurrentUploadingPost == null || mMediaLatchMap.get(event.media.getId()) == null) {
-            AppLog.i(T.POSTS, "PostUploadManager > Media event not recognized: " + event.media.getId() + ", ignoring");
+            AppLog.i(T.POSTS, "PostUploadHandler > Media event not recognized: " + event.media.getId() + ", ignoring");
             return;
         }
 
         if (event.isError()) {
-            AppLog.w(T.POSTS, "PostUploadManager > Media upload failed. " + event.error.type + ": "
+            AppLog.w(T.POSTS, "PostUploadHandler > Media upload failed. " + event.error.type + ": "
                     + event.error.message);
             SiteModel site = mSiteStore.getSiteByLocalId(sCurrentUploadingPost.getLocalSiteId());
             Context context = WordPress.getContext();
@@ -614,7 +614,7 @@ public class PostUploadManager extends AbstractUploadManager {
         }
 
         if (event.completed) {
-            AppLog.i(T.POSTS, "PostUploadManager > Media upload completed for post. Media id: " + event.media.getId()
+            AppLog.i(T.POSTS, "PostUploadHandler > Media upload completed for post. Media id: " + event.media.getId()
                     + ", post id: " + sCurrentUploadingPost.getId());
             mMediaLatchMap.get(event.media.getId()).countDown();
             mMediaLatchMap.remove(event.media.getId());

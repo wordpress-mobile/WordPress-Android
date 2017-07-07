@@ -32,16 +32,16 @@ import de.greenrobot.event.EventBus;
 /**
  * Started with explicit list of media to upload.
  */
-public class MediaUploadManager extends AbstractUploadManager {
+public class MediaUploadHandler extends AbstractUploadHandler {
     private static final List<MediaModel> sPendingUploads = new ArrayList<>();
     private static final List<MediaModel> sInProgressUploads = new ArrayList<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
 
-    MediaUploadManager() {
+    MediaUploadHandler() {
         ((WordPress) WordPress.getContext()).component().inject(this);
-        AppLog.i(T.MEDIA, "MediaUploadManager > Created");
+        AppLog.i(T.MEDIA, "MediaUploadHandler > Created");
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
@@ -94,25 +94,25 @@ public class MediaUploadManager extends AbstractUploadManager {
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
         if (event.canceled) {
-            AppLog.i(T.MEDIA, "MediaUploadManager > Upload successfully canceled");
+            AppLog.i(T.MEDIA, "MediaUploadHandler > Upload successfully canceled");
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_CANCELED,
                     getMediaFromInProgressQueueById(event.media.getId()), null);
             completeUploadWithId(event.media.getId());
             uploadNextInQueue();
         } else if (event.completed) {
-            AppLog.i(T.MEDIA, "MediaUploadManager > Upload completed - localId=" + event.media.getId() + " title="
+            AppLog.i(T.MEDIA, "MediaUploadHandler > Upload completed - localId=" + event.media.getId() + " title="
                     + event.media.getTitle());
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS,
                     getMediaFromInProgressQueueById(event.media.getId()), null);
             completeUploadWithId(event.media.getId());
             uploadNextInQueue();
         } else {
-            AppLog.i(T.MEDIA, "MediaUploadManager > " + event.media.getId() + " - progress: " + event.progress);
+            AppLog.i(T.MEDIA, "MediaUploadHandler > " + event.media.getId() + " - progress: " + event.progress);
         }
     }
 
     private void handleOnMediaUploadedError(@NonNull OnMediaUploaded event) {
-        AppLog.w(T.MEDIA, "MediaUploadManager > Error uploading media: " + event.error.message);
+        AppLog.w(T.MEDIA, "MediaUploadHandler > Error uploading media: " + event.error.message);
         MediaModel media = getMediaFromInProgressQueueById(event.media.getId());
         if (media != null) {
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
@@ -130,7 +130,7 @@ public class MediaUploadManager extends AbstractUploadManager {
         MediaModel next = getNextMediaToUpload();
 
         if (next == null) {
-            AppLog.w(T.MEDIA, "MediaUploadManager > No more media items to upload. Skipping this request.");
+            AppLog.w(T.MEDIA, "MediaUploadHandler > No more media items to upload. Skipping this request.");
             notifyServiceIfUploadsComplete();
             return;
         }
@@ -139,7 +139,7 @@ public class MediaUploadManager extends AbstractUploadManager {
 
         // somehow lost our reference to the site, complete this action
         if (site == null) {
-            AppLog.w(T.MEDIA, "MediaUploadManager > Unexpected state, site is null. Skipping this request.");
+            AppLog.w(T.MEDIA, "MediaUploadHandler > Unexpected state, site is null. Skipping this request.");
             notifyServiceIfUploadsComplete();
             return;
         }
@@ -187,14 +187,14 @@ public class MediaUploadManager extends AbstractUploadManager {
             if (site != null) {
                 dispatchCancelAction(oneUpload, site, delete);
             } else {
-                AppLog.w(T.MEDIA, "MediaUploadManager > Unexpected state, site is null. "
+                AppLog.w(T.MEDIA, "MediaUploadHandler > Unexpected state, site is null. "
                         + "Skipping cancellation of this request.");
             }
         }
     }
 
     private void dispatchUploadAction(@NonNull final MediaModel media, @NonNull final SiteModel site) {
-        AppLog.i(T.MEDIA, "MediaUploadManager > Dispatching upload action for media with local id: "
+        AppLog.i(T.MEDIA, "MediaUploadHandler > Dispatching upload action for media with local id: "
                 + media.getId() + " and path: " + media.getFilePath());
         sInProgressUploads.add(media);
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
@@ -204,7 +204,7 @@ public class MediaUploadManager extends AbstractUploadManager {
     }
 
     private void dispatchCancelAction(@NonNull final MediaModel media, @NonNull final SiteModel site, boolean delete) {
-        AppLog.i(T.MEDIA, "MediaUploadManager > Dispatching cancel upload action for media with local id: "
+        AppLog.i(T.MEDIA, "MediaUploadHandler > Dispatching cancel upload action for media with local id: "
                 + media.getId() + " and path: " + media.getFilePath());
         CancelMediaPayload payload = new CancelMediaPayload(site, media, delete);
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
@@ -212,7 +212,7 @@ public class MediaUploadManager extends AbstractUploadManager {
 
     private void notifyServiceIfUploadsComplete() {
         if (sPendingUploads.isEmpty() && sInProgressUploads.isEmpty()) {
-            AppLog.i(T.MEDIA, "MediaUploadManager > Completed");
+            AppLog.i(T.MEDIA, "MediaUploadHandler > Completed");
         }
     }
 
@@ -241,7 +241,7 @@ public class MediaUploadManager extends AbstractUploadManager {
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
     public void onMediaUploaded(OnMediaUploaded event) {
         if (event.media == null) {
-            AppLog.w(T.MEDIA, "MediaUploadManager > Received media event for null media, ignoring");
+            AppLog.w(T.MEDIA, "MediaUploadHandler > Received media event for null media, ignoring");
             return;
         }
 
@@ -259,7 +259,7 @@ public class MediaUploadManager extends AbstractUploadManager {
      */
     private void trackUploadMediaEvents(AnalyticsTracker.Stat stat, MediaModel media, Map<String, Object> properties) {
         if (media == null) {
-            AppLog.e(T.MEDIA, "MediaUploadManager > Cannot track media upload manager events if the original media"
+            AppLog.e(T.MEDIA, "MediaUploadHandler > Cannot track media upload handler events if the original media"
                     + "is null");
             return;
         }
@@ -273,7 +273,7 @@ public class MediaUploadManager extends AbstractUploadManager {
 
     private boolean mediaAlreadyQueuedOrUploading(MediaModel mediaModel) {
         for (MediaModel queuedMedia : sInProgressUploads) {
-            AppLog.i(T.MEDIA, "MediaUploadManager > Attempting to add media with path " + mediaModel.getFilePath()
+            AppLog.i(T.MEDIA, "MediaUploadHandler > Attempting to add media with path " + mediaModel.getFilePath()
                     + " and site id " + mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath()
                     + ", " + queuedMedia.getLocalSiteId());
             if (compareBySiteAndFilePath(queuedMedia, mediaModel)) {
@@ -282,7 +282,7 @@ public class MediaUploadManager extends AbstractUploadManager {
         }
 
         for (MediaModel queuedMedia : sPendingUploads) {
-            AppLog.i(T.MEDIA, "MediaUploadManager > Attempting to add media with path " + mediaModel.getFilePath()
+            AppLog.i(T.MEDIA, "MediaUploadHandler > Attempting to add media with path " + mediaModel.getFilePath()
                     + " and site id " + mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath()
                     + ", " + queuedMedia.getLocalSiteId());
             if (compareBySiteAndFilePath(queuedMedia, mediaModel)) {

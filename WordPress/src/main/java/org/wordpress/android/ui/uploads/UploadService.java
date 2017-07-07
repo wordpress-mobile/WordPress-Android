@@ -41,8 +41,8 @@ public class UploadService extends Service {
     private static final String KEY_LOCAL_POST_ID = "localPostId";
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
 
-    private MediaUploadManager mMediaUploadManager;
-    private PostUploadManager mPostUploadManager;
+    private MediaUploadHandler mMediaUploadHandler;
+    private PostUploadHandler mPostUploadHandler;
     private PostUploadNotifier mPostUploadNotifier;
 
     // Posts that we're withholding from the PostUploadManager until their pending media uploads are completed
@@ -69,8 +69,8 @@ public class UploadService extends Service {
 
     @Override
     public void onDestroy() {
-        mMediaUploadManager.cancelInProgressUploads();
-        mPostUploadManager.cancelInProgressUploads();
+        mMediaUploadHandler.cancelInProgressUploads();
+        mPostUploadHandler.cancelInProgressUploads();
 
         // Update posts with any completed uploads in our post->media map
         for (Integer postId : sCompletedUploadsByPost.keySet()) {
@@ -79,8 +79,8 @@ public class UploadService extends Service {
         }
 
         mDispatcher.unregister(this);
-        mMediaUploadManager.unregister();
-        mPostUploadManager.unregister();
+        mMediaUploadHandler.unregister();
+        mPostUploadHandler.unregister();
         AppLog.i(T.MAIN, "UploadService > Destroyed");
         super.onDestroy();
     }
@@ -99,16 +99,16 @@ public class UploadService extends Service {
             return START_NOT_STICKY;
         }
 
-        if (mMediaUploadManager == null) {
-            mMediaUploadManager = new MediaUploadManager();
+        if (mMediaUploadHandler == null) {
+            mMediaUploadHandler = new MediaUploadHandler();
         }
 
         if (mPostUploadNotifier == null) {
             mPostUploadNotifier = new PostUploadNotifier(getApplicationContext(), this);
         }
 
-        if (mPostUploadManager == null) {
-            mPostUploadManager = new PostUploadManager(mPostUploadNotifier);
+        if (mPostUploadHandler == null) {
+            mPostUploadHandler = new PostUploadHandler(mPostUploadNotifier);
         }
 
         if (intent.hasExtra(KEY_MEDIA_LIST)) {
@@ -153,7 +153,7 @@ public class UploadService extends Service {
         @SuppressWarnings("unchecked")
         List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(KEY_MEDIA_LIST);
         if (mediaList != null) {
-            mMediaUploadManager.uploadMedia(mediaList);
+            mMediaUploadHandler.uploadMedia(mediaList);
         }
     }
 
@@ -162,11 +162,11 @@ public class UploadService extends Service {
         if (post != null) {
             boolean shouldTrackAnalytics = intent.getBooleanExtra(KEY_SHOULD_TRACK_ANALYTICS, false);
             if (shouldTrackAnalytics) {
-                mPostUploadManager.registerPostForAnalyticsTracking(post);
+                mPostUploadHandler.registerPostForAnalyticsTracking(post);
             }
 
             if (!hasPendingMediaUploadsForPost(post)) {
-                mPostUploadManager.uploadPost(post);
+                mPostUploadHandler.uploadPost(post);
             } else {
                 sPostsWithPendingMedia.add(post);
                 showNotificationForPostWithPendingMedia(post);
@@ -197,7 +197,7 @@ public class UploadService extends Service {
     }
 
     public static void setLegacyMode(boolean enabled) {
-        PostUploadManager.setLegacyMode(enabled);
+        PostUploadHandler.setLegacyMode(enabled);
     }
 
     public static void uploadMedia(Context context, ArrayList<MediaModel> mediaList) {
@@ -217,7 +217,7 @@ public class UploadService extends Service {
      */
     public static boolean isPostUploadingOrQueued(PostModel post) {
         // First check for posts uploading or queued inside the PostUploadManager
-        if (PostUploadManager.isPostUploadingOrQueued(post)) {
+        if (PostUploadHandler.isPostUploadingOrQueued(post)) {
             return true;
         }
 
@@ -240,7 +240,7 @@ public class UploadService extends Service {
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
     public static boolean isPostUploading(PostModel post) {
-        return PostUploadManager.isPostUploading(post);
+        return PostUploadHandler.isPostUploading(post);
     }
 
     public static void cancelQueuedPostUpload(PostModel post) {
@@ -275,7 +275,7 @@ public class UploadService extends Service {
     }
 
     public static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
-        return MediaUploadManager.hasPendingMediaUploadsForPost(postModel);
+        return MediaUploadHandler.hasPendingMediaUploadsForPost(postModel);
     }
 
     private void showNotificationForPostWithPendingMedia(PostModel post) {
@@ -318,11 +318,11 @@ public class UploadService extends Service {
     }
 
     private synchronized void stopServiceIfUploadsComplete() {
-        if (mPostUploadManager != null && mPostUploadManager.hasInProgressUploads()) {
+        if (mPostUploadHandler != null && mPostUploadHandler.hasInProgressUploads()) {
             return;
         }
 
-        if (mMediaUploadManager != null && mMediaUploadManager.hasInProgressUploads()) {
+        if (mMediaUploadHandler != null && mMediaUploadHandler.hasInProgressUploads()) {
             return;
         }
 
@@ -353,7 +353,7 @@ public class UploadService extends Service {
         mPostUploadNotifier.cancelNotification(postToCancel);
         mPostUploadNotifier.updateNotificationError(postToCancel, site, message, true);
 
-        mPostUploadManager.unregisterPostForAnalyticsTracking(postToCancel);
+        mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
     }
 
@@ -425,7 +425,7 @@ public class UploadService extends Service {
                             // TODO Should do some extra validation here
                             // e.g. what if the post has local media URLs but no pending media uploads?
                             iterator.remove();
-                            mPostUploadManager.uploadPost(updatedPost);
+                            mPostUploadHandler.uploadPost(updatedPost);
                         }
                     }
                 }

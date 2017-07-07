@@ -51,7 +51,6 @@ import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.ui.uploads.PostUploadManager;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
@@ -84,7 +83,8 @@ import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeWebActivity;
-import org.wordpress.android.ui.uploads.MediaUploadManager;
+import org.wordpress.android.ui.uploads.MediaUploadHandler;
+import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.wordpress.android.util.WPWebViewClient;
@@ -114,8 +114,8 @@ public interface AppComponent {
     void inject(NewUserFragment object);
 
     void inject(UploadService object);
-    void inject(MediaUploadManager object);
-    void inject(PostUploadManager object);
+    void inject(MediaUploadHandler object);
+    void inject(PostUploadHandler object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsWidgetConfigureAdapter object);
