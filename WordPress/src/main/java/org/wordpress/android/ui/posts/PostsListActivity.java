@@ -70,7 +70,9 @@ public class PostsListActivity extends AppCompatActivity {
         boolean bSiteHasChanged = false;
         if (intent.hasExtra(WordPress.SITE)) {
             SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
-            bSiteHasChanged = site.getId() != mSite.getId();
+            if (mSite != null && site != null) {
+                bSiteHasChanged = site.getId() != mSite.getId();
+            }
             mSite = site;
         }
 
