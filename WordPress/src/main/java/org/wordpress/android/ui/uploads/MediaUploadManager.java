@@ -55,6 +55,10 @@ public class MediaUploadManager {
         uploadNextInQueue();
     }
 
+    boolean hasInProgressUploads() {
+        return !sInProgressUploads.isEmpty() || !sPendingUploads.isEmpty();
+    }
+
     static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
         for (MediaModel queuedMedia : sInProgressUploads) {
             if (queuedMedia.getLocalPostId() == postModel.getId()) {

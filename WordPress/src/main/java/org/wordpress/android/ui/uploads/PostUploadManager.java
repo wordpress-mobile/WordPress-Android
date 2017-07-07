@@ -128,6 +128,10 @@ public class PostUploadManager {
         return sCurrentUploadingPost != null && sCurrentUploadingPost.getId() == post.getId();
     }
 
+    boolean hasInProgressUploads() {
+        return mCurrentTask != null || !sQueuedPostsList.isEmpty();
+    }
+
     private void uploadNextPost() {
         synchronized (sQueuedPostsList) {
             if (mCurrentTask == null) { //make sure nothing is running
@@ -527,7 +531,7 @@ public class PostUploadManager {
     }
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
     public void onPostUploaded(OnPostUploaded event) {
         SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
 

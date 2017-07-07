@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.util.AppLog;
@@ -69,13 +70,11 @@ public class UploadService extends Service {
     public void onDestroy() {
         // TODO: Cancel in-progress uploads
 
-        // update posts with any completed uploads in our post->media map
+        // Update posts with any completed uploads in our post->media map
         for (Integer postId : sCompletedUploadsByPost.keySet()) {
             PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
         }
-
-        // TODO revert state of any uploading posts back to draft
 
         // TODO unregister managers as well
         mDispatcher.unregister(this);
@@ -90,6 +89,13 @@ public class UploadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        // Skip this request if no items to upload were given
+        if (intent == null || (!intent.hasExtra(KEY_MEDIA_LIST) && !intent.hasExtra(KEY_LOCAL_POST_ID))) {
+            AppLog.e(T.MEDIA, "UploadService was killed and restarted with an empty intent.");
+            stopServiceIfUploadsComplete();
+            return START_NOT_STICKY;
+        }
+
         if (mMediaUploadManager == null) {
             mMediaUploadManager = new MediaUploadManager();
         }
@@ -304,28 +310,29 @@ public class UploadService extends Service {
         return post;
     }
 
-    private synchronized void updatePostAndStopServiceIfUploadsComplete() {
-        // we only trigger the actual post modification / processing after we've got
-        // no other pending/inprogress uploads, and we have some completed uploads still to be processed
-        // TODO
+    private synchronized void stopServiceIfUploadsComplete() {
+        if (mPostUploadManager != null && mPostUploadManager.hasInProgressUploads()) {
+            return;
+        }
+
+        if (mMediaUploadManager != null && mMediaUploadManager.hasInProgressUploads()) {
+            return;
+        }
+
+        if (!sPostsWithPendingMedia.isEmpty()) {
+            return;
+        }
+
         if (!sCompletedUploadsByPost.isEmpty()) {
-            // here we need to edit the corresponding post with all completed uploads
-            // also bear in mind the service could be handling media uploads for different posts,
-            // so we also need to take into account processing completed uploads in batches through
-            // each post
             for (Integer postId : sCompletedUploadsByPost.keySet()) {
+                // For each post with completed media uploads, update the content with the new remote URLs
+                // This is done in a batch when all media is complete to prevent conflicts by updating separate images
+                // at a time simultaneously for the same post
                 PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
                 mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
             }
         }
-        stopServiceIfUploadsComplete();
-    }
 
-    private void stopServiceIfUploadsComplete() {
-        // TODO: Stop service if no more media or posts are left to upload
-        if (sPostsWithPendingMedia.isEmpty()) {
-            // TODO
-        }
         AppLog.i(T.MAIN, "Upload Service > completed");
         mDispatcher.unregister(sMediaUploadManager);
         EventBus.getDefault().unregister(sMediaUploadManager);
@@ -376,6 +383,7 @@ public class UploadService extends Service {
                     event.error.type + ": " + event.error.message);
             String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.error);
             cancelPostUploadMatchingMedia(event.media, errorMessage);
+            stopServiceIfUploadsComplete();
             return;
         }
 
@@ -383,6 +391,7 @@ public class UploadService extends Service {
             AppLog.d(T.MEDIA, "UploadService: Upload cancelled for post with id " + event.media.getLocalPostId()
                     + " - a media upload for this post has been cancelled, id: " + event.media.getId());
             cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
+            stopServiceIfUploadsComplete();
             return;
         }
 
@@ -390,7 +399,6 @@ public class UploadService extends Service {
             if (event.media.getLocalPostId() != 0) {
                 AppLog.d(T.MEDIA, "UploadService: Processing completed media with id " + event.media.getId() +
                         " and local post id " + event.media.getLocalPostId());
-                // add the MediaModel object within the OnMediaUploaded event to our completedMediaList
                 addMediaToPostCompletedMediaListMap(event.media);
 
                 // If this was the last media upload a pending post was waiting for, send it to the PostUploadManager
@@ -414,6 +422,13 @@ public class UploadService extends Service {
                     }
                 }
             }
+            stopServiceIfUploadsComplete();
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
+    public void onPostUploaded(OnPostUploaded event) {
+        stopServiceIfUploadsComplete();
     }
 }
