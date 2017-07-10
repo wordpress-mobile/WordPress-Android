@@ -28,24 +28,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
-import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
-import org.wordpress.android.fluxc.network.BaseRequest;
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -81,7 +75,6 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
     private boolean mInProgress;
     private String mRequestedSiteAddress;
 
-    @Inject SiteRestClient mSiteRestClient;
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
     @Inject HTTPAuthManager mHTTPAuthManager;
@@ -210,40 +203,7 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
         mRequestedSiteAddress = getCleanedSiteAddress();
 
         Uri uri = Uri.parse(UrlUtils.addUrlSchemeIfNeeded(mRequestedSiteAddress, false));
-        String endpoint = WPCOMREST.sites.getUrlV1() + uri.getHost();
-        WPComGsonRequest req = WPComGsonRequest.buildGetRequest(endpoint, null, SiteWPComRestResponse.class,
-                new Response.Listener<SiteWPComRestResponse>() {
-                    @Override
-                    public void onResponse(SiteWPComRestResponse response) {
-                        if (response.jetpack) {
-                            // if Jetpack site, treat it as selfhosted and start the discovery process
-                            mDispatcher.dispatch(
-                                    AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
-                            return;
-                        }
-
-                        endProgress();
-
-                        // it's a wp.com site so, treat it as such.
-                        mLoginListener.gotWpcomSiteInfo(
-                                UrlUtils.removeScheme(response.URL),
-                                response.name,
-                                response.icon == null ? null : response.icon.img);
-                    }
-                }, new BaseRequest.BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError baseNetworkError) {
-                        if (baseNetworkError.type != null && baseNetworkError.type == GenericErrorType.NOT_FOUND) {
-                            // not a wp.com site so, start the discovery process
-                            mDispatcher.dispatch(
-                                    AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
-                        } else {
-                            showError(R.string.no_site_error, NO_SITE_HELPSHIFT_FAQ_ID, NO_SITE_HELPSHIFT_FAQ_SECTION);
-                            endProgress();
-                        }
-                    }
-                });
-        mSiteRestClient.add(req);
+        mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(uri.getHost()));
 
         showProgressDialog();
     }
@@ -386,6 +346,45 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
     }
 
     // OnChanged events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void OnWPComSiteFetched(SiteStore.OnWPComSiteFetched event) {
+        if (mRequestedSiteAddress == null) {
+            // bail if user canceled
+            return;
+        }
+
+        if (!isAdded()) {
+            return;
+        }
+
+        if (event.isError()) {
+            if (event.error.type != null && event.error.type == SiteStore.SiteErrorType.UNKNOWN_SITE) {
+                // not a wp.com site so, start the discovery process
+                mDispatcher.dispatch(
+                        AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
+            } else {
+                showError(R.string.no_site_error, NO_SITE_HELPSHIFT_FAQ_ID, NO_SITE_HELPSHIFT_FAQ_SECTION);
+                endProgress();
+            }
+        } else {
+            if (event.site.isJetpackInstalled()) {
+                // if Jetpack site, treat it as selfhosted and start the discovery process
+                mDispatcher.dispatch(
+                        AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
+                return;
+            }
+
+            endProgress();
+
+            // it's a wp.com site so, treat it as such.
+            mLoginListener.gotWpcomSiteInfo(
+                    UrlUtils.removeScheme(event.site.getUrl()),
+                    event.site.getName(),
+                    event.site.getIconUrl());
+        }
+    }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
