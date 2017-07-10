@@ -77,7 +77,10 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_email_screen, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_form_screen, container, false);
+        ViewStub form_container = ((ViewStub) rootView.findViewById(R.id.login_form_content_stub));
+        form_container.setLayoutResource(R.layout.login_email_screen);
+        form_container.inflate();
 
         setupLabel(rootView);
         setupEmailInputRow(rootView);
@@ -96,16 +99,14 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
     }
 
     private void setupEmailInputRow(ViewGroup rootView) {
-        View emailInputElement = ((ViewStub) rootView.findViewById(R.id.email_input_stub)).inflate();
-
-        mEmailEditTextLayout = (TextInputLayout) emailInputElement.findViewById(R.id.input_layout);
+        mEmailEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.input_layout);
         mEmailEditTextLayout.setHint(getString(R.string.email_address));
 
-        ImageView icon = (ImageView) emailInputElement.findViewById(R.id.icon);
+        ImageView icon = (ImageView) rootView.findViewById(R.id.icon);
         icon.setContentDescription(getString(R.string.login_email_image));
         icon.setImageResource(R.drawable.ic_user_grey_24dp);
 
-        mEmailEditText = (EditText) emailInputElement.findViewById(R.id.input);
+        mEmailEditText = (EditText) rootView.findViewById(R.id.input);
         mEmailEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mEmailEditText.addTextChangedListener(this);
 
