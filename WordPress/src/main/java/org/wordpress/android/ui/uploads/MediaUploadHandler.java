@@ -223,14 +223,18 @@ public class MediaUploadHandler extends AbstractUploadHandler {
         if (event.post == null) {
             return;
         }
-        for (MediaModel inProgressUpload : sInProgressUploads) {
-            if (inProgressUpload.getLocalPostId() == event.post.getId()) {
-                cancelUpload(inProgressUpload, true);
+        synchronized (sInProgressUploads) {
+            for (MediaModel inProgressUpload : sInProgressUploads) {
+                if (inProgressUpload.getLocalPostId() == event.post.getId()) {
+                    cancelUpload(inProgressUpload, true);
+                }
             }
         }
-        for (MediaModel pendingUpload : sPendingUploads) {
-            if (pendingUpload.getLocalPostId() == event.post.getId()) {
-                cancelUpload(pendingUpload, true);
+        synchronized (sPendingUploads) {
+            for (MediaModel pendingUpload : sPendingUploads) {
+                if (pendingUpload.getLocalPostId() == event.post.getId()) {
+                    cancelUpload(pendingUpload, true);
+                }
             }
         }
     }
