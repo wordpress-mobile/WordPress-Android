@@ -241,6 +241,10 @@ public class MediaUploadHandler extends AbstractUploadHandler {
 
     // FluxC events
 
+    /**
+     * Has priority 9 on OnMediaUploaded events, which ensures that MediaUploadHandler is the first to receive
+     * and process OnMediaUploaded events, before they trickle down to other subscribers.
+     */
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
     public void onMediaUploaded(OnMediaUploaded event) {

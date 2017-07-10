@@ -375,6 +375,10 @@ public class UploadService extends Service {
         return null;
     }
 
+    /**
+     * Has lower priority than the UploadHandlers, which ensures that the handlers have already received and
+     * processed this OnMediaUploaded event. This means we can safely rely on their internal state being up to date.
+     */
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onMediaUploaded(OnMediaUploaded event) {
@@ -434,6 +438,10 @@ public class UploadService extends Service {
         }
     }
 
+    /**
+     * Has lower priority than the PostUploadHandler, which ensures that the handler has already received and
+     * processed this OnPostUploaded event. This means we can safely rely on its internal state being up to date.
+     */
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostUploaded(OnPostUploaded event) {

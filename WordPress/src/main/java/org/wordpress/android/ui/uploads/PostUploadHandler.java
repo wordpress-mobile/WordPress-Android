@@ -546,6 +546,10 @@ public class PostUploadHandler extends AbstractUploadHandler {
         }
     }
 
+    /**
+     * Has priority 9 on OnPostUploaded events, which ensures that PostUploadHandler is the first to receive
+     * and process OnPostUploaded events, before they trickle down to other subscribers.
+     */
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
     public void onPostUploaded(OnPostUploaded event) {
@@ -576,6 +580,9 @@ public class PostUploadHandler extends AbstractUploadHandler {
         finishUpload();
     }
 
+    /**
+     * Has priority 8 on OnMediaUploaded events, which is the second-highest (after the MediaUploadHandler).
+     */
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 8)
     public void onMediaUploaded(OnMediaUploaded event) {
