@@ -546,30 +546,27 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     /*
      * returns true if the passed list is the same as the existing one
      */
-    private boolean isSameList(@NonNull List<MediaModel> mediaList) {
-        if (mediaList.size() != mMediaList.size()) {
+    private boolean isSameList(@NonNull List<MediaModel> otherList) {
+        if (otherList.size() != mMediaList.size()) {
             return false;
         }
 
-        for (MediaModel media: mediaList) {
-            if (getMediaFromMediaId(media.getMediaId()) == null) {
+        for (MediaModel otherMedia: otherList) {
+            boolean foundMatch = false;
+            for (MediaModel thisMedia: mMediaList) {
+                // compare both local and remote IDs since local IDs are reset by FluxC upon refresh
+                if (thisMedia.getId() == otherMedia.getId()
+                        && thisMedia.getMediaId() == otherMedia.getMediaId()) {
+                    foundMatch = true;
+                    break;
+                }
+            }
+            if (!foundMatch) {
                 return false;
             }
         }
 
         return true;
-    }
-
-    /*
-     * returns the media item with the passed (remote) media ID in the current media list
-     */
-    private MediaModel getMediaFromMediaId(long mediaId) {
-        for (int i = 0; i < mMediaList.size(); i++) {
-            if (mMediaList.get(i).getMediaId() == mediaId) {
-                return mMediaList.get(i);
-            }
-        }
-        return null;
     }
 
     private String getLabelForMediaUploadState(MediaUploadState uploadState) {
