@@ -1091,7 +1091,7 @@
     <string name="publisher">Publisher:</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
     <string name="automattic_url" translatable="false">automattic.com</string>
-    <string name="wordpresscom_tos_url" translatable="false">https://en.wordpress.com/tos</string>
+    <string name="wordpresscom_tos_url" translatable="false">https://%s.wordpress.com/tos</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
