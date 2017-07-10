@@ -423,9 +423,11 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
             }
         });
 
+        showProgress(true);
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+                showProgress(false);
                 controls.show();
                 mp.start();
             }
@@ -622,17 +624,22 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
             ToastUtils.showToast(this, R.string.error_media_not_found);
             return;
         }
-
-        ToastUtils.showToast(this, R.string.media_downloading);
-
+        
         DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(media.getUrl()));
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, media.getFileName());
+        try {
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, media.getFileName());
+        } catch (IllegalStateException error) {
+            AppLog.e(AppLog.T.MEDIA, error);
+            ToastUtils.showToast(MediaPreviewActivity.this, R.string.error_media_save);
+            return;
+        }
         request.allowScanningByMediaScanner();
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
 
         mDownloadId = dm.enqueue(request);
         invalidateOptionsMenu();
+        ToastUtils.showToast(this, R.string.media_downloading);
     }
 
     private void shareMedia() {

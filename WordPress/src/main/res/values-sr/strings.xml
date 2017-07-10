@@ -66,8 +66,6 @@ Language: sr_RS
 	<string name="reader_toast_err_follow_blog_not_authorized">Нисте овлашћени да приступите овом блогу</string>
 	<string name="reader_toast_err_follow_blog_not_found">Овај блог не може бити пронађен</string>
 	<string name="undo">Врати</string>
-	<string name="tabbar_accessibility_label_me">Ја</string>
-	<string name="tabbar_accessibility_label_my_site">Моје веб место</string>
 	<string name="passcodelock_prompt_message">Унесите свој PIN</string>
 	<string name="editor_toast_changes_saved">Измене су сачуване</string>
 	<string name="ignore">Занемари</string>
@@ -542,6 +540,7 @@ Language: sr_RS
 	<string name="stats_entry_posts_and_pages">Наслов</string>
 	<string name="theme_auth_error_title">Неуспешно добављање тема</string>
 	<string name="stats_view_tags_and_categories">Ознаке и категорије</string>
+	<string name="manage">Управљајте</string>
 	<string name="upload">Отпремање</string>
 	<string name="notifications">Обавештења</string>
 	<string name="more_notifications">и %d још.</string>

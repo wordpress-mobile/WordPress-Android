@@ -13,6 +13,15 @@
         android:layout_height="wrap_content"
         android:scaleType="centerCrop" />
 
+    <ImageView
+        android:id="@+id/image_video_overlay"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/reader_video_overlay"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <RelativeLayout
         android:id="@+id/media_grid_item_file_container"
         android:layout_width="match_parent"
@@ -30,11 +39,11 @@
 
             <ImageView
                 android:id="@+id/media_grid_item_filetype_image"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
                 android:tint="@color/grey_dark"
-                tools:src="@drawable/media_document" />
+                tools:src="@drawable/ic_gridicons_page" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_filetype"
@@ -44,7 +53,7 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:textAllCaps="true"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/text_sz_small"
                 android:textStyle="bold"
                 tools:text="PDF" />
 
@@ -57,7 +66,7 @@
                 android:gravity="center_horizontal"
                 android:singleLine="true"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_small"
+                android:textSize="@dimen/text_sz_extra_small"
                 tools:text="filename" />
         </LinearLayout>
 
@@ -127,10 +136,8 @@
             android:id="@+id/image_preview"
             android:layout_width="@dimen/photo_picker_preview_icon"
             android:layout_height="@dimen/photo_picker_preview_icon"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginLeft="@dimen/margin_small"
             android:background="@drawable/preview_icon_background"
-            android:padding="@dimen/margin_medium"
-            app:srcCompat="@drawable/ic_preview_white_24dp" />
+            android:padding="@dimen/margin_small"
+            app:srcCompat="@drawable/ic_fullscreen_white_24dp" />
     </FrameLayout>
 </RelativeLayout>

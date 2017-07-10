@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-08 07:37:32+0000
+Translation-Revision-Date: 2017-06-21 22:44:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+	<string name="permission_location">Ubicación</string>
+	<string name="permission_camera">Cámara</string>
+	<string name="permission_storage">Almacenamiento</string>
+	<string name="permissions_denied_message">Para cambiar esto modifica tus permisos y asegúrate de que está activo %s</string>
+	<string name="permissions_denied_title">Parece que has desactivado permisos requeridos para esta funcionalidad</string>
+	<string name="button_edit_permissions">Editar permisos</string>
+	<string name="photo_picker_soft_ask_allow">Permitir</string>
+	<string name="photo_picker_soft_ask_label">%s necesita permisos para acceder a tus fotos</string>
+	<string name="sharing_twitter_message">Esto se incluirá en los tuits cuando la gente lo comparta usando el botón de Twitter</string>
+	<string name="sharing_label_message">Cambia el texto de la etiqueta de los botones de compartir. Este texto no aparecerá hasta que añadas al menos un botón de compartir.</string>
+	<string name="connecting_account">Conectando cuenta</string>
+	<string name="cannot_connect_account_error">La conexión con %s no se ha podido establecer debido a que no se ha seleccionado ninguna cuenta.</string>
+	<string name="connected">Conectado</string>
+	<string name="twitter">Twitter</string>
+	<string name="likes">Me gusta</string>
+	<string name="sharing_comment_likes_description">Permite que tú y tus lectores den me gusta a todos los comentarios</string>
+	<string name="visual">Visual</string>
+	<string name="buttons">Botones</string>
+	<string name="sharing_edit_more_buttons">Editar los botones "Más"</string>
+	<string name="sharing_more_description">Un botón "Más" contiene un desplegable que muestra botones de compartir</string>
+	<string name="sharing_sharing_buttons_description">Elige qué botones se mostrarán debajo de tus entradas</string>
+	<string name="twitter_username">Usuario de Twitter</string>
+	<string name="sharing_comment_likes">Me gusta a comentarios</string>
+	<string name="button_style">Estilo del botón</string>
+	<string name="label">Etiqueta</string>
+	<string name="more_buttons">Botones "Más"</string>
+	<string name="sharing_buttons">Botones de compartir</string>
+	<string name="site_settings_like">Mostrar botón de me gusta</string>
+	<string name="site_settings_reblog">Mostrar botón de reblog</string>
+	<string name="site_settings_reblog_and_like_header">Reblog y me gusta</string>
+	<string name="publicize_text_only">Solo texto</string>
+	<string name="publicize_icon_and_text">Icono y texto</string>
+	<string name="publicize_icon_only">Solo icono</string>
+	<string name="publicize_official_buttons">Botones oficiales</string>
+	<string name="official_buttons_display">Botones oficiales</string>
+	<string name="text_only_display">Solo texto</string>
+	<string name="icon_only_display">Solo icono</string>
+	<string name="icon_and_text_display">Icono y texto</string>
+	<string name="connection_chooser_message">Elige la cuenta a la que quieres autorizar. Date cuenta de que tus entradas se compartirán automáticamente en la cuenta seleccionada.</string>
+	<string name="connecting_social_network">Conectando %s</string>
+	<string name="dlg_confirm_publicize_disconnect">¿Desconectar de %s?</string>
+	<string name="share_btn_connect_another_account">Conectar con otra cuenta</string>
+	<string name="share_btn_reconnect">Reconectar</string>
+	<string name="share_btn_disconnect">Desconectar</string>
+	<string name="share_btn_connect">Conectar</string>
+	<string name="connection_service_description">Conéctate para compartir automáticamente las entradas de tu blog en %s</string>
+	<string name="connection_service_label">Divulgar en %s</string>
+	<string name="connected_accounts_label">Cuentas conectadas</string>
+	<string name="connections_description">Conecta con tus servicios de medios sociales favoritos para compartir automáticamente las nuevas entradas con tus amigos.</string>
+	<string name="connections_label">Conexiones</string>
+	<string name="sharing">Compartir</string>
+	<string name="tabbar_accessibility_label_notifications">Avisos. Gestiona tus avisos.</string>
+	<string name="tabbar_accessibility_label_reader">Lector. Sigue contenido de otros sitios.</string>
+	<string name="tabbar_accessibility_label_me">Yo. Ve tu perfil y hazle cambios.</string>
+	<string name="tabbar_accessibility_label_my_site">Mi sitio. Ve tu sitio y gestiónalo, estadísticas incluidas.</string>
+	<string name="fab_content_description_write">Escribe</string>
+	<string name="my_site_btn_sharing">Compartir</string>
+	<string name="button_not_now">Ahora no</string>
 	<string name="media_error_timeout">Se agotó la respuesta del servidor, puede que tengas una conexión pobre o que sea un error del servidor</string>
 	<string name="media_error_internal_server_error">Error en la subida. Trata de activar Optimizar imágenes en Sitio->Ajustes</string>
 	<string name="media_error_too_large_upload">Archivo a subir demasiado grande. Trata de activar Optimizar imágenes en Sitio->Ajustes</string>
@@ -659,8 +717,6 @@ Language: es
 	<string name="reader_toast_err_follow_blog_not_authorized">No tienes autorización para acceder a este blog</string>
 	<string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar este blog</string>
 	<string name="undo">Deshacer</string>
-	<string name="tabbar_accessibility_label_me">Yo mismo</string>
-	<string name="tabbar_accessibility_label_my_site">Mi sitio</string>
 	<string name="editor_toast_changes_saved">Cambios guardados</string>
 	<string name="passcodelock_prompt_message">Escribe tu PIN</string>
 	<string name="push_auth_expired">La solicitud ha expirado. Accede a WordPress.com para volver a intentarlo.</string>
@@ -1160,6 +1216,7 @@ Language: es
 	<string name="all">Todas</string>
 	<string name="themes">Temas</string>
 	<string name="discard">Descartar</string>
+	<string name="manage">Gestionar</string>
 	<string name="upload">Subir</string>
 	<string name="more_notifications">y %d más.</string>
 	<string name="new_notifications">%d nuevas notificaciones</string>

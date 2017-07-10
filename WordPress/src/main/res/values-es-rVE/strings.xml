@@ -545,8 +545,6 @@ Language: es_VE
 	<string name="reader_toast_err_follow_blog_not_authorized">No tienes autorización para acceder a este blog</string>
 	<string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar este blog</string>
 	<string name="undo">Deshacer</string>
-	<string name="tabbar_accessibility_label_me">Yo mismo</string>
-	<string name="tabbar_accessibility_label_my_site">Mi sitio</string>
 	<string name="passcodelock_prompt_message">Escribe tu PIN</string>
 	<string name="editor_toast_changes_saved">Cambios guardados</string>
 	<string name="push_auth_expired">La solicitud ha expirado. Accede a WordPress.com para volver a intentarlo.</string>
@@ -1042,6 +1040,7 @@ Language: es_VE
 	<string name="passcode_turn_on">Bloquear PIN</string>
 	<string name="stats_view_tags_and_categories">Etiquetas y categorías</string>
 	<string name="upload">Subir</string>
+	<string name="manage">Gestionar</string>
 	<string name="discard">Descartar</string>
 	<string name="sign_in">Acceder</string>
 	<string name="notifications">Notificaciones</string>

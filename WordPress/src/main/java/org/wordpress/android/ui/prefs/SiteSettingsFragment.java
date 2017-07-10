@@ -44,6 +44,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,6 +67,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.HashMap;
@@ -190,6 +192,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mOptimizedImage;
     private DetailListPreference mImageWidthPref;
     private DetailListPreference mImageQualityPref;
+    private WPSwitchPreference mOptimizedVideo;
+    private DetailListPreference mVideoWidthPref;
+    private DetailListPreference mVideoEncorderBitratePref;
 
     // Advanced settings
     private Preference mStartOverPref;
@@ -347,6 +352,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                              ViewGroup container,
                              Bundle savedInstanceState) {
         // use a wrapper to apply the Calypso theme
+
+        if (getActivity().getActionBar() != null) {
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+            getActivity().getActionBar().setDisplayShowHomeEnabled(true);
+        }
+
         Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
         LayoutInflater localInflater = inflater.cloneInContext(themer);
         View view = super.onCreateView(localInflater, container, savedInstanceState);
@@ -536,6 +547,20 @@ public class SiteSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mImageQualityPref,
                     newValue.toString(),
                     getLabelForImageQualityValue(mSiteSettings.getImageQuality()));
+        } else if (preference == mOptimizedVideo) {
+            mSiteSettings.setOptimizedVideo((Boolean) newValue);
+            mVideoEncorderBitratePref.setEnabled((Boolean) newValue);
+        } else if (preference == mVideoWidthPref) {
+            int newWidth = Integer.parseInt(newValue.toString());
+            mSiteSettings.setVideoResizeWidth(newWidth);
+            setDetailListPreferenceValue(mVideoWidthPref,
+                    newValue.toString(),
+                    getLabelForVideoMaxWidthValue(mSiteSettings.getMaxVideoWidth()));
+        } else if (preference == mVideoEncorderBitratePref) {
+            mSiteSettings.setVideoEncoderBitrate(Integer.parseInt(newValue.toString()));
+            setDetailListPreferenceValue(mVideoEncorderBitratePref,
+                    newValue.toString(),
+                    getLabelForVideoEncoderBitrateValue(mSiteSettings.getVideoEncoderBitrate()));
         } else if (preference == mCategoryPref) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCategoryPref,
@@ -679,6 +704,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         mOptimizedImage = (WPSwitchPreference) getChangePref(R.string.pref_key_optimize_image);
         mImageWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_width);
         mImageQualityPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_quality);
+        mOptimizedVideo = (WPSwitchPreference) getChangePref(R.string.pref_key_optimize_video);
+        mVideoWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_video_width);
+        mVideoEncorderBitratePref = (DetailListPreference) getChangePref(R.string.pref_key_site_video_encoder_bitrate);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
@@ -713,6 +741,19 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mImageQualityPref,
                 String.valueOf(mSiteSettings.getImageQuality()),
                 getLabelForImageQualityValue(mSiteSettings.getImageQuality()));
+
+        mOptimizedVideo.setChecked(mSiteSettings.getOptimizedVideo());
+        setDetailListPreferenceValue(mVideoWidthPref,
+                String.valueOf(mSiteSettings.getMaxVideoWidth()),
+                getLabelForVideoMaxWidthValue(mSiteSettings.getMaxVideoWidth()));
+        setDetailListPreferenceValue(mVideoEncorderBitratePref,
+                String.valueOf(mSiteSettings.getVideoEncoderBitrate()),
+                getLabelForVideoEncoderBitrateValue(mSiteSettings.getVideoEncoderBitrate()));
+        if (!WPMediaUtils.isVideoOptimizationAvailable()) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_this_device, R.string.pref_key_optimize_video);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_this_device, R.string.pref_key_site_video_width);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_this_device, R.string.pref_key_site_video_encoder_bitrate);
+        }
     }
 
     public void setEditingEnabled(boolean enabled) {
@@ -750,6 +791,30 @@ public class SiteSettingsFragment extends PreferenceFragment
     private String getLabelForImageQualityValue(int newValue) {
         String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_values);
         String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_entries);
+        for (int i = 0; i < values.length ; i++) {
+            if (values[i].equals(String.valueOf(newValue))) {
+                return entries[i];
+            }
+        }
+
+        return entries[0];
+    }
+
+    private String getLabelForVideoMaxWidthValue(int newValue) {
+        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_video_width_values);
+        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_video_width_entries);
+        for (int i = 0; i < values.length ; i++) {
+            if (values[i].equals(String.valueOf(newValue))) {
+                return entries[i];
+            }
+        }
+
+        return entries[0];
+    }
+
+    private String getLabelForVideoEncoderBitrateValue(int newValue) {
+        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_video_bitrate_values);
+        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_video_bitrate_entries);
         for (int i = 0; i < values.length ; i++) {
             if (values[i].equals(String.valueOf(newValue))) {
                 return entries[i];
@@ -977,6 +1042,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mImageQualityPref,
                 String.valueOf(mSiteSettings.getImageQuality()),
                 getLabelForImageQualityValue(mSiteSettings.getImageQuality()));
+
+        mOptimizedVideo.setChecked(mSiteSettings.getOptimizedVideo());
+        setDetailListPreferenceValue(mVideoWidthPref,
+                String.valueOf(mSiteSettings.getMaxVideoWidth()),
+                getLabelForVideoMaxWidthValue(mSiteSettings.getMaxVideoWidth()));
+        setDetailListPreferenceValue(mVideoEncorderBitratePref,
+                String.valueOf(mSiteSettings.getVideoEncoderBitrate()),
+                getLabelForVideoEncoderBitrateValue(mSiteSettings.getVideoEncoderBitrate()));
 
         changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());
@@ -1326,8 +1399,19 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void removeNonJetpackPreferences() {
+        removePrivateOptionFromPrivacySetting();
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
+    }
+
+    private void removePrivateOptionFromPrivacySetting() {
+        if (mPrivacyPref == null) {
+            return;
+        }
+
+        final CharSequence[] entries = mPrivacyPref.getEntries();
+        mPrivacyPref.remove(ArrayUtils.indexOf(entries, getString(R.string.site_settings_privacy_private_summary)));
     }
 
     private void removeNonDotComPreferences() {

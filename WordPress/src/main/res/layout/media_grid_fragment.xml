@@ -10,24 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/media_filter_spinner_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/grey_lighten_30"
-            android:clickable="true"
-            android:paddingLeft="8dp"
-            android:paddingRight="16dp">
-
-            <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/media_filter_spinner"
-                style="@style/DropDownNav.WordPress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:paddingLeft="0dp" />
-        </FrameLayout>
-
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_filter_result_text"
             android:layout_width="match_parent"
@@ -51,25 +33,19 @@
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
     </LinearLayout>
 
-
-    <LinearLayout
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        style="@style/WordPress.EmptyList.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+        android:layout_marginLeft="@dimen/empty_list_title_side_margin"
+        android:layout_marginRight="@dimen/empty_list_title_side_margin"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:text="@string/media_empty_list"
+        android:visibility="gone"
+        app:fixWidowWords="true"
+        tools:visibility="visible" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/empty_view_title"
-            style="@style/WordPress.EmptyList.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
-            android:layout_marginLeft="@dimen/empty_list_title_side_margin"
-            android:layout_marginRight="@dimen/empty_list_title_side_margin"
-            android:text="@string/media_empty_list"
-            app:fixWidowWords="true" />
-
-    </LinearLayout>
 </FrameLayout>

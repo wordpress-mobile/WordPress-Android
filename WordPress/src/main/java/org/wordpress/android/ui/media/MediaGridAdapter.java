@@ -22,8 +22,8 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.FadeInNetworkImageView;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -33,6 +33,7 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (show != mShowPreviewIcon) {
             mShowPreviewIcon = show;
             if (getItemCount() > 0) {
-                notifyDataSetChanged();;
+                notifyDataSetChanged();
             }
         }
     }
@@ -171,13 +172,19 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
+            holder.imgVideoOverlay.setVisibility(View.GONE);
             if (isLocalFile) {
                 loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
                 WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView, mImageLoader);
             }
+        } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
+            holder.fileContainer.setVisibility(View.GONE);
+            holder.imgVideoOverlay.setVisibility(View.VISIBLE);
+            WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl(), holder.imageView, mImageLoader);
         } else {
-            // not an image, so show file name and file type
+            // not an image or video, so show file name and file type
+            holder.imgVideoOverlay.setVisibility(View.GONE);
             holder.imageView.setImageDrawable(null);
             String fileName = media.getFileName();
             String title = media.getTitle();
@@ -216,7 +223,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
                 holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
             } else {
-                holder.stateTextView.setText(MediaUploadState.getLabel(mContext, state));
+                holder.stateTextView.setText(getLabelForMediaUploadState(state));
                 holder.stateTextView.setCompoundDrawables(null, null, null, null);
             }
         } else {
@@ -251,6 +258,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final ViewGroup stateContainer;
         private final ViewGroup fileContainer;
         private final ImageView imgPreview;
+        private final ImageView imgVideoOverlay;
 
         public GridViewHolder(View view) {
             super(view);
@@ -266,6 +274,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             titleView = (TextView) fileContainer.findViewById(R.id.media_grid_item_name);
             fileTypeView = (TextView) fileContainer.findViewById(R.id.media_grid_item_filetype);
             fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
+
+            imgVideoOverlay = (ImageView) view.findViewById(R.id.image_video_overlay);
 
             ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.frame_preview);
             previewContainer.setVisibility(mShowPreviewIcon ? View.VISIBLE : View.GONE);
@@ -432,13 +442,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
+    public boolean isEmpty() {
+        return mMediaList.isEmpty();
+    }
+
     @Override
     public int getItemCount() {
         return mMediaList.size();
     }
 
     public static int getColumnCount(Context context) {
-        return context.getResources().getInteger(R.integer.media_grid_num_columns);
+        return DisplayUtils.isLandscape(context) ? 4 : 3;
     }
 
     public void setCallback(MediaGridAdapterCallback callback) {
@@ -538,8 +552,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         for (MediaModel media: mediaList) {
-            MediaModel thisMedia = getMediaFromId(media.getId());
-            if (thisMedia == null || !thisMedia.equals(media)) {
+            if (getMediaFromMediaId(media.getMediaId()) == null) {
                 return false;
             }
         }
@@ -548,14 +561,32 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     /*
-     * returns the media item with the passed media ID in the current media list
+     * returns the media item with the passed (remote) media ID in the current media list
      */
-    private MediaModel getMediaFromId(int id) {
+    private MediaModel getMediaFromMediaId(long mediaId) {
         for (int i = 0; i < mMediaList.size(); i++) {
-            if (mMediaList.get(i).getId() == id) {
+            if (mMediaList.get(i).getMediaId() == mediaId) {
                 return mMediaList.get(i);
             }
         }
         return null;
+    }
+
+    private String getLabelForMediaUploadState(MediaUploadState uploadState) {
+        switch (uploadState) {
+            case QUEUED:
+                return mContext.getString(R.string.media_upload_state_queued);
+            case UPLOADING:
+                return mContext.getString(R.string.media_upload_state_uploading);
+            case DELETING:
+                return mContext.getString(R.string.media_upload_state_deleting);
+            case DELETED:
+                return mContext.getString(R.string.media_upload_state_deleted);
+            case FAILED:
+                return mContext.getString(R.string.media_upload_state_failed);
+            case UPLOADED:
+                return mContext.getString(R.string.media_upload_state_uploaded);
+        }
+        return "";
     }
 }
