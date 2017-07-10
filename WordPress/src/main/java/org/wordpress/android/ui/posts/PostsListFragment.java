@@ -249,6 +249,7 @@ public class PostsListFragment extends Fragment
         boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
         if (isDraft) {
             if (PostUtils.isPublishable(post)) {
+                // if the post is publishable, we offer the PUBLISH button
                 if (savedLocally) {
                     showSnackbar(R.string.editor_draft_saved_locally, R.string.button_publish, publishPostListener);
                 }
@@ -261,10 +262,18 @@ public class PostsListFragment extends Fragment
                     }
                 }
             } else {
-                if (savedLocally) {
-                    ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_locally);
+                showSnackbar(getString(R.string.editor_draft_saved_locally));
+            }
+        } else {
+            if (savedLocally) {
+                showSnackbar(R.string.editor_post_saved_locally, R.string.button_publish, publishPostListener);
+            }
+            else {
+                if (MediaUploadService.hasPendingMediaUploadsForPost(post) ||
+                        PostUploadService.isPostUploadingOrQueued(post)) {
+                    showSnackbar(getString(R.string.editor_uploading_post));
                 } else {
-                    ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_online);
+                    showSnackbar(R.string.editor_post_saved_online, R.string.button_publish, publishPostListener);
                 }
             }
         }
