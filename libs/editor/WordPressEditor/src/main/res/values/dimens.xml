@@ -42,6 +42,7 @@
     <dimen name="image_settings_dialog_top_separator_margin_top">16dp</dimen>
     <dimen name="image_settings_dialog_thumbnail_container_margin_bottom">8dp</dimen>
     <dimen name="image_settings_dialog_thumbnail_size">100dp</dimen>
+    <dimen name="image_settings_dialog_thumbnail_progress_size">50dp</dimen>
     <dimen name="image_settings_dialog_thumbnail_left_margin">4dp</dimen>
     <dimen name="image_settings_dialog_thumbnail_right_margin">8dp</dimen>
     <dimen name="image_settings_dialog_filename_margin_left">16dp</dimen>
