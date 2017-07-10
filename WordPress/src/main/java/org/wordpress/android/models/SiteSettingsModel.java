@@ -177,6 +177,9 @@ public class SiteSettingsModel {
     public boolean allowLikeButton;
     public boolean allowCommentLikes;
     public String twitterUsername;
+    public boolean monitorActive;
+    public boolean emailNotifications;
+    public boolean wpNotifications;
 
     @Override
     public boolean equals(Object other) {
@@ -224,6 +227,9 @@ public class SiteSettingsModel {
                 allowReblogButton == otherModel.allowReblogButton &&
                 allowLikeButton == otherModel.allowLikeButton &&
                 allowCommentLikes == otherModel.allowCommentLikes &&
+                monitorActive == otherModel.monitorActive &&
+                emailNotifications == otherModel.emailNotifications &&
+                wpNotifications == otherModel.wpNotifications &&
                 twitterUsername != null && twitterUsername.equals(otherModel.twitterUsername);
     }
 
