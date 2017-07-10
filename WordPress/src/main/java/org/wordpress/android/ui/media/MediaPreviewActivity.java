@@ -423,9 +423,11 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
             }
         });
 
+        showProgress(true);
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+                showProgress(false);
                 controls.show();
                 mp.start();
             }
