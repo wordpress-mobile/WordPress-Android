@@ -445,7 +445,7 @@ public class PhotoPickerFragment extends Fragment {
 
         if (hasStoragePermission()) {
             showSoftAskView(false);
-            if (mAdapter == null || mAdapter.isEmpty()) {
+            if (!hasAdapter()) {
                 reload();
             }
         } else {
@@ -532,7 +532,6 @@ public class PhotoPickerFragment extends Fragment {
         } else if (mSoftAskContainer.getVisibility() == View.VISIBLE) {
             AniUtils.fadeOut(mSoftAskContainer, AniUtils.Duration.MEDIUM);
             showBottomBar();
-            refresh();
         }
     }
 
