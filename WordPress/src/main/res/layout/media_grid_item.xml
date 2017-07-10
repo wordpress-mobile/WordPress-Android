@@ -13,6 +13,15 @@
         android:layout_height="wrap_content"
         android:scaleType="centerCrop" />
 
+    <ImageView
+        android:id="@+id/image_video_overlay"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/reader_video_overlay"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <RelativeLayout
         android:id="@+id/media_grid_item_file_container"
         android:layout_width="match_parent"
@@ -34,7 +43,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
                 android:tint="@color/grey_dark"
-                tools:src="@drawable/media_document" />
+                tools:src="@drawable/ic_gridicons_page" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_filetype"

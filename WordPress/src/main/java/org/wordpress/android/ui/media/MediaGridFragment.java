@@ -603,13 +603,18 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
         }
 
-        boolean isPermissionError = (errorType == MediaErrorType.AUTHORIZATION_REQUIRED);
-        if (isPermissionError) {
+        int toastResId;
+        if (errorType == MediaErrorType.AUTHORIZATION_REQUIRED) {
             updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-            ToastUtils.showToast(getActivity(), getString(R.string.media_error_no_permission));
-        } else {
+            toastResId = R.string.media_error_no_permission;
+         } else {
             updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media));
+            toastResId = R.string.error_refresh_media;
+        }
+
+        // only show the toast if the list is NOT empty since the empty view shows the same message
+        if (!isEmpty()) {
+            ToastUtils.showToast(getActivity(), getString(toastResId));
         }
 
         setRefreshing(false);
