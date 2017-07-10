@@ -36,8 +36,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-61"
-        versionCode 423
+        versionName "alpha-64"
+        versionCode 430
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -108,8 +108,9 @@ dependencies {
     compile 'com.android.support:percent:25.3.1'
     compile 'com.android.support:preference-v7:25.3.1'
 
-    compile 'com.google.android.gms:play-services-gcm:9.0.2'
-    compile 'com.google.android.gms:play-services-auth:9.0.2'
+    compile 'com.google.android.gms:play-services-gcm:10.0.1'
+    compile 'com.google.android.gms:play-services-auth:10.0.1'
+    compile 'com.google.android.gms:play-services-places:10.0.1'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.helpshift:android-helpshift-aar:4.9.1'
     compile 'de.greenrobot:eventbus:2.4.0'
@@ -117,7 +118,7 @@ dependencies {
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.2'
     compile 'org.wordpress:emailchecker2:1.1.0'
-    compile 'com.squareup.okio:okio:1.9.0'
+    compile 'com.squareup.okio:okio:1.13.0'
 
     compile 'com.airbnb.android:lottie:2.0.0-rc2'
 
@@ -134,7 +135,7 @@ dependencies {
     androidTestCompile 'org.objenesis:objenesis:2.1'
     androidTestCompile 'org.mockito:mockito-core:1.10.19'
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
-    androidTestCompile 'com.squareup.okio:okio:1.9.0' // explicitly compile okio to match the version needed by ucrop
+    androidTestCompile 'com.squareup.okio:okio:1.13.0'
 
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
@@ -146,7 +147,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:8680c825896d7c457f55c86bbb19357260996d0d') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:60c800b7e991d3acbdcf374d45864f07d7d469e5') {
         exclude group: "com.android.volley";
     }
 
@@ -200,6 +201,10 @@ android.buildTypes.all { buildType ->
         if (property.key.toLowerCase().startsWith("wp.")) {
             buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
                     "\"${property.value}\""
+        }
+        if (property.key.toLowerCase().startsWith("wp.res.")) {
+            buildType.resValue "string", property.key.replace("wp.res.", "").replace(".", "_").toLowerCase(),
+                    "${property.value}"
         }
     }
 }

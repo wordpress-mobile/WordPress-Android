@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-24 06:46:38+0000
+Translation-Revision-Date: 2017-06-22 06:37:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: hi_IN
 -->
 <resources>
+	<string name="editor_draft_saved_locally">ड्राफ़्ट डिवाइस पर सहेजा गया</string>
+	<string name="button_sync">सिंक</string>
+	<string name="error_unknown_post_type">अज्ञात पोस्ट प्रारूप</string>
 	<string name="jetpack_stats_module_disabled_message_not_admin">जेटपैक प्लगइन से जुड़ा हुआ है, लेकिन आँकड़े मॉड्यूल सक्रिय नहीं है। साइट व्यवस्थापक से संपर्क करें।</string>
 	<string name="jetpack_stats_module_disabled_message">जेटपैक प्लगइन से जुड़ा हुआ है, लेकिन आँकड़े मॉड्यूल सक्रिय नहीं है। क्या आप आँकड़े सक्रिय करना चाहते हैं?</string>
 	<string name="jetpack_info">जेटपैक की जानकारी</string>
@@ -31,6 +34,7 @@ Language: hi_IN
 	<string name="like">लाइक</string>
 	<string name="timespan_now">अब</string>
 	<string name="visual_editor">विजुअल सम्पादक</string>
+	<string name="image_width">चौड़ाई </string>
 	<string name="invite_error_for_username">%1$s: %2$s</string>
 	<string name="theme_premium">प्रीमियम</string>
 	<string name="theme_all">सभी</string>
@@ -139,8 +143,6 @@ Language: hi_IN
 	<string name="page_trashed">पृष्ठ ट्रैश में भेज दिया गया</string>
 	<string name="my_site_no_sites_view_subtitle">क्या आप एक जोड़ना चाहेंगे?</string>
 	<string name="reader_toast_err_follow_blog_not_found">इस ब्लॉग को पाया नहीं जा सका</string>
-	<string name="tabbar_accessibility_label_me">मैं </string>
-	<string name="tabbar_accessibility_label_my_site">मेरा साईट</string>
 	<string name="editor_toast_changes_saved">परिवर्तन सहेजा गया</string>
 	<string name="ignore">ध्यान न दें</string>
 	<string name="stats_insights_most_popular_hour">सबसे लोकप्रिय घण्टा</string>
@@ -507,6 +509,7 @@ Language: hi_IN
 	<string name="all">सभी</string>
 	<string name="themes">थीम्स</string>
 	<string name="discard">नज़रअंदाज़ करे</string>
+	<string name="manage">प्रबंधन</string>
 	<string name="upload">अपलोड</string>
 	<string name="more_notifications">और %d और भी.</string>
 	<string name="new_notifications">%d नयी सूचनाएं</string>
@@ -538,6 +541,7 @@ Language: hi_IN
 	<string name="upload_scaled_image">अपलोड करें और बढाये गए छवि से जोड़े</string>
 	<string name="scheduled">	नियत किया गया</string>
 	<string name="link_enter_url">यूआरएल</string>
+	<string name="uploading">अपलोड किया जा रहा</string>
 	<string name="app_title">एंड्राइड के लिए वर्डप्रेस</string>
 	<string name="tos">सेवा की शर्तें</string>
 	<string name="version">संस्करण</string>

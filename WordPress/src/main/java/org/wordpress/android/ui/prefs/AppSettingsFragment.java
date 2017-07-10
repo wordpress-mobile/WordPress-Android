@@ -60,6 +60,8 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_device_settings))
                 .setOnPreferenceClickListener(this);
+        findPreference(getString(R.string.pref_key_editor_footer))
+                .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_oss_licenses))
@@ -83,6 +85,8 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         if (preferenceKey.equals(getString(R.string.pref_key_device_settings))) {
             return handleDevicePreferenceClick();
+        } else if (preferenceKey.equals(getString(R.string.pref_key_editor_footer))) {
+            return handleEditorFooterPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_app_about))) {
             return handleAboutPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
@@ -240,6 +244,11 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         mLanguagePreference.setValue(languageCode);
         mLanguagePreference.setSummary(WPPrefUtils.getLanguageString(languageCode, languageLocale));
         mLanguagePreference.refreshAdapter();
+    }
+
+    private boolean handleEditorFooterPreferenceClick() {
+        startActivity(new Intent(getActivity(), EditorReleaseNotesActivity.class));
+        return true;
     }
 
     private boolean handleAboutPreferenceClick() {

@@ -54,6 +54,7 @@ import org.wordpress.aztec.AztecText;
 import org.wordpress.aztec.AztecText.OnImageTappedListener;
 import org.wordpress.aztec.HistoryListener;
 import org.wordpress.aztec.Html;
+import org.wordpress.aztec.TextFormat;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.AztecToolbarClickListener;
@@ -95,6 +96,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             .MIMETYPE_TEXT_PLAIN, ClipDescription.MIMETYPE_TEXT_HTML);
     private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = Arrays.asList("image/jpeg", "image/png");
 
+    private static boolean mIsToolbarExpanded = false;
+
     private boolean mIsKeyboardOpen = false;
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
@@ -115,7 +118,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private ImagePredicate mTappedImagePredicate;
 
-    public static AztecEditorFragment newInstance(String title, String content) {
+    public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
+        mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -143,11 +147,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content = (AztecText)view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
 
-        source.setHint("<p>" + getString(R.string.edit_hint) + "</p>");
+        source.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
 
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
         formattingToolbar.setEditor(content, source);
         formattingToolbar.setToolbarListener(this);
+        formattingToolbar.setExpanded(mIsToolbarExpanded);
 
         title.setOnFocusChangeListener(
             new View.OnFocusChangeListener() {
@@ -323,6 +328,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content.fromHtml(text.toString());
         updateFailedMediaList();
         overlayFailedMedia();
+
+        // ToDo:  this is to be removed when feature/async-media is merged
+        // If there are images that are still in progress (because the editor exited before they completed),
+        // set them to failed, so the user can restart them (otherwise they will stay stuck in 'uploading' mode)
+        markAllUploadingMediaAsFailed();
     }
 
     /**
@@ -340,12 +350,92 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onToolbarHtmlModeClicked() {
+    public void onToolbarCollapseButtonClicked() {
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.ELLIPSIS_COLLAPSE_BUTTON_TAPPED);
+    }
+
+    @Override
+    public void onToolbarExpandButtonClicked() {
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.ELLIPSIS_EXPAND_BUTTON_TAPPED);
+    }
+
+    @Override
+    public void onToolbarFormatButtonClicked(TextFormat format, boolean isKeyboardShortcut) {
+        switch(format) {
+            case FORMAT_PARAGRAPH:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.PARAGRAPH_BUTTON_TAPPED);
+                break;
+            case FORMAT_PREFORMAT:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.PREFORMAT_BUTTON_TAPPED);
+                break;
+            case FORMAT_HEADING_1:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_1_BUTTON_TAPPED);
+                break;
+            case FORMAT_HEADING_2:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_2_BUTTON_TAPPED);
+                break;
+            case FORMAT_HEADING_3:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_3_BUTTON_TAPPED);
+                break;
+            case FORMAT_HEADING_4:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_4_BUTTON_TAPPED);
+                break;
+            case FORMAT_HEADING_5:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_5_BUTTON_TAPPED);
+                break;
+            case FORMAT_HEADING_6:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_6_BUTTON_TAPPED);
+                break;
+            case FORMAT_ORDERED_LIST:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_ORDERED_BUTTON_TAPPED);
+                break;
+            case FORMAT_UNORDERED_LIST:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_UNORDERED_BUTTON_TAPPED);
+                break;
+            case FORMAT_BOLD:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.BOLD_BUTTON_TAPPED);
+                break;
+            case FORMAT_ITALIC:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.ITALIC_BUTTON_TAPPED);
+                break;
+            case FORMAT_STRIKETHROUGH:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.STRIKETHROUGH_BUTTON_TAPPED);
+                break;
+            case FORMAT_UNDERLINE:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.UNDERLINE_BUTTON_TAPPED);
+                break;
+            case FORMAT_QUOTE:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.BLOCKQUOTE_BUTTON_TAPPED);
+                break;
+            case FORMAT_LINK:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.LINK_ADDED_BUTTON_TAPPED);
+                break;
+            case FORMAT_MORE:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.READ_MORE_BUTTON_TAPPED);
+                break;
+            case FORMAT_PAGE:
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.NEXT_PAGE_BUTTON_TAPPED);
+                break;
+        }
+    }
+
+    @Override
+    public void onToolbarHeadingButtonClicked() {
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_BUTTON_TAPPED);
+    }
+
+    @Override
+    public void onToolbarHtmlButtonClicked() {
         if (!isAdded()) {
             return;
         }
 
         checkForFailedUploadAndSwitchToHtmlMode();
+    }
+
+    @Override
+    public void onToolbarListButtonClicked() {
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_BUTTON_TAPPED);
     }
 
     private void checkForFailedUploadAndSwitchToHtmlMode() {
@@ -396,6 +486,34 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public boolean isActionInProgress() {
         return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
+    }
+
+    private void markAllUploadingMediaAsFailed() {
+        // first obtain all the media currently marked as "uploading"
+        AztecText.AttributePredicate uploadingPredicate = new AztecText.AttributePredicate() {
+            @Override
+            public boolean matches(@NonNull Attributes attrs) {
+                AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
+                return attributesWithClass.hasClass(ATTR_STATUS_UPLOADING);
+            }
+        };
+
+        Set<String> uploadingIdsUponStart = new HashSet<>();
+        for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
+            uploadingIdsUponStart.add(attrs.getValue(ATTR_ID_WP));
+        }
+
+        // now re-mark them as "failed"
+        for (String mediaId : uploadingIdsUponStart) {
+            if (mediaId != null) {
+                AttributesWithClass attributesWithClass = new AttributesWithClass(
+                        content.getElementAttributes(ImagePredicate.getLocalMediaIdPredicate(mediaId)));
+                attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+                attributesWithClass.addClass(ATTR_STATUS_FAILED);
+                overlayFailedMedia(mediaId, attributesWithClass.getAttributes());
+                mFailedMediaIds.add(mediaId);
+            }
+        }
     }
 
     private void updateFailedMediaList() {
@@ -542,7 +660,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 content.updateElementAttributes(localMediaIdPredicate, attrs);
 
-                content.refreshText();
+                content.resetAttributedMediaSpan(localMediaIdPredicate);
 
                 mUploadingMedia.put(localMediaId, MediaType.IMAGE);
             }
@@ -606,9 +724,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 // clear overlay
                 ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+                content.resetAttributedMediaSpan(predicate);
                 content.clearOverlays(predicate);
                 content.updateElementAttributes(predicate, attrs);
-                content.refreshText();
 
                 mUploadingMedia.remove(localMediaId);
             } else if (mediaType.equals(MediaType.VIDEO)) {
@@ -645,7 +763,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mediaType != null) {
             AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
             content.setOverlayLevel(localMediaIdPredicate, 1, (int)(progress * 10000));
-            content.refreshText();
+            content.resetAttributedMediaSpan(localMediaIdPredicate);
         }
     }
 
@@ -658,14 +776,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mediaType != null) {
             switch (mediaType) {
                 case IMAGE:
+                    ImagePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
                     AttributesWithClass attributesWithClass = new AttributesWithClass(
-                            content.getElementAttributes(ImagePredicate.getLocalMediaIdPredicate(localMediaId)));
+                            content.getElementAttributes(localMediaIdPredicate));
 
                     attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
                     attributesWithClass.addClass(ATTR_STATUS_FAILED);
 
                     overlayFailedMedia(localMediaId, attributesWithClass.getAttributes());
-                    content.refreshText();
+                    content.resetAttributedMediaSpan(localMediaIdPredicate);
                     break;
                 case VIDEO:
                     // TODO: mark media as upload-failed
@@ -852,7 +971,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onToolbarAddMediaClicked() {
+    public void onToolbarMediaButtonClicked() {
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
 
         if (isActionInProgress()) {
@@ -949,6 +1068,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
                                 content.getElementAttributes(mTappedImagePredicate));
                         attributesWithClass.removeClass(ATTR_STATUS_FAILED);
+                        attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
 
                         // set intermediate shade overlay
                         content.setOverlay(mTappedImagePredicate, 0,
@@ -961,7 +1081,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         content.setOverlay(mTappedImagePredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
                         content.updateElementAttributes(mTappedImagePredicate, attributesWithClass.getAttributes());
 
-                        content.refreshText();
+                        content.resetAttributedMediaSpan(mTappedImagePredicate);
                         break;
                     case VIDEO:
                         // TODO: unmark video failed

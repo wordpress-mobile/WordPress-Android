@@ -6,7 +6,9 @@ import android.app.Dialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
@@ -295,6 +297,7 @@ public class WordPress extends MultiDexApplication {
         // https://developer.android.com/reference/android/support/v7/app/AppCompatDelegate.html#setCompatVectorFromResourcesEnabled(boolean)
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
     }
 
     private void runFluxCMigration() {
@@ -834,7 +837,12 @@ public class WordPress extends MultiDexApplication {
                     }
                     AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
                     AnalyticsTracker.endSession(false);
-                    ConnectionChangeReceiver.setEnabled(WordPress.this, false);
+                    // Programmatically unregistering the ConnectionChangeReceiver here for Android >= N as per this:
+                    // https://developer.android.com/reference/android/net/ConnectivityManager.html
+                    // "Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if they
+                    // declare the broadcast receiver in their manifest. Apps will still receive broadcasts if they
+                    // register their BroadcastReceiver with Context.registerReceiver() and that context is still valid."
+                    unregisterReceiver(ConnectionChangeReceiver.getInstance());
                 }
             };
 
@@ -861,7 +869,8 @@ public class WordPress extends MultiDexApplication {
          */
         private void onAppComesFromBackground(Activity activity) {
             AppLog.i(T.UTILS, "App comes from background");
-            ConnectionChangeReceiver.setEnabled(WordPress.this, true);
+            registerReceiver(ConnectionChangeReceiver.getInstance(),
+                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
             Map<String, Boolean> properties = new HashMap<>(1);

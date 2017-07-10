@@ -265,8 +265,6 @@ Language: hr
 	<string name="reader_toast_err_follow_blog_not_authorized">Nemate pravo pristupa ovom blogu</string>
 	<string name="reader_toast_err_follow_blog_not_found">Blog nije moguće pronaći</string>
 	<string name="undo">Poništi</string>
-	<string name="tabbar_accessibility_label_me">Ja</string>
-	<string name="tabbar_accessibility_label_my_site">Moja stranica</string>
 	<string name="editor_toast_changes_saved">Promjene spremljene</string>
 	<string name="passcodelock_prompt_message">Unesi svoj PIN</string>
 	<string name="push_auth_expired">Zahtjev je istekao. Za ponovni pokušaj prijavite se u WordPress.com.</string>

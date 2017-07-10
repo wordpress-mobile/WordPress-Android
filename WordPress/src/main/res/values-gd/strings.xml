@@ -59,8 +59,6 @@ Language: gd_GB
 	<string name="invite_error_sending">Thachair mearachd nuair a dh’fheuch sinn ris an cuireadh a chur!</string>
 	<string name="invite_error_invalid_usernames_multiple">Cha ghabh a chur: Tha ainmean no puist-d ann nach eil dligheach</string>
 	<string name="invite_error_invalid_usernames_one">Cha ghabh a chur: Tha ainm no post-d ann nach eil dligheach</string>
-	<string name="tabbar_accessibility_label_my_site">An làrach agam</string>
-	<string name="tabbar_accessibility_label_me">Mise</string>
 	<string name="editor_toast_changes_saved">Chaidh na h-atharraichean a shàbhaladh</string>
 	<string name="passcodelock_prompt_message">Cuir a-steach am PIN agad</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% de sheallaidhean</string>
@@ -544,6 +542,7 @@ Language: gd_GB
 	<string name="passcode_turn_off">Cuir glas a\' PIN dheth</string>
 	<string name="passcode_turn_on">Cuir glas a\' PIN air</string>
 	<string name="upload">Luchdadh suas</string>
+	<string name="manage">Stiùirich</string>
 	<string name="discard">Tilg air falbh</string>
 	<string name="notifications">Brathan</string>
 	<string name="note_reply_successful">Chaidh an fhreagairt fhoillseachadh</string>
