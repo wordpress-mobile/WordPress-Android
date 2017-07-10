@@ -253,7 +253,8 @@ public class PostsListFragment extends Fragment
                     showSnackbar(R.string.editor_draft_saved_locally, R.string.button_publish, publishPostListener);
                 }
                 else {
-                    if (MediaUploadService.hasPendingMediaUploadsForPost(post) || PostUploadService.isPostUploadingOrQueued(post)) {
+                    if (MediaUploadService.hasPendingMediaUploadsForPost(post) ||
+                            PostUploadService.isPostUploadingOrQueued(post)) {
                         showSnackbar(getString(R.string.editor_uploading_post));
                     } else {
                         showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
