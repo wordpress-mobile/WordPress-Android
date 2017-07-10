@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.uploads;
 
-import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -28,9 +27,9 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
@@ -50,8 +49,7 @@ public class UploadService extends Service {
 
     // To avoid conflicts by editing the post each time a single upload completes, this map tracks completed media by
     // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
-    @SuppressLint("UseSparseArrays")
-    private static final HashMap<Integer, List<MediaModel>> sCompletedUploadsByPost = new HashMap<>();
+    private static final ConcurrentHashMap<Integer, List<MediaModel>> sCompletedMediaByPost = new ConcurrentHashMap<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -73,7 +71,7 @@ public class UploadService extends Service {
         mPostUploadHandler.cancelInProgressUploads();
 
         // Update posts with any completed uploads in our post->media map
-        for (Integer postId : sCompletedUploadsByPost.keySet()) {
+        for (Integer postId : sCompletedMediaByPost.keySet()) {
             PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
         }
@@ -259,15 +257,15 @@ public class UploadService extends Service {
         // now get the list of completed media for this post, so we can make post content
         // updates in one go and save only once
         if (post != null) {
-            synchronized (sCompletedUploadsByPost) {
+            synchronized (sCompletedMediaByPost) {
                 MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
-                List<MediaModel> mediaList = sCompletedUploadsByPost.get(post.getId());
+                List<MediaModel> mediaList = sCompletedMediaByPost.get(post.getId());
                 if (mediaList != null && !mediaList.isEmpty()) {
                     for (MediaModel media : mediaList) {
                         post = updatePostWithMediaUrl(post, media, processor);
                     }
                     // finally remove all completed uploads for this post, as they've been taken care of
-                    sCompletedUploadsByPost.remove(post.getId());
+                    sCompletedMediaByPost.remove(post.getId());
                 }
             }
         }
@@ -287,13 +285,13 @@ public class UploadService extends Service {
     // this keeps a map for all completed media for each post, so we can process the post easily
     // in one go later
     private void addMediaToPostCompletedMediaListMap(MediaModel media) {
-        synchronized (sCompletedUploadsByPost) {
-            List<MediaModel> mediaListForPost = sCompletedUploadsByPost.get(media.getLocalPostId());
+        synchronized (sCompletedMediaByPost) {
+            List<MediaModel> mediaListForPost = sCompletedMediaByPost.get(media.getLocalPostId());
             if (mediaListForPost == null) {
                 mediaListForPost = new ArrayList<>();
             }
             mediaListForPost.add(media);
-            sCompletedUploadsByPost.put(media.getLocalPostId(), mediaListForPost);
+            sCompletedMediaByPost.put(media.getLocalPostId(), mediaListForPost);
         }
     }
 
@@ -330,8 +328,8 @@ public class UploadService extends Service {
             return;
         }
 
-        if (!sCompletedUploadsByPost.isEmpty()) {
-            for (Integer postId : sCompletedUploadsByPost.keySet()) {
+        if (!sCompletedMediaByPost.isEmpty()) {
+            for (Integer postId : sCompletedMediaByPost.keySet()) {
                 // For each post with completed media uploads, update the content with the new remote URLs
                 // This is done in a batch when all media is complete to prevent conflicts by updating separate images
                 // at a time simultaneously for the same post
