@@ -43,8 +43,8 @@
 
     <ImageView
         android:id="@+id/image_video_overlay"
-        android:layout_width="@dimen/photo_picker_video_overlay"
-        android:layout_height="@dimen/photo_picker_video_overlay"
+        android:layout_width="@dimen/photo_picker_preview_icon"
+        android:layout_height="@dimen/photo_picker_preview_icon"
         android:layout_gravity="bottom"
         android:padding="@dimen/margin_extra_small"
         android:src="@drawable/reader_video_overlay"
