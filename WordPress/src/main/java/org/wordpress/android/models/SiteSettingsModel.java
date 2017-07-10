@@ -63,6 +63,9 @@ public class SiteSettingsModel {
     public static final String ALLOW_LIKE_BUTTON_COLUMN_NAME = "allowLikeButton";
     public static final String ALLOW_COMMENT_LIKES_COLUMN_NAME = "allowCommentLikes";
     public static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
+    public static final String JP_MONITOR_ACTIVE_COLUMN_NAME = "monitorActive";
+    public static final String JP_MONITOR_EMAIL_NOTES_COLUMN_NAME = "jpEmailNotifications";
+    public static final String JP_MONITOR_WP_NOTES_COLUMN_NAME = "jpWpNotifications";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
     public static final String ADD_OPTIMIZED_IMAGE = "alter table " + SETTINGS_TABLE_NAME +
@@ -125,6 +128,9 @@ public class SiteSettingsModel {
                     IDENTITY_REQUIRED_COLUMN_NAME + " BOOLEAN, " +
                     USER_ACCOUNT_REQUIRED_COLUMN_NAME + " BOOLEAN, " +
                     WHITELIST_COLUMN_NAME + " BOOLEAN, " +
+                    JP_MONITOR_ACTIVE_COLUMN_NAME + " BOOLEAN, " +
+                    JP_MONITOR_EMAIL_NOTES_COLUMN_NAME + " BOOLEAN, " +
+                    JP_MONITOR_WP_NOTES_COLUMN_NAME + " BOOLEAN, " +
                     MODERATION_KEYS_COLUMN_NAME + " TEXT, " +
                     BLACKLIST_KEYS_COLUMN_NAME + " TEXT" +
                     ");";
@@ -337,6 +343,9 @@ public class SiteSettingsModel {
         commentsRequireIdentity = getBooleanFromCursor(cursor, IDENTITY_REQUIRED_COLUMN_NAME);
         commentsRequireUserAccount = getBooleanFromCursor(cursor, USER_ACCOUNT_REQUIRED_COLUMN_NAME);
         commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, WHITELIST_COLUMN_NAME);
+        monitorActive = getBooleanFromCursor(cursor, JP_MONITOR_ACTIVE_COLUMN_NAME);
+        emailNotifications = getBooleanFromCursor(cursor, JP_MONITOR_EMAIL_NOTES_COLUMN_NAME);
+        wpNotifications = getBooleanFromCursor(cursor, JP_MONITOR_WP_NOTES_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
@@ -425,6 +434,9 @@ public class SiteSettingsModel {
         values.put(IDENTITY_REQUIRED_COLUMN_NAME, commentsRequireIdentity);
         values.put(USER_ACCOUNT_REQUIRED_COLUMN_NAME, commentsRequireUserAccount);
         values.put(WHITELIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
+        values.put(JP_MONITOR_ACTIVE_COLUMN_NAME, monitorActive);
+        values.put(JP_MONITOR_EMAIL_NOTES_COLUMN_NAME, emailNotifications);
+        values.put(JP_MONITOR_WP_NOTES_COLUMN_NAME, wpNotifications);
 
         String moderationKeys = "";
         if (holdForModeration != null) {
