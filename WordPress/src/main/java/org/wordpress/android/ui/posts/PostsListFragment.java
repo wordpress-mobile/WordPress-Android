@@ -725,7 +725,7 @@ public class PostsListFragment extends Fragment
                 showSnackbar(getString(R.string.editor_draft_saved_locally));
             } else {
                 if (post != null) {
-                    boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
+                    boolean isDraft = PostStatus.fromPost(post) == PostStatus.DRAFT;
                     if (isDraft) {
                         View.OnClickListener publishPostListener = new View.OnClickListener() {
                             @Override
