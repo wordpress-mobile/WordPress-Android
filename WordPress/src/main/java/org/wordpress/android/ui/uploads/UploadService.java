@@ -67,8 +67,15 @@ public class UploadService extends Service {
 
     @Override
     public void onDestroy() {
-        mMediaUploadHandler.cancelInProgressUploads();
-        mPostUploadHandler.cancelInProgressUploads();
+        if (mMediaUploadHandler != null) {
+            mMediaUploadHandler.cancelInProgressUploads();
+            mMediaUploadHandler.unregister();
+        }
+
+        if (mPostUploadHandler != null) {
+            mPostUploadHandler.cancelInProgressUploads();
+            mPostUploadHandler.unregister();
+        }
 
         // Update posts with any completed uploads in our post->media map
         for (Integer postId : sCompletedMediaByPost.keySet()) {
@@ -77,8 +84,6 @@ public class UploadService extends Service {
         }
 
         mDispatcher.unregister(this);
-        mMediaUploadHandler.unregister();
-        mPostUploadHandler.unregister();
         AppLog.i(T.MAIN, "UploadService > Destroyed");
         super.onDestroy();
     }
