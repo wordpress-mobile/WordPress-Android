@@ -60,18 +60,18 @@ public class PostsListActivity extends AppCompatActivity {
         // get new intent extras and compare whether the running instance of PostsListActivity has
         // the same values or not. If not, we need to create a new fragment and show the corresponding
         // requested content
-        boolean bPageHasChanged = false;
+        boolean pageHasChanged = false;
         if (intent.hasExtra(EXTRA_VIEW_PAGES)) {
             boolean isPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
-            bPageHasChanged = isPage != mIsPage;
+            pageHasChanged = isPage != mIsPage;
         }
         mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
 
-        boolean bSiteHasChanged = false;
+        boolean siteHasChanged = false;
         if (intent.hasExtra(WordPress.SITE)) {
             SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
             if (mSite != null && site != null) {
-                bSiteHasChanged = site.getId() != mSite.getId();
+                siteHasChanged = site.getId() != mSite.getId();
             }
             mSite = site;
         }
@@ -90,7 +90,7 @@ public class PostsListActivity extends AppCompatActivity {
         }
 
         mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
-        if (mPostList == null || bSiteHasChanged || bPageHasChanged) {
+        if (mPostList == null || siteHasChanged || pageHasChanged) {
             PostsListFragment oldFragment = mPostList;
             mPostList = PostsListFragment.newInstance(mSite, mIsPage);
             if (oldFragment == null) {
