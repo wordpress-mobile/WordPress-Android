@@ -239,6 +239,18 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
+    public void getJetpackSettings(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
+        Map<String, String> params = new HashMap<>();
+        get(path, params, null, listener, errorListener);
+    }
+
+    public void setJetpackSettings(long siteId, Listener listener, ErrorListener errorListener,
+                                       Map<String, String> params) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
+        post(path, params, null, listener, errorListener);
+    }
+
     /**
      * Delete a site
      */
