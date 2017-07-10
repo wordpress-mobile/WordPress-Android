@@ -370,6 +370,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         if (imageUrl == null) {
             AppLog.e(AppLog.T.MEDIA, "Image url is null! Show the default error image.");
             showErrorImage();
+            return;
         }
 
         Uri uri = Uri.parse(imageUrl);
