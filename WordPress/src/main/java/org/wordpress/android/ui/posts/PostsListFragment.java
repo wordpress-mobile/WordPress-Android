@@ -712,23 +712,30 @@ public class PostsListFragment extends Fragment
             loadPosts(LoadMode.FORCED);
 
             final PostModel post = event.post;
-
             if (event.isError()) {
                 showSnackbar(getString(R.string.editor_draft_saved_locally));
             } else {
-                boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
-                if (isDraft) {
-                    View.OnClickListener publishPostListener = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            publishPost(post);
-                        }
-                    };
-                    showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
+                if (post != null) {
+                    boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
+                    if (isDraft) {
+                        View.OnClickListener publishPostListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                publishPost(post);
+                            }
+                        };
+                        showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
+                    } else {
+                        String message = post.isPage() ? getString(R.string.page_published) :
+                                getString(R.string.post_published);
+                        showSnackbar(message);
+                    }
                 } else {
-                    String message = post.isPage() ? getString(R.string.page_published) :
-                            getString(R.string.post_published);
-                    showSnackbar(message);
+                    // this condition should never be reached - we don't have a valid PostModel object
+                    // here, but the event says it has been uploaded without errors, so let's tell the
+                    // user it went successfully (also we assume this is a Post and not a Page as we
+                    // can't really tell anyway).
+                    showSnackbar(getString(R.string.post_published));
                 }
             }
         }
