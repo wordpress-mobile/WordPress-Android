@@ -26,7 +26,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 import javax.inject.Inject;
 
 public abstract class LoginBaseFormFragment extends Fragment implements TextWatcher {
@@ -172,7 +171,6 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
         mInProgress = true;
     }
 
-    @OverridingMethodsMustInvokeSuper
     protected void endProgress() {
         mInProgress = false;
 
