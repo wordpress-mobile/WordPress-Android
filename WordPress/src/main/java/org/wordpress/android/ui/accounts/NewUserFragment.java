@@ -2,6 +2,8 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.text.Editable;
@@ -488,8 +490,14 @@ public class NewUserFragment extends AbstractFragment {
         termsOfServiceTextView.setOnClickListener(new OnClickListener() {
                                                       @Override
                                                       public void onClick(View v) {
+                                                          Resources res = getResources();
+                                                          Configuration conf = res.getConfiguration();
+                                                          String localString = conf.locale.toString();
+                                                          if (localString.contains("_")) {
+                                                              localString = localString.substring(0, localString.indexOf("_"));
+                                                          }
                                                           ActivityLauncher.openUrlExternal(getContext(),
-                                                                  getString(R.string.wordpresscom_tos_url));
+                                                                  getString(R.string.wordpresscom_tos_url).replace( "en", localString ));
                                                       }
                                                   }
         );
