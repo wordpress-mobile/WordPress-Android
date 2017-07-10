@@ -581,7 +581,30 @@ public abstract class SiteSettingsInterface {
         return StringUtils.getQuantityString(mActivity, R.string.site_settings_list_editor_no_items_text,
                 R.string.site_settings_list_editor_summary_one,
                 R.string.site_settings_list_editor_summary_other, count);
+    }
 
+    public boolean getMonitorActive() {
+        return mSettings.monitorActive;
+    }
+
+    public boolean getEmailNotes() {
+        return mSettings.emailNotifications;
+    }
+
+    public boolean getNoteNotes() {
+        return mSettings.wpNotifications;
+    }
+
+    public void setMonitorActive(boolean active) {
+        mSettings.monitorActive = active;
+    }
+
+    public void setEmailNotes(boolean notes) {
+        mSettings.emailNotifications = notes;
+    }
+
+    public void setNoteNotes(boolean notes) {
+        mSettings.wpNotifications = notes;
     }
 
     public void setTitle(String title) {
