@@ -229,7 +229,7 @@ public class RestClientUtils {
 
     public void getGeneralSettings(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/settings", siteId);
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         get(path, params, null, listener, errorListener);
     }
 
