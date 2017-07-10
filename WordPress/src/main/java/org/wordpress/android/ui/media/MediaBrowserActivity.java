@@ -552,7 +552,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onMediaItemSelected(View sourceView, int localMediaId) {
         MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
         if (media == null) {
-            AppLog.w(AppLog.T.MEDIA, "onMediaItemSelected > unable to load localMediaId = " + localMediaId);
+            AppLog.w(AppLog.T.MEDIA, "Media browser > unable to load localMediaId = " + localMediaId);
             ToastUtils.showToast(this, R.string.error_media_load);
             return;
         }
