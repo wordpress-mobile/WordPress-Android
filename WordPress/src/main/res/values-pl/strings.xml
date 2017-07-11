@@ -66,7 +66,7 @@ Language: pl
 	<string name="button_not_now">Nie teraz</string>
 	<string name="media_error_timeout">Czas odpowiedzi serwera został przekroczony, możliwe że masz problemy z połączeniem lub jest to błąd serwera</string>
 	<string name="media_error_internal_server_error">Błąd przesyłania. Spróbuj włączyć funkcję optymalizacji obrazków w ustawieniach witryny</string>
-	<string name="media_error_too_large_upload">Plik zbyt duży aby go przesłać. Spróbuj włączyć funkcję optymalizacji obrazków w ustawieniach witryny</string>
+	<string name="media_error_http_too_large_upload">Plik zbyt duży aby go przesłać. Spróbuj włączyć funkcję optymalizacji obrazków w ustawieniach witryny</string>
 	<string name="media_downloading">Zapisywanie mediów na to urządzenie</string>
 	<string name="error_media_save">Nie można zapisać pliku mediów</string>
 	<string name="editor_scheduled_post_saved_online">Publikacja wpisu została zaplanowana</string>
