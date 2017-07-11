@@ -733,26 +733,37 @@ public class MediaStore extends Store {
         emitChange(onMediaUploaded);
     }
 
+    private void updateFetchedMediaList(@NonNull FetchMediaListResponsePayload payload) {
+        // update local IDs for the fetched list
+        for (MediaModel media: payload.mediaList) {
+            MediaModel existingMedia = getSiteMediaWithId(payload.site, media.getMediaId());
+            if (existingMedia != null) {
+                media.setId(existingMedia.getId());
+            }
+        }
+
+        if (!payload.loadedMore) {
+            if (TextUtils.isEmpty(payload.mimeType)) {
+                MediaSqlUtils.deleteAllUploadedSiteMedia(payload.site);
+            } else {
+                MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(payload.site, payload.mimeType);
+            }
+        }
+
+        if (!payload.mediaList.isEmpty()) {
+            for (MediaModel media : payload.mediaList) {
+                updateMedia(media, false);
+            }
+        }
+    }
+
     private void handleMediaListFetched(@NonNull FetchMediaListResponsePayload payload) {
         OnMediaListFetched onMediaListFetched;
 
         if (payload.isError()) {
             onMediaListFetched = new OnMediaListFetched(payload.site, payload.error, payload.mimeType);
         } else {
-            // Clear existing media if this is a fresh fetch (loadMore = false in the original request)
-            // This is the simplest way of keeping our local media in sync with remote media (in case of deletions)
-            if (!payload.loadedMore) {
-                if (TextUtils.isEmpty(payload.mimeType)) {
-                    MediaSqlUtils.deleteAllUploadedSiteMedia(payload.site);
-                } else {
-                    MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(payload.site, payload.mimeType);
-                }
-            }
-            if (!payload.mediaList.isEmpty()) {
-                for (MediaModel media : payload.mediaList) {
-                    updateMedia(media, false);
-                }
-            }
+            updateFetchedMediaList(payload);
             onMediaListFetched = new OnMediaListFetched(payload.site, payload.canLoadMore, payload.mimeType);
         }
 
