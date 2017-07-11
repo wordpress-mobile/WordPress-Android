@@ -718,6 +718,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Fragment fragment = getFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
+            if (fragment instanceof  ImageSettingsDialogFragment) {
+                ImageSettingsDialogFragment imFragment = (ImageSettingsDialogFragment) fragment;
+                imFragment.dismissFragment();
+            }
             return false;
         }
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
