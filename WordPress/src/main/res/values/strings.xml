@@ -514,7 +514,6 @@
     <string name="jetpack_allow_wpcom_sign_in_title">Allow login using WordPress.com accounts</string>
     <string name="jetpack_match_wpcom_via_email_title">Match accounts using email addresses</string>
     <string name="jetpack_require_two_factor_title">Require two-step authentication</string>
-    <string name="jetpack_security_settings_screen_title">Jetpack Security Settings</string>
 
     <!-- Preference Summaries -->
     <string name="site_settings_privacy_public_summary">Public</string>

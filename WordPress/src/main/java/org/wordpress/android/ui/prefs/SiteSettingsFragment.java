@@ -1388,7 +1388,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void setupJetpackSecurityScreen() {
         if (mJpSecuritySettings == null || !isAdded()) return;
-        String title = getString(R.string.jetpack_security_settings_screen_title);
+        String title = getString(R.string.jetpack_security_setting_title);
         Dialog dialog = mJpSecuritySettings.getDialog();
         if (dialog != null) {
             setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
