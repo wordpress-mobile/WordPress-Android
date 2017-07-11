@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
