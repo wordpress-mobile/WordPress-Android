@@ -259,7 +259,7 @@
 
         <PreferenceScreen
             android:id="@+id/pref_screen_jetpack_security"
-            android:key="@string/pref_key_site_jetpack_security"
+            android:key="@string/jetpack_security_site_setting"
             android:title="@string/jetpack_security_site_setting_title">
 
             <PreferenceCategory
@@ -345,33 +345,6 @@
             android:entryValues="@array/site_settings_video_bitrate_values"
             android:dependency="@string/pref_key_optimize_video"
             app:longClickHint="@string/site_settings_video_quality_hint" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:id="@+id/pref_category_jetpack_monitor"
-        android:key="@string/pref_key_site_jetpack_monitor"
-        android:title="Jetpack Monitor">
-
-        <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_monitor_uptime"
-            android:layout="@layout/preference_layout"
-            android:key="@string/pref_key_site_monitor_uptime"
-            android:title="@string/site_settings_monitor_uptime_title" />
-
-        <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_jetpack_send_email_notifications"
-            android:layout="@layout/preference_layout"
-            android:key="@string/pref_key_site_send_email_notifications"
-            android:title="@string/site_settings_monitor_uptime_title"
-            android:dependency="@string/pref_key_site_monitor_uptime" />
-
-        <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_jetpack_send_wp_notifications"
-            android:layout="@layout/preference_layout"
-            android:key="@string/pref_key_site_send_wp_notifications"
-            android:title="@string/site_settings_send_wp_notifications_title"
-            android:dependency="@string/pref_key_site_monitor_uptime" />
 
     </PreferenceCategory>
 
