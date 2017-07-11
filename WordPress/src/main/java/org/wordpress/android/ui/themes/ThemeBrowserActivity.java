@@ -193,8 +193,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                             }
                             AppLog.d(T.THEMES, getString(R.string.theme_auth_error_authenticate));
                         } else {
-                            ToastUtils.showToast(ThemeBrowserActivity.this, R.string.theme_fetch_failed, ToastUtils.Duration.LONG)
-                                    .show();
+                            ToastUtils.showToast(ThemeBrowserActivity.this, R.string.theme_fetch_failed,
+                                    ToastUtils.Duration.LONG);
                             AppLog.d(T.THEMES, getString(R.string.theme_fetch_failed) + ": " + response.toString());
                         }
                         mFetchingThemes = false;
