@@ -255,17 +255,17 @@
     <PreferenceCategory
         android:id="@+id/site_settings_jetpack_category"
         android:key="@string/pref_key_site_jetpack"
-        android:title="Jetpack Settings">
+        android:title="@string/site_settings_jetpack_category_title">
 
         <PreferenceScreen
             android:id="@+id/pref_screen_jetpack_security"
             android:key="@string/pref_key_site_jetpack_security"
-            android:title="Security">
+            android:title="@string/jetpack_security_site_setting_title">
 
             <PreferenceCategory
                 android:id="@+id/pref_category_jetpack_monitor"
                 android:key="@string/pref_key_site_jetpack_monitor"
-                android:title="Jetpack Monitor">
+                android:title="@string/jetpack_monitor_security_pref_category_title">
 
                 <org.wordpress.android.ui.prefs.WPSwitchPreference
                     android:id="@+id/pref_monitor_uptime"
