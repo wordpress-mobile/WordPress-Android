@@ -742,43 +742,28 @@ public class MediaStore extends Store {
             return;
         }
 
-        // otherwise, build separate lists of existing and new media
+        // build separate lists of existing and new media
         List <MediaModel> existingMediaList = new ArrayList<>();
         List <MediaModel> newMediaList = new ArrayList<>();
         for (MediaModel fetchedMedia: payload.mediaList) {
             MediaModel media = getSiteMediaWithId(payload.site, fetchedMedia.getMediaId());
             if (media != null) {
-                // retain the local ID
+                // retain the local ID, then update this media item
                 fetchedMedia.setId(media.getId());
                 existingMediaList.add(fetchedMedia);
+                updateMedia(fetchedMedia, false);
             } else {
                 newMediaList.add(fetchedMedia);
             }
         }
 
-        if (existingMediaList.isEmpty()) {
-            // no existing media, so clear everything
-            if (!TextUtils.isEmpty(payload.mimeType)) {
-                MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(payload.site, payload.mimeType);
-            } else {
-                MediaSqlUtils.deleteAllUploadedSiteMedia(payload.site);
-            }
-        } else {
-            // update the existing media
-            for (MediaModel media : existingMediaList) {
-                updateMedia(media, false);
-            }
-
-            // delete media that's NOT in the existing list
-            MediaSqlUtils.deleteUploadedSiteMediaNotInList(
-                    payload.site, existingMediaList, payload.mimeType);
-        }
+        // remove media that is NOT in the existing list
+        MediaSqlUtils.deleteUploadedSiteMediaNotInList(
+                payload.site, existingMediaList, payload.mimeType);
 
         // add new media
-        if (!newMediaList.isEmpty()) {
-            for (MediaModel media : newMediaList) {
-                updateMedia(media, false);
-            }
+        for (MediaModel media : newMediaList) {
+            updateMedia(media, false);
         }
     }
 
