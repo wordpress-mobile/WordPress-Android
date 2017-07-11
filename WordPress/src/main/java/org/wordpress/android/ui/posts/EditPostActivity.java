@@ -719,6 +719,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Fragment fragment = getFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
+            if (fragment instanceof  ImageSettingsDialogFragment) {
+                ImageSettingsDialogFragment imFragment = (ImageSettingsDialogFragment) fragment;
+                imFragment.dismissFragment();
+            }
             return false;
         }
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
@@ -1978,7 +1982,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(this)) {
-            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, false);
+            FetchMediaListPayload payload = new FetchMediaListPayload(
+                    mSite, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         } else {
             ToastUtils.showToast(this, R.string.error_media_refresh_no_connection, ToastUtils.Duration.SHORT);

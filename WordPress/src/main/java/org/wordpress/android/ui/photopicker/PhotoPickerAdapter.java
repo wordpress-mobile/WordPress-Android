@@ -154,7 +154,9 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             holder.imgThumbnail.setScaleY(scale);
         }
 
+        holder.imgPreview.setVisibility(item.isVideo ? View.GONE : View.VISIBLE);
         holder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
+
         mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo);
     }
 
@@ -260,14 +262,16 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     class ThumbnailViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imgThumbnail;
         private final TextView txtSelectionCount;
-        private final View videoOverlay;
+        private final ImageView videoOverlay;
+        private final ImageView imgPreview;
 
         public ThumbnailViewHolder(View view) {
             super(view);
 
             imgThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
             txtSelectionCount = (TextView) view.findViewById(R.id.text_selection_count);
-            videoOverlay = view.findViewById(R.id.image_video_overlay);
+            videoOverlay = (ImageView) view.findViewById(R.id.image_video_overlay);
+            imgPreview = (ImageView) view.findViewById(R.id.image_preview);
 
             imgThumbnail.getLayoutParams().width = mThumbWidth;
             imgThumbnail.getLayoutParams().height = mThumbHeight;
@@ -301,8 +305,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 }
             });
 
-            View imgPreview = view.findViewById(R.id.image_preview);
-            imgPreview.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener previewListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
@@ -311,12 +314,14 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                         trackOpenPreviewScreenEvent(item);
                         MediaPreviewActivity.showPreview(
                                 mContext,
-                                imgThumbnail,
+                                v,
                                 item.uri.toString(),
                                 item.isVideo);
                     }
                 }
-            });
+            };
+            imgPreview.setOnClickListener(previewListener);
+            videoOverlay.setOnClickListener(previewListener);
         }
     }
 
