@@ -253,6 +253,45 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:id="@+id/site_settings_jetpack_category"
+        android:key="@string/pref_key_site_jetpack"
+        android:title="Jetpack Settings">
+
+        <PreferenceScreen
+            android:id="@+id/pref_screen_jetpack_security"
+            android:key="@string/pref_key_site_jetpack_security"
+            android:title="Security">
+
+            <PreferenceCategory
+                android:id="@+id/pref_category_jetpack_monitor"
+                android:key="@string/pref_key_site_jetpack_monitor"
+                android:title="Jetpack Monitor">
+
+                <org.wordpress.android.ui.prefs.WPSwitchPreference
+                    android:id="@+id/pref_monitor_uptime"
+                    android:layout="@layout/preference_layout"
+                    android:key="@string/pref_key_site_monitor_uptime"
+                    android:title="@string/site_settings_monitor_uptime_title" />
+
+                <org.wordpress.android.ui.prefs.WPSwitchPreference
+                    android:id="@+id/pref_jetpack_send_email_notifications"
+                    android:layout="@layout/preference_layout"
+                    android:key="@string/pref_key_site_send_email_notifications"
+                    android:title="@string/site_settings_monitor_uptime_title"
+                    android:dependency="@string/pref_key_site_monitor_uptime" />
+
+                <org.wordpress.android.ui.prefs.WPSwitchPreference
+                    android:id="@+id/pref_jetpack_send_wp_notifications"
+                    android:layout="@layout/preference_layout"
+                    android:key="@string/pref_key_site_send_wp_notifications"
+                    android:title="@string/site_settings_send_wp_notifications_title"
+                    android:dependency="@string/pref_key_site_monitor_uptime" />
+
+            </PreferenceCategory>
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:id="@+id/pref_this_device"
         android:key="@string/pref_key_site_this_device"
         android:title="@string/site_settings_this_device_header">

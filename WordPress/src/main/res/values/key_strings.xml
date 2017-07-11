@@ -75,6 +75,8 @@
     <string name="pref_key_site_moderation_hold" translatable="false">wp_pref_site_moderation_hold</string>
     <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
     <string name="pref_key_site_danger" translatable="false">wp_pref_site_danger</string>
+    <string name="pref_key_site_jetpack" translatable="false">wp_pref_site_jetpack</string>
+    <string name="pref_key_site_jetpack_security" translatable="false">wp_pref_site_jetpack_security</string>
     <string name="pref_key_site_jetpack_monitor" translatable="false">wp_pref_site_jetpack_monitor</string>
     <string name="pref_key_site_monitor_uptime" translatable="false">wp_pref_site_monitor_uptime</string>
     <string name="pref_key_site_send_email_notifications" translatable="false">wp_pref_site_send_email_notifications</string>
