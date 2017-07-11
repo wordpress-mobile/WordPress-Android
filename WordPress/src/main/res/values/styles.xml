@@ -58,7 +58,7 @@
 
         <item name="android:statusBarColor">@color/status_bar_tint</item>
         <item name="android:windowBackground">@color/login_background_color</item>
-        <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
     </style>
 
     <style name="LoginTheme.Toolbar" parent="LoginTheme">
