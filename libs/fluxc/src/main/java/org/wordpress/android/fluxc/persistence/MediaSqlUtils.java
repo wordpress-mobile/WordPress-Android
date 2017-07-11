@@ -364,8 +364,13 @@ public class MediaSqlUtils {
 
     public static int deleteUploadedSiteMediaNotInList(
             SiteModel site, List<MediaModel> mediaList, String mimeType) {
+
         if (mediaList.isEmpty()) {
-            return 0;
+            if (!TextUtils.isEmpty(mimeType)) {
+                return MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(site, mimeType);
+            } else {
+                return MediaSqlUtils.deleteAllUploadedSiteMedia(site);
+            }
         }
 
         List<Integer> idList = new ArrayList<>();
