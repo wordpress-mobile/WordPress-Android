@@ -41,11 +41,11 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
 import org.wordpress.android.ui.uploads.PostEvents;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -552,7 +552,7 @@ public class PostsListFragment extends Fragment
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
 
-        UploadService.addPostToUpload(getActivity(), post);
+        UploadService.uploadPost(getActivity(), post);
 
         PostUtils.trackSavePostAnalytics(post, mSite);
     }

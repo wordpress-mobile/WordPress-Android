@@ -285,13 +285,13 @@ public class PostPreviewActivity extends AppCompatActivity {
             if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
                 // Remote draft being published
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
-                UploadService.addPostToUploadAndTrackAnalytics(this, mPost);
+                UploadService.uploadPostAndTrackAnalytics(this, mPost);
             } else if (mPost.isLocalDraft() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
                 // Local draft being published
-                UploadService.addPostToUploadAndTrackAnalytics(this, mPost);
+                UploadService.uploadPostAndTrackAnalytics(this, mPost);
             } else {
                 // Not a first-time publish
-                UploadService.addPostToUpload(this, mPost);
+                UploadService.uploadPost(this, mPost);
             }
         }
     }

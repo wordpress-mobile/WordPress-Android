@@ -182,7 +182,7 @@ public class UploadService extends Service {
     /**
      * Adds a post to the queue.
      */
-    public static void addPostToUpload(Context context, @NonNull PostModel post) {
+    public static void uploadPost(Context context, @NonNull PostModel post) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(UploadService.KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, false);
@@ -194,7 +194,7 @@ public class UploadService extends Service {
      * To be used only the first time a post is uploaded, i.e. when its status changes from local draft or remote draft
      * to published.
      */
-    public static void addPostToUploadAndTrackAnalytics(Context context, @NonNull PostModel post) {
+    public static void uploadPostAndTrackAnalytics(Context context, @NonNull PostModel post) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(UploadService.KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, true);

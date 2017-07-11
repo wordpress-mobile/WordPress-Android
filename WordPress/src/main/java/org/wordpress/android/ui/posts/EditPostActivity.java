@@ -985,9 +985,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
             UploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
             if (isFirstTimePublish) {
-                UploadService.addPostToUploadAndTrackAnalytics(EditPostActivity.this, mPost);
+                UploadService.uploadPostAndTrackAnalytics(EditPostActivity.this, mPost);
             } else {
-                UploadService.addPostToUpload(EditPostActivity.this, mPost);
+                UploadService.uploadPost(EditPostActivity.this, mPost);
             }
 
             PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
