@@ -499,17 +499,22 @@
     <string name="site_settings_moderation_hold_title">Hold for Moderation</string>
     <string name="site_settings_blacklist_title">Blacklist</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
-    <string name="site_settings_monitor_uptime_title">Monitor your site\'s uptime</string>
-    <string name="site_settings_send_email_notifications_title">Send notifications to your WordPress.com email address</string>
-    <string name="site_settings_send_wp_notifications_title">Send notifications via WordPress.com notification</string>
-    <string name="site_settings_prevent_brute_force_title">Prevent and block malicious login attempts</string>
-    <string name="site_settings_allow_wpcom_sign_in_title">Allow sign in using WordPress.com accounts</string>
-    <string name="site_settings_match_wpcom_via_email_title">Match accounts using email addresses</string>
-    <string name="site_settings_require_two_factor_title">Require two-step authentication</string>
-    <string name="site_settings_jetpack_category_title">Jetpack Settings</string>
-    <string name="site_settings_jetpack_security_title">Security</string>
-    <string name="site_settings_jetpack_security_screen_title">Jetpack Security Settings</string>
-    <string name="site_settings_jetpack_monitor_category_title">Jetpack Monitor</string>
+
+    <!-- Jetpack settings -->
+    <string name="jetpack_site_settings_category_title">Jetpack Settings</string>
+    <string name="jetpack_security_setting_title">Security</string>
+    <string name="jetpack_monitor_category_title">Jetpack Monitor</string>
+    <string name="jetpack_monitor_uptime_title">Monitor your site\'s uptime</string>
+    <string name="jetpack_send_email_notifications_title">Send notifications to your WordPress.com email address</string>
+    <string name="jetpack_send_wp_notifications_title">Send notifications via WordPress.com notification</string>
+    <string name="jetpack_prevent_brute_force_category_title">Brute force attack protection</string>
+    <string name="jetpack_prevent_brute_force_title">Block malicious login attempts</string>
+    <string name="jetpack_brute_force_whitelist_title">Whitelisted IP addresses</string>
+    <string name="jetpack_wpcom_sign_in_category_title">WordPress.com login</string>
+    <string name="jetpack_allow_wpcom_sign_in_title">Allow login using WordPress.com accounts</string>
+    <string name="jetpack_match_wpcom_via_email_title">Match accounts using email addresses</string>
+    <string name="jetpack_require_two_factor_title">Require two-step authentication</string>
+    <string name="jetpack_security_settings_screen_title">Jetpack Security Settings</string>
 
     <!-- Preference Summaries -->
     <string name="site_settings_privacy_public_summary">Public</string>

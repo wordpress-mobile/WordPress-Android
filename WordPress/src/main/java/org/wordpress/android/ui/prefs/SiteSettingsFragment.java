@@ -727,10 +727,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
-        mJpSecuritySettings = (PreferenceScreen) getClickPref(R.string.pref_key_jetpack_security_site_setting);
-        mJpMonitorActivePref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_monitor_uptime);
-        mJpMonitorEmailNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_send_email_notifications);
-        mJpMonitorWpNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_send_wp_notifications);
+        mJpSecuritySettings = (PreferenceScreen) getClickPref(R.string.pref_key_jetpack_security_screen);
+        mJpMonitorActivePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_monitor_uptime);
+        mJpMonitorEmailNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_email_notifications);
+        mJpMonitorWpNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_wp_notifications);
 
         sortLanguages();
 
@@ -1388,7 +1388,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void setupJetpackSecurityScreen() {
         if (mJpSecuritySettings == null || !isAdded()) return;
-        String title = getString(R.string.site_settings_jetpack_security_screen_title);
+        String title = getString(R.string.jetpack_security_settings_screen_title);
         Dialog dialog = mJpSecuritySettings.getDialog();
         if (dialog != null) {
             setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
