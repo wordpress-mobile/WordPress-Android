@@ -2045,7 +2045,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     /**
      * Starts the upload service to upload selected media.
      */
-    private void startMediaUploadService() {
+    private void startUploadService() {
         if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             final ArrayList<MediaModel> mediaList = new ArrayList<>();
             for (MediaModel media : mPendingUploads) {
@@ -2087,7 +2087,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     /**
-     * Queues a media file for upload and starts the MediaUploadService. Toasts will alert the user
+     * Queues a media file for upload and starts the UploadService. Toasts will alert the user
      * if there are issues with the file.
      */
     private MediaModel queueFileForUpload(Uri uri, String mimeType) {
@@ -2118,7 +2118,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // add this item to the queue - we keep it for visual aid atm
         mPendingUploads.add(media);
 
-        startMediaUploadService();
+        startUploadService();
 
         return media;
     }
@@ -2227,7 +2227,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             media.setUploadState(MediaUploadState.QUEUED);
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             mPendingUploads.add(media);
-            startMediaUploadService();
+            startUploadService();
         }
 
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
