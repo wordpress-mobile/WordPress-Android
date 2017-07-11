@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
@@ -100,20 +101,20 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     }
 
     @Override
-    public void upload(PostModel post) {
+    public void upload(@NonNull PostModel post) {
         synchronized (sQueuedPostsList) {
             sQueuedPostsList.add(post);
         }
         uploadNextPost();
     }
 
-    void registerPostForAnalyticsTracking(PostModel post) {
+    void registerPostForAnalyticsTracking(@NonNull PostModel post) {
         synchronized (sFirstPublishPosts) {
             sFirstPublishPosts.add(post.getId());
         }
     }
 
-    void unregisterPostForAnalyticsTracking(PostModel post) {
+    void unregisterPostForAnalyticsTracking(@NonNull PostModel post) {
         synchronized (sFirstPublishPosts) {
             sFirstPublishPosts.remove(post.getId());
         }

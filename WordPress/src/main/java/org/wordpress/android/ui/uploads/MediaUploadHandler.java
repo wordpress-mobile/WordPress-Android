@@ -61,10 +61,8 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
     }
 
     @Override
-    public void upload(MediaModel media) {
-        if (media != null) {
-            addUniqueMediaToQueue(media);
-        }
+    public void upload(@NonNull MediaModel media) {
+        addUniqueMediaToQueue(media);
         uploadNextInQueue();
     }
 
