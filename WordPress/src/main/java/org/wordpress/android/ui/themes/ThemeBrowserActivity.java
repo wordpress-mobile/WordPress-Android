@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.VolleyError;
@@ -194,7 +193,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                             }
                             AppLog.d(T.THEMES, getString(R.string.theme_auth_error_authenticate));
                         } else {
-                            Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG)
+                            ToastUtils.showToast(ThemeBrowserActivity.this, R.string.theme_fetch_failed, ToastUtils.Duration.LONG)
                                     .show();
                             AppLog.d(T.THEMES, getString(R.string.theme_fetch_failed) + ": " + response.toString());
                         }
@@ -399,7 +398,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }, new ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), R.string.theme_activation_error, Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(ThemeBrowserActivity.this, R.string.theme_activation_error,
+                        ToastUtils.Duration.SHORT);
             }
         });
     }
@@ -459,7 +459,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             }
         }
 
-        Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
+        ToastUtils.showToast(this, toastText, ToastUtils.Duration.SHORT);
     }
 
     @Override

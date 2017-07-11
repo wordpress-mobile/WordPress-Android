@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -108,8 +107,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openWPCOMURL");
-            Toast.makeText(activity, activity.getResources().getText(R.string.invalid_site_url_message),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(activity, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
             return;
         }
 
