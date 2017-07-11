@@ -178,9 +178,9 @@ public class WPMediaUtils {
             case CONNECTION_ERROR:
                 return R.string.media_error_generic_connection_error;
             case EXCEEDS_FILESIZE_LIMIT:
-                return R.string.media_error_wp_too_large_upload;
+                return R.string.media_error_exceeds_php_filesize;
             case EXCEEDS_MEMORY_LIMIT:
-                return R.string.media_error_wp_memory_limit;
+                return R.string.media_error_exceeds_memory_limit;
             case PARSE_ERROR:
                 return R.string.error_media_parse_error;
         }
