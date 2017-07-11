@@ -221,6 +221,10 @@ public class UploadService extends Service {
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
     public static boolean isPostUploadingOrQueued(PostModel post) {
+        if (post == null) {
+            return false;
+        }
+
         // First check for posts uploading or queued inside the PostUploadManager
         if (PostUploadHandler.isPostUploadingOrQueued(post)) {
             return true;
@@ -245,16 +249,18 @@ public class UploadService extends Service {
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
     public static boolean isPostUploading(PostModel post) {
-        return PostUploadHandler.isPostUploading(post);
+        return post != null && PostUploadHandler.isPostUploading(post);
     }
 
     public static void cancelQueuedPostUpload(PostModel post) {
-        synchronized (sPostsWithPendingMedia) {
-            Iterator<PostModel> iterator = sPostsWithPendingMedia.iterator();
-            while (iterator.hasNext()) {
-                PostModel postModel = iterator.next();
-                if (postModel.getId() == post.getId()) {
-                    iterator.remove();
+        if (post != null) {
+            synchronized (sPostsWithPendingMedia) {
+                Iterator<PostModel> iterator = sPostsWithPendingMedia.iterator();
+                while (iterator.hasNext()) {
+                    PostModel postModel = iterator.next();
+                    if (postModel.getId() == post.getId()) {
+                        iterator.remove();
+                    }
                 }
             }
         }
@@ -280,7 +286,7 @@ public class UploadService extends Service {
     }
 
     public static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
-        return MediaUploadHandler.hasPendingMediaUploadsForPost(postModel);
+        return postModel != null && MediaUploadHandler.hasPendingMediaUploadsForPost(postModel);
     }
 
     private void showNotificationForPostWithPendingMedia(PostModel post) {

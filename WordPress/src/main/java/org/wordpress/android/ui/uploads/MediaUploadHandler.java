@@ -69,6 +69,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
     }
 
     static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
+        if (postModel == null) {
+            return false;
+        }
+
         synchronized (sInProgressUploads) {
             for (MediaModel queuedMedia : sInProgressUploads) {
                 if (queuedMedia.getLocalPostId() == postModel.getId()) {

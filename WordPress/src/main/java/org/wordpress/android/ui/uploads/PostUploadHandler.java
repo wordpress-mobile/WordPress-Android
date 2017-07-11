@@ -124,6 +124,10 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     }
 
     static boolean isPostUploadingOrQueued(PostModel post) {
+        if (post == null) {
+            return false;
+        }
+
         // First check the currently uploading post
         if (isPostUploading(post)) {
             return true;
@@ -143,7 +147,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     }
 
     static boolean isPostUploading(PostModel post) {
-        return sCurrentUploadingPost != null && sCurrentUploadingPost.getId() == post.getId();
+        return post != null && sCurrentUploadingPost != null && sCurrentUploadingPost.getId() == post.getId();
     }
 
     private void uploadNextPost() {
