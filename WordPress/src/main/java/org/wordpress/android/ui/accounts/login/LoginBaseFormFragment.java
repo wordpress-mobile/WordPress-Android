@@ -20,11 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.util.EditTextUtils;
 
 import javax.inject.Inject;
 
@@ -46,6 +48,10 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
     protected abstract void setupContent(ViewGroup rootView);
     protected abstract void setupBottomButtons(Button secondaryButton, Button primaryButton);
     protected abstract @StringRes int getProgressBarText();
+
+    protected EditText getEditTextToFocusOnStart() {
+        return null;
+    }
 
     protected boolean isInProgress() {
         return mInProgress;
@@ -88,6 +94,10 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (savedInstanceState == null) {
+            EditTextUtils.showSoftInput(getEditTextToFocusOnStart());
         }
     }
 
