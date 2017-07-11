@@ -58,7 +58,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class PostUploadHandler extends AbstractUploadHandler {
+public class PostUploadHandler implements UploadHandler {
     private static final ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();
     private static final Set<Integer> sFirstPublishPosts = new HashSet<>();
     private static PostModel sCurrentUploadingPost = null;
@@ -83,17 +83,17 @@ public class PostUploadHandler extends AbstractUploadHandler {
     }
 
     @Override
-    void unregister() {
+    public void unregister() {
         mDispatcher.unregister(this);
     }
 
     @Override
-    boolean hasInProgressUploads() {
+    public boolean hasInProgressUploads() {
         return mCurrentTask != null || !sQueuedPostsList.isEmpty();
     }
 
     @Override
-    void cancelInProgressUploads() {
+    public void cancelInProgressUploads() {
         if (mCurrentTask != null) {
             AppLog.i(T.POSTS, "PostUploadHandler > Cancelling current upload task");
             mCurrentTask.cancel(true);

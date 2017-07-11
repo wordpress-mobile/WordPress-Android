@@ -29,10 +29,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-/**
- * Started with explicit list of media to upload.
- */
-public class MediaUploadHandler extends AbstractUploadHandler {
+public class MediaUploadHandler implements UploadHandler {
     private static final List<MediaModel> sPendingUploads = new ArrayList<>();
     private static final List<MediaModel> sInProgressUploads = new ArrayList<>();
 
@@ -47,18 +44,18 @@ public class MediaUploadHandler extends AbstractUploadHandler {
     }
 
     @Override
-    void unregister() {
+    public void unregister() {
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
     }
 
     @Override
-    boolean hasInProgressUploads() {
+    public boolean hasInProgressUploads() {
         return !sInProgressUploads.isEmpty() || !sPendingUploads.isEmpty();
     }
 
     @Override
-    void cancelInProgressUploads() {
+    public void cancelInProgressUploads() {
         for (MediaModel oneUpload : sInProgressUploads) {
             cancelUpload(oneUpload, false);
         }
