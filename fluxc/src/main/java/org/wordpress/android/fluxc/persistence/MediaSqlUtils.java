@@ -364,15 +364,19 @@ public class MediaSqlUtils {
 
     public static int deleteUploadedSiteMediaNotInList(
             SiteModel site, List<MediaModel> mediaList, String mimeType) {
-        List<Integer> existingIds = new ArrayList<>();
-        for (MediaModel existing: mediaList) {
-            existingIds.add(existing.getId());
+        if (mediaList.isEmpty()) {
+            return 0;
+        }
+
+        List<Integer> idList = new ArrayList<>();
+        for (MediaModel media: mediaList) {
+            idList.add(media.getId());
         }
 
         if (!TextUtils.isEmpty(mimeType)) {
             return WellSql.delete(MediaModel.class)
                     .where().beginGroup()
-                    .isNotIn(MediaModelTable.ID, existingIds)
+                    .isNotIn(MediaModelTable.ID, idList)
                     .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
                     .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
                     .contains(MediaModelTable.MIME_TYPE, mimeType)
@@ -381,7 +385,7 @@ public class MediaSqlUtils {
         } else {
             return WellSql.delete(MediaModel.class)
                     .where().beginGroup()
-                    .isNotIn(MediaModelTable.ID, existingIds)
+                    .isNotIn(MediaModelTable.ID, idList)
                     .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
                     .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
                     .endGroup().endWhere()
