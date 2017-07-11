@@ -167,6 +167,10 @@ public class WPMediaUtils {
         }
 
         switch (error.type) {
+            case FS_READ_PERMISSION_DENIED:
+               return R.string.error_media_insufficient_fs_permissions;
+            case NOT_FOUND:
+                return R.string.error_media_not_found;
             case AUTHORIZATION_REQUIRED:
                 return R.string.media_error_no_permission_upload;
             case REQUEST_TOO_LARGE:
