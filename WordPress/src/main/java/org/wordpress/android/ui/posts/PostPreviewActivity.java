@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -32,8 +31,8 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.posts.services.PostEvents;
-import org.wordpress.android.ui.posts.services.PostUploadService;
+import org.wordpress.android.ui.uploads.PostEvents;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -189,7 +188,7 @@ public class PostPreviewActivity extends AppCompatActivity {
 
         if (mPost == null
                 || mIsUpdatingPost
-                || PostUploadService.isPostUploadingOrQueued(mPost)
+                || UploadService.isPostUploadingOrQueued(mPost)
                 || (!mPost.isLocallyChanged() && !mPost.isLocalDraft())
                 && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
             messageView.setVisibility(View.GONE);
@@ -286,15 +285,14 @@ public class PostPreviewActivity extends AppCompatActivity {
             if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
                 // Remote draft being published
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
-                PostUploadService.addPostToUploadAndTrackAnalytics(mPost);
+                UploadService.uploadPostAndTrackAnalytics(this, mPost);
             } else if (mPost.isLocalDraft() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
                 // Local draft being published
-                PostUploadService.addPostToUploadAndTrackAnalytics(mPost);
+                UploadService.uploadPostAndTrackAnalytics(this, mPost);
             } else {
                 // Not a first-time publish
-                PostUploadService.addPostToUpload(mPost);
+                UploadService.uploadPost(this, mPost);
             }
-            startService(new Intent(this, PostUploadService.class));
         }
     }
 

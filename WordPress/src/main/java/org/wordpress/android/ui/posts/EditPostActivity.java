@@ -88,18 +88,17 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
-import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
-import org.wordpress.android.ui.posts.services.PostEvents;
-import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
+import org.wordpress.android.ui.uploads.PostEvents;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -308,7 +307,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
                 if (mPost != null) {
                     mOriginalPost = mPost.clone();
-                    mPost = MediaUploadService.updatePostWithCurrentlyCompletedUploads(mPost);
+                    mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
                     mIsPage = mPost.isPage();
                 }
             }
@@ -984,13 +983,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
+            UploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
             if (isFirstTimePublish) {
-                PostUploadService.addPostToUploadAndTrackAnalytics(mPost);
+                UploadService.uploadPostAndTrackAnalytics(EditPostActivity.this, mPost);
             } else {
-                PostUploadService.addPostToUpload(mPost);
+                UploadService.uploadPost(EditPostActivity.this, mPost);
             }
-            PostUploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
-            startService(new Intent(EditPostActivity.this, PostUploadService.class));
+
             PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
 
             return null;
@@ -2046,7 +2045,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     /**
      * Starts the upload service to upload selected media.
      */
-    private void startMediaUploadService() {
+    private void startUploadService() {
         if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             final ArrayList<MediaModel> mediaList = new ArrayList<>();
             for (MediaModel media : mPendingUploads) {
@@ -2062,7 +2061,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 savePostAsync(new AfterSavePostListener() {
                     @Override
                     public void onPostSave() {
-                        MediaUploadService.startService(EditPostActivity.this, mediaList);
+                        UploadService.uploadMedia(EditPostActivity.this, mediaList);
                     }
                 });
 
@@ -2088,7 +2087,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     /**
-     * Queues a media file for upload and starts the MediaUploadService. Toasts will alert the user
+     * Queues a media file for upload and starts the UploadService. Toasts will alert the user
      * if there are issues with the file.
      */
     private MediaModel queueFileForUpload(Uri uri, String mimeType) {
@@ -2119,7 +2118,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // add this item to the queue - we keep it for visual aid atm
         mPendingUploads.add(media);
 
-        startMediaUploadService();
+        startUploadService();
 
         return media;
     }
@@ -2228,7 +2227,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             media.setUploadState(MediaUploadState.QUEUED);
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             mPendingUploads.add(media);
-            startMediaUploadService();
+            startUploadService();
         }
 
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);

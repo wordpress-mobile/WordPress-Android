@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.services;
+package org.wordpress.android.ui.uploads;
 
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.util.StringUtils;

@@ -41,12 +41,11 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
-import org.wordpress.android.ui.posts.services.PostEvents;
-import org.wordpress.android.ui.posts.services.PostUploadService;
+import org.wordpress.android.ui.uploads.PostEvents;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -254,8 +253,8 @@ public class PostsListFragment extends Fragment
                     showSnackbar(R.string.editor_draft_saved_locally, R.string.button_publish, publishPostListener);
                 }
                 else {
-                    if (MediaUploadService.hasPendingMediaUploadsForPost(post) ||
-                            PostUploadService.isPostUploadingOrQueued(post)) {
+                    if (UploadService.hasPendingMediaUploadsForPost(post) ||
+                            UploadService.isPostUploadingOrQueued(post)) {
                         showSnackbar(getString(R.string.editor_uploading_post));
                     } else {
                         showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
@@ -269,8 +268,8 @@ public class PostsListFragment extends Fragment
                 showSnackbar(R.string.editor_post_saved_locally, R.string.button_publish, publishPostListener);
             }
             else {
-                if (MediaUploadService.hasPendingMediaUploadsForPost(post) ||
-                        PostUploadService.isPostUploadingOrQueued(post)) {
+                if (UploadService.hasPendingMediaUploadsForPost(post) ||
+                        UploadService.isPostUploadingOrQueued(post)) {
                     showSnackbar(getString(R.string.editor_uploading_post));
                 } else {
                     showSnackbar(R.string.editor_post_saved_online, R.string.button_publish, publishPostListener);
@@ -529,10 +528,10 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
-                if (PostUploadService.isPostUploadingOrQueued(post)) {
+                if (UploadService.isPostUploadingOrQueued(post)) {
                     // If the post is uploading media, allow the media to continue uploading, but don't upload the
                     // post itself when they finish (since we're about to edit it again)
-                    PostUploadService.cancelQueuedPostUpload(post);
+                    UploadService.cancelQueuedPostUpload(post);
                 }
                 ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 break;
@@ -556,7 +555,7 @@ public class PostsListFragment extends Fragment
                 // Currently, the button is tappable while media are uploading, but nothing happens
 
                 // prevent deleting post while it's being uploaded
-                if (!PostUploadService.isPostUploadingOrQueued(post)) {
+                if (!UploadService.isPostUploadingOrQueued(post)) {
                     trashPost(post);
                 }
                 break;
@@ -579,11 +578,10 @@ public class PostsListFragment extends Fragment
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
 
-        // save the post in the DB so the PostUploadService will get the latest change
+        // save the post in the DB so the UploadService will get the latest change
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 
-        PostUploadService.addPostToUpload(post);
-        getActivity().startService(new Intent(getActivity(), PostUploadService.class));
+        UploadService.uploadPost(getActivity(), post);
 
         PostUtils.trackSavePostAnalytics(post, mSite);
     }
@@ -762,7 +760,7 @@ public class PostsListFragment extends Fragment
     public void onMediaUploaded(OnMediaUploaded event) {
         if (event.media != null && event.completed) {
             PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
-            if (post != null && PostUploadService.isPostUploadingOrQueued(post)) {
+            if (post != null && UploadService.isPostUploadingOrQueued(post)) {
                 loadPosts(LoadMode.FORCED);
             }
         }

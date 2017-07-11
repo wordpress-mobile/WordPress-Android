@@ -1,14 +1,11 @@
-package org.wordpress.android.ui.posts.services;
+package org.wordpress.android.ui.uploads;
 
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.IBinder;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.annotation.NonNull;
@@ -29,17 +26,13 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
-import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
-import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.media.services.MediaUploadService;
-import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -55,7 +48,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,65 +59,85 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class PostUploadService extends Service {
-    private static final ArrayList<PostModel> mQueuedPostsList = new ArrayList<>();
-    private static PostModel mCurrentUploadingPost = null;
-    private static Map<String, Object> mCurrentUploadingPostAnalyticsProperties;
-    private static boolean mUseLegacyMode;
-    private UploadPostTask mCurrentTask = null;
+public class PostUploadHandler implements UploadHandler<PostModel> {
+    private static final ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();
+    private static final Set<Integer> sFirstPublishPosts = new HashSet<>();
+    private static PostModel sCurrentUploadingPost = null;
+    private static Map<String, Object> sCurrentUploadingPostAnalyticsProperties;
 
-    private static final Set<Integer> mFirstPublishPosts = new HashSet<>();
+    private static boolean sUseLegacyMode;
 
-    private Context mContext;
     private PostUploadNotifier mPostUploadNotifier;
+    private UploadPostTask mCurrentTask = null;
 
     private SparseArray<CountDownLatch> mMediaLatchMap = new SparseArray<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
-    @Inject PostStore mPostStore;
 
-    /**
-     * Adds a post to the queue.
-     */
-    public static void addPostToUpload(PostModel post) {
-        synchronized (mQueuedPostsList) {
-            mQueuedPostsList.add(post);
+    PostUploadHandler(PostUploadNotifier postUploadNotifier) {
+        ((WordPress) WordPress.getContext()).component().inject(this);
+        AppLog.i(T.POSTS, "PostUploadHandler > Created");
+        mDispatcher.register(this);
+        mPostUploadNotifier = postUploadNotifier;
+    }
+
+    void unregister() {
+        mDispatcher.unregister(this);
+    }
+
+    @Override
+    public boolean hasInProgressUploads() {
+        return mCurrentTask != null || !sQueuedPostsList.isEmpty();
+    }
+
+    @Override
+    public void cancelInProgressUploads() {
+        if (mCurrentTask != null) {
+            AppLog.i(T.POSTS, "PostUploadHandler > Cancelling current upload task");
+            mCurrentTask.cancel(true);
         }
     }
 
-    /**
-     * Adds a post to the queue and tracks post analytics.
-     * To be used only the first time a post is uploaded, i.e. when its status changes from local draft or remote draft
-     * to published.
-     */
-    public static void addPostToUploadAndTrackAnalytics(PostModel post) {
-        synchronized (mFirstPublishPosts) {
-            mFirstPublishPosts.add(post.getId());
+    @Override
+    public void upload(@NonNull PostModel post) {
+        synchronized (sQueuedPostsList) {
+            sQueuedPostsList.add(post);
         }
-        addPostToUpload(post);
+        uploadNextPost();
     }
 
-    public static void setLegacyMode(boolean enabled) {
-        mUseLegacyMode = enabled;
+    void registerPostForAnalyticsTracking(@NonNull PostModel post) {
+        synchronized (sFirstPublishPosts) {
+            sFirstPublishPosts.add(post.getId());
+        }
     }
 
-    /**
-     * Returns true if the passed post is either currently uploading or waiting to be uploaded.
-     * Except for legacy mode, a post counts as 'uploading' if the post content itself is being uploaded - a post
-     * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
-     */
-    public static boolean isPostUploadingOrQueued(PostModel post) {
+    void unregisterPostForAnalyticsTracking(@NonNull PostModel post) {
+        synchronized (sFirstPublishPosts) {
+            sFirstPublishPosts.remove(post.getId());
+        }
+    }
+
+    static void setLegacyMode(boolean enabled) {
+        sUseLegacyMode = enabled;
+    }
+
+    static boolean isPostUploadingOrQueued(PostModel post) {
+        if (post == null) {
+            return false;
+        }
+
         // First check the currently uploading post
         if (isPostUploading(post)) {
             return true;
         }
 
         // Then check the list of posts waiting to be uploaded
-        if (mQueuedPostsList.size() > 0) {
-            synchronized (mQueuedPostsList) {
-                for (PostModel queuedPost : mQueuedPostsList) {
+        if (sQueuedPostsList.size() > 0) {
+            synchronized (sQueuedPostsList) {
+                for (PostModel queuedPost : sQueuedPostsList) {
                     if (queuedPost.getId() == post.getId()) {
                         return true;
                     }
@@ -135,148 +147,38 @@ public class PostUploadService extends Service {
         return false;
     }
 
-    /**
-     * Returns true if the passed post is currently uploading.
-     * Except for legacy mode, a post counts as 'uploading' if the post content itself is being uploaded - a post
-     * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
-     */
-    public static boolean isPostUploading(PostModel post) {
-        return mCurrentUploadingPost != null && mCurrentUploadingPost.getId() == post.getId();
-    }
-
-    public static void cancelQueuedPostUpload(PostModel post) {
-        synchronized (mQueuedPostsList) {
-            Iterator<PostModel> iterator = mQueuedPostsList.iterator();
-            while (iterator.hasNext()) {
-                PostModel postModel = iterator.next();
-                if (postModel.getId() == post.getId()) {
-                    iterator.remove();
-                }
-            }
-        }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        ((WordPress) getApplication()).component().inject(this);
-        mDispatcher.register(this);
-        mContext = this.getApplicationContext();
-        mPostUploadNotifier = new PostUploadNotifier(mContext, this);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // Cancel current task, it will reset post from "uploading" to "local draft"
-        if (mCurrentTask != null) {
-            AppLog.d(T.POSTS, "cancelling current upload task");
-            mCurrentTask.cancel(true);
-        }
-        mDispatcher.unregister(this);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        synchronized (mQueuedPostsList) {
-            if (mQueuedPostsList.size() == 0 || mContext == null) {
-                stopSelf();
-                return START_NOT_STICKY;
-            }
-        }
-
-        uploadNextPost();
-        showNotificationsForPendingMediaPosts();
-        // We want this service to continue running until it is explicitly stopped, so return sticky.
-        return START_STICKY;
+    static boolean isPostUploading(PostModel post) {
+        return post != null && sCurrentUploadingPost != null && sCurrentUploadingPost.getId() == post.getId();
     }
 
     private void uploadNextPost() {
-        synchronized (mQueuedPostsList) {
+        synchronized (sQueuedPostsList) {
             if (mCurrentTask == null) { //make sure nothing is running
-                mCurrentUploadingPost = null;
-                mCurrentUploadingPostAnalyticsProperties = null;
-                if (mQueuedPostsList.size() > 0) {
-                    if (!mUseLegacyMode) {
-                        // Skip any posts with pending media uploads
-                        PostModel nextPost = getNextUploadablePost();
-                        if (nextPost != null) {
-                            mCurrentUploadingPost = nextPost;
-                            mCurrentTask = new UploadPostTask();
-                            mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mCurrentUploadingPost);
-                        }
-                    } else {
-                        mCurrentUploadingPost = mQueuedPostsList.remove(0);
-                        mCurrentTask = new UploadPostTask();
-                        mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mCurrentUploadingPost);
-                    }
+                sCurrentUploadingPost = null;
+                sCurrentUploadingPostAnalyticsProperties = null;
+                if (sQueuedPostsList.size() > 0) {
+                    sCurrentUploadingPost = sQueuedPostsList.remove(0);
+                    mCurrentTask = new UploadPostTask();
+                    mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, sCurrentUploadingPost);
                 } else {
-                    stopSelf();
+                    AppLog.i(T.POSTS, "PostUploadHandler > Completed");
                 }
             }
         }
-    }
-
-    private PostModel getNextUploadablePost() {
-        Iterator<PostModel> iterator = mQueuedPostsList.iterator();
-        while (iterator.hasNext()) {
-            PostModel postModel = iterator.next();
-            if (!MediaUploadService.hasPendingMediaUploadsForPost(postModel)) {
-                // Fetch latest version of the post, as it might have been updated by the MediaUploadService
-                PostModel latestPost = mPostStore.getPostByLocalPostId(postModel.getId());
-                // TODO Should do some extra validation here
-                // e.g. what if the post has local media URLs but no pending media uploads?
-                iterator.remove();
-                return latestPost;
-            }
-        }
-        AppLog.d(T.POSTS, "All posts queued for upload have pending media");
-        return null;
-    }
-
-    private void showNotificationsForPendingMediaPosts() {
-        for (PostModel postModel : mQueuedPostsList) {
-            if (MediaUploadService.hasPendingMediaUploadsForPost(postModel)) {
-                if (!mPostUploadNotifier.isDisplayingNotificationForPost(postModel)) {
-                    mPostUploadNotifier.createNotificationForPost(postModel, getString(R.string.uploading_post_media));
-                }
-            }
-        }
-    }
-
-    /**
-     * Removes a post from the queued post list given its local ID.
-     * @return the post that was removed - if no post was removed, returns null
-     */
-    private PostModel removeQueuedPostByLocalId(int localPostId) {
-        synchronized (mQueuedPostsList) {
-            Iterator<PostModel> iterator = mQueuedPostsList.iterator();
-            while (iterator.hasNext()) {
-                PostModel postModel = iterator.next();
-                if (postModel.getId() == localPostId) {
-                    iterator.remove();
-                    return postModel;
-                }
-            }
-        }
-        return null;
     }
 
     private void finishUpload() {
-        synchronized (mQueuedPostsList) {
+        synchronized (sQueuedPostsList) {
             mCurrentTask = null;
-            mCurrentUploadingPost = null;
-            mCurrentUploadingPostAnalyticsProperties = null;
+            sCurrentUploadingPost = null;
+            sCurrentUploadingPostAnalyticsProperties = null;
         }
         uploadNextPost();
     }
 
     private class UploadPostTask extends AsyncTask<PostModel, Boolean, Boolean> {
+        private Context mContext;
+
         private PostModel mPost;
         private SiteModel mSite;
 
@@ -299,11 +201,13 @@ public class PostUploadService extends Service {
 
         @Override
         protected Boolean doInBackground(PostModel... posts) {
+            mContext = WordPress.getContext();
             mPost = posts[0];
 
             String uploadingPostMessage = String.format(
-                    getString(R.string.sending_content),
-                    mPost.isPage() ? getString(R.string.page).toLowerCase() : getString(R.string.post).toLowerCase()
+                    mContext.getString(R.string.sending_content),
+                    mPost.isPage() ? mContext.getString(R.string.page).toLowerCase()
+                            : mContext.getString(R.string.post).toLowerCase()
             );
 
             if (mPostUploadNotifier.isDisplayingNotificationForPost(mPost)) {
@@ -343,12 +247,12 @@ public class PostUploadService extends Service {
             }
 
             // Support for legacy editor - images are identified as featured as they're being uploaded with the post
-            if (mUseLegacyMode && featuredImageID != -1) {
+            if (sUseLegacyMode && featuredImageID != -1) {
                 mPost.setFeaturedImageId(featuredImageID);
             }
 
             // Track analytics only if the post is newly published
-            if (mFirstPublishPosts.contains(mPost.getId())) {
+            if (sFirstPublishPosts.contains(mPost.getId())) {
                 prepareUploadAnalytics(mPost.getContent());
             }
 
@@ -368,11 +272,11 @@ public class PostUploadService extends Service {
 
         private void prepareUploadAnalytics(String postContent) {
             // Calculate the words count
-            mCurrentUploadingPostAnalyticsProperties = new HashMap<>();
-            mCurrentUploadingPostAnalyticsProperties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
+            sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
+            sCurrentUploadingPostAnalyticsProperties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
 
             if (hasGallery()) {
-                mCurrentUploadingPostAnalyticsProperties.put("with_galleries", true);
+                sCurrentUploadingPostAnalyticsProperties.put("with_galleries", true);
             }
             if (!mHasImage) {
                 // Check if there is a img tag in the post. Media added in any editor other than legacy.
@@ -382,7 +286,7 @@ public class PostUploadService extends Service {
                 mHasImage = matcher.find();
             }
             if (mHasImage) {
-                mCurrentUploadingPostAnalyticsProperties.put("with_photos", true);
+                sCurrentUploadingPostAnalyticsProperties.put("with_photos", true);
             }
             if (!mHasVideo) {
                 // Check if there is a video tag in the post. Media added in any editor other than legacy.
@@ -392,15 +296,15 @@ public class PostUploadService extends Service {
                 mHasVideo = matcher.find();
             }
             if (mHasVideo) {
-                mCurrentUploadingPostAnalyticsProperties.put("with_videos", true);
+                sCurrentUploadingPostAnalyticsProperties.put("with_videos", true);
             }
             if (mHasCategory) {
-                mCurrentUploadingPostAnalyticsProperties.put("with_categories", true);
+                sCurrentUploadingPostAnalyticsProperties.put("with_categories", true);
             }
             if (!mPost.getTagNameList().isEmpty()) {
-                mCurrentUploadingPostAnalyticsProperties.put("with_tags", true);
+                sCurrentUploadingPostAnalyticsProperties.put("with_tags", true);
             }
-            mCurrentUploadingPostAnalyticsProperties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
+            sCurrentUploadingPostAnalyticsProperties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
         }
 
         /**
@@ -475,7 +379,7 @@ public class PostUploadService extends Service {
         }
 
         private String uploadImage(MediaFile mediaFile) {
-            AppLog.d(T.POSTS, "uploadImage: " + mediaFile.getFilePath());
+            AppLog.i(T.POSTS, "PostUploadHandler > UploadImage: " + mediaFile.getFilePath());
 
             if (mediaFile.getFilePath() == null) {
                 return null;
@@ -523,7 +427,7 @@ public class PostUploadService extends Service {
             try {
                 mContext.openFileOutput(tempFileName, Context.MODE_PRIVATE);
             } catch (FileNotFoundException e) {
-                mErrorMessage = getResources().getString(R.string.file_error_create);
+                mErrorMessage = mContext.getResources().getString(R.string.file_error_create);
                 return null;
             }
 
@@ -590,7 +494,8 @@ public class PostUploadService extends Service {
                 mMediaLatchMap.put(mediaFile.getId(), countDownLatch);
                 countDownLatch.await();
             } catch (InterruptedException e) {
-                AppLog.e(T.POSTS, "CountDownLatch await interrupted for media file: " + mediaFile.getId() + " - " + e);
+                AppLog.e(T.POSTS, "PostUploadHandler > CountDownLatch await interrupted for media file: "
+                        + mediaFile.getId() + " - " + e);
                 mIsMediaError = true;
             }
 
@@ -620,7 +525,8 @@ public class PostUploadService extends Service {
                 mMediaLatchMap.put(mediaFile.getId(), countDownLatch);
                 countDownLatch.await();
             } catch (InterruptedException e) {
-                AppLog.e(T.POSTS, "CountDownLatch await interrupted for media file: " + mediaFile.getId() + " - " + e);
+                AppLog.e(T.POSTS, "PostUploadHandler > CountDownLatch await interrupted for media file: "
+                        + mediaFile.getId() + " - " + e);
                 mIsMediaError = true;
             }
 
@@ -645,145 +551,71 @@ public class PostUploadService extends Service {
         }
     }
 
-    private void cancelPostUploadMatchingMedia(MediaModel media, String mediaErrorMessage) {
-        PostModel postToCancel = removeQueuedPostByLocalId(media.getLocalPostId());
-        if (postToCancel == null) return;
-
-        SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
-        String message = getErrorMessage(postToCancel, mediaErrorMessage);
-        mPostUploadNotifier.updateNotificationError(postToCancel, site, message, true);
-
-        mFirstPublishPosts.remove(postToCancel.getId());
-        EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
-        finishUpload();
-    }
-
     /**
-     * Returns an error message string for a failed post upload.
+     * Has priority 9 on OnPostUploaded events, which ensures that PostUploadHandler is the first to receive
+     * and process OnPostUploaded events, before they trickle down to other subscribers.
      */
-    private @NonNull String getErrorMessageFromPostError(PostModel post, PostError error) {
-        switch (error.type) {
-            case UNKNOWN_POST:
-                return getString(R.string.error_unknown_post);
-            case UNKNOWN_POST_TYPE:
-                return getString(R.string.error_unknown_post_type);
-            case UNAUTHORIZED:
-                return post.isPage() ? getString(R.string.error_refresh_unauthorized_pages) :
-                        getString(R.string.error_refresh_unauthorized_posts);
-        }
-        // In case of a generic or uncaught error, return the message from the API response or the error type
-        return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
-    }
-
-    private @NonNull String getErrorMessageFromMediaError(MediaError error) {
-         switch (error.type) {
-            case FS_READ_PERMISSION_DENIED:
-                return getString(R.string.error_media_insufficient_fs_permissions);
-            case NOT_FOUND:
-                return getString(R.string.error_media_not_found);
-            case AUTHORIZATION_REQUIRED:
-                return getString(R.string.error_media_unauthorized);
-             case PARSE_ERROR:
-                 return getString(R.string.error_media_parse_error);
-            case REQUEST_TOO_LARGE:
-                return getString(R.string.error_media_request_too_large);
-             case SERVER_ERROR:
-                 return getString(R.string.media_error_internal_server_error);
-             case TIMEOUT:
-                 return getString(R.string.media_error_timeout);
-        }
-        // In case of a generic or uncaught error, return the message from the API response or the error type
-        return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
-    }
-
-    private @NonNull String getErrorMessage(PostModel post, String specificMessage) {
-        String postType = getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
-        return String.format(mContext.getResources().getText(R.string.error_upload_params).toString(), postType,
-                specificMessage);
-    }
-
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
     public void onPostUploaded(OnPostUploaded event) {
         SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
 
         if (event.isError()) {
-            AppLog.e(T.POSTS, "Post upload failed. " + event.error.type + ": " + event.error.message);
-            String message = getErrorMessage(event.post, getErrorMessageFromPostError(event.post, event.error));
-            mPostUploadNotifier.updateNotificationError(event.post, site, message, false);
-            mFirstPublishPosts.remove(event.post.getId());
+            AppLog.w(T.POSTS, "PostUploadHandler > Post upload failed. " + event.error.type + ": "
+                    + event.error.message);
+            Context context = WordPress.getContext();
+            String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
+            String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage);
+            mPostUploadNotifier.updateNotificationError(event.post, site, notificationMessage, false);
+            sFirstPublishPosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.cancelNotification(event.post);
-            boolean isFirstTimePublish = mFirstPublishPosts.remove(event.post.getId());
+            boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
             mPostUploadNotifier.updateNotificationSuccess(event.post, site, isFirstTimePublish);
             if (isFirstTimePublish) {
-                if (mCurrentUploadingPostAnalyticsProperties != null){
-                    mCurrentUploadingPostAnalyticsProperties.put("post_id", event.post.getRemotePostId());
+                if (sCurrentUploadingPostAnalyticsProperties != null){
+                    sCurrentUploadingPostAnalyticsProperties.put("post_id", event.post.getRemotePostId());
                 }
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,
                         mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
-                        mCurrentUploadingPostAnalyticsProperties);
+                        sCurrentUploadingPostAnalyticsProperties);
             }
         }
 
         finishUpload();
     }
 
+    /**
+     * Has priority 8 on OnMediaUploaded events, which is the second-highest (after the MediaUploadHandler).
+     */
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, priority = 8)
     public void onMediaUploaded(OnMediaUploaded event) {
         if (event.media == null) {
+            AppLog.w(T.POSTS, "PostUploadHandler > Received media event for null media, ignoring");
             return;
         }
-        if (!mUseLegacyMode) {
-            handleMediaUploadCompleted(event);
-        } else {
+        if (sUseLegacyMode) {
             handleMediaUploadCompletedLegacy(event);
-        }
-    }
-
-    private void handleMediaUploadCompleted(OnMediaUploaded event) {
-        if (event.media.getLocalPostId() == 0) {
-            // Only interested in media attached to local posts
-            return;
-        }
-
-        if (event.isError()) {
-            AppLog.e(T.MEDIA, "Media upload failed for post " + event.media.getLocalPostId() + " : " +
-                    event.error.type + ": " + event.error.message);
-            String errorMessage = getErrorMessageFromMediaError(event.error);
-            cancelPostUploadMatchingMedia(event.media, errorMessage);
-            return;
-        }
-
-        if (event.canceled) {
-            AppLog.i(T.MEDIA, "Upload cancelled for post with id " + event.media.getLocalPostId()
-                            + " - a media upload for this post has been cancelled, id: " + event.media.getId());
-            cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
-            return;
-        }
-
-        if (event.completed) {
-            AppLog.i(T.MEDIA, "Media upload completed for post. Media id: " + event.media.getId()
-                    + ", post id: " + event.media.getLocalPostId());
-            // The media item might belong to a post in our queue, so check if any waiting posts can now be uploaded
-            uploadNextPost();
         }
     }
 
     private void handleMediaUploadCompletedLegacy(OnMediaUploaded event) {
         // Event for unknown media, ignoring
-        if (mCurrentUploadingPost == null || mMediaLatchMap.get(event.media.getId()) == null) {
-            AppLog.w(T.MEDIA, "Media event not recognized: " + event.media);
+        if (sCurrentUploadingPost == null || mMediaLatchMap.get(event.media.getId()) == null) {
+            AppLog.i(T.POSTS, "PostUploadHandler > Media event not recognized: " + event.media.getId() + ", ignoring");
             return;
         }
 
         if (event.isError()) {
-            AppLog.e(T.MEDIA, "Media upload failed. " + event.error.type + ": " + event.error.message);
-            SiteModel site = mSiteStore.getSiteByLocalId(mCurrentUploadingPost.getLocalSiteId());
-            String message = getErrorMessage(mCurrentUploadingPost, getErrorMessageFromMediaError(event.error));
-            mPostUploadNotifier.updateNotificationError(mCurrentUploadingPost, site, message, true);
-            mFirstPublishPosts.remove(mCurrentUploadingPost.getId());
+            AppLog.w(T.POSTS, "PostUploadHandler > Media upload failed. " + event.error.type + ": "
+                    + event.error.message);
+            SiteModel site = mSiteStore.getSiteByLocalId(sCurrentUploadingPost.getLocalSiteId());
+            Context context = WordPress.getContext();
+            String errorMessage = UploadUtils.getErrorMessageFromMediaError(context, event.error);
+            String notificationMessage = UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage);
+            mPostUploadNotifier.updateNotificationError(sCurrentUploadingPost, site, notificationMessage, true);
+            sFirstPublishPosts.remove(sCurrentUploadingPost.getId());
             finishUpload();
             return;
         }
@@ -794,13 +626,13 @@ public class PostUploadService extends Service {
         }
 
         if (event.completed) {
-            AppLog.i(T.MEDIA, "Media upload completed for post. Media id: " + event.media.getId()
-                    + ", post id: " + mCurrentUploadingPost.getId());
+            AppLog.i(T.POSTS, "PostUploadHandler > Media upload completed for post. Media id: " + event.media.getId()
+                    + ", post id: " + sCurrentUploadingPost.getId());
             mMediaLatchMap.get(event.media.getId()).countDown();
             mMediaLatchMap.remove(event.media.getId());
         } else {
             // Progress update
-            mPostUploadNotifier.updateNotificationProgress(mCurrentUploadingPost, event.progress);
+            mPostUploadNotifier.updateNotificationProgress(sCurrentUploadingPost, event.progress);
         }
     }
 }
