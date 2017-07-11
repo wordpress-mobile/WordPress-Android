@@ -734,26 +734,40 @@ public class MediaStore extends Store {
     }
 
     private void updateFetchedMediaList(@NonNull FetchMediaListResponsePayload payload) {
-        // update local IDs for the fetched list
-        for (MediaModel media: payload.mediaList) {
-            MediaModel existingMedia = getSiteMediaWithId(payload.site, media.getMediaId());
-            if (existingMedia != null) {
-                media.setId(existingMedia.getId());
-            }
-        }
-
-        if (!payload.loadedMore) {
-            if (TextUtils.isEmpty(payload.mimeType)) {
-                MediaSqlUtils.deleteAllUploadedSiteMedia(payload.site);
-            } else {
-                MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(payload.site, payload.mimeType);
-            }
-        }
-
-        if (!payload.mediaList.isEmpty()) {
-            for (MediaModel media : payload.mediaList) {
+        // if we loaded another page, simply add the fetched media and be done
+        if (payload.loadedMore) {
+            for (MediaModel media: payload.mediaList) {
                 updateMedia(media, false);
             }
+            return;
+        }
+
+        // otherwise, build separate lists of existing and new media
+        List <MediaModel> existingMediaList = new ArrayList<>();
+        List <MediaModel> newMediaList = new ArrayList<>();
+        for (MediaModel fetchedMedia: payload.mediaList) {
+            MediaModel media = getSiteMediaWithId(payload.site, fetchedMedia.getMediaId());
+            if (media != null) {
+                // retain the local ID
+                fetchedMedia.setId(media.getId());
+                existingMediaList.add(fetchedMedia);
+            } else {
+                newMediaList.add(fetchedMedia);
+            }
+        }
+
+        // update the existing media
+        for (MediaModel media: existingMediaList) {
+            updateMedia(media, false);
+        }
+
+        // delete media that's NOT in the existing list
+        MediaSqlUtils.deleteUploadedSiteMediaNotInList(
+                payload.site, existingMediaList, payload.mimeType);
+
+        // add new media
+        for (MediaModel media : newMediaList) {
+            updateMedia(media, false);
         }
     }
 
