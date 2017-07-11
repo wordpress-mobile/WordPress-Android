@@ -1,16 +1,20 @@
 package org.wordpress.android.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 
@@ -150,5 +154,40 @@ public class WPMediaUtils {
         builder.show();
         // Do not ask again
         AppPrefs.setImageOptimizePromoRequired(false);
+    }
+
+
+    /**
+     * Given a media error returns the error message to display on the UI.
+     *
+     * @param error The media error occurred
+     * @return int The associated resource identifier of the message to show to the user.
+     * Returns 0 if no such resource was found. (0 is not a valid resource ID.)
+     */
+    public static int getErrorMessageResID(final MediaStore.MediaError error) {
+        if (error == null) {
+            return 0;
+        }
+
+        switch (error.type) {
+            case AUTHORIZATION_REQUIRED:
+                return R.string.media_error_no_permission_upload;
+            case REQUEST_TOO_LARGE:
+                return R.string.media_error_http_too_large_upload;
+            case SERVER_ERROR:
+                return R.string.media_error_internal_server_error;
+            case TIMEOUT:
+                return R.string.media_error_timeout;
+            case CONNECTION_ERROR:
+                return R.string.media_error_generic_connection_error;
+            case EXCEEDS_FILESIZE_LIMIT:
+                return R.string.media_error_wp_too_large_upload;
+            case EXCEEDS_MEMORY_LIMIT:
+                return R.string.media_error_wp_memory_limit;
+            case PARSE_ERROR:
+                return R.string.error_media_parse_error;
+        }
+
+        return 0;
     }
 }

@@ -46,6 +46,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
@@ -579,24 +580,13 @@ public class PostUploadService extends Service {
     }
 
     private @NonNull String getErrorMessageFromMediaError(MediaError error) {
-         switch (error.type) {
-            case FS_READ_PERMISSION_DENIED:
-                return getString(R.string.error_media_insufficient_fs_permissions);
-            case NOT_FOUND:
-                return getString(R.string.error_media_not_found);
-            case AUTHORIZATION_REQUIRED:
-                return getString(R.string.error_media_unauthorized);
-             case PARSE_ERROR:
-                 return getString(R.string.error_media_parse_error);
-            case REQUEST_TOO_LARGE:
-                return getString(R.string.error_media_request_too_large);
-             case SERVER_ERROR:
-                 return getString(R.string.media_error_internal_server_error);
-             case TIMEOUT:
-                 return getString(R.string.media_error_timeout);
+        int errorMessageID = WPMediaUtils.getErrorMessageResID(error);
+        if (errorMessageID != 0) {
+            return getString(errorMessageID);
+        } else {
+            // In case of a generic or uncaught error, return the message from the API response or the error type
+            return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
         }
-        // In case of a generic or uncaught error, return the message from the API response or the error type
-        return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
     }
 
     private @NonNull String getErrorMessage(PostModel post, String specificMessage) {
