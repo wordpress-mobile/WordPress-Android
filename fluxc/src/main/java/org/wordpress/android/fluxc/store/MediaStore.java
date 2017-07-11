@@ -743,8 +743,8 @@ public class MediaStore extends Store {
         }
 
         // build separate lists of existing and new media
-        List <MediaModel> existingMediaList = new ArrayList<>();
-        List <MediaModel> newMediaList = new ArrayList<>();
+        List<MediaModel> existingMediaList = new ArrayList<>();
+        List<MediaModel> newMediaList = new ArrayList<>();
         for (MediaModel fetchedMedia: payload.mediaList) {
             MediaModel media = getSiteMediaWithId(payload.site, fetchedMedia.getMediaId());
             if (media != null) {
