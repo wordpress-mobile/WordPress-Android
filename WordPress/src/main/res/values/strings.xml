@@ -503,7 +503,8 @@
     <string name="site_settings_send_email_notifications_title">Send notifications to your WordPress.com email address</string>
     <string name="site_settings_send_wp_notifications_title">Send notifications via WordPress.com notification</string>
     <string name="site_settings_jetpack_category_title">Jetpack Settings</string>
-    <string name="site_settings_jetpack_security_screen_title">Security</string>
+    <string name="site_settings_jetpack_security_title">Security</string>
+    <string name="site_settings_jetpack_security_screen_title">Jetpack Security Settings</string>
     <string name="site_settings_jetpack_monitor_category_title">Jetpack Monitor</string>
 
     <!-- Preference Summaries -->

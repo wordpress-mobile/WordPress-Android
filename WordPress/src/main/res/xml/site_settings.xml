@@ -259,13 +259,13 @@
 
         <PreferenceScreen
             android:id="@+id/pref_screen_jetpack_security"
-            android:key="@string/jetpack_security_site_setting"
-            android:title="@string/jetpack_security_site_setting_title">
+            android:key="@string/pref_key_jetpack_security_site_setting"
+            android:title="@string/site_settings_jetpack_security_title">
 
             <PreferenceCategory
                 android:id="@+id/pref_category_jetpack_monitor"
                 android:key="@string/pref_key_site_jetpack_monitor"
-                android:title="@string/jetpack_monitor_security_pref_category_title">
+                android:title="@string/site_settings_jetpack_monitor_category_title">
 
                 <org.wordpress.android.ui.prefs.WPSwitchPreference
                     android:id="@+id/pref_monitor_uptime"
