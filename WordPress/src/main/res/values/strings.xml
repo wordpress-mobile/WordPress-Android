@@ -502,6 +502,10 @@
     <string name="site_settings_monitor_uptime_title">Monitor your site\'s uptime</string>
     <string name="site_settings_send_email_notifications_title">Send notifications to your WordPress.com email address</string>
     <string name="site_settings_send_wp_notifications_title">Send notifications via WordPress.com notification</string>
+    <string name="site_settings_prevent_brute_force_title">Prevent and block malicious login attempts</string>
+    <string name="site_settings_allow_wpcom_sign_in_title">Allow sign in using WordPress.com accounts</string>
+    <string name="site_settings_match_wpcom_via_email_title">Match accounts using email addresses</string>
+    <string name="site_settings_require_two_factor_title">Require two-step authentication</string>
     <string name="site_settings_jetpack_category_title">Jetpack Settings</string>
     <string name="site_settings_jetpack_security_title">Security</string>
     <string name="site_settings_jetpack_security_screen_title">Jetpack Security Settings</string>
