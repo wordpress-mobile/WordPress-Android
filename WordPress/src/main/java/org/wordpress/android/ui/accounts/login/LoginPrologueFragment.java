@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 public class LoginPrologueFragment extends Fragment {
@@ -67,6 +68,13 @@ public class LoginPrologueFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mLoginListener = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        WPActivityUtils.hideKeyboard(getView());
     }
 
     public void onNextPromo() {
