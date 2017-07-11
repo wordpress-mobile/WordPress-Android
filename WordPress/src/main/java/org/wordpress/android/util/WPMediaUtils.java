@@ -1,14 +1,11 @@
 package org.wordpress.android.util;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
