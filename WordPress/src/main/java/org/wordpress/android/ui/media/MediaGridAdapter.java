@@ -110,11 +110,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void setMediaList(@NonNull List<MediaModel> mediaList) {
-        if (!isSameList(mediaList)) {
-            mMediaList.clear();
-            mMediaList.addAll(mediaList);
-            notifyDataSetChanged();
-        }
+        mMediaList.clear();
+        mMediaList.addAll(mediaList);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -395,6 +393,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (isValidPosition(position)) {
             return mMediaList.get(position).getId();
         }
+        AppLog.w(AppLog.T.MEDIA, "MediaGridAdapter > Invalid position " + position);
         return INVALID_POSITION;
     }
 
@@ -540,35 +539,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
         }
         notifyDataSetChanged();
-    }
-
-    /*
-     * returns true if the passed list is the same as the existing one
-     */
-    private boolean isSameList(@NonNull List<MediaModel> mediaList) {
-        if (mediaList.size() != mMediaList.size()) {
-            return false;
-        }
-
-        for (MediaModel media: mediaList) {
-            if (getMediaFromMediaId(media.getMediaId()) == null) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /*
-     * returns the media item with the passed (remote) media ID in the current media list
-     */
-    private MediaModel getMediaFromMediaId(long mediaId) {
-        for (int i = 0; i < mMediaList.size(); i++) {
-            if (mMediaList.get(i).getMediaId() == mediaId) {
-                return mMediaList.get(i);
-            }
-        }
-        return null;
     }
 
     private String getLabelForMediaUploadState(MediaUploadState uploadState) {
