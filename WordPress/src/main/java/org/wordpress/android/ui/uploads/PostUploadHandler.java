@@ -58,7 +58,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class PostUploadHandler implements UploadHandler {
+public class PostUploadHandler implements UploadHandler<PostModel> {
     private static final ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();
     private static final Set<Integer> sFirstPublishPosts = new HashSet<>();
     private static PostModel sCurrentUploadingPost = null;
@@ -99,7 +99,8 @@ public class PostUploadHandler implements UploadHandler {
         }
     }
 
-    void uploadPost(PostModel post) {
+    @Override
+    public void upload(PostModel post) {
         synchronized (sQueuedPostsList) {
             sQueuedPostsList.add(post);
         }

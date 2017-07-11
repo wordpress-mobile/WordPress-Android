@@ -29,7 +29,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class MediaUploadHandler implements UploadHandler {
+public class MediaUploadHandler implements UploadHandler<MediaModel> {
     private static final List<MediaModel> sPendingUploads = new ArrayList<>();
     private static final List<MediaModel> sInProgressUploads = new ArrayList<>();
 
@@ -60,7 +60,8 @@ public class MediaUploadHandler implements UploadHandler {
         }
     }
 
-    public void uploadMedia(MediaModel media) {
+    @Override
+    public void upload(MediaModel media) {
         if (media != null) {
             addUniqueMediaToQueue(media);
         }

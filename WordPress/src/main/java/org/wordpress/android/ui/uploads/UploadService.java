@@ -157,7 +157,7 @@ public class UploadService extends Service {
         List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(KEY_MEDIA_LIST);
         if (mediaList != null) {
             for (MediaModel media : mediaList) {
-                mMediaUploadHandler.uploadMedia(media);
+                mMediaUploadHandler.upload(media);
             }
         }
     }
@@ -171,7 +171,7 @@ public class UploadService extends Service {
             }
 
             if (!hasPendingMediaUploadsForPost(post)) {
-                mPostUploadHandler.uploadPost(post);
+                mPostUploadHandler.upload(post);
             } else {
                 sPostsWithPendingMedia.add(post);
                 showNotificationForPostWithPendingMedia(post);
@@ -434,7 +434,7 @@ public class UploadService extends Service {
                             // TODO Should do some extra validation here
                             // e.g. what if the post has local media URLs but no pending media uploads?
                             iterator.remove();
-                            mPostUploadHandler.uploadPost(updatedPost);
+                            mPostUploadHandler.upload(updatedPost);
                         }
                     }
                 }
