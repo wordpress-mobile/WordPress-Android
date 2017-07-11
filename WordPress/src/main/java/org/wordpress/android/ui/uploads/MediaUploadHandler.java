@@ -60,11 +60,9 @@ public class MediaUploadHandler implements UploadHandler {
         }
     }
 
-    void uploadMedia(List<MediaModel> mediaList) {
-        if (mediaList != null) {
-            for (MediaModel media : mediaList) {
-                addUniqueMediaToQueue(media);
-            }
+    public void uploadMedia(MediaModel media) {
+        if (media != null) {
+            addUniqueMediaToQueue(media);
         }
         uploadNextInQueue();
     }

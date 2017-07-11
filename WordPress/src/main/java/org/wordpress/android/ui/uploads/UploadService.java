@@ -156,7 +156,9 @@ public class UploadService extends Service {
         @SuppressWarnings("unchecked")
         List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(KEY_MEDIA_LIST);
         if (mediaList != null) {
-            mMediaUploadHandler.uploadMedia(mediaList);
+            for (MediaModel media : mediaList) {
+                mMediaUploadHandler.uploadMedia(media);
+            }
         }
     }
 
