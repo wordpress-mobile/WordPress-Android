@@ -82,8 +82,7 @@ public class PostUploadHandler implements UploadHandler {
         mPostUploadNotifier = postUploadNotifier;
     }
 
-    @Override
-    public void unregister() {
+    void unregister() {
         mDispatcher.unregister(this);
     }
 

@@ -43,8 +43,7 @@ public class MediaUploadHandler implements UploadHandler {
         EventBus.getDefault().register(this);
     }
 
-    @Override
-    public void unregister() {
+    void unregister() {
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
     }
