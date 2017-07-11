@@ -756,18 +756,29 @@ public class MediaStore extends Store {
             }
         }
 
-        // update the existing media
-        for (MediaModel media: existingMediaList) {
-            updateMedia(media, false);
+        if (existingMediaList.isEmpty()) {
+            // no existing media, so clear everything
+            if (!TextUtils.isEmpty(payload.mimeType)) {
+                MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(payload.site, payload.mimeType);
+            } else {
+                MediaSqlUtils.deleteAllUploadedSiteMedia(payload.site);
+            }
+        } else {
+            // update the existing media
+            for (MediaModel media : existingMediaList) {
+                updateMedia(media, false);
+            }
+
+            // delete media that's NOT in the existing list
+            MediaSqlUtils.deleteUploadedSiteMediaNotInList(
+                    payload.site, existingMediaList, payload.mimeType);
         }
 
-        // delete media that's NOT in the existing list
-        MediaSqlUtils.deleteUploadedSiteMediaNotInList(
-                payload.site, existingMediaList, payload.mimeType);
-
         // add new media
-        for (MediaModel media : newMediaList) {
-            updateMedia(media, false);
+        if (!newMediaList.isEmpty()) {
+            for (MediaModel media : newMediaList) {
+                updateMedia(media, false);
+            }
         }
     }
 
