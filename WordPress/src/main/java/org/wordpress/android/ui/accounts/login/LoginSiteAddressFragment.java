@@ -360,19 +360,12 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
         }
 
         if (event.isError()) {
-            if (event.error.type != null && event.error.type == SiteStore.SiteErrorType.UNKNOWN_SITE) {
-                // not a wp.com site so, start the discovery process
-                mDispatcher.dispatch(
-                        AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
-            } else {
-                showError(R.string.no_site_error, NO_SITE_HELPSHIFT_FAQ_ID, NO_SITE_HELPSHIFT_FAQ_SECTION);
-                endProgress();
-            }
+            // not a wp.com site so, start the discovery process
+            mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
         } else {
             if (event.site.isJetpackInstalled()) {
                 // if Jetpack site, treat it as selfhosted and start the discovery process
-                mDispatcher.dispatch(
-                        AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
+                mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
                 return;
             }
 
