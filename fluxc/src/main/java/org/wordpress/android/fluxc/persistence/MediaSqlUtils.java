@@ -3,6 +3,8 @@ package org.wordpress.android.fluxc.persistence;
 import android.text.TextUtils;
 
 import com.wellsql.generated.MediaModelTable;
+import com.yarolegovich.wellsql.ConditionClauseBuilder;
+import com.yarolegovich.wellsql.DeleteQuery;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellCursor;
 import com.yarolegovich.wellsql.WellSql;
@@ -376,24 +378,17 @@ public class MediaSqlUtils {
             idList.add(media.getId());
         }
 
+        ConditionClauseBuilder<DeleteQuery<MediaModel>> builder = WellSql.delete(MediaModel.class)
+                .where().beginGroup()
+                .isNotIn(MediaModelTable.ID, idList)
+                .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString());
+
         if (!TextUtils.isEmpty(mimeType)) {
-            return WellSql.delete(MediaModel.class)
-                    .where().beginGroup()
-                    .isNotIn(MediaModelTable.ID, idList)
-                    .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
-                    .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
-                    .contains(MediaModelTable.MIME_TYPE, mimeType)
-                    .endGroup().endWhere()
-                    .execute();
-        } else {
-            return WellSql.delete(MediaModel.class)
-                    .where().beginGroup()
-                    .isNotIn(MediaModelTable.ID, idList)
-                    .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
-                    .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
-                    .endGroup().endWhere()
-                    .execute();
+            builder.contains(MediaModelTable.MIME_TYPE, mimeType);
         }
+
+        return builder.endGroup().endWhere().execute();
     }
 
     private static SelectQuery<MediaModel> getSiteMediaExcludingQuery(SiteModel site, String column, Object value) {
