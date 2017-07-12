@@ -20,7 +20,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -49,6 +49,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.AztecEditorFragment;
+import org.wordpress.android.editor.EditorBetaClickListener;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -144,9 +145,15 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
-        ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
-        PhotoPickerFragment.PhotoPickerListener, EditPostSettingsFragment.EditPostActivityHook {
+public class EditPostActivity extends AppCompatActivity implements
+        EditorBetaClickListener,
+        EditorDragAndDropListener,
+        EditorFragmentListener,
+        EditorWebViewCompatibility.ReflectionFailureListener,
+        OnRequestPermissionsResultCallback,
+        PhotoPickerFragment.PhotoPickerListener,
+        EditPostSettingsFragment.EditPostActivityHook {
+
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
@@ -461,6 +468,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (orientation != mPhotoPickerOrientation) {
             resizePhotoPicker();
         }
+    }
+
+    @Override
+    public void onBetaClicked() {
+        startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+        AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LABEL);
     }
 
     private String getSaveButtonText() {
@@ -1261,6 +1274,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     // TODO: Remove editor options after testing.
                     if (mShowAztecEditor) {
                         mAztecEditorFragment = AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
+                        mAztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
                         mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
 
                         // Show confirmation message when coming from editor promotion dialog.
