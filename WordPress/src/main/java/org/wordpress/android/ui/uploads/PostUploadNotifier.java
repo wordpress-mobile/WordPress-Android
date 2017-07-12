@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.services;
+package org.wordpress.android.ui.uploads;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -27,9 +27,9 @@ import org.wordpress.android.util.WPMeShortlinks;
 
 import java.util.Random;
 
-public class PostUploadNotifier {
+class PostUploadNotifier {
     private final Context mContext;
-    private final PostUploadService mService;
+    private final UploadService mService;
 
     private final NotificationManager mNotificationManager;
     private final Notification.Builder mNotificationBuilder;
@@ -45,7 +45,7 @@ public class PostUploadNotifier {
         Bitmap latestIcon;
     }
 
-    public PostUploadNotifier(Context context, PostUploadService service) {
+    PostUploadNotifier(Context context, UploadService service) {
         // Add the uploader to the notification bar
         mContext = context;
         mService = service;
@@ -55,7 +55,7 @@ public class PostUploadNotifier {
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
     }
 
-    public void createNotificationForPost(@NonNull PostModel post, String message) {
+    void createNotificationForPost(@NonNull PostModel post, String message) {
         mNotificationBuilder.setContentTitle(buildNotificationTitleForPost(post));
         if (message != null) {
             mNotificationBuilder.setContentText(message);
@@ -68,17 +68,17 @@ public class PostUploadNotifier {
         mService.startForeground(notificationId, mNotificationBuilder.build());
     }
 
-    public boolean isDisplayingNotificationForPost(@NonNull PostModel post) {
+    boolean isDisplayingNotificationForPost(@NonNull PostModel post) {
         return mPostIdToNotificationData.get(post.getId()) != null;
     }
 
-    public void updateNotificationMessage(@NonNull PostModel post, String message) {
+    void updateNotificationMessage(@NonNull PostModel post, String message) {
         NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
         mNotificationBuilder.setContentText(StringUtils.notNullStr(message));
         doNotify(notificationData.notificationId, mNotificationBuilder.build());
     }
 
-    public void updateNotificationIcon(PostModel post, Bitmap icon) {
+    void updateNotificationIcon(PostModel post, Bitmap icon) {
         NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
 
         if (icon != null) {
@@ -88,14 +88,15 @@ public class PostUploadNotifier {
         doNotify(mPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
     }
 
-    public void cancelNotification(PostModel post) {
+    void cancelNotification(PostModel post) {
         NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
         if (notificationData != null) {
             mNotificationManager.cancel(notificationData.notificationId);
         }
+        mService.stopForeground(true);
     }
 
-    public void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstTimePublish) {
+    void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstTimePublish) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationSuccess");
 
         // Get the shareableUrl
@@ -137,18 +138,19 @@ public class PostUploadNotifier {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
         notificationBuilder.setAutoCancel(true);
 
+        long notificationId = getNotificationIdForPost(post);
         // Tap notification intent (open the post list)
         Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
         notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
-        PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext, 0,
-                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
+                (int)notificationId,
+                notificationIntent, PendingIntent.FLAG_ONE_SHOT);
         notificationBuilder.setContentIntent(pendingIntentPost);
 
         // Share intent - started if the user tap the share link button - only if the link exist
-        long notificationId = getNotificationIdForPost(post);
         if (shareableUrl != null && PostStatus.fromPost(post) == PostStatus.PUBLISHED) {
             Intent shareIntent = new Intent(mContext, ShareAndDismissNotificationReceiver.class);
             shareIntent.putExtra(ShareAndDismissNotificationReceiver.NOTIFICATION_ID_KEY, notificationId);
@@ -169,20 +171,26 @@ public class PostUploadNotifier {
         return post.getLocalSiteId() + remotePostId;
     }
 
-    public void updateNotificationError(PostModel post, SiteModel site, String errorMessage, boolean isMediaError) {
+    void updateNotificationError(PostModel post, SiteModel site, String errorMessage, boolean isMediaError) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationError: " + errorMessage);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext());
         String postOrPage = (String) (post.isPage() ? mContext.getResources().getText(R.string.page_id)
                 : mContext.getResources().getText(R.string.post_id));
+
+        long notificationId = getNotificationIdForPost(post);
+        // Tap notification intent (open the post list)
         Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
         notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
         notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, errorMessage);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
-                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationIntent.setAction(String.valueOf(notificationId));
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
+                (int)notificationId,
+                notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
         String errorText = mContext.getResources().getText(R.string.upload_failed).toString();
         if (isMediaError) {
@@ -206,7 +214,7 @@ public class PostUploadNotifier {
         doNotify(notificationData.notificationErrorId, notificationBuilder.build());
     }
 
-    public void updateNotificationProgress(PostModel post, float progress) {
+    void updateNotificationProgress(PostModel post, float progress) {
         NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
         if (notificationData.totalMediaItems == 0) {
             return;
@@ -233,7 +241,7 @@ public class PostUploadNotifier {
         }
     }
 
-    public void setTotalMediaItems(PostModel post, int totalMediaItems) {
+    void setTotalMediaItems(PostModel post, int totalMediaItems) {
         NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
         if (totalMediaItems <= 0) {
             totalMediaItems = 1;
@@ -243,7 +251,7 @@ public class PostUploadNotifier {
         notificationData.itemProgressSize = 100.0f / notificationData.totalMediaItems;
     }
 
-    public void setCurrentMediaItem(PostModel post, int currentItem) {
+    void setCurrentMediaItem(PostModel post, int currentItem) {
         NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
         notificationData.currentMediaItem = currentItem;
 

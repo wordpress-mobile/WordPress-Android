@@ -44,8 +44,8 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
-import org.wordpress.android.ui.posts.services.PostEvents;
-import org.wordpress.android.ui.posts.services.PostUploadService;
+import org.wordpress.android.ui.uploads.PostEvents;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -239,6 +239,8 @@ public class PostsListFragment extends Fragment
             // if it's a published post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
                 showSnackbar(R.string.editor_post_saved_locally, R.string.button_sync, publishPostListener);
+            } else {
+                showSnackbar(getString(R.string.editor_uploading_post));
             }
             return;
         }
@@ -246,13 +248,31 @@ public class PostsListFragment extends Fragment
         boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
         if (isDraft) {
             if (PostUtils.isPublishable(post)) {
-                int message =  savedLocally ? R.string.editor_draft_saved_locally : R.string.editor_draft_saved_online;
-                showSnackbar(message, R.string.button_publish, publishPostListener);
-            } else {
+                // if the post is publishable, we offer the PUBLISH button
                 if (savedLocally) {
-                    ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_locally);
+                    showSnackbar(R.string.editor_draft_saved_locally, R.string.button_publish, publishPostListener);
+                }
+                else {
+                    if (UploadService.hasPendingMediaUploadsForPost(post) ||
+                            UploadService.isPostUploadingOrQueued(post)) {
+                        showSnackbar(getString(R.string.editor_uploading_post));
+                    } else {
+                        showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
+                    }
+                }
+            } else {
+                showSnackbar(getString(R.string.editor_draft_saved_locally));
+            }
+        } else {
+            if (savedLocally) {
+                showSnackbar(R.string.editor_post_saved_locally, R.string.button_publish, publishPostListener);
+            }
+            else {
+                if (UploadService.hasPendingMediaUploadsForPost(post) ||
+                        UploadService.isPostUploadingOrQueued(post)) {
+                    showSnackbar(getString(R.string.editor_uploading_post));
                 } else {
-                    ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_online);
+                    showSnackbar(R.string.editor_post_saved_online, R.string.button_publish, publishPostListener);
                 }
             }
         }
@@ -262,6 +282,12 @@ public class PostsListFragment extends Fragment
         Snackbar.make(getActivity().findViewById(R.id.coordinator), messageRes, Snackbar.LENGTH_LONG)
                 .setAction(buttonTitleRes, onClickListener).show();
     }
+
+    private void showSnackbar(String text) {
+        Snackbar.make(getView().findViewById(R.id.coordinator),
+                text, Snackbar.LENGTH_LONG).show();
+    }
+
 
     private void initSwipeToRefreshHelper(View view) {
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(
@@ -502,10 +528,10 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
-                if (PostUploadService.isPostUploadingOrQueued(post)) {
+                if (UploadService.isPostUploadingOrQueued(post)) {
                     // If the post is uploading media, allow the media to continue uploading, but don't upload the
                     // post itself when they finish (since we're about to edit it again)
-                    PostUploadService.cancelQueuedPostUpload(post);
+                    UploadService.cancelQueuedPostUpload(post);
                 }
                 ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 break;
@@ -529,7 +555,7 @@ public class PostsListFragment extends Fragment
                 // Currently, the button is tappable while media are uploading, but nothing happens
 
                 // prevent deleting post while it's being uploaded
-                if (!PostUploadService.isPostUploadingOrQueued(post)) {
+                if (!UploadService.isPostUploadingOrQueued(post)) {
                     trashPost(post);
                 }
                 break;
@@ -552,8 +578,10 @@ public class PostsListFragment extends Fragment
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
 
-        PostUploadService.addPostToUpload(post);
-        getActivity().startService(new Intent(getActivity(), PostUploadService.class));
+        // save the post in the DB so the UploadService will get the latest change
+        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
+
+        UploadService.uploadPost(getActivity(), post);
 
         PostUtils.trackSavePostAnalytics(post, mSite);
     }
@@ -687,8 +715,28 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-        if (isAdded() && event.post.getLocalSiteId() == mSite.getId()) {
+        final PostModel post = event.post;
+        if (isAdded() && event.post != null && event.post.getLocalSiteId() == mSite.getId()) {
             loadPosts(LoadMode.FORCED);
+
+            if (event.isError()) {
+                showSnackbar(getString(R.string.editor_draft_saved_locally));
+            } else {
+                boolean isDraft = PostStatus.fromPost(post) == PostStatus.DRAFT;
+                if (isDraft) {
+                    View.OnClickListener publishPostListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            publishPost(post);
+                        }
+                    };
+                    showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
+                } else {
+                    String message = post.isPage() ? getString(R.string.page_published) :
+                            getString(R.string.post_published);
+                    showSnackbar(message);
+                }
+            }
         }
     }
 
@@ -712,7 +760,7 @@ public class PostsListFragment extends Fragment
     public void onMediaUploaded(OnMediaUploaded event) {
         if (event.media != null && event.completed) {
             PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
-            if (post != null && PostUploadService.isPostUploadingOrQueued(post)) {
+            if (post != null && UploadService.isPostUploadingOrQueued(post)) {
                 loadPosts(LoadMode.FORCED);
             }
         }

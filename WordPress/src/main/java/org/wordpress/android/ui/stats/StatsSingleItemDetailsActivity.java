@@ -16,7 +16,6 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
@@ -196,7 +195,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         }
 
         if (mRemoteBlogID == 0 || mRemoteItemID == null) {
-            Toast.makeText(this, R.string.stats_generic_error, Toast.LENGTH_LONG).show();
+            ToastUtils.showToast(this, R.string.stats_generic_error, ToastUtils.Duration.LONG);
             finish();
             return;
         }

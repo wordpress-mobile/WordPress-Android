@@ -39,7 +39,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -88,18 +87,17 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
-import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
-import org.wordpress.android.ui.posts.services.PostEvents;
-import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
+import org.wordpress.android.ui.uploads.PostEvents;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -308,7 +306,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
                 if (mPost != null) {
                     mOriginalPost = mPost.clone();
-                    mPost = MediaUploadService.updatePostWithCurrentlyCompletedUploads(mPost);
+                    mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
                     mIsPage = mPost.isPage();
                 }
             }
@@ -720,6 +718,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Fragment fragment = getFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
+            if (fragment instanceof  ImageSettingsDialogFragment) {
+                ImageSettingsDialogFragment imFragment = (ImageSettingsDialogFragment) fragment;
+                imFragment.dismissFragment();
+            }
             return false;
         }
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
@@ -859,7 +861,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void showErrorAndFinish(int errorMessageId) {
-        Toast.makeText(this, getResources().getText(errorMessageId), Toast.LENGTH_LONG).show();
+        ToastUtils.showToast(this, errorMessageId, ToastUtils.Duration.LONG);
         finish();
     }
 
@@ -984,13 +986,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
+            UploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
             if (isFirstTimePublish) {
-                PostUploadService.addPostToUploadAndTrackAnalytics(mPost);
+                UploadService.uploadPostAndTrackAnalytics(EditPostActivity.this, mPost);
             } else {
-                PostUploadService.addPostToUpload(mPost);
+                UploadService.uploadPost(EditPostActivity.this, mPost);
             }
-            PostUploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
-            startService(new Intent(EditPostActivity.this, PostUploadService.class));
+
             PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
 
             return null;
@@ -1908,8 +1910,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (downloadedUri != null) {
                 addMedia(downloadedUri);
             } else {
-                Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image),
-                        Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(EditPostActivity.this, R.string.error_downloading_image,
+                        ToastUtils.Duration.SHORT);
             }
         } else {
             addMedia(mediaUri);
@@ -1927,8 +1929,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
         if (isErrorAddingMedia) {
-            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
         }
     }
 
@@ -1979,7 +1980,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(this)) {
-            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, false);
+            FetchMediaListPayload payload = new FetchMediaListPayload(
+                    mSite, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         } else {
             ToastUtils.showToast(this, R.string.error_media_refresh_no_connection, ToastUtils.Duration.SHORT);
@@ -2046,7 +2048,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     /**
      * Starts the upload service to upload selected media.
      */
-    private void startMediaUploadService() {
+    private void startUploadService() {
         if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             final ArrayList<MediaModel> mediaList = new ArrayList<>();
             for (MediaModel media : mPendingUploads) {
@@ -2062,7 +2064,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 savePostAsync(new AfterSavePostListener() {
                     @Override
                     public void onPostSave() {
-                        MediaUploadService.startService(EditPostActivity.this, mediaList);
+                        UploadService.uploadMedia(EditPostActivity.this, mediaList);
                     }
                 });
 
@@ -2088,7 +2090,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     /**
-     * Queues a media file for upload and starts the MediaUploadService. Toasts will alert the user
+     * Queues a media file for upload and starts the UploadService. Toasts will alert the user
      * if there are issues with the file.
      */
     private MediaModel queueFileForUpload(Uri uri, String mimeType) {
@@ -2100,14 +2102,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Invalid file path
         if (TextUtils.isEmpty(path)) {
-            Toast.makeText(this, R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(this, R.string.editor_toast_invalid_path, ToastUtils.Duration.SHORT);
             return null;
         }
 
         // File not found
         File file = new File(path);
         if (!file.exists()) {
-            Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
             return null;
         }
 
@@ -2119,7 +2121,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // add this item to the queue - we keep it for visual aid atm
         mPendingUploads.add(media);
 
-        startMediaUploadService();
+        startUploadService();
 
         return media;
     }
@@ -2228,7 +2230,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             media.setUploadState(MediaUploadState.QUEUED);
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             mPendingUploads.add(media);
-            startMediaUploadService();
+            startUploadService();
         }
 
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);

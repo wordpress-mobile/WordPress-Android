@@ -20,7 +20,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 
@@ -33,6 +32,7 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,8 +129,8 @@ public class AddQuickPressShortcutActivity extends ListActivity {
         dialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 if (TextUtils.isEmpty(quickPressShortcutName.getText())) {
-                    Toast t = Toast.makeText(AddQuickPressShortcutActivity.this, R.string.quickpress_add_error, Toast.LENGTH_LONG);
-                    t.show();
+                    ToastUtils.showToast(AddQuickPressShortcutActivity.this, R.string.quickpress_add_error,
+                            ToastUtils.Duration.LONG);
                 } else {
                     Intent shortcutIntent = new Intent(getApplicationContext(), EditPostActivity.class);
                     shortcutIntent.setAction(Intent.ACTION_MAIN);

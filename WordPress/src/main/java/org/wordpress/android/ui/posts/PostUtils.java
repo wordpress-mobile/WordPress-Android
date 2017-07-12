@@ -114,7 +114,7 @@ public class PostUtils {
                     properties.put("post_id", post.getRemotePostId());
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
-                    // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadService
+                    // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadHandler
                 }
                 break;
             case SCHEDULED:

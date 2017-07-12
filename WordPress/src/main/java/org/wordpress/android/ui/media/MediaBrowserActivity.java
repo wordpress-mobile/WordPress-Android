@@ -35,13 +35,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -56,19 +57,20 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
-import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -135,7 +137,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private MediaBrowserType mBrowserType;
     private int mLastAddMediaItemClickedPosition;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -188,13 +189,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         setupTabs();
 
-        int filter;
+        MediaFilter filter;
         if (mImagesOnly) {
-            filter = MediaGridFragment.FILTER_IMAGES;
+            filter = MediaFilter.FILTER_IMAGES;
         } else if (savedInstanceState != null) {
-            filter = savedInstanceState.getInt(ARG_FILTER);
+            filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
         } else {
-            filter = MediaGridFragment.FILTER_ALL;
+            filter = MediaFilter.FILTER_ALL;
         }
 
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentByTag(MediaGridFragment.TAG);
@@ -232,14 +233,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             int selectedColor = ContextCompat.getColor(this, R.color.white);
             mTabLayout.setTabTextColors(normalColor, selectedColor);
 
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.all));
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.images));
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.unattached));
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_all));         // FILTER_ALL
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_images));      // FILTER_IMAGES
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_documents));   // FILTER_DOCUMENTS
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_videos));      // FILTER_VIDEOS
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_audio));       // FILTER_AUDIO
 
             mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-                    setFilter(tab.getPosition());
+                    setFilter(getFilterForPosition(tab.getPosition()));
                 }
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
@@ -247,7 +250,30 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
-                    setFilter(tab.getPosition());
+                    setFilter(getFilterForPosition(tab.getPosition()));
+                }
+            });
+
+            // tabMode is set to scrollable in layout, set to fixed if there's enough space to show them all
+            mTabLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mTabLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                    if (mTabLayout.getChildCount() > 0) {
+                        int tabLayoutWidth = 0;
+                        LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
+                        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+                            LinearLayout tabView = (LinearLayout) (tabFirstChild.getChildAt(i));
+                            tabLayoutWidth += (tabView.getMeasuredWidth() + tabView.getPaddingLeft() + tabView.getPaddingRight());
+                        }
+
+                        int displayWidth = DisplayUtils.getDisplayPixelWidth(MediaBrowserActivity.this);
+                        if (tabLayoutWidth < displayWidth) {
+                            mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+                            mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                        }
+                    }
                 }
             });
         } else {
@@ -255,11 +281,25 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void setFilter(int filter) {
+    private int getPositionForFilter(@NonNull MediaFilter filter) {
+        return filter.getValue();
+    }
+
+    private MediaFilter getFilterForPosition(int position) {
+        for (MediaFilter filter: MediaFilter.values()) {
+            if (filter.getValue() == position) {
+                return filter;
+            }
+        }
+        return MediaFilter.FILTER_ALL;
+    }
+
+    private void setFilter(@NonNull MediaFilter filter) {
+        int position = getPositionForFilter(filter);
         if (shouldShowTabs()
                 && mTabLayout != null
-                && mTabLayout.getSelectedTabPosition() != filter) {
-            mTabLayout.setScrollPosition(filter, 0f, true);
+                && mTabLayout.getSelectedTabPosition() != position) {
+            mTabLayout.setScrollPosition(position, 0f, true);
         }
 
         if (mMediaGridFragment != null &&
@@ -315,7 +355,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
         outState.putBoolean(ARG_IMAGES_ONLY, mImagesOnly);
         if (mMediaGridFragment != null) {
-            outState.putInt(ARG_FILTER, mMediaGridFragment.getFilter());
+            outState.putSerializable(ARG_FILTER, mMediaGridFragment.getFilter());
         }
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
@@ -511,6 +551,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onMediaItemSelected(View sourceView, int localMediaId) {
         MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
         if (media == null) {
+            AppLog.w(AppLog.T.MEDIA, "Media browser > unable to load localMediaId = " + localMediaId);
             ToastUtils.showToast(this, R.string.error_media_load);
             return;
         }
@@ -585,18 +626,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaListFetched(OnMediaListFetched event) {
-        if (event.isError()) {
-            AppLog.w(AppLog.T.MEDIA, "Received OnMediaListFetched error: " + event.error.type
-                    + " - " + event.error.message);
-            ToastUtils.showToast(this, "Media fetch error occurred: " + event.error.message, ToastUtils.Duration.LONG);
-            return;
-        }
-        updateViews();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
         if (event.isError()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
@@ -661,9 +690,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         if (sanitizedIds.size() != ids.size()) {
             if (ids.size() == 1) {
-                Toast.makeText(this, R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
+                ToastUtils.showToast(this, R.string.wait_until_upload_completes, ToastUtils.Duration.LONG);
             } else {
-                Toast.makeText(this, R.string.cannot_delete_multi_media_items, Toast.LENGTH_LONG).show();
+                ToastUtils.showToast(this, R.string.cannot_delete_multi_media_items, ToastUtils.Duration.LONG);
             }
         }
 
@@ -835,8 +864,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             if (downloadedUri != null) {
                 queueFileForUpload(getOptimizedPictureIfNecessary(downloadedUri), mimeType);
             } else {
-                Toast.makeText(MediaBrowserActivity.this, getString(R.string.error_downloading_image),
-                        Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(MediaBrowserActivity.this, R.string.error_downloading_image,
+                        ToastUtils.Duration.SHORT);
             }
         } else {
             queueFileForUpload(getOptimizedPictureIfNecessary(mediaUri), mimeType);
@@ -869,13 +898,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void addMediaToUploadService(@NonNull MediaModel media) {
         // Start the upload service if it's not started and fill the media queue
         if (!NetworkUtils.isNetworkAvailable(this)) {
-            AppLog.v(AppLog.T.MEDIA, "Unable to start MediaUploadService, internet connection required.");
+            AppLog.v(AppLog.T.MEDIA, "Unable to start UploadService, internet connection required.");
             return;
         }
 
         ArrayList<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(media);
-        MediaUploadService.startService(this, mediaList);
+        UploadService.uploadMedia(this, mediaList);
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {
@@ -883,7 +912,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         String path = MediaUtils.getRealPathFromURI(this,uri);
 
         if (TextUtils.isEmpty(path)) {
-            Toast.makeText(this, getString(R.string.file_not_found), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
             return;
         }
 
@@ -969,6 +998,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void updateViews() {
-        mMediaGridFragment.refresh();
+        mMediaGridFragment.reload();
     }
 }

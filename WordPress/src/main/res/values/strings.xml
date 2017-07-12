@@ -116,9 +116,11 @@
     <string name="cab_selected">%d selected</string>
 
     <!-- Media  -->
-    <string name="all">All</string>
-    <string name="images">Images</string>
-    <string name="unattached">Unattached</string>
+    <string name="media_all">All</string>
+    <string name="media_images">Images</string>
+    <string name="media_documents">Documents</string>
+    <string name="media_videos">Videos</string>
+    <string name="media_audio">Audio</string>
     <string name="media_gallery_column_count_single">1 column</string>
     <string name="media_gallery_column_count_multi">%d columns</string>
     <string name="media_gallery_type">Type</string>
@@ -185,6 +187,10 @@
     <string name="wait_until_upload_completes">Wait until upload completes</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="media_empty_list">No media</string>
+    <string name="media_empty_image_list">You don\'t have any images</string>
+    <string name="media_empty_videos_list">You don\'t have any videos</string>
+    <string name="media_empty_documents_list">You don\'t have any documents</string>
+    <string name="media_empty_audio_list">You don\'t have any audio</string>
     <string name="delete">Delete</string>
 
     <!-- Media details -->
@@ -947,6 +953,7 @@
     <string name="editor_draft_saved_locally">Draft saved on device</string>
     <string name="editor_scheduled_post_saved_online">Post scheduled</string>
     <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
+    <string name="editor_uploading_post">Your post is being sent online</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
@@ -1119,7 +1126,7 @@
     <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
-    <string name="error_refresh_media">Something went wrong while refreshing the media library. Try again later.</string>
+    <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
 
     <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>

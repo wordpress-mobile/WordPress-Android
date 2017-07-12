@@ -5,6 +5,8 @@ public class PublicizeConstants {
     public static final String ARG_CONNECTION_ID  = "connection_id";
     public static final String ARG_CONNECTION_ARRAY_JSON = "connection_array_json";
 
+    public static final String GOOGLE_PLUS_ID = "google_plus";
+
     public enum ConnectAction {
         CONNECT,
         DISCONNECT,

@@ -214,17 +214,17 @@ public class WordPressMediaUtils {
 
     public static int getPlaceholder(String url) {
         if (MediaUtils.isValidImage(url)) {
-            return R.drawable.media_image_placeholder;
+            return R.drawable.ic_gridicons_image;
         } else if (MediaUtils.isDocument(url)) {
-            return R.drawable.media_document;
+            return R.drawable.ic_gridicons_page;
         } else if (MediaUtils.isPowerpoint(url)) {
             return R.drawable.media_powerpoint;
         } else if (MediaUtils.isSpreadsheet(url)) {
             return R.drawable.media_spreadsheet;
         } else if (MediaUtils.isVideo(url)) {
-            return org.wordpress.android.editor.R.drawable.media_movieclip;
+            return R.drawable.ic_gridicons_video_camera;
         } else if (MediaUtils.isAudio(url)) {
-            return R.drawable.media_audio;
+            return R.drawable.ic_gridicons_audio;
         } else {
             return 0;
         }
