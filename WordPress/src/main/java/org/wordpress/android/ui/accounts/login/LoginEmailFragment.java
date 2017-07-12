@@ -130,17 +130,17 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
     }
 
     @Override
+    protected EditText getEditTextToFocusOnStart() {
+        return mEmailEditText;
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
             mRequestedEmail = savedInstanceState.getString(KEY_REQUESTED_EMAIL);
         }
-    }
-
-    @Override
-    protected EditText getEditTextToFocusOnStart() {
-        return mEmailEditText;
     }
 
     @Override
