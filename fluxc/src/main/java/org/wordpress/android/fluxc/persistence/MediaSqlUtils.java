@@ -362,9 +362,7 @@ public class MediaSqlUtils {
         return WellSql.delete(MediaModel.class).execute();
     }
 
-    public static int deleteUploadedSiteMediaNotInList(
-            SiteModel site, List<MediaModel> mediaList, String mimeType) {
-
+    public static int deleteUploadedSiteMediaNotInList(SiteModel site, List<MediaModel> mediaList, String mimeType) {
         if (mediaList.isEmpty()) {
             if (!TextUtils.isEmpty(mimeType)) {
                 return MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(site, mimeType);
