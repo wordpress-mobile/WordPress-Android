@@ -78,9 +78,11 @@
 
             <ProgressBar
                 android:id="@+id/post_upload_progress"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:max="100"
                 android:indeterminate="false"
                 android:progress="25"/>
 

@@ -371,10 +371,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
-        if (PostUploadService.isPostUploadingOrQueued(post)) {
+        if (UploadService.isPostUploadingOrQueued(post)) {
             view.setVisibility(View.VISIBLE);
             // ToDo: update current progress here by some means from the new UploadService
-            view.setProgress(90);
+//            view.setProgress(90);
+            // ToDo: when we have information from PostUploadService, delete the below line
+            view.setIndeterminate(true);
         } else {
             view.setVisibility(View.GONE);
         }
