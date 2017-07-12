@@ -68,10 +68,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String SET_TITLE_KEY = "blogname";
     private static final String SET_DESC_KEY = "blogdescription";
 
-    // JSON response keys
-    private static final String SETTINGS_KEY = "settings";
-    private static final String UPDATED_KEY = "updated";
-
     // WP.com REST keys used in response to a categories GET request
     private static final String CAT_ID_KEY = "ID";
     private static final String CAT_NAME_KEY = "name";
@@ -94,10 +90,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public void saveSettings() {
         super.saveSettings();
 
-        if (mSite.isJetpackConnected()) {
-            saveJetpackSettings();
-        }
-
         final Map<String, String> params = serializeDotComParams();
         if (params == null || params.isEmpty()) return;
 
@@ -110,7 +102,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         mRemoteSettings.copyFrom(mSettings);
 
                         if (response != null) {
-                            JSONObject updated = response.optJSONObject(UPDATED_KEY);
+                            JSONObject updated = response.optJSONObject("updated");
                             if (updated == null) return;
                             HashMap<String, Object> properties = new HashMap<>();
                             Iterator<String> keys = updated.keys();
@@ -123,6 +115,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             }
                             AnalyticsUtils.trackWithSiteDetails(
                                     AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
+                        }
+                        if (mSite.isJetpackConnected()) {
+                            saveJetpackSettings();
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -140,9 +135,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
     @Override
     protected void fetchRemoteData() {
         fetchCategories();
-        if (mSite.isJetpackConnected()) {
-            fetchJetpackSettings();
-        }
         WordPress.getRestClientUtils().getGeneralSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
@@ -179,6 +171,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);
                         }
+
+                        if (mSite.isJetpackConnected()) {
+                            fetchJetpackSettings();
+                        }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -194,7 +190,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Received response to Jetpack Settings REST request.");
+                        AppLog.v(AppLog.T.API, "Received response to Jetpack Settings REST request.");
                         mRemoteSettings.localTableId = mSite.getId();
                         deserializeJetpackRestResponse(mSite, response);
                         mSettings.copyFrom(mRemoteSettings);
@@ -203,7 +199,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error response to Jetpack Settings REST request: " + error);
+                        AppLog.e(AppLog.T.API, "Error response to Jetpack Settings REST request: " + error);
                         notifyUpdatedOnUiThread(error);
                     }
                 });
@@ -212,9 +208,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
     /**
      * Sets values from a .com REST response object.
      */
-    public void deserializeDotComRestResponse(SiteModel site, JSONObject response) {
+    private void deserializeDotComRestResponse(SiteModel site, JSONObject response) {
         if (site == null || response == null) return;
-        JSONObject settingsObject = response.optJSONObject(SETTINGS_KEY);
+        JSONObject settingsObject = response.optJSONObject("settings");
 
         mRemoteSettings.username = site.getUsername();
         mRemoteSettings.password = site.getPassword();
@@ -280,7 +276,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
      * Using undocumented endpoint WPCOM_JSON_API_Site_Settings_Endpoint
      * https://wpcom.trac.automattic.com/browser/trunk/public.api/rest/json-endpoints.php#L1903
      */
-    public Map<String, String> serializeDotComParams() {
+    private Map<String, String> serializeDotComParams() {
         Map<String, String> params = new HashMap<>();
 
         if (mSettings.title!= null && !mSettings.title.equals(mRemoteSettings.title)) {
@@ -456,7 +452,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 }, params);
     }
 
-    public void deserializeJetpackRestResponse(SiteModel site, JSONObject response) {
+    private void deserializeJetpackRestResponse(SiteModel site, JSONObject response) {
         if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
         mRemoteSettings.monitorActive = settingsObject.optBoolean(JP_MONITOR_ACTIVE_KEY, false);
@@ -464,7 +460,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
     }
 
-    public Map<String, String> serializeJetpackParams() {
+    private Map<String, String> serializeJetpackParams() {
         Map<String, String> params = new HashMap<>();
         params.put(JP_MONITOR_ACTIVE_KEY, String.valueOf(mSettings.monitorActive));
         params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mSettings.emailNotifications));
