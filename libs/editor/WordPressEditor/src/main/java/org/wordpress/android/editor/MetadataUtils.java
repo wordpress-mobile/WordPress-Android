@@ -146,6 +146,15 @@ public class MetadataUtils {
             }
         }
 
+        boolean hasClassStartingWith(String prefix) {
+            for (String cls : mClasses) {
+                if (cls.startsWith(prefix)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         void removeClass(String c) {
             mClasses.remove(c);
         }
@@ -159,17 +168,24 @@ public class MetadataUtils {
         }
 
         AztecAttributes getAttributes() {
-            String classesStr = TextUtils.join(" ", mClasses);
-            mAztecAttributes.setValue("class", classesStr);
+            updateClassAttribute();
             return mAztecAttributes;
         }
 
         String getAttribute(String key, String defaultValue) {
+
+            updateClassAttribute();
+
             if (mAztecAttributes.hasAttribute(key)) {
                 return mAztecAttributes.getValue(key);
             } else {
                 return defaultValue;
             }
+        }
+
+        private void updateClassAttribute() {
+            String classesStr = TextUtils.join(" ", mClasses);
+            mAztecAttributes.setValue("class", classesStr);
         }
     }
 }
