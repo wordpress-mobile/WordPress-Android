@@ -194,7 +194,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Received response to Jetpack Settings REST request.");
+                        AppLog.v(AppLog.T.API, "Received response to Jetpack Settings REST request.");
                         mRemoteSettings.localTableId = mSite.getId();
                         deserializeJetpackRestResponse(mSite, response);
                         mSettings.copyFrom(mRemoteSettings);
@@ -203,7 +203,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error response to Jetpack Settings REST request: " + error);
+                        AppLog.e(AppLog.T.API, "Error response to Jetpack Settings REST request: " + error);
                         notifyUpdatedOnUiThread(error);
                     }
                 });
