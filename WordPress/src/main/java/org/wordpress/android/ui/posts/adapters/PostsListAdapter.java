@@ -377,8 +377,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             int statusIconResId = 0;
             int statusColorResId = R.color.grey_darken_10;
 
-            if (UploadService.isPostUploadingOrQueued(post)) {
+            if (UploadService.isPostUploading(post)) {
                 statusTextResId = R.string.post_uploading;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
+            } else if(UploadService.isPostQueued(post)) {
+                statusTextResId = R.string.post_queued;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if (post.isLocalDraft()) {
                 statusTextResId = R.string.local_draft;

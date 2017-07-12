@@ -243,6 +243,30 @@ public class UploadService extends Service {
         return false;
     }
 
+    public static boolean isPostQueued(PostModel post) {
+        if (post == null) {
+            return false;
+        }
+
+        // First check for posts strictly queued inside the PostUploadManager
+        if (PostUploadHandler.isPostQueued(post)) {
+            return true;
+        }
+
+        // Then check the list of posts waiting for media to complete
+        if (sPostsWithPendingMedia.size() > 0) {
+            synchronized (sPostsWithPendingMedia) {
+                for (PostModel queuedPost : sPostsWithPendingMedia) {
+                    if (queuedPost.getId() == post.getId()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
     /**
      * Returns true if the passed post is currently uploading.
      * Except for legacy mode, a post counts as 'uploading' if the post content itself is being uploaded - a post
