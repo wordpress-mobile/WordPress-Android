@@ -1,31 +1,24 @@
 package org.wordpress.android.ui.accounts.login;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -50,8 +43,7 @@ import org.wordpress.android.util.UrlUtils;
 
 import javax.inject.Inject;
 
-public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
-    private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
+public class LoginSiteAddressFragment extends LoginBaseFormFragment implements TextWatcher {
     private static final String KEY_REQUESTED_SITE_ADDRESS = "KEY_REQUESTED_SITE_ADDRESS";
 
     public static final String TAG = "login_email_fragment_tag";
@@ -67,12 +59,7 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
 
     private TextInputLayout mSiteAddressTextLayout;
     private EditText mSiteAddressEditText;
-    private Button mNextButton;
-    private ProgressDialog mProgressDialog;
 
-    private LoginListener mLoginListener;
-
-    private boolean mInProgress;
     private String mRequestedSiteAddress;
 
     @Inject AccountStore mAccountStore;
@@ -81,28 +68,33 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
     @Inject MemorizingTrustManager mMemorizingTrustManager;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
-
-        setHasOptionsMenu(true);
+    protected @LayoutRes
+    int getContentLayout() {
+        return R.layout.login_site_address_screen;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_site_address_screen, container, false);
+    protected @LayoutRes int getProgressBarText() {
+        return R.string.login_checking_site_address;
+    }
 
-        mSiteAddressEditText = (EditText) rootView.findViewById(R.id.login_site_address);
+    @Override
+    protected void setupLabel(TextView label) {
+        label.setText(R.string.enter_site_address);
+    }
+
+    @Override
+    protected void setupContent(ViewGroup rootView) {
+        mSiteAddressTextLayout = (TextInputLayout) rootView.findViewById(R.id.input_layout);
+        mSiteAddressTextLayout.setHint(getString(R.string.login_site_address));
+
+        ImageView icon = (ImageView) rootView.findViewById(R.id.icon);
+        icon.setContentDescription(getString(R.string.login_globe_icon));
+        icon.setImageResource(R.drawable.ic_globe_grey_24dp);
+
+        mSiteAddressEditText = (EditText) rootView.findViewById(R.id.input);
+        mSiteAddressEditText.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
         mSiteAddressEditText.addTextChangedListener(this);
-
-        mSiteAddressTextLayout = (TextInputLayout) rootView.findViewById(R.id.login_site_address_layout);
-
-        mNextButton = (Button) rootView.findViewById(R.id.login_next_button);
-        mNextButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                discover();
-            }
-        });
 
         mSiteAddressEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -117,29 +109,33 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
                 return true;
             }
         });
+    }
 
-        rootView.findViewById(R.id.login_site_address_help).setOnClickListener(new OnClickListener() {
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setText(R.string.login_site_address_help);
+        secondaryButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSiteAddressHelp();
             }
         });
-
-        return rootView;
+        primaryButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                discover();
+            }
+        });
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected EditText getEditTextToFocusOnStart() {
+        return mSiteAddressEditText;
+    }
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
     }
 
     @Override
@@ -147,56 +143,24 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
             mRequestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS);
-
-            if (mInProgress) {
-                showProgressDialog();
-            }
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof LoginListener) {
-            mLoginListener = (LoginListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement LoginListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mLoginListener = null;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
         outState.putString(KEY_REQUESTED_SITE_ADDRESS, mRequestedSiteAddress);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_login, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.help) {
-            mLoginListener.help();
-            return true;
-        }
-
-        return false;
     }
 
     protected void discover() {
         if (!NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
+
+        if (TextUtils.isEmpty(mSiteAddressEditText.getText())) {
+            showError(R.string.login_empty_site_url, null, null);
             return;
         }
 
@@ -209,7 +173,7 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
     }
 
     private String getCleanedSiteAddress() {
-        return EditTextUtils.getText(mSiteAddressEditText).trim().replaceAll("\r|\n", "");
+        return EditTextUtils.getText(mSiteAddressEditText).trim().replaceAll("[\r\n]", "");
     }
 
     @Override
@@ -222,13 +186,8 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        updateNextButton();
         mSiteAddressTextLayout.setError(null);
         mLoginListener.setHelpContext(null, null);
-    }
-
-    private void updateNextButton() {
-        mNextButton.setEnabled(getCleanedSiteAddress().length() > 0);
     }
 
     private void showError(int messageId, String faqId, String faqSection) {
@@ -237,47 +196,9 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mDispatcher.unregister(this);
-    }
-
-    private void showProgressDialog() {
-        mNextButton.setEnabled(false);
-        mProgressDialog = ProgressDialog.show(
-                getActivity(),
-                "",
-                getActivity().getString(R.string.login_checking_site_address),
-                true,
-                true,
-                new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogInterface) {
-                        if (mInProgress) {
-                            endProgress();
-                        }
-                    }
-                });
-        mInProgress = true;
-    }
-
-    private void endProgress() {
-        mInProgress = false;
-
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
-        }
-
+    protected void endProgress() {
+        super.endProgress();
         mRequestedSiteAddress = null;
-
-        updateNextButton();
     }
 
     private void askForHttpAuthCredentials(@NonNull final String url) {
@@ -394,7 +315,7 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
         // hold the URL in a variable to use below otherwise it gets cleared up by endProgress
         final String requestedSiteAddress = mRequestedSiteAddress;
 
-        if (mInProgress) {
+        if (isInProgress()) {
             endProgress();
         }
 
