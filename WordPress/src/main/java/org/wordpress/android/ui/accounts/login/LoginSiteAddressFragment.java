@@ -68,8 +68,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment implements T
     @Inject MemorizingTrustManager mMemorizingTrustManager;
 
     @Override
-    protected @LayoutRes
-    int getContentLayout() {
+    protected @LayoutRes int getContentLayout() {
         return R.layout.login_site_address_screen;
     }
 
