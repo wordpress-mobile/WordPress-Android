@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
@@ -32,6 +33,9 @@ import de.greenrobot.event.EventBus;
 public class MediaUploadHandler implements UploadHandler<MediaModel> {
     private static final List<MediaModel> sPendingUploads = new ArrayList<>();
     private static final List<MediaModel> sInProgressUploads = new ArrayList<>();
+
+    // TODO This should be moved to FluxC, perhaps in a new UploadMediaTable
+    private static final ConcurrentHashMap<Integer, Float> sProgressByMediaId = new ConcurrentHashMap<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -113,6 +117,15 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
         return false;
     }
 
+    /**
+     * Returns the last recorded progress value for the given {@param media}. If there is no record for that media,
+     * it's assumed to be a completed upload (returned progress is 1).
+     */
+    static float getProgressForMedia(MediaModel media) {
+        Float progress = sProgressByMediaId.get(media.getId());
+        return progress == null ? 1 : progress;
+    }
+
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
         if (event.canceled) {
             AppLog.i(T.MEDIA, "MediaUploadHandler > Upload successfully canceled");
@@ -129,6 +142,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
             uploadNextInQueue();
         } else {
             AppLog.i(T.MEDIA, "MediaUploadHandler > " + event.media.getId() + " - progress: " + event.progress);
+            sProgressByMediaId.put(event.media.getId(), event.progress);
         }
     }
 
@@ -172,6 +186,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
         MediaModel media = getMediaFromInProgressQueueById(id);
         if (media != null) {
             sInProgressUploads.remove(media);
+            sProgressByMediaId.remove(media.getId());
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
         }
     }
