@@ -437,7 +437,6 @@ public class NewUserFragment extends AbstractFragment {
         if (!isAdded()) {
             return;
         }
-        endProgress();
 
         if (AppPrefs.isLoginWizardStyleActivated()) {
             if (mLoginListener != null) {
