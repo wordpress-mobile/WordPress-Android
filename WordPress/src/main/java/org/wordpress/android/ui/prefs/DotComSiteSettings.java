@@ -90,10 +90,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public void saveSettings() {
         super.saveSettings();
 
-        if (mSite.isJetpackConnected()) {
-            saveJetpackSettings();
-        }
-
         final Map<String, String> params = serializeDotComParams();
         if (params == null || params.isEmpty()) return;
 
@@ -120,6 +116,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             AnalyticsUtils.trackWithSiteDetails(
                                     AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
                         }
+                        if (mSite.isJetpackConnected()) {
+                            saveJetpackSettings();
+                        }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -136,9 +135,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
     @Override
     protected void fetchRemoteData() {
         fetchCategories();
-        if (mSite.isJetpackConnected()) {
-            fetchJetpackSettings();
-        }
         WordPress.getRestClientUtils().getGeneralSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
@@ -174,6 +170,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);
+                        }
+
+                        if (mSite.isJetpackConnected()) {
+                            fetchJetpackSettings();
                         }
                     }
                 }, new RestRequest.ErrorListener() {
