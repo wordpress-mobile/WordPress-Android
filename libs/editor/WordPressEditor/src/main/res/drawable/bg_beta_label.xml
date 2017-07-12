@@ -14,7 +14,7 @@
     </solid>
 
     <stroke
-        android:color="@color/grey_lighten_10"
+        android:color="@color/wp_grey_lighten_10"
         android:width="1dp" >
     </stroke>
 
