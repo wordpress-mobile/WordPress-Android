@@ -143,8 +143,8 @@
     <string name="media_error_suggest_optimize_image">Try enabling Optimize Images in your site\'s settings</string>
     <string name="media_error_http_too_large_photo_upload">Image too large to upload</string>
     <string name="media_error_http_too_large_video_upload">Video too large to upload</string>
-    <string name="media_error_exceeds_php_filesize">File exceeds the maximum upload size for this site. Change the php.ini upload_max_filesize, and post_max_size settings</string>
-    <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site. Change the php.ini memory_limit setting</string>
+    <string name="media_error_exceeds_php_filesize">File exceeds the maximum upload size for this site</string>
+    <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
     <string name="media_error_generic_connection_error">Connection error. You may have a poor connection or no Internet access</string>
     <string name="media_error_internal_server_error">Upload error. Try enabling Optimize Images in Site->Settings</string>
     <string name="media_error_timeout">Server response timed out, you may have a poor connection or server error</string>
