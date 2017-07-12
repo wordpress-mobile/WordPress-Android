@@ -631,6 +631,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 attrs.setValue(ATTR_SRC, safeMediaUrl);
                 attrs.setValue(ATTR_CLASS, ATTR_STATUS_UPLOADING);
 
+                addDefaultSizeClassIfMissing(attrs);
+
                 // load a scaled version of the image to prevent OOM exception
                 int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
                 Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
@@ -721,6 +723,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 AztecAttributes attrs = new AztecAttributes();
                 attrs.setValue(ATTR_SRC, remoteUrl);
+
+                addDefaultSizeClassIfMissing(attrs);
 
                 // clear overlay
                 ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
@@ -1239,5 +1243,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mediaFile.getHeight() != DEFAULT_MEDIA_HEIGHT) {
             attributes.setValue(ATTR_DIMEN_HEIGHT, String.valueOf(mediaFile.getHeight()));
         }
+
+        addDefaultSizeClassIfMissing(attributes);
+    }
+
+    private void addDefaultSizeClassIfMissing(AztecAttributes attributes) {
+        AttributesWithClass attrs = new AttributesWithClass(attributes);
+        if (!attrs.hasClassStartingWith("size")) {
+            attrs.addClass("size-full");
+        }
+        attributes.setValue(ATTR_CLASS, attrs.getAttributes().getValue(ATTR_CLASS));
     }
 }

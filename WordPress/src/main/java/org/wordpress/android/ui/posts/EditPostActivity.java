@@ -39,7 +39,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -718,6 +717,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Fragment fragment = getFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
+            if (fragment instanceof  ImageSettingsDialogFragment) {
+                ImageSettingsDialogFragment imFragment = (ImageSettingsDialogFragment) fragment;
+                imFragment.dismissFragment();
+            }
             return false;
         }
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
@@ -852,7 +855,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void showErrorAndFinish(int errorMessageId) {
-        Toast.makeText(this, getResources().getText(errorMessageId), Toast.LENGTH_LONG).show();
+        ToastUtils.showToast(this, errorMessageId, ToastUtils.Duration.LONG);
         finish();
     }
 
@@ -1896,8 +1899,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (downloadedUri != null) {
                 addMedia(downloadedUri);
             } else {
-                Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image),
-                        Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(EditPostActivity.this, R.string.error_downloading_image,
+                        ToastUtils.Duration.SHORT);
             }
         } else {
             addMedia(mediaUri);
@@ -1915,8 +1918,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
         if (isErrorAddingMedia) {
-            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
         }
     }
 
@@ -2077,14 +2079,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Invalid file path
         if (TextUtils.isEmpty(path)) {
-            Toast.makeText(this, R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(this, R.string.editor_toast_invalid_path, ToastUtils.Duration.SHORT);
             return null;
         }
 
         // File not found
         File file = new File(path);
         if (!file.exists()) {
-            Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
             return null;
         }
 
