@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -378,7 +379,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             if (UploadService.isPostUploadingOrQueued(post)) {
                 statusTextResId = R.string.post_uploading;
-                statusColorResId = R.color.alert_yellow;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if (post.isLocalDraft()) {
                 statusTextResId = R.string.local_draft;
                 statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
@@ -419,6 +420,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             txtStatus.setTextColor(resources.getColor(statusColorResId));
             txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
             Drawable drawable = (statusIconResId != 0 ? resources.getDrawable(statusIconResId) : null);
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable, resources.getColor(statusColorResId));
             txtStatus.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             txtStatus.setVisibility(View.VISIBLE);
         }
