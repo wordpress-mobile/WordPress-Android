@@ -456,7 +456,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 }, params);
     }
 
-    public void deserializeJetpackRestResponse(SiteModel site, JSONObject response) {
+    private void deserializeJetpackRestResponse(SiteModel site, JSONObject response) {
         if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
         mRemoteSettings.monitorActive = settingsObject.optBoolean(JP_MONITOR_ACTIVE_KEY, false);
@@ -464,7 +464,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
     }
 
-    public Map<String, String> serializeJetpackParams() {
+    private Map<String, String> serializeJetpackParams() {
         Map<String, String> params = new HashMap<>();
         params.put(JP_MONITOR_ACTIVE_KEY, String.valueOf(mSettings.monitorActive));
         params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mSettings.emailNotifications));
