@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.accounts.login;
 
-import android.animation.Animator;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -24,8 +22,6 @@ public class LoginPrologueAnimationFragment extends Fragment {
     private String mAnimationFilename;
     private @StringRes int mPromoText;
     private Boolean mLightBackground;
-
-    private LoginListener mLoginListener;
 
     static LoginPrologueAnimationFragment newInstance(String animationFilename, @StringRes int promoText,
             boolean lightBackground) {
@@ -59,51 +55,8 @@ public class LoginPrologueAnimationFragment extends Fragment {
 
         mLottieAnimationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
         mLottieAnimationView.setAnimation(mAnimationFilename, LottieAnimationView.CacheStrategy.Weak);
-        mLottieAnimationView.loop(true);
-
-        mLottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                mLottieAnimationView.setProgress(0);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                mLottieAnimationView.setProgress(0);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-                mLottieAnimationView.setProgress(0);
-
-                if (mLoginListener != null && getUserVisibleHint() && !mLoginListener.pagerMovedManually()) {
-                    mLoginListener.nextPromo();
-                }
-            }
-        });
 
         return rootView;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof LoginListener) {
-            mLoginListener = (LoginListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement LoginListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        mLoginListener = null;
     }
 
     @Override
