@@ -261,31 +261,25 @@
             android:key="@string/pref_key_jetpack_security_screen"
             android:title="@string/jetpack_security_setting_title">
 
-            <PreferenceCategory
-                android:id="@+id/pref_category_jetpack_monitor"
-                android:title="@string/jetpack_monitor_category_title">
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_monitor_uptime"
+                android:layout="@layout/preference_layout"
+                android:key="@string/pref_key_jetpack_monitor_uptime"
+                android:title="@string/jetpack_monitor_uptime_title" />
 
-                <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_monitor_uptime"
-                    android:layout="@layout/preference_layout"
-                    android:key="@string/pref_key_jetpack_monitor_uptime"
-                    android:title="@string/jetpack_monitor_uptime_title" />
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_jetpack_send_email_notifications"
+                android:layout="@layout/preference_layout"
+                android:key="@string/pref_key_jetpack_send_email_notifications"
+                android:title="@string/jetpack_send_email_notifications_title"
+                android:dependency="@string/pref_key_jetpack_monitor_uptime" />
 
-                <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_jetpack_send_email_notifications"
-                    android:layout="@layout/preference_layout"
-                    android:key="@string/pref_key_jetpack_send_email_notifications"
-                    android:title="@string/jetpack_send_email_notifications_title"
-                    android:dependency="@string/pref_key_jetpack_monitor_uptime" />
-
-                <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_jetpack_send_wp_notifications"
-                    android:layout="@layout/preference_layout"
-                    android:key="@string/pref_key_jetpack_send_wp_notifications"
-                    android:title="@string/jetpack_send_wp_notifications_title"
-                    android:dependency="@string/pref_key_jetpack_monitor_uptime" />
-
-            </PreferenceCategory>
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_jetpack_send_wp_notifications"
+                android:layout="@layout/preference_layout"
+                android:key="@string/pref_key_jetpack_send_wp_notifications"
+                android:title="@string/jetpack_send_wp_notifications_title"
+                android:dependency="@string/pref_key_jetpack_monitor_uptime" />
 
             <PreferenceCategory
                 android:id="@+id/pref_category_jetpack_brute_force"
