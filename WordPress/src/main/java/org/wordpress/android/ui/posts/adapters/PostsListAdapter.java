@@ -264,6 +264,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             String dateStr = getPageDateHeaderText(context, post);
             pageHolder.txtDate.setText(dateStr);
 
+            updatePostUploadProgressBar(pageHolder.progressBar, post);
             updateStatusText(pageHolder.txtStatus, post);
 
             // don't show date header if same as previous

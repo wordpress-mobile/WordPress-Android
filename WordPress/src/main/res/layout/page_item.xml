@@ -41,16 +41,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ProgressBar
-            android:id="@+id/post_upload_progress"
-            style="@style/UploadProgressBar"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="100"
-            android:indeterminate="false"
-            android:progress="25"/>
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -121,6 +111,17 @@
                 android:layout_centerVertical="true"
                 android:indeterminate="true"/>
         </RelativeLayout>
+
+        <ProgressBar
+            android:id="@+id/post_upload_progress"
+            style="@style/UploadProgressBar"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:indeterminate="false"
+            android:progress="25"/>
+
     </LinearLayout>
 
 
