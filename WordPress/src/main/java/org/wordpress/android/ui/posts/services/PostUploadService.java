@@ -579,14 +579,13 @@ public class PostUploadService extends Service {
         return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
     }
 
-    private @NonNull String getErrorMessageFromMediaError(MediaError error) {
-        int errorMessageID = WPMediaUtils.getErrorMessageResID(error);
-        if (errorMessageID != 0) {
-            return getString(errorMessageID);
-        } else {
+    private @NonNull String getErrorMessageFromMediaError(OnMediaUploaded event) {
+        String errorMessage = WPMediaUtils.getErrorMessageResID(mContext, event.media, event.error);
+        if (errorMessage == null) {
             // In case of a generic or uncaught error, return the message from the API response or the error type
-            return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
+            errorMessage = TextUtils.isEmpty(event.error.message) ? event.error.type.toString() : event.error.message;
         }
+        return errorMessage;
     }
 
     private @NonNull String getErrorMessage(PostModel post, String specificMessage) {
@@ -634,7 +633,7 @@ public class PostUploadService extends Service {
         if (event.isError()) {
             AppLog.e(T.MEDIA, "Media upload failed. " + event.error.type + ": " + event.error.message);
             SiteModel site = mSiteStore.getSiteByLocalId(mCurrentUploadingPost.getLocalSiteId());
-            String message = getErrorMessage(mCurrentUploadingPost, getErrorMessageFromMediaError(event.error));
+            String message = getErrorMessage(mCurrentUploadingPost, getErrorMessageFromMediaError(event));
             mPostUploadNotifier.updateNotificationError(mCurrentUploadingPost, site, message, true);
             mFirstPublishPosts.remove(mCurrentUploadingPost.getId());
             finishUpload();

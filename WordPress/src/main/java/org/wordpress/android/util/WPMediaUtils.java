@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -153,42 +155,44 @@ public class WPMediaUtils {
         AppPrefs.setImageOptimizePromoRequired(false);
     }
 
-
     /**
      * Given a media error returns the error message to display on the UI.
      *
      * @param error The media error occurred
-     * @return int The associated resource identifier of the message to show to the user.
-     * Returns 0 if no such resource was found. (0 is not a valid resource ID.)
+     * @return String  The associated error message.
      */
-    public static int getErrorMessageResID(final MediaStore.MediaError error) {
-        if (error == null) {
-            return 0;
+    public static String getErrorMessageResID(final Context context, final MediaModel media, final MediaStore.MediaError error) {
+        if (context == null || media == null || error == null) {
+            return null;
         }
 
         switch (error.type) {
             case FS_READ_PERMISSION_DENIED:
-               return R.string.error_media_insufficient_fs_permissions;
+               return context.getString(R.string.error_media_insufficient_fs_permissions);
             case NOT_FOUND:
-                return R.string.error_media_not_found;
+                return context.getString(R.string.error_media_not_found);
             case AUTHORIZATION_REQUIRED:
-                return R.string.media_error_no_permission_upload;
+                return context.getString(R.string.media_error_no_permission_upload);
             case REQUEST_TOO_LARGE:
-                return R.string.media_error_http_too_large_upload;
+                if (!media.isVideo()) {
+                    return context.getString(R.string.media_error_http_too_large_upload);
+                } else {
+                    return context.getString(R.string.media_error_http_too_large_upload);
+                }
             case SERVER_ERROR:
-                return R.string.media_error_internal_server_error;
+                return context.getString(R.string.media_error_internal_server_error);
             case TIMEOUT:
-                return R.string.media_error_timeout;
+                return context.getString(R.string.media_error_timeout);
             case CONNECTION_ERROR:
-                return R.string.media_error_generic_connection_error;
+                return context.getString(R.string.media_error_generic_connection_error);
             case EXCEEDS_FILESIZE_LIMIT:
-                return R.string.media_error_exceeds_php_filesize;
+                return context.getString(R.string.media_error_exceeds_php_filesize);
             case EXCEEDS_MEMORY_LIMIT:
-                return R.string.media_error_exceeds_memory_limit;
+                return context.getString(R.string.media_error_exceeds_memory_limit);
             case PARSE_ERROR:
-                return R.string.error_media_parse_error;
+                return context.getString(R.string.error_media_parse_error);
         }
 
-        return 0;
+        return null;
     }
 }
