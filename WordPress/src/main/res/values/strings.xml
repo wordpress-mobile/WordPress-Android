@@ -145,7 +145,7 @@
     <string name="media_error_http_too_large_video_upload">Video too large to upload</string>
     <string name="media_error_exceeds_php_filesize">File exceeds the maximum upload size for this site</string>
     <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
-    <string name="media_error_generic_connection_error">Connection error. You may have a poor connection or no Internet access</string>
+    <string name="media_error_generic_connection_error">You may have a poor connection or no Internet access</string>
     <string name="media_error_internal_server_error">Upload error. Try enabling Optimize Images in Site->Settings</string>
     <string name="media_error_timeout">Server response timed out, you may have a poor connection or server error</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
