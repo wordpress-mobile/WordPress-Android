@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
@@ -157,7 +156,7 @@ public class ActivityLauncher {
 
     public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {
         if (site == null) {
-            Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
 
@@ -169,7 +168,7 @@ public class ActivityLauncher {
 
     public static void viewBlogAdmin(Context context, SiteModel site) {
         if (site == null || site.getAdminUrl() == null) {
-            Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, site);

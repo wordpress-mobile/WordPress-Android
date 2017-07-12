@@ -43,7 +43,6 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -552,6 +551,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onMediaItemSelected(View sourceView, int localMediaId) {
         MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
         if (media == null) {
+            AppLog.w(AppLog.T.MEDIA, "Media browser > unable to load localMediaId = " + localMediaId);
             ToastUtils.showToast(this, R.string.error_media_load);
             return;
         }
@@ -690,9 +690,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         if (sanitizedIds.size() != ids.size()) {
             if (ids.size() == 1) {
-                Toast.makeText(this, R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
+                ToastUtils.showToast(this, R.string.wait_until_upload_completes, ToastUtils.Duration.LONG);
             } else {
-                Toast.makeText(this, R.string.cannot_delete_multi_media_items, Toast.LENGTH_LONG).show();
+                ToastUtils.showToast(this, R.string.cannot_delete_multi_media_items, ToastUtils.Duration.LONG);
             }
         }
 
@@ -864,8 +864,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             if (downloadedUri != null) {
                 queueFileForUpload(getOptimizedPictureIfNecessary(downloadedUri), mimeType);
             } else {
-                Toast.makeText(MediaBrowserActivity.this, getString(R.string.error_downloading_image),
-                        Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(MediaBrowserActivity.this, R.string.error_downloading_image,
+                        ToastUtils.Duration.SHORT);
             }
         } else {
             queueFileForUpload(getOptimizedPictureIfNecessary(mediaUri), mimeType);
@@ -912,7 +912,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         String path = MediaUtils.getRealPathFromURI(this,uri);
 
         if (TextUtils.isEmpty(path)) {
-            Toast.makeText(this, getString(R.string.file_not_found), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
             return;
         }
 
