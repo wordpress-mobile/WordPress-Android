@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
@@ -580,7 +579,7 @@ public class PostUploadService extends Service {
     }
 
     private @NonNull String getErrorMessageFromMediaError(OnMediaUploaded event) {
-        String errorMessage = WPMediaUtils.getErrorMessageResID(mContext, event.media, event.error);
+        String errorMessage = WPMediaUtils.getErrorMessage(mContext, true, event.media, event.error);
         if (errorMessage == null) {
             // In case of a generic or uncaught error, return the message from the API response or the error type
             errorMessage = TextUtils.isEmpty(event.error.message) ? event.error.type.toString() : event.error.message;

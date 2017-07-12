@@ -632,7 +632,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
                     + " - " + event.error.message);
 
-            String errorMessage = WPMediaUtils.getErrorMessageResID(this, event.media, event.error);
+            String errorMessage = WPMediaUtils.getErrorMessage(
+                    this,
+                    WPMediaUtils.isImageOptimizationEnabled(this, mSite),
+                    event.media,
+                    event.error
+            );
             if (errorMessage != null) {
                 ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
             } else {
