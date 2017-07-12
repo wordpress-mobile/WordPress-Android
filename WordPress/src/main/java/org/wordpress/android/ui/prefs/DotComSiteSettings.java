@@ -68,10 +68,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String SET_TITLE_KEY = "blogname";
     private static final String SET_DESC_KEY = "blogdescription";
 
-    // JSON response keys
-    private static final String SETTINGS_KEY = "settings";
-    private static final String UPDATED_KEY = "updated";
-
     // WP.com REST keys used in response to a categories GET request
     private static final String CAT_ID_KEY = "ID";
     private static final String CAT_NAME_KEY = "name";
@@ -110,7 +106,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         mRemoteSettings.copyFrom(mSettings);
 
                         if (response != null) {
-                            JSONObject updated = response.optJSONObject(UPDATED_KEY);
+                            JSONObject updated = response.optJSONObject("updated");
                             if (updated == null) return;
                             HashMap<String, Object> properties = new HashMap<>();
                             Iterator<String> keys = updated.keys();
@@ -212,9 +208,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
     /**
      * Sets values from a .com REST response object.
      */
-    public void deserializeDotComRestResponse(SiteModel site, JSONObject response) {
+    private void deserializeDotComRestResponse(SiteModel site, JSONObject response) {
         if (site == null || response == null) return;
-        JSONObject settingsObject = response.optJSONObject(SETTINGS_KEY);
+        JSONObject settingsObject = response.optJSONObject("settings");
 
         mRemoteSettings.username = site.getUsername();
         mRemoteSettings.password = site.getPassword();
@@ -280,7 +276,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
      * Using undocumented endpoint WPCOM_JSON_API_Site_Settings_Endpoint
      * https://wpcom.trac.automattic.com/browser/trunk/public.api/rest/json-endpoints.php#L1903
      */
-    public Map<String, String> serializeDotComParams() {
+    private Map<String, String> serializeDotComParams() {
         Map<String, String> params = new HashMap<>();
 
         if (mSettings.title!= null && !mSettings.title.equals(mRemoteSettings.title)) {
