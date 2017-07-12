@@ -2,11 +2,15 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@android:id/background">
-        <solid android:color="@color/grey_light"/>
+        <shape>
+            <solid android:color="@color/grey_light"/>
+        </shape>
     </item>
 
     <item android:id="@android:id/progress">
-        <solid android:color="@color/blue_light"/>
+        <shape>
+            <solid android:color="@color/blue_light"/>
+        </shape>
     </item>
 
 </layer-list>
