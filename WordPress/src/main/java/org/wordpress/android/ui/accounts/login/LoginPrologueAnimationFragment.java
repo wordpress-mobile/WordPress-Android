@@ -83,6 +83,7 @@ public class LoginPrologueAnimationFragment extends Fragment {
             mLottieAnimationView.playAnimation();
         } else {
             mLottieAnimationView.cancelAnimation();
+            mLottieAnimationView.setProgress(0);
         }
     }
 }
