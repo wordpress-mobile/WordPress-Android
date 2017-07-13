@@ -483,13 +483,13 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         if (preference == mJpMonitorActivePref) {
             mJpMonitorActivePref.setChecked((Boolean) newValue);
-            mSiteSettings.setMonitorActive((Boolean) newValue);
+            mSiteSettings.enableJetpackMonitor((Boolean) newValue);
         } else if (preference == mJpMonitorEmailNotesPref) {
             mJpMonitorEmailNotesPref.setChecked((Boolean) newValue);
-            mSiteSettings.setEmailNotes((Boolean) newValue);
+            mSiteSettings.enableJetpackMonitorEmailNotifications((Boolean) newValue);
         } else if (preference == mJpMonitorWpNotesPref) {
             mJpMonitorWpNotesPref.setChecked((Boolean) newValue);
-            mSiteSettings.setNoteNotes((Boolean) newValue);
+            mSiteSettings.enableJetpackMonitorWpNotifications((Boolean) newValue);
         } else if (preference == mJpBruteForcePref) {
             mJpBruteForcePref.setChecked((Boolean) newValue);
             mSiteSettings.enableJetpackProtect((Boolean) newValue);
@@ -1110,9 +1110,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
         mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
         mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
-        mJpMonitorActivePref.setChecked(mSiteSettings.getMonitorActive());
-        mJpMonitorEmailNotesPref.setChecked(mSiteSettings.getEmailNotes());
-        mJpMonitorWpNotesPref.setChecked(mSiteSettings.getNoteNotes());
+        mJpMonitorActivePref.setChecked(mSiteSettings.isJetpackMonitorEnabled());
+        mJpMonitorEmailNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorEmailNotifications());
+        mJpMonitorWpNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorWpNotifications());
         mJpBruteForcePref.setChecked(mSiteSettings.isJetpackProtectEnabled());
     }
 

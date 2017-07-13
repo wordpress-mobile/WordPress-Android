@@ -583,28 +583,28 @@ public abstract class SiteSettingsInterface {
                 R.string.site_settings_list_editor_summary_other, count);
     }
 
-    public boolean getMonitorActive() {
+    public boolean isJetpackMonitorEnabled() {
         return mSettings.monitorActive;
     }
 
-    public boolean getEmailNotes() {
+    public boolean shouldSendJetpackMonitorEmailNotifications() {
         return mSettings.emailNotifications;
     }
 
-    public boolean getNoteNotes() {
+    public boolean shouldSendJetpackMonitorWpNotifications() {
         return mSettings.wpNotifications;
     }
 
-    public void setMonitorActive(boolean active) {
-        mSettings.monitorActive = active;
+    public void enableJetpackMonitor(boolean monitorActive) {
+        mSettings.monitorActive = monitorActive;
     }
 
-    public void setEmailNotes(boolean notes) {
-        mSettings.emailNotifications = notes;
+    public void enableJetpackMonitorEmailNotifications(boolean emailNotifications) {
+        mSettings.emailNotifications = emailNotifications;
     }
 
-    public void setNoteNotes(boolean notes) {
-        mSettings.wpNotifications = notes;
+    public void enableJetpackMonitorWpNotifications(boolean wpNotifications) {
+        mSettings.wpNotifications = wpNotifications;
     }
 
     public boolean isJetpackProtectEnabled() {

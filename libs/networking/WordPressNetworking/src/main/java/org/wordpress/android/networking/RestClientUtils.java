@@ -229,8 +229,7 @@ public class RestClientUtils {
 
     public void getGeneralSettings(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/settings", siteId);
-        Map<String, String> params = new HashMap<>();
-        get(path, params, null, listener, errorListener);
+        get(path, listener, errorListener);
     }
 
     public void setGeneralSiteSettings(long siteId, Listener listener, ErrorListener errorListener,
@@ -241,8 +240,7 @@ public class RestClientUtils {
 
     public void getJetpackSettings(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
-        Map<String, String> params = new HashMap<>();
-        get(path, params, null, listener, errorListener);
+        get(path, listener, errorListener);
     }
 
     public void getJetpackProtect(long siteId, Listener listener, ErrorListener errorListener) {

@@ -503,7 +503,6 @@
     <!-- Jetpack settings -->
     <string name="jetpack_site_settings_category_title">Jetpack Settings</string>
     <string name="jetpack_security_setting_title">Security</string>
-    <string name="jetpack_monitor_category_title">Jetpack Monitor</string>
     <string name="jetpack_monitor_uptime_title">Monitor your site\'s uptime</string>
     <string name="jetpack_send_email_notifications_title">Send notifications to your WordPress.com email address</string>
     <string name="jetpack_send_wp_notifications_title">Send notifications via WordPress.com notification</string>
