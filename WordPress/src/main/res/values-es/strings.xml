@@ -66,7 +66,7 @@ Language: es
 	<string name="button_not_now">Ahora no</string>
 	<string name="media_error_timeout">Se agotó la respuesta del servidor, puede que tengas una conexión pobre o que sea un error del servidor</string>
 	<string name="media_error_internal_server_error">Error en la subida. Trata de activar Optimizar imágenes en Sitio->Ajustes</string>
-	<string name="media_error_too_large_upload">Archivo a subir demasiado grande. Trata de activar Optimizar imágenes en Sitio->Ajustes</string>
+	<string name="media_error_http_too_large_upload">Archivo a subir demasiado grande. Trata de activar Optimizar imágenes en Sitio->Ajustes</string>
 	<string name="media_downloading">Guardando medios en este dispositivo</string>
 	<string name="error_media_save">No fue posible guardar los medios</string>
 	<string name="editor_scheduled_post_saved_online">Entrada programada</string>

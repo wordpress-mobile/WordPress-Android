@@ -66,7 +66,7 @@ Language: en_GB
 	<string name="button_not_now">Not now</string>
 	<string name="media_error_timeout">Server response timed out, you may have a poor connection or server error</string>
 	<string name="media_error_internal_server_error">Upload error. Try enabling Optimise Images in Site->Settings</string>
-	<string name="media_error_too_large_upload">File too large to upload. Try enabling Optimise Images in Site->Settings</string>
+	<string name="media_error_http_too_large_upload">File too large to upload. Try enabling Optimise Images in Site->Settings</string>
 	<string name="media_downloading">Saving media to this device</string>
 	<string name="error_media_save">Unable to save media</string>
 	<string name="editor_scheduled_post_saved_online">Post scheduled</string>
