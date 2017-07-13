@@ -139,7 +139,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/post_settings_set_featured_image"/>
 
-                    <org.wordpress.android.widgets.WPNetworkImageView
+                    <com.android.volley.toolbox.NetworkImageView
                         android:id="@+id/post_featured_image"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
