@@ -205,9 +205,6 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
         Uri uri = Uri.parse(UrlUtils.addUrlSchemeIfNeeded(mRequestedSiteAddress, false));
         mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(uri.getHost()));
 
-        // auth token can be invalid so, clean it up for this public API call
-        req.setAccessToken(null);
-
         showProgressDialog();
     }
 
