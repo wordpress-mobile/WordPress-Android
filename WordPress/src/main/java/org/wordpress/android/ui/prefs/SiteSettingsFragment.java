@@ -206,6 +206,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mJpMonitorActivePref;
     private WPSwitchPreference mJpMonitorEmailNotesPref;
     private WPSwitchPreference mJpMonitorWpNotesPref;
+    private WPSwitchPreference mJpBruteForcePref;
 
     public boolean mEditingEnabled = true;
 
@@ -489,6 +490,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mJpMonitorWpNotesPref) {
             mJpMonitorWpNotesPref.setChecked((Boolean) newValue);
             mSiteSettings.setNoteNotes((Boolean) newValue);
+        } else if (preference == mJpBruteForcePref) {
+            mJpBruteForcePref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackProtect((Boolean) newValue);
         } else if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
             changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
@@ -731,6 +735,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpMonitorActivePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_monitor_uptime);
         mJpMonitorEmailNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_email_notifications);
         mJpMonitorWpNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_wp_notifications);
+        mJpBruteForcePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_prevent_brute_force);
 
         sortLanguages();
 
@@ -1108,6 +1113,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpMonitorActivePref.setChecked(mSiteSettings.getMonitorActive());
         mJpMonitorEmailNotesPref.setChecked(mSiteSettings.getEmailNotes());
         mJpMonitorWpNotesPref.setChecked(mSiteSettings.getNoteNotes());
+        mJpBruteForcePref.setChecked(mSiteSettings.isJetpackProtectEnabled());
     }
 
     private void setCategories() {

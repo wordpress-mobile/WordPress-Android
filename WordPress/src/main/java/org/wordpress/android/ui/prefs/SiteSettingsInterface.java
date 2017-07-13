@@ -607,6 +607,14 @@ public abstract class SiteSettingsInterface {
         mSettings.wpNotifications = notes;
     }
 
+    public boolean isJetpackProtectEnabled() {
+        return mSettings.jetpackProtectEnabled;
+    }
+
+    public void enableJetpackProtect(boolean enabled) {
+        mSettings.jetpackProtectEnabled = enabled;
+    }
+
     public void setTitle(String title) {
         mSettings.title = title;
     }

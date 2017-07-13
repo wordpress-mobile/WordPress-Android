@@ -96,6 +96,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
         if (mSite.isJetpackConnected()) {
             saveJetpackSettings();
+            updateJetpackProtectSettings();
         }
 
         final Map<String, String> params = serializeDotComParams();
@@ -142,6 +143,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         fetchCategories();
         if (mSite.isJetpackConnected()) {
             fetchJetpackSettings();
+            getJetpackProtectSettings();
         }
         WordPress.getRestClientUtils().getGeneralSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
@@ -439,12 +441,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Jetpack Settings saved remotely");
+                        mRemoteSettings.jetpackProtectEnabled = response.optBoolean("active");
+                        mSettings.jetpackProtectEnabled = response.optBoolean("active");
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error POSTing Jetpack site settings changes: " + error);
+                        AppLog.w(AppLog.T.API, "Error getting Jetpack Protect settings: " + error);
                     }
                 });
     }
@@ -454,14 +457,16 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Jetpack Settings saved remotely");
+                        AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
+                        mRemoteSettings.jetpackProtectEnabled = response.optBoolean("active");
+                        mSettings.jetpackProtectEnabled = response.optBoolean("active");
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error POSTing Jetpack site settings changes: " + error);
+                        AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
                     }
-                }, true);
+                }, mSettings.jetpackProtectEnabled);
     }
 
     private void saveJetpackSettings() {

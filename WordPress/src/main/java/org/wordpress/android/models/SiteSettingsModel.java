@@ -183,9 +183,12 @@ public class SiteSettingsModel {
     public boolean allowLikeButton;
     public boolean allowCommentLikes;
     public String twitterUsername;
+
+    // Jetpack
     public boolean monitorActive;
     public boolean emailNotifications;
     public boolean wpNotifications;
+    public boolean jetpackProtectEnabled;
 
     @Override
     public boolean equals(Object other) {
