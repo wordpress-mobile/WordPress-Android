@@ -252,7 +252,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            dismissFragment();
             return true;
         }
         return super.onOptionsItemSelected(item);

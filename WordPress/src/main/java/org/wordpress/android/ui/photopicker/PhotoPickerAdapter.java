@@ -71,6 +71,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private boolean mAllowMultiSelect;
     private boolean mIsMultiSelectEnabled;
     private boolean mPhotosOnly;
+    private boolean mIsListTaskRunning;
 
     private final ThumbnailLoader mThumbnailLoader;
     private final PhotoPickerAdapterListener mListener;
@@ -88,6 +89,11 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     }
 
     void refresh(boolean forceReload) {
+        if (mIsListTaskRunning) {
+            AppLog.w(AppLog.T.MEDIA, "photo picker > build list task already running");
+            return;
+        }
+
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
         int thumbWidth = displayWidth / NUM_COLUMNS;
         int thumbHeight = (int) (thumbWidth * 0.75f);
@@ -415,11 +421,26 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 return false;
             }
             for (int i = 0; i < tmpList.size(); i++) {
+                if (!isValidPosition(i)) {
+                    return false;
+                }
                 if (tmpList.get(i)._id != mMediaList.get(i)._id) {
                     return false;
                 }
             }
             return true;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mIsListTaskRunning = true;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mIsListTaskRunning = false;
         }
 
         @Override
@@ -432,6 +453,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             if (mListener != null) {
                 mListener.onAdapterLoaded(isEmpty());
             }
+            mIsListTaskRunning = false;
         }
     }
 }
