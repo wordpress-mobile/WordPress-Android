@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/margin_extra_small">
 
-    <org.wordpress.android.ui.FadeInNetworkImageView
+    <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/media_grid_item_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
