@@ -267,7 +267,7 @@ public class WordPressMediaUtils {
             String filepath = uri.getLastPathSegment();
 
             int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
-            imageView.setErrorImageResId(placeholderResId);
+            imageView.setErrorImageResId(R.drawable.media_item_background);
 
             // default image while downloading
             imageView.setDefaultImageResId(R.drawable.media_item_background);
@@ -276,7 +276,7 @@ public class WordPressMediaUtils {
                 imageView.setTag(imageUrl);
                 imageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
             } else {
-                imageView.setImageResource(placeholderResId);
+                imageView.setImageResource(R.drawable.media_item_background);
             }
         } else {
             imageView.setImageResource(0);
