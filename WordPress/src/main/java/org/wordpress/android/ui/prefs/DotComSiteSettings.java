@@ -434,6 +434,36 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 });
     }
 
+    private void getJetpackProtectSettings() {
+        WordPress.getRestClientUtils().getJetpackProtect(
+                mSite.getSiteId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.d(AppLog.T.API, "Jetpack Settings saved remotely");
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error POSTing Jetpack site settings changes: " + error);
+                    }
+                });
+    }
+
+    private void updateJetpackProtectSettings() {
+        WordPress.getRestClientUtils().setJetpackProtect(
+                mSite.getSiteId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.d(AppLog.T.API, "Jetpack Settings saved remotely");
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error POSTing Jetpack site settings changes: " + error);
+                    }
+                }, true);
+    }
+
     private void saveJetpackSettings() {
         final Map<String, String> params = serializeJetpackParams();
         if (params == null || params.isEmpty()) return;
