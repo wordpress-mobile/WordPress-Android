@@ -376,13 +376,16 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             int statusTextResId = 0;
             int statusIconResId = 0;
             int statusColorResId = R.color.grey_darken_10;
+            int drawablePadding = 0;
 
             if (UploadService.isPostUploading(post)) {
                 statusTextResId = R.string.post_uploading;
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload_16dp;
+                drawablePadding = 10;
             } else if(UploadService.isPostQueued(post)) {
                 statusTextResId = R.string.post_queued;
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload_16dp;
+                drawablePadding = 10;
             } else if (post.isLocalDraft()) {
                 statusTextResId = R.string.local_draft;
                 statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
@@ -426,6 +429,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             drawable = DrawableCompat.wrap(drawable);
             DrawableCompat.setTint(drawable, resources.getColor(statusColorResId));
             txtStatus.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+            txtStatus.setCompoundDrawablePadding(drawablePadding);
             txtStatus.setVisibility(View.VISIBLE);
         }
     }
