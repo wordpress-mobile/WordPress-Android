@@ -244,7 +244,8 @@ public class WordPressMediaUtils {
             Uri uri = Uri.parse(imageUrl);
             String filepath = uri.getLastPathSegment();
 
-            int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
+            // re-use the default background drawable as error image for now.
+            // See: https://github.com/wordpress-mobile/WordPress-Android/pull/6295#issuecomment-315129759
             imageView.setErrorImageResId(R.drawable.media_item_background);
 
             // default image while downloading
