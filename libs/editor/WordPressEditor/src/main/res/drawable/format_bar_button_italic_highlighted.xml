@@ -2,14 +2,14 @@
 
 <vector
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:height="48dp"
-    android:width="48dp"
+    android:height="44dp"
+    android:width="44dp"
     android:viewportHeight="48"
     android:viewportWidth="48" >
 
-    <!-- @color/wp_grey_dark -->
+    <!-- @color/wp_blue -->
     <path
-        android:fillColor="#ff2e4453"
+        android:fillColor="#ff0087be"
         android:pathData="M22.4,16.4l-0.5,2.1h1.7l-2.6,12h-1.6l-0.5,2.2h6.7l0.5-2.2h-1.7l2.6-12h1.6l0.5-2.1H22.4z" >
     </path>
 

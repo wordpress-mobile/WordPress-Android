@@ -57,7 +57,8 @@ public class HelpshiftHelper {
         ORIGIN_LOGIN_SCREEN_JETPACK("origin:jetpack-login-screen"),
         ORIGIN_SIGNUP_SCREEN("origin:signup-screen"),
         ORIGIN_ME_SCREEN_HELP("origin:me-screen-help"),
-        ORIGIN_DELETE_SITE("origin:delete-site");
+        ORIGIN_DELETE_SITE("origin:delete-site"),
+        ORIGIN_FEEDBACK_AZTEC("origin:aztec-feedback");
 
         private final String mStringValue;
 
@@ -266,20 +267,45 @@ public class HelpshiftHelper {
         return mMetadata.get(key.toString());
     }
 
+
+    private String getJetpackMetadataString(SiteModel site) {
+        StringBuffer sb = new StringBuffer();
+        if (site.isJetpackConnected()) {
+            sb.append("🚀✅ Jetpack connected with site ID: ");
+            sb.append(site.getSiteId());
+        } else {
+            sb.append("🚀❌ Jetpack not connected");
+            if (site.isJetpackInstalled()) {
+                sb.append(" but ✅ installed");
+            } else {
+                sb.append(" and ❌ not installed");
+            }
+        }
+        return sb.toString();
+    }
     private void addDefaultMetaData(Context context, SiteStore siteStore, String wpComUsername) {
         // Use plain text log (unfortunately Helpshift can't display this correctly)
         mMetadata.put("log", AppLog.toPlainText(context));
 
         // List blogs name and url
         int counter = 1;
-        for (SiteModel site: siteStore.getSites()) {
+        for (SiteModel site : siteStore.getSites()) {
             mMetadata.put("blog-name-" + counter, site.getName());
             mMetadata.put("blog-url-" + counter, site.getUrl());
             mMetadata.put("blog-plan-" + counter, site.getPlanId());
             if (site.isAutomatedTransfer()) {
                 mMetadata.put("is-automated-transfer-" + counter, "true");
             }
+            if (!site.isWPCom()) {
+                mMetadata.put("blog-jetpack-infos-" + counter, getJetpackMetadataString(site));
+            }
             counter += 1;
+        }
+
+        if (AnalyticsUtils.isJetpackUser(siteStore)) {
+            mMetadata.put("jetpack-user", true);
+        } else {
+            mMetadata.put("jetpack-user", false);
         }
 
         // wpcom user

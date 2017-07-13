@@ -635,8 +635,6 @@ Language: is
 	<string name="reader_toast_err_follow_blog_not_authorized">Þú hefur ekki aðgang að þessu bloggi</string>
 	<string name="reader_toast_err_follow_blog_not_found">Þetta blogg fannst ekki</string>
 	<string name="undo">Afturkalla</string>
-	<string name="tabbar_accessibility_label_me">Ég</string>
-	<string name="tabbar_accessibility_label_my_site">Mín síða</string>
 	<string name="editor_toast_changes_saved">Breytingar vistaðar.</string>
 	<string name="passcodelock_prompt_message">Sláðu inn PIN númer</string>
 	<string name="push_auth_expired">Fyrirspurnin rann út á tíma. Skráðu þig inn á WordPress.com til þess að reyna aftur.</string>
@@ -1134,6 +1132,7 @@ Language: is
 	<string name="all">Allt</string>
 	<string name="themes">Þemu</string>
 	<string name="discard">Henda</string>
+	<string name="manage">Stjórnun</string>
 	<string name="upload">Hlaða upp</string>
 	<string name="more_notifications">og %d til viðbótar.</string>
 	<string name="new_notifications">%d nýjar tilkynningar</string>

@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
@@ -42,9 +41,8 @@ import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
-import org.wordpress.android.ui.publicize.PublicizeConstants;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
@@ -158,7 +156,7 @@ public class ActivityLauncher {
 
     public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {
         if (site == null) {
-            Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
 
@@ -170,7 +168,7 @@ public class ActivityLauncher {
 
     public static void viewBlogAdmin(Context context, SiteModel site) {
         if (site == null || site.getAdminUrl() == null) {
-            Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, site);
@@ -196,12 +194,13 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, boolean isPage) {
+    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, boolean isPage, boolean isPromo) {
         if (site == null) return;
 
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 

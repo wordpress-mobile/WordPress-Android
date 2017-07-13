@@ -448,7 +448,21 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
 
             endProgress();
 
-            String errorMessage = event.error.toString();
+            String errorMessage;
+            if (event.error.type == SiteStore.SiteErrorType.DUPLICATE_SITE) {
+                if (event.rowsAffected == 0) {
+                    // If there is a duplicate site and not any site has been added, show an error and
+                    // stop the sign in process
+                    errorMessage = getString(R.string.cannot_add_duplicate_site);
+                } else {
+                    // If there is a duplicate site, notify the user something could be wrong,
+                    // but continue the sign in process
+                    errorMessage = getString(R.string.duplicate_site_detected);
+                }
+            } else {
+                errorMessage = getString(R.string.login_error_while_adding_site, event.error.type.toString());
+            }
+
             AppLog.e(T.API, "Login with username/pass onSiteChanged has error: " + event.error.type + " - " +
                     errorMessage);
 

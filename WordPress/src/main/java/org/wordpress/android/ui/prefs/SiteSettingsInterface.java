@@ -292,6 +292,19 @@ public abstract class SiteSettingsInterface {
         return mSettings.imageQualitySetting > 1 ? mSettings.imageQualitySetting : WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY;
     }
 
+    public boolean getOptimizedVideo() {
+        return mSettings.optimizedVideo;
+    }
+
+    public int getMaxVideoWidth() {
+        int resizeWidth = mSettings.maxVideoWidth;
+        return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_VIDEO_MAX_WIDTH : resizeWidth;
+    }
+
+    public int getVideoEncoderBitrate() {
+        return mSettings.videoEncoderBitrate > 1 ? mSettings.videoEncoderBitrate : WPMediaUtils.OPTIMIZE_VIDEO_ENCODER_BITRATE_KB;
+    }
+
     public @NonNull Map<String, String> getFormats() {
         mSettings.postFormats = new HashMap<>();
         String[] postFormatDisplayNames = mActivity.getResources().getStringArray(R.array.post_format_display_names);
@@ -623,6 +636,18 @@ public abstract class SiteSettingsInterface {
         mSettings.imageQualitySetting = quality;
     }
 
+    public void setOptimizedVideo(boolean optimizedVideo) {
+        mSettings.optimizedVideo = optimizedVideo;
+    }
+
+    public void setVideoResizeWidth(int width) {
+        mSettings.maxVideoWidth = width;
+    }
+
+    public void setVideoEncoderBitrate(int bitrate) {
+        mSettings.videoEncoderBitrate = bitrate;
+    }
+
     public void setAllowComments(boolean allowComments) {
         mSettings.allowComments = allowComments;
     }
@@ -869,6 +894,9 @@ public abstract class SiteSettingsInterface {
             mRemoteSettings.optimizedImage = mSettings.optimizedImage;
             mRemoteSettings.maxImageWidth = mSettings.maxImageWidth;
             mRemoteSettings.imageQualitySetting = mSettings.imageQualitySetting;
+            mRemoteSettings.optimizedVideo = mSettings.optimizedVideo;
+            mRemoteSettings.maxVideoWidth = mSettings.maxVideoWidth;
+            mRemoteSettings.videoEncoderBitrate = mSettings.videoEncoderBitrate;
             notifyUpdatedOnUiThread(null);
         } else {
             mSettings.isInLocalTable = false;

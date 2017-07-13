@@ -230,8 +230,6 @@ Language: th
 	<string name="reader_toast_err_follow_blog_not_authorized">คุณไม่มีสิทธิเข้าถึงบล็อกนี้</string>
 	<string name="reader_toast_err_follow_blog_not_found">ไม่สามารถค้นหาบล็อกนี้</string>
 	<string name="undo">ย้อนกลับ</string>
-	<string name="tabbar_accessibility_label_me">ฉัน</string>
-	<string name="tabbar_accessibility_label_my_site">เว็บของฉัน</string>
 	<string name="editor_toast_changes_saved">บันทึกการเปลี่ยนแปลงแล้ว</string>
 	<string name="passcodelock_prompt_message">ใส่ PIN ของคุณ</string>
 	<string name="push_auth_expired">การร้องขอหมดอายุแล้ว  ลงทะเบียนเข้าสู่ WordPress.com เพื่อลองอีกครั้ง</string>
@@ -726,6 +724,7 @@ Language: th
 	<string name="all">ทั้งหมด</string>
 	<string name="themes">Themes</string>
 	<string name="discard">เอาออก</string>
+	<string name="manage">จัดการ</string>
 	<string name="upload">อัปโหลด</string>
 	<string name="more_notifications">และ %d เพิ่มเติม</string>
 	<string name="new_notifications">%d คำเตือนใหม่</string>

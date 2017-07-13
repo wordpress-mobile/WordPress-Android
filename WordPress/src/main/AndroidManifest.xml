@@ -71,6 +71,11 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/com_google_android_geo_api_key"/>
+
         <activity
             android:name=".ui.WPLaunchActivity"
             android:noHistory="true"
@@ -148,6 +153,9 @@
             android:label="@string/settings"
             android:theme="@style/CalypsoTheme" />
         <activity
+            android:name=".ui.prefs.EditorReleaseNotesActivity"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
@@ -177,10 +185,6 @@
             android:theme="@style/CalypsoTheme" />
 
         <!-- Posts activities -->
-        <activity
-            android:name=".ui.posts.AddCategoryActivity"
-            android:label="@string/add_new_category"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
             android:name=".editor.legacy.EditLinkActivity"
             android:label="@string/create_a_link"
@@ -218,6 +222,10 @@
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
+            android:theme="@style/CalypsoTheme" />
+        <activity
+            android:name=".ui.posts.PostSettingsTagsActivity"
+            android:label="@string/post_settings_tags"
             android:theme="@style/CalypsoTheme" />
 
         <!-- plans -->
@@ -549,13 +557,6 @@
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
-        <receiver
-            android:name=".networking.ConnectionChangeReceiver"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
         <receiver
             android:name=".ui.stats.StatsWidgetProvider"
             android:label="@string/stats_widget_name">

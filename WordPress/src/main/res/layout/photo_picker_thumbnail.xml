@@ -18,15 +18,6 @@
             android:scaleType="centerCrop"
             tools:src="@drawable/gravatar_placeholder" />
 
-        <ImageView
-            android:id="@+id/image_video_overlay"
-            android:layout_width="@dimen/photo_picker_video_overlay"
-            android:layout_height="@dimen/photo_picker_video_overlay"
-            android:layout_centerInParent="true"
-            android:src="@drawable/reader_video_overlay"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_selection_count"
             android:layout_width="32dp"
@@ -46,10 +37,18 @@
         android:layout_width="@dimen/photo_picker_preview_icon"
         android:layout_height="@dimen/photo_picker_preview_icon"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:layout_marginLeft="@dimen/margin_small"
         android:background="@drawable/preview_icon_background"
-        android:padding="@dimen/margin_medium"
-        app:srcCompat="@drawable/ic_preview_white_24dp" />
+        android:padding="@dimen/margin_small"
+        app:srcCompat="@drawable/ic_fullscreen_white_24dp" />
+
+    <ImageView
+        android:id="@+id/image_video_overlay"
+        android:layout_width="@dimen/photo_picker_preview_icon"
+        android:layout_height="@dimen/photo_picker_preview_icon"
+        android:layout_gravity="bottom"
+        android:padding="@dimen/margin_extra_small"
+        android:src="@drawable/reader_video_overlay"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </FrameLayout>

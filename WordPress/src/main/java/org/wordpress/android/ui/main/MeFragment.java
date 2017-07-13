@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
@@ -54,6 +53,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.io.DataInputStream;
@@ -448,7 +448,8 @@ public class MeFragment extends Fragment {
                         if (downloadedUri != null) {
                             startCropActivity(downloadedUri);
                         } else {
-                            Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+                            ToastUtils.showToast(getActivity(), R.string.error_downloading_image,
+                                    ToastUtils.Duration.SHORT);
                             AppLog.e(AppLog.T.UTILS, "Can't download picked or captured image");
                         }
                     } else {
@@ -462,7 +463,7 @@ public class MeFragment extends Fragment {
                 if (resultCode == Activity.RESULT_OK) {
                     fetchMedia(UCrop.getOutput(data));
                 } else if (resultCode == UCrop.RESULT_ERROR) {
-                    Toast.makeText(getActivity(), getString(R.string.error_cropping_image), Toast.LENGTH_SHORT).show();
+                    ToastUtils.showToast(getActivity(), R.string.error_cropping_image, ToastUtils.Duration.SHORT);
 
                     final Throwable cropError = UCrop.getError(data);
                     AppLog.e(AppLog.T.MAIN, "Image cropping failed!", cropError);
@@ -502,7 +503,7 @@ public class MeFragment extends Fragment {
             if (downloadedUri != null) {
                 startGravatarUpload(MediaUtils.getRealPathFromURI(getActivity(), downloadedUri));
             } else {
-                Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(getActivity(), R.string.error_downloading_image, ToastUtils.Duration.SHORT);
             }
         } else {
             // It is a regular local media file
@@ -512,13 +513,13 @@ public class MeFragment extends Fragment {
 
     private void startGravatarUpload(final String filePath) {
         if (TextUtils.isEmpty(filePath)) {
-            Toast.makeText(getActivity(), getString(R.string.error_locating_image), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(getActivity(), R.string.error_locating_image, ToastUtils.Duration.SHORT);
             return;
         }
 
         File file = new File(filePath);
         if (!file.exists()) {
-            Toast.makeText(getActivity(), getString(R.string.error_locating_image), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(getActivity(), R.string.error_locating_image, ToastUtils.Duration.SHORT);
             return;
         }
 
@@ -555,7 +556,7 @@ public class MeFragment extends Fragment {
             loadAvatar(avatarUrl, event.filePath);
         } else {
             showGravatarProgressBar(false);
-            Toast.makeText(getActivity(), getString(R.string.error_updating_gravatar), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(getActivity(), R.string.error_updating_gravatar, ToastUtils.Duration.SHORT);
         }
     }
 
@@ -569,7 +570,7 @@ public class MeFragment extends Fragment {
 
     public void onEventMainThread(GravatarLoadFinished event) {
         if (!event.success && mIsUpdatingGravatar) {
-            Toast.makeText(getActivity(), getString(R.string.error_refreshing_gravatar), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(getActivity(), R.string.error_refreshing_gravatar, ToastUtils.Duration.SHORT);
         }
         showGravatarProgressBar(false);
     }

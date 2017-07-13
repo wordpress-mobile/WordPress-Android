@@ -348,8 +348,6 @@ Language: sk
 	<string name="reader_toast_err_follow_blog_not_authorized">Nemáte prístup do tohto blogu</string>
 	<string name="reader_toast_err_follow_blog_not_found">Blog sa nenašiel</string>
 	<string name="undo">Zrušiť zmenu</string>
-	<string name="tabbar_accessibility_label_me">Ja</string>
-	<string name="tabbar_accessibility_label_my_site">Moja webová stránka</string>
 	<string name="editor_toast_changes_saved">Zmeny uložené</string>
 	<string name="passcodelock_prompt_message">Zadajte svoj PIN</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% zobrazení</string>
@@ -828,6 +826,7 @@ Language: sk
 	<string name="images">Obrázky</string>
 	<string name="all">Všetko</string>
 	<string name="themes">Témy</string>
+	<string name="manage">Spravovať</string>
 	<string name="upload">Nahrať</string>
 	<string name="more_notifications">a %d ďalším.</string>
 	<string name="new_notifications">Počet nových upozornení: %d</string>

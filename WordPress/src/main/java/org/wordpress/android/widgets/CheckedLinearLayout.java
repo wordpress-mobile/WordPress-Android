@@ -21,7 +21,7 @@ public class CheckedLinearLayout extends LinearLayout implements Checkable {
         for (int i = 0; i < childCount; ++i) {
             View v = getChildAt(i);
             if (v instanceof CheckedTextView) {
-                mCheckbox = (CheckedTextView)v;
+                mCheckbox = (CheckedTextView) v;
             }
         }
     }

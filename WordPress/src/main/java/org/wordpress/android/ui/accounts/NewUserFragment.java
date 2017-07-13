@@ -437,7 +437,6 @@ public class NewUserFragment extends AbstractFragment {
         if (!isAdded()) {
             return;
         }
-        endProgress();
 
         if (AppPrefs.isLoginWizardStyleActivated()) {
             if (mLoginListener != null) {
@@ -489,7 +488,6 @@ public class NewUserFragment extends AbstractFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         if (AppPrefs.isLoginWizardStyleActivated()) {
             if (context instanceof LoginListener) {
                 mLoginListener = (LoginListener) context;
@@ -502,7 +500,6 @@ public class NewUserFragment extends AbstractFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
         mLoginListener = null;
     }
 

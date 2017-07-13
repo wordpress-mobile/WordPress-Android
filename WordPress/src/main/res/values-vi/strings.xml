@@ -472,8 +472,6 @@ Language: vi_VN
 	<string name="reader_toast_err_follow_blog_not_authorized">Bạn không có quyền truy cập blog này</string>
 	<string name="reader_toast_err_follow_blog_not_found">Blog này không tồn tại</string>
 	<string name="undo">Làm lại</string>
-	<string name="tabbar_accessibility_label_me">Tôi</string>
-	<string name="tabbar_accessibility_label_my_site">Trang của tôi</string>
 	<string name="editor_toast_changes_saved">Các thay đổi đã được lưu lại</string>
 	<string name="passcodelock_prompt_message">Nhập mã PIN</string>
 	<string name="push_auth_expired">Yêu cầu đã hết hạn. Đăng nhập vào Wordpress.com để thử lại.</string>

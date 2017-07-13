@@ -1,11 +1,17 @@
 package org.wordpress.android.widgets;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
@@ -22,6 +28,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -77,10 +84,13 @@ public class WPPrefView extends LinearLayout implements
     private String mTextDialogSubtitle;
     private OnPrefChangedListener mListener;
 
+    private static final String KEY_LIST_ITEMS = "prefview_listitems";
+    private static final String KEY_SUPER_STATE = "prefview_super_state";
+
     /*
      * single item when this is a list preference
      */
-    public static class PrefListItem {
+    public static class PrefListItem implements Serializable {
         private final String mItemName;   // name to display for this item
         private final String mItemValue;  // value for this item (can be same as name)
         private boolean mIsChecked;       // whether this item is checked
@@ -216,6 +226,25 @@ public class WPPrefView extends LinearLayout implements
         }
     }
 
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(KEY_LIST_ITEMS, mListItems);
+        bundle.putParcelable(KEY_SUPER_STATE, super.onSaveInstanceState());
+        return bundle;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            PrefListItems items = (PrefListItems) bundle.getSerializable(KEY_LIST_ITEMS);
+            setListItems(items);
+            state = bundle.getParcelable(KEY_SUPER_STATE);
+        }
+        super.onRestoreInstanceState(state);
+    }
+
     public void setOnPrefChangedListener(OnPrefChangedListener listener) {
         mListener = listener;
     }
@@ -309,13 +338,14 @@ public class WPPrefView extends LinearLayout implements
     public void onClick(View v) {
         switch (mPrefType) {
             case CHECKLIST:
-                showCheckListDialog();
-                break;
             case RADIOLIST:
-                showRadioListDialog();
-                break;
             case TEXT:
-                showTextDialog();
+                if (getContext() instanceof Activity) {
+                    Activity activity = (Activity) getContext();
+                    WPPrefDialogFragment fragment = WPPrefDialogFragment.newInstance(this);
+                    activity.getFragmentManager().executePendingTransactions();
+                    fragment.show(activity.getFragmentManager(), "pref_dialog_tag");
+                }
                 break;
             case TOGGLE:
                 mToggleSwitch.setChecked(!mToggleSwitch.isChecked());
@@ -335,7 +365,7 @@ public class WPPrefView extends LinearLayout implements
      * user clicked the view when the PrefType is TEXT - shows a dialog enabling the user
      * to edit the entry
      */
-    private void showTextDialog() {
+    private Dialog getTextDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         ViewGroup customView = (ViewGroup) inflater.inflate(R.layout.wppref_text_dialog, null);
         final EditText editText = (EditText) customView.findViewById(R.id.edit);
@@ -347,7 +377,7 @@ public class WPPrefView extends LinearLayout implements
             txtSubtitle.setVisibility(GONE);
         }
 
-        new AlertDialog.Builder(getContext())
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setTitle(mTitleTextView.getText())
                 .setView(customView)
                 .setNegativeButton(android.R.string.cancel, null)
@@ -357,15 +387,15 @@ public class WPPrefView extends LinearLayout implements
                         setTextEntry(editText.getText().toString());
                         doPrefChanged();
                     }
-                })
-        .show();
+                });
+        return builder.create();
     }
 
     /*
      * user clicked the view when the PrefType is CHECKLIST - shows a multi-select dialog enabling
      * the user to modify the list
      */
-    private void showCheckListDialog() {
+    private Dialog getCheckListDialog() {
         CharSequence[] items = new CharSequence[mListItems.size()];
         boolean[] checkedItems = new boolean[mListItems.size()];
         for (int i = 0; i < mListItems.size(); i++) {
@@ -373,7 +403,7 @@ public class WPPrefView extends LinearLayout implements
             checkedItems[i] = mListItems.get(i).mIsChecked;
         }
 
-        new AlertDialog.Builder(getContext())
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setTitle(mTitleTextView.getText())
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -385,15 +415,15 @@ public class WPPrefView extends LinearLayout implements
                         doPrefChanged();
                     }
                 })
-                .setMultiChoiceItems(items, checkedItems, null)
-                .show();
+                .setMultiChoiceItems(items, checkedItems, null);
+        return builder.create();
     }
 
     /*
      * user clicked the view when the PrefType is RADIOLIST - shows a single-select dialog enabling
      * the user to choose a different item
      */
-    private void showRadioListDialog() {
+    private Dialog getRadioListDialog() {
         CharSequence[] items = new CharSequence[mListItems.size()];
         int selectedPos = 0;
         for (int i = 0; i < mListItems.size(); i++) {
@@ -403,7 +433,7 @@ public class WPPrefView extends LinearLayout implements
             }
         }
 
-        new AlertDialog.Builder(getContext())
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setTitle(mTitleTextView.getText())
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -417,7 +447,57 @@ public class WPPrefView extends LinearLayout implements
                         doPrefChanged();
                     }
                 })
-                .setSingleChoiceItems(items, selectedPos, null)
-                .show();
+                .setSingleChoiceItems(items, selectedPos, null);
+        return builder.create();
+    }
+
+    public static class WPPrefDialogFragment extends DialogFragment {
+
+        private int mPrefViewId;
+        private static final String ARG_PREF_VIEW_ID = "pref_view_ID";
+
+        public WPPrefDialogFragment() {
+            // noop
+        }
+
+        public static WPPrefDialogFragment newInstance(@NonNull WPPrefView prefView) {
+            WPPrefDialogFragment frag = new WPPrefDialogFragment();
+
+            Bundle args = new Bundle();
+            args.putInt(ARG_PREF_VIEW_ID, prefView.getId());
+            frag.setArguments(args);
+
+            return frag;
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            mPrefViewId = getArguments().getInt(ARG_PREF_VIEW_ID);
+        }
+
+        private
+        @Nullable WPPrefView getPrefView() {
+            if (getActivity() != null) {
+                return (WPPrefView) getActivity().findViewById(mPrefViewId);
+            }
+            return null;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            WPPrefView prefView = getPrefView();
+            if (prefView != null) {
+                switch (prefView.mPrefType) {
+                    case TEXT:
+                        return prefView.getTextDialog();
+                    case RADIOLIST:
+                        return prefView.getRadioListDialog();
+                    case CHECKLIST:
+                        return prefView.getCheckListDialog();
+                }
+            }
+            return super.onCreateDialog(savedInstanceState);
+        }
     }
 }
