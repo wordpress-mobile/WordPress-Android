@@ -160,17 +160,7 @@ public class WPMediaUtils {
      * @param error The media error occurred
      * @return String  The associated error message.
      */
-    public static String getErrorMessage(final Activity activity, final  SiteModel siteModel, final MediaModel media, final MediaStore.MediaError error) {
-        if (activity == null || media == null || error == null) {
-            return null;
-        }
-
-        return getErrorMessage(activity.getBaseContext(), WPMediaUtils.isImageOptimizationEnabled(activity, siteModel),
-                WPMediaUtils.isVideoOptimizationEnabled(activity, siteModel), media, error);
-    }
-
-    public static String getErrorMessage(final Context context, boolean isImageOptimizationEnabled, boolean isVideoOptimizationEnabled,
-                                         final MediaModel media, final MediaStore.MediaError error) {
+    public static String getErrorMessage(final Context context, final MediaModel media, final MediaStore.MediaError error) {
         if (context == null || media == null || error == null) {
             return null;
         }
@@ -186,12 +176,8 @@ public class WPMediaUtils {
                 if (media.isVideo()) {
                     return context.getString(R.string.media_error_http_too_large_video_upload);
                 } else {
-                    if (isImageOptimizationEnabled) {
-                        return context.getString(R.string.media_error_http_too_large_photo_upload);
-                    } else {
-                        return context.getString(R.string.media_error_http_too_large_photo_upload) + ". " +
-                                context.getString(R.string.media_error_suggest_optimize_image);
-                    }
+                    return context.getString(R.string.media_error_http_too_large_photo_upload) + ". " +
+                            context.getString(R.string.media_error_suggest_optimize_image);
                 }
             case SERVER_ERROR:
                 return context.getString(R.string.media_error_internal_server_error);

@@ -631,7 +631,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (event.isError()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
                     + " - " + event.error.message);
-            String errorMessage = WPMediaUtils.getErrorMessage(this, mSite, event.media, event.error);
+            String errorMessage = WPMediaUtils.getErrorMessage(this, event.media, event.error);
             if (errorMessage != null) {
                 ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
             } else {
