@@ -176,8 +176,7 @@ public class WPMediaUtils {
                 if (media.isVideo()) {
                     return context.getString(R.string.media_error_http_too_large_video_upload);
                 } else {
-                    return context.getString(R.string.media_error_http_too_large_photo_upload) + ". " +
-                            context.getString(R.string.media_error_suggest_optimize_image);
+                    return context.getString(R.string.media_error_http_too_large_photo_upload);
                 }
             case SERVER_ERROR:
                 return context.getString(R.string.media_error_internal_server_error);
