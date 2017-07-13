@@ -246,6 +246,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             if (UploadService.isPostUploading(post)) {
                 postHolder.disabledOverlay.setVisibility(View.VISIBLE);
+                postHolder.progressBar.setIndeterminate(true);
             } else {
                 postHolder.disabledOverlay.setVisibility(View.GONE);
             }
@@ -292,6 +293,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             if (UploadService.isPostUploading(post)) {
                 pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
+                pageHolder.progressBar.setIndeterminate(true);
             } else {
                 pageHolder.disabledOverlay.setVisibility(View.GONE);
             }
