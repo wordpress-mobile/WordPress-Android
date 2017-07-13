@@ -579,7 +579,6 @@ public class PostUploadService extends Service {
     }
 
     private @NonNull String getErrorMessageFromMediaError(OnMediaUploaded event) {
-        // FIXME : We set isImageOptimizationEnabled and isVideoOptimizationEnabled to true because we don't want display the hint about them.
         String errorMessage = WPMediaUtils.getErrorMessage(mContext, event.media, event.error);
         if (errorMessage == null) {
             // In case of a generic or uncaught error, return the message from the API response or the error type
