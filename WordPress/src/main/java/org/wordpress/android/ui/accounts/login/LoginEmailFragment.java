@@ -3,9 +3,7 @@ package org.wordpress.android.ui.accounts.login;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -15,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -30,6 +27,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.widgets.WPLoginInputRow;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,8 +38,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
-    private TextInputLayout mEmailEditTextLayout;
-    private EditText mEmailEditText;
+    private WPLoginInputRow mEmailInput;
 
     private String mRequestedEmail;
 
@@ -66,20 +63,13 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        mEmailEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.input_layout);
-        mEmailEditTextLayout.setHint(getString(R.string.email_address));
+        mEmailInput = (WPLoginInputRow) rootView.findViewById(R.id.login_email_row);
 
-        ImageView icon = (ImageView) rootView.findViewById(R.id.icon);
-        icon.setContentDescription(getString(R.string.login_email_image));
-        icon.setImageResource(R.drawable.ic_user_grey_24dp);
-
-        mEmailEditText = (EditText) rootView.findViewById(R.id.input);
-        mEmailEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-        mEmailEditText.addTextChangedListener(this);
+        mEmailInput.addTextChangedListener(this);
 
         autoFillFromBuildConfig();
 
-        mEmailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mEmailInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (event != null
@@ -131,7 +121,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
 
     @Override
     protected EditText getEditTextToFocusOnStart() {
-        return mEmailEditText;
+        return mEmailInput.getEditText();
     }
 
     @Override
@@ -160,7 +150,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
         String email = (String) WordPress.getBuildConfigValue(getActivity().getApplication(),
                 "DEBUG_DOTCOM_LOGIN_EMAIL");
         if (!TextUtils.isEmpty(email)) {
-            mEmailEditText.setText(email);
+            mEmailInput.setText(email);
             AppLog.d(T.NUX, "Auto-filled email from build config");
         }
     }
@@ -180,7 +170,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
     }
 
     private String getCleanedEmail() {
-        return EditTextUtils.getText(mEmailEditText).trim();
+        return EditTextUtils.getText(mEmailInput.getEditText()).trim();
     }
 
     private boolean isValidEmail(String email) {
@@ -200,11 +190,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        mEmailEditTextLayout.setError(null);
+        mEmailInput.setError(null);
     }
 
     private void showEmailError(int messageId) {
-        mEmailEditTextLayout.setError(getString(messageId));
+        mEmailInput.setError(getString(messageId));
     }
 
     @Override
@@ -240,7 +230,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
                     // email address is available on wpcom, so apparently the user can't login with that one.
                     showEmailError(R.string.email_not_registered_wpcom);
                 } else if (mLoginListener != null) {
-                    EditTextUtils.hideSoftInput(mEmailEditText);
+                    EditTextUtils.hideSoftInput(mEmailInput.getEditText());
                     mLoginListener.gotWpcomEmail(event.value);
                 }
                 break;

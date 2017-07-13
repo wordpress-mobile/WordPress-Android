@@ -107,4 +107,16 @@
         <attr name="wpTextDialogSubtitle" format="string" />
     </declare-styleable>
 
+    <!--
+        WPLoginInputRow
+    -->
+    <declare-styleable name="wpLoginInputRow">
+        <attr name="wpIconDrawable" format="reference"/>
+        <attr name="wpIconContentDescription" format="string"/>
+        <attr name="android:inputType" />
+        <attr name="android:hint" />
+        <attr name="passwordToggleEnabled" />
+        <attr name="passwordToggleTint" />
+    </declare-styleable>
+
 </resources>
