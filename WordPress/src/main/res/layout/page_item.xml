@@ -36,9 +36,10 @@
             android:background="@color/grey_lighten_20" />
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -103,14 +104,19 @@
             android:clickable="true"
             android:focusable="true">
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:indeterminate="true"/>
         </RelativeLayout>
-    </FrameLayout>
+
+        <ProgressBar
+            android:id="@+id/post_upload_progress"
+            style="@style/UploadProgressBar"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:indeterminate="false"
+            android:progress="25"/>
+
+    </LinearLayout>
 
 
 

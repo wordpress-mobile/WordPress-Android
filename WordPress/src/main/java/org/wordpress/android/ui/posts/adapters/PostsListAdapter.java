@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -245,10 +246,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             if (UploadService.isPostUploading(post)) {
                 postHolder.disabledOverlay.setVisibility(View.VISIBLE);
+                postHolder.progressBar.setIndeterminate(true);
             } else {
                 postHolder.disabledOverlay.setVisibility(View.GONE);
             }
 
+            updatePostUploadProgressBar(postHolder.progressBar, post);
             updateStatusText(postHolder.txtStatus, post);
             configurePostButtons(postHolder, post);
         } else if (holder instanceof PageViewHolder) {
@@ -262,6 +265,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             String dateStr = getPageDateHeaderText(context, post);
             pageHolder.txtDate.setText(dateStr);
 
+            updatePostUploadProgressBar(pageHolder.progressBar, post);
             updateStatusText(pageHolder.txtStatus, post);
 
             // don't show date header if same as previous
@@ -289,6 +293,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             if (UploadService.isPostUploading(post)) {
                 pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
+                pageHolder.progressBar.setIndeterminate(true);
             } else {
                 pageHolder.disabledOverlay.setVisibility(View.GONE);
             }
@@ -367,6 +372,19 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         });
         listPopup.show();
     }
+
+    private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
+        if (UploadService.isPostUploadingOrQueued(post)) {
+            view.setVisibility(View.VISIBLE);
+            // ToDo: update current progress here by some means from the new UploadService
+//            view.setProgress(90);
+            // ToDo: when we have information from PostUploadService, delete the below line
+            view.setIndeterminate(true);
+        } else {
+            view.setVisibility(View.GONE);
+        }
+    }
+
 
     private void updateStatusText(TextView txtStatus, PostModel post) {
         if ((PostStatus.fromPost(post) == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.isLocallyChanged()) {
@@ -612,6 +630,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private final View disabledOverlay;
 
+        private final ProgressBar progressBar;
+
         PostViewHolder(View view) {
             super(view);
 
@@ -633,6 +653,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             layoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
 
             disabledOverlay = view.findViewById(R.id.disabled_overlay);
+
+            progressBar = (ProgressBar) view.findViewById(R.id.post_upload_progress);
         }
     }
 
@@ -644,6 +666,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final View btnMore;
         private final View dividerTop;
         private final View disabledOverlay;
+        private final ProgressBar progressBar;
 
         PageViewHolder(View view) {
             super(view);
@@ -654,6 +677,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             dateHeader = (ViewGroup) view.findViewById(R.id.header_date);
             txtDate = (TextView) dateHeader.findViewById(R.id.text_date);
             disabledOverlay = view.findViewById(R.id.disabled_overlay);
+            progressBar = (ProgressBar) view.findViewById(R.id.post_upload_progress);
         }
     }
 
