@@ -2,6 +2,7 @@ package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -119,7 +120,11 @@ public class WPLoginInputRow extends RelativeLayout {
         int[] rules = iconLayoutParams.getRules();
         for (int i = 0; i < rules.length; i++) {
             if (rules[i] == mTextInputLayout.getId()) {
-                iconLayoutParams.addRule(i, mNewIds.get(1));
+                if (Build.VERSION.SDK_INT > 23) {
+                    rules[i] = mNewIds.get(1);
+                } else {
+                    iconLayoutParams.addRule(i, mNewIds.get(1));
+                }
             }
         }
         mIcon.setLayoutParams(iconLayoutParams);
@@ -128,7 +133,11 @@ public class WPLoginInputRow extends RelativeLayout {
         rules = editTextLayoutParams.getRules();
         for (int i = 0; i < rules.length; i++) {
             if (rules[i] == mIcon.getId()) {
-                editTextLayoutParams.addRule(i, mNewIds.get(0));
+                if (Build.VERSION.SDK_INT > 23) {
+                    rules[i] = mNewIds.get(0);
+                } else {
+                    editTextLayoutParams.addRule(i, mNewIds.get(0));
+                }
             }
         }
         mTextInputLayout.setLayoutParams(editTextLayoutParams);
