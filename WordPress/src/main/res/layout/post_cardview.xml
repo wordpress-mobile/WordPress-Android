@@ -67,6 +67,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="bottom"
+                android:layout_marginRight="@dimen/margin_small"
                 tools:src="@drawable/ic_gridicons_cloud_upload"
                 />
 

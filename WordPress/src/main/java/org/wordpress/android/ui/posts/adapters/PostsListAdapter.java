@@ -432,7 +432,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     case SCHEDULED:
                         statusTextResId = R.string.post_status_scheduled;
                         statusIconResId = R.drawable.ic_gridicons_calendar;
-                        statusColorResId = R.color.alert_yellow;
+                        statusColorResId = R.color.blue_medium;
                         break;
                     case TRASHED:
                         statusTextResId = R.string.post_status_trashed;
