@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -51,6 +53,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
 
     public static final String TAG = "login_username_password_fragment_tag";
 
+    private ScrollView mScrollView;
     private WPLoginInputRow mUsernameInput;
     private WPLoginInputRow mPasswordInput;
 
@@ -96,6 +99,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
 
     @Override
     protected void setupContent(ViewGroup rootView) {
+        mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
+
         rootView.findViewById(R.id.login_site_title_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
         rootView.findViewById(R.id.login_blavatar_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
         rootView.findViewById(R.id.login_blavatar).setVisibility(mIsWpcom ? View.VISIBLE : View.GONE);
@@ -294,6 +299,17 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
     private void showError(String errorMessage) {
         mUsernameInput.setError(errorMessage != null ? " " : null);
         mPasswordInput.setError(errorMessage);
+
+        if (errorMessage != null) {
+            mPasswordInput.post(new Runnable() {
+                @Override
+                public void run() {
+                    Rect rect = new Rect(); //coordinates to scroll to
+                    mPasswordInput.getHitRect(rect);
+                    mScrollView.requestChildRectangleOnScreen(mPasswordInput, rect, false);
+                }
+            });
+        }
     }
 
     @Override
