@@ -82,11 +82,21 @@
                 tools:visibility="visible" />
         </LinearLayout>
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
+            android:orientation="vertical"
             android:background="@color/grey_light">
+
+            <ProgressBar
+                android:id="@+id/post_upload_progress"
+                style="@style/UploadProgressBar"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:max="100" />
 
             <LinearLayout
                 android:id="@+id/layout_buttons"
@@ -156,7 +166,7 @@
                     wp:wpPostButtonType="back" />
 
             </LinearLayout>
-        </FrameLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <RelativeLayout
@@ -167,11 +177,5 @@
         android:clickable="true"
         android:focusable="true">
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:indeterminate="true"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>
