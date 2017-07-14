@@ -71,10 +71,13 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private boolean mAllowMultiSelect;
     private boolean mIsMultiSelectEnabled;
     private boolean mPhotosOnly;
+    private boolean mIsListTaskRunning;
+    private boolean mDisableImageReset;
 
     private final ThumbnailLoader mThumbnailLoader;
     private final PhotoPickerAdapterListener mListener;
     private final LayoutInflater mInflater;
+
     private final ArrayList<PhotoPickerItem> mMediaList = new ArrayList<>();
 
     public PhotoPickerAdapter(Context context,
@@ -84,10 +87,16 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         mListener = listener;
         mInflater = LayoutInflater.from(context);
         mThumbnailLoader = new ThumbnailLoader(context);
+
         setHasStableIds(true);
     }
 
     void refresh(boolean forceReload) {
+        if (mIsListTaskRunning) {
+            AppLog.w(AppLog.T.MEDIA, "photo picker > build list task already running");
+            return;
+        }
+
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
         int thumbWidth = displayWidth / NUM_COLUMNS;
         int thumbHeight = (int) (thumbWidth * 0.75f);
@@ -157,7 +166,12 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         holder.imgPreview.setVisibility(item.isVideo ? View.GONE : View.VISIBLE);
         holder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
 
-        mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo);
+        if (!mDisableImageReset) {
+            holder.imgThumbnail.setImageDrawable(null);
+        }
+
+        boolean animate = !mDisableImageReset;
+        mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo, animate);
     }
 
     private PhotoPickerItem getItemAtPosition(int position) {
@@ -187,7 +201,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
         if (!enabled && mSelectedUris.size() > 0) {
             mSelectedUris.clear();
-            notifyDataSetChangedNoFade();
+            notifyDataSetChangedInternal();
         }
     }
 
@@ -232,7 +246,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                notifyDataSetChangedNoFade();
+                notifyDataSetChangedInternal();
             }
         }, delayMs);
     }
@@ -248,12 +262,18 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     }
 
     /*
-     * calls notifyDataSetChanged() with the ThumbnailLoader image fade disabled - used to
-     * prevent unnecessary flicker when changing existing items
+     * wrapper for notifyDataSetChanged() that prevents/reduces flicker
      */
-    private void notifyDataSetChangedNoFade() {
-        mThumbnailLoader.temporarilyDisableFade();
+    private void notifyDataSetChangedInternal() {
+        mDisableImageReset = true;
         notifyDataSetChanged();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mDisableImageReset = false;
+            }
+        }, 500);
     }
 
     /*
@@ -415,11 +435,26 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 return false;
             }
             for (int i = 0; i < tmpList.size(); i++) {
+                if (!isValidPosition(i)) {
+                    return false;
+                }
                 if (tmpList.get(i)._id != mMediaList.get(i)._id) {
                     return false;
                 }
             }
             return true;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mIsListTaskRunning = true;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mIsListTaskRunning = false;
         }
 
         @Override
@@ -432,6 +467,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             if (mListener != null) {
                 mListener.onAdapterLoaded(isEmpty());
             }
+            mIsListTaskRunning = false;
         }
     }
 }

@@ -100,20 +100,13 @@ public class PhotoPickerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Bundle args = getArguments();
         if (args != null) {
             mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
             mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY, false);
             mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY, false);
         }
-    }
-
-    @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-        mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT);
-        mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY);
-        mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY);
     }
 
     public void setOptions(@NonNull EnumSet<PhotoPickerOption> options) {
@@ -266,7 +259,7 @@ public class PhotoPickerFragment extends Fragment {
         popup.show();
     }
 
-    void setPhotoPickerListener(PhotoPickerListener listener) {
+    public void setPhotoPickerListener(PhotoPickerListener listener) {
         mListener = listener;
     }
 
@@ -445,7 +438,7 @@ public class PhotoPickerFragment extends Fragment {
 
         if (hasStoragePermission()) {
             showSoftAskView(false);
-            if (mAdapter == null || mAdapter.isEmpty()) {
+            if (!hasAdapter()) {
                 reload();
             }
         } else {
@@ -532,7 +525,6 @@ public class PhotoPickerFragment extends Fragment {
         } else if (mSoftAskContainer.getVisibility() == View.VISIBLE) {
             AniUtils.fadeOut(mSoftAskContainer, AniUtils.Duration.MEDIUM);
             showBottomBar();
-            refresh();
         }
     }
 

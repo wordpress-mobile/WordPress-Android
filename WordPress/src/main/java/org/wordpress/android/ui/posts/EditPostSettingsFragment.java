@@ -31,7 +31,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -77,6 +76,7 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -115,7 +115,7 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mPostFormatTextView;
     private TextView mPasswordTextView;
     private TextView mPublishDateTextView;
-    private NetworkImageView mFeaturedImageView;
+    private WPNetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
 
     private PostLocation mPostLocation;
@@ -127,7 +127,6 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
-    @Inject FluxCImageLoader mImageLoader;
 
     interface EditPostActivityHook {
         PostModel getPost();
@@ -223,7 +222,7 @@ public class EditPostSettingsFragment extends Fragment {
         mPasswordTextView = (TextView) rootView.findViewById(R.id.post_password);
         mPublishDateTextView = (TextView) rootView.findViewById(R.id.publish_date);
 
-        mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.post_featured_image);
+        mFeaturedImageView = (WPNetworkImageView) rootView.findViewById(R.id.post_featured_image);
         mFeaturedImageButton = (Button) rootView.findViewById(R.id.post_add_featured_image_button);
         CardView featuredImageCardView = (CardView) rootView.findViewById(R.id.post_featured_image_card_view);
 
@@ -853,7 +852,7 @@ public class EditPostSettingsFragment extends Fragment {
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }
 
-        WordPressMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView, mImageLoader);
+        WordPressMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView);
     }
 
     private void launchFeaturedMediaPicker() {

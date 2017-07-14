@@ -66,7 +66,7 @@ Language: tr
 	<string name="button_not_now">Şimdi değil</string>
 	<string name="media_error_timeout">Sunucu cevabı zaman aşımına uğradı, zayıf bir bağlantınız olabilir ya da sunucu hatası</string>
 	<string name="media_error_internal_server_error">Yükleme hatası. Site->Ayarlar bölümünden görsellerin optimize edilmesini etkinleştirin</string>
-	<string name="media_error_too_large_upload">Dosya yüklemek için çok büyük. Site->Ayarlar bölümünden görsellerin optimize edilmesini etkinleştirmeyi deneyin</string>
+	<string name="media_error_http_too_large_upload">Dosya yüklemek için çok büyük. Site->Ayarlar bölümünden görsellerin optimize edilmesini etkinleştirmeyi deneyin</string>
 	<string name="media_downloading">Ortam dosyaları bu cihazda saklanıyor</string>
 	<string name="error_media_save">Ortam dosyası kaydedilemiyor</string>
 	<string name="editor_scheduled_post_saved_online">Yazı zamanlandı</string>

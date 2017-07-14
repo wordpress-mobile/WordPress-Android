@@ -23,6 +23,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -238,22 +239,23 @@ public class WordPressMediaUtils {
     /**
      * Loads the given network image URL into the {@link NetworkImageView}.
      */
-    public static void loadNetworkImage(String imageUrl, NetworkImageView imageView, ImageLoader imageLoader) {
+    public static void loadNetworkImage(String imageUrl, WPNetworkImageView imageView) {
         if (imageUrl != null) {
             Uri uri = Uri.parse(imageUrl);
             String filepath = uri.getLastPathSegment();
 
-            int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
-            imageView.setErrorImageResId(placeholderResId);
+            // re-use the default background drawable as error image for now.
+            // See: https://github.com/wordpress-mobile/WordPress-Android/pull/6295#issuecomment-315129759
+            imageView.setErrorImageResId(R.drawable.media_item_background);
 
             // default image while downloading
             imageView.setDefaultImageResId(R.drawable.media_item_background);
 
             if (MediaUtils.isValidImage(filepath)) {
                 imageView.setTag(imageUrl);
-                imageView.setImageUrl(imageUrl, imageLoader);
+                imageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
             } else {
-                imageView.setImageResource(placeholderResId);
+                imageView.setImageResource(R.drawable.media_item_background);
             }
         } else {
             imageView.setImageResource(0);

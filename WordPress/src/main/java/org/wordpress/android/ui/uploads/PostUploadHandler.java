@@ -41,6 +41,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;

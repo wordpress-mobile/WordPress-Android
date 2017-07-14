@@ -8,7 +8,7 @@ Language: zh_TW
 <resources>
 	<string name="media_error_timeout">伺服器回應逾時，可能是因為你的連線品質不佳或伺服器發生錯誤</string>
 	<string name="media_error_internal_server_error">上傳錯誤。請嘗試在「網站」->「設定」中啟用「將圖片最佳化」的功能</string>
-	<string name="media_error_too_large_upload">檔案太大，無法上傳。請嘗試在「網站」->「設定」中啟用「將圖片最佳化」的功能</string>
+	<string name="media_error_http_too_large_upload">檔案太大，無法上傳。請嘗試在「網站」->「設定」中啟用「將圖片最佳化」的功能</string>
 	<string name="media_downloading">將媒體儲存到此裝置</string>
 	<string name="error_media_save">無法儲存媒體</string>
 	<string name="editor_scheduled_post_saved_online">文章已排程</string>
