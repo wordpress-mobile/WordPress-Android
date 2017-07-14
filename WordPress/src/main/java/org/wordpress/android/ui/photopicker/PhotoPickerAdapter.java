@@ -72,7 +72,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private boolean mIsMultiSelectEnabled;
     private boolean mPhotosOnly;
     private boolean mIsListTaskRunning;
-    private boolean mIsFlinging;
     private boolean mDisableImageReset;
 
     private final ThumbnailLoader mThumbnailLoader;
@@ -171,20 +170,8 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             holder.imgThumbnail.setImageDrawable(null);
         }
 
-        if (!mIsFlinging) {
-            boolean animate = !mDisableImageReset;
-            mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo, animate);
-        }
-    }
-
-    void setIsFlinging(boolean isFlinging) {
-        if (isFlinging != mIsFlinging) {
-            mIsFlinging = isFlinging;
-            AppLog.w(AppLog.T.MEDIA, "isFlinging = " + isFlinging + " " + System.currentTimeMillis());
-            if (!mIsFlinging) {
-                notifyDataSetChangedInternal();
-            }
-        }
+        boolean animate = !mDisableImageReset;
+        mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo, animate);
     }
 
     private PhotoPickerItem getItemAtPosition(int position) {
