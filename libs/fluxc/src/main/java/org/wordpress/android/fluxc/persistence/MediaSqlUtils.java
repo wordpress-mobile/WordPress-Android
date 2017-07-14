@@ -1,6 +1,10 @@
 package org.wordpress.android.fluxc.persistence;
 
+import android.text.TextUtils;
+
 import com.wellsql.generated.MediaModelTable;
+import com.yarolegovich.wellsql.ConditionClauseBuilder;
+import com.yarolegovich.wellsql.DeleteQuery;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellCursor;
 import com.yarolegovich.wellsql.WellSql;
@@ -10,6 +14,7 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MediaSqlUtils {
@@ -357,6 +362,33 @@ public class MediaSqlUtils {
 
     public static int deleteAllMedia() {
         return WellSql.delete(MediaModel.class).execute();
+    }
+
+    public static int deleteUploadedSiteMediaNotInList(SiteModel site, List<MediaModel> mediaList, String mimeType) {
+        if (mediaList.isEmpty()) {
+            if (!TextUtils.isEmpty(mimeType)) {
+                return MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(site, mimeType);
+            } else {
+                return MediaSqlUtils.deleteAllUploadedSiteMedia(site);
+            }
+        }
+
+        List<Integer> idList = new ArrayList<>();
+        for (MediaModel media: mediaList) {
+            idList.add(media.getId());
+        }
+
+        ConditionClauseBuilder<DeleteQuery<MediaModel>> builder = WellSql.delete(MediaModel.class)
+                .where().beginGroup()
+                .isNotIn(MediaModelTable.ID, idList)
+                .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString());
+
+        if (!TextUtils.isEmpty(mimeType)) {
+            builder.contains(MediaModelTable.MIME_TYPE, mimeType);
+        }
+
+        return builder.endGroup().endWhere().execute();
     }
 
     private static SelectQuery<MediaModel> getSiteMediaExcludingQuery(SiteModel site, String column, Object value) {
