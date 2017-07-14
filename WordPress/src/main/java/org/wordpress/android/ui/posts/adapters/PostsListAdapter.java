@@ -398,14 +398,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             if (UploadService.isPostUploading(post)) {
                 statusTextResId = R.string.post_uploading;
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload_16dp;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if (UploadService.hasInProgressMediaUploadsForPost(post)) {
                 statusTextResId = R.string.uploading_post_media;
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload_16dp;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if(UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
                 // the Post (or its related media if such a thing exist) *is strictly* queued
                 statusTextResId = R.string.post_queued;
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload_16dp;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if (post.isLocalDraft()) {
                 statusTextResId = R.string.local_draft;
                 statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
