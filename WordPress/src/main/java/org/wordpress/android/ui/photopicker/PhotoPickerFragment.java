@@ -100,20 +100,13 @@ public class PhotoPickerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Bundle args = getArguments();
         if (args != null) {
             mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
             mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY, false);
             mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY, false);
         }
-    }
-
-    @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-        mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT);
-        mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY);
-        mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY);
     }
 
     public void setOptions(@NonNull EnumSet<PhotoPickerOption> options) {
