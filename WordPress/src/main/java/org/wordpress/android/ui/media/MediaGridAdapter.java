@@ -101,9 +101,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void setMediaList(@NonNull List<MediaModel> mediaList) {
-        mMediaList.clear();
-        mMediaList.addAll(mediaList);
-        notifyDataSetChanged();
+        if (!isSameList(mediaList)) {
+            mMediaList.clear();
+            mMediaList.addAll(mediaList);
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -548,5 +550,29 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 return mContext.getString(R.string.media_upload_state_uploaded);
         }
         return "";
+    }
+
+    /*
+     * returns true if the passed list is the same as the existing one
+     */
+    private boolean isSameList(@NonNull List<MediaModel> otherList) {
+        if (otherList.size() != mMediaList.size()) {
+            return false;
+        }
+
+        for (MediaModel otherMedia : otherList) {
+            boolean exists = false;
+            for (MediaModel thisMedia: mMediaList) {
+                if (thisMedia.getId() == otherMedia.getId()) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
