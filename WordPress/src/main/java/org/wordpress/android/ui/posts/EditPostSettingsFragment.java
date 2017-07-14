@@ -31,7 +31,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -128,7 +127,6 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
-    @Inject FluxCImageLoader mImageLoader;
 
     interface EditPostActivityHook {
         PostModel getPost();
