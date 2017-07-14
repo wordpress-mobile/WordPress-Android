@@ -135,6 +135,14 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             return true;
         }
 
+        return isPostQueued(post);
+    }
+
+    static boolean isPostQueued(PostModel post) {
+        if (post == null) {
+            return false;
+        }
+
         // Then check the list of posts waiting to be uploaded
         if (sQueuedPostsList.size() > 0) {
             synchronized (sQueuedPostsList) {

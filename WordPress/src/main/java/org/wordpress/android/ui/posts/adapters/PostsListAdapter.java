@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -251,8 +253,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 postHolder.disabledOverlay.setVisibility(View.GONE);
             }
 
+            updateStatusTextAndImage(postHolder.txtStatus, postHolder.imgStatus, post);
             updatePostUploadProgressBar(postHolder.progressBar, post);
-            updateStatusText(postHolder.txtStatus, post);
             configurePostButtons(postHolder, post);
         } else if (holder instanceof PageViewHolder) {
             PageViewHolder pageHolder = (PageViewHolder) holder;
@@ -265,8 +267,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             String dateStr = getPageDateHeaderText(context, post);
             pageHolder.txtDate.setText(dateStr);
 
+            updateStatusTextAndImage(pageHolder.txtStatus, pageHolder.imgStatus, post);
             updatePostUploadProgressBar(pageHolder.progressBar, post);
-            updateStatusText(pageHolder.txtStatus, post);
 
             // don't show date header if same as previous
             boolean showDate;
@@ -385,31 +387,38 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-
-    private void updateStatusText(TextView txtStatus, PostModel post) {
+    private void updateStatusTextAndImage(TextView txtStatus, ImageView imgStatus, PostModel post) {
         if ((PostStatus.fromPost(post) == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.isLocallyChanged()) {
             txtStatus.setVisibility(View.GONE);
+            imgStatus.setVisibility(View.GONE);
         } else {
             int statusTextResId = 0;
             int statusIconResId = 0;
             int statusColorResId = R.color.grey_darken_10;
 
-            if (UploadService.isPostUploadingOrQueued(post)) {
+            if (UploadService.isPostUploading(post)) {
                 statusTextResId = R.string.post_uploading;
-                statusColorResId = R.color.alert_yellow;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
+            } else if (UploadService.hasInProgressMediaUploadsForPost(post)) {
+                statusTextResId = R.string.uploading_post_media;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
+            } else if(UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
+                // the Post (or its related media if such a thing exist) *is strictly* queued
+                statusTextResId = R.string.post_queued;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if (post.isLocalDraft()) {
                 statusTextResId = R.string.local_draft;
-                statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
+                statusIconResId = R.drawable.ic_gridicons_page;
                 statusColorResId = R.color.alert_yellow;
             } else if (post.isLocallyChanged()) {
                 statusTextResId = R.string.local_changes;
-                statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
+                statusIconResId = R.drawable.ic_gridicons_page;
                 statusColorResId = R.color.alert_yellow;
             } else {
                 switch (PostStatus.fromPost(post)) {
                     case DRAFT:
                         statusTextResId = R.string.post_status_draft;
-                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
+                        statusIconResId = R.drawable.ic_gridicons_page;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case PRIVATE:
@@ -417,17 +426,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         break;
                     case PENDING:
                         statusTextResId = R.string.post_status_pending_review;
-                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
+                        statusIconResId = R.drawable.ic_gridicons_page;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case SCHEDULED:
                         statusTextResId = R.string.post_status_scheduled;
-                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
-                        statusColorResId = R.color.alert_yellow;
+                        statusIconResId = R.drawable.ic_gridicons_calendar;
+                        statusColorResId = R.color.blue_medium;
                         break;
                     case TRASHED:
                         statusTextResId = R.string.post_status_trashed;
-                        statusIconResId = R.drawable.ic_pages_alert_red_16dp;
+                        statusIconResId = R.drawable.ic_gridicons_page;
                         statusColorResId = R.color.alert_red;
                         break;
                 }
@@ -436,9 +445,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             Resources resources = txtStatus.getContext().getResources();
             txtStatus.setTextColor(resources.getColor(statusColorResId));
             txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
-            Drawable drawable = (statusIconResId != 0 ? resources.getDrawable(statusIconResId) : null);
-            txtStatus.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             txtStatus.setVisibility(View.VISIBLE);
+
+            Drawable drawable = (statusIconResId != 0 ? resources.getDrawable(statusIconResId) : null);
+            if (drawable != null) {
+                drawable = DrawableCompat.wrap(drawable);
+                DrawableCompat.setTint(drawable, resources.getColor(statusColorResId));
+                imgStatus.setImageDrawable(drawable);
+                imgStatus.setVisibility(View.VISIBLE);
+            } else {
+                imgStatus.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -615,6 +632,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final TextView txtExcerpt;
         private final TextView txtDate;
         private final TextView txtStatus;
+        private final ImageView imgStatus;
 
         private final PostListButton btnEdit;
         private final PostListButton btnView;
@@ -639,6 +657,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             txtExcerpt = (TextView) view.findViewById(R.id.text_excerpt);
             txtDate = (TextView) view.findViewById(R.id.text_date);
             txtStatus = (TextView) view.findViewById(R.id.text_status);
+            imgStatus = (ImageView) view.findViewById(R.id.image_status);
 
             btnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
             btnView = (PostListButton) view.findViewById(R.id.btn_view);
@@ -662,6 +681,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final TextView txtTitle;
         private final TextView txtDate;
         private final TextView txtStatus;
+        private final ImageView imgStatus;
         private final ViewGroup dateHeader;
         private final View btnMore;
         private final View dividerTop;
@@ -672,6 +692,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtStatus = (TextView) view.findViewById(R.id.text_status);
+            imgStatus = (ImageView) view.findViewById(R.id.image_status);
             btnMore = view.findViewById(R.id.btn_more);
             dividerTop = view.findViewById(R.id.divider_top);
             dateHeader = (ViewGroup) view.findViewById(R.id.header_date);

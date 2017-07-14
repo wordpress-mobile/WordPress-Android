@@ -170,7 +170,7 @@ public class UploadService extends Service {
                 mPostUploadHandler.registerPostForAnalyticsTracking(post);
             }
 
-            if (!hasPendingMediaUploadsForPost(post)) {
+            if (!hasPendingOrInProgressMediaUploadsForPost(post)) {
                 mPostUploadHandler.upload(post);
             } else {
                 sPostsWithPendingMedia.add(post);
@@ -243,6 +243,19 @@ public class UploadService extends Service {
         return false;
     }
 
+    public static boolean isPostQueued(PostModel post) {
+        if (post == null) {
+            return false;
+        }
+
+        // First check for posts strictly queued inside the PostUploadManager
+        if (PostUploadHandler.isPostQueued(post)) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Returns true if the passed post is currently uploading.
      * Except for legacy mode, a post counts as 'uploading' if the post content itself is being uploaded - a post
@@ -285,8 +298,16 @@ public class UploadService extends Service {
         return post;
     }
 
+    public static boolean hasInProgressMediaUploadsForPost(PostModel postModel) {
+        return postModel != null && MediaUploadHandler.hasInProgressMediaUploadsForPost(postModel);
+    }
+
     public static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
         return postModel != null && MediaUploadHandler.hasPendingMediaUploadsForPost(postModel);
+    }
+
+    public static boolean hasPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
+        return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel);
     }
 
     private void showNotificationForPostWithPendingMedia(PostModel post) {
@@ -429,7 +450,7 @@ public class UploadService extends Service {
                     Iterator<PostModel> iterator = sPostsWithPendingMedia.iterator();
                     while (iterator.hasNext()) {
                         PostModel postModel = iterator.next();
-                        if (!UploadService.hasPendingMediaUploadsForPost(postModel)) {
+                        if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
                             // Fetch latest version of the post, in case it has been modified elsewhere
                             PostModel latestPost = mPostStore.getPostByLocalPostId(postModel.getId());
 
