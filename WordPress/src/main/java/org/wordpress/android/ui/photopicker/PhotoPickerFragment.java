@@ -133,6 +133,23 @@ public class PhotoPickerFragment extends Fragment {
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
+        mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
+            @Override
+            public boolean onFling(int velocityX, int velocityY) {
+                getAdapter().setIsFlinging(true);
+                return false;
+            }
+        });
+        mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_SETTLING
+                        || newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    getAdapter().setIsFlinging(false);
+                }
+            }
+        });
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
         mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {

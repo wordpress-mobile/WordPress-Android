@@ -72,6 +72,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private boolean mIsMultiSelectEnabled;
     private boolean mPhotosOnly;
     private boolean mIsListTaskRunning;
+    private boolean mIsFlinging;
 
     private final ThumbnailLoader mThumbnailLoader;
     private final PhotoPickerAdapterListener mListener;
@@ -163,7 +164,23 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         holder.imgPreview.setVisibility(item.isVideo ? View.GONE : View.VISIBLE);
         holder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
 
-        mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo);
+        // load the thumbnail unless the user is in a fling, in which case simply show the
+        // placeholder to reduce memory consumption while the fling is in progress
+        if (!mIsFlinging) {
+            mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo);
+        } else {
+            holder.imgThumbnail.setImageResource(R.drawable.photo_picker_item_background);
+        }
+    }
+
+    public void setIsFlinging(boolean isFlinging) {
+        AppLog.w(AppLog.T.MEDIA, "isFlinging = " + isFlinging);
+        if (isFlinging != mIsFlinging) {
+            mIsFlinging = isFlinging;
+            if (!mIsFlinging) {
+                notifyDataSetChanged();
+            }
+        }
     }
 
     private PhotoPickerItem getItemAtPosition(int position) {
