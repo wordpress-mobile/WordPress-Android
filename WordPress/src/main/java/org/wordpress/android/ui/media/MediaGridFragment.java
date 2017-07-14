@@ -36,7 +36,6 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
-import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
@@ -125,7 +124,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
-    @Inject FluxCImageLoader mImageLoader;
 
     private MediaBrowserType mBrowserType;
 
@@ -248,7 +246,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private MediaGridAdapter getAdapter() {
         if (!hasAdapter()) {
-            mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
+            mGridAdapter = new MediaGridAdapter(getActivity(), mSite);
             mGridAdapter.setCallback(this);
             mGridAdapter.setAllowMultiselect(mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER);
             mGridAdapter.setShowPreviewIcon(mBrowserType.isPicker());

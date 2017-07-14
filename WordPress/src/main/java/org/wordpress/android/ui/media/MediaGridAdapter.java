@@ -17,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -53,7 +51,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private final Handler mHandler;
     private final LayoutInflater mInflater;
 
-    private ImageLoader mImageLoader;
     private final Context mContext;
     private final SiteModel mSite;
 
@@ -75,7 +72,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     private static final int INVALID_POSITION = -1;
 
-    public MediaGridAdapter(Context context, SiteModel site, ImageLoader imageLoader) {
+    public MediaGridAdapter(Context context, SiteModel site) {
         super();
         setHasStableIds(true);
 
@@ -87,8 +84,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
         mThumbWidth = displayWidth / getColumnCount(mContext);
         mThumbHeight = (int) (mThumbWidth * 0.75f);
-
-        setImageLoader(imageLoader);
     }
 
     public void setShowPreviewIcon(boolean show) {
@@ -103,10 +98,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     @Override
     public long getItemId(int position) {
         return getLocalMediaIdAtPosition(position);
-    }
-
-    private void setImageLoader(ImageLoader imageLoader) {
-        mImageLoader = imageLoader;
     }
 
     public void setMediaList(@NonNull List<MediaModel> mediaList) {
