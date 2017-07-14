@@ -733,26 +733,47 @@ public class MediaStore extends Store {
         emitChange(onMediaUploaded);
     }
 
+    private void updateFetchedMediaList(@NonNull FetchMediaListResponsePayload payload) {
+        // if we loaded another page, simply add the fetched media and be done
+        if (payload.loadedMore) {
+            for (MediaModel media: payload.mediaList) {
+                updateMedia(media, false);
+            }
+            return;
+        }
+
+        // build separate lists of existing and new media
+        List<MediaModel> existingMediaList = new ArrayList<>();
+        List<MediaModel> newMediaList = new ArrayList<>();
+        for (MediaModel fetchedMedia: payload.mediaList) {
+            MediaModel media = getSiteMediaWithId(payload.site, fetchedMedia.getMediaId());
+            if (media != null) {
+                // retain the local ID, then update this media item
+                fetchedMedia.setId(media.getId());
+                existingMediaList.add(fetchedMedia);
+                updateMedia(fetchedMedia, false);
+            } else {
+                newMediaList.add(fetchedMedia);
+            }
+        }
+
+        // remove media that is NOT in the existing list
+        MediaSqlUtils.deleteUploadedSiteMediaNotInList(
+                payload.site, existingMediaList, payload.mimeType);
+
+        // add new media
+        for (MediaModel media : newMediaList) {
+            updateMedia(media, false);
+        }
+    }
+
     private void handleMediaListFetched(@NonNull FetchMediaListResponsePayload payload) {
         OnMediaListFetched onMediaListFetched;
 
         if (payload.isError()) {
             onMediaListFetched = new OnMediaListFetched(payload.site, payload.error, payload.mimeType);
         } else {
-            // Clear existing media if this is a fresh fetch (loadMore = false in the original request)
-            // This is the simplest way of keeping our local media in sync with remote media (in case of deletions)
-            if (!payload.loadedMore) {
-                if (TextUtils.isEmpty(payload.mimeType)) {
-                    MediaSqlUtils.deleteAllUploadedSiteMedia(payload.site);
-                } else {
-                    MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(payload.site, payload.mimeType);
-                }
-            }
-            if (!payload.mediaList.isEmpty()) {
-                for (MediaModel media : payload.mediaList) {
-                    updateMedia(media, false);
-                }
-            }
+            updateFetchedMediaList(payload);
             onMediaListFetched = new OnMediaListFetched(payload.site, payload.canLoadMore, payload.mimeType);
         }
 
