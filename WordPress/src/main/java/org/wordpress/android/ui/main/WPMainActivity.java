@@ -592,9 +592,7 @@ public class WPMainActivity extends AppCompatActivity {
                 }
                 break;
             case RequestCodes.REAUTHENTICATE:
-                if (resultCode == RESULT_CANCELED) {
-                    ActivityLauncher.showSignInForResult(this);
-                } else {
+                if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
                     startService(new Intent(this, GCMRegistrationIntentService.class));
                 }
@@ -676,7 +674,7 @@ public class WPMainActivity extends AppCompatActivity {
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         if (event.isError()) {
             if (mSelectedSite != null && event.error.type == AuthenticationErrorType.INVALID_TOKEN) {
-                AuthenticationDialogUtils.showAuthErrorView(this, mSelectedSite);
+                AuthenticationDialogUtils.showAuthErrorView(this, mSiteStore, mSelectedSite);
             }
 
             return;

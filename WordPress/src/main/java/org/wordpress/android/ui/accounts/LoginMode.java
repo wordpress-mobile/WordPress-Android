@@ -6,7 +6,8 @@ public enum LoginMode {
     FULL,
     SELFHOSTED_ONLY,
     JETPACK_STATS,
-    WPCOM_LOGIN_DEEPLINK;
+    WPCOM_LOGIN_DEEPLINK,
+    WPCOM_REAUTHENTICATE;
 
     private static final String ARG_LOGIN_MODE = "ARG_LOGIN_MODE";
 

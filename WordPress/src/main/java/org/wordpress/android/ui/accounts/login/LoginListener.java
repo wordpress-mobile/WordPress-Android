@@ -8,6 +8,8 @@ public interface LoginListener {
     // Login Prologue callbacks
     void showEmailLoginScreen();
     void doStartSignup();
+    void loggedInViaSigUp();
+    void newUserCreatedButErrored(String email, String password);
 
     // Login Email input callbacks
     void gotWpcomEmail(String email);

@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
                     break;
                 case JETPACK_STATS:
                 case WPCOM_LOGIN_DEEPLINK:
+                case WPCOM_REAUTHENTICATE:
                     showFragment(new LoginEmailFragment(), LoginEmailFragment.TAG);
                     break;
             }
@@ -100,6 +101,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
                 break;
             case JETPACK_STATS:
             case WPCOM_LOGIN_DEEPLINK:
+            case WPCOM_REAUTHENTICATE:
                 ActivityLauncher.showLoginEpilogueForResult(this, true);
                 break;
             case SELFHOSTED_ONLY:
@@ -130,7 +132,19 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void doStartSignup() {
-        ToastUtils.showToast(this, "Signup is not implemented yet");
+        NewUserFragment newUserFragment = NewUserFragment.newInstance();
+        slideInFragment(newUserFragment, true, NewUserFragment.TAG);
+    }
+
+    @Override
+    public void loggedInViaSigUp() {
+        loggedInAndFinish();
+    }
+
+    @Override
+    public void newUserCreatedButErrored(String email, String password) {
+        LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, password);
+        slideInFragment(loginEmailPasswordFragment, false, LoginEmailPasswordFragment.TAG);
     }
 
     @Override
@@ -139,7 +153,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
             LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(email);
             slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
         } else {
-            LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email);
+            LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, null);
             slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
         }
     }
@@ -170,7 +184,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void usePasswordInstead(String email) {
-        LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email);
+        LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, null);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailFragment.TAG);
     }
 
