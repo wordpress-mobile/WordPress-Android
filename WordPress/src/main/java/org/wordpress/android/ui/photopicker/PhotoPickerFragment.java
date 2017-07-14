@@ -208,7 +208,7 @@ public class PhotoPickerFragment extends Fragment {
 
     private void setIsFlinging(boolean isFlinging) {
         if (hasAdapter()) {
-            getAdapter().setIsFlinging(isFlinging);
+            //getAdapter().setIsFlinging(isFlinging);
         }
     }
 

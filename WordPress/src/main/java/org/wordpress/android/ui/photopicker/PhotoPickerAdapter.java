@@ -2,13 +2,11 @@ package org.wordpress.android.ui.photopicker;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,7 +78,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private final ThumbnailLoader mThumbnailLoader;
     private final PhotoPickerAdapterListener mListener;
     private final LayoutInflater mInflater;
-    private final Drawable mBackground;
 
     private final ArrayList<PhotoPickerItem> mMediaList = new ArrayList<>();
 
@@ -91,7 +88,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         mListener = listener;
         mInflater = LayoutInflater.from(context);
         mThumbnailLoader = new ThumbnailLoader(context);
-        mBackground = ContextCompat.getDrawable(context, R.drawable.photo_picker_item_background);
 
         setHasStableIds(true);
     }
@@ -171,12 +167,10 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         holder.imgPreview.setVisibility(item.isVideo ? View.GONE : View.VISIBLE);
         holder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
 
-        // clear the thumbnail unless we've temporarily disabled it
         if (!mDisableImageReset) {
-            holder.imgThumbnail.setImageDrawable(mBackground);
+            holder.imgThumbnail.setImageDrawable(null);
         }
 
-        // don't load the thumbnail during a fling (reduces memory usage)
         if (!mIsFlinging) {
             boolean animate = !mDisableImageReset;
             mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo, animate);

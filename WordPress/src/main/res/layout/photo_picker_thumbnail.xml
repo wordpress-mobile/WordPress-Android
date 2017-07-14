@@ -15,6 +15,7 @@
             android:id="@+id/image_thumbnail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/photo_picker_item_background"
             android:scaleType="centerCrop"
             tools:src="@drawable/gravatar_placeholder" />
 
