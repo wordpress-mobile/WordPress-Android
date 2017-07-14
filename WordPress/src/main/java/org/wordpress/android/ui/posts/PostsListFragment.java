@@ -495,7 +495,7 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.browsePostOrPage(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_PREVIEW:
-                ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, post, mIsPage);
+                ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_STATS:
                 ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, mIsPage);
