@@ -17,14 +17,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.FadeInNetworkImageView;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -34,6 +31,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +51,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private final Handler mHandler;
     private final LayoutInflater mInflater;
 
-    private ImageLoader mImageLoader;
     private final Context mContext;
     private final SiteModel mSite;
 
@@ -75,7 +72,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     private static final int INVALID_POSITION = -1;
 
-    public MediaGridAdapter(Context context, SiteModel site, ImageLoader imageLoader) {
+    public MediaGridAdapter(Context context, SiteModel site) {
         super();
         setHasStableIds(true);
 
@@ -87,8 +84,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
         mThumbWidth = displayWidth / getColumnCount(mContext);
         mThumbHeight = (int) (mThumbWidth * 0.75f);
-
-        setImageLoader(imageLoader);
     }
 
     public void setShowPreviewIcon(boolean show) {
@@ -103,10 +98,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     @Override
     public long getItemId(int position) {
         return getLocalMediaIdAtPosition(position);
-    }
-
-    private void setImageLoader(ImageLoader imageLoader) {
-        mImageLoader = imageLoader;
     }
 
     public void setMediaList(@NonNull List<MediaModel> mediaList) {
@@ -173,12 +164,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if (isLocalFile) {
                 loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
-                WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView, mImageLoader);
+                WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView);
             }
         } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.VISIBLE);
-            WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl(), holder.imageView, mImageLoader);
+            WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl(), holder.imageView);
         } else {
             // not an image or video, so show file name and file type
             holder.videoOverlayContainer.setVisibility(View.GONE);
@@ -248,7 +239,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     class GridViewHolder extends RecyclerView.ViewHolder {
         private final TextView titleView;
-        private final FadeInNetworkImageView imageView;
+        private final WPNetworkImageView imageView;
         private final TextView fileTypeView;
         private final ImageView fileTypeImageView;
         private final TextView selectionCountTextView;
@@ -262,7 +253,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         public GridViewHolder(View view) {
             super(view);
 
-            imageView = (FadeInNetworkImageView) view.findViewById(R.id.media_grid_item_image);
+            imageView = (WPNetworkImageView) view.findViewById(R.id.media_grid_item_image);
             selectionCountTextView = (TextView) view.findViewById(R.id.text_selection_count);
 
             stateContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_upload_state_container);
