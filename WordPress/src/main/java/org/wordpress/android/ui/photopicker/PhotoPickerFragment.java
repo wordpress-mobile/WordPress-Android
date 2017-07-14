@@ -30,6 +30,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapte
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.WPPermissionUtils;
@@ -84,6 +85,8 @@ public class PhotoPickerFragment extends Fragment {
     private static final String ARG_PHOTOS_ONLY = "photos_only";
     private static final String ARG_DEVICE_ONLY = "device_only";
 
+    private static final int MIN_DISTANCE_DP = 48;
+
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
                                                   @NonNull EnumSet<PhotoPickerOption> options) {
         Bundle args = new Bundle();
@@ -100,6 +103,7 @@ public class PhotoPickerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Bundle args = getArguments();
         if (args != null) {
             mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
@@ -126,10 +130,12 @@ public class PhotoPickerFragment extends Fragment {
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
 
+        // detect flings so we can disable thumbnail loading during them
+        final int minDistancePx = DisplayUtils.dpToPx(getActivity(), MIN_DISTANCE_DP);
         mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
             @Override
             public boolean onFling(int velocityX, int velocityY) {
-                getAdapter().setIsFlinging(true);
+                setIsFlinging(true);
                 return false;
             }
         });
@@ -137,9 +143,15 @@ public class PhotoPickerFragment extends Fragment {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE
-                        || newState == RecyclerView.SCROLL_STATE_SETTLING) {
-                    getAdapter().setIsFlinging(false);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    setIsFlinging(false);
+                }
+            }
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy <= minDistancePx) {
+                    setIsFlinging(false);
                 }
             }
         });
@@ -192,6 +204,12 @@ public class PhotoPickerFragment extends Fragment {
     public void onResume() {
         super.onResume();
         checkStoragePermission();
+    }
+
+    private void setIsFlinging(boolean isFlinging) {
+        if (hasAdapter()) {
+            getAdapter().setIsFlinging(isFlinging);
+        }
     }
 
     private void doIconClicked(@NonNull PhotoPickerIcon icon) {
