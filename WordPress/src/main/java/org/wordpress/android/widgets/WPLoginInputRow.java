@@ -119,7 +119,7 @@ public class WPLoginInputRow extends RelativeLayout {
         int[] rules = iconLayoutParams.getRules();
         for (int i = 0; i < rules.length; i++) {
             if (rules[i] == mTextInputLayout.getId()) {
-                rules[i] = mNewIds.get(1);
+                iconLayoutParams.addRule(i, mNewIds.get(1));
             }
         }
         mIcon.setLayoutParams(iconLayoutParams);
@@ -128,7 +128,7 @@ public class WPLoginInputRow extends RelativeLayout {
         rules = editTextLayoutParams.getRules();
         for (int i = 0; i < rules.length; i++) {
             if (rules[i] == mIcon.getId()) {
-                rules[i] = mNewIds.get(0);
+                editTextLayoutParams.addRule(i, mNewIds.get(0));
             }
         }
         mTextInputLayout.setLayoutParams(editTextLayoutParams);
