@@ -7,18 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -40,10 +36,12 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.widgets.WPLoginInputRow;
+import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
 import javax.inject.Inject;
 
-public class LoginSiteAddressFragment extends LoginBaseFormFragment implements TextWatcher {
+public class LoginSiteAddressFragment extends LoginBaseFormFragment implements TextWatcher, OnEditorCommitListener {
     private static final String KEY_REQUESTED_SITE_ADDRESS = "KEY_REQUESTED_SITE_ADDRESS";
 
     public static final String TAG = "login_email_fragment_tag";
@@ -57,8 +55,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment implements T
     private static final String NO_SITE_HELPSHIFT_FAQ_SECTION = "10";
     private static final String NO_SITE_HELPSHIFT_FAQ_ID = "2"; //using the same as in INVALID URL
 
-    private TextInputLayout mSiteAddressTextLayout;
-    private EditText mSiteAddressEditText;
+    private WPLoginInputRow mSiteAddressInput;
 
     private String mRequestedSiteAddress;
 
@@ -84,30 +81,9 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment implements T
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        mSiteAddressTextLayout = (TextInputLayout) rootView.findViewById(R.id.input_layout);
-        mSiteAddressTextLayout.setHint(getString(R.string.login_site_address));
-
-        ImageView icon = (ImageView) rootView.findViewById(R.id.icon);
-        icon.setContentDescription(getString(R.string.login_globe_icon));
-        icon.setImageResource(R.drawable.ic_globe_grey_24dp);
-
-        mSiteAddressEditText = (EditText) rootView.findViewById(R.id.input);
-        mSiteAddressEditText.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
-        mSiteAddressEditText.addTextChangedListener(this);
-
-        mSiteAddressEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null
-                        && event.getAction() == KeyEvent.ACTION_UP
-                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    discover();
-                }
-
-                // always consume the event so the focus stays in the EditText
-                return true;
-            }
-        });
+        mSiteAddressInput = (WPLoginInputRow) rootView.findViewById(R.id.login_site_address_row);
+        mSiteAddressInput.addTextChangedListener(this);
+        mSiteAddressInput.setOnEditorCommitListener(this);
     }
 
     @Override
@@ -128,7 +104,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment implements T
 
     @Override
     protected EditText getEditTextToFocusOnStart() {
-        return mSiteAddressEditText;
+        return mSiteAddressInput.getEditText();
     }
 
     @Override
@@ -158,7 +134,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment implements T
             return;
         }
 
-        if (TextUtils.isEmpty(mSiteAddressEditText.getText())) {
+        if (TextUtils.isEmpty(mSiteAddressInput.getEditText().getText())) {
             showError(R.string.login_empty_site_url, null, null);
             return;
         }
@@ -172,7 +148,12 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment implements T
     }
 
     private String getCleanedSiteAddress() {
-        return EditTextUtils.getText(mSiteAddressEditText).trim().replaceAll("[\r\n]", "");
+        return EditTextUtils.getText(mSiteAddressInput.getEditText()).trim().replaceAll("[\r\n]", "");
+    }
+
+    @Override
+    public void OnEditorCommit() {
+        discover();
     }
 
     @Override
@@ -185,12 +166,12 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment implements T
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        mSiteAddressTextLayout.setError(null);
+        mSiteAddressInput.setError(null);
         mLoginListener.setHelpContext(null, null);
     }
 
     private void showError(int messageId, String faqId, String faqSection) {
-        mSiteAddressTextLayout.setError(getString(messageId));
+        mSiteAddressInput.setError(getString(messageId));
         mLoginListener.setHelpContext(faqId, faqSection);
     }
 
