@@ -9,6 +9,8 @@ public interface LoginListener {
     void nextPromo();
     void showEmailLoginScreen();
     void doStartSignup();
+    void loggedInViaSigUp();
+    void newUserCreatedButErrored(String email, String password);
 
     // Login Email input callbacks
     void gotWpcomEmail(String email);

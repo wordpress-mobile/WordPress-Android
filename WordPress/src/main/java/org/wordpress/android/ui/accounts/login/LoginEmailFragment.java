@@ -54,8 +54,24 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
 
     @Override
     protected void setupLabel(TextView label) {
+        switch (mLoginListener.getLoginMode()) {
+            case WPCOM_LOGIN_DEEPLINK:
+                // fall through to FULL
+            case FULL:
+                label.setText(R.string.enter_email_wordpress_com);
+                break;
+            case JETPACK_STATS:
+                label.setText(R.string.stats_sign_in_jetpack_different_com_account);
+                break;
+            case WPCOM_REAUTHENTICATE:
+                label.setText(R.string.auth_required);
+                break;
+        }
+
         if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
             label.setText(R.string.stats_sign_in_jetpack_different_com_account);
+        } else if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
+
         } else {
             label.setText(R.string.enter_email_wordpress_com);
         }
@@ -108,6 +124,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
                 secondaryButton.setText(R.string.enter_username_instead);
                 break;
             case WPCOM_LOGIN_DEEPLINK:
+                secondaryButton.setVisibility(View.GONE);
+                break;
+            case WPCOM_REAUTHENTICATE:
                 secondaryButton.setVisibility(View.GONE);
                 break;
         }
