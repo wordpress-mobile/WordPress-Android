@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -23,6 +24,11 @@ import java.util.List;
  * Compound view composed of an icon and an EditText
  */
 public class WPLoginInputRow extends RelativeLayout {
+
+    public interface OnEditorCommitListener {
+        void OnEditorCommit();
+    }
+
     private ImageView mIcon;
     private TextInputLayout mTextInputLayout;
     private EditText mEditText;
@@ -142,6 +148,22 @@ public class WPLoginInputRow extends RelativeLayout {
 
     public void addTextChangedListener(TextWatcher watcher) {
         mEditText.addTextChangedListener(watcher);
+    }
+
+    public void setOnEditorCommitListener(final OnEditorCommitListener listener) {
+        mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event != null
+                        && event.getAction() == KeyEvent.ACTION_UP
+                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    listener.OnEditorCommit();
+                }
+
+                // always consume the event so the focus stays in the EditText
+                return true;
+            }
+        });
     }
 
     public void setOnEditorActionListener(TextView.OnEditorActionListener l) {

@@ -28,11 +28,12 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
+import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginEmailFragment extends LoginBaseFormFragment implements TextWatcher {
+public class LoginEmailFragment extends LoginBaseFormFragment implements TextWatcher, OnEditorCommitListener {
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
 
     public static final String TAG = "login_email_fragment_tag";
@@ -86,19 +87,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
 
         autoFillFromBuildConfig();
 
-        mEmailInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null
-                        && event.getAction() == KeyEvent.ACTION_UP
-                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    next(getCleanedEmail());
-                }
-
-                // always consume the event so the focus stays in the EditText
-                return true;
-            }
-        });
+        mEmailInput.setOnEditorCommitListener(this);
     }
 
     @Override
@@ -198,6 +187,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
         Matcher matcher = emailRegExPattern.matcher(email);
 
         return matcher.find() && email.length() <= MAX_EMAIL_LENGTH;
+    }
+
+    @Override
+    public void OnEditorCommit() {
+        next(getCleanedEmail());
     }
 
     @Override
