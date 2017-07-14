@@ -73,6 +73,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private boolean mPhotosOnly;
     private boolean mIsListTaskRunning;
     private boolean mIsFlinging;
+    private boolean mDisableImageReset;
 
     private final ThumbnailLoader mThumbnailLoader;
     private final PhotoPickerAdapterListener mListener;
@@ -164,21 +165,24 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         holder.imgPreview.setVisibility(item.isVideo ? View.GONE : View.VISIBLE);
         holder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
 
-        // load the thumbnail unless the user is in a fling, in which case simply show the
-        // placeholder to reduce memory consumption while the fling is in progress
-        if (!mIsFlinging) {
-            mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo);
-        } else {
+        // clear the thumbnail unless we've temporarily disabled it
+        if (!mDisableImageReset) {
             holder.imgThumbnail.setImageResource(R.drawable.photo_picker_item_background);
+        }
+
+        // don't load the thumbnail during a fling (reduces memory usage)
+        if (!mIsFlinging) {
+            boolean animate = !mDisableImageReset;
+            mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo, animate);
         }
     }
 
-    public void setIsFlinging(boolean isFlinging) {
-        AppLog.w(AppLog.T.MEDIA, "isFlinging = " + isFlinging);
+    void setIsFlinging(boolean isFlinging) {
         if (isFlinging != mIsFlinging) {
             mIsFlinging = isFlinging;
+            AppLog.w(AppLog.T.MEDIA, "isFlinging = " + isFlinging + " " + System.currentTimeMillis());
             if (!mIsFlinging) {
-                notifyDataSetChanged();
+                notifyDataSetChangedInternal();
             }
         }
     }
@@ -210,7 +214,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
         if (!enabled && mSelectedUris.size() > 0) {
             mSelectedUris.clear();
-            notifyDataSetChangedNoFade();
+            notifyDataSetChangedInternal();
         }
     }
 
@@ -255,7 +259,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                notifyDataSetChangedNoFade();
+                notifyDataSetChangedInternal();
             }
         }, delayMs);
     }
@@ -271,12 +275,18 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     }
 
     /*
-     * calls notifyDataSetChanged() with the ThumbnailLoader image fade disabled - used to
-     * prevent unnecessary flicker when changing existing items
+     * wrapper for notifyDataSetChanged() that prevents/reduces flicker
      */
-    private void notifyDataSetChangedNoFade() {
-        mThumbnailLoader.temporarilyDisableFade();
+    private void notifyDataSetChangedInternal() {
+        mDisableImageReset = true;
         notifyDataSetChanged();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mDisableImageReset = false;
+            }
+        }, 500);
     }
 
     /*

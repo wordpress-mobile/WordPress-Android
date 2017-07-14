@@ -9,7 +9,6 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 
-import org.wordpress.android.R;
 import org.wordpress.android.util.ImageUtils;
 
 import java.lang.ref.WeakReference;
@@ -21,9 +20,8 @@ class ThumbnailLoader {
     private final Context mContext;
     private final ThreadPoolExecutor mExecutor;
     private final Handler mHandler;
-    private boolean mIsFadeEnabled = true;
 
-    private static final int FADE_TRANSITION = 250;
+    private static final long FADE_TRANSITION = 250;
 
     ThumbnailLoader(Context context) {
         mContext = context;
@@ -34,24 +32,11 @@ class ThumbnailLoader {
         mHandler = new Handler(Looper.getMainLooper());
     }
 
-    void loadThumbnail(ImageView imageView, long imageId, boolean isVideo) {
-        Runnable task = new ThumbnailLoaderRunnable(imageView, imageId, isVideo);
+    void loadThumbnail(ImageView imageView, long imageId, boolean isVideo, boolean animate) {
+        Runnable task = new ThumbnailLoaderRunnable(imageView, imageId, isVideo, animate);
         mExecutor.submit(task);
     }
 
-    /*
-     * temporarily disables the fade animation - called when multiple items are changed
-     * to prevent unnecessary fade/flicker
-     */
-    void temporarilyDisableFade() {
-        mIsFadeEnabled = false;
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mIsFadeEnabled = true;
-            }
-        }, 500);
-    }
     /*
      * task to load a device thumbnail and display it in an ImageView
      */
@@ -60,18 +45,17 @@ class ThumbnailLoader {
         private final long mImageId;
         private final String mTag;
         private final boolean mIsVideo;
+        private final boolean mAnimate;
         private Bitmap mThumbnail;
 
-        ThumbnailLoaderRunnable(ImageView imageView, long imageId, boolean isVideo) {
+        ThumbnailLoaderRunnable(ImageView imageView, long imageId, boolean isVideo, boolean animate) {
             mWeakImageView = new WeakReference<>(imageView);
             mImageId = imageId;
             mIsVideo = isVideo;
+            mAnimate = animate;
 
             mTag = Long.toString(mImageId);
             imageView.setTag(mTag);
-            if (mIsFadeEnabled) {
-                imageView.setImageResource(R.drawable.photo_picker_item_background);
-            }
         }
 
         private boolean isImageViewValid() {
@@ -103,14 +87,14 @@ class ThumbnailLoader {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    // TODO: handle null thumbnail - show error image, maybe?
                     if (mThumbnail != null && isImageViewValid()) {
                         mWeakImageView.get().setImageBitmap(mThumbnail);
-                        if (mIsFadeEnabled) {
+                        if (mAnimate) {
                             ObjectAnimator alpha = ObjectAnimator.ofFloat(
                                     mWeakImageView.get(), View.ALPHA, 0.25f, 1f);
                             alpha.setDuration(FADE_TRANSITION);
                             alpha.start();
+
                         }
                     }
                 }

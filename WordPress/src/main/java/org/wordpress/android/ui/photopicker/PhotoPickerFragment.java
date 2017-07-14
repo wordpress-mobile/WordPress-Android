@@ -108,14 +108,6 @@ public class PhotoPickerFragment extends Fragment {
         }
     }
 
-    @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-        mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT);
-        mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY);
-        mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY);
-    }
-
     public void setOptions(@NonNull EnumSet<PhotoPickerOption> options) {
         mAllowMultiSelect = options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT);
         mPhotosOnly = options.contains(PhotoPickerOption.PHOTOS_ONLY);
@@ -133,6 +125,7 @@ public class PhotoPickerFragment extends Fragment {
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
+
         mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
             @Override
             public boolean onFling(int velocityX, int velocityY) {
@@ -144,8 +137,8 @@ public class PhotoPickerFragment extends Fragment {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_SETTLING
-                        || newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE
+                        || newState == RecyclerView.SCROLL_STATE_SETTLING) {
                     getAdapter().setIsFlinging(false);
                 }
             }
