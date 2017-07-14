@@ -8,7 +8,7 @@ Language: fr
 <resources>
 	<string name="media_error_timeout">Le serveur a mis trop de temps à répondre. Il se peut que vous ayez une connexion trop lente, ou qu\'une erreur serveur soit survenue.</string>
 	<string name="media_error_internal_server_error">Erreur de mise en ligne. Essayez d\'activer l\'option « Optimiser les images » dans l\'écran Site -> Réglages.</string>
-	<string name="media_error_too_large_upload">Le fichier est trop gros pour être mis en ligne. Essayez d\'activer l\'option « Optimiser les images » dans l\'écran Site -> Réglages.</string>
+	<string name="media_error_http_too_large_upload">Le fichier est trop gros pour être mis en ligne. Essayez d\'activer l\'option « Optimiser les images » dans l\'écran Site -> Réglages.</string>
 	<string name="media_downloading">Enregistrement du fichier sur cet appareil</string>
 	<string name="error_media_save">Impossible d’enregistrer les médias</string>
 	<string name="editor_scheduled_post_saved_online">Article programmé</string>

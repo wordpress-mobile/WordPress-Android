@@ -140,9 +140,12 @@
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_error_no_permission_upload">You don\'t have permission to upload media to the site</string>
-    <string name="media_error_too_large_upload">File too large to upload. Try enabling Optimize Images in Site->Settings</string>
-    <string name="media_error_internal_server_error">Upload error. Try enabling Optimize Images in Site->Settings</string>
-    <string name="media_error_timeout">Server response timed out, you may have a poor connection or server error</string>
+    <string name="media_error_http_too_large_photo_upload">Image too large to upload. Try changing Optimize Images in your site\'s settings</string>
+    <string name="media_error_http_too_large_video_upload">Video too large to upload</string>
+    <string name="media_error_exceeds_php_filesize">File exceeds the maximum upload size for this site</string>
+    <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
+    <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your site\'s settings</string>
+    <string name="media_error_timeout">Server took too long to respond</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
@@ -288,6 +291,7 @@
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
+    <string name="toast_err_post_media_uploading">Unable to delete a post while it\'s uploading</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -1143,15 +1147,13 @@
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
     <string name="error_upload_params">Error while uploading the %1$s: %2$s</string>
-    <string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
+    <string name="error_media_insufficient_fs_permissions">Read permission denied on device media</string>
     <string name="error_media_not_found">Media could not be found</string>
     <string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
-    <string name="error_media_parse_error">Could not parse response after media upload</string>
+    <string name="error_media_parse_error">Unexpected response from server</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
-    <string name="error_media_upload_connection">A connection error occurred while uploading media</string>
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_media_load">Unable to load media</string>
-    <string name="error_media_request_too_large">Media too large, can\'t be uploaded</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>

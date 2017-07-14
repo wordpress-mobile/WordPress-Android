@@ -557,6 +557,8 @@ public class PostsListFragment extends Fragment
                 // prevent deleting post while it's being uploaded
                 if (!UploadService.isPostUploadingOrQueued(post)) {
                     trashPost(post);
+                } else {
+                    ToastUtils.showToast(getActivity(), R.string.toast_err_post_media_uploading);
                 }
                 break;
         }

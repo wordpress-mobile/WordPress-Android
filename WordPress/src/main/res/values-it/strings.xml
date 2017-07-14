@@ -8,7 +8,7 @@ Language: it
 <resources>
 	<string name="media_error_timeout">Esaurito il tempo di risposta del server, potresti avere una connessione lenta o si è verificato un errore sul server</string>
 	<string name="media_error_internal_server_error">Errore di caricamento. Prova ad abilitare l\'Ottimizzazione immagini in Sito.>Impostazioni</string>
-	<string name="media_error_too_large_upload">File troppo grande per il caicamento. Prova ad abilitare l\'Ottimizzazione immagini in Sito.>Impostazioni</string>
+	<string name="media_error_http_too_large_upload">File troppo grande per il caicamento. Prova ad abilitare l\'Ottimizzazione immagini in Sito.>Impostazioni</string>
 	<string name="media_downloading">Salvataggio elemento media sulla periferica</string>
 	<string name="error_media_save">Non è possibile salvare il media</string>
 	<string name="editor_scheduled_post_saved_online">Pubblicazione programmata</string>

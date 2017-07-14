@@ -20,7 +20,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -49,6 +49,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.AztecEditorFragment;
+import org.wordpress.android.editor.EditorBetaClickListener;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -144,9 +145,15 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
-        ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
-        PhotoPickerFragment.PhotoPickerListener, EditPostSettingsFragment.EditPostActivityHook {
+public class EditPostActivity extends AppCompatActivity implements
+        EditorBetaClickListener,
+        EditorDragAndDropListener,
+        EditorFragmentListener,
+        EditorWebViewCompatibility.ReflectionFailureListener,
+        OnRequestPermissionsResultCallback,
+        PhotoPickerFragment.PhotoPickerListener,
+        EditPostSettingsFragment.EditPostActivityHook {
+
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
@@ -464,6 +471,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    @Override
+    public void onBetaClicked() {
+        startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+        AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LABEL);
+    }
+
     private String getSaveButtonText() {
         if (!userCanPublishPosts()) {
             return getString(R.string.submit_for_review);
@@ -554,6 +567,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (!isPhotoPickerShowing()) {
             AniUtils.animateBottomBar(mPhotoPickerContainer, true, AniUtils.Duration.MEDIUM);
             mPhotoPickerFragment.refresh();
+            mPhotoPickerFragment.setPhotoPickerListener(this);
         }
 
         // fade in the overlay atop the editor, which effectively disables the editor
@@ -571,6 +585,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private void hidePhotoPicker() {
         if (isPhotoPickerShowing()) {
             mPhotoPickerFragment.finishActionMode();
+            mPhotoPickerFragment.setPhotoPickerListener(null);
             AniUtils.animateBottomBar(mPhotoPickerContainer, false);
         }
 
@@ -799,23 +814,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED, properties);
 
         // Display custom error depending on error type
-        String errorMessage;
-        switch (error.type) {
-            case AUTHORIZATION_REQUIRED:
-                errorMessage = getString(R.string.media_error_no_permission_upload);
-                break;
-            case REQUEST_TOO_LARGE:
-                errorMessage = getString(R.string.media_error_too_large_upload);
-                break;
-            case SERVER_ERROR:
-                errorMessage = getString(R.string.media_error_internal_server_error);
-                break;
-            case TIMEOUT:
-                errorMessage = getString(R.string.media_error_timeout);
-                break;
-            case GENERIC_ERROR:
-            default:
-                errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
+        String errorMessage = WPMediaUtils.getErrorMessage(this, media, error);
+        if (errorMessage == null) {
+            errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
         }
 
         if (mEditorMediaUploadListener != null) {
@@ -1272,6 +1273,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     // TODO: Remove editor options after testing.
                     if (mShowAztecEditor) {
                         mAztecEditorFragment = AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
+                        mAztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
                         mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
 
                         // Show confirmation message when coming from editor promotion dialog.

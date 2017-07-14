@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.DragEvent;
@@ -119,6 +120,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private ImagePredicate mTappedImagePredicate;
 
+    EditorBetaClickListener mEditorBetaClickListener;
+
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -191,7 +194,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         mAztecReady = true;
 
+        AppCompatTextView titleBeta = (AppCompatTextView) view.findViewById(R.id.title_beta);
+        titleBeta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mEditorBetaClickListener.onBetaClicked();
+            }
+        });
+
         return view;
+    }
+
+    public void setEditorBetaClickListener(EditorBetaClickListener listener) {
+        mEditorBetaClickListener = listener;
     }
 
     public void setImageLoader(Html.ImageGetter imageLoader) {
