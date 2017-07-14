@@ -445,14 +445,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             Resources resources = txtStatus.getContext().getResources();
             txtStatus.setTextColor(resources.getColor(statusColorResId));
             txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
+            txtStatus.setVisibility(View.VISIBLE);
 
             Drawable drawable = (statusIconResId != 0 ? resources.getDrawable(statusIconResId) : null);
-            drawable = DrawableCompat.wrap(drawable);
-            DrawableCompat.setTint(drawable, resources.getColor(statusColorResId));
-            imgStatus.setImageDrawable(drawable);
-
-            txtStatus.setVisibility(View.VISIBLE);
-            imgStatus.setVisibility(View.VISIBLE);
+            if (drawable != null) {
+                drawable = DrawableCompat.wrap(drawable);
+                DrawableCompat.setTint(drawable, resources.getColor(statusColorResId));
+                imgStatus.setImageDrawable(drawable);
+                imgStatus.setVisibility(View.VISIBLE);
+            } else {
+                imgStatus.setVisibility(View.GONE);
+            }
         }
     }
 
