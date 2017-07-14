@@ -253,7 +253,7 @@ public class PostsListFragment extends Fragment
                     showSnackbar(R.string.editor_draft_saved_locally, R.string.button_publish, publishPostListener);
                 }
                 else {
-                    if (UploadService.hasPendingMediaUploadsForPost(post) ||
+                    if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post) ||
                             UploadService.isPostUploadingOrQueued(post)) {
                         showSnackbar(getString(R.string.editor_uploading_post));
                     } else {
@@ -268,7 +268,7 @@ public class PostsListFragment extends Fragment
                 showSnackbar(R.string.editor_post_saved_locally, R.string.button_publish, publishPostListener);
             }
             else {
-                if (UploadService.hasPendingMediaUploadsForPost(post) ||
+                if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post) ||
                         UploadService.isPostUploadingOrQueued(post)) {
                     showSnackbar(getString(R.string.editor_uploading_post));
                 } else {

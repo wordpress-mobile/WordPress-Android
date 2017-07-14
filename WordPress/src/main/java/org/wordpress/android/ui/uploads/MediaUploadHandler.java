@@ -66,7 +66,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
         uploadNextInQueue();
     }
 
-    static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
+    static boolean hasInProgressMediaUploadsForPost(PostModel postModel) {
         if (postModel == null) {
             return false;
         }
@@ -79,6 +79,14 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
             }
         }
 
+        return false;
+    }
+
+    static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
+        if (postModel == null) {
+            return false;
+        }
+
         synchronized (sPendingUploads) {
             for (MediaModel queuedMedia : sPendingUploads) {
                 if (queuedMedia.getLocalPostId() == postModel.getId()) {
@@ -86,6 +94,22 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
                 }
             }
         }
+        return false;
+    }
+
+    static boolean hasPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
+        if (postModel == null) {
+            return false;
+        }
+
+        if (hasInProgressMediaUploadsForPost(postModel)) {
+            return true;
+        }
+
+        if (hasPendingMediaUploadsForPost(postModel)) {
+            return true;
+        }
+
         return false;
     }
 
