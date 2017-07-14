@@ -119,6 +119,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         if (mSite.isJetpackConnected()) {
                             saveJetpackSettings();
                             updateJetpackProtectSettings();
+                            updateJetpackSsoSettings();
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -174,8 +175,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         }
 
                         if (mSite.isJetpackConnected()) {
+                            getJetpackModules();
                             fetchJetpackSettings();
-                            getJetpackProtectSettings();
+                            getJetpackProtectModule();
+                            getJetpackSsoModule();
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -183,6 +186,56 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error response to Settings REST request: " + error);
                         notifyUpdatedOnUiThread(error);
+                    }
+                });
+    }
+
+    private void getJetpackProtectModule() {
+        WordPress.getRestClientUtils().getJetpackModule(
+                mSite.getSiteId(), "protect", new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        mRemoteSettings.jetpackProtectEnabled = response.optBoolean("active");
+                        mSettings.jetpackProtectEnabled = response.optBoolean("active");
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error getting Jetpack Protect settings: " + error);
+                    }
+                });
+    }
+
+    private void getJetpackSsoModule() {
+        WordPress.getRestClientUtils().getJetpackModule(
+                mSite.getSiteId(), "sso", new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        mRemoteSettings.ssoActive = response.optBoolean("active");
+                        mSettings.ssoActive = response.optBoolean("active");
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error getting Jetpack Protect settings: " + error);
+                    }
+                });
+    }
+
+    private void setJetpackSsoModule(boolean enabled) {
+    }
+
+    private void getJetpackModules() {
+        WordPress.getRestClientUtils().getJetpackModules(
+                mSite.getSiteId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received response to Jetpack Settings REST request.");
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.v(AppLog.T.API, "Received response to Jetpack Settings REST request.");
                     }
                 });
     }
@@ -432,22 +485,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 });
     }
 
-    private void getJetpackProtectSettings() {
-        WordPress.getRestClientUtils().getJetpackProtect(
-                mSite.getSiteId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        mRemoteSettings.jetpackProtectEnabled = response.optBoolean("active");
-                        mSettings.jetpackProtectEnabled = response.optBoolean("active");
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error getting Jetpack Protect settings: " + error);
-                    }
-                });
-    }
-
     private void updateJetpackProtectSettings() {
         WordPress.getRestClientUtils().setJetpackProtect(
                 mSite.getSiteId(), new RestRequest.Listener() {
@@ -463,6 +500,23 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
                     }
                 }, mSettings.jetpackProtectEnabled);
+    }
+
+    private void updateJetpackSsoSettings() {
+        WordPress.getRestClientUtils().setJetpackSso(
+                mSite.getSiteId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
+                        mRemoteSettings.ssoActive = response.optBoolean("active");
+                        mSettings.ssoActive = response.optBoolean("active");
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
+                    }
+                }, mSettings.ssoActive);
     }
 
     private void saveJetpackSettings() {

@@ -238,13 +238,18 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
-    public void getJetpackSettings(long siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
+    public void getJetpackModule(long siteId, String module, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/jetpack/modules/%s", siteId, module);
         get(path, listener, errorListener);
     }
 
-    public void getJetpackProtect(long siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/jetpack/modules/protect", siteId);
+    public void getJetpackModules(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/jetpack/modules", siteId);
+        get(path, listener, errorListener);
+    }
+
+    public void getJetpackSettings(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
         get(path, listener, errorListener);
     }
 
