@@ -189,6 +189,9 @@ public class SiteSettingsModel {
     public boolean emailNotifications;
     public boolean wpNotifications;
     public boolean jetpackProtectEnabled;
+    public boolean ssoActive;
+    public boolean ssoMatchEmail;
+    public boolean ssoRequireTwoFactor;
 
     @Override
     public boolean equals(Object other) {
