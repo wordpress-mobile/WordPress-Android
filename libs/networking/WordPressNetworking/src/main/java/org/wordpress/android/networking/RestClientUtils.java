@@ -275,8 +275,7 @@ public class RestClientUtils {
      * Make POST request
      */
     public void post(String path, Listener listener, ErrorListener errorListener) {
-        Map<String, String> params = null;
-        post(path, params, null, listener, errorListener);
+        post(path, (Map<String, String>) null, null, listener, errorListener);
     }
 
     /**
