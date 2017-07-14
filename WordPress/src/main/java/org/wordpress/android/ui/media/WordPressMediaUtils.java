@@ -2,7 +2,6 @@ package org.wordpress.android.ui.media;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -53,17 +52,7 @@ public class WordPressMediaUtils {
                 RequestCodes.VIDEO_LIBRARY);
     }
 
-    public static void launchVideoLibrary(Fragment fragment) {
-        if (!fragment.isAdded()) {
-            return;
-        }
-        AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(prepareVideoLibraryIntent(fragment.getActivity()),
-                RequestCodes.VIDEO_LIBRARY);
-    }
-
-
-    public static Intent prepareVideoLibraryIntent(Context context) {
+    private static Intent prepareVideoLibraryIntent(Context context) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
@@ -74,14 +63,6 @@ public class WordPressMediaUtils {
         activity.startActivityForResult(prepareVideoCameraIntent(), RequestCodes.TAKE_VIDEO);
     }
 
-    public static void launchVideoCamera(Fragment fragment) {
-        if (!fragment.isAdded()) {
-            return;
-        }
-        AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(prepareVideoCameraIntent(), RequestCodes.TAKE_VIDEO);
-    }
-
     private static Intent prepareVideoCameraIntent() {
         return new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
     }
@@ -90,15 +71,6 @@ public class WordPressMediaUtils {
         AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(preparePictureLibraryIntent(activity.getString(R.string.pick_photo)),
                 RequestCodes.PICTURE_LIBRARY);
-    }
-
-    public static void launchPictureLibrary(Fragment fragment) {
-        if (!fragment.isAdded()) {
-            return;
-        }
-        AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(preparePictureLibraryIntent(fragment.getActivity()
-                .getString(R.string.pick_photo)), RequestCodes.PICTURE_LIBRARY);
     }
 
     private static Intent preparePictureLibraryIntent(String title) {
@@ -114,25 +86,14 @@ public class WordPressMediaUtils {
     }
 
     public static void launchCamera(Activity activity, String applicationId, LaunchCameraCallback callback) {
-        Intent intent = preparelaunchCamera(activity, applicationId, callback);
+        Intent intent = prepareLaunchCamera(activity, applicationId, callback);
         if (intent != null) {
             AppLockManager.getInstance().setExtendedTimeout();
             activity.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
         }
     }
 
-    public static void launchCamera(Fragment fragment, String applicationId, LaunchCameraCallback callback) {
-        if (!fragment.isAdded()) {
-            return;
-        }
-        Intent intent = preparelaunchCamera(fragment.getActivity(), applicationId, callback);
-        if (intent != null) {
-            AppLockManager.getInstance().setExtendedTimeout();
-            fragment.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
-        }
-    }
-
-    private static Intent preparelaunchCamera(Context context, String applicationId, LaunchCameraCallback callback) {
+    private static Intent prepareLaunchCamera(Context context, String applicationId, LaunchCameraCallback callback) {
         String state = android.os.Environment.getExternalStorageState();
         if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
             showSDCardRequiredDialog(context);
@@ -185,17 +146,6 @@ public class WordPressMediaUtils {
         return intent;
     }
 
-    public static void launchPictureLibraryOrCapture(Fragment fragment, String applicationId, LaunchCameraCallback
-            callback) {
-        if (!fragment.isAdded()) {
-            return;
-        }
-        AppLockManager.getInstance().setExtendedTimeout();
-
-        Intent intent = makePickOrCaptureIntent(fragment.getActivity(), applicationId, callback);
-        fragment.startActivityForResult(intent, RequestCodes.PICTURE_LIBRARY_OR_CAPTURE);
-    }
-
     private static Intent makePickOrCaptureIntent(Context context, String applicationId, LaunchCameraCallback callback) {
         Intent pickPhotoIntent = prepareGalleryIntent(context.getString(R.string.capture_or_pick_photo));
 
@@ -213,7 +163,7 @@ public class WordPressMediaUtils {
         return pickPhotoIntent;
     }
 
-    public static int getPlaceholder(String url) {
+    static int getPlaceholder(String url) {
         if (MediaUtils.isValidImage(url)) {
             return R.drawable.ic_gridicons_image;
         } else if (MediaUtils.isDocument(url)) {
@@ -231,7 +181,7 @@ public class WordPressMediaUtils {
         }
     }
 
-    public static boolean canDeleteMedia(MediaModel mediaModel) {
+    static boolean canDeleteMedia(MediaModel mediaModel) {
         String state = mediaModel.getUploadState();
         return state == null || (!state.equalsIgnoreCase("uploading") && !state.equalsIgnoreCase("deleted"));
     }
@@ -261,7 +211,7 @@ public class WordPressMediaUtils {
         }
     }
 
-    public static void loadNetworkImage(String imageUrl, WPNetworkImageView imageView) {
+    static void loadNetworkImage(String imageUrl, WPNetworkImageView imageView) {
         if (imageUrl != null) {
             Uri uri = Uri.parse(imageUrl);
             String filepath = uri.getLastPathSegment();
@@ -292,9 +242,9 @@ public class WordPressMediaUtils {
         String posterUrl = "";
 
         if (videoUrl != null) {
-            int filetypeLocation = videoUrl.lastIndexOf(".");
-            if (filetypeLocation > 0) {
-                posterUrl = videoUrl.substring(0, filetypeLocation) + "_std.original.jpg";
+            int fileTypeLocation = videoUrl.lastIndexOf(".");
+            if (fileTypeLocation > 0) {
+                posterUrl = videoUrl.substring(0, fileTypeLocation) + "_std.original.jpg";
             }
         }
 
