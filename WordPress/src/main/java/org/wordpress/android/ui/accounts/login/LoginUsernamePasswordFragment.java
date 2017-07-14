@@ -118,6 +118,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         mUsernameInput.setOnEditorCommitListener(new OnEditorCommitListener() {
             @Override
             public void OnEditorCommit() {
+                showError(null);
                 mPasswordInput.getEditText().requestFocus();
             }
         });
@@ -273,6 +274,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
 
     @Override
     public void OnEditorCommit() {
+        showError(null);
         next();
     }
 
