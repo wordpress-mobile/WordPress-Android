@@ -56,7 +56,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
     protected void setupLabel(TextView label) {
         switch (mLoginListener.getLoginMode()) {
             case WPCOM_LOGIN_DEEPLINK:
-                // fall through to FULL
+                label.setText(R.string.login_log_in_for_deeplink);
+                break;
             case FULL:
                 label.setText(R.string.enter_email_wordpress_com);
                 break;
