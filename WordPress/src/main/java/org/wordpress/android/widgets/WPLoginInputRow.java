@@ -9,6 +9,7 @@ import android.support.design.widget.TextInputLayout;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -154,9 +155,11 @@ public class WPLoginInputRow extends RelativeLayout {
         mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null
-                        && event.getAction() == KeyEvent.ACTION_UP
-                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                if (actionId == EditorInfo.IME_ACTION_DONE ||
+                        actionId == EditorInfo.IME_ACTION_NEXT ||
+                        (event != null
+                                && event.getAction() == KeyEvent.ACTION_UP
+                                && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                     listener.OnEditorCommit();
                 }
 
