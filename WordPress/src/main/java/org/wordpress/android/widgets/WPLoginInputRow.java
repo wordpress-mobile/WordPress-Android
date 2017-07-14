@@ -40,10 +40,6 @@ public class WPLoginInputRow extends RelativeLayout {
         return mIcon;
     }
 
-    public TextInputLayout getTextInputLayout() {
-        return mTextInputLayout;
-    }
-
     public EditText getEditText() {
         return mEditText;
     }
@@ -126,10 +122,7 @@ public class WPLoginInputRow extends RelativeLayout {
     @Override
     protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
-
-        SavedState savedState = new SavedState(superState, mNewIds);
-
-        return savedState;
+        return new SavedState(superState, mNewIds);
     }
 
     @Override
@@ -182,7 +175,7 @@ public class WPLoginInputRow extends RelativeLayout {
         mTextInputLayout.setError(error);
     }
 
-    public static class SavedState extends BaseSavedState {
+    private static class SavedState extends BaseSavedState {
         private List<Integer> mIds;
 
         SavedState(Parcelable superState, List<Integer> ids) {
