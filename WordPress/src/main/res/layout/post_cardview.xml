@@ -82,9 +82,8 @@
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="100"
                 android:indeterminate="false"
-                android:progress="25"/>
+                android:max="100" />
 
             <LinearLayout
                 android:id="@+id/layout_buttons"

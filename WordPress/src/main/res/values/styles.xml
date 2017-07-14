@@ -562,10 +562,7 @@
 
     <style name="UploadProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressDrawable">@drawable/wp_progress_horizontal</item>
-        <item name="android:minHeight">4dip</item>
-        <item name="android:maxHeight">4dip</item>
-        <item name="android:scaleY">2</item>
-        <item name="android:mirrorForRtl">true</item>
+        <item name="android:minHeight">8dip</item>
+        <item name="android:maxHeight">8dip</item>
     </style>
 </resources>
