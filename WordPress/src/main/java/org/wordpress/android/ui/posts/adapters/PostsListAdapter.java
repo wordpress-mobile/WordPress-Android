@@ -408,17 +408,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if (post.isLocalDraft()) {
                 statusTextResId = R.string.local_draft;
-                statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
+                statusIconResId = R.drawable.ic_gridicons_page;
                 statusColorResId = R.color.alert_yellow;
             } else if (post.isLocallyChanged()) {
                 statusTextResId = R.string.local_changes;
-                statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
+                statusIconResId = R.drawable.ic_gridicons_page;
                 statusColorResId = R.color.alert_yellow;
             } else {
                 switch (PostStatus.fromPost(post)) {
                     case DRAFT:
                         statusTextResId = R.string.post_status_draft;
-                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
+                        statusIconResId = R.drawable.ic_gridicons_page;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case PRIVATE:
@@ -426,7 +426,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         break;
                     case PENDING:
                         statusTextResId = R.string.post_status_pending_review;
-                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
+                        statusIconResId = R.drawable.ic_gridicons_page;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case SCHEDULED:
@@ -436,7 +436,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         break;
                     case TRASHED:
                         statusTextResId = R.string.post_status_trashed;
-                        statusIconResId = R.drawable.ic_pages_alert_red_16dp;
+                        statusIconResId = R.drawable.ic_gridicons_page;
                         statusColorResId = R.color.alert_red;
                         break;
                 }

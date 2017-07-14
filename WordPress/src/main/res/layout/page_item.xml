@@ -82,7 +82,7 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_gravity="center"
-                        tools:src="@drawable/noticon_scheduled_alert_yellow_16dp"
+                        tools:src="@drawable/ic_gridicons_page"
                         />
 
                     <org.wordpress.android.widgets.WPTextView
