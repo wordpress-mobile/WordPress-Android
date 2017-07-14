@@ -70,17 +70,36 @@ public class WPLoginInputRow extends RelativeLayout {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.wpLoginInputRow, 0, 0);
 
             try {
-                mIcon.setContentDescription(a.getString(R.styleable.wpLoginInputRow_wpIconContentDescription));
-                mIcon.setImageResource(a.getResourceId(R.styleable.wpLoginInputRow_wpIconDrawable, 0));
+                if (a.hasValue(R.styleable.wpLoginInputRow_wpIconContentDescription)) {
+                    mIcon.setContentDescription(a.getString(R.styleable.wpLoginInputRow_wpIconContentDescription));
+                }
 
-                mTextInputLayout.setHint(a.getString(R.styleable.wpLoginInputRow_android_hint));
-                mTextInputLayout.setPasswordVisibilityToggleEnabled(
-                        a.getBoolean(R.styleable.wpLoginInputRow_passwordToggleEnabled, false));
-                mTextInputLayout.setPasswordVisibilityToggleTintList(
-                        a.getColorStateList(R.styleable.wpLoginInputRow_passwordToggleTint));
+                if (a.hasValue(R.styleable.wpLoginInputRow_wpIconDrawable)) {
+                    mIcon.setImageResource(a.getResourceId(R.styleable.wpLoginInputRow_wpIconDrawable, 0));
+                }
 
-                mEditText.setInputType(a.getInteger(R.styleable.wpLoginInputRow_android_inputType, 0));
-                mEditText.setImeOptions(a.getInteger(R.styleable.wpLoginInputRow_android_imeOptions, 0));
+                if (a.hasValue(R.styleable.wpLoginInputRow_android_hint)) {
+                    mTextInputLayout.setHint(a.getString(R.styleable.wpLoginInputRow_android_hint));
+                }
+
+                if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleEnabled)) {
+                    mTextInputLayout.setPasswordVisibilityToggleEnabled(
+                            a.getBoolean(R.styleable.wpLoginInputRow_passwordToggleEnabled, false));
+
+                }
+
+                if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleTint)) {
+                    mTextInputLayout.setPasswordVisibilityToggleTintList(
+                            a.getColorStateList(R.styleable.wpLoginInputRow_passwordToggleTint));
+                }
+
+                if (a.hasValue(R.styleable.wpLoginInputRow_android_inputType)) {
+                    mEditText.setInputType(a.getInteger(R.styleable.wpLoginInputRow_android_inputType, 0));
+                }
+
+                if (a.hasValue(R.styleable.wpLoginInputRow_android_imeOptions)) {
+                    mEditText.setImeOptions(a.getInteger(R.styleable.wpLoginInputRow_android_imeOptions, 0));
+                }
             } finally {
                 a.recycle();
             }
