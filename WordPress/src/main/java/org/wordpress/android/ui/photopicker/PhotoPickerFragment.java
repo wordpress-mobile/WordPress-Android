@@ -283,7 +283,7 @@ public class PhotoPickerFragment extends Fragment {
         popup.show();
     }
 
-    void setPhotoPickerListener(PhotoPickerListener listener) {
+    public void setPhotoPickerListener(PhotoPickerListener listener) {
         mListener = listener;
     }
 
