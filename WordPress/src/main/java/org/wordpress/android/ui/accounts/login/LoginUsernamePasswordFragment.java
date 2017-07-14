@@ -286,12 +286,11 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        mUsernameInput.setError(null);
-        mPasswordInput.setError(null);
+        showError(null);
     }
 
     private void showError(String errorMessage) {
-        mUsernameInput.setError(" ");
+        mUsernameInput.setError(errorMessage != null ? " " : null);
         mPasswordInput.setError(errorMessage);
     }
 
