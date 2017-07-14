@@ -84,6 +84,7 @@ public class WPLoginInputRow extends RelativeLayout {
                         a.getColorStateList(R.styleable.wpLoginInputRow_passwordToggleTint));
 
                 mEditText.setInputType(a.getInteger(R.styleable.wpLoginInputRow_android_inputType, 0));
+                mEditText.setImeOptions(a.getInteger(R.styleable.wpLoginInputRow_android_imeOptions, 0));
             } finally {
                 a.recycle();
             }
