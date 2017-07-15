@@ -171,7 +171,12 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         }
 
         boolean animate = !mDisableImageReset;
-        mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo, animate);
+        mThumbnailLoader.loadThumbnail(
+                holder.imgThumbnail,
+                item._id,
+                item.isVideo,
+                animate,
+                mThumbWidth);
     }
 
     private PhotoPickerItem getItemAtPosition(int position) {
