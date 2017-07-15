@@ -73,6 +73,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private boolean mPhotosOnly;
     private boolean mIsListTaskRunning;
     private boolean mDisableImageReset;
+    private boolean mLoadThumbnails = true;
 
     private final ThumbnailLoader mThumbnailLoader;
     private final PhotoPickerAdapterListener mListener;
@@ -135,6 +136,16 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         return mMediaList.size() == 0;
     }
 
+    void setLoadThumbnails(boolean loadThumbnails) {
+        if (loadThumbnails != mLoadThumbnails) {
+            mLoadThumbnails = loadThumbnails;
+            AppLog.d(AppLog.T.MEDIA, "PhotoPickerAdapter > loadThumbnails = " + loadThumbnails);
+            if (mLoadThumbnails) {
+                notifyDataSetChangedInternal();
+            }
+        }
+    }
+
     @Override
     public ThumbnailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.photo_picker_thumbnail, parent, false);
@@ -170,13 +181,15 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             holder.imgThumbnail.setImageDrawable(null);
         }
 
-        boolean animate = !mDisableImageReset;
-        mThumbnailLoader.loadThumbnail(
-                holder.imgThumbnail,
-                item._id,
-                item.isVideo,
-                animate,
-                mThumbWidth);
+        if (mLoadThumbnails) {
+            boolean animate = !mDisableImageReset;
+            mThumbnailLoader.loadThumbnail(
+                    holder.imgThumbnail,
+                    item._id,
+                    item.isVideo,
+                    animate,
+                    mThumbWidth);
+        }
     }
 
     private PhotoPickerItem getItemAtPosition(int position) {
