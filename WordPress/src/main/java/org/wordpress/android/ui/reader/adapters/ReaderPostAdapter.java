@@ -275,10 +275,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return VIEW_TYPE_TAG_HEADER;
         } else if (position == mGapMarkerPosition) {
             return VIEW_TYPE_GAP_MARKER;
-        } else if (getItem(position).isXpost()) {
-            return VIEW_TYPE_XPOST;
         } else {
-            return VIEW_TYPE_POST;
+            ReaderPost post = getItem(position);
+            if (post != null && post.isXpost()) {
+                return VIEW_TYPE_XPOST;
+            } else {
+                return VIEW_TYPE_POST;
+            }
         }
     }
 
@@ -330,6 +333,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void renderXPost(int position, ReaderXPostViewHolder holder) {
         final ReaderPost post = getItem(position);
+        if (post == null) {
+            return;
+        }
 
         if (post.hasPostAvatar()) {
             holder.imgAvatar.setImageUrl(
@@ -356,6 +362,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void renderPost(int position, ReaderPostViewHolder holder) {
         final ReaderPost post = getItem(position);
         ReaderTypes.ReaderPostListType postListType = getPostListType();
+        if (post == null) {
+            return;
+        }
 
         holder.txtDateline.setText(DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext()));
 
@@ -740,7 +749,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case VIEW_TYPE_GAP_MARKER :
                 return ITEM_ID_GAP_MARKER;
             default:
-                return getItem(position).getStableId();
+                ReaderPost post = getItem(position);
+                return post != null ? post.getStableId() : 0;
         }
     }
 
