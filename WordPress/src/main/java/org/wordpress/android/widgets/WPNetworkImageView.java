@@ -458,7 +458,11 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
     }
 
-    public void showDefaultBlavatarImage() {
+    public void showDefaultBlavatarImageAndNullifyUrl() {
+        setImageUrl(null, ImageType.BLAVATAR);
+    }
+
+    private void showDefaultBlavatarImage() {
         setImageResource(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
     }
 

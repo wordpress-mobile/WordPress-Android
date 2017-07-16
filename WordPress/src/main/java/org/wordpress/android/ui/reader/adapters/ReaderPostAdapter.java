@@ -344,7 +344,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall),
                     WPNetworkImageView.ImageType.BLAVATAR);
         } else {
-            holder.imgBlavatar.showDefaultBlavatarImage();
+            holder.imgBlavatar.showDefaultBlavatarImageAndNullifyUrl();
         }
 
         holder.txtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
@@ -554,7 +554,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     postHolder.imgDiscoverAvatar.setImageUrl(
                             GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.BLAVATAR);
                 } else {
-                    postHolder.imgDiscoverAvatar.showDefaultBlavatarImage();
+                    postHolder.imgDiscoverAvatar.showDefaultBlavatarImageAndNullifyUrl();
                 }
                 // site picks show "Visit [BlogName]" link - tapping opens the blog preview if
                 // we have the blogId, if not show blog in internal webView
