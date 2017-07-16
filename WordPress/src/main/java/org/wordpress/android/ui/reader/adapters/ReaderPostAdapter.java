@@ -96,14 +96,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * cross-post
      */
-    class ReaderXPostViewHolder extends RecyclerView.ViewHolder {
+    private class ReaderXPostViewHolder extends RecyclerView.ViewHolder {
         private final CardView cardView;
         private final WPNetworkImageView imgAvatar;
         private final WPNetworkImageView imgBlavatar;
         private final TextView txtTitle;
         private final TextView txtSubtitle;
 
-        public ReaderXPostViewHolder(View itemView) {
+        ReaderXPostViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.card_view);
             imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
@@ -127,8 +127,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * full post
      */
-    class ReaderPostViewHolder extends RecyclerView.ViewHolder {
-        public final CardView cardView;
+    private class ReaderPostViewHolder extends RecyclerView.ViewHolder {
+        final CardView cardView;
 
         private final TextView txtTitle;
         private final TextView txtText;
@@ -158,7 +158,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final ReaderThumbnailStrip thumbnailStrip;
 
-        public ReaderPostViewHolder(View itemView) {
+        ReaderPostViewHolder(View itemView) {
             super(itemView);
 
             cardView = (CardView) itemView.findViewById(R.id.card_view);
@@ -241,25 +241,25 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class SiteHeaderViewHolder extends RecyclerView.ViewHolder {
+    private class SiteHeaderViewHolder extends RecyclerView.ViewHolder {
         private final ReaderSiteHeaderView mSiteHeaderView;
-        public SiteHeaderViewHolder(View itemView) {
+        SiteHeaderViewHolder(View itemView) {
             super(itemView);
             mSiteHeaderView = (ReaderSiteHeaderView) itemView;
         }
     }
 
-    class TagHeaderViewHolder extends RecyclerView.ViewHolder {
+    private class TagHeaderViewHolder extends RecyclerView.ViewHolder {
         private final ReaderTagHeaderView mTagHeaderView;
-        public TagHeaderViewHolder(View itemView) {
+        TagHeaderViewHolder(View itemView) {
             super(itemView);
             mTagHeaderView = (ReaderTagHeaderView) itemView;
         }
     }
 
-    class GapMarkerViewHolder extends RecyclerView.ViewHolder {
+    private class GapMarkerViewHolder extends RecyclerView.ViewHolder {
         private final ReaderGapMarkerView mGapMarkerView;
-        public GapMarkerViewHolder(View itemView) {
+        GapMarkerViewHolder(View itemView) {
             super(itemView);
             mGapMarkerView = (ReaderGapMarkerView) itemView;
         }
