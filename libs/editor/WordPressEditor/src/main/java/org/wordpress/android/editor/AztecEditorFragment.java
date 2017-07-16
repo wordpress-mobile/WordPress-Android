@@ -50,17 +50,20 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
+import org.wordpress.aztec.Aztec;
 import org.wordpress.aztec.AztecAttributes;
 import org.wordpress.aztec.AztecText;
-import org.wordpress.aztec.AztecText.OnImageTappedListener;
-import org.wordpress.aztec.HistoryListener;
 import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.Html;
+import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.ITextFormat;
 import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
+import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
-import org.wordpress.aztec.toolbar.AztecToolbarClickListener;
+import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
+import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
+import org.wordpress.aztec.plugins.wpcomments.toolbar.PageToolbarButton;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -73,11 +76,11 @@ import java.util.Set;
 import java.util.UUID;
 
 public class AztecEditorFragment extends EditorFragmentAbstract implements
-        OnImeBackListener,
+        AztecText.OnImeBackListener,
+        AztecText.OnImageTappedListener,
         EditorMediaUploadListener,
-        OnImageTappedListener,
-        AztecToolbarClickListener,
-        HistoryListener {
+        IAztecToolbarClickListener,
+        IHistoryListener {
 
     private static final String ATTR_ALIGN_DASH = "align-";
     private static final String ATTR_CLASS = "class";
@@ -155,8 +158,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         source.setHint("<p>" + getString(R.string.edit_hint) + "</p>");
 
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
-        formattingToolbar.setEditor(content, source);
-        formattingToolbar.setToolbarListener(this);
         formattingToolbar.setExpanded(mIsToolbarExpanded);
 
         title.setOnFocusChangeListener(
@@ -167,14 +168,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
             }
         );
-
-        // initialize the text & HTML
-        source.setHistory(content.getHistory());
-        content.setImageGetter(imageLoader);
-
-        content.getHistory().setHistoryListener(this);
-
-        content.setOnImageTappedListener(this);
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
@@ -198,6 +191,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 mEditorBetaClickListener.onBetaClicked();
             }
         });
+
+        Aztec.Factory.with(content, source, formattingToolbar, this)
+            .setImageGetter(imageLoader)
+            .setOnImeBackListener(this)
+            .setHistoryListener(this)
+            .setOnImageTappedListener(this)
+            .addPlugin(new WordPressCommentsPlugin(content))
+            .addPlugin(new MoreToolbarButton(content))
+            .addPlugin(new PageToolbarButton(content));
 
         return view;
     }
