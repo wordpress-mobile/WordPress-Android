@@ -197,9 +197,6 @@
     <string name="media_details_copy_url">Copy URL</string>
     <string name="media_details_copy_url_toast">URL copied to clipboard</string>
 
-    <!-- tab titles -->
-    <string name="tab_comments" translatable="false">@string/comments</string>
-
     <!-- themes -->
     <string name="themes_live_preview">Live preview</string>
     <string name="themes_details_label">Details</string>
@@ -892,10 +889,14 @@
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
     <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
-    <string name="unread">Unread</string>
     <string name="follows">Follows</string>
     <string name="notifications_label_new_notifications">New notifications</string>
     <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
+    <string name="notifications_tab_title_all">All</string>
+    <string name="notifications_tab_title_unread">Unread</string>
+    <string name="notifications_tab_title_comments" translatable="false">@string/comments</string>
+    <string name="notifications_tab_title_follows" translatable="false">@string/follows</string>
+    <string name="notifications_tab_title_likes" translatable="false">@string/stats_likes</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
