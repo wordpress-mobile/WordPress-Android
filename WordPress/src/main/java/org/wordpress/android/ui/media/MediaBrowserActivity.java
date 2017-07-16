@@ -621,7 +621,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 break;
         }
 
-        updateViews();
+        reloadMediaGrid();
     }
 
     @SuppressWarnings("unused")
@@ -636,14 +636,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             } else {
                 showMediaToastError(R.string.media_upload_error, event.error.message);
             }
-            updateViews();
         } else if (event.completed) {
             String title = "";
             if (event.media != null) {
                 title = event.media.getTitle();
             }
             AppLog.d(AppLog.T.MEDIA, "<" + title + "> upload complete");
-            updateViews();
+        }
+
+        if (event.media != null) {
+            updateMediaGridItem(event.media);
         }
     }
 
@@ -947,6 +949,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         addMediaToUploadService(media);
+
+        updateMediaGridItem(media);
     }
 
     private void handleSharedMedia() {
@@ -993,7 +997,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void updateViews() {
+    private void updateMediaGridItem(@NonNull MediaModel media) {
+        mMediaGridFragment.updateMediaItem(media);
+    }
+
+    private void reloadMediaGrid() {
         mMediaGridFragment.reload();
     }
 }
