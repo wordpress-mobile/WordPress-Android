@@ -134,14 +134,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtText;
         private final TextView txtAuthorAndBlogName;
         private final TextView txtDateline;
-        private final TextView txtVisit;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
 
         private final ImageView imgMore;
         private final ImageView imgVideoOverlay;
-        private final ImageView imgVisit;
         private final LinearLayout visit;
 
         private final WPNetworkImageView imgFeatured;
@@ -167,7 +165,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
             txtAuthorAndBlogName = (TextView) itemView.findViewById(R.id.text_author_and_blog_name);
             txtDateline = (TextView) itemView.findViewById(R.id.text_dateline);
-            txtVisit = (TextView) itemView.findViewById(R.id.text_visit);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
@@ -179,7 +176,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             imgAvatarOrBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar_or_blavatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
-            imgVisit = (ImageView) itemView.findViewById(R.id.image_visit_icon);
             visit = (LinearLayout) itemView.findViewById(R.id.visit);
 
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
