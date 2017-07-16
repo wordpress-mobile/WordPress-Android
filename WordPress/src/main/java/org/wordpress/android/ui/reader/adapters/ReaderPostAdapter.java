@@ -96,14 +96,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * cross-post
      */
-    class ReaderXPostViewHolder extends RecyclerView.ViewHolder {
+    private class ReaderXPostViewHolder extends RecyclerView.ViewHolder {
         private final CardView cardView;
         private final WPNetworkImageView imgAvatar;
         private final WPNetworkImageView imgBlavatar;
         private final TextView txtTitle;
         private final TextView txtSubtitle;
 
-        public ReaderXPostViewHolder(View itemView) {
+        ReaderXPostViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.card_view);
             imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
@@ -127,21 +127,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * full post
      */
-    class ReaderPostViewHolder extends RecyclerView.ViewHolder {
-        public final CardView cardView;
+    private class ReaderPostViewHolder extends RecyclerView.ViewHolder {
+        final CardView cardView;
 
         private final TextView txtTitle;
         private final TextView txtText;
         private final TextView txtAuthorAndBlogName;
         private final TextView txtDateline;
-        private final TextView txtVisit;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
 
         private final ImageView imgMore;
         private final ImageView imgVideoOverlay;
-        private final ImageView imgVisit;
         private final LinearLayout visit;
 
         private final WPNetworkImageView imgFeatured;
@@ -158,7 +156,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final ReaderThumbnailStrip thumbnailStrip;
 
-        public ReaderPostViewHolder(View itemView) {
+        ReaderPostViewHolder(View itemView) {
             super(itemView);
 
             cardView = (CardView) itemView.findViewById(R.id.card_view);
@@ -167,7 +165,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
             txtAuthorAndBlogName = (TextView) itemView.findViewById(R.id.text_author_and_blog_name);
             txtDateline = (TextView) itemView.findViewById(R.id.text_dateline);
-            txtVisit = (TextView) itemView.findViewById(R.id.text_visit);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
@@ -179,7 +176,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             imgAvatarOrBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar_or_blavatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
-            imgVisit = (ImageView) itemView.findViewById(R.id.image_visit_icon);
             visit = (LinearLayout) itemView.findViewById(R.id.visit);
 
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
@@ -241,25 +237,25 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class SiteHeaderViewHolder extends RecyclerView.ViewHolder {
+    private class SiteHeaderViewHolder extends RecyclerView.ViewHolder {
         private final ReaderSiteHeaderView mSiteHeaderView;
-        public SiteHeaderViewHolder(View itemView) {
+        SiteHeaderViewHolder(View itemView) {
             super(itemView);
             mSiteHeaderView = (ReaderSiteHeaderView) itemView;
         }
     }
 
-    class TagHeaderViewHolder extends RecyclerView.ViewHolder {
+    private class TagHeaderViewHolder extends RecyclerView.ViewHolder {
         private final ReaderTagHeaderView mTagHeaderView;
-        public TagHeaderViewHolder(View itemView) {
+        TagHeaderViewHolder(View itemView) {
             super(itemView);
             mTagHeaderView = (ReaderTagHeaderView) itemView;
         }
     }
 
-    class GapMarkerViewHolder extends RecyclerView.ViewHolder {
+    private class GapMarkerViewHolder extends RecyclerView.ViewHolder {
         private final ReaderGapMarkerView mGapMarkerView;
-        public GapMarkerViewHolder(View itemView) {
+        GapMarkerViewHolder(View itemView) {
             super(itemView);
             mGapMarkerView = (ReaderGapMarkerView) itemView;
         }
@@ -275,10 +271,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return VIEW_TYPE_TAG_HEADER;
         } else if (position == mGapMarkerPosition) {
             return VIEW_TYPE_GAP_MARKER;
-        } else if (getItem(position).isXpost()) {
-            return VIEW_TYPE_XPOST;
         } else {
-            return VIEW_TYPE_POST;
+            ReaderPost post = getItem(position);
+            if (post != null && post.isXpost()) {
+                return VIEW_TYPE_XPOST;
+            } else {
+                return VIEW_TYPE_POST;
+            }
         }
     }
 
@@ -330,6 +329,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void renderXPost(int position, ReaderXPostViewHolder holder) {
         final ReaderPost post = getItem(position);
+        if (post == null) {
+            return;
+        }
 
         if (post.hasPostAvatar()) {
             holder.imgAvatar.setImageUrl(
@@ -356,6 +358,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void renderPost(int position, ReaderPostViewHolder holder) {
         final ReaderPost post = getItem(position);
         ReaderTypes.ReaderPostListType postListType = getPostListType();
+        if (post == null) {
+            return;
+        }
 
         holder.txtDateline.setText(DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext()));
 
@@ -740,7 +745,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case VIEW_TYPE_GAP_MARKER :
                 return ITEM_ID_GAP_MARKER;
             default:
-                return getItem(position).getStableId();
+                ReaderPost post = getItem(position);
+                return post != null ? post.getStableId() : 0;
         }
     }
 
