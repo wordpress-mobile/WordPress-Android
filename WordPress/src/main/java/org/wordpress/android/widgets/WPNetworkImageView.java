@@ -441,7 +441,11 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
     }
 
-    public void showDefaultGravatarImage() {
+    public void showDefaultGravatarImageAndNullifyUrl() {
+        setImageUrl(null, ImageType.AVATAR);
+    }
+
+    private void showDefaultGravatarImage() {
         if (getContext() == null) return;
         try {
             new ShapeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
@@ -451,7 +455,6 @@ public class WPNetworkImageView extends AppCompatImageView {
         } catch (RejectedExecutionException e) {
             AppLog.w(AppLog.T.UTILS, "Too many tasks already available in the default AsyncTask.THREAD_POOL_EXECUTOR queue. " +
                     "The current DefaultGravatarImage was rejected");
-            return;
         }
     }
 
