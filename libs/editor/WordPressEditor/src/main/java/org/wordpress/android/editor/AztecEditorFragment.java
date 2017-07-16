@@ -158,7 +158,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         source.setHint("<p>" + getString(R.string.edit_hint) + "</p>");
 
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
-        formattingToolbar.setExpanded(mIsToolbarExpanded);
 
         title.setOnFocusChangeListener(
             new View.OnFocusChangeListener() {
@@ -199,6 +198,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             .setOnImageTappedListener(this)
             .addPlugin(new WordPressCommentsPlugin(content))
             .addPlugin(new MoreToolbarButton(content));
+
+        formattingToolbar.setExpanded(mIsToolbarExpanded);
 
         return view;
     }
