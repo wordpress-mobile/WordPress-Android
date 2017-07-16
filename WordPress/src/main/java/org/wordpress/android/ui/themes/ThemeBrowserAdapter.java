@@ -16,13 +16,11 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.widgets.HeaderGridView;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
  * Adapter for the {@link ThemeBrowserFragment}'s listview
@@ -43,7 +41,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
 
     private static class ThemeViewHolder {
         private final CardView cardView;
-        private final NetworkImageView imageView;
+        private final WPNetworkImageView imageView;
         private final TextView nameView;
         private final TextView activeView;
         private final TextView priceView;
@@ -53,7 +51,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
 
         ThemeViewHolder(View view) {
             cardView = (CardView) view.findViewById(R.id.theme_grid_card);
-            imageView = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
+            imageView = (WPNetworkImageView) view.findViewById(R.id.theme_grid_item_image);
             nameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
             priceView = (TextView) view.findViewById(R.id.theme_grid_item_price);
             activeView = (TextView) view.findViewById(R.id.theme_grid_item_active);
@@ -122,7 +120,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             requestURL = screenshotURL;
         }
 
-        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth, WordPress.sImageLoader);
+        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth, WPNetworkImageView.ImageType.PHOTO);
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -189,29 +189,7 @@ public class WordPressMediaUtils {
     /**
      * Loads the given network image URL into the {@link NetworkImageView}.
      */
-    public static void loadNetworkImage(String imageUrl, NetworkImageView imageView, ImageLoader imageLoader) {
-        if (imageUrl != null) {
-            Uri uri = Uri.parse(imageUrl);
-            String filepath = uri.getLastPathSegment();
-
-            int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
-            imageView.setErrorImageResId(placeholderResId);
-
-            // default image while downloading
-            imageView.setDefaultImageResId(R.drawable.media_item_background);
-
-            if (MediaUtils.isValidImage(filepath)) {
-                imageView.setTag(imageUrl);
-                imageView.setImageUrl(imageUrl, imageLoader);
-            } else {
-                imageView.setImageResource(placeholderResId);
-            }
-        } else {
-            imageView.setImageResource(0);
-        }
-    }
-
-    static void loadNetworkImage(String imageUrl, WPNetworkImageView imageView) {
+    public static void loadNetworkImage(String imageUrl, WPNetworkImageView imageView) {
         if (imageUrl != null) {
             Uri uri = Uri.parse(imageUrl);
             String filepath = uri.getLastPathSegment();

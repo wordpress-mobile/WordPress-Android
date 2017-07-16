@@ -290,6 +290,7 @@
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
+    <string name="toast_err_post_media_uploading">Unable to delete a post while it\'s uploading</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>

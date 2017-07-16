@@ -566,6 +566,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!isPhotoPickerShowing()) {
             AniUtils.animateBottomBar(mPhotoPickerContainer, true, AniUtils.Duration.MEDIUM);
             mPhotoPickerFragment.refresh();
+            mPhotoPickerFragment.setPhotoPickerListener(this);
         }
 
         // fade in the overlay atop the editor, which effectively disables the editor
@@ -583,6 +584,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private void hidePhotoPicker() {
         if (isPhotoPickerShowing()) {
             mPhotoPickerFragment.finishActionMode();
+            mPhotoPickerFragment.setPhotoPickerListener(null);
             AniUtils.animateBottomBar(mPhotoPickerContainer, false);
         }
 
