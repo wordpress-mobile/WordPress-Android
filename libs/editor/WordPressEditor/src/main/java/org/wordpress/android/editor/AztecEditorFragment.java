@@ -198,8 +198,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             .setHistoryListener(this)
             .setOnImageTappedListener(this)
             .addPlugin(new WordPressCommentsPlugin(content))
-            .addPlugin(new MoreToolbarButton(content))
-            .addPlugin(new PageToolbarButton(content));
+            .addPlugin(new MoreToolbarButton(content));
 
         return view;
     }
