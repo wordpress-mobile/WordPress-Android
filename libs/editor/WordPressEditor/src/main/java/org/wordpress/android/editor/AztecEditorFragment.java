@@ -158,6 +158,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         source.setHint("<p>" + getString(R.string.edit_hint) + "</p>");
 
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
+        formattingToolbar.setExpanded(mIsToolbarExpanded);
 
         title.setOnFocusChangeListener(
             new View.OnFocusChangeListener() {
@@ -167,8 +168,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
             }
         );
-
-        mEditorFragmentListener.onEditorFragmentInitialized();
 
         content.setOnDragListener(mOnDragListener);
         source.setOnDragListener(mOnDragListener);
@@ -199,7 +198,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             .addPlugin(new WordPressCommentsPlugin(content))
             .addPlugin(new MoreToolbarButton(content));
 
-        formattingToolbar.setExpanded(mIsToolbarExpanded);
+        mEditorFragmentListener.onEditorFragmentInitialized();
 
         return view;
     }
