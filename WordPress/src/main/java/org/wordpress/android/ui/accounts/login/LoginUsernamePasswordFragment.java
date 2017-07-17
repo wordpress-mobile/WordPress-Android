@@ -1,19 +1,12 @@
 package org.wordpress.android.ui.accounts.login;
 
-import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -169,24 +162,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        if (savedInstanceState == null) {
-            EditTextUtils.showSoftInput(mUsernameInput.getEditText());
-        }
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -199,46 +174,12 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof LoginListener) {
-            mLoginListener = (LoginListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement LoginListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mLoginListener = null;
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_LOGIN_FINISHED, mLoginFinished);
         outState.putString(KEY_REQUESTED_USERNAME, mRequestedUsername);
         outState.putString(KEY_REQUESTED_PASSWORD, mRequestedPassword);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_login, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.help) {
-            if (mLoginListener != null) {
-                mLoginListener.help();
-            }
-
-            return true;
-        }
-
-        return false;
     }
 
     protected void next() {
