@@ -256,6 +256,7 @@
     <string name="button_more" translatable="false">@string/more</string>
     <string name="button_back">Back</string>
     <string name="button_revert">Revert</string>
+    <string name="button_retry">Retry</string>
 
     <!-- dropdown filter above post cards -->
     <string name="filter_published_posts">Published</string>

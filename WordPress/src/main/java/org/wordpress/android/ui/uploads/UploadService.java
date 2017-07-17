@@ -519,6 +519,8 @@ public class UploadService extends Service {
                 FailReason reason = new FailReason(event.error);
                 addFailedReasonToFailedPosts(event.post, reason);
             }
+        } else {
+            removeFailedReasonForPost(event.post);
         }
         stopServiceIfUploadsComplete();
     }

@@ -1,8 +1,12 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,6 +35,7 @@ public class PostListButton extends LinearLayout {
     public static final int BUTTON_MORE     = 9;
     public static final int BUTTON_BACK     = 10;
     public static final int BUTTON_SUBMIT   = 11;
+    public static final int BUTTON_RETRY   = 12;
 
     public PostListButton(Context context){
         super(context);
@@ -81,7 +86,16 @@ public class PostListButton extends LinearLayout {
 
         mButtonType = buttonType;
         mTextView.setText(getButtonTextResId(buttonType));
-        mImageView.setImageResource(getButtonIconResId(buttonType));
+        if (buttonType == BUTTON_RETRY) {
+            mImageView.setImageResource(0);
+            Resources resources = mImageView.getContext().getResources();
+            Drawable drawable =  resources.getDrawable(getButtonIconResId(buttonType));
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable, resources.getColor(R.color.blue_medium));
+            mImageView.setImageDrawable(drawable);
+        } else {
+            mImageView.setImageResource(getButtonIconResId(buttonType));
+        }
     }
 
     public static int getButtonTextResId(int buttonType) {
@@ -108,6 +122,8 @@ public class PostListButton extends LinearLayout {
                 return R.string.button_back;
             case BUTTON_SUBMIT:
                 return R.string.submit_for_review;
+            case BUTTON_RETRY:
+                return R.string.button_retry;
             default:
                 return 0;
         }
@@ -135,6 +151,8 @@ public class PostListButton extends LinearLayout {
                 return R.drawable.ic_ellipsis_blue_wordpress_18dp;
             case BUTTON_BACK:
                 return R.drawable.ic_chevron_left_blue_wordpress_18dp;
+            case BUTTON_RETRY:
+                return R.drawable.media_retry_image;
             default:
                 return 0;
         }

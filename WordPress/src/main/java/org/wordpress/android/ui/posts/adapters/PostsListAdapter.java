@@ -486,10 +486,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
 
-        if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
-            holder.btnPublish.setButtonType(PostListButton.BUTTON_SYNC);
+        if (UploadService.getFailedReasonForPost(post) != null) {
+            holder.btnPublish.setButtonType(PostListButton.BUTTON_RETRY);
         } else {
-            holder.btnPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
+            if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
+                holder.btnPublish.setButtonType(PostListButton.BUTTON_SYNC);
+            } else {
+                holder.btnPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
+            }
         }
 
         boolean canShowStatsButton = canShowStatsForPost(post);

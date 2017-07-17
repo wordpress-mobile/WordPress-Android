@@ -537,6 +537,7 @@ public class PostsListFragment extends Fragment
                 break;
             case PostListButton.BUTTON_SUBMIT:
             case PostListButton.BUTTON_SYNC:
+            case PostListButton.BUTTON_RETRY:
             case PostListButton.BUTTON_PUBLISH:
                 publishPost(post);
                 break;
