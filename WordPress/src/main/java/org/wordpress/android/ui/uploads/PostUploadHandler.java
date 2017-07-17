@@ -41,7 +41,6 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
-import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
@@ -126,16 +125,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     }
 
     static boolean isPostUploadingOrQueued(PostModel post) {
-        if (post == null) {
-            return false;
-        }
-
-        // First check the currently uploading post
-        if (isPostUploading(post)) {
-            return true;
-        }
-
-        return isPostQueued(post);
+        return post != null && (isPostUploading(post) || isPostQueued(post));
     }
 
     static boolean isPostQueued(PostModel post) {
@@ -143,7 +133,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             return false;
         }
 
-        // Then check the list of posts waiting to be uploaded
+        // Check the list of posts waiting to be uploaded
         if (sQueuedPostsList.size() > 0) {
             synchronized (sQueuedPostsList) {
                 for (PostModel queuedPost : sQueuedPostsList) {

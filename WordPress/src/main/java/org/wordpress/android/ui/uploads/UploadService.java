@@ -259,12 +259,8 @@ public class UploadService extends Service {
             return false;
         }
 
-        // First check for posts strictly queued inside the PostUploadManager
-        if (PostUploadHandler.isPostQueued(post)) {
-            return true;
-        }
-
-        return false;
+        // Check for posts queued inside the PostUploadManager
+        return PostUploadHandler.isPostQueued(post);
     }
 
     /**

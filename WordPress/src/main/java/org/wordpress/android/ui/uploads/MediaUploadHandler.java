@@ -107,15 +107,8 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
             return false;
         }
 
-        if (hasInProgressMediaUploadsForPost(postModel)) {
-            return true;
-        }
-
-        if (hasPendingMediaUploadsForPost(postModel)) {
-            return true;
-        }
-
-        return false;
+        // Check if there are media in the in-progress or the pending queue attached to the given post
+        return hasInProgressMediaUploadsForPost(postModel) || hasPendingMediaUploadsForPost(postModel);
     }
 
     static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
