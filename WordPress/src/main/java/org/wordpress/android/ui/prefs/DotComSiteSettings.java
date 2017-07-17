@@ -58,7 +58,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String TWITTER_USERNAME_KEY = "twitter_via";
     private static final String JP_MONITOR_ACTIVE_KEY = "monitor_active";
     private static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
-    private static final String JP_MONITOR_WP_NOTES_KEY = "wp_notifications";
+    private static final String JP_MONITOR_WP_NOTES_KEY = "wp_note_notifications";
 
     // WP.com REST keys used to GET certain site settings
     private static final String GET_TITLE_KEY = "name";
