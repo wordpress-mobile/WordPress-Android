@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts.login;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -141,8 +140,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment implements T
 
         mRequestedSiteAddress = getCleanedSiteAddress();
 
-        Uri uri = Uri.parse(UrlUtils.addUrlSchemeIfNeeded(mRequestedSiteAddress, false));
-        mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(uri.getHost()));
+        mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(mRequestedSiteAddress));
 
         showProgressDialog();
     }
