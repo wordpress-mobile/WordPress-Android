@@ -164,22 +164,22 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.GONE);
-            if (isLocalFile) {
-                loadLocalImage(media.getFilePath(), holder.imageView);
-            } else if (mLoadThumbnails) {
-                WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView);
+            if (mLoadThumbnails) {
+                if (isLocalFile) {
+                    loadLocalImage(media.getFilePath(), holder.imageView);
+                } else {
+                    holder.imageView.setImageUrl(getBestImageUrl(media), WPNetworkImageView.ImageType.PHOTO);
+                }
             } else {
-                holder.imageView.setTag(null);
-                holder.imageView.setImageResource(R.drawable.media_item_background);
+                holder.imageView.setImageUrl(null, WPNetworkImageView.ImageType.PHOTO);
             }
         } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.VISIBLE);
             if (mLoadThumbnails) {
-                WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl(), holder.imageView);
+                holder.imageView.setImageUrl(media.getThumbnailUrl(), WPNetworkImageView.ImageType.PHOTO);
             } else {
-                holder.imageView.setTag(null);
-                holder.imageView.setImageResource(R.drawable.media_item_background);
+                holder.imageView.setImageUrl(null, WPNetworkImageView.ImageType.PHOTO);
             }
         } else {
             // not an image or video, so show file name and file type
@@ -285,6 +285,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
             previewContainer = (ViewGroup) view.findViewById(R.id.frame_preview);
             videoOverlayContainer = (ViewGroup) view.findViewById(R.id.frame_video_overlay);
+
+            imageView.setErrorImageResId(R.drawable.media_item_background);
+            imageView.setDefaultImageResId(R.drawable.media_item_background);
 
             View.OnClickListener previewListener = new View.OnClickListener() {
                 @Override
