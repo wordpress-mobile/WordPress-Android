@@ -741,12 +741,15 @@ public class WordPress extends MultiDexApplication {
      */
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
         private final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
+        private final long MAX_ACTIVITY_TRANSITION_TIME_MS = 2000;
+
         private Date mLastPingDate;
         private Date mApplicationOpenedDate;
-        boolean mFirstActivityResumed = true;
         private Timer mActivityTransitionTimer;
         private TimerTask mActivityTransitionTimerTask;
-        private final long MAX_ACTIVITY_TRANSITION_TIME_MS = 2000;
+        private boolean mConnectionReceiverRegistered;
+
+        boolean mFirstActivityResumed = true;
         boolean mIsInBackground = true;
 
         @Override
@@ -846,12 +849,12 @@ public class WordPress extends MultiDexApplication {
             }
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
             AnalyticsTracker.endSession(false);
-            try {
+            // Methods onAppComesFromBackground / onAppGoesToBackground are only workarounds to track when the
+            // app goes or comes to background, but there are not 100% reliable, and here we could try
+            // to unregister the receiver twice.
+            if (mConnectionReceiverRegistered) {
+                mConnectionReceiverRegistered = false;
                 unregisterReceiver(ConnectionChangeReceiver.getInstance());
-            } catch (IllegalArgumentException iae) {
-                // Methods onAppComesFromBackground / onAppGoesToBackground are only workarounds to track when the
-                // app goes or comes to background, but there are not 100% reliable, and here we could try
-                // to unregister the receiver twice.
             }
         }
 
@@ -878,8 +881,11 @@ public class WordPress extends MultiDexApplication {
             // Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if they
             // declare the broadcast receiver in their manifest. Apps will still receive broadcasts if they
             // register their BroadcastReceiver with Context.registerReceiver() and that context is still valid.
-            registerReceiver(ConnectionChangeReceiver.getInstance(),
-                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            if (!mConnectionReceiverRegistered) {
+                mConnectionReceiverRegistered = true;
+                registerReceiver(ConnectionChangeReceiver.getInstance(),
+                        new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            }
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
             Map<String, Boolean> properties = new HashMap<>(1);
