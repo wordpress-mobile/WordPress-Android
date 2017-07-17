@@ -621,7 +621,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 break;
         }
 
-        reloadMediaGrid();
+        if (event.mediaList != null && event.mediaList.size() == 1) {
+            updateMediaGridItem(event.mediaList.get(0));
+        } else {
+            reloadMediaGrid();
+        }
     }
 
     @SuppressWarnings("unused")
