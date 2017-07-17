@@ -866,12 +866,29 @@ public abstract class SiteSettingsInterface {
     public SiteSettingsInterface init(boolean fetchRemote) {
         loadCachedSettings();
 
+        if (mSite.isJetpackConnected()) {
+            loadCachedJpSettings();
+        }
+
         if (fetchRemote) {
             fetchRemoteData();
             mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
         }
 
         return this;
+    }
+
+    private void loadCachedJpSettings() {
+        Cursor localSettings = SiteSettingsTable.getJpSettings(mSite.getId());
+
+        if (localSettings != null && localSettings.getCount() > 0) {
+            mJpSettings.deserializeOptionsDatabaseCursor(localSettings);
+            notifyUpdatedOnUiThread(null);
+        }
+
+        if (localSettings != null) {
+            localSettings.close();
+        }
     }
 
     /**

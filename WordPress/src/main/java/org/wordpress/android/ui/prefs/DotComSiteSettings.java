@@ -437,15 +437,16 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private void saveJetpackSettings() {
         final Map<String, String> params = serializeJetpackParams();
         if (params == null || params.isEmpty()) return;
+
         WordPress.getRestClientUtils().setJetpackSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack Settings saved remotely");
-                        notifySavedOnUiThread(null);
                         mRemoteJpSettings.monitorActive = mJpSettings.monitorActive;
                         mRemoteJpSettings.emailNotifications = mJpSettings.emailNotifications;
                         mRemoteJpSettings.wpNotifications = mJpSettings.wpNotifications;
+                        notifySavedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
