@@ -161,26 +161,22 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         boolean isSelected = isItemSelected(media.getId());
         boolean isImage = media.getMimeType() != null && media.getMimeType().startsWith("image/");
 
-        if (isImage) {
+        if (!mLoadThumbnails) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.GONE);
-            if (mLoadThumbnails) {
-                if (isLocalFile) {
-                    loadLocalImage(media.getFilePath(), holder.imageView);
-                } else {
-                    holder.imageView.setImageUrl(getBestImageUrl(media), WPNetworkImageView.ImageType.PHOTO);
-                }
+            holder.imageView.setImageUrl(null, WPNetworkImageView.ImageType.PHOTO);
+        } else if (isImage) {
+            holder.fileContainer.setVisibility(View.GONE);
+            holder.videoOverlayContainer.setVisibility(View.GONE);
+            if (isLocalFile) {
+                loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
-                holder.imageView.setImageUrl(null, WPNetworkImageView.ImageType.PHOTO);
+                holder.imageView.setImageUrl(getBestImageUrl(media), WPNetworkImageView.ImageType.PHOTO);
             }
         } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.VISIBLE);
-            if (mLoadThumbnails) {
-                holder.imageView.setImageUrl(media.getThumbnailUrl(), WPNetworkImageView.ImageType.PHOTO);
-            } else {
-                holder.imageView.setImageUrl(null, WPNetworkImageView.ImageType.PHOTO);
-            }
+            holder.imageView.setImageUrl(media.getThumbnailUrl(), WPNetworkImageView.ImageType.PHOTO);
         } else {
             // not an image or video, so show file name and file type
             holder.videoOverlayContainer.setVisibility(View.GONE);
