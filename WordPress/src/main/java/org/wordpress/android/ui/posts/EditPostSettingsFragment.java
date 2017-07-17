@@ -913,7 +913,9 @@ public class EditPostSettingsFragment extends Fragment {
             AppLog.e(T.POSTS, "An error occurred while updating the post formats with type: " + event.error.type);
             return;
         }
-        updatePostFormatKeysAndNames();
+        if (getSite() != null) {
+            updatePostFormatKeysAndNames();
+        }
     }
 
     /**
