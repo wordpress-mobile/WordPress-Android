@@ -32,8 +32,12 @@ class ThumbnailLoader {
         mHandler = new Handler(Looper.getMainLooper());
     }
 
-    void loadThumbnail(ImageView imageView, long imageId, boolean isVideo, boolean animate) {
-        Runnable task = new ThumbnailLoaderRunnable(imageView, imageId, isVideo, animate);
+    void loadThumbnail(ImageView imageView,
+                       long imageId,
+                       boolean isVideo,
+                       boolean animate,
+                       int maxSize) {
+        Runnable task = new ThumbnailLoaderRunnable(imageView, imageId, isVideo, animate, maxSize);
         mExecutor.submit(task);
     }
 
@@ -46,13 +50,19 @@ class ThumbnailLoader {
         private final String mTag;
         private final boolean mIsVideo;
         private final boolean mAnimate;
+        private final int mMaxSize;
         private Bitmap mThumbnail;
 
-        ThumbnailLoaderRunnable(ImageView imageView, long imageId, boolean isVideo, boolean animate) {
+        ThumbnailLoaderRunnable(ImageView imageView,
+                                long imageId,
+                                boolean isVideo,
+                                boolean animate,
+                                int maxSize) {
             mWeakImageView = new WeakReference<>(imageView);
             mImageId = imageId;
             mIsVideo = isVideo;
             mAnimate = animate;
+            mMaxSize = maxSize;
 
             mTag = Long.toString(mImageId);
             imageView.setTag(mTag);
@@ -72,18 +82,26 @@ class ThumbnailLoader {
 
         @Override
         public void run() {
+            Bitmap media;
             if (mIsVideo) {
-                mThumbnail = MediaStore.Video.Thumbnails.getThumbnail(
+                media = MediaStore.Video.Thumbnails.getThumbnail(
                         mContext.getContentResolver(),
                         mImageId,
                         MediaStore.Video.Thumbnails.MINI_KIND,
                         null);
             } else {
-                mThumbnail = ImageUtils.getThumbnail(
+                media = ImageUtils.getThumbnail(
                         mContext.getContentResolver(),
                         mImageId,
                         MediaStore.Images.Thumbnails.MINI_KIND);
             }
+
+            if (media != null && media.getWidth() > mMaxSize) {
+                mThumbnail = ImageUtils.getScaledBitmapAtLongestSide(media, mMaxSize);
+            } else {
+                mThumbnail = media;
+            }
+
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
