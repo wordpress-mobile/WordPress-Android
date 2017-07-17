@@ -414,7 +414,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
      * it was just added, so reload the adapter
      */
     void updateMediaItem(@NonNull MediaModel media) {
-        if (!isAdded()) return;
+        if (!isAdded() || !hasAdapter()) return;
 
         if (getAdapter().mediaExists(media)) {
             getAdapter().updateMediaItem(media);

@@ -998,10 +998,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void updateMediaGridItem(@NonNull MediaModel media) {
-        mMediaGridFragment.updateMediaItem(media);
+        if (mMediaGridFragment != null) {
+            mMediaGridFragment.updateMediaItem(media);
+        }
     }
 
     private void reloadMediaGrid() {
-        mMediaGridFragment.reload();
+        if (mMediaGridFragment != null) {
+            mMediaGridFragment.reload();
+        }
     }
 }
