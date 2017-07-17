@@ -140,7 +140,8 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment implements T
 
         mRequestedSiteAddress = getCleanedSiteAddress();
 
-        mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(mRequestedSiteAddress));
+        String extraCleanSiteAddress = UrlUtils.cleanupInputAddress(mRequestedSiteAddress);
+        mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(extraCleanSiteAddress));
 
         showProgressDialog();
     }
