@@ -442,6 +442,7 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     public void showDefaultGravatarImageAndNullifyUrl() {
+        // Setting the image url `null` will result in showing the default image by calling `showErrorImage`
         setImageUrl(null, ImageType.AVATAR);
     }
 
@@ -459,6 +460,7 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     public void showDefaultBlavatarImageAndNullifyUrl() {
+        // Setting the image url `null` will result in showing the default image by calling `showErrorImage`
         setImageUrl(null, ImageType.BLAVATAR);
     }
 
