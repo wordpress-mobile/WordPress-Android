@@ -90,6 +90,11 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public void saveSettings() {
         super.saveSettings();
 
+        // save any Jetpack changes
+        if (mSite.isJetpackConnected()) {
+            saveJetpackSettings();
+        }
+
         final Map<String, String> params = serializeDotComParams();
         if (params == null || params.isEmpty()) return;
 
@@ -115,9 +120,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             }
                             AnalyticsUtils.trackWithSiteDetails(
                                     AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
-                        }
-                        if (mSite.isJetpackConnected()) {
-                            saveJetpackSettings();
                         }
                     }
                 }, new RestRequest.ErrorListener() {
