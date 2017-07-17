@@ -45,7 +45,7 @@ public class UploadService extends Service {
     private PostUploadNotifier mPostUploadNotifier;
 
     // Posts that we're withholding from the PostUploadManager until their pending media uploads are completed
-    private static final List<PostModel> sPostsWithPendingMedia = new ArrayList<>();
+    private static final List<UploadingPost> sPostsWithPendingMedia = new ArrayList<>();
 
     // To avoid conflicts by editing the post each time a single upload completes, this map tracks completed media by
     // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
@@ -55,6 +55,15 @@ public class UploadService extends Service {
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
+
+    private class UploadingPost {
+        PostModel postModel;
+        List<MediaModel> pendingMedia = new ArrayList<>();
+        UploadingPost(PostModel postModel, List<MediaModel> pendingMedia) {
+            this.postModel = postModel;
+            this.pendingMedia = pendingMedia;
+        }
+    }
 
     @Override
     public void onCreate() {
@@ -173,7 +182,9 @@ public class UploadService extends Service {
             if (!hasPendingOrInProgressMediaUploadsForPost(post)) {
                 mPostUploadHandler.upload(post);
             } else {
-                sPostsWithPendingMedia.add(post);
+                List<MediaModel> pendingMedia = MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
+                UploadingPost uploadingPost = new UploadingPost(post, pendingMedia);
+                sPostsWithPendingMedia.add(uploadingPost);
                 showNotificationForPostWithPendingMedia(post);
             }
         }
@@ -233,8 +244,8 @@ public class UploadService extends Service {
         // Then check the list of posts waiting for media to complete
         if (sPostsWithPendingMedia.size() > 0) {
             synchronized (sPostsWithPendingMedia) {
-                for (PostModel queuedPost : sPostsWithPendingMedia) {
-                    if (queuedPost.getId() == post.getId()) {
+                for (UploadingPost queuedPost : sPostsWithPendingMedia) {
+                    if (queuedPost.postModel.getId() == post.getId()) {
                         return true;
                     }
                 }
@@ -268,9 +279,9 @@ public class UploadService extends Service {
     public static void cancelQueuedPostUpload(PostModel post) {
         if (post != null) {
             synchronized (sPostsWithPendingMedia) {
-                Iterator<PostModel> iterator = sPostsWithPendingMedia.iterator();
+                Iterator<UploadingPost> iterator = sPostsWithPendingMedia.iterator();
                 while (iterator.hasNext()) {
-                    PostModel postModel = iterator.next();
+                    PostModel postModel = iterator.next().postModel;
                     if (postModel.getId() == post.getId()) {
                         iterator.remove();
                     }
@@ -395,9 +406,9 @@ public class UploadService extends Service {
      */
     private PostModel removeQueuedPostByLocalId(int localPostId) {
         synchronized (sPostsWithPendingMedia) {
-            Iterator<PostModel> iterator = sPostsWithPendingMedia.iterator();
+            Iterator<UploadingPost> iterator = sPostsWithPendingMedia.iterator();
             while (iterator.hasNext()) {
-                PostModel postModel = iterator.next();
+                PostModel postModel = iterator.next().postModel;
                 if (postModel.getId() == localPostId) {
                     iterator.remove();
                     return postModel;
@@ -447,9 +458,9 @@ public class UploadService extends Service {
 
                 // If this was the last media upload a pending post was waiting for, send it to the PostUploadManager
                 synchronized (sPostsWithPendingMedia) {
-                    Iterator<PostModel> iterator = sPostsWithPendingMedia.iterator();
+                    Iterator<UploadingPost> iterator = sPostsWithPendingMedia.iterator();
                     while (iterator.hasNext()) {
-                        PostModel postModel = iterator.next();
+                        PostModel postModel = iterator.next().postModel;
                         if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
                             // Fetch latest version of the post, in case it has been modified elsewhere
                             PostModel latestPost = mPostStore.getPostByLocalPostId(postModel.getId());

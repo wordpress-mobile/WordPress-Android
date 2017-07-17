@@ -21,6 +21,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,6 +116,30 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
         }
 
         return false;
+    }
+
+    static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
+        if (postModel == null) {
+            return Collections.emptyList();
+        }
+
+        List<MediaModel> mediaList = new ArrayList<>();
+        synchronized (sInProgressUploads) {
+            for (MediaModel queuedMedia : sInProgressUploads) {
+                if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                    mediaList.add(queuedMedia);
+                }
+            }
+        }
+
+        synchronized (sPendingUploads) {
+            for (MediaModel queuedMedia : sPendingUploads) {
+                if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                    mediaList.add(queuedMedia);
+                }
+            }
+        }
+        return mediaList;
     }
 
     /**
