@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 
-class UploadUtils {
+public class UploadUtils {
     /**
      * Returns a post-type specific error message string.
      */
@@ -21,7 +21,7 @@ class UploadUtils {
     /**
      * Returns an error message string for a failed post upload.
      */
-    static @NonNull String getErrorMessageFromPostError(Context context, PostModel post, PostError error) {
+    public static @NonNull String getErrorMessageFromPostError(Context context, PostModel post, PostError error) {
         switch (error.type) {
             case UNKNOWN_POST:
                 return context.getString(R.string.error_unknown_post);
@@ -38,7 +38,7 @@ class UploadUtils {
     /**
      * Returns an error message string for a failed media upload.
      */
-    static @NonNull String getErrorMessageFromMediaError(Context context, MediaError error) {
+    public static @NonNull String getErrorMessageFromMediaError(Context context, MediaError error) {
         switch (error.type) {
             case FS_READ_PERMISSION_DENIED:
                 return context.getString(R.string.error_media_insufficient_fs_permissions);

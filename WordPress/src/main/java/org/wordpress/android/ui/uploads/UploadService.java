@@ -51,10 +51,26 @@ public class UploadService extends Service {
     // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
     private static final ConcurrentHashMap<Integer, List<MediaModel>> sCompletedMediaByPost = new ConcurrentHashMap<>();
 
+    // This will hold a map of postID and the corresponding last error if any error occured while uploading
+    private static final ConcurrentHashMap<Integer, FailReason> sFailedUploadPosts = new ConcurrentHashMap<>();
+
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
+
+    public class FailReason {
+        public PostStore.PostError postError;
+        public MediaStore.MediaError mediaError;
+
+        FailReason (PostStore.PostError postError) {
+            this.postError = postError;
+        }
+
+        FailReason (MediaStore.MediaError mediaError) {
+            this.mediaError = mediaError;
+        }
+    }
 
     @Override
     public void onCreate() {
@@ -170,6 +186,8 @@ public class UploadService extends Service {
                 mPostUploadHandler.registerPostForAnalyticsTracking(post);
             }
 
+            // as user wants to upload this post, remove any failed reasons as it goes to the queue
+            removeFailedReasonForPost(post);
             if (!hasPendingOrInProgressMediaUploadsForPost(post)) {
                 mPostUploadHandler.upload(post);
             } else {
@@ -407,6 +425,18 @@ public class UploadService extends Service {
         return null;
     }
 
+    private void addFailedReasonToFailedPosts(PostModel post, FailReason reason) {
+        sFailedUploadPosts.put(post.getId(), reason);
+    }
+
+    public static void removeFailedReasonForPost(PostModel post) {
+        sFailedUploadPosts.remove(post.getId());
+    }
+
+    public static FailReason getFailedReasonForPost(PostModel post) {
+        return sFailedUploadPosts.get(post.getId());
+    }
+
     /**
      * Has lower priority than the UploadHandlers, which ensures that the handlers have already received and
      * processed this OnMediaUploaded event. This means we can safely rely on their internal state being up to date.
@@ -424,6 +454,13 @@ public class UploadService extends Service {
                         + event.error.type + ": " + event.error.message);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.error);
                 cancelPostUploadMatchingMedia(event.media, errorMessage);
+
+                // now keep track of the error reason so it can be queried
+                if (event.error != null && event.error != null) {
+                    FailReason reason = new FailReason(event.error);
+                    PostModel failedPost = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
+                    addFailedReasonToFailedPosts(failedPost, reason);
+                }
             }
             stopServiceIfUploadsComplete();
             return;
@@ -477,6 +514,12 @@ public class UploadService extends Service {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostUploaded(OnPostUploaded event) {
+        if (event.isError()) {
+            if (event.error != null && event.error != null) {
+                FailReason reason = new FailReason(event.error);
+                addFailedReasonToFailedPosts(event.post, reason);
+            }
+        }
         stopServiceIfUploadsComplete();
     }
 }

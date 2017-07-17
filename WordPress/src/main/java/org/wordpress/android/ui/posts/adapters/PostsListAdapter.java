@@ -42,9 +42,11 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -395,8 +397,20 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             int statusTextResId = 0;
             int statusIconResId = 0;
             int statusColorResId = R.color.grey_darken_10;
+            String errorMessage = null;
 
-            if (UploadService.isPostUploading(post)) {
+            UploadService.FailReason reason = UploadService.getFailedReasonForPost(post);
+            if (reason != null) {
+                if (reason.mediaError != null) {
+                    errorMessage = UploadUtils.getErrorMessageFromMediaError(
+                            txtStatus.getContext(), reason.mediaError);
+                } else if (reason.postError != null) {
+                    errorMessage = UploadUtils.getErrorMessageFromPostError(
+                            txtStatus.getContext(), post, reason.postError);
+                }
+                statusIconResId = R.drawable.ic_notice_48dp;
+                statusColorResId = R.color.alert_yellow;
+            } else if (UploadService.isPostUploading(post)) {
                 statusTextResId = R.string.post_uploading;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if (UploadService.hasInProgressMediaUploadsForPost(post)) {
@@ -444,7 +458,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             Resources resources = txtStatus.getContext().getResources();
             txtStatus.setTextColor(resources.getColor(statusColorResId));
-            txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
+            if (!TextUtils.isEmpty(errorMessage)) {
+                txtStatus.setText(errorMessage);
+            } else {
+                txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
+            }
             txtStatus.setVisibility(View.VISIBLE);
 
             Drawable drawable = (statusIconResId != 0 ? resources.getDrawable(statusIconResId) : null);
