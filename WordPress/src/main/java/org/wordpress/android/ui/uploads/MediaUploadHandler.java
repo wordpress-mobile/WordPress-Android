@@ -49,6 +49,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
     }
 
     void unregister() {
+        sProgressByMediaId.clear();
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
     }
@@ -141,7 +142,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
      */
     static float getProgressForMedia(MediaModel media) {
         Float progress = sProgressByMediaId.get(media.getId());
-        return progress == null ? 1 : progress;
+        return progress == null ? 0 : progress;
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
@@ -207,7 +208,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
         MediaModel media = getMediaFromInProgressQueueById(id);
         if (media != null) {
             sInProgressUploads.remove(media);
-            sProgressByMediaId.remove(media.getId());
+            sProgressByMediaId.put(media.getId(), 1F);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
         }
     }
