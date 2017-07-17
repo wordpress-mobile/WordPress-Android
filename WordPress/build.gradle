@@ -43,7 +43,6 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
-        buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
         buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "false"
         buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "false"
     }
