@@ -423,6 +423,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
+    void removeMediaItem(@NonNull MediaModel media) {
+        if (!isAdded() || !hasAdapter()) return;
+
+        getAdapter().removeMediaItem(media);
+    }
+
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
         List<MediaModel> mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);

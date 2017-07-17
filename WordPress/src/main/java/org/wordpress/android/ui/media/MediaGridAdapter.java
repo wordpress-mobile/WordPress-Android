@@ -585,6 +585,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
+    void removeMediaItem(@NonNull MediaModel media) {
+        int index = indexOfMedia(media);
+        if (index > -1) {
+            mMediaList.remove(index);
+            notifyItemRemoved(index);
+        }
+    }
+
     boolean mediaExists(@NonNull MediaModel media) {
         return indexOfMedia(media) > -1;
     }

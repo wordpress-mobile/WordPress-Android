@@ -602,6 +602,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(OnMediaChanged event) {
+        AppLog.d(AppLog.T.MEDIA, "MediaBrowser onMediaChanged > " + event.cause);
+
         if (event.isError()) {
             AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.type
                     + " - " + event.error.message);
@@ -1003,7 +1005,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private void updateMediaGridItem(@NonNull MediaModel media) {
         if (mMediaGridFragment != null) {
-            mMediaGridFragment.updateMediaItem(media);
+            if (mMediaStore.getMediaWithLocalId(media.getId()) != null) {
+                mMediaGridFragment.updateMediaItem(media);
+            } else {
+                mMediaGridFragment.removeMediaItem(media);
+            }
         }
     }
 
