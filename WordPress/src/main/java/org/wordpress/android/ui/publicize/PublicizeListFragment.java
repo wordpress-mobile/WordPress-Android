@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.publicize;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +17,7 @@ import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
@@ -45,21 +45,16 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     }
 
     @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-
-        if (args != null) {
-            mSite = (SiteModel) args.getSerializable(WordPress.SITE);
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        if (savedInstanceState != null) {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        if (getArguments() != null) {
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+        }
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
         }
     }
 
@@ -72,12 +67,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         getAdapter().refresh();
         setTitle(R.string.sharing);
         setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
