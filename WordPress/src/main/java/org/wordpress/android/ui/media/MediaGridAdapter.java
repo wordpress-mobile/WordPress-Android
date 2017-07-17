@@ -47,6 +47,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private boolean mAllowMultiselect;
     private boolean mInMultiSelect;
     private boolean mShowPreviewIcon;
+    private boolean mLoadThumbnails = true;
 
     private final Handler mHandler;
     private final LayoutInflater mInflater;
@@ -160,18 +161,22 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         boolean isSelected = isItemSelected(media.getId());
         boolean isImage = media.getMimeType() != null && media.getMimeType().startsWith("image/");
 
-        if (isImage) {
+        if (!mLoadThumbnails) {
+            holder.fileContainer.setVisibility(View.GONE);
+            holder.videoOverlayContainer.setVisibility(View.GONE);
+            holder.imageView.setImageUrl(null, WPNetworkImageView.ImageType.PHOTO);
+        } else if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.GONE);
             if (isLocalFile) {
                 loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
-                WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView);
+                holder.imageView.setImageUrl(getBestImageUrl(media), WPNetworkImageView.ImageType.PHOTO);
             }
         } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.VISIBLE);
-            WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl(), holder.imageView);
+            holder.imageView.setImageUrl(media.getThumbnailUrl(), WPNetworkImageView.ImageType.PHOTO);
         } else {
             // not an image or video, so show file name and file type
             holder.videoOverlayContainer.setVisibility(View.GONE);
@@ -231,6 +236,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
+    @Override
+    public void onViewRecycled(GridViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.imageView.setImageDrawable(null);
+        holder.imageView.setTag(null);
+    }
+
     public ArrayList<Integer> getSelectedItems() {
         return mSelectedItems;
     }
@@ -269,6 +281,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
             previewContainer = (ViewGroup) view.findViewById(R.id.frame_preview);
             videoOverlayContainer = (ViewGroup) view.findViewById(R.id.frame_video_overlay);
+
+            imageView.setErrorImageResId(R.drawable.media_item_background);
+            imageView.setDefaultImageResId(R.drawable.media_item_background);
 
             View.OnClickListener previewListener = new View.OnClickListener() {
                 @Override
@@ -452,6 +467,16 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public void setHasRetrievedAll(boolean b) {
         mHasRetrievedAll = b;
+    }
+
+    void setLoadThumbnails(boolean loadThumbnails) {
+        if (loadThumbnails != mLoadThumbnails) {
+            mLoadThumbnails = loadThumbnails;
+            AppLog.d(AppLog.T.MEDIA, "MediaGridAdapter > loadThumbnails = " + loadThumbnails);
+            if (mLoadThumbnails) {
+                notifyDataSetChanged();
+            }
+        }
     }
 
     public void clearSelection() {

@@ -209,8 +209,29 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         int numColumns = MediaGridAdapter.getColumnCount(getActivity());
         mGridManager = new GridLayoutManager(getActivity(), numColumns);
         mRecycler.setLayoutManager(mGridManager);
-
         mRecycler.setAdapter(getAdapter());
+
+        // disable thumbnail loading during a fling to conserve memory
+        final int minDistance =
+                WordPressMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
+        mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
+            @Override
+            public boolean onFling(int velocityX, int velocityY) {
+                if (Math.abs(velocityY) > minDistance) {
+                    getAdapter().setLoadThumbnails(false);
+                }
+                return false;
+            }
+        });
+        mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    getAdapter().setLoadThumbnails(true);
+                }
+            }
+        });
 
         mEmptyView = (TextView) view.findViewById(R.id.empty_view);
 
