@@ -12,8 +12,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
+import android.view.ViewConfiguration;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
@@ -292,5 +292,14 @@ public class WordPressMediaUtils {
                         AppLog.d(T.MEDIA, "Media scanner finished scanning " + path);
                     }
                 });
+    }
+
+    /*
+     * returns the minimum distance for a fling which determines whether to disable loading
+     * thumbnails in the media grid or photo picker - used to conserve memory usage during
+     * a reasonably-sized fling
+     */
+    public static int getFlingDistanceToDisableThumbLoading(@NonNull Context context) {
+        return ViewConfiguration.get(context).getScaledMaximumFlingVelocity() / 2;
     }
 }

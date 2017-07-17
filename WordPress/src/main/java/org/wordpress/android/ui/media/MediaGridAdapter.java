@@ -47,6 +47,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private boolean mAllowMultiselect;
     private boolean mInMultiSelect;
     private boolean mShowPreviewIcon;
+    private boolean mLoadThumbnails = true;
 
     private final Handler mHandler;
     private final LayoutInflater mInflater;
@@ -163,15 +164,23 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.GONE);
-            if (isLocalFile) {
-                loadLocalImage(media.getFilePath(), holder.imageView);
+            if (mLoadThumbnails) {
+                if (isLocalFile) {
+                    loadLocalImage(media.getFilePath(), holder.imageView);
+                } else {
+                    WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView);
+                }
             } else {
-                WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView);
+                holder.imageView.setImageDrawable(null);
             }
         } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.VISIBLE);
-            WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl(), holder.imageView);
+            if (mLoadThumbnails) {
+                WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl(), holder.imageView);
+            } else {
+                holder.imageView.setImageDrawable(null);
+            }
         } else {
             // not an image or video, so show file name and file type
             holder.videoOverlayContainer.setVisibility(View.GONE);
@@ -452,6 +461,16 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public void setHasRetrievedAll(boolean b) {
         mHasRetrievedAll = b;
+    }
+
+    void setLoadThumbnails(boolean loadThumbnails) {
+        if (loadThumbnails != mLoadThumbnails) {
+            mLoadThumbnails = loadThumbnails;
+            AppLog.d(AppLog.T.MEDIA, "MediaGridAdapter > loadThumbnails = " + loadThumbnails);
+            if (mLoadThumbnails) {
+                notifyDataSetChanged();
+            }
+        }
     }
 
     public void clearSelection() {

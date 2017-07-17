@@ -20,13 +20,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -130,7 +130,8 @@ public class PhotoPickerFragment extends Fragment {
         mRecycler.setHasFixedSize(true);
 
         // disable thumbnail loading during a fling to conserve memory
-        final int minDistance = ViewConfiguration.get(getActivity()).getScaledMaximumFlingVelocity() / 2;
+        final int minDistance =
+                WordPressMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
         mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
             @Override
             public boolean onFling(int velocityX, int velocityY) {
