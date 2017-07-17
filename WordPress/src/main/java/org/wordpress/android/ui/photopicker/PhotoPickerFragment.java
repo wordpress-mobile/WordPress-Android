@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -79,6 +80,7 @@ public class PhotoPickerFragment extends Fragment {
     private boolean mAllowMultiSelect;
     private boolean mPhotosOnly;
     private boolean mDeviceOnly;
+    private boolean mIsFlinging;
 
     private static final String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
     private static final String ARG_PHOTOS_ONLY = "photos_only";
@@ -126,6 +128,27 @@ public class PhotoPickerFragment extends Fragment {
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
+
+        // disable thumbnail loading during a fling to conserve memory
+        final int minDistance = ViewConfiguration.get(getActivity()).getScaledMaximumFlingVelocity() / 2;
+        mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
+            @Override
+            public boolean onFling(int velocityX, int velocityY) {
+                if (Math.abs(velocityY) > minDistance) {
+                    getAdapter().setLoadThumbnails(false);
+                }
+                return false;
+            }
+        });
+        mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    getAdapter().setLoadThumbnails(true);
+                }
+            }
+        });
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
         mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
