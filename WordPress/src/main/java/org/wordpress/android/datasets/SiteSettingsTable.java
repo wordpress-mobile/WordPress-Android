@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CategoryModel;
+import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.models.SiteSettingsModel;
 
 import java.util.HashMap;
@@ -29,6 +30,7 @@ public final class SiteSettingsTable {
     public static void createTable(SQLiteDatabase db) {
         if (db != null) {
             db.execSQL(SiteSettingsModel.CREATE_SETTINGS_TABLE_SQL);
+            db.execSQL(JetpackSettingsModel.CREATE_JP_SETTINGS_TABLE_SQL);
             db.execSQL(CREATE_CATEGORIES_TABLE_SQL);
         }
     }
@@ -96,6 +98,13 @@ public final class SiteSettingsTable {
         return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
     }
 
+    public static Cursor getJpSettings(long id) {
+        if (id < 0) return null;
+
+        String sqlCommand = sqlSelectAllJpSettings() + sqlWhere(JetpackSettingsModel.ID_COLUMN_NAME, Long.toString(id)) + ";";
+        return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
+    }
+
     public static void saveCategory(CategoryModel category) {
         if (category == null) return;
 
@@ -110,6 +119,14 @@ public final class SiteSettingsTable {
         for (CategoryModel category : categories) {
             saveCategory(category);
         }
+    }
+
+    public static void saveJpSettings(JetpackSettingsModel settings) {
+        if (settings == null) return;
+
+        ContentValues values = settings.serializeToDatabase();
+        WordPress.wpDB.getDatabase().insertWithOnConflict(
+                JetpackSettingsModel.JP_SETTINGS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     public static void saveSettings(SiteSettingsModel settings) {
@@ -128,6 +145,10 @@ public final class SiteSettingsTable {
 
     private static String sqlSelectAllSettings() {
         return "SELECT * FROM " + SiteSettingsModel.SETTINGS_TABLE_NAME + " ";
+    }
+
+    private static String sqlSelectAllJpSettings() {
+        return "SELECT * FROM " + JetpackSettingsModel.JP_SETTINGS_TABLE_NAME + " ";
     }
 
     private static String sqlWhere(String variable, String value) {

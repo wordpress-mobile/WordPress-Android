@@ -15,57 +15,54 @@ import java.util.Map;
  */
 
 public class SiteSettingsModel {
-    public static final int RELATED_POSTS_ENABLED_FLAG = 0x1;
-    public static final int RELATED_POST_HEADER_FLAG = 0x2;
-    public static final int RELATED_POST_IMAGE_FLAG = 0x4;
+    private static final int RELATED_POSTS_ENABLED_FLAG = 0x1;
+    private static final int RELATED_POST_HEADER_FLAG = 0x2;
+    private static final int RELATED_POST_IMAGE_FLAG = 0x4;
 
     // Settings table column names
     public static final String ID_COLUMN_NAME = "id";
-    public static final String ADDRESS_COLUMN_NAME = "address";
-    public static final String USERNAME_COLUMN_NAME = "username";
-    public static final String PASSWORD_COLUMN_NAME = "password";
-    public static final String TITLE_COLUMN_NAME = "title";
-    public static final String TAGLINE_COLUMN_NAME = "tagline";
-    public static final String LANGUAGE_COLUMN_NAME = "language";
-    public static final String PRIVACY_COLUMN_NAME = "privacy";
-    public static final String LOCATION_COLUMN_NAME = "location";
-    public static final String OPTIMIZED_IMAGE_COLUMN_NAME = "optimizedImage";
-    public static final String MAX_IMAGE_WIDTH_COLUMN_NAME = "maxImageWidth";
-    public static final String IMAGE_ENCODER_QUALITY_COLUMN_NAME = "imageEncoderQuality";
-    public static final String OPTIMIZED_VIDEO_COLUMN_NAME = "optimizedVideo";
-    public static final String MAX_VIDEO_WIDTH_COLUMN_NAME = "maxVideoWidth";
-    public static final String VIDEO_ENCODER_BITRATE_COLUMN_NAME = "videoEncoderBitrate";
-    public static final String DEF_CATEGORY_COLUMN_NAME = "defaultCategory";
-    public static final String DEF_POST_FORMAT_COLUMN_NAME = "defaultPostFormat";
-    public static final String CATEGORIES_COLUMN_NAME = "categories";
-    public static final String POST_FORMATS_COLUMN_NAME = "postFormats";
-    public static final String CREDS_VERIFIED_COLUMN_NAME = "credsVerified";
-    public static final String RELATED_POSTS_COLUMN_NAME = "relatedPosts";
-    public static final String ALLOW_COMMENTS_COLUMN_NAME = "allowComments";
-    public static final String SEND_PINGBACKS_COLUMN_NAME = "sendPingbacks";
-    public static final String RECEIVE_PINGBACKS_COLUMN_NAME = "receivePingbacks";
-    public static final String SHOULD_CLOSE_AFTER_COLUMN_NAME = "shouldCloseAfter";
-    public static final String CLOSE_AFTER_COLUMN_NAME = "closeAfter";
-    public static final String SORT_BY_COLUMN_NAME = "sortBy";
-    public static final String SHOULD_THREAD_COLUMN_NAME = "shouldThread";
-    public static final String THREADING_COLUMN_NAME = "threading";
-    public static final String SHOULD_PAGE_COLUMN_NAME = "shouldPage";
-    public static final String PAGING_COLUMN_NAME = "paging";
-    public static final String MANUAL_APPROVAL_COLUMN_NAME = "manualApproval";
-    public static final String IDENTITY_REQUIRED_COLUMN_NAME = "identityRequired";
-    public static final String USER_ACCOUNT_REQUIRED_COLUMN_NAME = "userAccountRequired";
-    public static final String WHITELIST_COLUMN_NAME = "whitelist";
-    public static final String MODERATION_KEYS_COLUMN_NAME = "moderationKeys";
-    public static final String BLACKLIST_KEYS_COLUMN_NAME = "blacklistKeys";
-    public static final String SHARING_LABEL_COLUMN_NAME = "sharingLabel";
-    public static final String SHARING_BUTTON_STYLE_COLUMN_NAME = "sharingButtonStyle";
-    public static final String ALLOW_REBLOG_BUTTON_COLUMN_NAME = "allowReblogButton";
-    public static final String ALLOW_LIKE_BUTTON_COLUMN_NAME = "allowLikeButton";
-    public static final String ALLOW_COMMENT_LIKES_COLUMN_NAME = "allowCommentLikes";
-    public static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
-    public static final String JP_MONITOR_ACTIVE_COLUMN_NAME = "monitorActive";
-    public static final String JP_MONITOR_EMAIL_NOTES_COLUMN_NAME = "jpEmailNotifications";
-    public static final String JP_MONITOR_WP_NOTES_COLUMN_NAME = "jpWpNotifications";
+    private static final String ADDRESS_COLUMN_NAME = "address";
+    private static final String USERNAME_COLUMN_NAME = "username";
+    private static final String PASSWORD_COLUMN_NAME = "password";
+    private static final String TITLE_COLUMN_NAME = "title";
+    private static final String TAGLINE_COLUMN_NAME = "tagline";
+    private static final String LANGUAGE_COLUMN_NAME = "language";
+    private static final String PRIVACY_COLUMN_NAME = "privacy";
+    private static final String LOCATION_COLUMN_NAME = "location";
+    private static final String OPTIMIZED_IMAGE_COLUMN_NAME = "optimizedImage";
+    private static final String MAX_IMAGE_WIDTH_COLUMN_NAME = "maxImageWidth";
+    private static final String IMAGE_ENCODER_QUALITY_COLUMN_NAME = "imageEncoderQuality";
+    private static final String OPTIMIZED_VIDEO_COLUMN_NAME = "optimizedVideo";
+    private static final String MAX_VIDEO_WIDTH_COLUMN_NAME = "maxVideoWidth";
+    private static final String VIDEO_ENCODER_BITRATE_COLUMN_NAME = "videoEncoderBitrate";
+    private static final String DEF_CATEGORY_COLUMN_NAME = "defaultCategory";
+    private static final String DEF_POST_FORMAT_COLUMN_NAME = "defaultPostFormat";
+    private static final String CATEGORIES_COLUMN_NAME = "categories";
+    private static final String POST_FORMATS_COLUMN_NAME = "postFormats";
+    private static final String CREDS_VERIFIED_COLUMN_NAME = "credsVerified";
+    private static final String RELATED_POSTS_COLUMN_NAME = "relatedPosts";
+    private static final String ALLOW_COMMENTS_COLUMN_NAME = "allowComments";
+    private static final String SEND_PINGBACKS_COLUMN_NAME = "sendPingbacks";
+    private static final String RECEIVE_PINGBACKS_COLUMN_NAME = "receivePingbacks";
+    private static final String SHOULD_CLOSE_AFTER_COLUMN_NAME = "shouldCloseAfter";
+    private static final String CLOSE_AFTER_COLUMN_NAME = "closeAfter";
+    private static final String SORT_BY_COLUMN_NAME = "sortBy";
+    private static final String SHOULD_THREAD_COLUMN_NAME = "shouldThread";
+    private static final String THREADING_COLUMN_NAME = "threading";
+    private static final String SHOULD_PAGE_COLUMN_NAME = "shouldPage";
+    private static final String PAGING_COLUMN_NAME = "paging";
+    private static final String MANUAL_APPROVAL_COLUMN_NAME = "manualApproval";
+    private static final String IDENTITY_REQUIRED_COLUMN_NAME = "identityRequired";
+    private static final String USER_ACCOUNT_REQUIRED_COLUMN_NAME = "userAccountRequired";
+    private static final String WHITELIST_COLUMN_NAME = "whitelist";
+    private static final String MODERATION_KEYS_COLUMN_NAME = "moderationKeys";
+    private static final String BLACKLIST_KEYS_COLUMN_NAME = "blacklistKeys";
+    private static final String SHARING_LABEL_COLUMN_NAME = "sharingLabel";
+    private static final String SHARING_BUTTON_STYLE_COLUMN_NAME = "sharingButtonStyle";
+    private static final String ALLOW_REBLOG_BUTTON_COLUMN_NAME = "allowReblogButton";
+    private static final String ALLOW_LIKE_BUTTON_COLUMN_NAME = "allowLikeButton";
+    private static final String ALLOW_COMMENT_LIKES_COLUMN_NAME = "allowCommentLikes";
+    private static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
     public static final String ADD_OPTIMIZED_IMAGE = "alter table " + SETTINGS_TABLE_NAME +
@@ -128,9 +125,6 @@ public class SiteSettingsModel {
                     IDENTITY_REQUIRED_COLUMN_NAME + " BOOLEAN, " +
                     USER_ACCOUNT_REQUIRED_COLUMN_NAME + " BOOLEAN, " +
                     WHITELIST_COLUMN_NAME + " BOOLEAN, " +
-                    JP_MONITOR_ACTIVE_COLUMN_NAME + " BOOLEAN, " +
-                    JP_MONITOR_EMAIL_NOTES_COLUMN_NAME + " BOOLEAN, " +
-                    JP_MONITOR_WP_NOTES_COLUMN_NAME + " BOOLEAN, " +
                     MODERATION_KEYS_COLUMN_NAME + " TEXT, " +
                     BLACKLIST_KEYS_COLUMN_NAME + " TEXT" +
                     ");";
@@ -183,11 +177,6 @@ public class SiteSettingsModel {
     public boolean allowLikeButton;
     public boolean allowCommentLikes;
     public String twitterUsername;
-
-    // Jetpack
-    public boolean monitorActive;
-    public boolean emailNotifications;
-    public boolean wpNotifications;
     public boolean jetpackProtectEnabled;
 
     @Override
@@ -236,9 +225,6 @@ public class SiteSettingsModel {
                 allowReblogButton == otherModel.allowReblogButton &&
                 allowLikeButton == otherModel.allowLikeButton &&
                 allowCommentLikes == otherModel.allowCommentLikes &&
-                monitorActive == otherModel.monitorActive &&
-                emailNotifications == otherModel.emailNotifications &&
-                wpNotifications == otherModel.wpNotifications &&
                 twitterUsername != null && twitterUsername.equals(otherModel.twitterUsername);
     }
 
@@ -346,9 +332,6 @@ public class SiteSettingsModel {
         commentsRequireIdentity = getBooleanFromCursor(cursor, IDENTITY_REQUIRED_COLUMN_NAME);
         commentsRequireUserAccount = getBooleanFromCursor(cursor, USER_ACCOUNT_REQUIRED_COLUMN_NAME);
         commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, WHITELIST_COLUMN_NAME);
-        monitorActive = getBooleanFromCursor(cursor, JP_MONITOR_ACTIVE_COLUMN_NAME);
-        emailNotifications = getBooleanFromCursor(cursor, JP_MONITOR_EMAIL_NOTES_COLUMN_NAME);
-        wpNotifications = getBooleanFromCursor(cursor, JP_MONITOR_WP_NOTES_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
@@ -437,9 +420,6 @@ public class SiteSettingsModel {
         values.put(IDENTITY_REQUIRED_COLUMN_NAME, commentsRequireIdentity);
         values.put(USER_ACCOUNT_REQUIRED_COLUMN_NAME, commentsRequireUserAccount);
         values.put(WHITELIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
-        values.put(JP_MONITOR_ACTIVE_COLUMN_NAME, monitorActive);
-        values.put(JP_MONITOR_EMAIL_NOTES_COLUMN_NAME, emailNotifications);
-        values.put(JP_MONITOR_WP_NOTES_COLUMN_NAME, wpNotifications);
 
         String moderationKeys = "";
         if (holdForModeration != null) {
@@ -465,7 +445,7 @@ public class SiteSettingsModel {
         return values;
     }
 
-    public int getRelatedPostsFlags() {
+    private int getRelatedPostsFlags() {
         int flags = 0;
 
         if (showRelatedPosts) flags |= RELATED_POSTS_ENABLED_FLAG;
@@ -475,7 +455,7 @@ public class SiteSettingsModel {
         return flags;
     }
 
-    public void setRelatedPostsFlags(int flags) {
+    private void setRelatedPostsFlags(int flags) {
         showRelatedPosts = (flags & RELATED_POSTS_ENABLED_FLAG) > 0;
         showRelatedPostHeader = (flags & RELATED_POST_HEADER_FLAG) > 0;
         showRelatedPostImages = (flags & RELATED_POST_IMAGE_FLAG) > 0;
