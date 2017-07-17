@@ -321,6 +321,23 @@ public class UploadService extends Service {
         return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel);
     }
 
+    public static float getMediaUploadProgressForPost(PostModel postModel) {
+        if (postModel == null) {
+            return 0;
+        }
+
+        for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
+            if (uploadingPost.postModel.getId() == postModel.getId()) {
+                float overallProgress = getOverallProgressForMediaList(uploadingPost.pendingMedia);
+                AppLog.i(T.MAIN, "Overall progress for post with id " + uploadingPost.postModel.getId()
+                        + ": " + overallProgress);
+                return overallProgress;
+            }
+        }
+
+        return 1;
+    }
+
     private void showNotificationForPostWithPendingMedia(PostModel post) {
         if (!mPostUploadNotifier.isDisplayingNotificationForPost(post)) {
             mPostUploadNotifier.createNotificationForPost(post, getString(R.string.uploading_post_media));
@@ -416,6 +433,20 @@ public class UploadService extends Service {
             }
         }
         return null;
+    }
+
+    private static float getOverallProgressForMediaList(List<MediaModel> pendingMediaList) {
+        if (pendingMediaList.size() == 0) {
+            return 1;
+        }
+
+        float overallProgress = 0;
+        for (MediaModel pendingMedia : pendingMediaList) {
+            overallProgress += MediaUploadHandler.getProgressForMedia(pendingMedia);
+        }
+        overallProgress /= pendingMediaList.size();
+
+        return overallProgress;
     }
 
     /**
