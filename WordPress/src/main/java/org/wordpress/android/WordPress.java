@@ -850,8 +850,8 @@ public class WordPress extends MultiDexApplication {
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
             AnalyticsTracker.endSession(false);
             // Methods onAppComesFromBackground / onAppGoesToBackground are only workarounds to track when the
-            // app goes or comes to background, but there are not 100% reliable, and here we could try
-            // to unregister the receiver twice.
+            // app goes to or comes from background, but they are not 100% reliable, we should avoid unregistering
+            // the receiver twice.
             if (mConnectionReceiverRegistered) {
                 mConnectionReceiverRegistered = false;
                 unregisterReceiver(ConnectionChangeReceiver.getInstance());
