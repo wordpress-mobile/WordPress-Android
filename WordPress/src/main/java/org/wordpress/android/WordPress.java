@@ -404,14 +404,12 @@ public class WordPress extends MultiDexApplication {
         if (oldVersionCode == 0) {
             // Track application installed if there isn't old version code
             AnalyticsTracker.track(Stat.APPLICATION_INSTALLED);
-            AppPrefs.setNewEditorPromoRequired(true);
         }
         if (oldVersionCode != 0 && oldVersionCode < versionCode) {
             Map<String, Long> properties = new HashMap<String, Long>(1);
             properties.put("elapsed_time_on_create", elapsedTimeOnCreate);
             // app upgraded
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED, properties);
-            AppPrefs.setNewEditorPromoRequired(true);
         }
         AppPrefs.setLastAppVersionCode(versionCode);
     }
