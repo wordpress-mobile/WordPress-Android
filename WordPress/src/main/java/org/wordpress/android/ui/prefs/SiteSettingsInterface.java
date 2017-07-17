@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.models.CategoryModel;
+import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -207,6 +208,8 @@ public abstract class SiteSettingsInterface {
     protected final SiteSettingsListener mListener;
     protected final SiteSettingsModel mSettings;
     protected final SiteSettingsModel mRemoteSettings;
+    protected final JetpackSettingsModel mJpSettings;
+    protected final JetpackSettingsModel mRemoteJpSettings;
     private final Map<String, String> mLanguageCodes;
 
     @Inject SiteStore mSiteStore;
@@ -220,6 +223,8 @@ public abstract class SiteSettingsInterface {
         mListener = listener;
         mSettings = new SiteSettingsModel();
         mRemoteSettings = new SiteSettingsModel();
+        mJpSettings = new JetpackSettingsModel();
+        mRemoteJpSettings = new JetpackSettingsModel();
         mLanguageCodes = WPPrefUtils.generateLanguageMap(host);
     }
 
@@ -584,27 +589,27 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean isJetpackMonitorEnabled() {
-        return mSettings.monitorActive;
+        return mJpSettings.monitorActive;
     }
 
     public boolean shouldSendJetpackMonitorEmailNotifications() {
-        return mSettings.emailNotifications;
+        return mJpSettings.emailNotifications;
     }
 
     public boolean shouldSendJetpackMonitorWpNotifications() {
-        return mSettings.wpNotifications;
+        return mJpSettings.wpNotifications;
     }
 
     public void enableJetpackMonitor(boolean monitorActive) {
-        mSettings.monitorActive = monitorActive;
+        mJpSettings.monitorActive = monitorActive;
     }
 
     public void enableJetpackMonitorEmailNotifications(boolean emailNotifications) {
-        mSettings.emailNotifications = emailNotifications;
+        mJpSettings.emailNotifications = emailNotifications;
     }
 
     public void enableJetpackMonitorWpNotifications(boolean wpNotifications) {
-        mSettings.wpNotifications = wpNotifications;
+        mJpSettings.wpNotifications = wpNotifications;
     }
 
     public void setTitle(String title) {

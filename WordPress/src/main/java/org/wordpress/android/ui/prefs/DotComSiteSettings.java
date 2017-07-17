@@ -191,9 +191,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.v(AppLog.T.API, "Received response to Jetpack Settings REST request.");
-                        mRemoteSettings.localTableId = mSite.getId();
+                        mRemoteJpSettings.localTableId = mSite.getId();
                         deserializeJetpackRestResponse(mSite, response);
-                        mSettings.copyFrom(mRemoteSettings);
+                        mJpSettings.localTableId = mRemoteJpSettings.localTableId;
+                        mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
+                        mJpSettings.emailNotifications = mRemoteJpSettings.emailNotifications;
+                        mJpSettings.wpNotifications = mRemoteJpSettings.wpNotifications;
+                        SiteSettingsTable.saveJpSettings(mJpSettings);
                         notifyUpdatedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
@@ -439,9 +443,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack Settings saved remotely");
                         notifySavedOnUiThread(null);
-                        mRemoteSettings.monitorActive = mSettings.monitorActive;
-                        mRemoteSettings.emailNotifications = mSettings.emailNotifications;
-                        mRemoteSettings.wpNotifications = mSettings.wpNotifications;
+                        mRemoteJpSettings.monitorActive = mJpSettings.monitorActive;
+                        mRemoteJpSettings.emailNotifications = mJpSettings.emailNotifications;
+                        mRemoteJpSettings.wpNotifications = mJpSettings.wpNotifications;
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -455,16 +459,16 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private void deserializeJetpackRestResponse(SiteModel site, JSONObject response) {
         if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
-        mRemoteSettings.monitorActive = settingsObject.optBoolean(JP_MONITOR_ACTIVE_KEY, false);
-        mRemoteSettings.emailNotifications = settingsObject.optBoolean(JP_MONITOR_EMAIL_NOTES_KEY, false);
-        mRemoteSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
+        mRemoteJpSettings.monitorActive = settingsObject.optBoolean(JP_MONITOR_ACTIVE_KEY, false);
+        mRemoteJpSettings.emailNotifications = settingsObject.optBoolean(JP_MONITOR_EMAIL_NOTES_KEY, false);
+        mRemoteJpSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
     }
 
     private Map<String, String> serializeJetpackParams() {
         Map<String, String> params = new HashMap<>();
-        params.put(JP_MONITOR_ACTIVE_KEY, String.valueOf(mSettings.monitorActive));
-        params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mSettings.emailNotifications));
-        params.put(JP_MONITOR_WP_NOTES_KEY, String.valueOf(mSettings.wpNotifications));
+        params.put(JP_MONITOR_ACTIVE_KEY, String.valueOf(mJpSettings.monitorActive));
+        params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mJpSettings.emailNotifications));
+        params.put(JP_MONITOR_WP_NOTES_KEY, String.valueOf(mJpSettings.wpNotifications));
         return params;
     }
 
