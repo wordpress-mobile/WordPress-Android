@@ -76,22 +76,22 @@ public abstract class SiteSettingsInterface {
     /**
      * Name of the {@link SharedPreferences} that is used to store local settings.
      */
-    public static final String SITE_SETTINGS_PREFS = "site-settings-prefs";
+    private static final String SITE_SETTINGS_PREFS = "site-settings-prefs";
 
     /**
      * Key used to access the language preference stored in {@link SharedPreferences}.
      */
-    public static final String LANGUAGE_PREF_KEY = "site-settings-language-pref";
+    private static final String LANGUAGE_PREF_KEY = "site-settings-language-pref";
 
     /**
      * Key used to access the default category preference stored in {@link SharedPreferences}.
      */
-    public static final String DEF_CATEGORY_PREF_KEY = "site-settings-category-pref";
+    private static final String DEF_CATEGORY_PREF_KEY = "site-settings-category-pref";
 
     /**
      * Key used to access the default post format preference stored in {@link SharedPreferences}.
      */
-    public static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
+    private static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
 
     /**
      * Key used to access the sharing button style stored in {@link SharedPreferences}.
@@ -101,17 +101,17 @@ public abstract class SiteSettingsInterface {
     /**
      * Identifies an Ascending (oldest to newest) sort order.
      */
-    public static final int ASCENDING_SORT = 0;
+    static final int ASCENDING_SORT = 0;
 
     /**
      * Identifies an Descending (newest to oldest) sort order.
      */
-    public static final int DESCENDING_SORT = 1;
+    static final int DESCENDING_SORT = 1;
 
     /**
      * Used to prefix keys in an analytics property list.
      */
-    protected static final String SAVED_ITEM_PREFIX = "item_saved_";
+    static final String SAVED_ITEM_PREFIX = "item_saved_";
 
     /**
      * Key for the Standard post format. Used as default if post format is not set/known.

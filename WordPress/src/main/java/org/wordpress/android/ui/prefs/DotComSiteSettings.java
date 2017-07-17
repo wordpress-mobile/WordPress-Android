@@ -24,45 +24,45 @@ import java.util.Map;
 
 class DotComSiteSettings extends SiteSettingsInterface {
     // WP.com REST keys used in response to a settings GET and POST request
-    public static final String LANGUAGE_ID_KEY = "lang_id";
-    public static final String PRIVACY_KEY = "blog_public";
-    public static final String URL_KEY = "URL";
-    public static final String DEF_CATEGORY_KEY = "default_category";
-    public static final String DEF_POST_FORMAT_KEY = "default_post_format";
-    public static final String RELATED_POSTS_ALLOWED_KEY = "jetpack_relatedposts_allowed";
-    public static final String RELATED_POSTS_ENABLED_KEY = "jetpack_relatedposts_enabled";
-    public static final String RELATED_POSTS_HEADER_KEY = "jetpack_relatedposts_show_headline";
-    public static final String RELATED_POSTS_IMAGES_KEY = "jetpack_relatedposts_show_thumbnails";
-    public static final String ALLOW_COMMENTS_KEY = "default_comment_status";
-    public static final String SEND_PINGBACKS_KEY = "default_pingback_flag";
-    public static final String RECEIVE_PINGBACKS_KEY = "default_ping_status";
-    public static final String CLOSE_OLD_COMMENTS_KEY = "close_comments_for_old_posts";
-    public static final String CLOSE_OLD_COMMENTS_DAYS_KEY = "close_comments_days_old";
-    public static final String THREAD_COMMENTS_KEY = "thread_comments";
-    public static final String THREAD_COMMENTS_DEPTH_KEY = "thread_comments_depth";
-    public static final String PAGE_COMMENTS_KEY = "page_comments";
-    public static final String PAGE_COMMENT_COUNT_KEY = "comments_per_page";
-    public static final String COMMENT_SORT_ORDER_KEY = "comment_order";
-    public static final String COMMENT_MODERATION_KEY = "comment_moderation";
-    public static final String REQUIRE_IDENTITY_KEY = "require_name_email";
-    public static final String REQUIRE_USER_ACCOUNT_KEY = "comment_registration";
-    public static final String WHITELIST_KNOWN_USERS_KEY = "comment_whitelist";
-    public static final String MAX_LINKS_KEY = "comment_max_links";
-    public static final String MODERATION_KEYS_KEY = "moderation_keys";
-    public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
-    public static final String SHARING_LABEL_KEY = "sharing_label";
-    public static final String SHARING_BUTTON_STYLE_KEY = "sharing_button_style";
-    public static final String SHARING_REBLOGS_DISABLED_KEY = "disabled_reblogs";
-    public static final String SHARING_LIKES_DISABLED_KEY = "disabled_likes";
-    public static final String SHARING_COMMENT_LIKES_KEY = "jetpack_comment_likes_enabled";
-    public static final String TWITTER_USERNAME_KEY = "twitter_via";
-    public static final String JP_MONITOR_ACTIVE_KEY = "monitor_active";
-    public static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
-    public static final String JP_MONITOR_WP_NOTES_KEY = "wp_notifications";
+    private static final String LANGUAGE_ID_KEY = "lang_id";
+    private static final String PRIVACY_KEY = "blog_public";
+    private static final String URL_KEY = "URL";
+    private static final String DEF_CATEGORY_KEY = "default_category";
+    private static final String DEF_POST_FORMAT_KEY = "default_post_format";
+    private static final String RELATED_POSTS_ALLOWED_KEY = "jetpack_relatedposts_allowed";
+    private static final String RELATED_POSTS_ENABLED_KEY = "jetpack_relatedposts_enabled";
+    private static final String RELATED_POSTS_HEADER_KEY = "jetpack_relatedposts_show_headline";
+    private static final String RELATED_POSTS_IMAGES_KEY = "jetpack_relatedposts_show_thumbnails";
+    private static final String ALLOW_COMMENTS_KEY = "default_comment_status";
+    private static final String SEND_PINGBACKS_KEY = "default_pingback_flag";
+    private static final String RECEIVE_PINGBACKS_KEY = "default_ping_status";
+    private static final String CLOSE_OLD_COMMENTS_KEY = "close_comments_for_old_posts";
+    private static final String CLOSE_OLD_COMMENTS_DAYS_KEY = "close_comments_days_old";
+    private static final String THREAD_COMMENTS_KEY = "thread_comments";
+    private static final String THREAD_COMMENTS_DEPTH_KEY = "thread_comments_depth";
+    private static final String PAGE_COMMENTS_KEY = "page_comments";
+    private static final String PAGE_COMMENT_COUNT_KEY = "comments_per_page";
+    private static final String COMMENT_SORT_ORDER_KEY = "comment_order";
+    private static final String COMMENT_MODERATION_KEY = "comment_moderation";
+    private static final String REQUIRE_IDENTITY_KEY = "require_name_email";
+    private static final String REQUIRE_USER_ACCOUNT_KEY = "comment_registration";
+    private static final String WHITELIST_KNOWN_USERS_KEY = "comment_whitelist";
+    private static final String MAX_LINKS_KEY = "comment_max_links";
+    private static final String MODERATION_KEYS_KEY = "moderation_keys";
+    private static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
+    private static final String SHARING_LABEL_KEY = "sharing_label";
+    private static final String SHARING_BUTTON_STYLE_KEY = "sharing_button_style";
+    private static final String SHARING_REBLOGS_DISABLED_KEY = "disabled_reblogs";
+    private static final String SHARING_LIKES_DISABLED_KEY = "disabled_likes";
+    private static final String SHARING_COMMENT_LIKES_KEY = "jetpack_comment_likes_enabled";
+    private static final String TWITTER_USERNAME_KEY = "twitter_via";
+    private static final String JP_MONITOR_ACTIVE_KEY = "monitor_active";
+    private static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
+    private static final String JP_MONITOR_WP_NOTES_KEY = "wp_notifications";
 
     // WP.com REST keys used to GET certain site settings
-    public static final String GET_TITLE_KEY = "name";
-    public static final String GET_DESC_KEY = "description";
+    private static final String GET_TITLE_KEY = "name";
+    private static final String GET_DESC_KEY = "description";
 
     // WP.com REST keys used to POST updates to site settings
     private static final String SET_TITLE_KEY = "blogname";
@@ -77,7 +77,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String CAT_POST_COUNT_KEY = "post_count";
     private static final String CAT_NUM_POSTS_KEY = "found";
     private static final String CATEGORIES_KEY = "categories";
-    public static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
+    private static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
 
     /**
      * Only instantiated by {@link SiteSettingsInterface}.
