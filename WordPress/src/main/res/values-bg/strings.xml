@@ -81,13 +81,6 @@ Language: bg
 	<string name="editor_failed_uploads_switch_html">Някои файлове не се качиха. Преминете в режим HTML\n        на сайта. Премахване на всички неуспешно качени файлове и напред?</string>
 	<string name="image_thumbnail">Малка картинка</string>
 	<string name="visual_editor">Визуален редактор</string>
-	<string name="format_bar_description_html">Режим HTML </string>
-	<string name="format_bar_description_ol">Подреден списък</string>
-	<string name="format_bar_description_ul">Неподреден списък</string>
-	<string name="format_bar_description_media">Вмъкване на файл</string>
-	<string name="format_bar_description_more">Прекъсване на текста</string>
-	<string name="format_bar_description_link">Вмъкване на връзка</string>
-	<string name="format_bar_description_quote">Цитат</string>
 	<string name="format_bar_description_strike">Зачертаване</string>
 	<string name="format_bar_description_underline">Подчертаване</string>
 	<string name="format_bar_description_italic">Курсив</string>

@@ -21,7 +21,6 @@ Language: it
 	<string name="smart_toast_photo_long_press">Fai tap e tieni premuto per la selezione multipla delle fotografie</string>
 	<string name="photo_picker_choose_video">Scegli un video dal dispositivo</string>
 	<string name="photo_picker_choose_photo">Scegli una fotografia dal dispositivo</string>
-	<string name="new_editor_promo_description">L\'app di WordPress ora include un nuovo bellissimo editor. Provalo e crea un nuovo articolo.</string>
 	<string name="wp_media_title">Media di WordPress</string>
 	<string name="media_insert_as_gallery">Aggiungi una galleria</string>
 	<string name="media_insert_individually">Aggiungi uno per uno</string>
@@ -64,7 +63,6 @@ Language: it
 	<string name="media_upload_state_queued">Accodato</string>
 	<string name="update_draft">Aggiorna bozza</string>
 	<string name="keep_editing">Continua a modificare</string>
-	<string name="image_quality">Qualità delle immagini</string>
 	<string name="error_all_media_upload_canceled">Tutti i caricamenti dei file multimediali sono stati cancellati a causa di un errore sconosciuto. Riprova il caricamento.</string>
 	<string name="error_unknown_post_type">Formato dell\'articolo sconosciuto</string>
 	<string name="error_unknown_post">Articolo sconosciuto, la copia locale potrebbe non essere sincronizzata con il server.</string>
@@ -194,13 +192,6 @@ Language: it
 	<string name="editor_failed_uploads_switch_html">Il caricamento di alcuni elementi multimediali non è andato a buon fine. Non puoi passare alla modalità HTML\n        in questo momento. Vuoi rimuovere i caricamenti falliti e proseguire?</string>
 	<string name="image_thumbnail">Immagine in minaitura</string>
 	<string name="visual_editor">Editor visuale</string>
-	<string name="format_bar_description_html">Modalità HTML</string>
-	<string name="format_bar_description_ol">Lista numerata</string>
-	<string name="format_bar_description_ul">Lista puntata</string>
-	<string name="format_bar_description_media">Inserire l\'elemento multimediale</string>
-	<string name="format_bar_description_more">Inserire di più</string>
-	<string name="format_bar_description_link">Inserisci link</string>
-	<string name="format_bar_description_quote">Citazione</string>
 	<string name="format_bar_description_strike">Barrato</string>
 	<string name="format_bar_description_underline">Sottolineato</string>
 	<string name="format_bar_description_italic">Corsivo</string>
@@ -386,7 +377,6 @@ Language: it
 	<string name="error_refresh_comments_showing_older">Impossibile aggiornare i commenti in questo momento, vengono visualizzati i commenti precedenti</string>
 	<string name="editor_post_settings_set_featured_image">Imposta immagine in primo piano</string>
 	<string name="editor_post_settings_featured_image">Immagine in evidenza</string>
-	<string name="new_editor_promo_title">Un editor completamente nuovo</string>
 	<string name="visual_editor_enabled">Editor visuale abilitato</string>
 	<string name="editor_content_placeholder">Condividi la tua storia qui...</string>
 	<string name="editor_page_title_placeholder">Titolo della pagina</string>

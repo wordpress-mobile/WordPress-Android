@@ -10,7 +10,6 @@ Language: sq_AL
 	<string name="smart_toast_photo_long_press">Që të përzgjidhni disa foto njëherësh, prekeni dhe mbajeni të prekur </string>
 	<string name="photo_picker_choose_video">Zgjidhni video prej pajisjes</string>
 	<string name="photo_picker_choose_photo">Zgjidhni foto prej pajisjes</string>
-	<string name="new_editor_promo_description">Aplikacioni WordPress tani përmban një përpunues të ri të hijshëm. Provojeni duke krijuar një postim të ri.</string>
 	<string name="wp_media_title">Media WordPress</string>
 	<string name="media_insert_as_gallery">Shtoji si galeri</string>
 	<string name="media_insert_individually">Shtoji tek e tek</string>
@@ -53,7 +52,6 @@ Language: sq_AL
 	<string name="media_upload_state_queued">Në radhë</string>
 	<string name="update_draft">Përditësoni skicën</string>
 	<string name="keep_editing">Vazhdoni përpunimin</string>
-	<string name="image_quality">Cilësi figure</string>
 	<string name="error_all_media_upload_canceled">Krejt ngarkimet e mediave u anuluan për shkak të një gabimi të panjohur. Ju lutemi, riprovoni t’i ringarkoni</string>
 	<string name="error_unknown_post_type">Format i panjohur postimesh</string>
 	<string name="error_unknown_post">Postim i panjohur, kopja vendore e këtij postimi mund të jetë e panjëkohësuar me atë të shërbyesit</string>
@@ -181,16 +179,9 @@ Language: sq_AL
 	<string name="error_fetch_email_followers_list">S&amp;#8217;u morën dot ndjekës të sajtit me email</string>
 	<string name="error_fetch_followers_list">S&amp;#8217;u morën dot ndjekës të sajtit</string>
 	<string name="editor_failed_uploads_switch_html">Disa ngarkime mediash dështuan. S&amp;#8217;mund të kaloni nën mënyrën HTML\n        në këtë gjendje. Të hiqen krejt ngarkimet e dështuara dhe të vazhdohet?</string>
-	<string name="format_bar_description_html">Mënyra HTML</string>
 	<string name="visual_editor">Përpunues pamor</string>
 	<string name="image_thumbnail">Miniaturë figure</string>
-	<string name="format_bar_description_ul">Listë e parenditur</string>
-	<string name="format_bar_description_ol">Listë e renditur</string>
-	<string name="format_bar_description_more">Futni më tepër</string>
-	<string name="format_bar_description_media">Futni media</string>
 	<string name="format_bar_description_strike">Hequrvije</string>
-	<string name="format_bar_description_link">Futni lidhje</string>
-	<string name="format_bar_description_quote">Bllok citimi</string>
 	<string name="format_bar_description_italic">Të pjerrëta</string>
 	<string name="format_bar_description_underline">Nënvijë</string>
 	<string name="image_settings_save_toast">Ndryshimet u ruajtën</string>
@@ -375,7 +366,6 @@ Language: sq_AL
 	<string name="error_refresh_comments_showing_older">Komentet s&amp;#8217;u freskuan dot këtë herë - po shfaqen komente më të vjetër</string>
 	<string name="editor_post_settings_set_featured_image">Vëre Si Figurë të Zgjedhur</string>
 	<string name="editor_post_settings_featured_image">Figurë e Zgjedhur</string>
-	<string name="new_editor_promo_title">Përpunues i ri</string>
 	<string name="visual_editor_enabled">Përpunuesi Pamor u aktivizua</string>
 	<string name="editor_content_placeholder">Ndajeni shembullin tuaj me ta…</string>
 	<string name="editor_page_title_placeholder">Titull Faqeje</string>

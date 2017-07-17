@@ -21,7 +21,6 @@ Language: zh_TW
 	<string name="smart_toast_photo_long_press">輕觸並按住以選取多張照片</string>
 	<string name="photo_picker_choose_video">從裝置中選擇影片</string>
 	<string name="photo_picker_choose_photo">從裝置中選擇照片</string>
-	<string name="new_editor_promo_description">WordPress 應用程式現已包含美觀的全新編輯器。建立新的文章，即可試用編輯器。</string>
 	<string name="wp_media_title">WordPress 媒體</string>
 	<string name="media_insert_as_gallery">以圖庫方式新增</string>
 	<string name="media_insert_individually">分別新增</string>
@@ -64,7 +63,6 @@ Language: zh_TW
 	<string name="media_upload_state_queued">已排進佇列</string>
 	<string name="update_draft">更新草稿</string>
 	<string name="keep_editing">繼續編輯</string>
-	<string name="image_quality">圖片品質</string>
 	<string name="error_all_media_upload_canceled">由於未知的錯誤，所有的媒體上傳均已取消。請重試上傳</string>
 	<string name="error_unknown_post_type">未知的文章格式</string>
 	<string name="error_unknown_post">未知的文章，此文章的本機副本可能並未與伺服器同步</string>
@@ -194,13 +192,6 @@ Language: zh_TW
 	<string name="editor_failed_uploads_switch_html">部分媒體上傳失敗。在此狀態下，你無法\n切換至 HTML 模式。要移除所有上傳失敗的項目並繼續嗎？</string>
 	<string name="image_thumbnail">縮圖</string>
 	<string name="visual_editor">視覺化編輯器</string>
-	<string name="format_bar_description_html">HTML 模式</string>
-	<string name="format_bar_description_ol">已排序清單</string>
-	<string name="format_bar_description_ul">未排序清單</string>
-	<string name="format_bar_description_media">插入媒體</string>
-	<string name="format_bar_description_more">插入更多</string>
-	<string name="format_bar_description_link">插入連結</string>
-	<string name="format_bar_description_quote">封鎖引文</string>
 	<string name="format_bar_description_strike">刪除線</string>
 	<string name="format_bar_description_underline">底線</string>
 	<string name="format_bar_description_italic">斜體</string>
@@ -386,7 +377,6 @@ Language: zh_TW
 	<string name="error_refresh_comments_showing_older">目前無法重新整理留言 – 顯示較舊的留言</string>
 	<string name="editor_post_settings_set_featured_image">設定特色圖片</string>
 	<string name="editor_post_settings_featured_image">特色圖片</string>
-	<string name="new_editor_promo_title">全新編輯器</string>
 	<string name="visual_editor_enabled">視覺化編輯器已啟用</string>
 	<string name="editor_content_placeholder">在此分享你的故事...</string>
 	<string name="editor_page_title_placeholder">頁面標題</string>

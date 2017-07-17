@@ -55,12 +55,6 @@ Language: eu_ES
 	<string name="error_fetch_email_followers_list">Ezin izan dira guneko e-posta jarraitzaileak eskuratu</string>
 	<string name="error_fetch_followers_list">Ezin izan dira guneko jarraitzaileak eskuratu</string>
 	<string name="visual_editor">Editore bisuala</string>
-	<string name="format_bar_description_html">HTML modua</string>
-	<string name="format_bar_description_ol">Zerrenda ordenatua</string>
-	<string name="format_bar_description_ul">Ordenarik gabeko zerrenda</string>
-	<string name="format_bar_description_media">Txertatu media</string>
-	<string name="format_bar_description_more">Txertatu gehiago</string>
-	<string name="format_bar_description_link">Txertatu esteka</string>
 	<string name="format_bar_description_underline">Azpimarra</string>
 	<string name="format_bar_description_italic">Etzana</string>
 	<string name="format_bar_description_bold">Lodia</string>

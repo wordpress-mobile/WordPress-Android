@@ -1,11 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-27 09:02:06+0000
+Translation-Revision-Date: 2017-07-15 08:09:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+	<string name="video_optimization_generic_error_message">Fout opgetreden bij het comprimeren van je video. Het oorspronkelijke bestand gebruiken.</string>
+	<string name="video_optimization_in_progress">Optimaliseren van je video...</string>
+	<string name="photo_picker_soft_ask_permissions_denied">%1$s kreeg geen toegang tot je foto\'s. Om dit te verhelpen, pas de rechten aan en schakel %2$s in.</string>
+	<string name="format_bar_description_ellipsis_expand">Toolbar uitvouwen</string>
+	<string name="format_bar_description_ellipsis_collapse">Toolbar invouwen</string>
+	<string name="format_bar_description_page">Pagina-einde</string>
+	<string name="format_bar_description_horizontal_rule">Horizontale lijn</string>
+	<string name="format_bar_description_link">Link</string>
+	<string name="format_bar_description_list">Lijst</string>
+	<string name="format_bar_description_heading">Heading</string>
+	<string name="format_bar_description_media">Media</string>
+	<string name="reader_view_comments">Reacties bekijken</string>
+	<string name="new_editor_promo_title_beta">Beta</string>
+	<string name="new_editor_promo_title">Probeer de nieuwe editor uit</string>
+	<string name="new_editor_promo_link">Wat is er nieuw?</string>
+	<string name="new_editor_promo_description_image">Zelfgemaakte tekeningen</string>
+	<string name="new_editor_promo_confirmation_message">Nieuwe editor ingeschakeld</string>
+	<string name="new_editor_promo_confirmation_action">Instellingen</string>
+	<string name="new_editor_promo_button_positive">Probeer het uit</string>
+	<string name="new_editor_promo_button_negative">Niet nu</string>
+	<string name="new_editor_beta_message">Nieuwe editor in Open Beta.</string>
+	<string name="new_editor_beta_action">Meer lezen</string>
+	<string name="preference_editor_footer_description">Info-icoon</string>
+	<string name="preference_editor_footer">Release-opmerkingen en bugrapporten Editor</string>
+	<string name="site_settings_video_quality_hint">Kwaliteit van video\'s. Hoe hoger de waarde, hoe beter de kwaliteit van je video\'s.</string>
+	<string name="site_settings_video_width_hint">De afmeting van video\'s in berichten wijzigen naar dit formaat</string>
+	<string name="site_settings_optimize_video_summary">Het aanpassen van de grootte en het comprimeren van video\'s inschakelen</string>
+	<string name="site_settings_optimize_videos">Optimaliseer video\'s</string>
+	<string name="draft_uploaded">Concept toegevoegd</string>
+	<string name="report_bug">Bug rapporteren</string>
+	<string name="video_quality">Videokwaliteit</string>
+	<string name="max_video_px_width">Standaard videobreedte</string>
+	<string name="permission_location">Locatie</string>
+	<string name="permission_camera">Camera</string>
+	<string name="permission_storage">Opslag</string>
+	<string name="permissions_denied_message">Om dit te wijzigen, moet je je machtigingen bewerken en zorgen dat %s is ingeschakeld</string>
+	<string name="permissions_denied_title">Het lijkt erop dat je de vereiste machtigingen voor deze functie hebt uitgeschakeld</string>
+	<string name="button_edit_permissions">Rechten bewerken</string>
+	<string name="photo_picker_soft_ask_allow">Toestaan</string>
+	<string name="photo_picker_soft_ask_label">%s heeft rechten nodig om toegang te krijgen tot je foto\'s </string>
+	<string name="sharing_twitter_message">Dit wordt opgenomen in tweets als mensen delen met behulp van de Twitter-knop</string>
+	<string name="sharing_label_message">De tekst van het deelknoppenlabel wijzigen. Deze tekst verschijnt niet totdat je tenminste één deelknop hebt toegevoegd.</string>
+	<string name="connecting_account">Verbinden met account</string>
+	<string name="cannot_connect_account_error">De %s verbinding kon niet tot stand worden gebracht omdat er geen account geselecteerd is.</string>
+	<string name="connected">Verbonden</string>
+	<string name="twitter">Twitter</string>
+	<string name="likes">Likes</string>
+	<string name="sharing_comment_likes_description">Toestaan dat alle reacties door jezelf en je lezers geliket kunnen worden</string>
+	<string name="visual">Visueel</string>
+	<string name="buttons">Knoppen</string>
+	<string name="sharing_edit_more_buttons">Knoppen \'Meer\' bewerken</string>
+	<string name="sharing_more_description">Een knop \'Meer\' bevat een vervolgkeuzemenu waarin knoppen voor delen worden weergegeven</string>
+	<string name="sharing_sharing_buttons_description">Selecteer welke knoppen worden weergegeven onder je berichten</string>
+	<string name="twitter_username">Twitter gebruikersnaam</string>
+	<string name="sharing_comment_likes">Reactie-likes</string>
+	<string name="button_style">Knopstijl</string>
+	<string name="label">Label</string>
+	<string name="more_buttons">"Meer"-knoppen</string>
+	<string name="sharing_buttons">Deel-knoppen</string>
+	<string name="site_settings_like">Like-knop tonen</string>
+	<string name="site_settings_reblog">Rebloggen-knop tonen</string>
+	<string name="site_settings_reblog_and_like_header">Rebloggen en liken</string>
+	<string name="publicize_text_only">Alleen tekst</string>
+	<string name="publicize_icon_and_text">Icoon &amp; tekst</string>
+	<string name="publicize_icon_only">Alleen icoon</string>
+	<string name="publicize_official_buttons">Officiële knoppen</string>
+	<string name="official_buttons_display">Officiële knoppen</string>
+	<string name="text_only_display">Alleen tekst</string>
+	<string name="icon_only_display">Alleen icoon</string>
+	<string name="icon_and_text_display">Icoon &amp; tekst</string>
+	<string name="connection_chooser_message">Selecteer het account dat je wilt verifiëren. Je berichten worden automatisch gedeeld op het geselecteerde account.</string>
+	<string name="connecting_social_network">Verbinden met %s</string>
+	<string name="dlg_confirm_publicize_disconnect">Verbinding verbreken met %s?</string>
+	<string name="share_btn_connect_another_account">Verbinden met een ander account</string>
+	<string name="share_btn_reconnect">Herverbinden</string>
+	<string name="share_btn_disconnect">Verbinding verbreken</string>
+	<string name="share_btn_connect">Verbinden</string>
+	<string name="connection_service_description">Maak verbinding om je blogberichten automatisch te delen met %s.</string>
+	<string name="connection_service_label">Publiceren op %s</string>
+	<string name="connected_accounts_label">Verbonden accounts</string>
+	<string name="connections_description">Koppel je favoriete social media-services om nieuwe berichten automatisch met vrienden te delen.</string>
+	<string name="connections_label">Verbindingen</string>
+	<string name="sharing">Delen</string>
+	<string name="tabbar_accessibility_label_notifications">Meldingen. Beheer je meldingen</string>
+	<string name="tabbar_accessibility_label_reader">Reader. Inhoud van andere sites volgen.</string>
+	<string name="tabbar_accessibility_label_me">Ik. Je profiel bekijken en wijzigingen aanbrengen.</string>
+	<string name="tabbar_accessibility_label_my_site">Mijn site. Je site bekijken en beheren, inclusief statistieken.</string>
+	<string name="fab_content_description_write">Schrijven</string>
+	<string name="my_site_btn_sharing">Delen</string>
+	<string name="button_not_now">Niet nu</string>
+	<string name="media_error_timeout">Time-out van serverrespons: je hebt een slechte verbinding of er is een serverfout opgetreden</string>
+	<string name="media_error_internal_server_error">Uploadfout. Probeer Afbeeldingen optimaliseren in te schakelen via Site -> Instellingen</string>
+	<string name="media_error_too_large_upload">Bestand te groot om te uploaden. Probeer Afbeeldingen optimaliseren in te schakelen via Site -> Instellingen</string>
+	<string name="media_downloading">Media op dit apparaat opslaan</string>
 	<string name="error_media_save">Media opslaan is mislukt</string>
 	<string name="editor_scheduled_post_saved_online">Bericht is ingepland</string>
 	<string name="editor_draft_saved_locally">Concept opgeslagen op apparaat</string>
@@ -193,10 +287,8 @@ Language: nl
 	<string name="format_bar_description_html">HTML</string>
 	<string name="format_bar_description_ol">Geordende lijst</string>
 	<string name="format_bar_description_ul">Ongeordende lijst</string>
-	<string name="format_bar_description_media">Media invoeren</string>
-	<string name="format_bar_description_more">Meer invoeren</string>
-	<string name="format_bar_description_link">Link invoeren</string>
-	<string name="format_bar_description_quote">Citaat blokkeren</string>
+	<string name="format_bar_description_more">Meer lezen</string>
+	<string name="format_bar_description_quote">Block Quote</string>
 	<string name="format_bar_description_strike">Doorstrepen</string>
 	<string name="format_bar_description_underline">Onderstrepen</string>
 	<string name="format_bar_description_italic">Cursief</string>
@@ -382,7 +474,6 @@ Language: nl
 	<string name="error_refresh_comments_showing_older">Reacties konden momenteel niet worden vernieuwd - oudere reacties worden weergegeven</string>
 	<string name="editor_post_settings_set_featured_image">Stel aanbevolen afbeelding in</string>
 	<string name="editor_post_settings_featured_image">Aanbevolen afbeelding</string>
-	<string name="new_editor_promo_title">Nieuwe editor</string>
 	<string name="visual_editor_enabled">Visual Editor ingeschakeld</string>
 	<string name="editor_content_placeholder">Deel hier je verhaal...</string>
 	<string name="editor_page_title_placeholder">Paginatitel</string>
