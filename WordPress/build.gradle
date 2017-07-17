@@ -51,7 +51,6 @@ android {
 
     productFlavors {
         vanilla { // used for release and beta
-            buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
         }
 
         zalpha { // alpha version - enable experimental features
