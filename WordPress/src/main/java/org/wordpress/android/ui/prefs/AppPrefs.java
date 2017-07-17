@@ -409,7 +409,7 @@ public class AppPrefs {
     }
 
     public static boolean isAztecEditorEnabled() {
-        return isAztecEditorAvailable() && getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, true);
+        return isAztecEditorAvailable() && getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, false);
     }
 
     public static void setAztecEditorAvailable(boolean aztecEditorAvailable) {
