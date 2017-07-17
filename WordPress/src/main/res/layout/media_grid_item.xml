@@ -11,7 +11,6 @@
         android:id="@+id/media_grid_item_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/media_item_background"
         android:scaleType="centerCrop" />
 
     <RelativeLayout

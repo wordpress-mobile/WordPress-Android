@@ -164,14 +164,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.GONE);
-            if (mLoadThumbnails) {
-                if (isLocalFile) {
-                    loadLocalImage(media.getFilePath(), holder.imageView);
-                } else {
-                    WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView);
-                }
+            if (isLocalFile) {
+                loadLocalImage(media.getFilePath(), holder.imageView);
+            } else if (mLoadThumbnails) {
+                WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView);
             } else {
-                holder.imageView.setImageDrawable(null);
+                holder.imageView.setTag(null);
+                holder.imageView.setImageResource(R.drawable.media_item_background);
             }
         } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
             holder.fileContainer.setVisibility(View.GONE);
@@ -179,7 +178,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if (mLoadThumbnails) {
                 WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl(), holder.imageView);
             } else {
-                holder.imageView.setImageDrawable(null);
+                holder.imageView.setTag(null);
+                holder.imageView.setImageResource(R.drawable.media_item_background);
             }
         } else {
             // not an image or video, so show file name and file type
@@ -238,6 +238,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 && mCallback != null) {
             mCallback.onAdapterFetchMoreData();
         }
+    }
+
+    @Override
+    public void onViewRecycled(GridViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.imageView.setImageDrawable(null);
+        holder.imageView.setTag(null);
     }
 
     public ArrayList<Integer> getSelectedItems() {
