@@ -284,6 +284,9 @@ public class SiteSettingsModel {
         commentsRequireIdentity = other.commentsRequireIdentity;
         commentsRequireUserAccount = other.commentsRequireUserAccount;
         commentAutoApprovalKnownUsers = other.commentAutoApprovalKnownUsers;
+        monitorActive = other.monitorActive;
+        emailNotifications = other.emailNotifications;
+        wpNotifications = other.wpNotifications;
         maxLinks = other.maxLinks;
         if (other.holdForModeration != null) {
             holdForModeration = new ArrayList<>(other.holdForModeration);
