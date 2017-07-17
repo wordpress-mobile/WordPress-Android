@@ -254,6 +254,7 @@
 
     <PreferenceCategory
         android:id="@+id/jetpack_settings_category"
+        android:key="@string/pref_key_jetpack_settings"
         android:title="@string/jetpack_site_settings_category_title">
 
         <PreferenceScreen

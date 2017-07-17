@@ -94,6 +94,7 @@
     <string name="pref_key_twitter_category" translatable="false">wp_pref_twitter_category</string>
 
     <!-- Jetpack Security -->
+    <string name="pref_key_jetpack_settings" translatable="false">wp_pref_jetpack_settings</string>
     <string name="pref_key_jetpack_security_screen" translatable="false">wp_pref_jetpack_security_screen</string>
     <string name="pref_key_jetpack_monitor_uptime" translatable="false">wp_pref_jetpack_monitor_uptime</string>
     <string name="pref_key_jetpack_send_email_notifications" translatable="false">wp_pref_jetpack_send_email_notifications</string>
