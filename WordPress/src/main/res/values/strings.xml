@@ -499,6 +499,9 @@
     <string name="site_settings_moderation_hold_title">Hold for Moderation</string>
     <string name="site_settings_blacklist_title">Blacklist</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
+    <string name="site_settings_monitor_uptime_title">Monitor your site\'s uptime</string>
+    <string name="site_settings_send_email_notifications_title">Send notifications to your WordPress.com email address</string>
+    <string name="site_settings_send_wp_notifications_title">Send notifications via WordPress.com notification</string>
 
     <!-- Preference Summaries -->
     <string name="site_settings_privacy_public_summary">Public</string>

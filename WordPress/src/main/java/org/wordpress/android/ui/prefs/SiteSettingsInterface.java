@@ -581,7 +581,30 @@ public abstract class SiteSettingsInterface {
         return StringUtils.getQuantityString(mActivity, R.string.site_settings_list_editor_no_items_text,
                 R.string.site_settings_list_editor_summary_one,
                 R.string.site_settings_list_editor_summary_other, count);
+    }
 
+    public boolean isJetpackMonitorEnabled() {
+        return mSettings.monitorActive;
+    }
+
+    public boolean shouldSendJetpackMonitorEmailNotifications() {
+        return mSettings.emailNotifications;
+    }
+
+    public boolean shouldSendJetpackMonitorWpNotifications() {
+        return mSettings.wpNotifications;
+    }
+
+    public void enableJetpackMonitor(boolean monitorActive) {
+        mSettings.monitorActive = monitorActive;
+    }
+
+    public void enableJetpackMonitorEmailNotifications(boolean emailNotifications) {
+        mSettings.emailNotifications = emailNotifications;
+    }
+
+    public void enableJetpackMonitorWpNotifications(boolean wpNotifications) {
+        mSettings.wpNotifications = wpNotifications;
     }
 
     public void setTitle(String title) {

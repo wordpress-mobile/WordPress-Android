@@ -201,6 +201,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mExportSitePref;
     private Preference mDeleteSitePref;
 
+    // Jetpack settings
+    private WPSwitchPreference mJpMonitorActivePref;
+    private WPSwitchPreference mJpMonitorEmailNotesPref;
+    private WPSwitchPreference mJpMonitorWpNotesPref;
+
     public boolean mEditingEnabled = true;
 
     // Reference to the state of the fragment
@@ -472,7 +477,16 @@ public class SiteSettingsFragment extends PreferenceFragment
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (newValue == null || !mEditingEnabled) return false;
 
-        if (preference == mTitlePref) {
+        if (preference == mJpMonitorActivePref) {
+            mJpMonitorActivePref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackMonitor((Boolean) newValue);
+        } else if (preference == mJpMonitorEmailNotesPref) {
+            mJpMonitorEmailNotesPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackMonitorEmailNotifications((Boolean) newValue);
+        } else if (preference == mJpMonitorWpNotesPref) {
+            mJpMonitorWpNotesPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackMonitorWpNotifications((Boolean) newValue);
+        } else if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
             changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         } else if (preference == mTaglinePref) {
@@ -710,6 +724,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
+        mJpMonitorActivePref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_monitor_uptime);
+        mJpMonitorEmailNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_send_email_notifications);
+        mJpMonitorWpNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_send_wp_notifications);
 
         sortLanguages();
 
@@ -1084,6 +1101,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
         mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
         mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        mJpMonitorActivePref.setChecked(mSiteSettings.isJetpackMonitorEnabled());
+        mJpMonitorEmailNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorEmailNotifications());
+        mJpMonitorWpNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorWpNotifications());
     }
 
     private void setCategories() {

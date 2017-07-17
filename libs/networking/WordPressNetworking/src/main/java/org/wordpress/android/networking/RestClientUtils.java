@@ -229,13 +229,23 @@ public class RestClientUtils {
 
     public void getGeneralSettings(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/settings", siteId);
-        Map<String, String> params = new HashMap<String, String>();
-        get(path, params, null, listener, errorListener);
+        get(path, listener, errorListener);
     }
 
     public void setGeneralSiteSettings(long siteId, Listener listener, ErrorListener errorListener,
                                        Map<String, String> params) {
         String path = String.format(Locale.US, "sites/%d/settings", siteId);
+        post(path, params, null, listener, errorListener);
+    }
+
+    public void getJetpackSettings(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
+        get(path, listener, errorListener);
+    }
+
+    public void setJetpackSettings(long siteId, Listener listener, ErrorListener errorListener,
+                                       Map<String, String> params) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
         post(path, params, null, listener, errorListener);
     }
 
