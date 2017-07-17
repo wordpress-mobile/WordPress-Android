@@ -167,7 +167,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
             uploadNextInQueue();
         } else {
             AppLog.i(T.MEDIA, "MediaUploadHandler > " + event.media.getId() + " - progress: " + event.progress);
-            sProgressByMediaId.put(event.media.getId(), event.progress);
+            Float previousProgress = sProgressByMediaId.get(event.media.getId());
+            if (previousProgress == null || previousProgress < event.progress) {
+                sProgressByMediaId.put(event.media.getId(), event.progress);
+            }
         }
     }
 
