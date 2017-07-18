@@ -6,29 +6,29 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar_login" />
 
-    <org.wordpress.android.widgets.WPNetworkImageView
-        android:id="@+id/gravatar"
+    <FrameLayout
+        android:id="@+id/avatar_container"
         android:layout_width="@dimen/avatar_sz_login"
         android:layout_height="@dimen/avatar_sz_login"
         android:layout_below="@+id/toolbar"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_extra_extra_large"
-        android:layout_marginBottom="@dimen/margin_extra_large"/>
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_centerHorizontal="true">
 
-    <ProgressBar
-        android:id="@+id/avatar_progress"
-        style="@android:style/Widget.Holo.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/gravatar"
-        android:layout_alignStart="@+id/gravatar"
-        android:layout_alignRight="@+id/gravatar"
-        android:layout_alignEnd="@+id/gravatar"
-        android:layout_alignTop="@+id/gravatar"
-        android:layout_alignBottom="@+id/gravatar"
-        android:padding="@dimen/margin_large"
-        android:background="@drawable/shape_oval_translucent"
-        android:indeterminate="true"/>
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/gravatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ProgressBar
+            android:id="@+id/avatar_progress"
+            style="@android:style/Widget.Holo.ProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/margin_large"
+            android:background="@drawable/shape_oval_translucent"
+            android:indeterminate="true"/>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/label"
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_below="@+id/gravatar"
+        android:layout_below="@+id/avatar_container"
         android:padding="@dimen/margin_extra_large"
         android:text="@string/login_magic_links_label"/>
 
