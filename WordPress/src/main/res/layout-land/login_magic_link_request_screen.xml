@@ -6,27 +6,42 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar_login" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:layout_centerInParent="true">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/gravatar"
             android:layout_width="@dimen/avatar_sz_login"
-            android:layout_height="@dimen/avatar_sz_login"/>
+            android:layout_height="@dimen/avatar_sz_login"
+            android:layout_centerHorizontal="true"/>
+
+        <ProgressBar
+            android:id="@+id/avatar_progress"
+            style="@android:style/Widget.Holo.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/gravatar"
+            android:layout_alignStart="@+id/gravatar"
+            android:layout_alignRight="@+id/gravatar"
+            android:layout_alignEnd="@+id/gravatar"
+            android:layout_alignTop="@+id/gravatar"
+            android:layout_alignBottom="@+id/gravatar"
+            android:padding="@dimen/margin_large"
+            android:background="@drawable/shape_oval_translucent"
+            android:indeterminate="true"/>
 
         <TextView
             android:id="@+id/label"
             style="@style/Base.TextAppearance.AppCompat.Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/gravatar"
             android:gravity="center"
             android:padding="@dimen/margin_extra_large"
             android:text="@string/login_magic_links_label"/>
-    </LinearLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/bottom_buttons"

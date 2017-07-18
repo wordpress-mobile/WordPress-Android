@@ -15,6 +15,21 @@
         android:layout_marginTop="@dimen/margin_extra_extra_large"
         android:layout_marginBottom="@dimen/margin_extra_large"/>
 
+    <ProgressBar
+        android:id="@+id/avatar_progress"
+        style="@android:style/Widget.Holo.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/gravatar"
+        android:layout_alignStart="@+id/gravatar"
+        android:layout_alignRight="@+id/gravatar"
+        android:layout_alignEnd="@+id/gravatar"
+        android:layout_alignTop="@+id/gravatar"
+        android:layout_alignBottom="@+id/gravatar"
+        android:padding="@dimen/margin_large"
+        android:background="@drawable/shape_oval_translucent"
+        android:indeterminate="true"/>
+
     <TextView
         android:id="@+id/label"
         style="@style/Base.TextAppearance.AppCompat.Body1"
