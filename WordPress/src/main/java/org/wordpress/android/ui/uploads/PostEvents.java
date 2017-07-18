@@ -44,14 +44,4 @@ public class PostEvents {
             this.post = post;
         }
     }
-
-    public static class PostUploadProgress {
-        public PostModel post;
-        public float progress;
-
-        public PostUploadProgress(PostModel post, float progress) {
-            this.post = post;
-            this.progress = progress;
-        }
-    }
 }

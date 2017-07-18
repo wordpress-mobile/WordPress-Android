@@ -502,20 +502,6 @@ public class UploadService extends Service {
                 }
             }
             stopServiceIfUploadsComplete();
-            return;
-        }
-
-        if (event.media.getLocalPostId() > 0) {
-            for (UploadingPost post : sPostsWithPendingMedia) {
-                if (post.postModel.getId() == event.media.getLocalPostId()) {
-                    // Received a progress event for FluxC for a media item we have a queued post for
-                    // Calculate the overall media progress for this post, and emit an event
-                    float overallProgress = getOverallProgressForMediaList(post.pendingMedia);
-                    EventBus.getDefault().post(new PostEvents.PostUploadProgress(post.postModel, overallProgress));
-                    AppLog.i(T.POSTS, "Upload progress for post " + post.postModel.getId() + ": " + overallProgress);
-                    return;
-                }
-            }
         }
     }
 

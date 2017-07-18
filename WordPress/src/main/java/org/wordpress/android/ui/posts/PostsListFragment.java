@@ -428,13 +428,6 @@ public class PostsListFragment extends Fragment
         }
     }
 
-    @SuppressWarnings("unused")
-    public void onEventMainThread(PostEvents.PostUploadProgress event) {
-        if (isAdded() && event.post != null && mSite.getId() == event.post.getLocalSiteId()) {
-            mPostsListAdapter.reloadPost(event.post);
-        }
-    }
-
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         int stringId;
         switch (emptyViewMessageType) {
@@ -767,11 +760,27 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
-        if (event.media != null && event.completed) {
-            PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
-            if (post != null && UploadService.isPostUploadingOrQueued(post)) {
+        if (!isAdded() || event.isError() || event.canceled) {
+            return;
+        }
+
+        if (event.media == null || event.media.getLocalPostId() == 0 || mSite.getId() != event.media.getLocalSiteId()) {
+            // Not interested in media not attached to posts or not belonging to the current site
+            return;
+        }
+
+        PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
+        if (post == null) {
+            return;
+        }
+
+        if (event.completed) {
+            if (UploadService.isPostUploadingOrQueued(post)) {
                 loadPosts(LoadMode.FORCED);
             }
+        } else {
+            // Reload the post to update the progress
+            mPostsListAdapter.reloadPost(post);
         }
     }
 }
