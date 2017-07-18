@@ -187,7 +187,11 @@ public class UploadService extends Service {
             }
 
             // as user wants to upload this post, remove any failed reasons as it goes to the queue
-            removeFailedReasonForPost(post);
+            if (removeFailedReasonForPost(post)) {
+                // also delete any error notifications still there
+                mPostUploadNotifier.cancelErrorNotification(post);
+            }
+
             if (!hasPendingOrInProgressMediaUploadsForPost(post)) {
                 mPostUploadHandler.upload(post);
             } else {
@@ -429,8 +433,8 @@ public class UploadService extends Service {
         sFailedUploadPosts.put(post.getId(), reason);
     }
 
-    public static void removeFailedReasonForPost(PostModel post) {
-        sFailedUploadPosts.remove(post.getId());
+    public static boolean removeFailedReasonForPost(PostModel post) {
+        return (sFailedUploadPosts.remove(post.getId()) != null ? true : false);
     }
 
     public static FailReason getFailedReasonForPost(PostModel post) {

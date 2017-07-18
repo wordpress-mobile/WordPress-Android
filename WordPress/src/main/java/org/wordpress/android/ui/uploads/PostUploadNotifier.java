@@ -34,7 +34,7 @@ class PostUploadNotifier {
     private final NotificationManager mNotificationManager;
     private final Notification.Builder mNotificationBuilder;
 
-    private final SparseArray<NotificationData> mPostIdToNotificationData = new SparseArray<>();
+    private static final SparseArray<NotificationData> mPostIdToNotificationData = new SparseArray<>();
 
     private class NotificationData {
         int notificationId;
@@ -94,6 +94,13 @@ class PostUploadNotifier {
             mNotificationManager.cancel(notificationData.notificationId);
         }
         mService.stopForeground(true);
+    }
+
+    void cancelErrorNotification(PostModel post) {
+        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        if (notificationData != null) {
+            mNotificationManager.cancel(notificationData.notificationErrorId);
+        }
     }
 
     void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstTimePublish) {
