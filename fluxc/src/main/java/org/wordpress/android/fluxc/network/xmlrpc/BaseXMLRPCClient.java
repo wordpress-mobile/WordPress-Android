@@ -68,4 +68,20 @@ public class BaseXMLRPCClient {
         request.setHTTPAuthHeaderOnMatchingURL(mHTTPAuthManager);
         return request;
     }
+
+    protected void reportParseError(Object response, String xmlrpcUrl, Class clazz) {
+        if (response == null) return;
+
+        try {
+            clazz.cast(response);
+        } catch (ClassCastException e) {
+            OnUnexpectedError onUnexpectedError = new OnUnexpectedError(e,
+                    "XML-RPC response parse error: " + e.getMessage());
+            if (xmlrpcUrl != null) {
+                onUnexpectedError.addExtra(OnUnexpectedError.KEY_URL, xmlrpcUrl);
+            }
+            onUnexpectedError.addExtra(OnUnexpectedError.KEY_RESPONSE, response.toString());
+            mOnParseErrorListener.onParseError(onUnexpectedError);
+        }
+    }
 }
