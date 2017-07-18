@@ -15,7 +15,6 @@ repositories {
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
-
 }
 
 apply plugin: 'com.android.application'
@@ -44,14 +43,12 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
-        buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
         buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "false"
         buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "false"
     }
 
     productFlavors {
         vanilla { // used for release and beta
-            buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
         }
 
         zalpha { // alpha version - enable experimental features

@@ -662,12 +662,6 @@
         <item>@string/preference_editor_beta</item>
     </string-array>
 
-    <string-array name="editor_entries_without_aztec" translatable="false">
-        <item>@string/preference_editor_legacy</item>
-        <item>@string/preference_editor_visual</item>
-    </string-array>
-
-
     <!-- stats -->
     <string name="stats">Stats</string>
     <string name="stats_for">Stats for %s</string>
