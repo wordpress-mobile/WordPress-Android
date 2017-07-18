@@ -54,6 +54,7 @@ import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.io.DataInputStream;
@@ -426,6 +427,12 @@ public class MeFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // If the fragment is not attached to the activity, we can't start the crop activity or upload the
+        // cropped image.
+        if (!isAdded()) {
+            return;
+        }
+
         switch (requestCode) {
             case RequestCodes.PHOTO_PICKER:
                 if (resultCode == Activity.RESULT_OK && data != null) {
@@ -448,8 +455,7 @@ public class MeFragment extends Fragment {
                         if (downloadedUri != null) {
                             startCropActivity(downloadedUri);
                         } else {
-                            ToastUtils.showToast(getActivity(), R.string.error_downloading_image,
-                                    ToastUtils.Duration.SHORT);
+                            ToastUtils.showToast(getActivity(), R.string.error_downloading_image, Duration.SHORT);
                             AppLog.e(AppLog.T.UTILS, "Can't download picked or captured image");
                         }
                     } else {
@@ -463,10 +469,8 @@ public class MeFragment extends Fragment {
                 if (resultCode == Activity.RESULT_OK) {
                     fetchMedia(UCrop.getOutput(data));
                 } else if (resultCode == UCrop.RESULT_ERROR) {
-                    ToastUtils.showToast(getActivity(), R.string.error_cropping_image, ToastUtils.Duration.SHORT);
-
-                    final Throwable cropError = UCrop.getError(data);
-                    AppLog.e(AppLog.T.MAIN, "Image cropping failed!", cropError);
+                    AppLog.e(AppLog.T.MAIN, "Image cropping failed!", UCrop.getError(data));
+                    ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
                 }
                 break;
         }

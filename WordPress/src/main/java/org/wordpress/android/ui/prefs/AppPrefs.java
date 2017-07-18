@@ -427,18 +427,7 @@ public class AppPrefs {
     }
 
     public static boolean isAztecEditorEnabled() {
-        return isAztecEditorAvailable() && getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, true);
-    }
-
-    public static void setAztecEditorAvailable(boolean aztecEditorAvailable) {
-        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, aztecEditorAvailable);
-        if (aztecEditorAvailable) {
-            AnalyticsTracker.track(Stat.EDITOR_AZTEC_ENABLED);
-        }
-    }
-
-    public static boolean isAztecEditorAvailable() {
-        return BuildConfig.AZTEC_EDITOR_AVAILABLE || getBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, false);
+        return getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, false);
     }
 
     public static boolean isAztecEditorToolbarExpanded() {

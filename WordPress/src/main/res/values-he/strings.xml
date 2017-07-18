@@ -10,7 +10,6 @@ Language: he_IL
 	<string name="smart_toast_photo_long_press">יש להקיש ולהחזיק כדי לבחור מספר תמונות</string>
 	<string name="photo_picker_choose_video">בחירת וידאו מהמכשיר</string>
 	<string name="photo_picker_choose_photo">בחירת תמונה מהמכשיר</string>
-	<string name="new_editor_promo_description">אפליקציית WordPress כוללת כעת עורך חדש ויפה. ניתן להתנסות בו על ידי יצירת פוסט חדש.</string>
 	<string name="wp_media_title">מדיה של WordPress</string>
 	<string name="media_insert_as_gallery">הוספה כגלריה</string>
 	<string name="media_insert_individually">הוספה של כל פריט בנפרד</string>
@@ -53,7 +52,6 @@ Language: he_IL
 	<string name="media_upload_state_queued">בתור</string>
 	<string name="update_draft">עדכון טיוטה</string>
 	<string name="keep_editing">המשך עריכה</string>
-	<string name="image_quality">איכות תמונה</string>
 	<string name="error_all_media_upload_canceled">כל ההעלאות של פריטי המדיה בוטלו עקב שגיאה לא מזוהה. יש לנסות לבצע את ההעלאה שוב</string>
 	<string name="error_unknown_post_type">סוג פוסט לא מזוהה</string>
 	<string name="error_unknown_post">פוסט לא מזוהה, ייתכן שהעותק המקומי של הפוסט לא מסונכרן עם השרת</string>
@@ -183,13 +181,6 @@ Language: he_IL
 	<string name="editor_failed_uploads_switch_html">מספר העלאות מדיה נכשלו. לא ניתן לעבור למצב HTML\n במצב זה. להסיר את כל ההעלאות שנכשלו ולהמשיך?</string>
 	<string name="image_thumbnail">תמונה ממוזערת של תמונה</string>
 	<string name="visual_editor">עורך ויזואלי</string>
-	<string name="format_bar_description_html">מצב HTML</string>
-	<string name="format_bar_description_ol">רשימה מסודרת</string>
-	<string name="format_bar_description_ul">רשימה לא מסודרת</string>
-	<string name="format_bar_description_media">הוספת מדיה</string>
-	<string name="format_bar_description_more">הוספה</string>
-	<string name="format_bar_description_link">הוספת קישור</string>
-	<string name="format_bar_description_quote">ציטוט</string>
 	<string name="format_bar_description_strike">קו חוצה</string>
 	<string name="format_bar_description_underline">קו תחתון</string>
 	<string name="format_bar_description_italic">נטוי</string>
@@ -375,7 +366,6 @@ Language: he_IL
 	<string name="error_refresh_comments_showing_older">לא ניתן לרענן תגובות כרגע - מציג תגובות ישנות</string>
 	<string name="editor_post_settings_set_featured_image">קביעת תמונה מרכזית</string>
 	<string name="editor_post_settings_featured_image">תמונה מרכזית</string>
-	<string name="new_editor_promo_title">עורך חדש ומחודש</string>
 	<string name="visual_editor_enabled">עורך ויזואלי מופעל</string>
 	<string name="editor_content_placeholder">מומלץ לשתף את הסיפור שלך כאן…</string>
 	<string name="editor_page_title_placeholder">כותרת עמוד</string>

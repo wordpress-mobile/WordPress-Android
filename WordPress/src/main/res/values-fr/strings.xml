@@ -1,14 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-07 17:18:57+0000
+Translation-Revision-Date: 2017-07-07 15:46:38+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+	<string name="format_bar_description_link">Lien</string>
+	<string name="format_bar_description_list">Liste</string>
+	<string name="format_bar_description_heading">En-tête</string>
+	<string name="format_bar_description_media">Média</string>
+	<string name="reader_view_comments">Afficher les commentaires</string>
+	<string name="new_editor_promo_title_beta">Beta</string>
+	<string name="new_editor_promo_title">Essayer le nouvel éditeur</string>
+	<string name="new_editor_promo_link">Quoi de neuf ?</string>
+	<string name="site_settings_optimize_videos">Optimiser les vidéos</string>
+	<string name="draft_uploaded">Brouillon envoyé</string>
+	<string name="report_bug">Rapport de bug</string>
+	<string name="video_quality">Qualité vidéo</string>
+	<string name="max_video_px_width">Largeur par défaut de vidéo</string>
+	<string name="permission_location">Emplacement</string>
+	<string name="permission_camera">Appareil photo</string>
+	<string name="permission_storage">Stockage</string>
+	<string name="permissions_denied_message">Pour changer ceci, modifiez vos permissions et assurez-vous que %s est bien activé</string>
+	<string name="button_edit_permissions">Modifier les permissions</string>
+	<string name="photo_picker_soft_ask_allow">Autoriser</string>
+	<string name="photo_picker_soft_ask_label">%s a besoin de permissions pour avoir accès à vos photos</string>
+	<string name="connecting_account">Connexion du compte</string>
+	<string name="cannot_connect_account_error">La connexion à %s n’a pas pu être établie parce qu’aucun compte n’a été choisi.</string>
+	<string name="connected">Connecté</string>
+	<string name="twitter">Twitter</string>
+	<string name="sharing_comment_likes_description">Permettre à tous les commentaires d\'être aimés par vous et vos lecteurs</string>
+	<string name="buttons">Boutons</string>
+	<string name="sharing_sharing_buttons_description">Choisissez quels boutons seront affichés sous vos articles</string>
+	<string name="twitter_username">Nom d’utilisateur Twitter</string>
+	<string name="button_style">Style de bouton</string>
+	<string name="sharing_buttons">Boutons de partage</string>
+	<string name="site_settings_like">Voir le bouton "J\'aime"</string>
+	<string name="site_settings_reblog">Voir le bouton "Rebloguer"</string>
+	<string name="site_settings_reblog_and_like_header">Rebloguer et aimer</string>
+	<string name="publicize_text_only">Texte seulement</string>
+	<string name="publicize_icon_and_text">Icône et texte</string>
+	<string name="publicize_icon_only">Icône seulement</string>
+	<string name="publicize_official_buttons">Boutons officiels</string>
+	<string name="official_buttons_display">Boutons officiels</string>
+	<string name="text_only_display">Texte seulement</string>
+	<string name="icon_only_display">Icône seulement</string>
+	<string name="icon_and_text_display">Icône et texte</string>
+	<string name="connection_chooser_message">Choisissez le compte que voulez autoriser. Notez que vos articles seront automatiquement partagés au compte choisi.</string>
+	<string name="connecting_social_network">Connexion à %s</string>
+	<string name="dlg_confirm_publicize_disconnect">Déconnecter de %s ?</string>
+	<string name="share_btn_connect_another_account">Connecter un autre compte</string>
+	<string name="share_btn_reconnect">Reconnecter</string>
+	<string name="share_btn_disconnect">Déconnecter</string>
+	<string name="share_btn_connect">Connecter</string>
+	<string name="connection_service_description">Connectez-vous pour partager automatiquement vos articles de blog vers %s.</string>
+	<string name="connection_service_label">Publier sur %s</string>
+	<string name="connected_accounts_label">Comptes connectés</string>
+	<string name="connections_description">Connectez vos réseaux sociaux préférés pour partager automatiquement vos articles de blog avec vos amis.</string>
+	<string name="connections_label">Connections</string>
+	<string name="sharing">Partage</string>
+	<string name="tabbar_accessibility_label_notifications">Notifications. Gérez vos notifications.</string>
+	<string name="tabbar_accessibility_label_reader">Lecteur. Suivez le contenu d\'autres sites.</string>
+	<string name="tabbar_accessibility_label_me">Moi. Affichez votre profil et faites des modifications.</string>
+	<string name="tabbar_accessibility_label_my_site">Mon site. Affichez votre site et gérez-le, y compris les statistiques.</string>
+	<string name="fab_content_description_write">Écrire</string>
+	<string name="my_site_btn_sharing">Partage</string>
+	<string name="button_not_now">Pas maintenant</string>
 	<string name="media_error_timeout">Le serveur a mis trop de temps à répondre. Il se peut que vous ayez une connexion trop lente, ou qu\'une erreur serveur soit survenue.</string>
 	<string name="media_error_internal_server_error">Erreur de mise en ligne. Essayez d\'activer l\'option « Optimiser les images » dans l\'écran Site -> Réglages.</string>
-	<string name="media_error_too_large_upload">Le fichier est trop gros pour être mis en ligne. Essayez d\'activer l\'option « Optimiser les images » dans l\'écran Site -> Réglages.</string>
+	<string name="media_error_http_too_large_upload">Le fichier est trop gros pour être mis en ligne. Essayez d\'activer l\'option « Optimiser les images » dans l\'écran Site -> Réglages.</string>
 	<string name="media_downloading">Enregistrement du fichier sur cet appareil</string>
 	<string name="error_media_save">Impossible d’enregistrer les médias</string>
 	<string name="editor_scheduled_post_saved_online">Article programmé</string>
@@ -21,7 +82,7 @@ Language: fr
 	<string name="smart_toast_photo_long_press">Touchez et maintenez la pression pour sélectionner plusieurs photos</string>
 	<string name="photo_picker_choose_video">Choisissez une vidéo sur votre appareil</string>
 	<string name="photo_picker_choose_photo">Choisissez une photo sur votre appareil</string>
-	<string name="new_editor_promo_description">L\'app WordPress comprend maintenant un superbe éditeur. Essayez-le en créer un nouvel article !</string>
+	<string name="new_editor_promo_description">L\'app WordPress comprend maintenant un superbe éditeur. Essayez-le en créant un nouvel article !</string>
 	<string name="wp_media_title">Média WordPress</string>
 	<string name="media_insert_as_gallery">Ajouter en tant que galerie</string>
 	<string name="media_insert_individually">Ajouter individuellement</string>
@@ -194,12 +255,9 @@ Language: fr
 	<string name="editor_failed_uploads_switch_html">La mise en ligne de certains fichiers a échoué. Vous ne pouvez pas \nrepasser en mode HTML dans l\'état actuel des choses.\nSupprimer toutes les mises en ligne échouées et continuer ?</string>
 	<string name="image_thumbnail">Image miniature</string>
 	<string name="visual_editor">Éditeur visuel</string>
-	<string name="format_bar_description_html">Mode HTML</string>
+	<string name="format_bar_description_html">HTML</string>
 	<string name="format_bar_description_ol">Liste ordonnée</string>
 	<string name="format_bar_description_ul">Liste non-ordonnée</string>
-	<string name="format_bar_description_media">Insérer un média</string>
-	<string name="format_bar_description_more">Insérer séparateur More</string>
-	<string name="format_bar_description_link">Insérer un lien</string>
 	<string name="format_bar_description_quote">Bloc de citation</string>
 	<string name="format_bar_description_strike">Barré</string>
 	<string name="format_bar_description_underline">Souligné</string>
@@ -386,7 +444,6 @@ Language: fr
 	<string name="error_refresh_comments_showing_older">Les commentaires ne peuvent pas être actualisés en ce moment - affichage des commentaires plus anciens</string>
 	<string name="editor_post_settings_set_featured_image">Définir une image mise à la une</string>
 	<string name="editor_post_settings_featured_image">Image à la une</string>
-	<string name="new_editor_promo_title">Tout nouvel éditeur</string>
 	<string name="visual_editor_enabled">Éditeur visuel activé</string>
 	<string name="editor_content_placeholder">Partagez ici votre histoire...</string>
 	<string name="editor_page_title_placeholder">Titre de la page</string>

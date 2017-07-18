@@ -85,7 +85,7 @@ public class CommentUtils {
         private final int margin;
         private final int lines;
 
-        public TextWrappingLeadingMarginSpan(int margin) {
+        TextWrappingLeadingMarginSpan(int margin) {
             this.margin = margin;
             this.lines = 1;
         }
