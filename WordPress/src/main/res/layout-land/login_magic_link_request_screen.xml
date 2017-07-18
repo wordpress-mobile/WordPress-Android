@@ -1,0 +1,71 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_login" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/gravatar"
+            android:layout_width="@dimen/avatar_sz_login"
+            android:layout_height="@dimen/avatar_sz_login"/>
+
+        <TextView
+            android:id="@+id/label"
+            style="@style/Base.TextAppearance.AppCompat.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/margin_extra_large"
+            android:text="@string/login_magic_links_label"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/login_background_color"
+        android:paddingLeft="@dimen/margin_small_medium"
+        android:paddingStart="@dimen/margin_small_medium"
+        android:paddingRight="@dimen/margin_extra_medium"
+        android:paddingEnd="@dimen/margin_extra_medium"
+        android:paddingTop="@dimen/margin_extra_medium"
+        android:paddingBottom="@dimen/margin_extra_medium"
+        android:layout_alignParentBottom="true">
+
+        <android.support.v7.widget.AppCompatButton
+            style="@style/LoginTheme.SecondaryButton"
+            android:id="@+id/login_enter_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/login_request_magic_link"
+            android:layout_toStartOf="@+id/login_request_magic_link"
+            android:paddingLeft="@dimen/margin_extra_medium"
+            android:paddingStart="@dimen/margin_extra_medium"
+            android:paddingRight="@dimen/margin_extra_medium"
+            android:paddingEnd="@dimen/margin_extra_medium"
+            android:layout_marginRight="@dimen/margin_extra_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:gravity="start|center_vertical"
+            android:text="@string/enter_your_password_instead"/>
+
+        <android.support.v7.widget.AppCompatButton
+            style="@style/WordPress.PrimaryButton"
+            android:id="@+id/login_request_magic_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/send_link" />
+    </RelativeLayout>
+</RelativeLayout>
