@@ -770,16 +770,7 @@ public class PostsListFragment extends Fragment
         }
 
         PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
-        if (post == null) {
-            return;
-        }
-
-        if (event.completed) {
-            if (UploadService.isPostUploadingOrQueued(post)) {
-                loadPosts(LoadMode.FORCED);
-            }
-        } else {
-            // Reload the post to update the progress
+        if (post != null) {
             mPostsListAdapter.reloadPost(post);
         }
     }
