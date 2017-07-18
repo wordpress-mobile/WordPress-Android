@@ -28,16 +28,9 @@ Language: gd_GB
 	<string name="error_fetch_email_followers_list">Cha b’ urrainn dhuinn na daoine a leanas an làrach slighe puist-d fhaighinn</string>
 	<string name="error_fetch_followers_list">Cha b’ urrainn dhuinn luchd-leantainn na làraich fhaighinn</string>
 	<string name="editor_failed_uploads_switch_html">Cha deach gach meadhan a luchdadh suas. Chan urrainn dhut leum gun mhodh\n        HTML is cùisean mar seo. A bheil thu airson na dh’fhàillig a thoirt air falbh is leantainn air adhart?</string>
-	<string name="format_bar_description_html">Am modh HTML</string>
 	<string name="visual_editor">An deasaiche lèirsinneach</string>
 	<string name="image_thumbnail">Dealbhagan deilbh</string>
-	<string name="format_bar_description_ul">Liosta gun seòrsachadh</string>
-	<string name="format_bar_description_ol">Liosta air a sheòrsachadh</string>
-	<string name="format_bar_description_more">Cuir a-steach barrachd</string>
-	<string name="format_bar_description_media">Am modh cuir a-steach</string>
 	<string name="format_bar_description_strike">Loidhne troimhe</string>
-	<string name="format_bar_description_quote">Bloc-luaidh</string>
-	<string name="format_bar_description_link">Cuir a-steach ceangal</string>
 	<string name="format_bar_description_italic">Eadailteach</string>
 	<string name="format_bar_description_underline">Fo-loidhne</string>
 	<string name="image_settings_save_toast">Chaidh na h-atharraichean a shàbhaladh</string>

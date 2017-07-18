@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -79,6 +80,7 @@ public class PhotoPickerFragment extends Fragment {
     private boolean mAllowMultiSelect;
     private boolean mPhotosOnly;
     private boolean mDeviceOnly;
+    private boolean mIsFlinging;
 
     private static final String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
     private static final String ARG_PHOTOS_ONLY = "photos_only";
@@ -100,20 +102,13 @@ public class PhotoPickerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Bundle args = getArguments();
         if (args != null) {
             mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
             mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY, false);
             mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY, false);
         }
-    }
-
-    @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-        mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT);
-        mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY);
-        mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY);
     }
 
     public void setOptions(@NonNull EnumSet<PhotoPickerOption> options) {
@@ -133,6 +128,27 @@ public class PhotoPickerFragment extends Fragment {
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
+
+        // disable thumbnail loading during a fling to conserve memory
+        final int minDistance = ViewConfiguration.get(getActivity()).getScaledMaximumFlingVelocity() / 2;
+        mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
+            @Override
+            public boolean onFling(int velocityX, int velocityY) {
+                if (Math.abs(velocityY) > minDistance) {
+                    getAdapter().setLoadThumbnails(false);
+                }
+                return false;
+            }
+        });
+        mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    getAdapter().setLoadThumbnails(true);
+                }
+            }
+        });
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
         mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
@@ -266,7 +282,7 @@ public class PhotoPickerFragment extends Fragment {
         popup.show();
     }
 
-    void setPhotoPickerListener(PhotoPickerListener listener) {
+    public void setPhotoPickerListener(PhotoPickerListener listener) {
         mListener = listener;
     }
 
@@ -445,7 +461,7 @@ public class PhotoPickerFragment extends Fragment {
 
         if (hasStoragePermission()) {
             showSoftAskView(false);
-            if (mAdapter == null || mAdapter.isEmpty()) {
+            if (!hasAdapter()) {
                 reload();
             }
         } else {
@@ -532,7 +548,6 @@ public class PhotoPickerFragment extends Fragment {
         } else if (mSoftAskContainer.getVisibility() == View.VISIBLE) {
             AniUtils.fadeOut(mSoftAskContainer, AniUtils.Duration.MEDIUM);
             showBottomBar();
-            refresh();
         }
     }
 

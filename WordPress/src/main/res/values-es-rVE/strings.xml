@@ -79,16 +79,9 @@ Language: es_VE
 	<string name="error_fetch_email_followers_list">No se pudieron recuperar los correos electrónicos de los seguidores del sitio</string>
 	<string name="error_fetch_followers_list">No se pudieron recuperar los seguidores del sitio</string>
 	<string name="editor_failed_uploads_switch_html">Algunas subidas de medios han fallado. Puedes cambiar al modo HTML \ncuando esto pasa. ¿Borramos todas las subidas fallidas y seguimos?</string>
-	<string name="format_bar_description_html">Modo HTML</string>
 	<string name="image_thumbnail">Miniatura de la imagen</string>
 	<string name="visual_editor">Editor visual</string>
-	<string name="format_bar_description_ol">Lista ordenada</string>
-	<string name="format_bar_description_ul">Lista no ordenada</string>
-	<string name="format_bar_description_more">Insertar más</string>
-	<string name="format_bar_description_media">Insertar archivo multimeda</string>
 	<string name="format_bar_description_strike">Tachado</string>
-	<string name="format_bar_description_link">Insertar enlace</string>
-	<string name="format_bar_description_quote">Cita</string>
 	<string name="format_bar_description_underline">Subrayado</string>
 	<string name="format_bar_description_italic">Cursiva</string>
 	<string name="image_alt_text">Texto alternativo</string>

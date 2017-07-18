@@ -104,11 +104,17 @@
     <!-- Aztec -->
     <string name="editor_content_hint">Share your story here&#8230;</string>
 
-    <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
+    <string name="editor_title_beta">Beta</string>
+
+    <string name="dialog_title">Insert link</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancel">Cancel</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
 
+    <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_small">Media too small to show</string>
 

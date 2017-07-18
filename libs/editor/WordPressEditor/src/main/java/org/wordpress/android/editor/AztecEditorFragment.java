@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.DragEvent;
@@ -49,15 +50,20 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
+import org.wordpress.aztec.Aztec;
 import org.wordpress.aztec.AztecAttributes;
 import org.wordpress.aztec.AztecText;
-import org.wordpress.aztec.AztecText.OnImageTappedListener;
-import org.wordpress.aztec.HistoryListener;
+import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.Html;
-import org.wordpress.aztec.TextFormat;
+import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.aztec.ITextFormat;
+import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
+import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
-import org.wordpress.aztec.toolbar.AztecToolbarClickListener;
+import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
+import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
+import org.wordpress.aztec.plugins.wpcomments.toolbar.PageToolbarButton;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -70,11 +76,11 @@ import java.util.Set;
 import java.util.UUID;
 
 public class AztecEditorFragment extends EditorFragmentAbstract implements
-        OnImeBackListener,
+        AztecText.OnImeBackListener,
+        AztecText.OnImageTappedListener,
         EditorMediaUploadListener,
-        OnImageTappedListener,
-        AztecToolbarClickListener,
-        HistoryListener {
+        IAztecToolbarClickListener,
+        IHistoryListener {
 
     private static final String ATTR_ALIGN_DASH = "align-";
     private static final String ATTR_CLASS = "class";
@@ -118,6 +124,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private ImagePredicate mTappedImagePredicate;
 
+    EditorBetaClickListener mEditorBetaClickListener;
+
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -150,8 +158,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         source.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
 
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
-        formattingToolbar.setEditor(content, source);
-        formattingToolbar.setToolbarListener(this);
         formattingToolbar.setExpanded(mIsToolbarExpanded);
 
         title.setOnFocusChangeListener(
@@ -162,16 +168,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
             }
         );
-
-        // initialize the text & HTML
-        source.setHistory(content.getHistory());
-        content.setImageGetter(imageLoader);
-
-        content.getHistory().setHistoryListener(this);
-
-        content.setOnImageTappedListener(this);
-
-        mEditorFragmentListener.onEditorFragmentInitialized();
 
         content.setOnDragListener(mOnDragListener);
         source.setOnDragListener(mOnDragListener);
@@ -186,7 +182,29 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         };
 
+        AppCompatTextView titleBeta = (AppCompatTextView) view.findViewById(R.id.title_beta);
+        titleBeta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mEditorBetaClickListener.onBetaClicked();
+            }
+        });
+
+        Aztec.Factory.with(content, source, formattingToolbar, this)
+            .setImageGetter(imageLoader)
+            .setOnImeBackListener(this)
+            .setHistoryListener(this)
+            .setOnImageTappedListener(this)
+            .addPlugin(new WordPressCommentsPlugin(content))
+            .addPlugin(new MoreToolbarButton(content));
+
+        mEditorFragmentListener.onEditorFragmentInitialized();
+
         return view;
+    }
+
+    public void setEditorBetaClickListener(EditorBetaClickListener listener) {
+        mEditorBetaClickListener = listener;
     }
 
     public void setImageLoader(Html.ImageGetter imageLoader) {
@@ -360,62 +378,43 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onToolbarFormatButtonClicked(TextFormat format, boolean isKeyboardShortcut) {
-        switch(format) {
-            case FORMAT_PARAGRAPH:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.PARAGRAPH_BUTTON_TAPPED);
-                break;
-            case FORMAT_PREFORMAT:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.PREFORMAT_BUTTON_TAPPED);
-                break;
-            case FORMAT_HEADING_1:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_1_BUTTON_TAPPED);
-                break;
-            case FORMAT_HEADING_2:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_2_BUTTON_TAPPED);
-                break;
-            case FORMAT_HEADING_3:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_3_BUTTON_TAPPED);
-                break;
-            case FORMAT_HEADING_4:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_4_BUTTON_TAPPED);
-                break;
-            case FORMAT_HEADING_5:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_5_BUTTON_TAPPED);
-                break;
-            case FORMAT_HEADING_6:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_6_BUTTON_TAPPED);
-                break;
-            case FORMAT_ORDERED_LIST:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_ORDERED_BUTTON_TAPPED);
-                break;
-            case FORMAT_UNORDERED_LIST:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_UNORDERED_BUTTON_TAPPED);
-                break;
-            case FORMAT_BOLD:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.BOLD_BUTTON_TAPPED);
-                break;
-            case FORMAT_ITALIC:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.ITALIC_BUTTON_TAPPED);
-                break;
-            case FORMAT_STRIKETHROUGH:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.STRIKETHROUGH_BUTTON_TAPPED);
-                break;
-            case FORMAT_UNDERLINE:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.UNDERLINE_BUTTON_TAPPED);
-                break;
-            case FORMAT_QUOTE:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.BLOCKQUOTE_BUTTON_TAPPED);
-                break;
-            case FORMAT_LINK:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.LINK_ADDED_BUTTON_TAPPED);
-                break;
-            case FORMAT_MORE:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.READ_MORE_BUTTON_TAPPED);
-                break;
-            case FORMAT_PAGE:
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.NEXT_PAGE_BUTTON_TAPPED);
-                break;
+    public void onToolbarFormatButtonClicked(ITextFormat format, boolean isKeyboardShortcut) {
+        if (format.equals(AztecTextFormat.FORMAT_PARAGRAPH)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.PARAGRAPH_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_PREFORMAT)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.PREFORMAT_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_HEADING_1)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_1_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_HEADING_2)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_2_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_HEADING_3)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_3_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_HEADING_4)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_4_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_HEADING_5)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_5_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_HEADING_6)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.HEADING_6_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_ORDERED_LIST)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_ORDERED_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_UNORDERED_LIST)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_UNORDERED_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_BOLD)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.BOLD_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_ITALIC)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.ITALIC_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_STRIKETHROUGH)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.STRIKETHROUGH_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_UNDERLINE)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.UNDERLINE_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_QUOTE)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.BLOCKQUOTE_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_LINK)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.LINK_ADDED_BUTTON_TAPPED);
+        } else if (format.equals(CommentsTextFormat.FORMAT_MORE)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.READ_MORE_BUTTON_TAPPED);
+        } else if (format.equals(CommentsTextFormat.FORMAT_PAGE)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.NEXT_PAGE_BUTTON_TAPPED);
         }
     }
 
