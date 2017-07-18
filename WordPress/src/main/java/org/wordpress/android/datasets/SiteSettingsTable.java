@@ -94,14 +94,16 @@ public final class SiteSettingsTable {
     public static Cursor getSettings(long id) {
         if (id < 0) return null;
 
-        String sqlCommand = sqlSelectAllSettings() + sqlWhere(SiteSettingsModel.ID_COLUMN_NAME, Long.toString(id)) + ";";
+        String whereClause = sqlWhere(SiteSettingsModel.ID_COLUMN_NAME, Long.toString(id));
+        String sqlCommand = sqlSelectAllSettings() + whereClause + ";";
         return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
     }
 
     public static Cursor getJpSettings(long id) {
         if (id < 0) return null;
 
-        String sqlCommand = sqlSelectAllJpSettings() + sqlWhere(JetpackSettingsModel.ID_COLUMN_NAME, Long.toString(id)) + ";";
+        String whereClause = sqlWhere(JetpackSettingsModel.ID_COLUMN_NAME, Long.toString(id));
+        String sqlCommand = sqlSelectAllJpSettings() + whereClause + ";";
         return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
     }
 
