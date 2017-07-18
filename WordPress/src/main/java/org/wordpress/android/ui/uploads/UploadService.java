@@ -434,7 +434,7 @@ public class UploadService extends Service {
     }
 
     public static boolean removeUploadErrorForPost(PostModel post) {
-        return (sFailedUploadPosts.remove(post.getId()) != null ? true : false);
+        return (sFailedUploadPosts.remove(post.getId()) != null);
     }
 
     public static UploadError getUploadErrorForPost(PostModel post) {
