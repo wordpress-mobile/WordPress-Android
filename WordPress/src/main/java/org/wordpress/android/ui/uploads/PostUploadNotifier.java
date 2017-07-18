@@ -34,7 +34,7 @@ class PostUploadNotifier {
     private final NotificationManager mNotificationManager;
     private final Notification.Builder mNotificationBuilder;
 
-    private static final SparseArray<NotificationData> mPostIdToNotificationData = new SparseArray<>();
+    private static final SparseArray<NotificationData> sPostIdToNotificationData = new SparseArray<>();
 
     private class NotificationData {
         int notificationId;
@@ -64,32 +64,32 @@ class PostUploadNotifier {
 
         NotificationData notificationData = new NotificationData();
         notificationData.notificationId = notificationId;
-        mPostIdToNotificationData.put(post.getId(), notificationData);
+        sPostIdToNotificationData.put(post.getId(), notificationData);
         mService.startForeground(notificationId, mNotificationBuilder.build());
     }
 
     boolean isDisplayingNotificationForPost(@NonNull PostModel post) {
-        return mPostIdToNotificationData.get(post.getId()) != null;
+        return sPostIdToNotificationData.get(post.getId()) != null;
     }
 
     void updateNotificationMessage(@NonNull PostModel post, String message) {
-        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
         mNotificationBuilder.setContentText(StringUtils.notNullStr(message));
         doNotify(notificationData.notificationId, mNotificationBuilder.build());
     }
 
     void updateNotificationIcon(PostModel post, Bitmap icon) {
-        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
 
         if (icon != null) {
             notificationData.latestIcon = icon;
             mNotificationBuilder.setLargeIcon(notificationData.latestIcon);
         }
-        doNotify(mPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
+        doNotify(sPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
     }
 
     void cancelNotification(PostModel post) {
-        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
         if (notificationData != null) {
             mNotificationManager.cancel(notificationData.notificationId);
         }
@@ -97,7 +97,7 @@ class PostUploadNotifier {
     }
 
     void cancelErrorNotification(PostModel post) {
-        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
         if (notificationData != null) {
             mNotificationManager.cancel(notificationData.notificationErrorId);
         }
@@ -131,7 +131,7 @@ class PostUploadNotifier {
         }
         notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
 
-        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
         if (notificationData == null || notificationData.latestIcon == null) {
             notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(mContext.getApplicationContext()
                     .getResources(),
@@ -214,7 +214,7 @@ class PostUploadNotifier {
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
 
-        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
         if (notificationData.notificationErrorId == 0) {
             notificationData.notificationErrorId = notificationData.notificationId + (new Random()).nextInt();
         }
@@ -222,7 +222,7 @@ class PostUploadNotifier {
     }
 
     void updateNotificationProgress(PostModel post, float progress) {
-        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
         if (notificationData.totalMediaItems == 0) {
             return;
         }
@@ -236,7 +236,7 @@ class PostUploadNotifier {
         }
 
         mNotificationBuilder.setProgress(100, (int) Math.ceil(currentChunkProgress), false);
-        doNotify(mPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
+        doNotify(sPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
     }
 
     private synchronized void doNotify(long id, Notification notification) {
@@ -249,7 +249,7 @@ class PostUploadNotifier {
     }
 
     void setTotalMediaItems(PostModel post, int totalMediaItems) {
-        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
         if (totalMediaItems <= 0) {
             totalMediaItems = 1;
         }
@@ -259,7 +259,7 @@ class PostUploadNotifier {
     }
 
     void setCurrentMediaItem(PostModel post, int currentItem) {
-        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
         notificationData.currentMediaItem = currentItem;
 
         mNotificationBuilder.setContentText(String.format(mContext.getString(R.string.uploading_total),
