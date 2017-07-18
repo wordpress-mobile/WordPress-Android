@@ -21,6 +21,12 @@
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@drawable/login_shadow"
+        android:layout_above="@+id/bottom_buttons"/>
+
     <LinearLayout
         android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
