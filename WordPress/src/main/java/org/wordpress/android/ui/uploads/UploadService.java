@@ -52,22 +52,22 @@ public class UploadService extends Service {
     private static final ConcurrentHashMap<Integer, List<MediaModel>> sCompletedMediaByPost = new ConcurrentHashMap<>();
 
     // This will hold a map of postID and the corresponding last error if any error occured while uploading
-    private static final ConcurrentHashMap<Integer, FailReason> sFailedUploadPosts = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, UploadError> sFailedUploadPosts = new ConcurrentHashMap<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
 
-    public class FailReason {
+    public class UploadError {
         public PostStore.PostError postError;
         public MediaStore.MediaError mediaError;
 
-        FailReason (PostStore.PostError postError) {
+        UploadError(PostStore.PostError postError) {
             this.postError = postError;
         }
 
-        FailReason (MediaStore.MediaError mediaError) {
+        UploadError(MediaStore.MediaError mediaError) {
             this.mediaError = mediaError;
         }
     }
@@ -187,7 +187,7 @@ public class UploadService extends Service {
             }
 
             // as user wants to upload this post, remove any failed reasons as it goes to the queue
-            if (removeFailedReasonForPost(post)) {
+            if (removeUploadErrorForPost(post)) {
                 // also delete any error notifications still there
                 mPostUploadNotifier.cancelErrorNotification(post);
             }
@@ -429,15 +429,15 @@ public class UploadService extends Service {
         return null;
     }
 
-    private void addFailedReasonToFailedPosts(PostModel post, FailReason reason) {
+    private void addUploadErrorToFailedPosts(PostModel post, UploadError reason) {
         sFailedUploadPosts.put(post.getId(), reason);
     }
 
-    public static boolean removeFailedReasonForPost(PostModel post) {
+    public static boolean removeUploadErrorForPost(PostModel post) {
         return (sFailedUploadPosts.remove(post.getId()) != null ? true : false);
     }
 
-    public static FailReason getFailedReasonForPost(PostModel post) {
+    public static UploadError getUploadErrorForPost(PostModel post) {
         return sFailedUploadPosts.get(post.getId());
     }
 
@@ -460,9 +460,9 @@ public class UploadService extends Service {
                 cancelPostUploadMatchingMedia(event.media, errorMessage);
 
                 // now keep track of the error reason so it can be queried
-                FailReason reason = new FailReason(event.error);
+                UploadError reason = new UploadError(event.error);
                 PostModel failedPost = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
-                addFailedReasonToFailedPosts(failedPost, reason);
+                addUploadErrorToFailedPosts(failedPost, reason);
             }
             stopServiceIfUploadsComplete();
             return;
@@ -518,11 +518,11 @@ public class UploadService extends Service {
     public void onPostUploaded(OnPostUploaded event) {
         if (event.isError()) {
             if (event.error != null && event.error != null) {
-                FailReason reason = new FailReason(event.error);
-                addFailedReasonToFailedPosts(event.post, reason);
+                UploadError reason = new UploadError(event.error);
+                addUploadErrorToFailedPosts(event.post, reason);
             }
         } else {
-            removeFailedReasonForPost(event.post);
+            removeUploadErrorForPost(event.post);
         }
         stopServiceIfUploadsComplete();
     }

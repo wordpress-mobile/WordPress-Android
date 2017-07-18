@@ -46,7 +46,6 @@ import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -399,7 +398,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             int statusColorResId = R.color.grey_darken_10;
             String errorMessage = null;
 
-            UploadService.FailReason reason = UploadService.getFailedReasonForPost(post);
+            UploadService.UploadError reason = UploadService.getUploadErrorForPost(post);
             if (reason != null) {
                 if (reason.mediaError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromMediaError(
@@ -486,7 +485,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
 
-        if (UploadService.getFailedReasonForPost(post) != null) {
+        if (UploadService.getUploadErrorForPost(post) != null) {
             holder.btnPublish.setButtonType(PostListButton.BUTTON_RETRY);
         } else {
             if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
