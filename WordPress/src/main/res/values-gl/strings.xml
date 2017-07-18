@@ -78,13 +78,6 @@ Language: gl_ES
 	<string name="editor_failed_uploads_switch_html">Fallou a carga dalgúns ficheiros. Nesta situación non podes cambiar a modo HTML\nQueres borrar todas as cargas que fallaron e continuar?</string>
 	<string name="image_thumbnail">Miniatura</string>
 	<string name="visual_editor">Editor visual</string>
-	<string name="format_bar_description_html">Modo HTML</string>
-	<string name="format_bar_description_ol">Lista ordenada</string>
-	<string name="format_bar_description_ul">Lista sen orde</string>
-	<string name="format_bar_description_media">Inserir ficheiro</string>
-	<string name="format_bar_description_more">Inserir máis</string>
-	<string name="format_bar_description_link">Inserir enlace</string>
-	<string name="format_bar_description_quote">Cita</string>
 	<string name="format_bar_description_strike">Riscado</string>
 	<string name="format_bar_description_underline">Subliñado</string>
 	<string name="format_bar_description_italic">Cursiva</string>
@@ -270,7 +263,6 @@ Language: gl_ES
 	<string name="error_refresh_comments_showing_older">Non foi posible actualizar os comentarios neste momento - mostrando comentarios antigos</string>
 	<string name="editor_post_settings_set_featured_image">Poñer como imaxe destacada</string>
 	<string name="editor_post_settings_featured_image">Imaxe destacada</string>
-	<string name="new_editor_promo_title">Editor novo</string>
 	<string name="visual_editor_enabled">Editor visual habilitado</string>
 	<string name="editor_content_placeholder">Comparte aquí as túas anécdotas...</string>
 	<string name="editor_page_title_placeholder">Título da páxina</string>

@@ -230,7 +230,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             String avatarUrl = GravatarUtils.fixGravatarUrl(comment.getAuthorAvatar(), mAvatarSz);
             commentHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
         } else {
-            commentHolder.imgAvatar.showDefaultGravatarImage();
+            commentHolder.imgAvatar.showDefaultGravatarImageAndNullifyUrl();
         }
 
         // tapping avatar or author name opens blog preview

@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -10,7 +11,9 @@ import android.support.v4.content.ContextCompat;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 
@@ -72,6 +75,10 @@ public class WPMediaUtils {
         return isVideoOptimizationAvailable() && siteSettings != null && siteSettings.init(false).getOptimizedVideo();
     }
 
+    public static boolean isImageOptimizationEnabled(Activity activity, SiteModel siteModel) {
+        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
+        return siteSettings != null && siteSettings.init(false).getOptimizedImage();
+    }
 
     /**
      *
@@ -101,12 +108,7 @@ public class WPMediaUtils {
         }
 
         // Check whether image optimization is already available for the site
-        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(act, site, null);
-        if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
-            return false;
-        }
-
-        return true;
+       return !isImageOptimizationEnabled(act, site);
     }
 
     public interface OnAdvertiseImageOptimizationListener {
@@ -150,5 +152,46 @@ public class WPMediaUtils {
         builder.show();
         // Do not ask again
         AppPrefs.setImageOptimizePromoRequired(false);
+    }
+
+    /**
+     * Given a media error returns the error message to display on the UI.
+     *
+     * @param error The media error occurred
+     * @return String  The associated error message.
+     */
+    public static String getErrorMessage(final Context context, final MediaModel media, final MediaStore.MediaError error) {
+        if (context == null || media == null || error == null) {
+            return null;
+        }
+
+        switch (error.type) {
+            case FS_READ_PERMISSION_DENIED:
+                return context.getString(R.string.error_media_insufficient_fs_permissions);
+            case NOT_FOUND:
+                return context.getString(R.string.error_media_not_found);
+            case AUTHORIZATION_REQUIRED:
+                return context.getString(R.string.media_error_no_permission_upload);
+            case REQUEST_TOO_LARGE:
+                if (media.isVideo()) {
+                    return context.getString(R.string.media_error_http_too_large_video_upload);
+                } else {
+                    return context.getString(R.string.media_error_http_too_large_photo_upload);
+                }
+            case SERVER_ERROR:
+                return context.getString(R.string.media_error_internal_server_error);
+            case TIMEOUT:
+                return context.getString(R.string.media_error_timeout);
+            case CONNECTION_ERROR:
+                return context.getString(R.string.connection_error);
+            case EXCEEDS_FILESIZE_LIMIT:
+                return context.getString(R.string.media_error_exceeds_php_filesize);
+            case EXCEEDS_MEMORY_LIMIT:
+                return context.getString(R.string.media_error_exceeds_memory_limit);
+            case PARSE_ERROR:
+                return context.getString(R.string.error_media_parse_error);
+        }
+
+        return null;
     }
 }

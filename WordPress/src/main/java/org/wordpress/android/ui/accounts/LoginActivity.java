@@ -69,10 +69,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         fragmentTransaction.commitAllowingStateLoss();
     }
 
-    private LoginPrologueFragment getLoginPrologueFragment() {
-        return (LoginPrologueFragment) getSupportFragmentManager().findFragmentByTag(LoginPrologueFragment.TAG);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -128,13 +124,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     // LoginListener implementation methods
-
-    @Override
-    public void nextPromo() {
-        if (getLoginPrologueFragment() != null) {
-            getLoginPrologueFragment().onNextPromo();
-        }
-    }
 
     @Override
     public void showEmailLoginScreen() {

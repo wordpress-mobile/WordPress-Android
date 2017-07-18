@@ -630,15 +630,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (event.isError()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
                     + " - " + event.error.message);
-            switch (event.error.type) {
-                case AUTHORIZATION_REQUIRED:
-                    showMediaToastError(R.string.media_error_no_permission, null);
-                    break;
-                case REQUEST_TOO_LARGE:
-                    showMediaToastError(R.string.media_error_too_large_upload, null);
-                    break;
-                default:
-                    showMediaToastError(R.string.media_upload_error, event.error.message);
+            String errorMessage = WPMediaUtils.getErrorMessage(this, event.media, event.error);
+            if (errorMessage != null) {
+                ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
+            } else {
+                showMediaToastError(R.string.media_upload_error, event.error.message);
             }
             updateViews();
         } else if (event.completed) {
