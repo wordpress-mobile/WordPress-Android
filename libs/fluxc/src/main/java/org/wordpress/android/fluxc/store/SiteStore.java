@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSit
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
+import org.wordpress.android.fluxc.utils.SiteErrorUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -73,6 +74,7 @@ public class SiteStore extends Store {
     public static class FetchedPostFormatsPayload extends Payload {
         public SiteModel site;
         public List<PostFormatModel> postFormats;
+        public PostFormatsError error;
         public FetchedPostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
             this.site = site;
             this.postFormats = postFormats;
@@ -131,17 +133,29 @@ public class SiteStore extends Store {
 
     public static class SiteError implements OnChangedError {
         public SiteErrorType type;
+        public String message;
 
         public SiteError(SiteErrorType type) {
+            this(type, "");
+        }
+
+        public SiteError(SiteErrorType type, String message) {
             this.type = type;
+            this.message = message;
         }
     }
 
     public static class PostFormatsError implements OnChangedError {
         public PostFormatsErrorType type;
+        public String message;
 
         public PostFormatsError(PostFormatsErrorType type) {
+            this(type, "");
+        }
+
+        public PostFormatsError(PostFormatsErrorType type, String message) {
             this.type = type;
+            this.message = message;
         }
     }
 
@@ -271,6 +285,7 @@ public class SiteStore extends Store {
         INVALID_SITE,
         UNKNOWN_SITE,
         DUPLICATE_SITE,
+        INVALID_RESPONSE,
         UNAUTHORIZED,
         GENERIC_ERROR
     }
@@ -295,7 +310,8 @@ public class SiteStore extends Store {
 
     public enum PostFormatsErrorType {
         INVALID_SITE,
-        GENERIC_ERROR
+        INVALID_RESPONSE,
+        GENERIC_ERROR;
     }
 
     public enum DeleteSiteErrorType {
@@ -768,7 +784,7 @@ public class SiteStore extends Store {
         OnSiteChanged event = new OnSiteChanged(0);
         if (siteModel.isError()) {
             // TODO: what kind of error could we get here?
-            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+            event.error = SiteErrorUtils.genericToSiteError(siteModel.error);
         } else {
             try {
                 event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
@@ -783,7 +799,7 @@ public class SiteStore extends Store {
         OnSiteChanged event = new OnSiteChanged(0);
         if (sitesModel.isError()) {
             // TODO: what kind of error could we get here?
-            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+            event.error = SiteErrorUtils.genericToSiteError(sitesModel.error);
         } else {
             UpdateSitesResult res = createOrUpdateSites(sitesModel);
             event.rowsAffected = res.rowsAffected;
@@ -798,7 +814,7 @@ public class SiteStore extends Store {
         OnSiteChanged event = new OnSiteChanged(0);
         if (fetchedSites.isError()) {
             // TODO: what kind of error could we get here?
-            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+            event.error = SiteErrorUtils.genericToSiteError(fetchedSites.error);
         } else {
             UpdateSitesResult res = createOrUpdateSites(fetchedSites);
             event.rowsAffected = res.rowsAffected;
@@ -911,8 +927,7 @@ public class SiteStore extends Store {
     private void updatePostFormats(FetchedPostFormatsPayload payload) {
         OnPostFormatsChanged event = new OnPostFormatsChanged(payload.site);
         if (payload.isError()) {
-            // TODO: what kind of error could we get here?
-            event.error = new PostFormatsError(PostFormatsErrorType.GENERIC_ERROR);
+            event.error = payload.error;
         } else {
             SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats);
         }
