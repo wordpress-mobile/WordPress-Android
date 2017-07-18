@@ -460,11 +460,9 @@ public class UploadService extends Service {
                 cancelPostUploadMatchingMedia(event.media, errorMessage);
 
                 // now keep track of the error reason so it can be queried
-                if (event.error != null && event.error != null) {
-                    FailReason reason = new FailReason(event.error);
-                    PostModel failedPost = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
-                    addFailedReasonToFailedPosts(failedPost, reason);
-                }
+                FailReason reason = new FailReason(event.error);
+                PostModel failedPost = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
+                addFailedReasonToFailedPosts(failedPost, reason);
             }
             stopServiceIfUploadsComplete();
             return;
