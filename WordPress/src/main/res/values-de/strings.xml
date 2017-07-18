@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-07 18:58:04+0000
+Translation-Revision-Date: 2017-07-05 07:34:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+	<string name="format_bar_description_page">Seitenumbruch</string>
+	<string name="format_bar_description_heading">Überschrift</string>
+	<string name="new_editor_promo_title_beta">Beta</string>
+	<string name="new_editor_promo_link">Was ist neu?</string>
+	<string name="new_editor_promo_confirmation_action">Einstellungen</string>
+	<string name="site_settings_optimize_videos">Videos optimieren</string>
+	<string name="report_bug">Fehler melden</string>
+	<string name="permission_camera">Kamera</string>
+	<string name="button_edit_permissions">Rechte bearbeiten</string>
+	<string name="twitter">Twitter</string>
+	<string name="likes">Likes</string>
+	<string name="buttons">Buttons</string>
+	<string name="publicize_text_only">Nur Text</string>
+	<string name="publicize_icon_and_text">Icon &amp; Text</string>
+	<string name="publicize_icon_only">Nur Icon</string>
+	<string name="text_only_display">Nur Text</string>
+	<string name="icon_only_display">Nur Icon</string>
+	<string name="icon_and_text_display">Icon &amp; Text</string>
+	<string name="connection_service_label">Auf %s veröffentlichen</string>
+	<string name="connected_accounts_label">Verbundene Konten</string>
+	<string name="connections_label">Verbindungen</string>
+	<string name="button_not_now">Nicht jetzt</string>
 	<string name="media_insert_as_gallery">Als Galerie hinzufügen.</string>
 	<string name="media_insert_title">mehrere Fotos hinzufügen</string>
 	<string name="media_gallery_column_count_multi">%d Spalten</string>
@@ -45,7 +67,6 @@ Language: de
 	<string name="media_upload_state_queued">In Warteschlange</string>
 	<string name="update_draft">Entwurf aktualisieren</string>
 	<string name="keep_editing">Weiter bearbeiten</string>
-	<string name="image_quality">Bildqualität</string>
 	<string name="error_all_media_upload_canceled">Aufgrund eines unbekannten Fehlers wurden alle Medien-Uploads abgebrochen. Bitte versuche erneut, die Inhalte hochzuladen</string>
 	<string name="error_unknown_post_type">Unbekanntes Beitragsformat</string>
 	<string name="error_unknown_post">Unbekannter Beitrag; eine lokale Kopie dieses Beitrags wurde möglicherweise nicht mit dem Server synchronisiert.</string>
@@ -156,13 +177,6 @@ Language: de
 	<string name="editor_failed_uploads_switch_html">Einige Medien konnten nicht hochgeladen werden. Du kannst daher derzeit nicht in den HTML-Modus umschalten. Möchtest du alle fehlgeschlagenen Uploads entfernen und fortfahren?</string>
 	<string name="image_thumbnail">Vorschaubild</string>
 	<string name="visual_editor">Visueller Editor</string>
-	<string name="format_bar_description_html">HTML-Modus</string>
-	<string name="format_bar_description_ol">Geordnete Aufzählung</string>
-	<string name="format_bar_description_ul">Ungeordnete Aufzählung</string>
-	<string name="format_bar_description_media">Medien einfügen</string>
-	<string name="format_bar_description_more">Weitere einfügen</string>
-	<string name="format_bar_description_link">Link einfügen</string>
-	<string name="format_bar_description_quote">Zitatblock</string>
 	<string name="format_bar_description_strike">Durchgestrichen</string>
 	<string name="format_bar_description_underline">Unterstrichen</string>
 	<string name="format_bar_description_italic">Kursiv</string>

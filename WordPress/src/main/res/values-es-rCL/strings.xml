@@ -7,16 +7,9 @@ Language: es_CL
 -->
 <resources>
 	<string name="editor_failed_uploads_switch_html">Algunas cargas de archivos fallaron. Puedes cambiar a modo HTML en este estado. ¿Eliminar los archivos que fallaron y continuar?</string>
-	<string name="format_bar_description_html">Modo HTML</string>
 	<string name="visual_editor">Editor Visual</string>
 	<string name="image_thumbnail">Miniatura de imagen</string>
-	<string name="format_bar_description_ul">Lista desordenada</string>
-	<string name="format_bar_description_ol">Lista ordenada</string>
-	<string name="format_bar_description_more">Insertar etiqueta Más</string>
-	<string name="format_bar_description_media">Insertar Media</string>
 	<string name="format_bar_description_strike">Texto tachado</string>
-	<string name="format_bar_description_quote">Bloque de Cita</string>
-	<string name="format_bar_description_link">Insertar Enlace</string>
 	<string name="format_bar_description_italic">Cursiva</string>
 	<string name="format_bar_description_underline">Subrayado</string>
 	<string name="image_settings_save_toast">Cambios guardados</string>
