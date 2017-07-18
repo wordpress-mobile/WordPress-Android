@@ -10,9 +10,10 @@
         android:id="@+id/gravatar"
         android:layout_width="@dimen/avatar_sz_login"
         android:layout_height="@dimen/avatar_sz_login"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="@dimen/margin_extra_extra_large"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_extra_extra_large"
+        android:layout_marginBottom="@dimen/margin_extra_large"/>
 
     <TextView
         android:id="@+id/label"
@@ -31,18 +32,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/label"
+        android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_centerHorizontal="true"
         android:text="@string/send_link" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatButton
+        style="@style/LoginTheme.SecondaryButton"
         android:id="@+id/login_enter_password"
-        style="@style/Base.TextAppearance.AppCompat.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_request_magic_link"
-        android:layout_marginTop="@dimen/margin_extra_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_extra_extra_large"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/blue_wordpress"
-        android:text="@string/enter_your_password_instead" />
-
+        android:paddingLeft="@dimen/margin_extra_medium"
+        android:paddingStart="@dimen/margin_extra_medium"
+        android:paddingRight="@dimen/margin_extra_medium"
+        android:paddingEnd="@dimen/margin_extra_medium"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:gravity="center"
+        android:text="@string/enter_your_password_instead"/>
 </RelativeLayout>
