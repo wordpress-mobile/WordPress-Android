@@ -6,7 +6,6 @@ public interface LoginListener {
     LoginMode getLoginMode();
 
     // Login Prologue callbacks
-    void nextPromo();
     void showEmailLoginScreen();
     void doStartSignup();
     void loggedInViaSigUp();

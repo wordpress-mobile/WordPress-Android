@@ -404,7 +404,6 @@ public class WordPress extends MultiDexApplication {
         if (oldVersionCode == 0) {
             // Track application installed if there isn't old version code
             AnalyticsTracker.track(Stat.APPLICATION_INSTALLED);
-            AppPrefs.setNewEditorPromoRequired(false);
         }
         if (oldVersionCode != 0 && oldVersionCode < versionCode) {
             Map<String, Long> properties = new HashMap<String, Long>(1);
@@ -741,12 +740,15 @@ public class WordPress extends MultiDexApplication {
      */
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
         private final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
+        private final long MAX_ACTIVITY_TRANSITION_TIME_MS = 2000;
+
         private Date mLastPingDate;
         private Date mApplicationOpenedDate;
-        boolean mFirstActivityResumed = true;
         private Timer mActivityTransitionTimer;
         private TimerTask mActivityTransitionTimerTask;
-        private final long MAX_ACTIVITY_TRANSITION_TIME_MS = 2000;
+        private boolean mConnectionReceiverRegistered;
+
+        boolean mFirstActivityResumed = true;
         boolean mIsInBackground = true;
 
         @Override
@@ -812,42 +814,47 @@ public class WordPress extends MultiDexApplication {
          * Our implementation uses `onActivityPaused` and `onActivityResumed` of ApplicationLifecycleMonitor
          * to start and stop the timer that detects when the app goes to background.
          *
-         * So when the user is simply navigating between the activities, the onActivityPaused() calls `startActivityTransitionTimer`
-         * and starts the timer, but almost immediately the new activity being entered, the ApplicationLifecycleMonitor cancels the timer
-         * in its onActivityResumed method, that in order calls `stopActivityTransitionTimer`.
-         * And so mIsInBackground would be false.
+         * So when the user is simply navigating between the activities, the onActivityPaused()
+         * calls `startActivityTransitionTimer` and starts the timer, but almost immediately the new activity being
+         * entered, the ApplicationLifecycleMonitor cancels the timer in its onActivityResumed method, that in order
+         * calls `stopActivityTransitionTimer` and so mIsInBackground would be false.
          *
-         * In the case the app is sent to background, the TimerTask is instead executed, and the code that handles all the background logic is run.
+         * In the case the app is sent to background, the TimerTask is instead executed, and the code that handles all
+         * the background logic is run.
          */
         private void startActivityTransitionTimer() {
             this.mActivityTransitionTimer = new Timer();
             this.mActivityTransitionTimerTask = new TimerTask() {
                 public void run() {
-                    AppLog.i(T.UTILS, "App goes to background");
-                    // We're in the Background
-                    mIsInBackground = true;
-                    String lastActivityString = AppPrefs.getLastActivityStr();
-                    ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
-                    Map<String, Object> properties = new HashMap<String, Object>();
-                    properties.put("last_visible_screen", lastActivity.toString());
-                    if (mApplicationOpenedDate != null) {
-                        Date now = new Date();
-                        properties.put("time_in_app", DateTimeUtils.secondsBetween(now, mApplicationOpenedDate));
-                        mApplicationOpenedDate = null;
-                    }
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
-                    AnalyticsTracker.endSession(false);
-                    // Programmatically unregistering the ConnectionChangeReceiver here for Android >= N as per this:
-                    // https://developer.android.com/reference/android/net/ConnectivityManager.html
-                    // "Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if they
-                    // declare the broadcast receiver in their manifest. Apps will still receive broadcasts if they
-                    // register their BroadcastReceiver with Context.registerReceiver() and that context is still valid."
-                    unregisterReceiver(ConnectionChangeReceiver.getInstance());
+                    onAppGoesToBackground();
                 }
             };
 
             this.mActivityTransitionTimer.schedule(mActivityTransitionTimerTask,
                     MAX_ACTIVITY_TRANSITION_TIME_MS);
+        }
+
+        private void onAppGoesToBackground() {
+            AppLog.i(T.UTILS, "App goes to background");
+            mIsInBackground = true;
+            String lastActivityString = AppPrefs.getLastActivityStr();
+            ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
+            Map<String, Object> properties = new HashMap<String, Object>();
+            properties.put("last_visible_screen", lastActivity.toString());
+            if (mApplicationOpenedDate != null) {
+                Date now = new Date();
+                properties.put("time_in_app", DateTimeUtils.secondsBetween(now, mApplicationOpenedDate));
+                mApplicationOpenedDate = null;
+            }
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
+            AnalyticsTracker.endSession(false);
+            // Methods onAppComesFromBackground / onAppGoesToBackground are only workarounds to track when the
+            // app goes to or comes from background, but they are not 100% reliable, we should avoid unregistering
+            // the receiver twice.
+            if (mConnectionReceiverRegistered) {
+                mConnectionReceiverRegistered = false;
+                unregisterReceiver(ConnectionChangeReceiver.getInstance());
+            }
         }
 
         private void stopActivityTransitionTimer() {
@@ -869,8 +876,15 @@ public class WordPress extends MultiDexApplication {
          */
         private void onAppComesFromBackground(Activity activity) {
             AppLog.i(T.UTILS, "App comes from background");
-            registerReceiver(ConnectionChangeReceiver.getInstance(),
-                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            // https://developer.android.com/reference/android/net/ConnectivityManager.html
+            // Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if they
+            // declare the broadcast receiver in their manifest. Apps will still receive broadcasts if they
+            // register their BroadcastReceiver with Context.registerReceiver() and that context is still valid.
+            if (!mConnectionReceiverRegistered) {
+                mConnectionReceiverRegistered = true;
+                registerReceiver(ConnectionChangeReceiver.getInstance(),
+                        new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            }
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
             Map<String, Boolean> properties = new HashMap<>(1);
