@@ -431,7 +431,7 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadProgress event) {
         if (isAdded() && event.post != null && mSite.getId() == event.post.getLocalSiteId()) {
-            // TODO
+            mPostsListAdapter.reloadPost(event.post);
         }
     }
 

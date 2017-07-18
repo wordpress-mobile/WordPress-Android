@@ -37,11 +37,11 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -378,10 +378,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
         if (UploadService.isPostUploadingOrQueued(post)) {
             view.setVisibility(View.VISIBLE);
-            // ToDo: update current progress here by some means from the new UploadService
-//            view.setProgress(90);
-            // ToDo: when we have information from PostUploadService, delete the below line
-            view.setIndeterminate(true);
+            view.setProgress(Math.min(90, Math.round(UploadService.getMediaUploadProgressForPost(post) * 100)));
         } else {
             view.setVisibility(View.GONE);
         }
@@ -580,6 +577,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             AppLog.d(AppLog.T.POSTS, "post adapter > already loading posts");
         } else {
             new LoadPostsTask(mode).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    public void reloadPost(@NonNull PostModel post) {
+        int position = PostUtils.indexOfPostInList(post, mPosts);
+        if (position > -1) {
+            notifyItemChanged(position);
         }
     }
 
