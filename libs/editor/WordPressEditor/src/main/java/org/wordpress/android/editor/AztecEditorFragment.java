@@ -178,7 +178,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         invalidateOptionsRunnable = new Runnable() {
             @Override
             public void run() {
-                getActivity().invalidateOptionsMenu();
+                if (isAdded()) {
+                    getActivity().invalidateOptionsMenu();
+                }
             }
         };
 
@@ -579,8 +581,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 imageLoader.get(mediaUrl, new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        if (getActivity() == null) {
-                            // the activity is in invalid state
+                        if (!isAdded()) {
+                            // the fragment is detached
                             return;
                         }
 
@@ -597,8 +599,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
                         Bitmap downloadedBitmap = container.getBitmap();
 
-                        if (downloadedBitmap == null || getActivity() == null) {
-                            // No bitmap downloaded from server or the activity is in invalid state.
+                        if (downloadedBitmap == null || !isAdded()) {
+                            // No bitmap downloaded from server or the fragment is detached
                             return;
                         }
 
