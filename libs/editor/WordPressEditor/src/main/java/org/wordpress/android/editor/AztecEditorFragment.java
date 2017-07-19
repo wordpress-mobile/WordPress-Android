@@ -736,21 +736,23 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
         final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
-            String remoteUrl = mediaType.equals(MediaType.VIDEO) ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) :
-                    Utils.escapeQuotes(mediaFile.getFileURL());
+            String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
 
-                AztecAttributes attrs = new AztecAttributes();
-                attrs.setValue(ATTR_SRC, remoteUrl);
+            AztecAttributes attrs = new AztecAttributes();
+            attrs.setValue(ATTR_SRC, remoteUrl);
 
-                addDefaultSizeClassIfMissing(attrs);
+            addDefaultSizeClassIfMissing(attrs);
 
-                // clear overlay
-                ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
-                content.resetAttributedMediaSpan(predicate);
-                content.clearOverlays(predicate);
-                content.updateElementAttributes(predicate, attrs);
+            // clear overlay
+            ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+            content.resetAttributedMediaSpan(predicate);
+            content.clearOverlays(predicate);
+            if (mediaType.equals(MediaType.VIDEO)) {
+                overlayVideoIcon(0, predicate);
+            }
+            content.updateElementAttributes(predicate, attrs);
 
-                mUploadingMedia.remove(localMediaId);
+            mUploadingMedia.remove(localMediaId);
         }
     }
 
