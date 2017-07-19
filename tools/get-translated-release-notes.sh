@@ -2,7 +2,7 @@
 
 LANG_FILE=tools/release-notes-language-codes.csv
 TMPDIR=/tmp/release-notes
-OUTFILE=$TMPDIR/release-notes.md
+OUTFILE=$TMPDIR/release-notes.xml
 
 function fetch() {
   for line in $(cat $LANG_FILE) ; do
