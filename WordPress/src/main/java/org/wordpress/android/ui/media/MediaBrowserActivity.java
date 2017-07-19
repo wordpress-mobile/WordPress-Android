@@ -588,14 +588,17 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         addMediaToUploadService(media);
     }
 
-    private void showMediaToastError(@StringRes int message, @Nullable String messageDetail) {
-        if (isFinishing()) {
-            return;
+    private void showMediaError(@NonNull MediaStore.MediaError error, @Nullable MediaModel media) {
+        if (isFinishing()) return;
+
+        String errorMessage = WPMediaUtils.getErrorMessage(this, error, media);
+        if (errorMessage == null) {
+            errorMessage = getString(R.string.media_generic_error);
+            if (!TextUtils.isEmpty(error.message)) {
+                errorMessage += ". " + error.message;
+            }
         }
-        String errorMessage = getString(message);
-        if (!TextUtils.isEmpty(messageDetail)) {
-            errorMessage += ". " + messageDetail;
-        }
+
         ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
     }
 
@@ -605,7 +608,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (event.isError()) {
             AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.type
                     + " - " + event.error.message);
-            showMediaToastError(R.string.media_generic_error, event.error.message);
+            MediaModel media = event.mediaList != null && event.mediaList.size() > 0
+                    ? event.mediaList.get(0) : null;
+            showMediaError(event.error, media);
             return;
         }
 
@@ -630,12 +635,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (event.isError()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
                     + " - " + event.error.message);
-            String errorMessage = WPMediaUtils.getErrorMessage(this, event.media, event.error);
-            if (errorMessage != null) {
-                ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
-            } else {
-                showMediaToastError(R.string.media_upload_error, event.error.message);
-            }
+            showMediaError(event.error, event.media);
             updateViews();
         } else if (event.completed) {
             String title = "";

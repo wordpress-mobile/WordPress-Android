@@ -810,7 +810,7 @@ public class EditPostActivity extends AppCompatActivity implements
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED, properties);
 
         // Display custom error depending on error type
-        String errorMessage = WPMediaUtils.getErrorMessage(this, media, error);
+        String errorMessage = WPMediaUtils.getErrorMessage(this, error, media);
         if (errorMessage == null) {
             errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
         }
