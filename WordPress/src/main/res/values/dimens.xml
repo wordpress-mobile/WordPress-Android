@@ -324,5 +324,6 @@
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
     <dimen name="textinputlayout_baseline_correction">2dp</dimen>
     <dimen name="textinputlayout_correction_padding">-4.3dp</dimen>
+    <dimen name="textinputlayout_correction_margin_right">-8.6dp</dimen>
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
 </resources>
