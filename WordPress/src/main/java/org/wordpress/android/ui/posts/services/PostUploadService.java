@@ -579,7 +579,7 @@ public class PostUploadService extends Service {
     }
 
     private @NonNull String getErrorMessageFromMediaError(OnMediaUploaded event) {
-        String errorMessage = WPMediaUtils.getErrorMessage(mContext, event.error, event.media);
+        String errorMessage = WPMediaUtils.getErrorMessage(mContext, event.media, event.error);
         if (errorMessage == null) {
             // In case of a generic or uncaught error, return the message from the API response or the error type
             errorMessage = TextUtils.isEmpty(event.error.message) ? event.error.type.toString() : event.error.message;
