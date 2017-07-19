@@ -143,7 +143,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment implements T
         String extraCleanSiteAddress = UrlUtils.cleanupInputAddress(mRequestedSiteAddress);
         mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(extraCleanSiteAddress));
 
-        showProgressDialog();
+        startProgress();
     }
 
     private String getCleanedSiteAddress() {
