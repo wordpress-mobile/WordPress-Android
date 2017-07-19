@@ -161,7 +161,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
         }
 
         if (isValidEmail(email)) {
-            showProgressDialog();
+            startProgress();
             mRequestedEmail = email;
             mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(email));
         } else {
