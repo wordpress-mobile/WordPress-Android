@@ -135,7 +135,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private boolean mImagesOnly;
     private MediaBrowserType mBrowserType;
     private int mLastAddMediaItemClickedPosition;
-    private boolean mUserCanAddMedia;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -166,8 +165,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             AppLog.w(AppLog.T.MEDIA, "MediaBrowserType is null. Defaulting to MediaBrowserType.BROWSER mode.");
             mBrowserType = MediaBrowserType.BROWSER;
         }
-
-        mUserCanAddMedia = mSite.getHasCapabilityUploadFiles();
 
         setContentView(R.layout.media_browser_activity);
 
@@ -454,7 +451,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         // hide "add media" if this is used as a media picker or the user doesn't have upload permission
-        if (mBrowserType.isPicker() || !mUserCanAddMedia) {
+        if (mBrowserType.isPicker() || !WordPressMediaUtils.currentUserCanUploadMedia(mSite)) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
         }
 

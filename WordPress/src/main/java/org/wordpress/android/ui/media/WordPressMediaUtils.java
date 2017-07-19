@@ -12,10 +12,12 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -241,5 +243,13 @@ public class WordPressMediaUtils {
                         AppLog.d(T.MEDIA, "Media scanner finished scanning " + path);
                     }
                 });
+    }
+
+    /*
+     * returns true if the current user has permission to upload new media to the passed site
+     */
+    public static boolean currentUserCanUploadMedia(@NonNull SiteModel site) {
+        // TODO: test with .org
+        return site.getHasCapabilityUploadFiles();
     }
 }
