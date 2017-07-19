@@ -79,7 +79,6 @@ Language: tr
 	<string name="smart_toast_photo_long_press">Birden çok fotoğraf seçmek için dokunun ve basılı tutun</string>
 	<string name="photo_picker_choose_video">Cihazdan bir video seçin</string>
 	<string name="photo_picker_choose_photo">Cihazdan bir fotoğraf seçin</string>
-	<string name="new_editor_promo_description">WordPress uygulaması artık beraberinde yeni bir düzenleyici içeriyor. Yeni bir yazı oluşturup deneyimleyin.</string>
 	<string name="wp_media_title">WordPress ortam dosyaları</string>
 	<string name="media_insert_as_gallery">Galeri olarak ekle</string>
 	<string name="media_insert_individually">Tekil olarak ekle</string>
@@ -122,7 +121,6 @@ Language: tr
 	<string name="media_upload_state_queued">Sırada</string>
 	<string name="update_draft">Taslağı güncelle</string>
 	<string name="keep_editing">Düzenlemeye devam et</string>
-	<string name="image_quality">Görsel kalitesi</string>
 	<string name="error_all_media_upload_canceled">Tüm ortam yüklemeleri bilimeyen bir hata sebebiyle iptal edildi. Lütfen tekrar yüklemeyi deneyin</string>
 	<string name="error_unknown_post_type">Bilinmeyen yazı biçimi</string>
 	<string name="error_unknown_post">Bilinmeyen yazı, yazının yerel kopyası sunucu ile eşzamanlı olmayabilir</string>
@@ -252,13 +250,6 @@ Language: tr
 	<string name="editor_failed_uploads_switch_html">Bazı ortam yüklemeleri başarısız oldu. HTML moduna geçebilirsiniz\n        Tüm başarısız yüklemeleri kaldırılıp devam edilsin mi?</string>
 	<string name="image_thumbnail">Görsel küçük resm</string>
 	<string name="visual_editor">Görsel düzenleyici</string>
-	<string name="format_bar_description_html">HTML modu</string>
-	<string name="format_bar_description_ol">Sıralı Liste</string>
-	<string name="format_bar_description_ul">Sırasız Liste</string>
-	<string name="format_bar_description_media">Ortam ekle</string>
-	<string name="format_bar_description_more">Daha fazla ekle</string>
-	<string name="format_bar_description_link">Bağlantı ekle</string>
-	<string name="format_bar_description_quote">Alıntı</string>
 	<string name="format_bar_description_strike">Üzeri çizili</string>
 	<string name="format_bar_description_underline">Altı çizgili</string>
 	<string name="format_bar_description_italic">Eğik</string>
@@ -444,7 +435,6 @@ Language: tr
 	<string name="error_refresh_comments_showing_older">Yorumlar şu anda yenilenemiyor, eski yorumlar gösteriliyor</string>
 	<string name="editor_post_settings_set_featured_image">Öne çıkarılan görsel ayarla</string>
 	<string name="editor_post_settings_featured_image">Öne Çıkan Görüntü</string>
-	<string name="new_editor_promo_title">Yeni düzenleyici</string>
 	<string name="visual_editor_enabled">Görsel Düzenleyici etkinleştirildi</string>
 	<string name="editor_content_placeholder">Hikayenizi burada paylaşın...</string>
 	<string name="editor_page_title_placeholder">Sayfa Başlığı</string>

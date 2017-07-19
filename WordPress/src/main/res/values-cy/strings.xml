@@ -127,13 +127,6 @@ Language: cy_GB
 	<string name="editor_failed_uploads_switch_html">Mae rhai lwythi cyfryngau wedi methu. Nid oes modd newid i\'r modd HTML\n       yn y cyflwr hwn. Tynnu pob cyfrwng sydd wedi methu a pharhau?</string>
 	<string name="image_thumbnail">Llun bach delwedd</string>
 	<string name="visual_editor">Golygydd gweledol</string>
-	<string name="format_bar_description_html">Modd HTML</string>
-	<string name="format_bar_description_ol">Rhestr wedi\'i drefnu</string>
-	<string name="format_bar_description_ul">Rhestr heb ei drefnu</string>
-	<string name="format_bar_description_media">Mewnosod cyfrwng</string>
-	<string name="format_bar_description_more">Mewnosod rhagor</string>
-	<string name="format_bar_description_link">Mewnosod dolen</string>
-	<string name="format_bar_description_quote">Dyfyniad bloc</string>
 	<string name="format_bar_description_strike">Llinell Drwodd</string>
 	<string name="format_bar_description_underline">Tanlinellu</string>
 	<string name="format_bar_description_italic">Italig</string>

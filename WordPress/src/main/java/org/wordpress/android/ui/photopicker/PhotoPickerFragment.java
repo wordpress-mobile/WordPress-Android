@@ -80,7 +80,6 @@ public class PhotoPickerFragment extends Fragment {
     private boolean mAllowMultiSelect;
     private boolean mPhotosOnly;
     private boolean mDeviceOnly;
-    private boolean mIsFlinging;
 
     private static final String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
     private static final String ARG_PHOTOS_ONLY = "photos_only";
@@ -130,8 +129,7 @@ public class PhotoPickerFragment extends Fragment {
         mRecycler.setHasFixedSize(true);
 
         // disable thumbnail loading during a fling to conserve memory
-        final int minDistance =
-                WordPressMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
+        final int minDistance = WordPressMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
         mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
             @Override
             public boolean onFling(int velocityX, int velocityY) {

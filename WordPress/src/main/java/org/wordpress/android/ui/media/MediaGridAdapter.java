@@ -176,7 +176,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.VISIBLE);
-            holder.imageView.setImageUrl(media.getThumbnailUrl(), WPNetworkImageView.ImageType.PHOTO);
+            holder.imageView.setImageUrl(media.getThumbnailUrl(), WPNetworkImageView.ImageType.VIDEO);
         } else {
             // not an image or video, so show file name and file type
             holder.videoOverlayContainer.setVisibility(View.GONE);
