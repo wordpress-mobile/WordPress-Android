@@ -51,7 +51,8 @@ public class UploadService extends Service {
     // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
     private static final ConcurrentHashMap<Integer, List<MediaModel>> sCompletedMediaByPost = new ConcurrentHashMap<>();
 
-    // This will hold a map of postID and the corresponding last error if any error occured while uploading
+    // TODO This should be moved to FluxC, perhaps in a new UploadMediaTable
+    // This will hold a map of postID and the corresponding last error if any error occurred while uploading
     private static final ConcurrentHashMap<Integer, UploadError> sFailedUploadPosts = new ConcurrentHashMap<>();
 
     @Inject Dispatcher mDispatcher;
