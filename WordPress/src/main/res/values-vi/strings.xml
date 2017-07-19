@@ -9,13 +9,6 @@ Language: vi_VN
 	<string name="editor_failed_uploads_switch_html">Một số media tải lên đã bị lỗi. Bạn không thể chuyển sang chế độ HTML \n        trong tình huống này. Loại bỏ tất cả tải lên bị lỗi và tiếp tục?</string>
 	<string name="image_thumbnail">Hình thu nhỏ Ảnh</string>
 	<string name="visual_editor">Trình biên tập trực quan</string>
-	<string name="format_bar_description_html">Chế độ HTML</string>
-	<string name="format_bar_description_ol">Danh sách đã xếp thứ tự</string>
-	<string name="format_bar_description_ul">Danh sách chưa xếp thư tự</string>
-	<string name="format_bar_description_media">Chèn media</string>
-	<string name="format_bar_description_more">Chèn nhiều hơn</string>
-	<string name="format_bar_description_link">Chèn liên kết</string>
-	<string name="format_bar_description_quote">Khối trích dẫn</string>
 	<string name="format_bar_description_strike">Gạch ngang</string>
 	<string name="format_bar_description_underline">Gạch dưới</string>
 	<string name="format_bar_description_italic">Nghiêng</string>
