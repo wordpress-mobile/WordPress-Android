@@ -144,7 +144,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
                 (keyCode == KeyEvent.KEYCODE_ENTER)) {
             // Since we don't allow new lines, we should add comma on "enter" to separate the tags
             String currentText = mTagsEditText.getText().toString();
-            if (!currentText.endsWith(",")) {
+            if (!currentText.isEmpty() && !currentText.endsWith(",")) {
                 mTagsEditText.setText(currentText.concat(","));
                 mTagsEditText.setSelection(mTagsEditText.length());
             }
