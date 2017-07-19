@@ -63,7 +63,6 @@ import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
-import org.wordpress.aztec.plugins.wpcomments.toolbar.PageToolbarButton;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
