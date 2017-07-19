@@ -579,6 +579,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 imageLoader.get(mediaUrl, new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        if (getActivity() == null) {
+                            // the activity is in invalid state
+                            return;
+                        }
+
                         // Show failed placeholder.
                         ToastUtils.showToast(getActivity(), R.string.error_media_load);
                         Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
@@ -592,8 +597,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
                         Bitmap downloadedBitmap = container.getBitmap();
 
-                        if (downloadedBitmap == null) {
-                            // No bitmap downloaded from server.
+                        if (downloadedBitmap == null || getActivity() == null) {
+                            // No bitmap downloaded from server or the activity is in invalid state.
                             return;
                         }
 
