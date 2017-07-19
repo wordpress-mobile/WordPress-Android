@@ -138,7 +138,7 @@ public class Login2FaFragment extends LoginBaseFormFragment implements TextWatch
         }
 
         mInProgressMessageId = messageId;
-        showProgressDialog();
+        startProgress();
 
         AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(mEmailAddress, mPassword);
         payload.twoStepCode = twoStepCode;
