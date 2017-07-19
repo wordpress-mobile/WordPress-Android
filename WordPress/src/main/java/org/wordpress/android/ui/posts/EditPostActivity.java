@@ -2155,10 +2155,13 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddMediaClicked() {
-        if (!isPhotoPickerShowing()) {
+        if (isPhotoPickerShowing()) {
+            hidePhotoPicker();
+        } else if (WordPressMediaUtils.currentUserCanUploadMedia(mSite)) {
             showPhotoPicker();
         } else {
-            hidePhotoPicker();
+            // show the WP media library instead of the photo picker if the user doesn't have upload permission
+            ActivityLauncher.viewMediaPickerForResult(this, mSite);
         }
     }
 
