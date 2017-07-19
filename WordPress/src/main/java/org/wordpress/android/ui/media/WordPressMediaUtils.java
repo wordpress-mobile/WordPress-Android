@@ -12,7 +12,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
@@ -249,8 +248,12 @@ public class WordPressMediaUtils {
      * returns true if the current user has permission to upload new media to the passed site
      */
     public static boolean currentUserCanUploadMedia(@NonNull SiteModel site) {
-        // TODO: test with .org
-        return site.getHasCapabilityUploadFiles();
+        if (site.isUsingWpComRestApi()) {
+            return site.getHasCapabilityUploadFiles();
+        } else {
+            // self-hosted sites don't have capabilities so always return true
+            return true;
+        }
     }
 
     public static boolean currentUserCanDeleteMedia(@NonNull SiteModel site) {
