@@ -652,6 +652,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         if (event.media != null) {
             updateMediaGridItem(event.media);
+        } else {
+            reloadMediaGrid();
         }
     }
 
