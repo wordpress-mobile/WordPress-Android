@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -136,6 +135,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private boolean mImagesOnly;
     private MediaBrowserType mBrowserType;
     private int mLastAddMediaItemClickedPosition;
+    private boolean mUserCanAddMedia;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -166,6 +166,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             AppLog.w(AppLog.T.MEDIA, "MediaBrowserType is null. Defaulting to MediaBrowserType.BROWSER mode.");
             mBrowserType = MediaBrowserType.BROWSER;
         }
+
+        mUserCanAddMedia = mSite.getHasCapabilityUploadFiles();
 
         setContentView(R.layout.media_browser_activity);
 
@@ -451,8 +453,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mSearchView.setQuery(mQuery, true);
         }
 
-        // hide "add media" if this is used as a media picker
-        if (mBrowserType.isPicker()) {
+        // hide "add media" if this is used as a media picker or the user doesn't have upload permission
+        if (mBrowserType.isPicker() || !mUserCanAddMedia) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
         }
 
