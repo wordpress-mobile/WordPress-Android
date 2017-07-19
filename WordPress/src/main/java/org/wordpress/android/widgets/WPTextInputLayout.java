@@ -25,8 +25,7 @@ public class WPTextInputLayout extends TextInputLayout {
     }
 
     @Override
-    public int getBaseline()
-    {
+    public int getBaseline() {
         EditText editText = getEditText();
         return editText != null ? editText.getBaseline() - editText.getPaddingBottom() + getResources().getDimensionPixelSize(R.dimen.textinputlayout_baseline_correction) : 0;
     }
