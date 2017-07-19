@@ -131,7 +131,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment implements
             return;
         }
 
-        showProgressDialog();
+        startProgress();
 
         mRequestedPassword = mPasswordInput.getEditText().getText().toString();
 
