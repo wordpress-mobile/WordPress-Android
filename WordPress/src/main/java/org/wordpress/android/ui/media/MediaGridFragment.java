@@ -212,8 +212,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mRecycler.setAdapter(getAdapter());
 
         // disable thumbnail loading during a fling to conserve memory
-        final int minDistance =
-                WordPressMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
+        final int minDistance = WordPressMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
         mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
             @Override
             public boolean onFling(int velocityX, int velocityY) {
