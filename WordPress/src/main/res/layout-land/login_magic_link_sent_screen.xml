@@ -47,7 +47,7 @@
         android:layout_alignParentBottom="true">
 
         <android.support.v7.widget.AppCompatButton
-            style="@style/LoginTheme.SecondaryButton"
+            style="@style/WordPress.Button.Secondary"
             android:id="@+id/login_enter_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             android:text="@string/enter_your_password_instead"/>
 
         <android.support.v7.widget.AppCompatButton
-            style="@style/WordPress.PrimaryButton"
+            style="@style/WordPress.Button.Primary"
             android:id="@+id/login_open_email_client"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
