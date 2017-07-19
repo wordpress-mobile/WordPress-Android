@@ -569,103 +569,97 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
-        final String safeMediaUrl = Utils.escapeQuotes(mediaUrl);
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            if (mediaFile.isVideo()) {
-                // TODO: insert video
-                ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
-            } else {
-                imageLoader.get(mediaUrl, new ImageLoader.ImageListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Show failed placeholder.
-                        ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                        Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
-                        AztecAttributes attributes = new AztecAttributes();
-                        attributes.setValue(ATTR_SRC, mediaUrl);
-                        setAttributeValuesIfNotDefault(attributes, mediaFile);
+            String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
+            imageLoader.get(posterURL, new ImageLoader.ImageListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // Show failed placeholder.
+                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
+                    AztecAttributes attributes = new AztecAttributes();
+                    attributes.setValue(ATTR_SRC, mediaUrl);
+                    setAttributeValuesIfNotDefault(attributes, mediaFile);
+                    content.insertImage(drawable, attributes);
+                }
+
+                @Override
+                public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
+                    Bitmap downloadedBitmap = container.getBitmap();
+
+                    if (downloadedBitmap == null) {
+                        // No bitmap downloaded from server.
+                        return;
+                    }
+
+                    AztecAttributes attributes = new AztecAttributes();
+                    attributes.setValue(ATTR_SRC, mediaUrl);
+                    setAttributeValuesIfNotDefault(attributes, mediaFile);
+
+                    int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
+
+                    if (downloadedBitmap.getHeight() < minimumDimension || downloadedBitmap.getWidth() < minimumDimension) {
+                        // Bitmap is too small.  Show image placeholder.
+                        ToastUtils.showToast(getActivity(), R.string.error_media_small);
+                        Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
                         content.insertImage(drawable, attributes);
+                        return;
                     }
 
-                    @Override
-                    public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
-                        Bitmap downloadedBitmap = container.getBitmap();
-
-                        if (downloadedBitmap == null) {
-                            // No bitmap downloaded from server.
-                            return;
-                        }
-
-                        AztecAttributes attributes = new AztecAttributes();
-                        attributes.setValue(ATTR_SRC, mediaUrl);
-                        setAttributeValuesIfNotDefault(attributes, mediaFile);
-
-                        int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
-
-                        if (downloadedBitmap.getHeight() < minimumDimension || downloadedBitmap.getWidth() < minimumDimension) {
-                            // Bitmap is too small.  Show image placeholder.
-                            ToastUtils.showToast(getActivity(), R.string.error_media_small);
-                            Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
-                            content.insertImage(drawable, attributes);
-                            return;
-                        }
-
-                        Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, DisplayUtils.getDisplayPixelWidth(getActivity()));
-                        content.insertImage(new BitmapDrawable(getResources(), resizedBitmap), attributes);
-                    }
-                }, 0, 0);
-            }
+                    Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, DisplayUtils.getDisplayPixelWidth(getActivity()));
+                    content.insertImage(new BitmapDrawable(getResources(), resizedBitmap), attributes);
+                }
+            }, 0, 0);
 
             mActionStartedAt = System.currentTimeMillis();
         } else {
             String localMediaId = String.valueOf(mediaFile.getId());
+            final String safeMediaUrl = mediaFile.isVideo() ?
+                    Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) :
+                    Utils.escapeQuotes(mediaUrl);
 
-            if (mediaFile.isVideo()) {
-                // TODO: insert local video
-                ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
+            AztecAttributes attrs = new AztecAttributes();
+            attrs.setValue(ATTR_ID_WP, localMediaId);
+            attrs.setValue(ATTR_SRC, safeMediaUrl);
+            attrs.setValue(ATTR_CLASS, ATTR_STATUS_UPLOADING);
+
+            addDefaultSizeClassIfMissing(attrs);
+
+            // load a scaled version of the image to prevent OOM exception
+            int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+            Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
+
+            if (bitmapToShow != null) {
+                content.insertImage(new BitmapDrawable(getResources(), bitmapToShow), attrs);
             } else {
-                AztecAttributes attrs = new AztecAttributes();
-                attrs.setValue(ATTR_ID_WP, localMediaId);
-                attrs.setValue(ATTR_SRC, safeMediaUrl);
-                attrs.setValue(ATTR_CLASS, ATTR_STATUS_UPLOADING);
-
-                addDefaultSizeClassIfMissing(attrs);
-
-                // load a scaled version of the image to prevent OOM exception
-                int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
-                Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
-
-                if (bitmapToShow != null) {
-                    content.insertImage(new BitmapDrawable(getResources(), bitmapToShow), attrs);
-                } else {
-                    // Failed to retrieve bitmap.  Show failed placeholder.
-                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                    Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
-                    drawable.setBounds(0, 0, maxWidth, maxWidth);
-                    content.insertImage(drawable, attrs);
-                }
-
-                // set intermediate shade overlay
-                AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
-                content.setOverlay(localMediaIdPredicate, 0,
-                        new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
-                        Gravity.FILL);
-
-                Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
-                // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
-                progressDrawable.setBounds(0, 0, 0, 4);
-
-                content.setOverlay(localMediaIdPredicate, 1, progressDrawable,
-                        Gravity.FILL_HORIZONTAL | Gravity.TOP);
-
-                content.updateElementAttributes(localMediaIdPredicate, attrs);
-
-                content.resetAttributedMediaSpan(localMediaIdPredicate);
-
-                mUploadingMedia.put(localMediaId, MediaType.IMAGE);
+                // Failed to retrieve bitmap.  Show failed placeholder.
+                ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
+                drawable.setBounds(0, 0, maxWidth, maxWidth);
+                content.insertImage(drawable, attrs);
             }
+
+            // set intermediate shade overlay
+            AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+            content.setOverlay(localMediaIdPredicate, 0,
+                    new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
+                    Gravity.FILL);
+
+            Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
+            // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
+            progressDrawable.setBounds(0, 0, 0, 4);
+
+            content.setOverlay(localMediaIdPredicate, 1, progressDrawable,
+                    Gravity.FILL_HORIZONTAL | Gravity.TOP);
+
+            content.updateElementAttributes(localMediaIdPredicate, attrs);
+
+            content.resetAttributedMediaSpan(localMediaIdPredicate);
+
+            mUploadingMedia.put(localMediaId, mediaFile.isVideo() ? MediaType.VIDEO : MediaType.IMAGE);
         }
+
     }
 
     @Override
@@ -717,8 +711,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
         final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
-            String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
-            if (mediaType.equals(MediaType.IMAGE)) {
+            String remoteUrl = mediaType.equals(MediaType.VIDEO) ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) :
+                    Utils.escapeQuotes(mediaFile.getFileURL());
 
                 AztecAttributes attrs = new AztecAttributes();
                 attrs.setValue(ATTR_SRC, remoteUrl);
@@ -732,9 +726,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 content.updateElementAttributes(predicate, attrs);
 
                 mUploadingMedia.remove(localMediaId);
-            } else if (mediaType.equals(MediaType.VIDEO)) {
-                // TODO: update video element
-            }
         }
     }
 
@@ -779,6 +770,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mediaType != null) {
             switch (mediaType) {
                 case IMAGE:
+                case VIDEO:
                     ImagePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
                     AttributesWithClass attributesWithClass = new AttributesWithClass(
                             content.getElementAttributes(localMediaIdPredicate));
@@ -789,8 +781,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     overlayFailedMedia(localMediaId, attributesWithClass.getAttributes());
                     content.resetAttributedMediaSpan(localMediaIdPredicate);
                     break;
-                case VIDEO:
-                    // TODO: mark media as upload-failed
             }
             mFailedMediaIds.add(localMediaId);
             mUploadingMedia.remove(localMediaId);
