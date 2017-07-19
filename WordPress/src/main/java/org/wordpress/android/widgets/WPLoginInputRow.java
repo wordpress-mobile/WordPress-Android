@@ -211,7 +211,7 @@ public class WPLoginInputRow extends RelativeLayout {
             mIds = ids;
         }
 
-        private SavedState(Parcel in) {
+        SavedState(Parcel in) {
             super(in);
 
             in.readList(mIds, List.class.getClassLoader());
