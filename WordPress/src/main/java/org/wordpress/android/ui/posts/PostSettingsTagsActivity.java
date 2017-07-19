@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +37,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class PostSettingsTagsActivity extends AppCompatActivity implements TextWatcher {
+public class PostSettingsTagsActivity extends AppCompatActivity implements TextWatcher, View.OnKeyListener {
     public static final String KEY_TAGS = "KEY_TAGS";
     public static final String KEY_SELECTED_TAGS = "KEY_SELECTED_TAGS";
     private SiteModel mSite;
@@ -82,6 +83,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         recyclerView.setAdapter(mAdapter);
 
         mTagsEditText = (EditText) findViewById(R.id.tags_edit_text);
+        mTagsEditText.setOnKeyListener(this);
         mTagsEditText.addTextChangedListener(this);
         if (!TextUtils.isEmpty(tags)) {
             // add a , at the end so the user can start typing a new tag
@@ -134,6 +136,21 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+        if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
+                (keyCode == KeyEvent.KEYCODE_ENTER)) {
+            // Since we don't allow new lines, we should add comma on "enter" to separate the tags
+            String currentText = mTagsEditText.getText().toString();
+            if (!currentText.endsWith(",")) {
+                mTagsEditText.setText(currentText.concat(","));
+                mTagsEditText.setSelection(mTagsEditText.length());
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override
