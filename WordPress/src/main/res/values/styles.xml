@@ -240,7 +240,7 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="LoginTheme.SecondaryButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+    <style name="WordPress.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:textColor">@color/blue_wordpress</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
     </style>

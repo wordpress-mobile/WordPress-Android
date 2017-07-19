@@ -38,7 +38,7 @@
         android:layout_alignParentBottom="true">
 
         <android.support.v7.widget.AppCompatButton
-            style="@style/LoginTheme.SecondaryButton"
+            style="@style/WordPress.Button.Secondary"
             android:id="@+id/secondary_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
