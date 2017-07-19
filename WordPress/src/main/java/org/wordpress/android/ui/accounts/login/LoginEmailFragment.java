@@ -7,7 +7,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -68,14 +67,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
             case WPCOM_REAUTHENTICATE:
                 label.setText(R.string.auth_required);
                 break;
-        }
-
-        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
-            label.setText(R.string.stats_sign_in_jetpack_different_com_account);
-        } else if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
-
-        } else {
-            label.setText(R.string.enter_email_wordpress_com);
         }
     }
 
@@ -170,7 +161,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
         }
 
         if (isValidEmail(email)) {
-            showProgressDialog();
+            startProgress();
             mRequestedEmail = email;
             mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(email));
         } else {

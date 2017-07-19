@@ -120,7 +120,7 @@ public class WPLoginInputRow extends RelativeLayout {
         int[] rules = iconLayoutParams.getRules();
         for (int i = 0; i < rules.length; i++) {
             if (rules[i] == mTextInputLayout.getId()) {
-                if (Build.VERSION.SDK_INT > 23) {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                     rules[i] = mNewIds.get(1);
                 } else {
                     iconLayoutParams.addRule(i, mNewIds.get(1));
@@ -133,7 +133,7 @@ public class WPLoginInputRow extends RelativeLayout {
         rules = editTextLayoutParams.getRules();
         for (int i = 0; i < rules.length; i++) {
             if (rules[i] == mIcon.getId()) {
-                if (Build.VERSION.SDK_INT > 23) {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                     rules[i] = mNewIds.get(0);
                 } else {
                     editTextLayoutParams.addRule(i, mNewIds.get(0));
@@ -211,7 +211,7 @@ public class WPLoginInputRow extends RelativeLayout {
             mIds = ids;
         }
 
-        private SavedState(Parcel in) {
+        SavedState(Parcel in) {
             super(in);
 
             in.readList(mIds, List.class.getClassLoader());

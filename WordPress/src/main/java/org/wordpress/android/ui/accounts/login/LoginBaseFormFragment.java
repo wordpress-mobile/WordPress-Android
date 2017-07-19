@@ -109,7 +109,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
             mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
 
             if (mInProgress) {
-                showProgressDialog();
+                startProgress();
             }
         }
     }
@@ -164,7 +164,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
         return false;
     }
 
-    protected void showProgressDialog() {
+    protected void startProgress() {
         mPrimaryButton.setEnabled(false);
         mSecondaryButton.setEnabled(false);
 
@@ -173,7 +173,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
                         new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialogInterface) {
-                                if (mInProgress) {
+                                if (isInProgress()) {
                                     endProgress();
                                 }
                             }

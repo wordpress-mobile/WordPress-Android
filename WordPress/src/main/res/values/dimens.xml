@@ -70,7 +70,7 @@
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_small_medium">6dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
-    <dimen name="margin_extra_medium">10dp</dimen>
+    <dimen name="margin_medium_large">10dp</dimen>
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
