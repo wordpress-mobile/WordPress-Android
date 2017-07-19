@@ -193,7 +193,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
             return;
         }
 
-        showProgressDialog();
+        startProgress();
 
         mRequestedUsername = getCleanedUsername();
         mRequestedPassword = mPasswordInput.getEditText().getText().toString();
