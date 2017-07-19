@@ -3,6 +3,7 @@ package org.wordpress.android.datasets;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CategoryModel;
@@ -67,6 +68,24 @@ public final class SiteSettingsTable {
         }
     }
 
+    public static void deserializeJetpackDatabaseCursor(final @NonNull JetpackSettingsModel jpSettings, Cursor cursor) {
+        if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) return;
+        jpSettings.monitorActive = getBooleanFromCursor(cursor,
+                JetpackSettingsModel.JP_MONITOR_ACTIVE_COLUMN_NAME);
+        jpSettings.emailNotifications = getBooleanFromCursor(cursor,
+                JetpackSettingsModel.JP_MONITOR_EMAIL_NOTES_COLUMN_NAME);
+        jpSettings.wpNotifications = getBooleanFromCursor(cursor,
+                JetpackSettingsModel.JP_MONITOR_WP_NOTES_COLUMN_NAME);
+    }
+
+    public static ContentValues serializeJetpackSettingsToDatabase(final @NonNull JetpackSettingsModel jpSettings) {
+        ContentValues values = new ContentValues();
+        values.put(JetpackSettingsModel.JP_MONITOR_ACTIVE_COLUMN_NAME, jpSettings.monitorActive);
+        values.put(JetpackSettingsModel.JP_MONITOR_EMAIL_NOTES_COLUMN_NAME, jpSettings.emailNotifications);
+        values.put(JetpackSettingsModel.JP_MONITOR_WP_NOTES_COLUMN_NAME, jpSettings.wpNotifications);
+        return values;
+    }
+
     public static Map<Integer, CategoryModel> getAllCategories() {
         String sqlCommand = sqlSelectAllCategories() + ";";
         Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
@@ -126,7 +145,7 @@ public final class SiteSettingsTable {
     public static void saveJpSettings(JetpackSettingsModel settings) {
         if (settings == null) return;
 
-        ContentValues values = settings.serializeToDatabase();
+        ContentValues values = serializeJetpackSettingsToDatabase(settings);
         WordPress.wpDB.getDatabase().insertWithOnConflict(
                 JetpackSettingsModel.JP_SETTINGS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
@@ -155,5 +174,10 @@ public final class SiteSettingsTable {
 
     private static String sqlWhere(String variable, String value) {
         return "WHERE " + variable + "=\"" + value + "\" ";
+    }
+
+    private static boolean getBooleanFromCursor(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        return columnIndex != -1 && cursor.getInt(columnIndex) != 0;
     }
 }

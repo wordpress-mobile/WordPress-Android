@@ -882,7 +882,7 @@ public abstract class SiteSettingsInterface {
         Cursor localSettings = SiteSettingsTable.getJpSettings(mSite.getId());
 
         if (localSettings != null && localSettings.getCount() > 0) {
-            mJpSettings.deserializeOptionsDatabaseCursor(localSettings);
+            SiteSettingsTable.deserializeJetpackDatabaseCursor(mJpSettings, localSettings);
             notifyUpdatedOnUiThread(null);
         }
 
