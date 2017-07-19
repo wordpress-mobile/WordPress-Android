@@ -39,10 +39,12 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
 
     private static final String ARG_SHOW_AND_RETURN = "ARG_SHOW_AND_RETURN";
 
-    private WPNetworkImageView mAvatarImageView;
-    private TextView mDisplayNameTextView;
-    private TextView mUsernameTextView;
     private View mSitesProgress;
+    private RecyclerView mSitesList;
+    private View mBottomShadow;
+    private View mBottomButtonsContainer;
+    private View mConnectMore;
+    private View mConnectMoreGrey;
 
     protected @Inject SiteStore mSiteStore;
     protected @Inject AccountStore mAccountStore;
@@ -52,7 +54,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     private SitePickerAdapter mAdapter;
     private boolean mShowAndReturn;
 
-    public interface LoginEpilogueListener {
+    interface LoginEpilogueListener {
         void onConnectAnotherSite();
         void onContinue();
     }
@@ -78,15 +80,25 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_epilogue_screen, container, false);
 
-        mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.avatar);
-        mDisplayNameTextView = (TextView) rootView.findViewById(R.id.display_name);
-        mUsernameTextView = (TextView) rootView.findViewById(R.id.username);
-
         mSitesProgress = rootView.findViewById(R.id.sites_progress);
 
-        View connectMore = rootView.findViewById(R.id.login_connect_more);
-        connectMore.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
-        connectMore.setOnClickListener(new View.OnClickListener() {
+        mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
+        mBottomButtonsContainer = rootView.findViewById(R.id.bottom_buttons);
+
+        mConnectMore = rootView.findViewById(R.id.login_connect_more);
+        mConnectMore.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
+        mConnectMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mLoginEpilogueListener != null) {
+                    mLoginEpilogueListener.onConnectAnotherSite();
+                }
+            }
+        });
+
+        mConnectMoreGrey = rootView.findViewById(R.id.login_connect_more_grey);
+        mConnectMoreGrey.setVisibility(View.GONE); // hide the grey version of the button on start
+        mConnectMoreGrey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginEpilogueListener != null) {
@@ -104,13 +116,11 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        RecyclerView sitesList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        sitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        sitesList.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        sitesList.setItemAnimator(null);
-        sitesList.setAdapter(getAdapter());
-
-        refreshAccountDetails();
+        mSitesList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mSitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mSitesList.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        mSitesList.setItemAnimator(null);
+        mSitesList.setAdapter(getAdapter());
 
         return rootView;
     }
@@ -138,13 +148,52 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         return mAdapter;
     }
 
+    private class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private final WPNetworkImageView mAvatarImageView;
+        private final TextView mDisplayNameTextView;
+        private final TextView mUsernameTextView;
+        private final TextView mMySitesHeadingTextView;
+
+        HeaderViewHolder(View view) {
+            super(view);
+            mAvatarImageView = (WPNetworkImageView) view.findViewById(R.id.avatar);
+            mDisplayNameTextView = (TextView) view.findViewById(R.id.display_name);
+            mUsernameTextView = (TextView) view.findViewById(R.id.username);
+            mMySitesHeadingTextView = (TextView) view.findViewById(R.id.my_sites_heading);
+        }
+    }
+
     private void setNewAdapter() {
-        mAdapter = new SitePickerAdapter(
-                getActivity(),
-                0,
-                "",
-                false,
-                null);
+        mAdapter = new SitePickerAdapter(getActivity(), R.layout.login_epilogue_sites_listitem, 0, "", false,
+                new SitePickerAdapter.OnDataLoadedListener() {
+            @Override
+            public void onBeforeLoad(boolean isEmpty) {}
+
+            @Override
+            public void onAfterLoad() {
+                if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
+                    mBottomShadow.setVisibility(View.VISIBLE);
+                    mBottomButtonsContainer.setBackgroundResource(R.color.white);
+                    mConnectMore.setVisibility(View.GONE);
+                    mConnectMoreGrey.setVisibility(View.VISIBLE);
+                } else {
+                    mBottomShadow.setVisibility(View.GONE);
+                    mBottomButtonsContainer.setBackground(null);
+                    mConnectMore.setVisibility(View.VISIBLE);
+                    mConnectMoreGrey.setVisibility(View.GONE);
+                }
+            }
+        }, new SitePickerAdapter.HeaderHandler() {
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent, boolean attachToRoot) {
+                return new HeaderViewHolder(layoutInflater.inflate(R.layout.login_epilogue_header, parent, false));
+            }
+
+            @Override
+            public void onBindViewHolder(RecyclerView.ViewHolder holder, int numberOfSites) {
+                refreshAccountDetails((HeaderViewHolder) holder, numberOfSites);
+            }
+        });
     }
 
     public void showProgress(boolean show) {
@@ -187,28 +236,43 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         super.onResume();
     }
 
-    private void refreshAccountDetails() {
+    private void refreshAccountDetails(HeaderViewHolder holder, int numberOfSites) {
+        if (!isAdded()) {
+            return;
+        }
+
         // we only want to show user details for WordPress.com users
         if (mAccountStore.hasAccessToken()) {
             AccountModel defaultAccount = mAccountStore.getAccount();
 
-            mDisplayNameTextView.setVisibility(View.VISIBLE);
-            mUsernameTextView.setVisibility(View.VISIBLE);
+            holder.mDisplayNameTextView.setVisibility(View.VISIBLE);
+            holder.mUsernameTextView.setVisibility(View.VISIBLE);
 
             final String avatarUrl = constructGravatarUrl(mAccountStore.getAccount());
-            mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, null);
+            holder.mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, null);
 
-            mUsernameTextView.setText(getString(R.string.login_username_at, defaultAccount.getUserName()));
+            holder.mUsernameTextView.setText(getString(R.string.login_username_at, defaultAccount.getUserName()));
 
             String displayName = StringUtils.unescapeHTML(defaultAccount.getDisplayName());
             if (!TextUtils.isEmpty(displayName)) {
-                mDisplayNameTextView.setText(displayName);
+                holder.mDisplayNameTextView.setText(displayName);
             } else {
-                mDisplayNameTextView.setText(defaultAccount.getUserName());
+                holder.mDisplayNameTextView.setText(defaultAccount.getUserName());
             }
+
+            if (numberOfSites == 0) {
+                holder.mMySitesHeadingTextView.setVisibility(View.GONE);
+            } else {
+                holder.mMySitesHeadingTextView.setVisibility(View.VISIBLE);
+                holder.mMySitesHeadingTextView.setText(
+                        StringUtils.getQuantityString(
+                                getActivity(), R.string.days_quantity_one, R.string.login_epilogue_mysites_one,
+                                        R.string.login_epilogue_mysites_other, numberOfSites));
+            }
+
         } else {
-            mDisplayNameTextView.setVisibility(View.GONE);
-            mUsernameTextView.setVisibility(View.GONE);
+            holder.mDisplayNameTextView.setVisibility(View.GONE);
+            holder.mUsernameTextView.setVisibility(View.GONE);
         }
     }
 
@@ -233,7 +297,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         }
 
         if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
-            refreshAccountDetails();
+            getAdapter().notifyDataSetChanged();
 
             // The user's account info has been fetched and stored - next, fetch the user's settings
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
