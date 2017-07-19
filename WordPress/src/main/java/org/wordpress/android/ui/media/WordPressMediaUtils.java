@@ -252,4 +252,8 @@ public class WordPressMediaUtils {
         // TODO: test with .org
         return site.getHasCapabilityUploadFiles();
     }
+
+    public static boolean currentUserCanDeleteMedia(@NonNull SiteModel site) {
+        return currentUserCanUploadMedia(site);
+    }
 }
