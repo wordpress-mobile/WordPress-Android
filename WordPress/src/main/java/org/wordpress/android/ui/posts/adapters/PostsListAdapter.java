@@ -191,8 +191,18 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private boolean canPublishPost(PostModel post) {
-        return post != null && !UploadService.isPostUploadingOrQueued(post) &&
+        // TODO remove the hasFailedMedia(post) check when we get a proper retry mechanism in place,
+        // that retried to upload any failed media along with the post
+        return post != null && !UploadService.isPostUploadingOrQueued(post) && !hasFailedMedia(post) &&
                 (post.isLocallyChanged() || post.isLocalDraft() || PostStatus.fromPost(post) == PostStatus.DRAFT);
+    }
+
+    private boolean hasFailedMedia(PostModel post) {
+        UploadService.UploadError error  = UploadService.getUploadErrorForPost(post);
+        if (error != null && error.mediaError != null) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -402,7 +412,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (reason != null) {
                 if (reason.mediaError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromMediaError(
-                            txtStatus.getContext(), reason.mediaError);
+                            txtStatus.getContext(), reason.mediaError)  + " - " +
+                            txtStatus.getContext().getString(R.string.error_media_recover);
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(
                             txtStatus.getContext(), post, reason.postError);
