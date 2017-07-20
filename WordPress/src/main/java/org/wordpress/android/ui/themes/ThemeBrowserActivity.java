@@ -413,13 +413,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void activateTheme(final String themeId) {
-        final String newThemeId = themeId;
-
         WordPress.getRestClientUtils().setTheme(mSite.getSiteId(), themeId, new Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                WordPress.wpDB.setCurrentTheme(String.valueOf(mSite.getSiteId()), newThemeId);
-                Theme newTheme = WordPress.wpDB.getTheme(String.valueOf(mSite.getSiteId()), newThemeId);
+                WordPress.wpDB.setCurrentTheme(String.valueOf(mSite.getSiteId()), themeId);
+                Theme newTheme = WordPress.wpDB.getTheme(String.valueOf(mSite.getSiteId()), themeId);
 
                 Map<String, Object> themeProperties = new HashMap<>();
                 themeProperties.put(THEME_ID, themeId);
