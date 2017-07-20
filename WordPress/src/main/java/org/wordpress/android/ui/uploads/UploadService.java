@@ -587,10 +587,8 @@ public class UploadService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostUploaded(OnPostUploaded event) {
         if (event.isError()) {
-            if (event.error != null && event.error != null) {
-                UploadError reason = new UploadError(event.error);
-                addUploadErrorToFailedPosts(event.post, reason);
-            }
+            UploadError reason = new UploadError(event.error);
+            addUploadErrorToFailedPosts(event.post, reason);
         } else {
             removeUploadErrorForPost(event.post);
         }
