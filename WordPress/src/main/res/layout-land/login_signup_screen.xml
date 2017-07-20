@@ -33,6 +33,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/grey_lighten_30"
         android:orientation="horizontal"
+        android:clipToPadding="false"
         android:padding="@dimen/margin_large">
 
         <android.support.v7.widget.AppCompatButton
