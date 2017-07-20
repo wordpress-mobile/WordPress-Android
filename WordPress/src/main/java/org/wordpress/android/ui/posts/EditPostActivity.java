@@ -1257,7 +1257,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (mShowAztecEditor) {
                         mAztecEditorFragment = AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
                         mAztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
-                        mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
+                        mAztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext()));
 
                         // Show confirmation message when coming from editor promotion dialog.
                         if (mIsPromo) {
