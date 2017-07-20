@@ -1883,4 +1883,5 @@
     <string name="login_checking_site_address">Checking site address</string>
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
+    <string name="login_empty_site_url">Please enter a site address</string>
 </resources>

@@ -127,7 +127,7 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         siteNameView.setVisibility(mSiteName != null ? View.VISIBLE : View.GONE);
 
         TextView siteAddressView = ((TextView) rootView.findViewById(R.id.login_site_address));
-        siteAddressView.setText(UrlUtils.removeScheme(cleanupInputAddress(mInputSiteAddress)));
+        siteAddressView.setText(UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(mInputSiteAddress)));
         siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
         mUsernameEditText = (EditText) rootView.findViewById(R.id.login_username);
@@ -184,14 +184,6 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         });
 
         return rootView;
-    }
-
-    private String cleanupInputAddress(String address) {
-        if (address.toLowerCase().endsWith("/xmlrpc.php")) {
-            return address.substring(0, address.lastIndexOf("xmlrpc.php"));
-        } else {
-            return address;
-        }
     }
 
     @Override
