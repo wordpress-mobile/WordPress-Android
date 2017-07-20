@@ -503,24 +503,26 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private class DeserializeThemesRestResponse extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {
         @Override
         protected ArrayList<Theme> doInBackground(JSONObject... args) {
-            JSONObject response = args[0];
+            if (args[0] == null) {
+                return null;
+            }
+
+            // JSONArray of themes is required
+            final JSONArray array = args[0].optJSONArray("themes");
+            if (array == null) {
+                return null;
+            }
+
+            // convert JSON themes to Theme models and store them in database
             final ArrayList<Theme> themes = new ArrayList<>();
-
-            if (response != null) {
-                JSONArray array;
+            final int count = array.length();
+            for (int i = 0; i < count; i++) {
                 try {
-                    array = response.getJSONArray("themes");
-
-                    if (array != null) {
-                        int count = array.length();
-                        for (int i = 0; i < count; i++) {
-                            JSONObject object = array.getJSONObject(i);
-                            Theme theme = Theme.fromJSONV1_2(object, mSite);
-                            if (theme != null) {
-                                theme.save();
-                                themes.add(theme);
-                            }
-                        }
+                    JSONObject object = array.getJSONObject(i);
+                    Theme theme = Theme.fromJSONV1_2(object, mSite);
+                    if (theme != null) {
+                        theme.save();
+                        themes.add(theme);
                     }
                 } catch (JSONException e) {
                     AppLog.e(T.THEMES, e);
@@ -529,11 +531,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
             fetchCurrentTheme();
 
-            if (themes.size() > 0) {
-                return themes;
-            }
-
-            return null;
+            return themes.size() > 0 ? themes : null;
         }
 
         @Override
