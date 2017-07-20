@@ -362,6 +362,12 @@ public class UploadService extends Service {
         return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel);
     }
 
+    public static boolean hasMediaErrorForPost(PostModel post) {
+        UploadError error  = getUploadErrorForPost(post);
+        return error != null && error.mediaError != null;
+    }
+
+
     public static float getMediaUploadProgressForPost(PostModel postModel) {
         if (postModel == null) {
             return 0;
