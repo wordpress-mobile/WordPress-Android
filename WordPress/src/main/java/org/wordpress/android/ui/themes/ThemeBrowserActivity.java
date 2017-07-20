@@ -175,7 +175,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         WordPress.getRestClientUtilsV1_2().getFreeThemes(mSite.getSiteId(), THEME_FETCH_MAX, page, new Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        new FetchThemesTask().execute(response);
+                        new DeserializeThemesRestResponse().execute(response);
                     }
                 }, new ErrorListener() {
                     @Override
@@ -214,7 +214,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        new FetchThemesTask().execute(response);
+                        new DeserializeThemesRestResponse().execute(response);
                     }
                 }, new ErrorListener() {
                     @Override
@@ -307,7 +307,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             WordPress.getRestClientUtilsV1_1().getPurchasedThemes(mSite.getSiteId(), new Listener() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    new FetchThemesTask().execute(response);
+                    new DeserializeThemesRestResponse().execute(response);
                 }
             }, new ErrorListener() {
                 @Override
@@ -494,7 +494,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         addSearchFragment();
     }
 
-    public class FetchThemesTask extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {
+    /**
+     * Converts themes from a JSON REST response object to a list of {@link Theme}'s and saves them to local database.
+     * A {@link JSONObject} containing a {@link JSONArray} with key "themes" is expected.
+     */
+    private class DeserializeThemesRestResponse extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {
         @Override
         protected ArrayList<Theme> doInBackground(JSONObject... args) {
             JSONObject response = args[0];
