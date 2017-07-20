@@ -152,7 +152,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         if (response == null) return null;
 
         List<SiteModel> siteArray = new ArrayList<>();
-        for (Object siteObject: response) {
+        for (Object siteObject : response) {
             if (!(siteObject instanceof Map)) {
                 continue;
             }
