@@ -21,9 +21,11 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
@@ -32,6 +34,9 @@ import de.greenrobot.event.EventBus;
 public class MediaUploadHandler implements UploadHandler<MediaModel> {
     private static final List<MediaModel> sPendingUploads = new ArrayList<>();
     private static final List<MediaModel> sInProgressUploads = new ArrayList<>();
+
+    // TODO This should be moved to FluxC, perhaps in a new UploadMediaTable
+    private static final ConcurrentHashMap<Integer, Float> sProgressByMediaId = new ConcurrentHashMap<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -44,6 +49,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
     }
 
     void unregister() {
+        sProgressByMediaId.clear();
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
     }
@@ -102,15 +108,41 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
             return false;
         }
 
-        if (hasInProgressMediaUploadsForPost(postModel)) {
-            return true;
+        // Check if there are media in the in-progress or the pending queue attached to the given post
+        return hasInProgressMediaUploadsForPost(postModel) || hasPendingMediaUploadsForPost(postModel);
+    }
+
+    static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
+        if (postModel == null) {
+            return Collections.emptyList();
         }
 
-        if (hasPendingMediaUploadsForPost(postModel)) {
-            return true;
+        List<MediaModel> mediaList = new ArrayList<>();
+        synchronized (sInProgressUploads) {
+            for (MediaModel queuedMedia : sInProgressUploads) {
+                if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                    mediaList.add(queuedMedia);
+                }
+            }
         }
 
-        return false;
+        synchronized (sPendingUploads) {
+            for (MediaModel queuedMedia : sPendingUploads) {
+                if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                    mediaList.add(queuedMedia);
+                }
+            }
+        }
+        return mediaList;
+    }
+
+    /**
+     * Returns the last recorded progress value for the given {@param media}. If there is no record for that media,
+     * it's assumed to be a completed upload (returned progress is 1).
+     */
+    static float getProgressForMedia(MediaModel media) {
+        Float progress = sProgressByMediaId.get(media.getId());
+        return progress == null ? 0 : progress;
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
@@ -129,6 +161,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
             uploadNextInQueue();
         } else {
             AppLog.i(T.MEDIA, "MediaUploadHandler > " + event.media.getId() + " - progress: " + event.progress);
+            Float previousProgress = sProgressByMediaId.get(event.media.getId());
+            if (previousProgress == null || previousProgress < event.progress) {
+                sProgressByMediaId.put(event.media.getId(), event.progress);
+            }
         }
     }
 
@@ -172,6 +208,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
         MediaModel media = getMediaFromInProgressQueueById(id);
         if (media != null) {
             sInProgressUploads.remove(media);
+            sProgressByMediaId.put(media.getId(), 1F);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
         }
     }
