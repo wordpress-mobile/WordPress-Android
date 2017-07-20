@@ -33,7 +33,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:padding="@dimen/margin_large">
+        android:padding="@dimen/margin_large"
+        android:clipToPadding="false">
 
         <android.support.v7.widget.AppCompatButton
             android:theme="@style/WordPress.Button"
