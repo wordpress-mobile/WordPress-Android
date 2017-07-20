@@ -178,4 +178,6 @@
     <!-- TODO: consolidate divider colors -->
     <color name="divider_grey">#D8E3EA</color>
 
+    <!-- Login -->
+    <color name="login_background_color">@color/grey_light</color>
 </resources>

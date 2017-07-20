@@ -1,24 +1,12 @@
 package org.wordpress.android.ui.accounts.login;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -31,7 +19,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.ui.accounts.LoginMode;
@@ -39,73 +26,64 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.widgets.WPLoginInputRow;
+import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
-
-public class LoginEmailFragment extends Fragment implements TextWatcher {
-    private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
+public class LoginEmailFragment extends LoginBaseFormFragment implements TextWatcher, OnEditorCommitListener {
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
-    private TextInputLayout mEmailEditTextLayout;
-    private EditText mEmailEditText;
-    private Button mNextButton;
-    private ProgressDialog mProgressDialog;
+    private WPLoginInputRow mEmailInput;
 
-    private LoginListener mLoginListener;
-
-    private boolean mInProgress;
     private String mRequestedEmail;
 
-    @Inject Dispatcher mDispatcher;
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
-
-        setHasOptionsMenu(true);
+    protected @LayoutRes int getContentLayout() {
+        return R.layout.login_email_screen;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_email_screen, container, false);
+    protected @LayoutRes int getProgressBarText() {
+        return R.string.checking_email;
+    }
 
-        mEmailEditText = (EditText) rootView.findViewById(R.id.login_email);
-        mEmailEditText.addTextChangedListener(this);
+    @Override
+    protected void setupLabel(TextView label) {
+        switch (mLoginListener.getLoginMode()) {
+            case WPCOM_LOGIN_DEEPLINK:
+                label.setText(R.string.login_log_in_for_deeplink);
+                break;
+            case FULL:
+                label.setText(R.string.enter_email_wordpress_com);
+                break;
+            case JETPACK_STATS:
+                label.setText(R.string.stats_sign_in_jetpack_different_com_account);
+                break;
+            case WPCOM_REAUTHENTICATE:
+                label.setText(R.string.auth_required);
+                break;
+        }
+    }
 
-        mEmailEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.login_email_layout);
+    @Override
+    protected void setupContent(ViewGroup rootView) {
+        mEmailInput = (WPLoginInputRow) rootView.findViewById(R.id.login_email_row);
 
-        mNextButton = (Button) rootView.findViewById(R.id.login_email_next_button);
-        mNextButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                next(getCleanedEmail());
-            }
-        });
+        mEmailInput.addTextChangedListener(this);
 
         autoFillFromBuildConfig();
 
-        mEmailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null
-                        && event.getAction() == KeyEvent.ACTION_UP
-                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    next(getCleanedEmail());
-                }
+        mEmailInput.setOnEditorCommitListener(this);
+    }
 
-                // always consume the event so the focus stays in the EditText
-                return true;
-            }
-        });
-
-        TextView loginViaSiteAddressView = (TextView) rootView.findViewById(R.id.login_site_address);
-        loginViaSiteAddressView.setOnClickListener(new OnClickListener() {
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
@@ -118,45 +96,32 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             }
         });
 
-        TextView label = ((TextView) rootView.findViewById(R.id.label));
-
-        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
-            label.setText(R.string.stats_sign_in_jetpack_different_com_account);
-            loginViaSiteAddressView.setText(R.string.enter_username_instead);
-        }
-
         switch (mLoginListener.getLoginMode()) {
             case FULL:
                 // all features enabled and with typical values
+                secondaryButton.setText(R.string.enter_site_address_instead);
                 break;
             case JETPACK_STATS:
-                label.setText(R.string.stats_sign_in_jetpack_different_com_account);
-                loginViaSiteAddressView.setVisibility(View.GONE);
+                secondaryButton.setText(R.string.enter_username_instead);
                 break;
             case WPCOM_LOGIN_DEEPLINK:
-                loginViaSiteAddressView.setVisibility(View.GONE);
+                secondaryButton.setVisibility(View.GONE);
                 break;
             case WPCOM_REAUTHENTICATE:
-                label.setText(R.string.auth_required);
-                loginViaSiteAddressView.setVisibility(View.GONE);
+                secondaryButton.setVisibility(View.GONE);
                 break;
         }
 
-        return rootView;
+        primaryButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                next(getCleanedEmail());
+            }
+        });
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+    protected EditText getEditTextToFocusOnStart() {
+        return mEmailInput.getEditText();
     }
 
     @Override
@@ -164,52 +129,15 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
             mRequestedEmail = savedInstanceState.getString(KEY_REQUESTED_EMAIL);
-
-            if (mInProgress) {
-                showEmailCheckProgressDialog();
-            }
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof LoginListener) {
-            mLoginListener = (LoginListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement LoginListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mLoginListener = null;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
         outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_login, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.help) {
-            mLoginListener.help();
-            return true;
-        }
-
-        return false;
     }
 
     /*
@@ -222,11 +150,10 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         String email = (String) WordPress.getBuildConfigValue(getActivity().getApplication(),
                 "DEBUG_DOTCOM_LOGIN_EMAIL");
         if (!TextUtils.isEmpty(email)) {
-            mEmailEditText.setText(email);
+            mEmailInput.setText(email);
             AppLog.d(T.NUX, "Auto-filled email from build config");
         }
     }
-
 
     protected void next(String email) {
         if (!NetworkUtils.checkConnection(getActivity())) {
@@ -234,7 +161,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         }
 
         if (isValidEmail(email)) {
-            showEmailCheckProgressDialog();
+            startProgress();
             mRequestedEmail = email;
             mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(email));
         } else {
@@ -243,7 +170,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
     }
 
     private String getCleanedEmail() {
-        return EditTextUtils.getText(mEmailEditText).trim();
+        return EditTextUtils.getText(mEmailInput.getEditText()).trim();
     }
 
     private boolean isValidEmail(String email) {
@@ -251,6 +178,11 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         Matcher matcher = emailRegExPattern.matcher(email);
 
         return matcher.find() && email.length() <= MAX_EMAIL_LENGTH;
+    }
+
+    @Override
+    public void OnEditorCommit() {
+        next(getCleanedEmail());
     }
 
     @Override
@@ -263,56 +195,17 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        updateNextButton();
-        mEmailEditTextLayout.setError(null);
-    }
-
-    private void updateNextButton() {
-        mNextButton.setEnabled(getCleanedEmail().length() > 0);
+        mEmailInput.setError(null);
     }
 
     private void showEmailError(int messageId) {
-        mEmailEditTextLayout.setError(getString(messageId));
+        mEmailInput.setError(getString(messageId));
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mDispatcher.unregister(this);
-    }
-
-    private void showEmailCheckProgressDialog() {
-        mNextButton.setEnabled(false);
-        mProgressDialog =
-                ProgressDialog.show(getActivity(), "", getActivity().getString(R.string.checking_email), true, true,
-                        new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialogInterface) {
-                                if (mInProgress) {
-                                    endProgress();
-                                }
-                            }
-                        });
-        mInProgress = true;
-    }
-
-    private void endProgress() {
-        mInProgress = false;
-
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
-        }
-
+    protected void endProgress() {
+        super.endProgress();
         mRequestedEmail = null;
-
-        updateNextButton();
     }
 
     // OnChanged events
@@ -325,7 +218,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             return;
         }
 
-        if (mInProgress) {
+        if (isInProgress()) {
             endProgress();
         }
 
@@ -342,7 +235,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
                     // email address is available on wpcom, so apparently the user can't login with that one.
                     showEmailError(R.string.email_not_registered_wpcom);
                 } else if (mLoginListener != null) {
-                    EditTextUtils.hideSoftInput(mEmailEditText);
+                    EditTextUtils.hideSoftInput(mEmailInput.getEditText());
                     mLoginListener.gotWpcomEmail(event.value);
                 }
                 break;

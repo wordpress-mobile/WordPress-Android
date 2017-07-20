@@ -57,8 +57,8 @@
         <item name="colorAccent">@color/wp_blue_medium</item>
 
         <item name="android:statusBarColor">@color/status_bar_tint</item>
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="android:windowBackground">@color/login_background_color</item>
+        <item name="actionMenuTextColor">@color/white</item>
     </style>
 
     <style name="LoginTheme.Toolbar" parent="LoginTheme">
@@ -69,8 +69,17 @@
         <item name="colorControlHighlight">@color/color_control_highlight</item>
     </style>
 
+    <style name="LoginTheme.TextLabel" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
     <style name="LoginTheme.EditText" parent="LoginTheme">
-        <item name="colorControlNormal">@color/wp_grey</item>
+        <item name="colorControlNormal">@color/grey</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColorHint">@color/grey</item>
+        <item name="colorControlActivated">@color/blue_medium</item>
+        <item name="colorControlHighlight">@color/blue_medium</item>
     </style>
 
     <style name="LoginTheme.PromoText" parent="TextAppearance.AppCompat.Title">
@@ -229,6 +238,11 @@
     <style name="WordPress.Button.Primary" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@color/blue_medium</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="WordPress.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
     </style>
 
     <!-- NUX Styles -->

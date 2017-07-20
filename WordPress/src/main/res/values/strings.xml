@@ -1175,6 +1175,7 @@
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="cd_related_post_preview_image">Related post preview image</string>
+    <string name="login_email_image">Login email icon</string>
     <string name="login_globe_icon">Site address globe icon</string>
     <string name="login_site_address_help_image">Site address positioning image</string>
     <string name="login_username_image">Login username icon</string>
@@ -1852,7 +1853,7 @@
     <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
     <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
     <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
-    <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites</string>
+    <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
     <string name="enter_site_address_instead">Log in to your site by entering your site address instead.</string>
@@ -1881,4 +1882,5 @@
     <string name="login_site_address_more_help">Need more help?</string>
     <string name="login_checking_site_address">Checking site address</string>
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
+    <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
 </resources>
