@@ -346,9 +346,9 @@ public class UploadService extends Service {
         // updates in one go and save only once
         if (post != null) {
             synchronized (sCompletedMediaByPost) {
-                MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
                 List<MediaModel> mediaList = sCompletedMediaByPost.get(post.getId());
                 if (mediaList != null && !mediaList.isEmpty()) {
+                    MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
                     for (MediaModel media : mediaList) {
                         post = updatePostWithMediaUrl(post, media, processor);
                     }
@@ -365,9 +365,9 @@ public class UploadService extends Service {
         // updates in one go and save only once
         if (post != null) {
             synchronized (sFailedMediaByPost) {
-                MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
                 List<MediaModel> mediaList = sFailedMediaByPost.get(post.getId());
                 if (mediaList != null && !mediaList.isEmpty()) {
+                    MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
                     for (MediaModel media : mediaList) {
                         post = updatePostWithFailedMedia(post, media, processor);
                     }
