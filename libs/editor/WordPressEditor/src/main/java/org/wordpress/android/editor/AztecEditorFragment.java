@@ -3,6 +3,7 @@ package org.wordpress.android.editor;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
@@ -32,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -1149,6 +1151,24 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 mUploadingMedia.put(localMediaId, mediaType);
                 break;
             default:
+                if (mediaType.equals(MediaType.VIDEO)) {
+                    try{
+                        // Open the video preview in the default browser for now.
+                        // TODO open the preview activity already available in media?
+                        final String imageSrc = meta.getString(ATTR_SRC);
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(imageSrc));
+                        startActivity(browserIntent);
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.EDITOR, "Could not retrieve image url from JSON metadata");
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(this.getActivity(),
+                                "No application can handle this request." + " Please install a Web browser",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    return;
+                }
+
+                // If it's not a picture skip the click
                 if (!mediaType.equals(MediaType.IMAGE)) {
                     return;
                 }
