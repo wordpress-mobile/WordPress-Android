@@ -673,7 +673,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         for (int position : indexList) {
             PostModel post = getItem(position);
             if (post != null) {
-                mFeaturedImageUrls.put(post.getId(), mediaModel.getUrl());
+                String imageUrl = mediaModel.getUrl();
+                if (imageUrl != null && imageUrl.startsWith("http")) {
+                    mFeaturedImageUrls.put(post.getId(), imageUrl);
+                } else {
+                    mFeaturedImageUrls.remove(post.getId());
+                }
                 notifyItemChanged(position);
             }
         }
