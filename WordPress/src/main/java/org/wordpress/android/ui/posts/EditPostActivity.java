@@ -202,7 +202,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private PostModel mPost;
     private PostModel mOriginalPost;
 
-    private AztecEditorFragment mAztecEditorFragment;
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditPostPreviewFragment mEditPostPreviewFragment;
@@ -335,6 +334,8 @@ public class EditPostActivity extends AppCompatActivity implements
             if (mEditorFragment instanceof EditorMediaUploadListener) {
                 mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
             }
+
+            initializeEditorFragment();
         }
 
         if (mSite == null) {
@@ -578,8 +579,8 @@ public class EditPostActivity extends AppCompatActivity implements
             AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
         }
 
-        if (mAztecEditorFragment != null) {
-            mAztecEditorFragment.enableMediaMode(true);
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            ((AztecEditorFragment)mEditorFragment).enableMediaMode(true);
         }
     }
 
@@ -594,8 +595,8 @@ public class EditPostActivity extends AppCompatActivity implements
             AniUtils.fadeOut(overlay, AniUtils.Duration.MEDIUM);
         }
 
-        if (mAztecEditorFragment != null) {
-            mAztecEditorFragment.enableMediaMode(false);
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            ((AztecEditorFragment)mEditorFragment).enableMediaMode(false);
         }
     }
 
@@ -1266,19 +1267,16 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowAztecEditor) {
-                        mAztecEditorFragment = AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
-                        mAztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
-                        mAztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext()));
 
                         // Show confirmation message when coming from editor promotion dialog.
                         if (mIsPromo) {
                             showSnackbarConfirmation();
-                        // Show open beta message when Aztec is already enabled.
+                            // Show open beta message when Aztec is already enabled.
                         } else if (AppPrefs.isAztecEditorEnabled() && AppPrefs.isNewEditorBetaRequired()) {
                             showSnackbarBeta();
                         }
 
-                        return mAztecEditorFragment;
+                        return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
                         return new EditorFragment();
