@@ -1321,7 +1321,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
 
-                // remove then uploading class
+                // remove the uploading class
                 AttributesWithClass attributesWithClass = new AttributesWithClass(
                         content.getElementAttributes(predicate));
                 attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
@@ -1333,6 +1333,41 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // clear overlay
                 content.clearOverlays(predicate);
                 content.updateElementAttributes(predicate, attrs);
+                content.refreshText();
+
+                // re-set the post content
+                postContent = content.toHtml(false);
+
+            } else {
+                // TODO: update video element
+            }
+        }
+        return postContent;
+    }
+
+    public static String markMediaFailed(Context context, @NonNull String postContent,
+                                                 String localMediaId, MediaFile mediaFile) {
+        if (mediaFile != null) {
+            String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            if (!mediaFile.isVideo()) {
+
+                // fill in Aztec with the post's content
+                AztecText content = new AztecText(context);
+                content.fromHtml(postContent);
+
+                ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+
+                // remove the uploading class
+                AttributesWithClass attributesWithClass = new AttributesWithClass(
+                        content.getElementAttributes(predicate));
+                attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+
+                // mark failed
+                attributesWithClass.addClass(ATTR_STATUS_FAILED);
+
+                // clear overlay
+                content.clearOverlays(predicate);
+                content.updateElementAttributes(predicate, attributesWithClass.getAttributes());
                 content.refreshText();
 
                 // re-set the post content

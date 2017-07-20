@@ -51,6 +51,9 @@ public class UploadService extends Service {
     // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
     private static final ConcurrentHashMap<Integer, List<MediaModel>> sCompletedMediaByPost = new ConcurrentHashMap<>();
 
+    // similar to the above map, this one tracks media failed for a post
+    private static final ConcurrentHashMap<Integer, List<MediaModel>> sFailedMediaByPost = new ConcurrentHashMap<>();
+
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
@@ -80,6 +83,12 @@ public class UploadService extends Service {
         // Update posts with any completed uploads in our post->media map
         for (Integer postId : sCompletedMediaByPost.keySet()) {
             PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
+            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+        }
+
+        // Update posts with any failed uploads in our post->media map
+        for (Integer postId : sFailedMediaByPost.keySet()) {
+            PostModel updatedPost = updatePostWithCurrentlyFailedUploads(mPostStore.getPostByLocalPostId(postId));
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
         }
 
@@ -298,6 +307,25 @@ public class UploadService extends Service {
         return post;
     }
 
+    public static PostModel updatePostWithCurrentlyFailedUploads(PostModel post) {
+        // now get the list of failed media for this post, so we can make post content
+        // updates in one go and save only once
+        if (post != null) {
+            synchronized (sFailedMediaByPost) {
+                MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
+                List<MediaModel> mediaList = sFailedMediaByPost.get(post.getId());
+                if (mediaList != null && !mediaList.isEmpty()) {
+                    for (MediaModel media : mediaList) {
+                        post = updatePostWithFailedMedia(post, media, processor);
+                    }
+                    // finally remove all failed uploads for this post, as they've been taken care of
+                    sFailedMediaByPost.remove(post.getId());
+                }
+            }
+        }
+        return post;
+    }
+
     public static boolean hasInProgressMediaUploadsForPost(PostModel postModel) {
         return postModel != null && MediaUploadHandler.hasInProgressMediaUploadsForPost(postModel);
     }
@@ -308,6 +336,15 @@ public class UploadService extends Service {
 
     public static boolean hasPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
         return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel);
+    }
+
+    public static boolean hasFailedMediaUploadsForPost(PostModel postModel) {
+        if (postModel != null) {
+            if (sFailedMediaByPost.get(postModel.getId()) != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void showNotificationForPostWithPendingMedia(PostModel post) {
@@ -329,11 +366,44 @@ public class UploadService extends Service {
         }
     }
 
+    // this keeps a map for all failed media for each post, so we can process the post easily
+    // in one go later
+    private void addMediaToPostFailedMediaListMap(MediaModel media) {
+        synchronized (sFailedMediaByPost) {
+            List<MediaModel> mediaListForPost = sFailedMediaByPost.get(media.getLocalPostId());
+            if (mediaListForPost == null) {
+                mediaListForPost = new ArrayList<>();
+            }
+            mediaListForPost.add(media);
+            sFailedMediaByPost.put(media.getLocalPostId(), mediaListForPost);
+        }
+    }
+
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
                                                                  MediaUploadReadyListener processor) {
         if (media != null && post != null && processor != null) {
             // actually replace the media ID with the media uri
             PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
+                    FluxCUtils.mediaFileFromMediaModel(media));
+            if (modifiedPost != null) {
+                post = modifiedPost;
+            }
+
+            // we changed the post, so let’s mark this down
+            if (!post.isLocalDraft()) {
+                post.setIsLocallyChanged(true);
+            }
+            post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+
+        }
+        return post;
+    }
+
+    private static synchronized PostModel updatePostWithFailedMedia(PostModel post, MediaModel media,
+                                                                 MediaUploadReadyListener processor) {
+        if (media != null && post != null && processor != null) {
+            // actually mark the media failed within the Post
+            PostModel modifiedPost = processor.markMediaUploadFailedInPost(post, String.valueOf(media.getId()),
                     FluxCUtils.mediaFileFromMediaModel(media));
             if (modifiedPost != null) {
                 post = modifiedPost;
@@ -368,6 +438,9 @@ public class UploadService extends Service {
                 // This is done in a batch when all media is complete to prevent conflicts by updating separate images
                 // at a time simultaneously for the same post
                 PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
+                // also do the same now with failed uploads
+                updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
+                // finally, save the PostModel
                 mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
             }
         }
@@ -422,6 +495,7 @@ public class UploadService extends Service {
             if (event.media.getLocalPostId() > 0) {
                 AppLog.w(T.MAIN, "UploadService > Media upload failed for post " + event.media.getLocalPostId() + " : "
                         + event.error.type + ": " + event.error.message);
+                addMediaToPostFailedMediaListMap(event.media);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.error);
                 cancelPostUploadMatchingMedia(event.media, errorMessage);
             }
@@ -460,8 +534,16 @@ public class UploadService extends Service {
 
                             // TODO Should do some extra validation here
                             // e.g. what if the post has local media URLs but no pending media uploads?
-                            iterator.remove();
-                            mPostUploadHandler.upload(updatedPost);
+
+                            // only upload Post if there are no failed media as well
+                            if (!hasFailedMediaUploadsForPost(postModel)) {
+                                iterator.remove();
+                                mPostUploadHandler.upload(updatedPost);
+                            } else {
+                                // TODO probably notify or do something to tell the user that
+                                // we've finished doing all we can on this Post, but it has some
+                                // failed media uploads that prevent the Post from being uploaded.
+                            }
                         }
                     }
                 }
