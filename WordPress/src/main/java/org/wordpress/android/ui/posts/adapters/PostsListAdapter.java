@@ -37,11 +37,11 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -63,6 +63,7 @@ import javax.inject.Inject;
  */
 public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final long ROW_ANIM_DURATION = 150;
+    private static final int MAX_DISPLAYED_UPLOAD_PROGRESS = 90;
 
     private static final int VIEW_TYPE_POST_OR_PAGE = 0;
     private static final int VIEW_TYPE_ENDLIST_INDICATOR = 1;
@@ -96,6 +97,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final List<PostModel> mHiddenPosts = new ArrayList<>();
     private final Map<Integer, String> mFeaturedImageUrls = new HashMap<>();
 
+    private RecyclerView mRecyclerView;
     private final LayoutInflater mLayoutInflater;
 
     @Inject Dispatcher mDispatcher;
@@ -148,6 +150,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private boolean isValidPostPosition(int position) {
         return (position >= 0 && position < mPosts.size());
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
     }
 
     @Override
@@ -378,10 +386,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
         if (UploadService.isPostUploadingOrQueued(post)) {
             view.setVisibility(View.VISIBLE);
-            // ToDo: update current progress here by some means from the new UploadService
-//            view.setProgress(90);
-            // ToDo: when we have information from PostUploadService, delete the below line
-            view.setIndeterminate(true);
+            int overallProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100);
+            // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
+            // Cap the progress bar at MAX_DISPLAYED_UPLOAD_PROGRESS (until we move past the 'uploading media' phase)
+            view.setProgress(Math.min(MAX_DISPLAYED_UPLOAD_PROGRESS, overallProgress));
         } else {
             view.setVisibility(View.GONE);
         }
@@ -580,6 +588,20 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             AppLog.d(AppLog.T.POSTS, "post adapter > already loading posts");
         } else {
             new LoadPostsTask(mode).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    public void updateProgressForPost(@NonNull PostModel post) {
+        if (mRecyclerView != null) {
+            int position = PostUtils.indexOfPostInList(post, mPosts);
+            if (position > -1) {
+                RecyclerView.ViewHolder viewHolder = mRecyclerView.findViewHolderForAdapterPosition(position);
+                if (viewHolder instanceof PostViewHolder) {
+                    updatePostUploadProgressBar(((PostViewHolder) viewHolder).progressBar, post);
+                } else if (viewHolder instanceof PageViewHolder) {
+                    updatePostUploadProgressBar(((PageViewHolder) viewHolder).progressBar, post);
+                }
+            }
         }
     }
 
