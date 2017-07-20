@@ -44,7 +44,8 @@
         android:paddingEnd="@dimen/margin_medium_large"
         android:paddingTop="@dimen/margin_medium_large"
         android:paddingBottom="@dimen/margin_medium_large"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:clipToPadding="false">
 
         <android.support.v7.widget.AppCompatButton
             style="@style/WordPress.Button.Secondary"
