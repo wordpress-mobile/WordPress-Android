@@ -94,7 +94,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static final int MIN_BITMAP_DIMENSION_DP = 48;
 
-    public static final int MAX_ACTION_TIME_MS = 2000;
+    private static final int MAX_ACTION_TIME_MS = 2000;
 
     private static final MediaFile DEFAULT_MEDIA = new MediaFile();
     private static final int DEFAULT_MEDIA_HEIGHT = DEFAULT_MEDIA.getHeight();
@@ -126,7 +126,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private ImagePredicate mTappedImagePredicate;
 
-    EditorBetaClickListener mEditorBetaClickListener;
+    private EditorBetaClickListener mEditorBetaClickListener;
 
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
@@ -1026,7 +1026,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         onMediaTapped(attrs, 0, 0, MediaType.VIDEO);
     }
 
-    public void onMediaTapped(@NotNull AztecAttributes attrs, int naturalWidth, int naturalHeight, final MediaType mediaType) {
+    private void onMediaTapped(@NotNull AztecAttributes attrs, int naturalWidth, int naturalHeight, final MediaType mediaType) {
         if (mediaType == null || !isAdded()) {
             return;
         }
@@ -1283,7 +1283,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    protected void setAttributeValuesIfNotDefault(AztecAttributes attributes, MediaFile mediaFile) {
+    private void setAttributeValuesIfNotDefault(AztecAttributes attributes, MediaFile mediaFile) {
         if (mediaFile.getWidth() != DEFAULT_MEDIA_WIDTH) {
             attributes.setValue(ATTR_DIMEN_WIDTH, String.valueOf(mediaFile.getWidth()));
         }
