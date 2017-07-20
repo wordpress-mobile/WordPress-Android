@@ -52,6 +52,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.AztecEditorFragment;
+import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorBetaClickListener;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
@@ -149,6 +150,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements
+        EditorFragmentActivity,
         EditorBetaClickListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
@@ -916,6 +918,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
         }).start();
+    }
+
+    @Override
+    public void initializeEditorFragment() {
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            AztecEditorFragment aztecEditorFragment = (AztecEditorFragment)mEditorFragment;
+            aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
+            aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext()));
+        }
     }
 
     private interface AfterSavePostListener {
