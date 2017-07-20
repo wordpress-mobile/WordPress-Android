@@ -52,7 +52,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.AztecEditorFragment;
-import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorBetaClickListener;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
@@ -60,6 +59,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
+import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.editor.EditorWebViewCompatibility;
@@ -1269,7 +1269,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         // Show confirmation message when coming from editor promotion dialog.
                         if (mIsPromo) {
                             showSnackbarConfirmation();
-                            // Show open beta message when Aztec is already enabled.
+                        // Show open beta message when Aztec is already enabled.
                         } else if (AppPrefs.isAztecEditorEnabled() && AppPrefs.isNewEditorBetaRequired()) {
                             showSnackbarBeta();
                         }
