@@ -59,10 +59,10 @@ import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.ITextFormat;
 import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
+import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
-import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -554,8 +554,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void overlayVideoIcon(int overlayLevel, AztecText.AttributePredicate predicate) {
-        Drawable alertDrawable = getResources().getDrawable(R.drawable.ic_play_video);
-        content.setOverlay(predicate, overlayLevel, alertDrawable, Gravity.CENTER);
+        Drawable videoDrawable = getResources().getDrawable(R.drawable.ic_play_video);
+        videoDrawable.setBounds(0,0,128,128);
+        content.setOverlay(predicate, overlayLevel, videoDrawable, Gravity.CENTER);
     }
 
     /**
@@ -580,6 +581,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
             String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
+            // load a scaled version of the image to prevent OOM exception
+            int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
             imageLoader.get(posterURL, new ImageLoader.ImageListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
@@ -628,7 +631,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         content.insertImage(new BitmapDrawable(getResources(), resizedBitmap), attributes);
                     }
                 }
-            }, 0, 0);
+            }, maxWidth, maxWidth);
 
             mActionStartedAt = System.currentTimeMillis();
         } else {
@@ -740,7 +743,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             AztecAttributes attrs = new AztecAttributes();
             attrs.setValue(ATTR_SRC, remoteUrl);
-
+            /* TODO add video press attribute -> value here
+            if (mediaType.equals(MediaType.VIDEO)) {
+                String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
+                        mediaFile.getVideoPressShortCode());
+                attrs.setValue( ?? , videoPressId);
+            }
+            */
             addDefaultSizeClassIfMissing(attrs);
 
             // clear overlay
