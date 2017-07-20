@@ -271,7 +271,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            mCurrentTheme = Theme.fromJSONV1_1(response, mSite);
+                            mCurrentTheme = Theme.fromJSONV1_1(response, mSite.getSiteId());
                             if (mCurrentTheme == null) {
                                 return;
                             }
@@ -519,7 +519,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             for (int i = 0; i < count; i++) {
                 try {
                     JSONObject object = array.getJSONObject(i);
-                    Theme theme = Theme.fromJSONV1_2(object, mSite);
+                    Theme theme = Theme.fromJSONV1_2(object, mSite.getSiteId());
                     if (theme != null) {
                         WordPress.wpDB.saveTheme(theme);
                         themes.add(theme);

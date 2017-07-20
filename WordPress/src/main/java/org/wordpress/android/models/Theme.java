@@ -2,7 +2,6 @@ package org.wordpress.android.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.fluxc.model.SiteModel;
 
 public class Theme {
     public static final String ID = "id";
@@ -16,9 +15,9 @@ public class Theme {
     public static final String BLOG_ID = "blogId";
     public static final String IS_CURRENT = "isCurrent";
 
-    public static final String PREVIEW_URL = "preview_url";
-    public static final String COST = "cost";
-    public static final String DISPLAY = "display";
+    private static final String PREVIEW_URL = "preview_url";
+    private static final String COST = "cost";
+    private static final String DISPLAY = "display";
 
     private String mId;
     private String mAuthor;
@@ -31,7 +30,7 @@ public class Theme {
     private String mBlogId;
     private boolean mIsCurrent;
 
-    public static Theme fromJSONV1_1(JSONObject object, SiteModel site) throws JSONException {
+    public static Theme fromJSONV1_1(JSONObject object, long siteId) throws JSONException {
         if (object == null) {
             return null;
         } else {
@@ -51,11 +50,11 @@ public class Theme {
             }
 
             return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price,
-                    String.valueOf(site.getSiteId()), false);
+                    String.valueOf(siteId), false);
         }
     }
 
-    public static Theme fromJSONV1_2(JSONObject object, SiteModel site) throws JSONException {
+    public static Theme fromJSONV1_2(JSONObject object, long siteId) throws JSONException {
         if (object == null) {
             return null;
         } else {
@@ -74,7 +73,7 @@ public class Theme {
             }
 
             return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price,
-                    String.valueOf(site.getSiteId()), false);
+                    String.valueOf(siteId), false);
         }
     }
 

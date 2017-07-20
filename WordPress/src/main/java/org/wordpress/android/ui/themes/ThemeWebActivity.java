@@ -78,7 +78,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Theme currentTheme = Theme.fromJSONV1_1(response, site);
+                    Theme currentTheme = Theme.fromJSONV1_1(response, site.getSiteId());
                     if (currentTheme != null) {
                         currentTheme.setIsCurrent(true);
                         WordPress.wpDB.saveTheme(currentTheme);
