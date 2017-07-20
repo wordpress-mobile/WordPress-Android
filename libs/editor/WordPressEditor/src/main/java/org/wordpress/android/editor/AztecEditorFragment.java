@@ -579,10 +579,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
+        // load a scaled version of the image to prevent OOM exception
+        final int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
+
         if (URLUtil.isNetworkUrl(mediaUrl)) {
             final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
-            // load a scaled version of the image to prevent OOM exception
-            final int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
             imageLoader.get(posterURL, new ImageLoader.ImageListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
@@ -648,8 +649,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             addDefaultSizeClassIfMissing(attrs);
 
-            // load a scaled version of the image to prevent OOM exception
-            int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
             Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
             AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
 
@@ -741,9 +740,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            if (mediaType.equals(MediaType.IMAGE) || mediaType.equals(MediaType.VIDEO)) {
 
-            AztecAttributes attrs = new AztecAttributes();
-            attrs.setValue(ATTR_SRC, remoteUrl);
+                AztecAttributes attrs = new AztecAttributes();
+                attrs.setValue(ATTR_SRC, remoteUrl);
             /* TODO add video press attribute -> value here
             if (mediaType.equals(MediaType.VIDEO)) {
                 String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
@@ -751,18 +751,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 attrs.setValue( ?? , videoPressId);
             }
             */
-            addDefaultSizeClassIfMissing(attrs);
+                addDefaultSizeClassIfMissing(attrs);
 
-            // clear overlay
-            ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
-            content.resetAttributedMediaSpan(predicate);
-            content.clearOverlays(predicate);
-            if (mediaType.equals(MediaType.VIDEO)) {
-                overlayVideoIcon(0, predicate);
+                // clear overlay
+                ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+                content.resetAttributedMediaSpan(predicate);
+                content.clearOverlays(predicate);
+                if (mediaType.equals(MediaType.VIDEO)) {
+                    overlayVideoIcon(0, predicate);
+                }
+                content.updateElementAttributes(predicate, attrs);
+
+                mUploadingMedia.remove(localMediaId);
             }
-            content.updateElementAttributes(predicate, attrs);
-
-            mUploadingMedia.remove(localMediaId);
         }
     }
 
