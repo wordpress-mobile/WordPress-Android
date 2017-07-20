@@ -760,11 +760,18 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
-        if (event.media != null && event.completed) {
-            PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
-            if (post != null && UploadService.isPostUploadingOrQueued(post)) {
-                loadPosts(LoadMode.FORCED);
-            }
+        if (!isAdded() || event.isError() || event.canceled) {
+            return;
+        }
+
+        if (event.media == null || event.media.getLocalPostId() == 0 || mSite.getId() != event.media.getLocalSiteId()) {
+            // Not interested in media not attached to posts or not belonging to the current site
+            return;
+        }
+
+        PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
+        if (post != null) {
+            mPostsListAdapter.updateProgressForPost(post);
         }
     }
 }
