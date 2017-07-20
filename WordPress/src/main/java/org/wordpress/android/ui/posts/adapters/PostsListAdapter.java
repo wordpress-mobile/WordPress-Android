@@ -7,9 +7,9 @@ import android.animation.PropertyValuesHolder;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.ListPopupWindow;
@@ -45,7 +45,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -311,28 +310,44 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void showFeaturedImage(int postId, WPNetworkImageView imgFeatured) {
-        if (!mFeaturedImageUrls.containsKey(postId)) {
-            imgFeatured.setVisibility(View.GONE);
-            return;
-        }
-
         String imageUrl = mFeaturedImageUrls.get(postId);
-        if (imageUrl.startsWith("http")) {
-            imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+        if (imageUrl == null) {
+            imgFeatured.setVisibility(View.GONE);
+        } else if (imageUrl.startsWith("http")) {
+            String photonUrl =  ReaderUtils.getResizedImageUrl(imageUrl, mPhotonWidth, mPhotonHeight, mSite.isPrivate());
             imgFeatured.setVisibility(View.VISIBLE);
+            imgFeatured.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
         } else {
-            Context context = imgFeatured.getContext();
-            int orientation = ImageUtils.getImageOrientation(context, imageUrl);
-            int size = Math.min(mPhotonWidth, mPhotonHeight);
-            byte[] bytes = ImageUtils.createThumbnailFromUri(
-                    context, Uri.parse(imageUrl), size, null, orientation);
-            if (bytes != null) {
-                imgFeatured.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+            Bitmap bmp = fastResizeBitmap(imgFeatured.getContext(), imageUrl, mPhotonWidth);
+            if (bmp != null) {
                 imgFeatured.setVisibility(View.VISIBLE);
+                imgFeatured.setImageBitmap(bmp);
             } else {
                 imgFeatured.setVisibility(View.GONE);
             }
         }
+    }
+
+    // TODO: once this is proven we can move it to ImageUtils
+    private static Bitmap fastResizeBitmap(@NonNull Context context, @NonNull String imageUri, int maxWidth) {
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imageUri, opt);
+        int srcWidth = opt.outWidth;
+        if (srcWidth <= maxWidth) {
+            return BitmapFactory.decodeFile(imageUri, null);
+        }
+
+        // scale must be a power of two
+        double scale = Math.pow(2, (int) Math.round(Math.log(maxWidth / (double) srcWidth) / Math.log(0.5)));
+
+        opt.inJustDecodeBounds = false;
+        opt.inScaled = true;
+        opt.inSampleSize = (int) scale;
+        opt.inDensity = srcWidth;
+        opt.inTargetDensity =  maxWidth * opt.inSampleSize;
+        Bitmap bitmap = BitmapFactory.decodeFile(imageUri, opt);
+        return bitmap;
     }
 
     /*
@@ -762,24 +777,21 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // Generate the featured image url for each post
             mFeaturedImageUrls.clear();
             for (PostModel post : tmpPosts) {
-                if (!post.isLocalDraft()) {
-                    String imageUrl = null;
-                    if (post.getFeaturedImageId() != 0) {
-                        MediaModel media = mMediaStore.getSiteMediaWithId(mSite, post.getFeaturedImageId());
-                        if (media != null) {
-                            imageUrl = media.getUrl();
-                        } else {
-                            // If the imageUrl isn't found it means the featured image info hasn't been added to
-                            // the local media library yet, so add to the list of media IDs to request info for
-                            mediaIdsToUpdate.add(post.getFeaturedImageId());
-                        }
-                    } else if (StringUtils.isNotEmpty(post.getContent())) {
-                        imageUrl = new ReaderImageScanner(post.getContent(), mSite.isPrivate()).getLargestImage();
+                String imageUrl = null;
+                if (post.getFeaturedImageId() != 0) {
+                    MediaModel media = mMediaStore.getSiteMediaWithId(mSite, post.getFeaturedImageId());
+                    if (media != null) {
+                        imageUrl = media.getUrl();
+                    } else {
+                        // If the imageUrl isn't found it means the featured image info hasn't been added to
+                        // the local media library yet, so add to the list of media IDs to request info for
+                        mediaIdsToUpdate.add(post.getFeaturedImageId());
                     }
-                    if (!TextUtils.isEmpty(imageUrl)) {
-                        mFeaturedImageUrls.put(post.getId(), ReaderUtils.getResizedImageUrl(imageUrl, mPhotonWidth,
-                                mPhotonHeight, mSite.isPrivate()));
-                    }
+                } else if (StringUtils.isNotEmpty(post.getContent())) {
+                    imageUrl = new ReaderImageScanner(post.getContent(), mSite.isPrivate()).getLargestImage();
+                }
+                if (!TextUtils.isEmpty(imageUrl)) {
+                    mFeaturedImageUrls.put(post.getId(),imageUrl);
                 }
             }
 
