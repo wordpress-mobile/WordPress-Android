@@ -620,6 +620,20 @@ public abstract class SiteSettingsInterface {
         mJpSettings.jetpackProtectEnabled = enabled;
     }
 
+    public List<String> getJetpackWhitelistKeys() {
+        if (mJpSettings.jetpackProtectWhitelist == null) {
+            mJpSettings.jetpackProtectWhitelist = new ArrayList<>();
+        }
+        return mJpSettings.jetpackProtectWhitelist;
+    }
+
+    public void setJetpackWhitelistKeys(List<String> whitelistKeys) {
+        if (mJpSettings.jetpackProtectWhitelist == null) {
+            mJpSettings.jetpackProtectWhitelist = new ArrayList<>();
+        }
+        mJpSettings.jetpackProtectWhitelist.addAll(whitelistKeys);
+    }
+
     public void setTitle(String title) {
         mSettings.title = title;
     }

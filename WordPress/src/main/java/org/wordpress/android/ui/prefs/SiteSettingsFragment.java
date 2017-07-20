@@ -207,6 +207,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mJpMonitorEmailNotesPref;
     private WPSwitchPreference mJpMonitorWpNotesPref;
     private WPSwitchPreference mJpBruteForcePref;
+    private WPPreference mJpWhitelistPref;
 
     public boolean mEditingEnabled = true;
 
@@ -454,6 +455,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mBlacklistPref) {
             mEditingList = mSiteSettings.getBlacklistKeys();
             showListEditorDialog(R.string.site_settings_blacklist_title,
+                    R.string.site_settings_blacklist_description);
+        } else if (preference == mJpWhitelistPref) {
+            mEditingList = mSiteSettings.getJetpackWhitelistKeys();
+            showListEditorDialog(R.string.jetpack_brute_force_whitelist_title,
                     R.string.site_settings_blacklist_description);
         } else if (preference == mStartOverPref) {
             handleStartOver();
@@ -736,6 +741,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpMonitorEmailNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_email_notifications);
         mJpMonitorWpNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_wp_notifications);
         mJpBruteForcePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_prevent_brute_force);
+        mJpWhitelistPref = (WPPreference) getClickPref(R.string.pref_key_jetpack_brute_force_whitelist);
 
         sortLanguages();
 

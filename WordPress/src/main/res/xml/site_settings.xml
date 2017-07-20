@@ -252,6 +252,7 @@
 
     </PreferenceCategory>
 
+    <!-- Jetpack settings -->
     <PreferenceCategory
         android:id="@+id/jetpack_settings_category"
         android:key="@string/pref_key_jetpack_settings"
