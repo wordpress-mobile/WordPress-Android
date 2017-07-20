@@ -63,6 +63,7 @@ import javax.inject.Inject;
  */
 public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final long ROW_ANIM_DURATION = 150;
+    private static final int MAX_DISPLAYED_UPLOAD_PROGRESS = 90;
 
     private static final int VIEW_TYPE_POST_OR_PAGE = 0;
     private static final int VIEW_TYPE_ENDLIST_INDICATOR = 1;
@@ -385,7 +386,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
         if (UploadService.isPostUploadingOrQueued(post)) {
             view.setVisibility(View.VISIBLE);
-            view.setProgress(Math.min(90, Math.round(UploadService.getMediaUploadProgressForPost(post) * 100)));
+            int overallProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100);
+            // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
+            // Cap the progress bar at MAX_DISPLAYED_UPLOAD_PROGRESS (until we move past the 'uploading media' phase)
+            view.setProgress(Math.min(MAX_DISPLAYED_UPLOAD_PROGRESS, overallProgress));
         } else {
             view.setVisibility(View.GONE);
         }
