@@ -225,10 +225,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 postHolder.txtExcerpt.setVisibility(View.GONE);
             }
 
-            if (post.getFeaturedImageId() > 0 || mFeaturedImageUrls.containsKey(post.getId())) {
+            if (mFeaturedImageUrls.containsKey(post.getId())) {
+                String imageUrl = mFeaturedImageUrls.get(post.getId());
+                AppLog.w(AppLog.T.READER, "featured = " + imageUrl);
                 postHolder.imgFeatured.setVisibility(View.VISIBLE);
-                postHolder.imgFeatured.setImageUrl(mFeaturedImageUrls.get(post.getId()),
-                        WPNetworkImageView.ImageType.PHOTO);
+                postHolder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
             } else {
                 postHolder.imgFeatured.setVisibility(View.GONE);
             }
@@ -745,7 +746,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     } else if (StringUtils.isNotEmpty(post.getContent())) {
                         imageUrl = new ReaderImageScanner(post.getContent(), mSite.isPrivate()).getLargestImage();
                     }
-                    if (!TextUtils.isEmpty(imageUrl)) {
+                    if (!TextUtils.isEmpty(imageUrl) && imageUrl.startsWith("http")) {
                         mFeaturedImageUrls.put(post.getId(), ReaderUtils.getResizedImageUrl(imageUrl, mPhotonWidth,
                                 mPhotonHeight, mSite.isPrivate()));
                     }
