@@ -729,34 +729,26 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
 
             // Generate the featured image url for each post
-            String imageUrl = null;
             mFeaturedImageUrls.clear();
             for (PostModel post : tmpPosts) {
-                if (post.isLocalDraft()) {
-                    imageUrl = null;
-                } else if (post.getFeaturedImageId() != 0) {
-                    MediaModel media = mMediaStore.getSiteMediaWithId(mSite, post.getFeaturedImageId());
-                    if (media != null) {
-                        imageUrl = media.getUrl();
-                    } else {
-                        // Reset the current `imageUrl` so it doesn't contain the previous post's image
-                        imageUrl = null;
+                if (!post.isLocalDraft()) {
+                    String imageUrl = null;
+                    if (post.getFeaturedImageId() != 0) {
+                        MediaModel media = mMediaStore.getSiteMediaWithId(mSite, post.getFeaturedImageId());
+                        if (media != null) {
+                            imageUrl = media.getUrl();
+                        } else {
+                            // If the imageUrl isn't found it means the featured image info hasn't been added to
+                            // the local media library yet, so add to the list of media IDs to request info for
+                            mediaIdsToUpdate.add(post.getFeaturedImageId());
+                        }
+                    } else if (StringUtils.isNotEmpty(post.getContent())) {
+                        imageUrl = new ReaderImageScanner(post.getContent(), mSite.isPrivate()).getLargestImage();
                     }
-                    // If the imageUrl isn't found it means the featured image info hasn't been added to
-                    // the local media library yet, so add to the list of media IDs to request info for
-                    if (TextUtils.isEmpty(imageUrl)) {
-                        mediaIdsToUpdate.add(post.getFeaturedImageId());
+                    if (!TextUtils.isEmpty(imageUrl)) {
+                        mFeaturedImageUrls.put(post.getId(), ReaderUtils.getResizedImageUrl(imageUrl, mPhotonWidth,
+                                mPhotonHeight, mSite.isPrivate()));
                     }
-                } else if (StringUtils.isNotEmpty(post.getContent())) {
-                    ReaderImageScanner scanner = new ReaderImageScanner(post.getContent(), mSite.isPrivate());
-                    imageUrl = scanner.getLargestImage();
-                } else {
-                    imageUrl = null;
-                }
-
-                if (!TextUtils.isEmpty(imageUrl)) {
-                    mFeaturedImageUrls.put(post.getId(), ReaderUtils.getResizedImageUrl(imageUrl, mPhotonWidth,
-                            mPhotonHeight, mSite.isPrivate()));
                 }
             }
 
