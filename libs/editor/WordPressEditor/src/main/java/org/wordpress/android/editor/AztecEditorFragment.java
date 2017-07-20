@@ -579,11 +579,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
-
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
+            final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
             // load a scaled version of the image to prevent OOM exception
-            int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
+            final int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
             imageLoader.get(posterURL, new ImageLoader.ImageListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
@@ -604,7 +603,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 @Override
                 public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
                     Bitmap downloadedBitmap = container.getBitmap();
-
                     if (downloadedBitmap == null || !isAdded()) {
                         // No bitmap downloaded from server or the fragment is detached
                         return;
@@ -624,7 +622,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         return;
                     }
 
-                    Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, DisplayUtils.getDisplayPixelWidth(getActivity()));
+                    Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
                     if(mediaFile.isVideo()) {
                         content.insertVideo(new BitmapDrawable(getResources(), resizedBitmap), attributes);
                         overlayVideoIcon(0, new ImagePredicate(mediaUrl, ATTR_SRC));
