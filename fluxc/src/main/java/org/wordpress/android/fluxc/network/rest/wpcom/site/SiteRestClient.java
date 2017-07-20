@@ -41,7 +41,9 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -321,20 +323,24 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void fetchWPComSiteByUrl(@NonNull final String siteUrl) {
-        URI uri;
+        String sanitizedUrl;
         try {
-            uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
+            URI uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
+            sanitizedUrl = URLEncoder.encode(UrlUtils.removeScheme(uri.toString()), "UTF-8");
         } catch (IllegalArgumentException e) {
             FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
             payload.checkedUrl = siteUrl;
             payload.error = new SiteError(SiteErrorType.INVALID_SITE);
             mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
             return;
+        } catch (UnsupportedEncodingException e) {
+            // This should be impossible (it means an Android device without UTF-8 support)
+            throw new IllegalStateException(e);
         }
 
-        String url = WPCOMREST.sites.siteUrl(uri.getHost()).getUrlV1_1();
+        String requestUrl = WPCOMREST.sites.siteUrl(sanitizedUrl).getUrlV1_1();
 
-        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(requestUrl, null,
                 SiteWPComRestResponse.class,
                 new Listener<SiteWPComRestResponse>() {
                     @Override
