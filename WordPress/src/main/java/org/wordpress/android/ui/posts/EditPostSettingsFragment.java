@@ -152,7 +152,7 @@ public class EditPostSettingsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         updatePostFormatKeysAndNames();
-        fetchSiteSettingsAndUpdateDefaultPostFormat();
+        fetchSiteSettingsAndUpdateDefaultPostFormatIfNecessary();
 
         // Update post formats and categories, in case anything changed.
         SiteModel siteModel = getSite();
@@ -164,13 +164,17 @@ public class EditPostSettingsFragment extends Fragment {
         refreshViews();
     }
 
-    private void fetchSiteSettingsAndUpdateDefaultPostFormat() {
+    private void fetchSiteSettingsAndUpdateDefaultPostFormatIfNecessary() {
+        // A format is already set for the post, no need to fetch the default post format
+        if (!TextUtils.isEmpty(getPost().getPostFormat())) {
+            return;
+        }
         // we need to fetch site settings in order to get the latest default post format
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSite(),
                 new SiteSettingsListener() {
                     @Override
                     public void onSettingsUpdated(Exception error) {
-                        if (error == null && TextUtils.isEmpty(getPost().getPostFormat())) {
+                        if (error == null) {
                             updatePostFormat(mSiteSettings.getDefaultPostFormat());
                         }
                     }
