@@ -177,7 +177,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
                         if (mSite.isJetpackConnected()) {
                             fetchJetpackSettings();
-                            getJetpackProtectSettings();
+                            fetchJetpackProtectSettings();
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -438,7 +438,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 });
     }
 
-    private void getJetpackProtectSettings() {
+    private void fetchJetpackProtectSettings() {
         WordPress.getRestClientUtils().getJetpackProtect(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
