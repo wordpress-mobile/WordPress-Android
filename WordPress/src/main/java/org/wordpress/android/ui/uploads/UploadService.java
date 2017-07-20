@@ -53,15 +53,33 @@ public class UploadService extends Service {
     // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
     private static final ConcurrentHashMap<Integer, List<MediaModel>> sCompletedMediaByPost = new ConcurrentHashMap<>();
 
+    // TODO This should be moved to FluxC, perhaps in a new UploadMediaTable
+    // This will hold a map of postID and the corresponding last error if any error occurred while uploading
+    private static final ConcurrentHashMap<Integer, UploadError> sFailedUploadPosts = new ConcurrentHashMap<>();
+
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
 
+    public class UploadError {
+        public PostStore.PostError postError;
+        public MediaStore.MediaError mediaError;
+
+        UploadError(PostStore.PostError postError) {
+            this.postError = postError;
+        }
+
+        UploadError(MediaStore.MediaError mediaError) {
+            this.mediaError = mediaError;
+        }
+    }
+
     private class UploadingPost {
         PostModel postModel;
         List<MediaModel> pendingMedia = new ArrayList<>();
         boolean isCancelled;
+
         UploadingPost(PostModel postModel, List<MediaModel> pendingMedia) {
             this.postModel = postModel;
             this.pendingMedia = pendingMedia;
@@ -180,6 +198,12 @@ public class UploadService extends Service {
             boolean shouldTrackAnalytics = intent.getBooleanExtra(KEY_SHOULD_TRACK_ANALYTICS, false);
             if (shouldTrackAnalytics) {
                 mPostUploadHandler.registerPostForAnalyticsTracking(post);
+            }
+
+            // as user wants to upload this post, remove any failed reasons as it goes to the queue
+            if (removeUploadErrorForPost(post)) {
+                // also delete any error notifications still there
+                mPostUploadNotifier.cancelErrorNotification(post);
             }
 
             if (!hasPendingOrInProgressMediaUploadsForPost(post)) {
@@ -338,6 +362,12 @@ public class UploadService extends Service {
         return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel);
     }
 
+    public static boolean hasMediaErrorForPost(PostModel post) {
+        UploadError error  = getUploadErrorForPost(post);
+        return error != null && error.mediaError != null;
+    }
+
+
     public static float getMediaUploadProgressForPost(PostModel postModel) {
         if (postModel == null) {
             return 0;
@@ -449,6 +479,18 @@ public class UploadService extends Service {
         return null;
     }
 
+    private void addUploadErrorToFailedPosts(PostModel post, UploadError reason) {
+        sFailedUploadPosts.put(post.getId(), reason);
+    }
+
+    public static boolean removeUploadErrorForPost(PostModel post) {
+        return (sFailedUploadPosts.remove(post.getId()) != null);
+    }
+
+    public static UploadError getUploadErrorForPost(PostModel post) {
+        return sFailedUploadPosts.get(post.getId());
+    }
+
     private static float getOverallProgressForMediaList(List<MediaModel> pendingMediaList) {
         if (pendingMediaList.size() == 0) {
             return 1;
@@ -480,6 +522,11 @@ public class UploadService extends Service {
                         + event.error.type + ": " + event.error.message);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.error);
                 cancelPostUploadMatchingMedia(event.media, errorMessage);
+
+                // now keep track of the error reason so it can be queried
+                UploadError reason = new UploadError(event.error);
+                PostModel failedPost = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
+                addUploadErrorToFailedPosts(failedPost, reason);
             }
             stopServiceIfUploadsComplete();
             return;
@@ -539,6 +586,12 @@ public class UploadService extends Service {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostUploaded(OnPostUploaded event) {
+        if (event.isError()) {
+            UploadError reason = new UploadError(event.error);
+            addUploadErrorToFailedPosts(event.post, reason);
+        } else {
+            removeUploadErrorForPost(event.post);
+        }
         stopServiceIfUploadsComplete();
     }
 }

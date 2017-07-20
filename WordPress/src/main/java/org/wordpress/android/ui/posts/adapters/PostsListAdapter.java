@@ -41,6 +41,7 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -198,7 +199,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private boolean canPublishPost(PostModel post) {
+        // TODO remove the hasMediaErrorForPost(post) check when we get a proper retry mechanism in place,
+        // that retried to upload any failed media along with the post
         return post != null && !UploadService.isPostUploadingOrQueued(post) &&
+                !UploadService.hasMediaErrorForPost(post) &&
                 (post.isLocallyChanged() || post.isLocalDraft() || PostStatus.fromPost(post) == PostStatus.DRAFT);
     }
 
@@ -403,8 +407,21 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             int statusTextResId = 0;
             int statusIconResId = 0;
             int statusColorResId = R.color.grey_darken_10;
+            String errorMessage = null;
 
-            if (UploadService.isPostUploading(post)) {
+            UploadService.UploadError reason = UploadService.getUploadErrorForPost(post);
+            if (reason != null) {
+                if (reason.mediaError != null) {
+                    errorMessage = UploadUtils.getErrorMessageFromMediaError(
+                            txtStatus.getContext(), reason.mediaError)  + " - " +
+                            txtStatus.getContext().getString(R.string.error_media_recover);
+                } else if (reason.postError != null) {
+                    errorMessage = UploadUtils.getErrorMessageFromPostError(
+                            txtStatus.getContext(), post, reason.postError);
+                }
+                statusIconResId = R.drawable.ic_notice_48dp;
+                statusColorResId = R.color.alert_yellow;
+            } else if (UploadService.isPostUploading(post)) {
                 statusTextResId = R.string.post_uploading;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if (UploadService.hasInProgressMediaUploadsForPost(post)) {
@@ -452,7 +469,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             Resources resources = txtStatus.getContext().getResources();
             txtStatus.setTextColor(resources.getColor(statusColorResId));
-            txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
+            if (!TextUtils.isEmpty(errorMessage)) {
+                txtStatus.setText(errorMessage);
+            } else {
+                txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
+            }
             txtStatus.setVisibility(View.VISIBLE);
 
             Drawable drawable = (statusIconResId != 0 ? resources.getDrawable(statusIconResId) : null);
@@ -476,10 +497,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
 
-        if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
-            holder.btnPublish.setButtonType(PostListButton.BUTTON_SYNC);
+        if (UploadService.getUploadErrorForPost(post) != null) {
+            holder.btnPublish.setButtonType(PostListButton.BUTTON_RETRY);
         } else {
-            holder.btnPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
+            if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
+                holder.btnPublish.setButtonType(PostListButton.BUTTON_SYNC);
+            } else {
+                holder.btnPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
+            }
         }
 
         boolean canShowStatsButton = canShowStatsForPost(post);
