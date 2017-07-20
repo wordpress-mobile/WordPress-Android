@@ -330,7 +330,7 @@ public class SiteRestClient extends BaseWPComRestClient {
             mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
             return;
         } catch (UnsupportedEncodingException e) {
-            // Impossible
+            // This should be impossible (it means an Android device without UTF-8 support)
             throw new IllegalStateException(e);
         }
 
