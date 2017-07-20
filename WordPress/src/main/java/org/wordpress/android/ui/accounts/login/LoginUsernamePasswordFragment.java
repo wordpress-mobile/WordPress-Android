@@ -127,7 +127,7 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         siteNameView.setVisibility(mSiteName != null ? View.VISIBLE : View.GONE);
 
         TextView siteAddressView = ((TextView) rootView.findViewById(R.id.login_site_address));
-        siteAddressView.setText(UrlUtils.removeScheme(UrlUtils.cleanupInputAddress(mInputSiteAddress)));
+        siteAddressView.setText(UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(mInputSiteAddress)));
         siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
         mUsernameEditText = (EditText) rootView.findViewById(R.id.login_username);

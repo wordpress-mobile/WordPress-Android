@@ -272,7 +272,7 @@ public class UrlUtils {
         return "";
     }
 
-    public static String cleanupInputAddress(String siteAddress) {
+    public static String removeXmlrpcSuffix(String siteAddress) {
         if (siteAddress.toLowerCase().endsWith("/xmlrpc.php")) {
             return siteAddress.substring(0, siteAddress.lastIndexOf("xmlrpc.php"));
         } else {
