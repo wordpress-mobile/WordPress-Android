@@ -94,10 +94,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         showToolbar();
     }
 
-    private void setCurrentThemeFromDB() {
-        mCurrentTheme = WordPress.wpDB.getCurrentTheme(String.valueOf(mSite.getSiteId()));
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -157,6 +153,38 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 activateTheme(themeId);
             }
         }
+    }
+
+    @Override
+    public void onActivateSelected(String themeId) {
+        activateTheme(themeId);
+    }
+
+    @Override
+    public void onTryAndCustomizeSelected(String themeId) {
+        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
+    }
+
+    @Override
+    public void onViewSelected(String themeId) {
+        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DEMO);
+    }
+
+    @Override
+    public void onDetailsSelected(String themeId) {
+        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DETAILS);
+    }
+
+    @Override
+    public void onSupportSelected(String themeId) {
+        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.SUPPORT);
+    }
+
+    @Override
+    public void onSearchClicked() {
+        mIsInSearchMode = true;
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, mSite);
+        addSearchFragment();
     }
 
     public void setIsInSearchMode(boolean isInSearchMode) {
@@ -292,6 +320,24 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         mThemeSearchFragment = themeSearchFragment;
     }
 
+    protected void showToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.themes);
+            findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
+            findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        }
+    }
+
+    private void setCurrentThemeFromDB() {
+        mCurrentTheme = WordPress.wpDB.getCurrentTheme(String.valueOf(mSite.getSiteId()));
+    }
+
     private void fetchThemesIfNoneAvailable() {
         if (NetworkUtils.isNetworkAvailable(this)
                 && WordPress.wpDB.getThemeCount(String.valueOf(mSite.getSiteId())) == 0) {
@@ -322,18 +368,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 mThemeBrowserFragment.setRefreshing(true);
             }
         }
-    }
-
-    protected void showToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(R.string.themes);
-        findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
-        findViewById(R.id.toolbar_search).setVisibility(View.GONE);
     }
 
     private void showCorrectToolbar() {
@@ -462,38 +496,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
 
         ToastUtils.showToast(this, toastText, ToastUtils.Duration.SHORT);
-    }
-
-    @Override
-    public void onActivateSelected(String themeId) {
-        activateTheme(themeId);
-    }
-
-    @Override
-    public void onTryAndCustomizeSelected(String themeId) {
-        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
-    }
-
-    @Override
-    public void onViewSelected(String themeId) {
-        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DEMO);
-    }
-
-    @Override
-    public void onDetailsSelected(String themeId) {
-        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DETAILS);
-    }
-
-    @Override
-    public void onSupportSelected(String themeId) {
-        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.SUPPORT);
-    }
-
-    @Override
-    public void onSearchClicked() {
-        mIsInSearchMode = true;
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, mSite);
-        addSearchFragment();
     }
 
     /**
