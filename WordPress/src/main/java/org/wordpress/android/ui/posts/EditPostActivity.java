@@ -334,8 +334,6 @@ public class EditPostActivity extends AppCompatActivity implements
             if (mEditorFragment instanceof EditorMediaUploadListener) {
                 mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
             }
-
-            initializeEditorFragment();
         }
 
         if (mSite == null) {
