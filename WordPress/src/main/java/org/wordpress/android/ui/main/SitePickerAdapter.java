@@ -164,7 +164,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        return position == 0 ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
+        if (mHeaderHandler == null) {
+            return VIEW_TYPE_ITEM;
+        } else {
+            return position == 0 ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
+        }
     }
 
     private SiteRecord getItem(int position) {
