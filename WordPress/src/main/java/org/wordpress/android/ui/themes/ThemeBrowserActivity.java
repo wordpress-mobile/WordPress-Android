@@ -276,7 +276,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                                 return;
                             }
                             mCurrentTheme.setIsCurrent(true);
-                            mCurrentTheme.save();
+                            WordPress.wpDB.saveTheme(mCurrentTheme);
                             WordPress.wpDB.setCurrentTheme(String.valueOf(mSite.getSiteId()), mCurrentTheme.getId());
                             if (mThemeBrowserFragment != null) {
                                 mThemeBrowserFragment.setRefreshing(false);
@@ -521,7 +521,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                     JSONObject object = array.getJSONObject(i);
                     Theme theme = Theme.fromJSONV1_2(object, mSite);
                     if (theme != null) {
-                        theme.save();
+                        WordPress.wpDB.saveTheme(theme);
                         themes.add(theme);
                     }
                 } catch (JSONException e) {

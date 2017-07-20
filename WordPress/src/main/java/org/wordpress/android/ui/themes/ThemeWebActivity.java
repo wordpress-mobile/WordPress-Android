@@ -81,7 +81,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
                     Theme currentTheme = Theme.fromJSONV1_1(response, site);
                     if (currentTheme != null) {
                         currentTheme.setIsCurrent(true);
-                        currentTheme.save();
+                        WordPress.wpDB.saveTheme(currentTheme);
                         WordPress.wpDB.setCurrentTheme(String.valueOf(site.getSiteId()), currentTheme.getId());
                         openTheme(activity, site, currentTheme.getId(), ThemeWebActivityType.PREVIEW, true);
                     }
