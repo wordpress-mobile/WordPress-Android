@@ -4,9 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.ListPopupWindow;
@@ -42,6 +45,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -87,6 +91,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final boolean mIsStatsSupported;
     private final boolean mAlwaysShowAllButtons;
 
+    private final ContentResolver mContentResolver;
+
     private boolean mIsLoadingPosts;
 
     private final List<PostModel> mPosts = new ArrayList<>();
@@ -104,6 +110,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         mIsPage = isPage;
         mLayoutInflater = LayoutInflater.from(context);
+        mContentResolver = context.getContentResolver();
 
         mSite = site;
         mIsStatsSupported = SiteUtils.isAccessedViaWPComRest(site) && site.getHasCapabilityViewStats();
@@ -225,14 +232,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 postHolder.txtExcerpt.setVisibility(View.GONE);
             }
 
-            if (mFeaturedImageUrls.containsKey(post.getId())) {
-                String imageUrl = mFeaturedImageUrls.get(post.getId());
-                AppLog.w(AppLog.T.READER, "featured = " + imageUrl);
-                postHolder.imgFeatured.setVisibility(View.VISIBLE);
-                postHolder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
-            } else {
-                postHolder.imgFeatured.setVisibility(View.GONE);
-            }
+            showFeaturedImage(post.getId(), postHolder.imgFeatured);
 
             // local drafts say "delete" instead of "trash"
             if (post.isLocalDraft()) {
@@ -308,6 +308,31 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             }
         });
+    }
+
+    private void showFeaturedImage(int postId, WPNetworkImageView imgFeatured) {
+        if (!mFeaturedImageUrls.containsKey(postId)) {
+            imgFeatured.setVisibility(View.GONE);
+            return;
+        }
+
+        String imageUrl = mFeaturedImageUrls.get(postId);
+        if (imageUrl.startsWith("http")) {
+            imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+            imgFeatured.setVisibility(View.VISIBLE);
+        } else {
+            Context context = imgFeatured.getContext();
+            int orientation = ImageUtils.getImageOrientation(context, imageUrl);
+            int size = Math.min(mPhotonWidth, mPhotonHeight);
+            byte[] bytes = ImageUtils.createThumbnailFromUri(
+                    context, Uri.parse(imageUrl), size, null, orientation);
+            if (bytes != null) {
+                imgFeatured.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                imgFeatured.setVisibility(View.VISIBLE);
+            } else {
+                imgFeatured.setVisibility(View.GONE);
+            }
+        }
     }
 
     /*
@@ -674,7 +699,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             PostModel post = getItem(position);
             if (post != null) {
                 String imageUrl = mediaModel.getUrl();
-                if (imageUrl != null && imageUrl.startsWith("http")) {
+                if (imageUrl != null) {
                     mFeaturedImageUrls.put(post.getId(), imageUrl);
                 } else {
                     mFeaturedImageUrls.remove(post.getId());
@@ -751,7 +776,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     } else if (StringUtils.isNotEmpty(post.getContent())) {
                         imageUrl = new ReaderImageScanner(post.getContent(), mSite.isPrivate()).getLargestImage();
                     }
-                    if (!TextUtils.isEmpty(imageUrl) && imageUrl.startsWith("http")) {
+                    if (!TextUtils.isEmpty(imageUrl)) {
                         mFeaturedImageUrls.put(post.getId(), ReaderUtils.getResizedImageUrl(imageUrl, mPhotonWidth,
                                 mPhotonHeight, mSite.isPrivate()));
                     }
