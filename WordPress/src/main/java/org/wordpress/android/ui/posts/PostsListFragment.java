@@ -760,10 +760,25 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
-        if (event.media != null && event.completed) {
-            PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
-            if (post != null && UploadService.isPostUploadingOrQueued(post)) {
-                loadPosts(LoadMode.FORCED);
+        if (event.media != null) {
+            if (event.completed) {
+                PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
+                if (post != null && UploadService.isPostUploadingOrQueued(post)) {
+                    loadPosts(LoadMode.FORCED);
+                }
+            } else if ((event.media.isError() || event.canceled)){
+                // if a media is cancelled or ends in error, and the post is not uploading nor queued,
+                // (meaning there is no other pending media to be uploaded for this post)
+                // then we should refresh it to shown its new state
+                PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
+                if (post != null && !UploadService.isPostUploadingOrQueued(post)) {
+                    // TODO: replace loadPosts for getPostListAdapter().notifyItemChanged(); kind of thing,
+                    // once we have a proper way to look for posts in place, probably after
+                    // merging https://github.com/wordpress-mobile/WordPress-Android/pull/6343
+                    // getPostListAdapter().notifyItemChanged(); like the way it's done here:
+                    // https://github.com/wordpress-mobile/WordPress-Android/blob/feature/async-global-post-progress/WordPress/src/main/java/org/wordpress/android/ui/posts/adapters/PostsListAdapter.java#L590
+                    loadPosts(LoadMode.FORCED);
+                }
             }
         }
     }
