@@ -556,9 +556,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void overlayVideoIcon(int overlayLevel, AztecText.AttributePredicate predicate) {
-        Drawable videoDrawable = getResources().getDrawable(R.drawable.ic_play_video);
-        videoDrawable.setBounds(0,0,128,128);
-        content.setOverlay(predicate, overlayLevel, videoDrawable, Gravity.CENTER);
+        Drawable videoDrawable = getResources().getDrawable(R.drawable.ic_overlay_video);
+        content.setOverlay(predicate, overlayLevel, videoDrawable, Gravity.BOTTOM | Gravity.START);
     }
 
     /**
