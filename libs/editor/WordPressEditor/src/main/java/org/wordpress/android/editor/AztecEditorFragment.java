@@ -1348,7 +1348,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public static String markMediaFailed(Context context, @NonNull String postContent,
                                                  String localMediaId, MediaFile mediaFile) {
         if (mediaFile != null) {
-            String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
             if (!mediaFile.isVideo()) {
 
                 // fill in Aztec with the post's content
