@@ -81,7 +81,11 @@ public class UploadService extends Service {
         }
 
         // Update posts with any completed AND failed uploads in our post->media map
-        for (Integer postId : sCompletedMediaByPost.keySet()) {
+        ConcurrentHashMap<Integer, List<MediaModel>> tmpMap = new ConcurrentHashMap<>();
+        tmpMap.putAll(sCompletedMediaByPost);
+        tmpMap.putAll(sFailedMediaByPost);
+
+        for (Integer postId : tmpMap.keySet()) {
             PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
             updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
@@ -427,8 +431,12 @@ public class UploadService extends Service {
             return;
         }
 
-        if (!sCompletedMediaByPost.isEmpty()) {
-            for (Integer postId : sCompletedMediaByPost.keySet()) {
+        if (!sCompletedMediaByPost.isEmpty() || !sFailedMediaByPost.isEmpty()) {
+            ConcurrentHashMap<Integer, List<MediaModel>> tmpMap = new ConcurrentHashMap<>();
+            tmpMap.putAll(sCompletedMediaByPost);
+            tmpMap.putAll(sFailedMediaByPost);
+
+            for (Integer postId : tmpMap.keySet()) {
                 // For each post with completed media uploads, update the content with the new remote URLs
                 // This is done in a batch when all media is complete to prevent conflicts by updating separate images
                 // at a time simultaneously for the same post
@@ -525,6 +533,9 @@ public class UploadService extends Service {
 
                             // Replace local with remote media in the post content
                             PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(latestPost);
+                            // also do the same now with failed uploads
+                            updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
+                            // finally, save the PostModel
                             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
 
                             // TODO Should do some extra validation here
