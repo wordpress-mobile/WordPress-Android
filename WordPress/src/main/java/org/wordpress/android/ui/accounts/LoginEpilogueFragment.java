@@ -43,8 +43,6 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     private RecyclerView mSitesList;
     private View mBottomShadow;
     private View mBottomButtonsContainer;
-    private View mConnectMore;
-    private View mConnectMoreGrey;
 
     protected @Inject SiteStore mSiteStore;
     protected @Inject AccountStore mAccountStore;
@@ -85,20 +83,9 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
         mBottomButtonsContainer = rootView.findViewById(R.id.bottom_buttons);
 
-        mConnectMore = rootView.findViewById(R.id.login_connect_more);
-        mConnectMore.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
-        mConnectMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mLoginEpilogueListener != null) {
-                    mLoginEpilogueListener.onConnectAnotherSite();
-                }
-            }
-        });
-
-        mConnectMoreGrey = rootView.findViewById(R.id.login_connect_more_grey);
-        mConnectMoreGrey.setVisibility(View.GONE); // hide the grey version of the button on start
-        mConnectMoreGrey.setOnClickListener(new View.OnClickListener() {
+        View connectMore = rootView.findViewById(R.id.login_connect_more);
+        connectMore.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
+        connectMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginEpilogueListener != null) {
@@ -174,13 +161,9 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
                 if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
                     mBottomShadow.setVisibility(View.VISIBLE);
                     mBottomButtonsContainer.setBackgroundResource(R.color.white);
-                    mConnectMore.setVisibility(View.GONE);
-                    mConnectMoreGrey.setVisibility(View.VISIBLE);
                 } else {
                     mBottomShadow.setVisibility(View.GONE);
                     mBottomButtonsContainer.setBackground(null);
-                    mConnectMore.setVisibility(View.VISIBLE);
-                    mConnectMoreGrey.setVisibility(View.GONE);
                 }
             }
         }, new SitePickerAdapter.HeaderHandler() {
