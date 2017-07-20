@@ -80,15 +80,10 @@ public class UploadService extends Service {
             mPostUploadHandler.unregister();
         }
 
-        // Update posts with any completed uploads in our post->media map
+        // Update posts with any completed AND failed uploads in our post->media map
         for (Integer postId : sCompletedMediaByPost.keySet()) {
             PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
-            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
-        }
-
-        // Update posts with any failed uploads in our post->media map
-        for (Integer postId : sFailedMediaByPost.keySet()) {
-            PostModel updatedPost = updatePostWithCurrentlyFailedUploads(mPostStore.getPostByLocalPostId(postId));
+            updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
         }
 
