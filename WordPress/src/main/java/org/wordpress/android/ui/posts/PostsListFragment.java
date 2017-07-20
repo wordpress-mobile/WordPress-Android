@@ -775,7 +775,7 @@ public class PostsListFragment extends Fragment
             if ((event.media.isError() || event.canceled)){
                 // if a media is cancelled or ends in error, and the post is not uploading nor queued,
                 // (meaning there is no other pending media to be uploaded for this post)
-                // then we should refresh it to shown its new state
+                // then we should refresh it to show its new state
                 if (post != null && !UploadService.isPostUploadingOrQueued(post)) {
                     // TODO: replace loadPosts for getPostListAdapter().notifyItemChanged(); kind of thing,
                     // once we have a proper way to look for posts in place, probably after
