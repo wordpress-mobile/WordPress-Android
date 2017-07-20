@@ -616,10 +616,18 @@ public class EditPostSettingsFragment extends Fragment {
     // Helpers
 
     private PostModel getPost() {
+        if (mEditPostActivityHook == null) {
+            // This can only happen during a callback while activity is re-created for some reason (config changes etc)
+            return null;
+        }
         return mEditPostActivityHook.getPost();
     }
 
     private SiteModel getSite() {
+        if (mEditPostActivityHook == null) {
+            // This can only happen during a callback while activity is re-created for some reason (config changes etc)
+            return null;
+        }
         return mEditPostActivityHook.getSite();
     }
 
@@ -730,6 +738,10 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateCategoriesTextView() {
+        if (getPost() == null || getSite() == null) {
+            // Since this method can get called after a callback, we have to make sure we have the post and site
+            return;
+        }
         List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(getPost(), getSite());
         StringBuilder sb = new StringBuilder();
         Iterator<TermModel> it = categories.iterator();
@@ -778,11 +790,8 @@ public class EditPostSettingsFragment extends Fragment {
     // Post Format Helpers
 
     private void updatePostFormatKeysAndNames() {
-        if (getActivity() == null) {
-            return;
-        }
-        if (getSite() == null) {
-            AppLog.e(T.POSTS, "Current site shouldn't be null while updating post format keys & names");
+        if (getActivity() == null || getSite() == null) {
+            // Since this method can get called after a callback, we have to make sure we have the site
             return;
         }
         // Default values
