@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
+import org.wordpress.android.ui.accounts.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
@@ -56,12 +57,15 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
+import java.util.ArrayList;
+
 public class ActivityLauncher {
 
-    public static void showMainActivityAndLoginEpilogue(Activity activity) {
+    public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds) {
         Intent intent = new Intent(activity, WPMainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(WPMainActivity.ARG_SHOW_LOGIN_EPILOGUE, true);
+        intent.putIntegerArrayListExtra(WPMainActivity.ARG_OLD_SITES_IDS, oldSitesIds);
         activity.startActivity(intent);
     }
 
@@ -274,14 +278,17 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
-    public static void showLoginEpilogue(Activity activity) {
+    public static void showLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
+        intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
         activity.startActivity(intent);
     }
 
-    public static void showLoginEpilogueForResult(Activity activity, boolean showAndReturn) {
+    public static void showLoginEpilogueForResult(Activity activity, boolean showAndReturn,
+            ArrayList<Integer> oldSitesIds) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
         intent.putExtra(LoginEpilogueActivity.EXTRA_SHOW_AND_RETURN, showAndReturn);
+        intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
         activity.startActivityForResult(intent, RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN);
     }
 

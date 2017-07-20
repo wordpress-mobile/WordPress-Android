@@ -22,12 +22,16 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
+import java.util.ArrayList;
+
 public class LoginEmailPasswordFragment extends LoginBaseFormFragment implements TextWatcher, OnEditorCommitListener {
     private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
+    private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
 
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
@@ -37,6 +41,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment implements
     private WPLoginInputRow mPasswordInput;
 
     private String mRequestedPassword;
+    ArrayList<Integer> mOldSitesIDs;
 
     private String mEmailAddress;
     private String mPassword;
@@ -116,6 +121,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment implements
 
         if (savedInstanceState == null) {
             mPasswordInput.setText(mPassword);
+        } else {
+            mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         }
     }
 
@@ -124,6 +131,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment implements
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_REQUESTED_PASSWORD, mRequestedPassword);
+        outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
     }
 
     protected void next() {
@@ -134,6 +142,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment implements
         startProgress();
 
         mRequestedPassword = mPasswordInput.getEditText().getText().toString();
+
+        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
         AuthenticatePayload payload = new AuthenticatePayload(mEmailAddress, mRequestedPassword);
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
@@ -202,7 +212,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment implements
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
         if (mLoginListener != null) {
-            mLoginListener.loggedInViaPassword();
+            mLoginListener.loggedInViaPassword(mOldSitesIDs);
         }
     }
 

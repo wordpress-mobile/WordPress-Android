@@ -30,6 +30,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
@@ -38,6 +40,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
 
     private static final String ARG_SHOW_AND_RETURN = "ARG_SHOW_AND_RETURN";
+    private static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
     private View mSitesProgress;
     private RecyclerView mSitesList;
@@ -51,6 +54,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     private boolean mInProgress;
     private SitePickerAdapter mAdapter;
     private boolean mShowAndReturn;
+    private ArrayList<Integer> mOldSitesIds;
 
     interface LoginEpilogueListener {
         void onConnectAnotherSite();
@@ -58,10 +62,11 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     }
     private LoginEpilogueListener mLoginEpilogueListener;
 
-    public static LoginEpilogueFragment newInstance(boolean showAndReturn) {
+    public static LoginEpilogueFragment newInstance(boolean showAndReturn, ArrayList<Integer> oldSitesIds) {
         LoginEpilogueFragment fragment = new LoginEpilogueFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_SHOW_AND_RETURN, showAndReturn);
+        args.putIntegerArrayList(ARG_OLD_SITES_IDS, oldSitesIds);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,6 +77,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         mShowAndReturn = getArguments().getBoolean(ARG_SHOW_AND_RETURN);
+        mOldSitesIds = getArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
     }
 
     @Override
@@ -176,7 +182,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
             public void onBindViewHolder(RecyclerView.ViewHolder holder, int numberOfSites) {
                 refreshAccountDetails((HeaderViewHolder) holder, numberOfSites);
             }
-        });
+        }, mOldSitesIds);
     }
 
     public void showProgress(boolean show) {
@@ -242,20 +248,19 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
             } else {
                 holder.mDisplayNameTextView.setText(defaultAccount.getUserName());
             }
-
-            if (numberOfSites == 0) {
-                holder.mMySitesHeadingTextView.setVisibility(View.GONE);
-            } else {
-                holder.mMySitesHeadingTextView.setVisibility(View.VISIBLE);
-                holder.mMySitesHeadingTextView.setText(
-                        StringUtils.getQuantityString(
-                                getActivity(), R.string.days_quantity_one, R.string.login_epilogue_mysites_one,
-                                        R.string.login_epilogue_mysites_other, numberOfSites));
-            }
-
         } else {
             holder.mDisplayNameTextView.setVisibility(View.GONE);
             holder.mUsernameTextView.setVisibility(View.GONE);
+        }
+
+        if (numberOfSites == 0) {
+            holder.mMySitesHeadingTextView.setVisibility(View.GONE);
+        } else {
+            holder.mMySitesHeadingTextView.setVisibility(View.VISIBLE);
+            holder.mMySitesHeadingTextView.setText(
+                    StringUtils.getQuantityString(
+                            getActivity(), R.string.days_quantity_one, R.string.login_epilogue_mysites_one,
+                            R.string.login_epilogue_mysites_other, numberOfSites));
         }
     }
 

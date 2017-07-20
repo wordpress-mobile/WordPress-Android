@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
@@ -61,6 +62,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UserEmailUtils;
@@ -68,7 +70,9 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -414,7 +418,8 @@ public class NewUserFragment extends AbstractFragment {
 
         if (AppPrefs.isLoginWizardStyleActivated()) {
             if (mLoginListener != null) {
-                mLoginListener.loggedInViaSigUp();
+                ArrayList<Integer> oldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
+                mLoginListener.loggedInViaSigUp(oldSitesIDs);
             }
         } else {
             getActivity().setResult(Activity.RESULT_OK);

@@ -75,6 +75,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private boolean mShowSelfHostedSites = true;
     private String mLastSearch;
     private SiteList mAllSites;
+    private ArrayList<Integer> mIgnoreSitesIds;
 
     private OnSiteClickListener mSiteSelectedListener;
     private OnSelectedCountChangedListener mSelectedCountListener;
@@ -114,7 +115,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String lastSearch,
             boolean isInSearchMode,
             OnDataLoadedListener dataLoadedListener) {
-        this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener, null);
+        this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener, null,
+                null);
     }
 
     public SitePickerAdapter(Context context,
@@ -123,7 +125,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String lastSearch,
             boolean isInSearchMode,
             OnDataLoadedListener dataLoadedListener,
-            HeaderHandler headerHandler) {
+            HeaderHandler headerHandler,
+            ArrayList<Integer> ignoreSitesIds) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
@@ -144,6 +147,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.grey_lighten_20_translucent_50));
 
         mHeaderHandler = headerHandler;
+
+        mIgnoreSitesIds = ignoreSitesIds;
 
         loadSites();
     }
@@ -491,6 +496,16 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 siteModels = mSiteStore.getSites();
             } else {
                 siteModels = getBlogsForCurrentView();
+            }
+
+            if (mIgnoreSitesIds != null) {
+                List<SiteModel> unignoredSiteModels = new ArrayList<>();
+                for (SiteModel site : siteModels) {
+                    if (!mIgnoreSitesIds.contains(site.getId())) {
+                        unignoredSiteModels.add(site);
+                    }
+                }
+                siteModels = unignoredSiteModels;
             }
 
             SiteList sites = new SiteList(siteModels);

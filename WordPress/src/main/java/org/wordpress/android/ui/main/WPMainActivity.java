@@ -84,6 +84,7 @@ import de.greenrobot.event.EventBus;
 public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
+    public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -271,7 +272,7 @@ public class WPMainActivity extends AppCompatActivity {
             AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false)) {
-            ActivityLauncher.showLoginEpilogue(this);
+            ActivityLauncher.showLoginEpilogue(this, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         }
     }
 
@@ -682,7 +683,7 @@ public class WPMainActivity extends AppCompatActivity {
         }
 
         if (mAccountStore.hasAccessToken() && hasMagicLinkLoginIntent()) {
-            ActivityLauncher.showLoginEpilogue(this);
+            ActivityLauncher.showLoginEpilogue(this, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         }
     }
 

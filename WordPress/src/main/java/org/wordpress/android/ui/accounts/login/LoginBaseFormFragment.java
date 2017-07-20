@@ -27,6 +27,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.EditTextUtils;
 
 import javax.inject.Inject;
@@ -43,6 +44,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
     private boolean mInProgress;
 
     @Inject Dispatcher mDispatcher;
+    @Inject SiteStore mSiteStore;
 
     protected abstract @LayoutRes int getContentLayout();
     protected abstract void setupLabel(TextView label);

@@ -2,13 +2,15 @@ package org.wordpress.android.ui.accounts.login;
 
 import org.wordpress.android.ui.accounts.LoginMode;
 
+import java.util.ArrayList;
+
 public interface LoginListener {
     LoginMode getLoginMode();
 
     // Login Prologue callbacks
     void showEmailLoginScreen();
     void doStartSignup();
-    void loggedInViaSigUp();
+    void loggedInViaSigUp(ArrayList<Integer> oldSitesIds);
     void newUserCreatedButErrored(String email, String password);
 
     // Login Email input callbacks
@@ -26,16 +28,16 @@ public interface LoginListener {
 
     // Login email password callbacks
     void needs2fa(String email, String password);
-    void loggedInViaPassword();
+    void loggedInViaPassword(ArrayList<Integer> oldSitesIds);
 
     // Login Site Address input callbacks
-    void alreadyLoggedInWpcom();
+    void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds);
     void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl);
     void gotXmlRpcEndpoint(String inputSiteAddress, String endpointAddress);
     void helpWithSiteAddress();
 
     // Login username password callbacks
-    void loggedInViaUsernamePassword();
+    void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds);
 
     // Help callback
     void help();
