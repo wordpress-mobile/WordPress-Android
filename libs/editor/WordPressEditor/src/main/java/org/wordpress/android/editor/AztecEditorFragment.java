@@ -1364,8 +1364,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // mark failed
                 attributesWithClass.addClass(ATTR_STATUS_FAILED);
 
-                // clear overlay
-                content.clearOverlays(predicate);
                 content.updateElementAttributes(predicate, attributesWithClass.getAttributes());
                 content.refreshText();
 
