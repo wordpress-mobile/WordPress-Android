@@ -96,6 +96,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final List<PostModel> mHiddenPosts = new ArrayList<>();
     private final Map<Integer, String> mFeaturedImageUrls = new HashMap<>();
 
+    private RecyclerView mRecyclerView;
     private final LayoutInflater mLayoutInflater;
 
     @Inject Dispatcher mDispatcher;
@@ -148,6 +149,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private boolean isValidPostPosition(int position) {
         return (position >= 0 && position < mPosts.size());
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
     }
 
     @Override
