@@ -31,6 +31,7 @@ public class PostListButton extends LinearLayout {
     public static final int BUTTON_MORE     = 9;
     public static final int BUTTON_BACK     = 10;
     public static final int BUTTON_SUBMIT   = 11;
+    public static final int BUTTON_RETRY    = 12;
 
     public PostListButton(Context context){
         super(context);
@@ -108,6 +109,8 @@ public class PostListButton extends LinearLayout {
                 return R.string.button_back;
             case BUTTON_SUBMIT:
                 return R.string.submit_for_review;
+            case BUTTON_RETRY:
+                return R.string.button_retry;
             default:
                 return 0;
         }
@@ -135,6 +138,8 @@ public class PostListButton extends LinearLayout {
                 return R.drawable.ic_ellipsis_blue_wordpress_18dp;
             case BUTTON_BACK:
                 return R.drawable.ic_chevron_left_blue_wordpress_18dp;
+            case BUTTON_RETRY:
+                return R.drawable.ic_refresh_blue_wordpress_18dp;
             default:
                 return 0;
         }
