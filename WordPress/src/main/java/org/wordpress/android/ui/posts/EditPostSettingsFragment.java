@@ -105,6 +105,10 @@ public class EditPostSettingsFragment extends Fragment {
     private EditPostActivityHook mEditPostActivityHook;
     private SiteSettingsInterface mSiteSettings;
 
+    private LinearLayout mCategoriesContainer;
+    private LinearLayout mExcerptContainer;
+    private LinearLayout mFormatContainer;
+    private LinearLayout mTagsContainer;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
     private TextView mLocationTextView;
@@ -141,6 +145,11 @@ public class EditPostSettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         mDispatcher.register(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         updatePostFormatKeysAndNames();
         fetchSiteSettingsAndUpdateDefaultPostFormat();
@@ -151,6 +160,8 @@ public class EditPostSettingsFragment extends Fragment {
         if (!getPost().isPage()) {
             mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel));
         }
+
+        refreshViews();
     }
 
     private void fetchSiteSettingsAndUpdateDefaultPostFormat() {
@@ -243,8 +254,8 @@ public class EditPostSettingsFragment extends Fragment {
             featuredImageCardView.setVisibility(View.GONE);
         }
 
-        final LinearLayout excerptContainer = (LinearLayout) rootView.findViewById(R.id.post_excerpt_container);
-        excerptContainer.setOnClickListener(new View.OnClickListener() {
+        mExcerptContainer = (LinearLayout) rootView.findViewById(R.id.post_excerpt_container);
+        mExcerptContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showPostExcerptDialog();
@@ -267,16 +278,16 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        final LinearLayout categoriesContainer = (LinearLayout) rootView.findViewById(R.id.post_categories_container);
-        categoriesContainer.setOnClickListener(new View.OnClickListener() {
+        mCategoriesContainer = (LinearLayout) rootView.findViewById(R.id.post_categories_container);
+        mCategoriesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showCategoriesActivity();
             }
         });
 
-        final LinearLayout tagsContainer = (LinearLayout) rootView.findViewById(R.id.post_tags_container);
-        tagsContainer.setOnClickListener(new View.OnClickListener() {
+        mTagsContainer = (LinearLayout) rootView.findViewById(R.id.post_tags_container);
+        mTagsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showTagsActivity();
@@ -291,8 +302,8 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        final LinearLayout formatContainer = (LinearLayout) rootView.findViewById(R.id.post_format_container);
-        formatContainer.setOnClickListener(new View.OnClickListener() {
+        mFormatContainer = (LinearLayout) rootView.findViewById(R.id.post_format_container);
+        mFormatContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showPostFormatDialog();
@@ -315,14 +326,6 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        if (getPost().isPage()) { // remove post specific views
-            excerptContainer.setVisibility(View.GONE);
-            categoriesContainer.setVisibility(View.GONE);
-            tagsContainer.setVisibility(View.GONE);
-            formatContainer.setVisibility(View.GONE);
-        }
-
-        refreshViews();
         return rootView;
     }
 
@@ -350,7 +353,15 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
+
         PostModel postModel = getPost();
+        if (postModel.isPage()) {
+            // remove post specific views
+            mCategoriesContainer.setVisibility(View.GONE);
+            mExcerptContainer.setVisibility(View.GONE);
+            mFormatContainer.setVisibility(View.GONE);
+            mTagsContainer.setVisibility(View.GONE);
+        }
         mExcerptTextView.setText(postModel.getExcerpt());
         mSlugTextView.setText(postModel.getSlug());
         mPasswordTextView.setText(postModel.getPassword());
