@@ -27,8 +27,10 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
@@ -59,6 +61,7 @@ public class UploadService extends Service {
     private class UploadingPost {
         PostModel postModel;
         List<MediaModel> pendingMedia = new ArrayList<>();
+        boolean isCancelled;
         UploadingPost(PostModel postModel, List<MediaModel> pendingMedia) {
             this.postModel = postModel;
             this.pendingMedia = pendingMedia;
@@ -182,8 +185,27 @@ public class UploadService extends Service {
             if (!hasPendingOrInProgressMediaUploadsForPost(post)) {
                 mPostUploadHandler.upload(post);
             } else {
-                List<MediaModel> pendingMedia = MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
-                UploadingPost uploadingPost = new UploadingPost(post, pendingMedia);
+                for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
+                    if (uploadingPost.postModel.getId() == post.getId()) {
+                        // If we already have an entry for this post, it was probably edited and re-uploaded while we
+                        // had in-progress media uploading (and was marked as isCancelled)
+                        // Update the model, unmark it as cancelled, and add any new media the post didn't have the
+                        // first time to its pending media list
+                        uploadingPost.postModel = post;
+                        uploadingPost.isCancelled = false;
+                        Set<MediaModel> totalPendingMedia = new HashSet<>();
+                        // Media we already have on record as pending for this post (some may have completed by now)
+                        totalPendingMedia.addAll(uploadingPost.pendingMedia);
+                        // Media the MediaUploadHandler is currently processing
+                        totalPendingMedia.addAll(MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post));
+                        uploadingPost.pendingMedia = new ArrayList<>(totalPendingMedia);
+                        showNotificationForPostWithPendingMedia(post);
+                        return;
+                    }
+                }
+                // Brand new post upload
+                UploadingPost uploadingPost = new UploadingPost(post,
+                        MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post));
                 sPostsWithPendingMedia.add(uploadingPost);
                 showNotificationForPostWithPendingMedia(post);
             }
@@ -246,7 +268,7 @@ public class UploadService extends Service {
             synchronized (sPostsWithPendingMedia) {
                 for (UploadingPost queuedPost : sPostsWithPendingMedia) {
                     if (queuedPost.postModel.getId() == post.getId()) {
-                        return true;
+                        return !queuedPost.isCancelled;
                     }
                 }
             }
@@ -275,11 +297,10 @@ public class UploadService extends Service {
     public static void cancelQueuedPostUpload(PostModel post) {
         if (post != null) {
             synchronized (sPostsWithPendingMedia) {
-                Iterator<UploadingPost> iterator = sPostsWithPendingMedia.iterator();
-                while (iterator.hasNext()) {
-                    PostModel postModel = iterator.next().postModel;
+                for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
+                    PostModel postModel = uploadingPost.postModel;
                     if (postModel.getId() == post.getId()) {
-                        iterator.remove();
+                        uploadingPost.isCancelled = true;
                     }
                 }
             }
@@ -484,19 +505,25 @@ public class UploadService extends Service {
                 synchronized (sPostsWithPendingMedia) {
                     Iterator<UploadingPost> iterator = sPostsWithPendingMedia.iterator();
                     while (iterator.hasNext()) {
-                        PostModel postModel = iterator.next().postModel;
-                        if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
-                            // Fetch latest version of the post, in case it has been modified elsewhere
-                            PostModel latestPost = mPostStore.getPostByLocalPostId(postModel.getId());
+                        UploadingPost uploadingPost = iterator.next();
+                        if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(uploadingPost.postModel)) {
+                            if (uploadingPost.isCancelled) {
+                                // Finished all media uploads for a post upload that was cancelled (probably because
+                                // it was re-opened in the editor) - we can just remove it from the list now
+                                iterator.remove();
+                            } else {
+                                // Fetch latest version of the post, in case it has been modified elsewhere
+                                PostModel latestPost = mPostStore.getPostByLocalPostId(uploadingPost.postModel.getId());
 
-                            // Replace local with remote media in the post content
-                            PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(latestPost);
-                            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+                                // Replace local with remote media in the post content
+                                PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(latestPost);
+                                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
 
-                            // TODO Should do some extra validation here
-                            // e.g. what if the post has local media URLs but no pending media uploads?
-                            iterator.remove();
-                            mPostUploadHandler.upload(updatedPost);
+                                // TODO Should do some extra validation here
+                                // e.g. what if the post has local media URLs but no pending media uploads?
+                                iterator.remove();
+                                mPostUploadHandler.upload(updatedPost);
+                            }
                         }
                     }
                 }
