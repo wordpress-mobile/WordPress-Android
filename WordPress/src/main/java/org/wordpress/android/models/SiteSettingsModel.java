@@ -177,7 +177,6 @@ public class SiteSettingsModel {
     public boolean allowLikeButton;
     public boolean allowCommentLikes;
     public String twitterUsername;
-    public boolean jetpackProtectEnabled;
 
     @Override
     public boolean equals(Object other) {

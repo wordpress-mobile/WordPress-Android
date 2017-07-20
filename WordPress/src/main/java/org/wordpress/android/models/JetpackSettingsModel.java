@@ -5,6 +5,7 @@ public class JetpackSettingsModel {
     public boolean monitorActive;
     public boolean emailNotifications;
     public boolean wpNotifications;
+    public boolean jetpackProtectEnabled;
 
     @Override
     public boolean equals(Object other) {
@@ -12,6 +13,7 @@ public class JetpackSettingsModel {
         JetpackSettingsModel otherModel = (JetpackSettingsModel) other;
         return monitorActive == otherModel.monitorActive &&
                 emailNotifications == otherModel.emailNotifications &&
-                wpNotifications == otherModel.wpNotifications;
+                wpNotifications == otherModel.wpNotifications &&
+                jetpackProtectEnabled == otherModel.jetpackProtectEnabled;
     }
 }

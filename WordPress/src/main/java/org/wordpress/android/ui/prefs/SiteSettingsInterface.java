@@ -613,11 +613,11 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean isJetpackProtectEnabled() {
-        return mSettings.jetpackProtectEnabled;
+        return mJpSettings.jetpackProtectEnabled;
     }
 
     public void enableJetpackProtect(boolean enabled) {
-        mSettings.jetpackProtectEnabled = enabled;
+        mJpSettings.jetpackProtectEnabled = enabled;
     }
 
     public void setTitle(String title) {

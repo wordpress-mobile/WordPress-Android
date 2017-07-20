@@ -443,8 +443,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        mRemoteSettings.jetpackProtectEnabled = response.optBoolean("active");
-                        mSettings.jetpackProtectEnabled = response.optBoolean("active");
+                        mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
+                        mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -460,15 +460,15 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
-                        mRemoteSettings.jetpackProtectEnabled = response.optBoolean("active");
-                        mSettings.jetpackProtectEnabled = response.optBoolean("active");
+                        mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
+                        mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
                     }
-                }, mSettings.jetpackProtectEnabled);
+                }, mJpSettings.jetpackProtectEnabled);
     }
 
     private void saveJetpackSettings() {
