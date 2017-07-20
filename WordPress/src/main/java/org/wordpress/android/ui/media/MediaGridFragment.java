@@ -266,9 +266,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private MediaGridAdapter getAdapter() {
         if (!hasAdapter()) {
+            boolean canMultiSelect = mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER
+                    && WordPressMediaUtils.currentUserCanDeleteMedia(mSite);
             mGridAdapter = new MediaGridAdapter(getActivity(), mSite);
             mGridAdapter.setCallback(this);
-            mGridAdapter.setAllowMultiselect(mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER);
+            mGridAdapter.setAllowMultiselect(canMultiSelect);
             mGridAdapter.setShowPreviewIcon(mBrowserType.isPicker());
         }
         return mGridAdapter;
