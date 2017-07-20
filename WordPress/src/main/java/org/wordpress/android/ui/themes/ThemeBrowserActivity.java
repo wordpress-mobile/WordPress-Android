@@ -210,8 +210,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             page = mThemeSearchFragment.getPage();
         }
 
-        WordPress.getRestClientUtilsV1_2().getFreeSearchThemes(mSite.getSiteId(), THEME_FETCH_MAX, page, searchTerm, new
-                Listener() {
+        WordPress.getRestClientUtilsV1_2().getFreeSearchThemes(mSite.getSiteId(), THEME_FETCH_MAX, page, searchTerm,
+                new Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         new DeserializeThemesRestResponse().execute(response);
@@ -244,20 +244,21 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                     public void onResponse(JSONObject response) {
                         try {
                             mCurrentTheme = Theme.fromJSONV1_1(response, mSite);
-                            if (mCurrentTheme != null) {
-                                mCurrentTheme.setIsCurrent(true);
-                                mCurrentTheme.save();
-                                WordPress.wpDB.setCurrentTheme(String.valueOf(mSite.getSiteId()), mCurrentTheme.getId());
-                                if (mThemeBrowserFragment != null) {
-                                    mThemeBrowserFragment.setRefreshing(false);
-                                    if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
-                                        mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
-                                        mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getId());
-                                    }
+                            if (mCurrentTheme == null) {
+                                return;
+                            }
+                            mCurrentTheme.setIsCurrent(true);
+                            mCurrentTheme.save();
+                            WordPress.wpDB.setCurrentTheme(String.valueOf(mSite.getSiteId()), mCurrentTheme.getId());
+                            if (mThemeBrowserFragment != null) {
+                                mThemeBrowserFragment.setRefreshing(false);
+                                if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
+                                    mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
+                                    mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getId());
                                 }
-                                if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
-                                    mThemeSearchFragment.setRefreshing(false);
-                                }
+                            }
+                            if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
+                                mThemeSearchFragment.setRefreshing(false);
                             }
                         } catch (JSONException e) {
                             AppLog.e(T.THEMES, e);
@@ -409,7 +410,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
         String thanksMessage = String.format(getString(R.string.theme_prompt), newTheme.getName());
         if (!newTheme.getAuthor().isEmpty()) {
-            thanksMessage = thanksMessage + " " + String.format(getString(R.string.theme_by_author_prompt_append), newTheme.getAuthor());
+            String append = String.format(getString(R.string.theme_by_author_prompt_append), newTheme.getAuthor());
+            thanksMessage = thanksMessage + " " + append;
         }
 
         dialogBuilder.setMessage(thanksMessage);
