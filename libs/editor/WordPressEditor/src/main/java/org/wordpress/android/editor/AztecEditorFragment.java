@@ -147,6 +147,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
 
+        // request dependency injection
+        if (getActivity() instanceof EditorFragmentActivity) {
+            ((EditorFragmentActivity)getActivity()).initializeEditorFragment();
+        }
+
         mUploadingMedia = new HashMap<>();
         mFailedMediaIds = new HashSet<>();
 
