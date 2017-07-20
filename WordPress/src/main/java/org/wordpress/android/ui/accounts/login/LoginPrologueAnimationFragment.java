@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.accounts.login;
 
-import android.animation.Animator;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -17,19 +15,21 @@ import org.wordpress.android.R;
 public class LoginPrologueAnimationFragment extends Fragment {
     private final static String KEY_ANIMATION_FILENAME = "KEY_ANIMATION_FILENAME";
     private final static String KEY_PROMO_TEXT = "KEY_PROMO_TEXT";
+    private final static String KEY_LIGHT_BACKGROUND = "KEY_LIGHT_BACKGROUND";
 
     private LottieAnimationView mLottieAnimationView;
 
     private String mAnimationFilename;
     private @StringRes int mPromoText;
+    private Boolean mLightBackground;
 
-    private LoginListener mLoginListener;
-
-    static LoginPrologueAnimationFragment newInstance(String animationFilename, @StringRes int promoText) {
+    static LoginPrologueAnimationFragment newInstance(String animationFilename, @StringRes int promoText,
+            boolean lightBackground) {
         LoginPrologueAnimationFragment fragment = new LoginPrologueAnimationFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_ANIMATION_FILENAME, animationFilename);
         bundle.putInt(KEY_PROMO_TEXT, promoText);
+        bundle.putBoolean(KEY_LIGHT_BACKGROUND, lightBackground);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -40,66 +40,23 @@ public class LoginPrologueAnimationFragment extends Fragment {
 
         mAnimationFilename = getArguments().getString(KEY_ANIMATION_FILENAME);
         mPromoText = getArguments().getInt(KEY_PROMO_TEXT);
+        mLightBackground = getArguments().getBoolean(KEY_LIGHT_BACKGROUND);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_intro_template_view, container, false);
+        rootView.setBackgroundColor(getResources().getColor(mLightBackground ? R.color.blue_light : R.color.blue_medium));
 
         TextView promoText = (TextView) rootView.findViewById(R.id.promo_text);
         promoText.setText(mPromoText);
+        promoText.setTextColor(getResources().getColor(mLightBackground ? R.color.blue_dark : R.color.white));
 
         mLottieAnimationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
         mLottieAnimationView.setAnimation(mAnimationFilename, LottieAnimationView.CacheStrategy.Weak);
-        mLottieAnimationView.loop(true);
-
-        mLottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
-            private int mCount;
-
-            @Override
-            public void onAnimationStart(Animator animation) {}
-
-            @Override
-            public void onAnimationEnd(Animator animation) {}
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                mCount = 0;
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-                mCount++;
-
-                if (mCount > 2) {
-                    mCount = 0;
-
-                    if (mLoginListener != null) {
-                        mLoginListener.nextPromo();
-                    }
-                }
-            }
-        });
 
         return rootView;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof LoginListener) {
-            mLoginListener = (LoginListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement LoginListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        mLoginListener = null;
     }
 
     @Override
@@ -126,6 +83,7 @@ public class LoginPrologueAnimationFragment extends Fragment {
             mLottieAnimationView.playAnimation();
         } else {
             mLottieAnimationView.cancelAnimation();
+            mLottieAnimationView.setProgress(0);
         }
     }
 }

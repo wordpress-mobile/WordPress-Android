@@ -73,10 +73,8 @@
         <item name="colorControlNormal">@color/wp_grey</item>
     </style>
 
-    <style name="LoginTheme.PromoText">
+    <style name="LoginTheme.PromoText" parent="TextAppearance.AppCompat.Title">
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/nux_promo_font_size</item>
         <item name="android:lineSpacingExtra">2dp</item>
     </style>
 
@@ -223,14 +221,14 @@
         <item name="colorButtonNormal">@color/white</item>
     </style>
 
-    <style name="WordPress.BlueButton" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/blue_wordpress</item>
-        <item name="android:textColor">@color/nux_primary_button</item>
+    <style name="WordPress.Button" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/white</item>
+        <item name="android:textColor">@color/grey_dark</item>
     </style>
 
-    <style name="WordPress.WhiteButton" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/white</item>
-        <item name="android:textColor">@color/blue_wordpress</item>
+    <style name="WordPress.Button.Primary" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/blue_medium</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <!-- NUX Styles -->

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -17,8 +16,6 @@ public class LoginPrologueFragment extends Fragment {
     public static final String TAG = "login_prologue_fragment_tag";
 
     LoginListener mLoginListener;
-
-    private WPViewPager mPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,13 +39,13 @@ public class LoginPrologueFragment extends Fragment {
             }
         });
 
-        mPager = (WPViewPager) view.findViewById(R.id.intros_pager);
+        WPViewPager pager = (WPViewPager) view.findViewById(R.id.intros_pager);
         LoginProloguePagerAdapter adapter = new LoginProloguePagerAdapter(getChildFragmentManager());
-        mPager.setAdapter(adapter);
+        pager.setAdapter(adapter);
 
         // Using a TabLayout for simulating a page indicator strip
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout_indicator);
-        tabLayout.setupWithViewPager(mPager, true);
+        tabLayout.setupWithViewPager(pager, true);
 
         return view;
     }
@@ -67,14 +64,5 @@ public class LoginPrologueFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mLoginListener = null;
-    }
-
-    public void onNextPromo() {
-        int nextItem = mPager.getCurrentItem() + 1;
-        if (nextItem == mPager.getAdapter().getCount()) {
-            nextItem = 0;
-        }
-
-        mPager.setCurrentItem(nextItem, true);
     }
 }
