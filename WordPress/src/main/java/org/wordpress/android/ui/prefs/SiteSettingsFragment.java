@@ -202,6 +202,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mDeleteSitePref;
 
     // Jetpack settings
+    private PreferenceScreen mJpSecuritySettings;
     private WPSwitchPreference mJpMonitorActivePref;
     private WPSwitchPreference mJpMonitorEmailNotesPref;
     private WPSwitchPreference mJpMonitorWpNotesPref;
@@ -417,6 +418,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                     AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED_MORE_SETTINGS, mSite);
 
             return setupMorePreferenceScreen();
+        } else if (preference == mJpSecuritySettings) {
+            setupJetpackSecurityScreen();
         } else if (preference == findPreference(getString(R.string.pref_key_site_start_over_screen))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (mSite == null || dialog == null) return false;
@@ -724,9 +727,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
-        mJpMonitorActivePref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_monitor_uptime);
-        mJpMonitorEmailNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_send_email_notifications);
-        mJpMonitorWpNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_send_wp_notifications);
+        mJpSecuritySettings = (PreferenceScreen) getClickPref(R.string.pref_key_jetpack_security_screen);
+        mJpMonitorActivePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_monitor_uptime);
+        mJpMonitorEmailNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_email_notifications);
+        mJpMonitorWpNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_wp_notifications);
 
         sortLanguages();
 
@@ -1382,6 +1386,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         return preference != null && preference.getEntries() != null && preference.getEntries().length > 0;
     }
 
+    private void setupJetpackSecurityScreen() {
+        if (mJpSecuritySettings == null || !isAdded()) return;
+        String title = getString(R.string.jetpack_security_setting_title);
+        Dialog dialog = mJpSecuritySettings.getDialog();
+        if (dialog != null) {
+            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+        }
+    }
+
     private boolean setupMorePreferenceScreen() {
         if (mMorePreference == null || !isAdded()) return false;
         String title = getString(R.string.site_settings_discussion_title);
@@ -1436,6 +1450,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void removeNonDotComPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
     }
 
     private Preference getChangePref(int id) {
