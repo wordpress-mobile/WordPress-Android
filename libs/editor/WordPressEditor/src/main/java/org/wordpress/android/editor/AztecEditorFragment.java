@@ -622,6 +622,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         return;
                     }
 
+                    // This call is not needed, since we're already asking the container to resize the picture after downloading.
+                    // It's here just for security.
                     Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
                     if(mediaFile.isVideo()) {
                         content.insertVideo(new BitmapDrawable(getResources(), resizedBitmap), attributes);
@@ -1016,42 +1018,23 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onImageTapped(@NotNull AztecAttributes attrs, int naturalWidth, int naturalHeight) {
-        Set<String> classes = MetadataUtils.getClassAttribute(attrs);
-
-        String idName;
-        String uploadStatus = "";
-        JSONObject meta = MetadataUtils.getMetadata(new AttributesWithClass(attrs), naturalWidth, naturalHeight);
-        if (classes.contains(ATTR_STATUS_UPLOADING)) {
-            uploadStatus = ATTR_STATUS_UPLOADING;
-            idName = ATTR_ID_WP;
-        } else if (classes.contains(ATTR_STATUS_FAILED)) {
-            uploadStatus = ATTR_STATUS_FAILED;
-            idName = ATTR_ID_WP;
-        } else {
-            idName = ATTR_ID;
-        }
-
-        String id = attrs.getValue(idName);
-
-        // generate the element ID if ATTR_ID or ATTR_ID_WP are missing
-        if (!attrs.hasAttribute(idName) || TextUtils.isEmpty(attrs.getValue(idName))) {
-            idName = TEMP_IMAGE_ID;
-            id = UUID.randomUUID().toString();
-        }
-
-        attrs.setValue(idName, id);
-        mTappedImagePredicate = new ImagePredicate(id, idName);
-
-        onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
+        onMediaTapped(attrs, naturalWidth, naturalHeight, MediaType.IMAGE);
     }
 
     @Override
     public void onVideoTapped(@NotNull AztecAttributes attrs) {
-        Set<String> classes = MetadataUtils.getClassAttribute(attrs);
+        onMediaTapped(attrs, 0, 0, MediaType.VIDEO);
+    }
 
+    public void onMediaTapped(@NotNull AztecAttributes attrs, int naturalWidth, int naturalHeight, final MediaType mediaType) {
+        if (mediaType == null || !isAdded()) {
+            return;
+        }
+
+        Set<String> classes = MetadataUtils.getClassAttribute(attrs);
         String idName;
         String uploadStatus = "";
-        JSONObject meta = MetadataUtils.getMetadata(new AttributesWithClass(attrs), 0, 0);
+        final JSONObject meta = MetadataUtils.getMetadata(new AttributesWithClass(attrs), naturalWidth, naturalHeight);
         if (classes.contains(ATTR_STATUS_UPLOADING)) {
             uploadStatus = ATTR_STATUS_UPLOADING;
             idName = ATTR_ID_WP;
@@ -1062,24 +1045,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             idName = ATTR_ID;
         }
 
-        String id = attrs.getValue(idName);
-
+        final String localMediaId;
         // generate the element ID if ATTR_ID or ATTR_ID_WP are missing
         if (!attrs.hasAttribute(idName) || TextUtils.isEmpty(attrs.getValue(idName))) {
             idName = TEMP_IMAGE_ID;
-            id = UUID.randomUUID().toString();
+            localMediaId = UUID.randomUUID().toString();
+        } else {
+            localMediaId = attrs.getValue(idName);
         }
 
-        attrs.setValue(idName, id);
-        mTappedImagePredicate = new ImagePredicate(id, idName);
-
-        onMediaTapped(id, MediaType.VIDEO, meta, uploadStatus);
-    }
-
-    public void onMediaTapped(final String localMediaId, final MediaType mediaType, final JSONObject meta, String uploadStatus) {
-        if (mediaType == null || !isAdded()) {
-            return;
-        }
+        attrs.setValue(idName, localMediaId);
+        mTappedImagePredicate = new ImagePredicate(localMediaId, idName);
 
         switch (uploadStatus) {
             case ATTR_STATUS_UPLOADING:
