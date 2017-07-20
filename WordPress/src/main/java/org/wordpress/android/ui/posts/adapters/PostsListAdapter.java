@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -90,8 +89,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final boolean mIsStatsSupported;
     private final boolean mAlwaysShowAllButtons;
 
-    private final ContentResolver mContentResolver;
-
     private boolean mIsLoadingPosts;
 
     private final List<PostModel> mPosts = new ArrayList<>();
@@ -109,7 +106,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         mIsPage = isPage;
         mLayoutInflater = LayoutInflater.from(context);
-        mContentResolver = context.getContentResolver();
 
         mSite = site;
         mIsStatsSupported = SiteUtils.isAccessedViaWPComRest(site) && site.getHasCapabilityViewStats();
@@ -318,7 +314,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             imgFeatured.setVisibility(View.VISIBLE);
             imgFeatured.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
         } else {
-            Bitmap bmp = fastResizeBitmap(imgFeatured.getContext(), imageUrl, mPhotonWidth);
+            Bitmap bmp = fastResizeBitmap(imageUrl, mPhotonWidth);
             if (bmp != null) {
                 imgFeatured.setVisibility(View.VISIBLE);
                 imgFeatured.setImageBitmap(bmp);
@@ -329,7 +325,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     // TODO: once this is proven we can move it to ImageUtils
-    private static Bitmap fastResizeBitmap(@NonNull Context context, @NonNull String imageUri, int maxWidth) {
+    private static Bitmap fastResizeBitmap(@NonNull String imageUri, int maxWidth) {
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(imageUri, opt);
@@ -346,8 +342,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         opt.inSampleSize = (int) scale;
         opt.inDensity = srcWidth;
         opt.inTargetDensity =  maxWidth * opt.inSampleSize;
-        Bitmap bitmap = BitmapFactory.decodeFile(imageUri, opt);
-        return bitmap;
+        return BitmapFactory.decodeFile(imageUri, opt);
     }
 
     /*
@@ -727,7 +722,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private List<PostModel> tmpPosts;
         private final ArrayList<Long> mediaIdsToUpdate = new ArrayList<>();
-        private LoadMode mLoadMode;
+        private final LoadMode mLoadMode;
 
         LoadPostsTask(LoadMode loadMode) {
             mLoadMode = loadMode;
@@ -783,15 +778,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     if (media != null) {
                         imageUrl = media.getUrl();
                     } else {
-                        // If the imageUrl isn't found it means the featured image info hasn't been added to
+                        // If the media isn't found it means the featured image info hasn't been added to
                         // the local media library yet, so add to the list of media IDs to request info for
                         mediaIdsToUpdate.add(post.getFeaturedImageId());
                     }
-                } else if (StringUtils.isNotEmpty(post.getContent())) {
+                } else {
                     imageUrl = new ReaderImageScanner(post.getContent(), mSite.isPrivate()).getLargestImage();
                 }
                 if (!TextUtils.isEmpty(imageUrl)) {
-                    mFeaturedImageUrls.put(post.getId(),imageUrl);
+                    mFeaturedImageUrls.put(post.getId(), imageUrl);
                 }
             }
 
