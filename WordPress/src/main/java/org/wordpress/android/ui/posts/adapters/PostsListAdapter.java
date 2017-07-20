@@ -587,10 +587,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    public void reloadPost(@NonNull PostModel post) {
-        int position = PostUtils.indexOfPostInList(post, mPosts);
-        if (position > -1) {
-            notifyItemChanged(position);
+    public void updateProgressForPost(@NonNull PostModel post) {
+        if (mRecyclerView != null) {
+            int position = PostUtils.indexOfPostInList(post, mPosts);
+            if (position > -1) {
+                RecyclerView.ViewHolder viewHolder = mRecyclerView.findViewHolderForAdapterPosition(position);
+                if (viewHolder instanceof PostViewHolder) {
+                    updatePostUploadProgressBar(((PostViewHolder) viewHolder).progressBar, post);
+                } else if (viewHolder instanceof PageViewHolder) {
+                    updatePostUploadProgressBar(((PageViewHolder) viewHolder).progressBar, post);
+                }
+            }
         }
     }
 

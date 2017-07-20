@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,8 +158,6 @@ public class PostsListFragment extends Fragment
 
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        // Disable flashing animation when a list item is updated (prevents flashing due to progress bar updates)
-        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.card_gutters);
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
@@ -774,7 +771,7 @@ public class PostsListFragment extends Fragment
 
         PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
         if (post != null) {
-            mPostsListAdapter.reloadPost(post);
+            mPostsListAdapter.updateProgressForPost(post);
         }
     }
 }
