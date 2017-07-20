@@ -315,7 +315,7 @@ public class SitePickerActivity extends AppCompatActivity
     private void setNewAdapter(String lastSearch, boolean isInSearchMode) {
         mAdapter = new SitePickerAdapter(
                 this,
-                R.layout.login_epilogue_sites_listitem,
+                R.layout.site_picker_listitem,
                 mCurrentLocalId,
                 lastSearch,
                 isInSearchMode,
