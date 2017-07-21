@@ -263,7 +263,7 @@ public class SiteSqlUtils {
                 .endWhere().getAsModel();
     }
 
-    public static void insertOrReplaceRoles(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
+    public static void insertOrUserReplaceRoles(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
         // Remove previous roles for this site
         WellSql.delete(RoleModel.class)
                 .where()

@@ -259,6 +259,13 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class OnUserRolesChanged extends OnChanged<UserRolesError> {
+        public SiteModel site;
+        public OnUserRolesChanged(SiteModel site) {
+            this.site = site;
+        }
+    }
+
     public static class OnURLChecked extends OnChanged<SiteError> {
         public String url;
         public boolean isWPCom;
@@ -767,11 +774,14 @@ public class SiteStore extends Store {
             case FETCH_POST_FORMATS:
                 fetchPostFormats((SiteModel) action.getPayload());
                 break;
+            case FETCHED_POST_FORMATS:
+                updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
+                break;
             case FETCH_USER_ROLES:
                 fetchUserRoles((SiteModel) action.getPayload());
                 break;
-            case FETCHED_POST_FORMATS:
-                updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
+            case FETCHED_USER_ROLES:
+                updateUserRoles((FetchedUserRolesPayload) action.getPayload());
                 break;
             case FETCH_CONNECT_SITE_INFO:
                 fetchConnectSiteInfo((String) action.getPayload());
@@ -970,6 +980,16 @@ public class SiteStore extends Store {
         if (site.isUsingWpComRestApi()) {
             mSiteRestClient.fetchUserRoles(site);
         }
+    }
+
+    private void updateUserRoles(FetchedUserRolesPayload payload) {
+        OnUserRolesChanged event = new OnUserRolesChanged(payload.site);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            SiteSqlUtils.insertOrUserReplaceRoles(payload.site, payload.roles);
+        }
+        emitChange(event);
     }
 
     private int removeSites(List<SiteModel> sites) {
