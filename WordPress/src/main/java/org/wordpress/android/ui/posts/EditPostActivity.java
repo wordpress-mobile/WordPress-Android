@@ -59,6 +59,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
+import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.editor.EditorWebViewCompatibility;
@@ -149,6 +150,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements
+        EditorFragmentActivity,
         EditorBetaClickListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
@@ -200,7 +202,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private PostModel mPost;
     private PostModel mOriginalPost;
 
-    private AztecEditorFragment mAztecEditorFragment;
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditPostPreviewFragment mEditPostPreviewFragment;
@@ -576,8 +577,8 @@ public class EditPostActivity extends AppCompatActivity implements
             AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
         }
 
-        if (mAztecEditorFragment != null) {
-            mAztecEditorFragment.enableMediaMode(true);
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            ((AztecEditorFragment)mEditorFragment).enableMediaMode(true);
         }
     }
 
@@ -592,8 +593,8 @@ public class EditPostActivity extends AppCompatActivity implements
             AniUtils.fadeOut(overlay, AniUtils.Duration.MEDIUM);
         }
 
-        if (mAztecEditorFragment != null) {
-            mAztecEditorFragment.enableMediaMode(false);
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            ((AztecEditorFragment)mEditorFragment).enableMediaMode(false);
         }
     }
 
@@ -916,6 +917,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
         }).start();
+    }
+
+    @Override
+    public void initializeEditorFragment() {
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            AztecEditorFragment aztecEditorFragment = (AztecEditorFragment)mEditorFragment;
+            aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
+            aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext()));
+        }
     }
 
     private interface AfterSavePostListener {
@@ -1255,9 +1265,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowAztecEditor) {
-                        mAztecEditorFragment = AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
-                        mAztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
-                        mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
 
                         // Show confirmation message when coming from editor promotion dialog.
                         if (mIsPromo) {
@@ -1267,7 +1274,7 @@ public class EditPostActivity extends AppCompatActivity implements
                             showSnackbarBeta();
                         }
 
-                        return mAztecEditorFragment;
+                        return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
                         return new EditorFragment();

@@ -63,7 +63,6 @@ import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
-import org.wordpress.aztec.plugins.wpcomments.toolbar.PageToolbarButton;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -112,7 +111,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private AztecText content;
     private SourceViewEditText source;
     private AztecToolbar formattingToolbar;
-    private Html.ImageGetter imageLoader;
+    private Html.ImageGetter aztecImageLoader;
 
     private Handler invalidateOptionsHandler;
     private Runnable invalidateOptionsRunnable;
@@ -147,6 +146,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
+
+        // request dependency injection
+        if (getActivity() instanceof EditorFragmentActivity) {
+            ((EditorFragmentActivity)getActivity()).initializeEditorFragment();
+        }
 
         mUploadingMedia = new HashMap<>();
         mFailedMediaIds = new HashSet<>();
@@ -193,7 +197,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         });
 
         Aztec.Factory.with(content, source, formattingToolbar, this)
-            .setImageGetter(imageLoader)
+            .setImageGetter(aztecImageLoader)
             .setOnImeBackListener(this)
             .setHistoryListener(this)
             .setOnImageTappedListener(this)
@@ -209,8 +213,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mEditorBetaClickListener = listener;
     }
 
-    public void setImageLoader(Html.ImageGetter imageLoader) {
-        this.imageLoader = imageLoader;
+    public void setAztecImageLoader(Html.ImageGetter imageLoader) {
+        this.aztecImageLoader = imageLoader;
     }
 
     @Override
