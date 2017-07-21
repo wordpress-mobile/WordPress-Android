@@ -176,8 +176,8 @@ public class XMLRPCSerializer {
         } catch (IllegalArgumentException e) {
             // There are characters outside the XML unicode charset as specified by the XML 1.0 standard
             // See http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
-            AppLog.e(T.API,
-                    "There are characters outside the XML unicode charset as specified by the XML 1.0 standard", e);
+            AppLog.d(T.API, "There are characters outside the XML unicode charset as specified"
+                    + " by the XML 1.0 standard");
         }
 
         // We need to do the following things:
@@ -191,8 +191,8 @@ public class XMLRPCSerializer {
             SERIALIZE_TESTER.text(noEmojiString);
             return noEmojiString;
         } catch (IllegalArgumentException e) {
-            AppLog.e(T.API, "noEmojiString still contains characters outside the XML unicode charset as specified"
-                            + " by the XML 1.0 standard");
+            AppLog.w(T.API, "noEmojiString still contains characters outside the XML unicode charset as specified"
+                    + " by the XML 1.0 standard");
             return StringUtils.stripNonValidXMLCharacters(noEmojiString);
         }
     }
