@@ -45,7 +45,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 11;
+        return 12;
     }
 
     @Override
@@ -108,6 +108,10 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 10:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table SiteModel add MEMORY_LIMIT integer;");
+                oldVersion++;
+            case 11:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE RoleModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,SITE_ID INTEGER,NAME TEXT,DISPLAY_NAME TEXT)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
