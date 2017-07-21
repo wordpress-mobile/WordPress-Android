@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -126,6 +127,27 @@ public class PhotoPickerFragment extends Fragment {
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
+
+        // disable thumbnail loading during a fling to conserve memory
+        final int minDistance = WordPressMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
+        mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
+            @Override
+            public boolean onFling(int velocityX, int velocityY) {
+                if (Math.abs(velocityY) > minDistance) {
+                    getAdapter().setLoadThumbnails(false);
+                }
+                return false;
+            }
+        });
+        mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    getAdapter().setLoadThumbnails(true);
+                }
+            }
+        });
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
         mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {

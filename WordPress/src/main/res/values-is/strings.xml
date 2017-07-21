@@ -41,7 +41,6 @@ Language: is
 	<string name="media_upload_state_queued">Í biðröð</string>
 	<string name="update_draft">Uppfæra drög</string>
 	<string name="keep_editing">Halda áfram að breyta</string>
-	<string name="image_quality">Gæði myndar</string>
 	<string name="error_all_media_upload_canceled">Hætt hefur verið við allar upphleðslur á skrám vegna óþekktrar villu. Vinsamlegast reyndu aftur að hlaða upp.</string>
 	<string name="error_unknown_post_type">Óþekkt færslusnið</string>
 	<string name="error_unknown_post">Óþekkt færsla, staðbundið afrit af þessari færslu gæti verið ósamstætt við netþjón</string>
@@ -171,13 +170,6 @@ Language: is
 	<string name="editor_failed_uploads_switch_html">Einhver skráarupphöl mistókust. Þú getur ekki skipt í HTML ham\n        eins og er. Fjarlægja öll misheppnuð upphöl og halda áfram?</string>
 	<string name="image_thumbnail">Þumla</string>
 	<string name="visual_editor">Sjónrænn ritill</string>
-	<string name="format_bar_description_html">HTML hamur</string>
-	<string name="format_bar_description_ol">Raðaður listi</string>
-	<string name="format_bar_description_ul">Óraðaður listi</string>
-	<string name="format_bar_description_media">Setja inn skrá</string>
-	<string name="format_bar_description_more">Skjóta inn skilju</string>
-	<string name="format_bar_description_link">Skjóta inn tengli</string>
-	<string name="format_bar_description_quote">Tilvitnun</string>
 	<string name="format_bar_description_strike">Útstrika</string>
 	<string name="format_bar_description_underline">Undirstrika</string>
 	<string name="format_bar_description_italic">Skáletra</string>

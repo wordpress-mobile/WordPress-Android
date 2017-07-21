@@ -43,13 +43,6 @@ Language: sk
 	<string name="error_remove_viewer">Nemožno odstrániť návštevníka</string>
 	<string name="error_remove_follower">Nemožno odstrániť odberateľa</string>
 	<string name="visual_editor">Vizuálny editor</string>
-	<string name="format_bar_description_html">HTML mód</string>
-	<string name="format_bar_description_ol">Číslovaný zoznam</string>
-	<string name="format_bar_description_ul">Neočíslovaný zoznam</string>
-	<string name="format_bar_description_media">Priložiť súbor</string>
-	<string name="format_bar_description_more">Priložiť viac</string>
-	<string name="format_bar_description_link">Vložiť odkaz</string>
-	<string name="format_bar_description_quote">Citát</string>
 	<string name="format_bar_description_strike">Prečiarknutie</string>
 	<string name="format_bar_description_underline">Podčiarknutie</string>
 	<string name="format_bar_description_italic">Kurzíva</string>

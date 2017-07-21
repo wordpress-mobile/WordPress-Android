@@ -41,7 +41,6 @@ Language: id
 	<string name="media_upload_state_queued">Diantrekan</string>
 	<string name="update_draft">Perbarui konsep</string>
 	<string name="keep_editing">Lanjutkan menyunting</string>
-	<string name="image_quality">Kualitas gambar</string>
 	<string name="error_all_media_upload_canceled">Semua unggahan media telah dibatalkan karena error yang tidak diketahui. Coba unggah lagi</string>
 	<string name="error_unknown_post_type">Format pos tidak diketahui</string>
 	<string name="error_unknown_post">Pos tidak diketahui, salinan lokal pos ini mungkin tidak sinkron dengan server</string>
@@ -146,13 +145,6 @@ Language: id
 	<string name="editor_failed_uploads_switch_html">Beberapa media gagal diunggah. Anda bisa pindah ke mode HTML\n        dalam situasi begini. Hapus semua unggahan yang gagal dan lanjutkan?</string>
 	<string name="image_thumbnail">Miniatur gambar</string>
 	<string name="visual_editor">Editor Visual</string>
-	<string name="format_bar_description_html">Mode HTML</string>
-	<string name="format_bar_description_ol">Daftar bernomor</string>
-	<string name="format_bar_description_ul">Daftar tak bernomor</string>
-	<string name="format_bar_description_media">Sisipkan media</string>
-	<string name="format_bar_description_more">Sisipkan lagi</string>
-	<string name="format_bar_description_link">Sisipkan tautan</string>
-	<string name="format_bar_description_quote">Blok kutipan</string>
 	<string name="format_bar_description_strike">Coretan</string>
 	<string name="format_bar_description_underline">Garis bawah</string>
 	<string name="format_bar_description_italic">Miring</string>

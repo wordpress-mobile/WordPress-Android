@@ -59,7 +59,6 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
-import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
@@ -767,6 +766,10 @@ public class EditPostSettingsFragment extends Fragment {
         if (getActivity() == null) {
             return;
         }
+        if (getSite() == null) {
+            AppLog.e(T.POSTS, "Current site shouldn't be null while updating post format keys & names");
+            return;
+        }
         // Default values
         mPostFormatKeys = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
         mPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
@@ -914,6 +917,7 @@ public class EditPostSettingsFragment extends Fragment {
             AppLog.e(T.POSTS, "An error occurred while updating the post formats with type: " + event.error.type);
             return;
         }
+        AppLog.v(T.POSTS, "Post formats successfully fetched!");
         updatePostFormatKeysAndNames();
     }
 
