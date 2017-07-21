@@ -159,7 +159,7 @@ public class XMLRPCSerializer {
         }
     }
 
-    private static String makeValidInputString(final String input) throws IOException {
+    public static String makeValidInputString(final String input) throws IOException {
         if (TextUtils.isEmpty(input)) {
             return "";
         }
