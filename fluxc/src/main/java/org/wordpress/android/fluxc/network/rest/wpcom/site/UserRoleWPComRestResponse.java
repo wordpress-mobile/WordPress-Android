@@ -2,10 +2,10 @@ package org.wordpress.android.fluxc.network.rest.wpcom.site;
 
 import java.util.List;
 
-class UserRoleWPComRestResponse {
-    class UserRolesResponse {
-        List<UserRoleWPComRestResponse> roles;
+public class UserRoleWPComRestResponse {
+    public class UserRolesResponse {
+        public List<UserRoleWPComRestResponse> roles;
     }
-    String name;
-    String display_name;
+    public String name;
+    public String display_name;
 }
