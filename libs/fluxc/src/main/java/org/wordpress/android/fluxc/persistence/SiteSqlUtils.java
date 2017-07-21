@@ -263,13 +263,13 @@ public class SiteSqlUtils {
                 .endWhere().getAsModel();
     }
 
-    public static void insertOrUserReplaceRoles(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
+    public static void insertOrReplaceUserRoles(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
         // Remove previous roles for this site
         WellSql.delete(RoleModel.class)
                 .where()
-                .equals(PostFormatModelTable.SITE_ID, site.getId())
+                .equals(RoleModelTable.SITE_ID, site.getId())
                 .endWhere().execute();
-        // Insert new post formats for this site
+        // Insert new user roles for this site
         for (RoleModel role : roles) {
             role.setSiteId(site.getId());
         }
