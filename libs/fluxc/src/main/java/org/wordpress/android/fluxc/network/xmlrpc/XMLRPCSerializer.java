@@ -6,6 +6,7 @@ import android.util.Xml;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
@@ -159,7 +160,7 @@ public class XMLRPCSerializer {
         }
     }
 
-    private static String makeValidInputString(final String input) throws IOException {
+    public static String makeValidInputString(final String input) throws IOException {
         if (TextUtils.isEmpty(input)) {
             return "";
         }
@@ -175,8 +176,8 @@ public class XMLRPCSerializer {
         } catch (IllegalArgumentException e) {
             // There are characters outside the XML unicode charset as specified by the XML 1.0 standard
             // See http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
-            AppLog.e(T.API,
-                    "There are characters outside the XML unicode charset as specified by the XML 1.0 standard", e);
+            AppLog.d(T.API, "There are characters outside the XML unicode charset as specified"
+                    + " by the XML 1.0 standard");
         }
 
         // We need to do the following things:
@@ -185,17 +186,15 @@ public class XMLRPCSerializer {
         // 3. Try to serialize the resulting string.
         // 4. If it fails again, strip characters that are not allowed in XML 1.0
 
-        return input;
-        // TODO: do that...
-//        final String noEmojiString = StringUtils.replaceUnicodeSurrogateBlocksWithHTMLEntities(input);
-//        try {
-//            SERIALIZE_TESTER.text(noEmojiString);
-//            return noEmojiString;
-//        } catch (IllegalArgumentException e) {
-//            AppLog.e(T.API, e. "noEmojiString still contains characters outside the XML unicode"
-//                               + "charset as specified by the XML 1.0 standard");
-//            return StringUtils.stripNonValidXMLCharacters(noEmojiString);
-//        }
+        final String noEmojiString = StringUtils.replaceUnicodeSurrogateBlocksWithHTMLEntities(input);
+        try {
+            SERIALIZE_TESTER.text(noEmojiString);
+            return noEmojiString;
+        } catch (IllegalArgumentException e) {
+            AppLog.w(T.API, "noEmojiString still contains characters outside the XML unicode charset as specified"
+                    + " by the XML 1.0 standard");
+            return StringUtils.stripNonValidXMLCharacters(noEmojiString);
+        }
     }
 
     public static Object deserialize(XmlPullParser parser) throws XmlPullParserException, IOException,

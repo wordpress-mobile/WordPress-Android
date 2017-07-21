@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCSerializer;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLSerializerUtils;
 
 import java.io.ByteArrayInputStream;
@@ -55,5 +56,14 @@ public class XMLSerializerUtilsTest {
         } catch (IOException e) {
         }
         return null;
+    }
+
+    @Test
+    public void testXMLRPCSerializer_makeValidInputString_emoji() throws IOException {
+        // Not a XML 1.0 valid character
+        String inputString = "\uD83D";
+        String serializeThis = XMLRPCSerializer.makeValidInputString(inputString);
+        // If the input wasn't modified, it will fail during the XMLRPC serialization step
+        Assert.assertNotEquals(inputString, serializeThis);
     }
 }
