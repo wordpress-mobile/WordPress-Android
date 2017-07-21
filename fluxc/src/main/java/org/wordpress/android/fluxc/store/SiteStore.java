@@ -991,7 +991,7 @@ public class SiteStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            SiteSqlUtils.insertOrUserReplaceRoles(payload.site, payload.roles);
+            SiteSqlUtils.insertOrReplaceUserRoles(payload.site, payload.roles);
         }
         emitChange(event);
     }
