@@ -114,7 +114,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private AztecText content;
     private SourceViewEditText source;
     private AztecToolbar formattingToolbar;
-    private Html.ImageGetter imageLoader;
+    private Html.ImageGetter aztecImageLoader;
 
     private Handler invalidateOptionsHandler;
     private Runnable invalidateOptionsRunnable;
@@ -150,6 +150,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
 
+        // request dependency injection
+        if (getActivity() instanceof EditorFragmentActivity) {
+            ((EditorFragmentActivity)getActivity()).initializeEditorFragment();
+        }
+
         mUploadingMedia = new HashMap<>();
         mFailedMediaIds = new HashSet<>();
 
@@ -163,12 +168,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         formattingToolbar.setExpanded(mIsToolbarExpanded);
 
         title.setOnFocusChangeListener(
-            new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean hasFocus) {
-                    formattingToolbar.enableFormatButtons(!hasFocus);
+                new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View view, boolean hasFocus) {
+                        formattingToolbar.enableFormatButtons(!hasFocus);
+                    }
                 }
-            }
         );
 
         content.setOnDragListener(mOnDragListener);
@@ -195,7 +200,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         });
 
         Aztec.Factory.with(content, source, formattingToolbar, this)
-                .setImageGetter(imageLoader)
+                .setImageGetter(aztecImageLoader)
                 .setOnImeBackListener(this)
                 .setHistoryListener(this)
                 .setOnImageTappedListener(this)
@@ -212,8 +217,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mEditorBetaClickListener = listener;
     }
 
-    public void setImageLoader(Html.ImageGetter imageLoader) {
-        this.imageLoader = imageLoader;
+    public void setAztecImageLoader(Html.ImageGetter imageLoader) {
+        this.aztecImageLoader = imageLoader;
     }
 
     @Override

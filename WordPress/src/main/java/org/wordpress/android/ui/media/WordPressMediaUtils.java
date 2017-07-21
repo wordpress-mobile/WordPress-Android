@@ -11,12 +11,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
+import android.view.ViewConfiguration;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -242,5 +243,30 @@ public class WordPressMediaUtils {
                         AppLog.d(T.MEDIA, "Media scanner finished scanning " + path);
                     }
                 });
+    }
+
+    /*
+     * returns true if the current user has permission to upload new media to the passed site
+     */
+    public static boolean currentUserCanUploadMedia(@NonNull SiteModel site) {
+        if (site.isUsingWpComRestApi()) {
+            return site.getHasCapabilityUploadFiles();
+        } else {
+            // self-hosted sites don't have capabilities so always return true
+            return true;
+        }
+    }
+
+    public static boolean currentUserCanDeleteMedia(@NonNull SiteModel site) {
+        return currentUserCanUploadMedia(site);
+    }
+  
+    /*
+     * returns the minimum distance for a fling which determines whether to disable loading
+     * thumbnails in the media grid or photo picker - used to conserve memory usage during
+     * a reasonably-sized fling
+     */
+    public static int getFlingDistanceToDisableThumbLoading(@NonNull Context context) {
+        return ViewConfiguration.get(context).getScaledMaximumFlingVelocity() / 2;
     }
 }
