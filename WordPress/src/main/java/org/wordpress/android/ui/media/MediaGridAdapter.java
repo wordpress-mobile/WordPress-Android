@@ -577,6 +577,35 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return "";
     }
 
+    void updateMediaItem(@NonNull MediaModel media) {
+        int index = indexOfMedia(media);
+        if (index > -1 && !media.equals(mMediaList.get(index))) {
+            mMediaList.set(index, media);
+            notifyItemChanged(index);
+        }
+    }
+
+    void removeMediaItem(@NonNull MediaModel media) {
+        int index = indexOfMedia(media);
+        if (index > -1) {
+            mMediaList.remove(index);
+            notifyItemRemoved(index);
+        }
+    }
+
+    boolean mediaExists(@NonNull MediaModel media) {
+        return indexOfMedia(media) > -1;
+    }
+
+    private int indexOfMedia(@NonNull MediaModel media) {
+        for (int i = 0 ; i < mMediaList.size(); i++) {
+            if (media.getId() == mMediaList.get(i).getId()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     /*
      * returns true if the passed list is the same as the existing one
      */
@@ -586,14 +615,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         for (MediaModel otherMedia : otherList) {
-            boolean exists = false;
-            for (MediaModel thisMedia: mMediaList) {
-                if (thisMedia.getId() == otherMedia.getId()) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (!exists) {
+            if (!mediaExists(otherMedia)) {
                 return false;
             }
         }

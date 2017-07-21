@@ -410,6 +410,26 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
+    /*
+     * update just the passed media item - if it doesn't exist it may be because
+     * it was just added, so reload the adapter
+     */
+    void updateMediaItem(@NonNull MediaModel media) {
+        if (!isAdded() || !hasAdapter()) return;
+
+        if (getAdapter().mediaExists(media)) {
+            getAdapter().updateMediaItem(media);
+        } else {
+            reload();
+        }
+    }
+
+    void removeMediaItem(@NonNull MediaModel media) {
+        if (!isAdded() || !hasAdapter()) return;
+
+        getAdapter().removeMediaItem(media);
+    }
+
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
         List<MediaModel> mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);
