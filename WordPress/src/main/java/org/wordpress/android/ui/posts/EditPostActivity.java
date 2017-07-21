@@ -308,6 +308,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
                 }
                 mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
+                mPost.setStatus(PostStatus.PUBLISHED.toString());
             } else if (extras != null) {
                 // Load post passed in extras
                 mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
