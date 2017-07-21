@@ -708,6 +708,10 @@ public class SiteStore extends Store {
         return SiteSqlUtils.getPostFormats(site);
     }
 
+    public List<RoleModel> getUserRoles(SiteModel site) {
+        return SiteSqlUtils.getUserRoles(site);
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {

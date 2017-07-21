@@ -256,7 +256,7 @@ public class SiteSqlUtils {
         WellSql.insert(postFormats).execute();
     }
 
-    public static List<RoleModel> getRoles(@NonNull SiteModel site) {
+    public static List<RoleModel> getUserRoles(@NonNull SiteModel site) {
         return WellSql.select(RoleModel.class)
                 .where()
                 .equals(RoleModelTable.SITE_ID, site.getId())
