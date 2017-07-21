@@ -111,7 +111,8 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 11:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("CREATE TABLE RoleModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,SITE_ID INTEGER,NAME TEXT,DISPLAY_NAME TEXT)");
+                db.execSQL("CREATE TABLE RoleModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,SITE_ID INTEGER,"
+                        + "NAME TEXT,DISPLAY_NAME TEXT)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
