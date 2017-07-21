@@ -767,6 +767,9 @@ public class SiteStore extends Store {
             case FETCH_POST_FORMATS:
                 fetchPostFormats((SiteModel) action.getPayload());
                 break;
+            case FETCH_USER_ROLES:
+                fetchUserRoles((SiteModel) action.getPayload());
+                break;
             case FETCHED_POST_FORMATS:
                 updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
                 break;
@@ -961,6 +964,12 @@ public class SiteStore extends Store {
             SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats);
         }
         emitChange(event);
+    }
+
+    private void fetchUserRoles(SiteModel site) {
+        if (site.isUsingWpComRestApi()) {
+            mSiteRestClient.fetchUserRoles(site);
+        }
     }
 
     private int removeSites(List<SiteModel> sites) {

@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostFormatModel;
+import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
@@ -27,13 +28,17 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.UserRolesError;
+import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
@@ -221,6 +226,38 @@ public class SiteRestClient extends BaseWPComRestClient {
                         // TODO: what other kind of error could we get here?
                         payload.error = new PostFormatsError(PostFormatsErrorType.GENERIC_ERROR);
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void fetchUserRoles(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).roles.getUrlV1_1();
+        final WPComGsonRequest<UserRolesResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                UserRolesResponse.class,
+                new Listener<UserRolesResponse>() {
+                    @Override
+                    public void onResponse(UserRolesResponse response) {
+                        List<RoleModel> roleArray = new ArrayList<>();
+                        for (UserRoleWPComRestResponse roleResponse : response.roles) {
+                            RoleModel roleModel = new RoleModel();
+                            roleModel.setName(roleResponse.name);
+                            roleModel.setDisplayName(roleResponse.display_name);
+                            roleArray.add(roleModel);
+                        }
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedUserRolesAction(new
+                                FetchedUserRolesPayload(site, roleArray)));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        FetchedUserRolesPayload payload = new FetchedUserRolesPayload(site,
+                                Collections.<RoleModel>emptyList());
+                        // TODO: what other kind of error could we get here?
+                        payload.error = new UserRolesError(UserRolesErrorType.GENERIC_ERROR);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedUserRolesAction(payload));
                     }
                 }
         );
