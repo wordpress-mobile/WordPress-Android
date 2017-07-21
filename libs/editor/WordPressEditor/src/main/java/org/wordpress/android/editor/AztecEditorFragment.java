@@ -744,17 +744,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 AztecAttributes attrs = new AztecAttributes();
                 attrs.setValue(ATTR_SRC, remoteUrl);
-                // TODO remove this when we have proper video support in Aztec
+
+                /* TODO add video press attribute -> value here
                 if (mediaType.equals(MediaType.VIDEO)) {
-                    attrs.setValue("href", remoteUrl);
+                    String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
+                            mediaFile.getVideoPressShortCode());
+                    attrs.setValue( ?? , videoPressId);
                 }
-            /* TODO add video press attribute -> value here
-            if (mediaType.equals(MediaType.VIDEO)) {
-                String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
-                        mediaFile.getVideoPressShortCode());
-                attrs.setValue( ?? , videoPressId);
-            }
-            */
+                */
+
                 addDefaultSizeClassIfMissing(attrs);
 
                 // clear overlay
