@@ -31,6 +31,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -412,8 +413,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             UploadService.UploadError reason = UploadService.getUploadErrorForPost(post);
             if (reason != null) {
                 if (reason.mediaError != null) {
+                    // Get the first failed media for this post
+                    MediaModel failedMedia = mMediaStore.getMediaForPostWithState(post, MediaUploadState.FAILED).get(0);
                     errorMessage = UploadUtils.getErrorMessageFromMediaError(
-                            txtStatus.getContext(), reason.mediaError)  + " - " +
+                            txtStatus.getContext(), failedMedia, reason.mediaError)  + " - " +
                             txtStatus.getContext().getString(R.string.error_media_recover);
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(
