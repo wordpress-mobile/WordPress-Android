@@ -262,6 +262,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 postHolder.disabledOverlay.setVisibility(View.VISIBLE);
                 postHolder.progressBar.setIndeterminate(true);
             } else {
+                postHolder.progressBar.setIndeterminate(false);
                 postHolder.disabledOverlay.setVisibility(View.GONE);
             }
 
@@ -310,6 +311,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 pageHolder.progressBar.setIndeterminate(true);
             } else {
                 pageHolder.disabledOverlay.setVisibility(View.GONE);
+                pageHolder.progressBar.setIndeterminate(false);
             }
         }
 
