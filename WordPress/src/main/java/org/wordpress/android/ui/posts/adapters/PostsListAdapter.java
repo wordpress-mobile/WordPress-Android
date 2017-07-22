@@ -7,7 +7,6 @@ import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -44,6 +43,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -310,11 +310,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (imageUrl == null) {
             imgFeatured.setVisibility(View.GONE);
         } else if (imageUrl.startsWith("http")) {
-            String photonUrl =  ReaderUtils.getResizedImageUrl(imageUrl, mPhotonWidth, mPhotonHeight, mSite.isPrivate());
+            String photonUrl =  ReaderUtils.getResizedImageUrl(
+                    imageUrl, mPhotonWidth, mPhotonHeight, !SiteUtils.isPhotonCapable(mSite));
             imgFeatured.setVisibility(View.VISIBLE);
             imgFeatured.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
         } else {
-            Bitmap bmp = fastResizeBitmap(imageUrl, mPhotonWidth);
+            Bitmap bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(
+                    imgFeatured.getContext(), imageUrl, mPhotonWidth);
             if (bmp != null) {
                 imgFeatured.setVisibility(View.VISIBLE);
                 imgFeatured.setImageBitmap(bmp);
@@ -322,27 +324,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 imgFeatured.setVisibility(View.GONE);
             }
         }
-    }
-
-    // TODO: once this is proven we can move it to ImageUtils
-    private static Bitmap fastResizeBitmap(@NonNull String imageUri, int maxWidth) {
-        BitmapFactory.Options opt = new BitmapFactory.Options();
-        opt.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(imageUri, opt);
-        int srcWidth = opt.outWidth;
-        if (srcWidth <= maxWidth) {
-            return BitmapFactory.decodeFile(imageUri, null);
-        }
-
-        // scale must be a power of two
-        double scale = Math.pow(2, (int) Math.round(Math.log(maxWidth / (double) srcWidth) / Math.log(0.5)));
-
-        opt.inJustDecodeBounds = false;
-        opt.inScaled = true;
-        opt.inSampleSize = (int) scale;
-        opt.inDensity = srcWidth;
-        opt.inTargetDensity =  maxWidth * opt.inSampleSize;
-        return BitmapFactory.decodeFile(imageUri, opt);
     }
 
     /*
