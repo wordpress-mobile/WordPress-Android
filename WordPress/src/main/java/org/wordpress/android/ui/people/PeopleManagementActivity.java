@@ -11,16 +11,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -78,6 +83,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     private int mFollowersLastFetchedPage;
     private int mEmailFollowersLastFetchedPage;
 
+    @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
 
     private SiteModel mSite;
@@ -86,6 +92,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
 
         setContentView(R.layout.people_management_activity);
         if (savedInstanceState == null) {
@@ -99,6 +106,9 @@ public class PeopleManagementActivity extends AppCompatActivity
             finish();
             return;
         }
+
+        // Fetch the user roles to get ready
+        mDispatcher.dispatch(SiteActionBuilder.newFetchUserRolesAction(mSite));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -660,5 +670,17 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     public interface InvitationSender {
         void send();
+    }
+
+    // Fluxc events
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onUserRolesChanged(SiteStore.OnUserRolesChanged event) {
+        if (event.isError()) {
+            AppLog.e(AppLog.T.PEOPLE, "An error occurred while fetching the user roles with type: "
+                    + event.error.type);
+        }
+        // We don't need to do anything with the callback
     }
 }
