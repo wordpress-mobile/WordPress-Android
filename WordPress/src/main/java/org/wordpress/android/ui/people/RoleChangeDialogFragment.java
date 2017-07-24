@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -14,8 +15,14 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Role;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -23,13 +30,15 @@ public class RoleChangeDialogFragment extends DialogFragment {
     private static final String PERSON_ID_TAG = "person_id";
     private static final String ROLE_TAG = "role";
 
+    @Inject SiteStore mSiteStore;
+
     private RoleListAdapter mRoleListAdapter;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Role role = mRoleListAdapter.getSelectedRole();
-        outState.putSerializable(ROLE_TAG, role);
+//        RoleModel role = mRoleListAdapter.getSelectedRole();
+//        outState.putSerializable(ROLE_TAG, role);
     }
 
     public static RoleChangeDialogFragment newInstance(long personID, SiteModel site, Role role) {
@@ -37,9 +46,7 @@ public class RoleChangeDialogFragment extends DialogFragment {
         Bundle args = new Bundle();
 
         args.putLong(PERSON_ID_TAG, personID);
-        if (role != null) {
-            args.putSerializable(ROLE_TAG, role);
-        }
+//        args.putSerializable(ROLE_TAG, role);
         args.putSerializable(WordPress.SITE, site);
 
         roleChangeDialogFragment.setArguments(args);
@@ -56,7 +63,7 @@ public class RoleChangeDialogFragment extends DialogFragment {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Role role = mRoleListAdapter.getSelectedRole();
+                RoleModel role = mRoleListAdapter.getSelectedRole();
                 Bundle args = getArguments();
                 if (args != null) {
                     long personID = args.getLong(PERSON_ID_TAG);
@@ -67,17 +74,18 @@ public class RoleChangeDialogFragment extends DialogFragment {
             }
         });
 
-        if (mRoleListAdapter == null) {
-            final Role[] userRoles = Role.userRoles(site);
+        if (mRoleListAdapter == null && site != null) {
+            List<RoleModel> roleList = mSiteStore.getUserRoles(site);
+            RoleModel[] userRoles = roleList.toArray(new RoleModel[roleList.size()]);
             mRoleListAdapter = new RoleListAdapter(getActivity(), R.layout.role_list_row, userRoles);
         }
         if (savedInstanceState != null) {
-            Role savedRole = (Role) savedInstanceState.getSerializable(ROLE_TAG);
+            RoleModel savedRole = (RoleModel) savedInstanceState.getSerializable(ROLE_TAG);
             mRoleListAdapter.setSelectedRole(savedRole);
         } else {
             Bundle args = getArguments();
             if (args != null) {
-                Role role = (Role) args.getSerializable(ROLE_TAG);
+                RoleModel role = (RoleModel) args.getSerializable(ROLE_TAG);
                 mRoleListAdapter.setSelectedRole(role);
             }
         }
@@ -86,40 +94,40 @@ public class RoleChangeDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    private class RoleListAdapter extends ArrayAdapter<Role> {
-        private Role mSelectedRole;
+    private class RoleListAdapter extends ArrayAdapter<RoleModel> {
+        private RoleModel mSelectedRole;
 
-        public RoleListAdapter(Context context, int resource, Role[] objects) {
-            super(context, resource, objects);
+        RoleListAdapter(Context context, int resource, RoleModel[] userRoles) {
+            super(context, resource, userRoles);
         }
 
+        @NonNull
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
             if (convertView == null) {
                 convertView = View.inflate(getContext(), R.layout.role_list_row, null);
             }
 
-            final RadioButton radioButton = (RadioButton) convertView.findViewById(R.id.radio);
             TextView mainText = (TextView) convertView.findViewById(R.id.role_label);
-            Role role = getItem(position);
-            mainText.setText(role.toDisplayString());
-
-            if (radioButton != null) {
-                radioButton.setChecked(role == mSelectedRole);
-                radioButton.setOnClickListener(new View.OnClickListener() {
+            final RadioButton radioButton = (RadioButton) convertView.findViewById(R.id.radio);
+            radioButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         changeSelection(position);
                     }
                 });
-            }
-
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     changeSelection(position);
                 }
             });
+
+            RoleModel role = getItem(position);
+            if (role != null) {
+                radioButton.setChecked(role.equals(mSelectedRole));
+                mainText.setText(role.getDisplayName());
+            }
 
             return convertView;
         }
@@ -129,21 +137,21 @@ public class RoleChangeDialogFragment extends DialogFragment {
             notifyDataSetChanged();
         }
 
-        public Role getSelectedRole() {
+        RoleModel getSelectedRole() {
             return mSelectedRole;
         }
 
-        public void setSelectedRole(Role role) {
+        void setSelectedRole(RoleModel role) {
             mSelectedRole = role;
         }
     }
 
-    public static class RoleChangeEvent {
-        public final long personID;
-        public final int localTableBlogId;
-        public final Role newRole;
+    static class RoleChangeEvent {
+        final long personID;
+        final int localTableBlogId;
+        final RoleModel newRole;
 
-        public RoleChangeEvent(long personID, int localTableBlogId, Role newRole) {
+        RoleChangeEvent(long personID, int localTableBlogId, RoleModel newRole) {
             this.personID = personID;
             this.localTableBlogId = localTableBlogId;
             this.newRole = newRole;
