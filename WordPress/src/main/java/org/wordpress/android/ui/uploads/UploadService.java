@@ -495,11 +495,11 @@ public class UploadService extends Service {
 
     private void updatePostModelWithCompletedAndFailedUploads(){
         if (!sCompletedMediaByPost.isEmpty() || !sFailedMediaByPost.isEmpty()) {
-            ConcurrentHashMap<Integer, List<MediaModel>> tmpMap = new ConcurrentHashMap<>();
-            tmpMap.putAll(sCompletedMediaByPost);
-            tmpMap.putAll(sFailedMediaByPost);
+            List<Integer> postIdList = new ArrayList<>();
+            postIdList.addAll(sCompletedMediaByPost.keySet());
+            postIdList.addAll(sFailedMediaByPost.keySet());
 
-            for (Integer postId : tmpMap.keySet()) {
+            for (Integer postId : postIdList) {
                 // For each post with completed media uploads, update the content with the new remote URLs
                 // This is done in a batch when all media is complete to prevent conflicts by updating separate images
                 // at a time simultaneously for the same post
