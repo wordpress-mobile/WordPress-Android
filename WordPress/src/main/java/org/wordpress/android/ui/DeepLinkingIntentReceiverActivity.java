@@ -11,6 +11,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.main.WPMainTabLayout;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -28,6 +30,8 @@ import javax.inject.Inject;
  */
 public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private static final int INTENT_WELCOME = 0;
+    private static final String VIEW_POST_HOST = "viewpost";
+    private static final String VIEW_STATS_HOST = "viewstats";
 
     private String mInterceptedUri;
     private String mBlogId;
@@ -42,6 +46,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
 
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
+        String host = uri.getHost();
 
         AnalyticsUtils.trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, uri);
 
@@ -55,7 +60,11 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
             // if user is signed in wpcom show the post right away - otherwise show welcome activity
             // and then show the post once the user has signed in
             if (mAccountStore.hasAccessToken()) {
-                showPost();
+                if (host.equals(VIEW_POST_HOST)) {
+                        showPost();
+                } else if (host.equals(VIEW_STATS_HOST)) {
+
+                }
             } else {
                 Intent intent = new Intent(this, SignInActivity.class);
                 startActivityForResult(intent, INTENT_WELCOME);
