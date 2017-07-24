@@ -2,8 +2,6 @@ package org.wordpress.android;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
@@ -11,7 +9,7 @@ import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
-import org.wordpress.android.models.Theme;
+import org.wordpress.android.datasets.ThemeTable;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -24,27 +22,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final String COLUMN_NAME_ID = "_id";
-
     private static final int DATABASE_VERSION = 57;
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
     private static final String NOTES_TABLE = "notes";
-
-    private static final String THEMES_TABLE = "themes";
-    private static final String CREATE_TABLE_THEMES = "create table if not exists themes ("
-            + COLUMN_NAME_ID + " integer primary key autoincrement, "
-            + Theme.ID + " text, "
-            + Theme.AUTHOR + " text, "
-            + Theme.SCREENSHOT + " text, "
-            + Theme.AUTHOR_URI + " text, "
-            + Theme.DEMO_URI + " text, "
-            + Theme.NAME + " text, "
-            + Theme.STYLESHEET + " text, "
-            + Theme.PRICE + " text, "
-            + Theme.BLOG_ID + " text, "
-            + Theme.IS_CURRENT + " boolean default false);";
 
     // add new table for QuickPress homescreen shortcuts
     private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS = "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
@@ -59,7 +41,7 @@ public class WordPressDB {
 
         // Create tables if they don't exist
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
-        db.execSQL(CREATE_TABLE_THEMES);
+        ThemeTable.createTables(db);
         SiteSettingsTable.createTable(db);
         SuggestionTable.createTables(db);
         NotificationsTable.createTables(db);
@@ -153,7 +135,7 @@ public class WordPressDB {
                 ctx.deleteDatabase("simperium-store");
                 currentVersion++;
             case 37:
-                resetThemeTable();
+                ThemeTable.resetTables(db);
                 currentVersion++;
             case 38:
                 currentVersion++;
@@ -217,11 +199,6 @@ public class WordPressDB {
         db.setVersion(DATABASE_VERSION);
     }
 
-    private void resetThemeTable() {
-        db.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
-        db.execSQL(CREATE_TABLE_THEMES);
-    }
-
     public SQLiteDatabase getDatabase() {
         return db;
     }
@@ -240,121 +217,6 @@ public class WordPressDB {
         }
 
         return (returnValue);
-    }
-
-    public boolean saveTheme(Theme theme) {
-        boolean returnValue = false;
-
-        ContentValues values = new ContentValues();
-        values.put(Theme.ID, theme.getId());
-        values.put(Theme.AUTHOR, theme.getAuthor());
-        values.put(Theme.SCREENSHOT, theme.getScreenshot());
-        values.put(Theme.AUTHOR_URI, theme.getAuthorURI());
-        values.put(Theme.DEMO_URI, theme.getDemoURI());
-        values.put(Theme.NAME, theme.getName());
-        values.put(Theme.STYLESHEET, theme.getStylesheet());
-        values.put(Theme.PRICE, theme.getPrice());
-        values.put(Theme.BLOG_ID, theme.getBlogId());
-        values.put(Theme.IS_CURRENT, theme.getIsCurrent() ? 1 : 0);
-
-        synchronized (this) {
-            int result = db.update(
-                    THEMES_TABLE,
-                    values,
-                    Theme.ID + "=?",
-                    new String[]{theme.getId()});
-            if (result == 0)
-                returnValue = db.insert(THEMES_TABLE, null, values) > 0;
-        }
-
-        return (returnValue);
-    }
-
-    public Cursor getThemesAll(String blogId) {
-        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE, Theme.IS_CURRENT};
-        String[] selection = {blogId};
-
-        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=?", selection, null, null, null);
-    }
-
-    public Cursor getThemesFree(String blogId) {
-        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE, Theme.IS_CURRENT};
-        String[] selection = {blogId, ""};
-
-        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.PRICE + "=?", selection, null, null, null);
-    }
-
-    public Cursor getThemesPremium(String blogId) {
-        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE, Theme.IS_CURRENT};
-        String[] selection = {blogId, ""};
-
-        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.PRICE + "!=?", selection, null, null, null);
-    }
-
-    public String getCurrentThemeId(String blogId) {
-        String[] selection = {blogId, String.valueOf(1)};
-        String currentThemeId;
-        try {
-            currentThemeId = DatabaseUtils.stringForQuery(db, "SELECT " + Theme.ID + " FROM " + THEMES_TABLE + " WHERE " + Theme.BLOG_ID + "=? and " + Theme.IS_CURRENT + "=?", selection);
-        } catch (SQLiteException e) {
-            currentThemeId = "";
-        }
-
-        return currentThemeId;
-    }
-
-    public void setCurrentTheme(String blogId, String id) {
-        // update any old themes that are set to true to false
-        ContentValues values = new ContentValues();
-        values.put(Theme.IS_CURRENT, false);
-        db.update(THEMES_TABLE, values, Theme.BLOG_ID + "=?", new String[] { blogId });
-
-        values = new ContentValues();
-        values.put(Theme.IS_CURRENT, true);
-        db.update(THEMES_TABLE, values, Theme.BLOG_ID + "=? AND " + Theme.ID + "=?", new String[] { blogId, id });
-    }
-
-    public int getThemeCount(String blogId) {
-        return getThemesAll(blogId).getCount();
-    }
-
-    public Cursor getThemes(String blogId, String searchTerm) {
-        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE, Theme.IS_CURRENT};
-        String[] selection = {blogId, "%" + searchTerm + "%"};
-
-        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.NAME + " LIKE ?", selection, null, null, null);
-    }
-
-    public Theme getTheme(String blogId, String themeId) {
-        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.AUTHOR, Theme.SCREENSHOT, Theme.AUTHOR_URI, Theme.DEMO_URI, Theme.NAME, Theme.STYLESHEET, Theme.PRICE, Theme.IS_CURRENT};
-        String[] selection = {blogId, themeId};
-        Cursor cursor = db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.ID + "=?", selection, null, null, null);
-
-        if (cursor.moveToFirst()) {
-            String id = cursor.getString(cursor.getColumnIndex(Theme.ID));
-            String author = cursor.getString(cursor.getColumnIndex(Theme.AUTHOR));
-            String screenshot = cursor.getString(cursor.getColumnIndex(Theme.SCREENSHOT));
-            String authorURI = cursor.getString(cursor.getColumnIndex(Theme.AUTHOR_URI));
-            String demoURI = cursor.getString(cursor.getColumnIndex(Theme.DEMO_URI));
-            String name = cursor.getString(cursor.getColumnIndex(Theme.NAME));
-            String stylesheet = cursor.getString(cursor.getColumnIndex(Theme.STYLESHEET));
-            String price = cursor.getString(cursor.getColumnIndex(Theme.PRICE));
-            boolean isCurrent = cursor.getInt(cursor.getColumnIndex(Theme.IS_CURRENT)) > 0;
-
-            Theme theme = new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, isCurrent);
-            cursor.close();
-
-            return theme;
-        } else {
-            cursor.close();
-            return null;
-        }
-    }
-
-    public Theme getCurrentTheme(String blogId) {
-        String currentThemeId = getCurrentThemeId(blogId);
-
-        return getTheme(blogId, currentThemeId);
     }
 
     /*

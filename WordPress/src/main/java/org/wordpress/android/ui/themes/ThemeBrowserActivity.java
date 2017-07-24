@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ThemeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ActivityId;
@@ -276,8 +277,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                                 return;
                             }
                             mCurrentTheme.setIsCurrent(true);
-                            WordPress.wpDB.saveTheme(mCurrentTheme);
-                            WordPress.wpDB.setCurrentTheme(String.valueOf(mSite.getSiteId()), mCurrentTheme.getId());
+                            ThemeTable.saveTheme(WordPress.wpDB.getDatabase(), mCurrentTheme);
+                            ThemeTable.setCurrentTheme(WordPress.wpDB.getDatabase(), String.valueOf(mSite.getSiteId()),
+                                    mCurrentTheme.getId());
                             if (mThemeBrowserFragment != null) {
                                 mThemeBrowserFragment.setRefreshing(false);
                                 if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
@@ -295,8 +297,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 }, new ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError response) {
-                        String themeId = WordPress.wpDB.getCurrentThemeId(String.valueOf(mSite.getSiteId()));
-                        mCurrentTheme = WordPress.wpDB.getTheme(String.valueOf(mSite.getSiteId()), themeId);
+                        String themeId = ThemeTable.getCurrentThemeId(WordPress.wpDB.getDatabase(),
+                                String.valueOf(mSite.getSiteId()));
+                        mCurrentTheme = ThemeTable.getTheme(WordPress.wpDB.getDatabase(),
+                                String.valueOf(mSite.getSiteId()), themeId);
                         if (mCurrentTheme != null && mThemeBrowserFragment != null) {
                             if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
                                 mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
@@ -335,12 +339,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void setCurrentThemeFromDB() {
-        mCurrentTheme = WordPress.wpDB.getCurrentTheme(String.valueOf(mSite.getSiteId()));
+        mCurrentTheme = ThemeTable.getCurrentTheme(WordPress.wpDB.getDatabase(), String.valueOf(mSite.getSiteId()));
     }
 
     private void fetchThemesIfNoneAvailable() {
         if (NetworkUtils.isNetworkAvailable(this)
-                && WordPress.wpDB.getThemeCount(String.valueOf(mSite.getSiteId())) == 0) {
+                && ThemeTable.getThemeCount(WordPress.wpDB.getDatabase(), String.valueOf(mSite.getSiteId())) == 0) {
             fetchThemes();
             //do not interact with theme browser fragment if we are in search mode
             if (!mIsInSearchMode) {
@@ -416,8 +420,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         WordPress.getRestClientUtils().setTheme(mSite.getSiteId(), themeId, new Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                WordPress.wpDB.setCurrentTheme(String.valueOf(mSite.getSiteId()), themeId);
-                Theme newTheme = WordPress.wpDB.getTheme(String.valueOf(mSite.getSiteId()), themeId);
+                ThemeTable.setCurrentTheme(WordPress.wpDB.getDatabase(), String.valueOf(mSite.getSiteId()), themeId);
+                Theme newTheme = ThemeTable.getTheme(WordPress.wpDB.getDatabase(),
+                        String.valueOf(mSite.getSiteId()), themeId);
 
                 Map<String, Object> themeProperties = new HashMap<>();
                 themeProperties.put(THEME_ID, themeId);
@@ -520,7 +525,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                     JSONObject object = array.getJSONObject(i);
                     Theme theme = Theme.fromJSONV1_2(object, mSite);
                     if (theme != null) {
-                        WordPress.wpDB.saveTheme(theme);
+                        ThemeTable.saveTheme(WordPress.wpDB.getDatabase(), theme);
                         themes.add(theme);
                     }
                 } catch (JSONException e) {
