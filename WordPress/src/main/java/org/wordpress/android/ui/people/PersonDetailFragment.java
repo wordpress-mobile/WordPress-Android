@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.people;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -214,6 +215,7 @@ public class PersonDetailFragment extends Fragment {
         mRoleTextView.setText(newRole.toDisplayString());
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     @SuppressWarnings("deprecation")
     private void clearRoleContainerBackground() {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
