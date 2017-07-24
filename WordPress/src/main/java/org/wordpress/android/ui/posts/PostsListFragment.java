@@ -777,11 +777,7 @@ public class PostsListFragment extends Fragment
                 // (meaning there is no other pending media to be uploaded for this post)
                 // then we should refresh it to show its new state
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    // TODO: replace loadPosts for getPostListAdapter().notifyItemChanged(); kind of thing,
-                    // once we have a proper way to look for posts in place, probably after
-                    // merging https://github.com/wordpress-mobile/WordPress-Android/pull/6343
-                    // getPostListAdapter().notifyItemChanged(); like the way it's done here:
-                    // https://github.com/wordpress-mobile/WordPress-Android/blob/feature/async-global-post-progress/WordPress/src/main/java/org/wordpress/android/ui/posts/adapters/PostsListAdapter.java#L590
+                    // TODO: replace loadPosts for getPostListAdapter().notifyItemChanged(); kind of thing
                     loadPosts(LoadMode.FORCED);
                 }
             } else {
