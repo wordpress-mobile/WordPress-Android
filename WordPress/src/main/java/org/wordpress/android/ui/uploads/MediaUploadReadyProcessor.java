@@ -32,7 +32,8 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
     }
 
     @Override
-    public PostModel markMediaUploadFailedInPost(@Nullable PostModel post, String localMediaId, final MediaFile mediaFile) {
+    public PostModel markMediaUploadFailedInPost(@Nullable PostModel post, String localMediaId,
+                                                 final MediaFile mediaFile) {
         if (post != null) {
 
             boolean showAztecEditor = AppPrefs.isAztecEditorEnabled();
