@@ -331,9 +331,12 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
 
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
-        if (mIsWpcom && mLoginListener != null) {
-            mLoginListener.loggedInViaPassword(mOldSitesIDs);
-        }
+        doFinishLogin();
+    }
+
+    @Override
+    protected void onLoginFinished() {
+        mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }
 
     @SuppressWarnings("unused")
@@ -379,8 +382,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
 
         // continue with success, even if the operation was cancelled since the user got logged in regardless. So, go on
         //  with finishing the login process
-
-        endProgress();
 
         // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
         mLoginFinished = true;

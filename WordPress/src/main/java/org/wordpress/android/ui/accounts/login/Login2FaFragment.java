@@ -207,9 +207,9 @@ public class Login2FaFragment extends LoginBaseFormFragment implements TextWatch
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        endProgress();
-
         if (event.isError()) {
+            endProgress();
+
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
 
             if (isAdded()) {
@@ -221,9 +221,11 @@ public class Login2FaFragment extends LoginBaseFormFragment implements TextWatch
 
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
-        if (mLoginListener != null) {
-            mLoginListener.loggedInViaPassword(mOldSitesIDs);
-        }
+        doFinishLogin();
     }
 
+    @Override
+    protected void onLoginFinished() {
+        mLoginListener.loggedInViaPassword(mOldSitesIDs);
+    }
 }

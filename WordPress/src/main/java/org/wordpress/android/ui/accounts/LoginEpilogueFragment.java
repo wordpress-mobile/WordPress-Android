@@ -1,27 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.action.AccountAction;
-import org.wordpress.android.fluxc.generated.AccountActionBuilder;
-import org.wordpress.android.fluxc.generated.SiteActionBuilder;
-import org.wordpress.android.fluxc.model.AccountModel;
-import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.main.SitePickerAdapter;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
-
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -30,14 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.ui.main.SitePickerAdapter;
+import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
+
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     public static final String TAG = "login_epilogue_fragment_tag";
-
-    private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
 
     private static final String ARG_SHOW_AND_RETURN = "ARG_SHOW_AND_RETURN";
     private static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
@@ -47,11 +34,8 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     private View mBottomShadow;
     private View mBottomButtonsContainer;
 
-    protected @Inject SiteStore mSiteStore;
     protected @Inject AccountStore mAccountStore;
-    protected @Inject Dispatcher mDispatcher;
 
-    private boolean mInProgress;
     private SitePickerAdapter mAdapter;
     private boolean mShowAndReturn;
     private ArrayList<Integer> mOldSitesIds;
@@ -116,22 +100,6 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         mSitesList.setAdapter(getAdapter());
 
         return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState == null) {
-            if (mAccountStore.hasAccessToken()) {
-                mInProgress = true;
-                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-            }
-        } else {
-            mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
-        }
-
-        showProgress(mInProgress);
     }
 
     private SitePickerAdapter getAdapter() {
@@ -206,25 +174,6 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mDispatcher.unregister(this);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
     }
@@ -271,60 +220,5 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     private String constructGravatarUrl(AccountModel account) {
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
-    }
-
-    // OnChanged events
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAccountChanged(AccountStore.OnAccountChanged event) {
-        if (!isAdded()) {
-            return;
-        }
-
-        if (event.isError()) {
-            AppLog.e(AppLog.T.API, "onAccountChanged has error: " + event.error.type + " - " + event.error.message);
-            ToastUtils.showToast(getContext(), R.string.error_fetch_my_profile);
-            return;
-        }
-
-        if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
-            getAdapter().notifyDataSetChanged();
-
-            // The user's account info has been fetched and stored - next, fetch the user's settings
-            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
-        } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
-            // The user's account settings have also been fetched and stored - now we can fetch the user's sites
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSiteChanged(SiteStore.OnSiteChanged event) {
-        if (event.isError()) {
-            AppLog.e(AppLog.T.API, "onSiteChanged has error: " + event.error.type + " - " + event.error.toString());
-            if (!isAdded() || event.error.type != SiteStore.SiteErrorType.DUPLICATE_SITE) {
-                return;
-            }
-
-            if (event.rowsAffected == 0) {
-                // If there is a duplicate site and not any site has been added, show an error and
-                // stop the sign in process
-                ToastUtils.showToast(getContext(), R.string.cannot_add_duplicate_site);
-                return;
-            } else {
-                // If there is a duplicate site, notify the user something could be wrong,
-                // but continue the sign in process
-                ToastUtils.showToast(getContext(), R.string.duplicate_site_detected);
-            }
-        }
-
-        // Start Notification service
-        NotificationsUpdateService.startService(getActivity().getApplicationContext());
-
-        mInProgress = false;
-        showProgress(false);
-        getAdapter().loadSites();
     }
 }
