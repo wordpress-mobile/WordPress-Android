@@ -343,7 +343,7 @@ public class PeopleListFragment extends Fragment {
                 peopleViewHolder.txtDisplayName.setText(StringUtils.unescapeHTML(person.getDisplayName()));
                 if (person.getRole() != null) {
                     peopleViewHolder.txtRole.setVisibility(View.VISIBLE);
-                    peopleViewHolder.txtRole.setText(StringUtils.capitalize(person.getRole().toDisplayString()));
+                    peopleViewHolder.txtRole.setText(StringUtils.capitalize(person.getRole()));
                 } else {
                     peopleViewHolder.txtRole.setVisibility(View.GONE);
                 }

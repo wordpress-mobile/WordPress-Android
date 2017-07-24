@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.models.Role;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
@@ -311,7 +310,7 @@ public class PeopleTable {
             case TEAM_TABLE:
                 person.setUsername(c.getString(c.getColumnIndex("user_name")));
                 String role = c.getString(c.getColumnIndex("role"));
-                person.setRole(Role.fromString(role));
+                person.setRole(role);
                 person.setPersonType(Person.PersonType.USER);
                 break;
             case FOLLOWERS_TABLE:

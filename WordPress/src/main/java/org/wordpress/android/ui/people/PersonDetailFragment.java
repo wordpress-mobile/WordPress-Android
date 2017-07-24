@@ -15,10 +15,10 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.models.Role;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
@@ -135,7 +135,7 @@ public class PersonDetailFragment extends Fragment {
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             mDisplayNameTextView.setText(StringUtils.unescapeHTML(person.getDisplayName()));
             if (person.getRole() != null) {
-                mRoleTextView.setText(StringUtils.capitalize(person.getRole().toDisplayString()));
+                mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
             }
 
             if (!TextUtils.isEmpty(person.getUsername())) {
@@ -211,8 +211,8 @@ public class PersonDetailFragment extends Fragment {
     }
 
     // used to optimistically update the role
-    public void changeRole(Role newRole) {
-        mRoleTextView.setText(newRole.toDisplayString());
+    public void changeRole(RoleModel newRole) {
+        mRoleTextView.setText(newRole.getDisplayName());
     }
 
     @SuppressLint("ObsoleteSdkInt")

@@ -18,7 +18,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.Role;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class RoleChangeDialogFragment extends DialogFragment {
 //        outState.putSerializable(ROLE_TAG, role);
     }
 
-    public static RoleChangeDialogFragment newInstance(long personID, SiteModel site, Role role) {
+    public static RoleChangeDialogFragment newInstance(long personID, SiteModel site, String role) {
         RoleChangeDialogFragment roleChangeDialogFragment = new RoleChangeDialogFragment();
         Bundle args = new Bundle();
 

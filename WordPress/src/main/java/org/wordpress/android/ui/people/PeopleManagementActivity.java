@@ -468,7 +468,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
         final Person person = PeopleTable.getUser(event.personID, event.localTableBlogId);
-        if (person == null || event.newRole == null || person.getRole() == event.newRole) {
+        if (person == null || event.newRole == null || event.newRole.getName().equals(person.getRole())) {
             return;
         }
 
