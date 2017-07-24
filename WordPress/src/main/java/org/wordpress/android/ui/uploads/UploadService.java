@@ -383,15 +383,6 @@ public class UploadService extends Service {
         return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel);
     }
 
-    public static boolean hasAnyFailedMediaUploadsForPost(PostModel postModel) {
-        if (postModel != null) {
-            if (sFailedMediaByPost.get(postModel.getId()) != null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static boolean hasMediaErrorForPost(PostModel post) {
         UploadError error  = getUploadErrorForPost(post);
         return error != null && error.mediaError != null;
