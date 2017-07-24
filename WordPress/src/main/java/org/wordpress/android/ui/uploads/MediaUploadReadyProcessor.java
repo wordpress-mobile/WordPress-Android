@@ -5,13 +5,11 @@ import android.support.annotation.Nullable;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.editor.EditorFragment;
-import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.helpers.MediaFile;
 
-import java.util.List;
 
 public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
     @Override
