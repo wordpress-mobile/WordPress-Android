@@ -15,7 +15,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
-import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Person;
@@ -211,8 +210,8 @@ public class PersonDetailFragment extends Fragment {
     }
 
     // used to optimistically update the role
-    public void changeRole(RoleModel newRole) {
-        mRoleTextView.setText(newRole.getDisplayName());
+    public void changeRole(String newRole) {
+        mRoleTextView.setText(StringUtils.capitalize(newRole));
     }
 
     @SuppressLint("ObsoleteSdkInt")

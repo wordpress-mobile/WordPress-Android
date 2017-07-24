@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Role;
@@ -157,7 +156,7 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-    public static void updateRole(final SiteModel site, long personID, RoleModel newRole, final int localTableBlogId,
+    public static void updateRole(final SiteModel site, long personID, String newRole, final int localTableBlogId,
                                   final UpdateUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -189,7 +188,7 @@ public class PeopleUtils {
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("roles", newRole.getName());
+        params.put("roles", newRole);
         String path = String.format(Locale.US, "sites/%d/users/%d", site.getSiteId(), personID);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }

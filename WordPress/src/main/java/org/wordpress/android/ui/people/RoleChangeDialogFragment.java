@@ -36,8 +36,8 @@ public class RoleChangeDialogFragment extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        RoleModel role = mRoleListAdapter.getSelectedRole();
-//        outState.putSerializable(ROLE_TAG, role);
+        String role = mRoleListAdapter.getSelectedRole();
+        outState.putSerializable(ROLE_TAG, role);
     }
 
     public static RoleChangeDialogFragment newInstance(long personID, SiteModel site, String role) {
@@ -45,7 +45,7 @@ public class RoleChangeDialogFragment extends DialogFragment {
         Bundle args = new Bundle();
 
         args.putLong(PERSON_ID_TAG, personID);
-//        args.putSerializable(ROLE_TAG, role);
+        args.putString(ROLE_TAG, role);
         args.putSerializable(WordPress.SITE, site);
 
         roleChangeDialogFragment.setArguments(args);
@@ -62,7 +62,7 @@ public class RoleChangeDialogFragment extends DialogFragment {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                RoleModel role = mRoleListAdapter.getSelectedRole();
+                String role = mRoleListAdapter.getSelectedRole();
                 Bundle args = getArguments();
                 if (args != null) {
                     long personID = args.getLong(PERSON_ID_TAG);
@@ -79,12 +79,12 @@ public class RoleChangeDialogFragment extends DialogFragment {
             mRoleListAdapter = new RoleListAdapter(getActivity(), R.layout.role_list_row, userRoles);
         }
         if (savedInstanceState != null) {
-            RoleModel savedRole = (RoleModel) savedInstanceState.getSerializable(ROLE_TAG);
+            String savedRole = savedInstanceState.getString(ROLE_TAG);
             mRoleListAdapter.setSelectedRole(savedRole);
         } else {
             Bundle args = getArguments();
             if (args != null) {
-                RoleModel role = (RoleModel) args.getSerializable(ROLE_TAG);
+                String role = args.getString(ROLE_TAG);
                 mRoleListAdapter.setSelectedRole(role);
             }
         }
@@ -94,7 +94,7 @@ public class RoleChangeDialogFragment extends DialogFragment {
     }
 
     private class RoleListAdapter extends ArrayAdapter<RoleModel> {
-        private RoleModel mSelectedRole;
+        private String mSelectedRole;
 
         RoleListAdapter(Context context, int resource, RoleModel[] userRoles) {
             super(context, resource, userRoles);
@@ -124,7 +124,7 @@ public class RoleChangeDialogFragment extends DialogFragment {
 
             RoleModel role = getItem(position);
             if (role != null) {
-                radioButton.setChecked(role.equals(mSelectedRole));
+                radioButton.setChecked(role.getName().equals(mSelectedRole));
                 mainText.setText(role.getDisplayName());
             }
 
@@ -132,15 +132,18 @@ public class RoleChangeDialogFragment extends DialogFragment {
         }
 
         private void changeSelection(int position) {
-            mSelectedRole = getItem(position);
-            notifyDataSetChanged();
+            RoleModel roleModel = getItem(position);
+            if (roleModel != null) {
+                mSelectedRole = roleModel.getName();
+                notifyDataSetChanged();
+            }
         }
 
-        RoleModel getSelectedRole() {
+        String getSelectedRole() {
             return mSelectedRole;
         }
 
-        void setSelectedRole(RoleModel role) {
+        void setSelectedRole(String role) {
             mSelectedRole = role;
         }
     }
@@ -148,9 +151,9 @@ public class RoleChangeDialogFragment extends DialogFragment {
     static class RoleChangeEvent {
         final long personID;
         final int localTableBlogId;
-        final RoleModel newRole;
+        final String newRole;
 
-        RoleChangeEvent(long personID, int localTableBlogId, RoleModel newRole) {
+        RoleChangeEvent(long personID, int localTableBlogId, String newRole) {
             this.personID = personID;
             this.localTableBlogId = localTableBlogId;
             this.newRole = newRole;
