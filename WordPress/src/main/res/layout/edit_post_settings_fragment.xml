@@ -181,7 +181,8 @@
 
                 </LinearLayout>
 
-                <View style="@style/PostSettingsDivider"/>
+                <View android:id="@+id/post_format_bottom_separator"
+                      style="@style/PostSettingsDivider"/>
 
                 <LinearLayout
                     android:id="@+id/post_slug_container"
