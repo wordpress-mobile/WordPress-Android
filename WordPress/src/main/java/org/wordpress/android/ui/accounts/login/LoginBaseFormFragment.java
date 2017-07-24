@@ -211,6 +211,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
     }
 
     protected void doFinishLogin() {
+        mProgressDialog.setCancelable(false);
         mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
     }
 
