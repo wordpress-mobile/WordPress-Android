@@ -752,6 +752,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             // Generate the featured image url for each post
             mFeaturedImageUrls.clear();
+            boolean isPrivate = !SiteUtils.isPhotonCapable(mSite);
             for (PostModel post : tmpPosts) {
                 String imageUrl = null;
                 if (post.getFeaturedImageId() != 0) {
@@ -764,7 +765,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         mediaIdsToUpdate.add(post.getFeaturedImageId());
                     }
                 } else {
-                    imageUrl = new ReaderImageScanner(post.getContent(), mSite.isPrivate()).getLargestImage();
+                    imageUrl = new ReaderImageScanner(post.getContent(), isPrivate).getLargestImage();
                 }
                 if (!TextUtils.isEmpty(imageUrl)) {
                     mFeaturedImageUrls.put(post.getId(), imageUrl);
