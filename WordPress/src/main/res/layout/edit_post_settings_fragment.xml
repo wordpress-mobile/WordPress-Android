@@ -73,6 +73,7 @@
 
         <android.support.v7.widget.CardView
             style="@style/PostSettingsCardView"
+            android:id="@+id/post_categories_and_tags_card"
             card_view:cardBackgroundColor="@color/white"
             card_view:cardCornerRadius="@dimen/cardview_default_radius">
 
@@ -180,7 +181,8 @@
 
                 </LinearLayout>
 
-                <View style="@style/PostSettingsDivider"/>
+                <View android:id="@+id/post_format_bottom_separator"
+                      style="@style/PostSettingsDivider"/>
 
                 <LinearLayout
                     android:id="@+id/post_slug_container"

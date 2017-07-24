@@ -579,12 +579,18 @@ public class PostsListFragment extends Fragment
         }
 
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
+        boolean isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT
+                || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
         post.setStatus(PostStatus.PUBLISHED.toString());
 
         // save the post in the DB so the UploadService will get the latest change
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 
-        UploadService.uploadPost(getActivity(), post);
+        if (isFirstTimePublish) {
+            UploadService.uploadPostAndTrackAnalytics(getActivity(), post);
+        } else {
+            UploadService.uploadPost(getActivity(), post);
+        }
 
         PostUtils.trackSavePostAnalytics(post, mSite);
     }
