@@ -142,6 +142,8 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     }
 
     private class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private final View mLoggedInAsHeading;
+        private final View mUserDetailsCard;
         private final WPNetworkImageView mAvatarImageView;
         private final TextView mDisplayNameTextView;
         private final TextView mUsernameTextView;
@@ -149,6 +151,8 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
 
         HeaderViewHolder(View view) {
             super(view);
+            mLoggedInAsHeading = view.findViewById(R.id.logged_in_as_heading);
+            mUserDetailsCard = view.findViewById(R.id.user_details_card);
             mAvatarImageView = (WPNetworkImageView) view.findViewById(R.id.avatar);
             mDisplayNameTextView = (TextView) view.findViewById(R.id.display_name);
             mUsernameTextView = (TextView) view.findViewById(R.id.username);
@@ -234,8 +238,8 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         if (mAccountStore.hasAccessToken()) {
             AccountModel defaultAccount = mAccountStore.getAccount();
 
-            holder.mDisplayNameTextView.setVisibility(View.VISIBLE);
-            holder.mUsernameTextView.setVisibility(View.VISIBLE);
+            holder.mLoggedInAsHeading.setVisibility(View.VISIBLE);
+            holder.mUserDetailsCard.setVisibility(View.VISIBLE);
 
             final String avatarUrl = constructGravatarUrl(mAccountStore.getAccount());
             holder.mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, null);
@@ -249,8 +253,8 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
                 holder.mDisplayNameTextView.setText(defaultAccount.getUserName());
             }
         } else {
-            holder.mDisplayNameTextView.setVisibility(View.GONE);
-            holder.mUsernameTextView.setVisibility(View.GONE);
+            holder.mLoggedInAsHeading.setVisibility(View.GONE);
+            holder.mUserDetailsCard.setVisibility(View.GONE);
         }
 
         if (numberOfSites == 0) {

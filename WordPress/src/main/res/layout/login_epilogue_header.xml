@@ -11,6 +11,7 @@
 
     <TextView
         style="@style/LoginTheme.Heading"
+        android:id="@+id/logged_in_as_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_extra_large"
@@ -21,12 +22,14 @@
         android:text="@string/login_logged_in_as" />
 
     <android.support.v7.widget.CardView
+        android:id="@+id/user_details_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_large"
         android:layout_marginStart="@dimen/margin_large"
         android:layout_marginRight="@dimen/margin_large"
         android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
         app:cardBackgroundColor="@color/white"
         app:cardElevation="@dimen/card_elevation"
         app:cardUseCompatPadding="true"
@@ -75,6 +78,5 @@
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
         android:text="@string/login_epilogue_mysites_other" />
 </LinearLayout>
