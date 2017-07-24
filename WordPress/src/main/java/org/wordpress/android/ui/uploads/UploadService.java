@@ -649,16 +649,8 @@ public class UploadService extends Service {
 
                                 // TODO Should do some extra validation here
                                 // e.g. what if the post has local media URLs but no pending media uploads?
-
-                                // only upload Post if there are no failed media as well
-                                if (!hasAnyFailedMediaUploadsForPost(uploadingPost.postModel)) {
-                                    iterator.remove();
-                                    mPostUploadHandler.upload(updatedPost);
-                                } else {
-                                    // TODO probably notify or do something to tell the user that
-                                    // we've finished doing all we can on this Post, but it has some
-                                    // failed media uploads that prevent the Post from being uploaded.
-                                }
+                                iterator.remove();
+                                mPostUploadHandler.upload(updatedPost);
                             }
                         }
                     }
