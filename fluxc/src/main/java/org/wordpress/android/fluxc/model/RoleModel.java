@@ -5,8 +5,10 @@ import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
+import java.io.Serializable;
+
 @Table
-public class RoleModel implements Identifiable {
+public class RoleModel implements Identifiable, Serializable {
     @PrimaryKey @Column private int mId;
 
     // Site Id Foreign Key
