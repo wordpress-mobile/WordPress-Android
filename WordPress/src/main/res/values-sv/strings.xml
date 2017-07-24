@@ -1,18 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-21 13:55:01+0000
+Translation-Revision-Date: 2017-07-04 21:01:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="video_optimization_generic_error_message">Ett fel uppstod när din video komprimerades. Originalfilen används.</string>
+	<string name="video_optimization_in_progress">Videoklippet optimeras…</string>
+	<string name="photo_picker_soft_ask_permissions_denied">%1$s nekades åtkomst till dina bilder. Korrigera genom att redigera dina rättigheter och aktivera %2$s.</string>
+	<string name="format_bar_description_ellipsis_expand">Expandera verktygsfältet</string>
+	<string name="format_bar_description_ellipsis_collapse">Minimera verktygsfältet</string>
+	<string name="format_bar_description_page">Ny sida</string>
+	<string name="format_bar_description_horizontal_rule">Horisontell linje</string>
+	<string name="format_bar_description_link">Länk</string>
+	<string name="format_bar_description_list">Lista</string>
+	<string name="format_bar_description_heading">Rubrik</string>
+	<string name="format_bar_description_media">Media</string>
+	<string name="reader_view_comments">Visa kommentarer</string>
+	<string name="new_editor_promo_title_beta">Beta</string>
+	<string name="new_editor_promo_title">Prova den nya redigeraren</string>
+	<string name="new_editor_promo_link">Vad är nytt?</string>
+	<string name="new_editor_promo_description_image">Handskriven bild</string>
+	<string name="new_editor_promo_confirmation_message">Den nya redigeraren är aktiverad!</string>
+	<string name="new_editor_promo_confirmation_action">Inställningar</string>
+	<string name="new_editor_promo_button_positive">Prova den</string>
+	<string name="new_editor_promo_button_negative">Inte nu</string>
+	<string name="new_editor_beta_message">Ny redigerare i publik beta-testning!</string>
+	<string name="new_editor_beta_action">Läs vidare</string>
+	<string name="preference_editor_footer_description">Informationsikon</string>
+	<string name="preference_editor_footer">Releaseinformation för redigerare och felrapportering</string>
+	<string name="site_settings_video_quality_hint">Videokvalitet. Högre värde innebär video med högre kvalitet.</string>
+	<string name="site_settings_video_width_hint">Ändrar storleken på videoklipp i inlägg till denna storlek</string>
+	<string name="site_settings_optimize_video_summary">Aktivera för att storleksändra och komprimera videoklipp</string>
+	<string name="site_settings_optimize_videos">Optimera videoklipp</string>
+	<string name="draft_uploaded">Utkastet uppladdat</string>
+	<string name="report_bug">Rapportera ett fel</string>
+	<string name="video_quality">Videokvalitet</string>
+	<string name="max_video_px_width">Standardbredd för video</string>
 	<string name="permission_location">Din plats</string>
 	<string name="permission_camera">Kamera</string>
 	<string name="permission_storage">Lagring</string>
 	<string name="permissions_denied_message">För att ändra detta behöver du redigera appens behörigheter och se till att ”%s” är aktiverat</string>
 	<string name="permissions_denied_title">Det verkar som om du har stängt av några behörigheter som krävs för denna funktion</string>
 	<string name="button_edit_permissions">Redigera behörigheter</string>
-	<string name="photo_picker_soft_ask_permissions_denied">%s tilläts inte åtkomst till dina foton</string>
 	<string name="photo_picker_soft_ask_allow">Tillåt</string>
 	<string name="photo_picker_soft_ask_label">%s behöver behörighet för att komma åt dina foton</string>
 	<string name="sharing_twitter_message">Detta kommer att inkluderas i twitter-meddelandena när besökare delar dina sidor med Twitter-knappen</string>
@@ -67,7 +98,7 @@ Language: sv_SE
 	<string name="button_not_now">Inte just nu.</string>
 	<string name="media_error_timeout">Servern tog för lång tid på sig att svara. Det kan vara en dålig förbindelse eller ett serverfel</string>
 	<string name="media_error_internal_server_error">Fel vid uppladdning. Prova att aktivera ”Optimera bilder” under Webbplats->Inställningar</string>
-	<string name="media_error_too_large_upload">Filen är för stor för att kunna laddas upp. Prova att aktivera ”Optimera bilder” under Webbplats->Inställningar</string>
+	<string name="media_error_http_too_large_upload">Filen är för stor för att kunna laddas upp. Prova att aktivera ”Optimera bilder” under Webbplats->Inställningar</string>
 	<string name="media_downloading">Mediafilerna sparas i denna enhet</string>
 	<string name="error_media_save">Kan inte spara media</string>
 	<string name="editor_scheduled_post_saved_online">Inlägget schemalagt</string>
@@ -80,7 +111,7 @@ Language: sv_SE
 	<string name="smart_toast_photo_long_press">Peka länge för att välja flera foton</string>
 	<string name="photo_picker_choose_video">Välj video från din enhet</string>
 	<string name="photo_picker_choose_photo">Välj foto från din enhet</string>
-	<string name="new_editor_promo_description">WordPress-appen innehåller nu en vacker ny redigerare. Prova den genom att skapa ett nytt inlägg.</string>
+	<string name="new_editor_promo_description">WordPress-appen innehåller nu en vacker ny redigerare. Prova den genom att skapa ett nytt inlägg!</string>
 	<string name="wp_media_title">WordPress-media</string>
 	<string name="media_insert_as_gallery">Lägg till som galleri</string>
 	<string name="media_insert_individually">Lägg till enstaka</string>
@@ -253,12 +284,10 @@ Language: sv_SE
 	<string name="editor_failed_uploads_switch_html">Vissa mediauppladdningar har misslyckats. Du kan inte skifta till HTML-läget\n        i detta tillstånd. Vill du ta bort alla misslyckade uppladdningar och fortsätta?</string>
 	<string name="image_thumbnail">Miniatyrbild</string>
 	<string name="visual_editor">Visuell redigerare</string>
-	<string name="format_bar_description_html">HTML-läge</string>
+	<string name="format_bar_description_html">HTML</string>
 	<string name="format_bar_description_ol">Ordnad lista</string>
 	<string name="format_bar_description_ul">Oordnad lista</string>
-	<string name="format_bar_description_media">Infoga media</string>
-	<string name="format_bar_description_more">Infoga mer</string>
-	<string name="format_bar_description_link">Infoga länk</string>
+	<string name="format_bar_description_more">Läs vidare</string>
 	<string name="format_bar_description_quote">Citatblock</string>
 	<string name="format_bar_description_strike">Genomstrykning</string>
 	<string name="format_bar_description_underline">Understreck</string>
@@ -445,7 +474,6 @@ Language: sv_SE
 	<string name="error_refresh_comments_showing_older">Kommentarer kan inte uppdateras just nu – visar äldre kommentarer</string>
 	<string name="editor_post_settings_set_featured_image">Ange utvald bild</string>
 	<string name="editor_post_settings_featured_image">Utvald bild</string>
-	<string name="new_editor_promo_title">Ny redigerare</string>
 	<string name="visual_editor_enabled">Visuell redigerare aktiverad</string>
 	<string name="editor_content_placeholder">Berätta din historia här...</string>
 	<string name="editor_page_title_placeholder">Sidans rubrik</string>

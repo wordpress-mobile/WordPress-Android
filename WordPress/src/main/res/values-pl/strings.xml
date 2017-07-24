@@ -1,18 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-27 17:03:56+0000
+Translation-Revision-Date: 2017-07-15 11:44:55+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="video_optimization_generic_error_message">Błąd podczas kompresji twojego filmu. Pozostawiono film w oryginale.</string>
+	<string name="video_optimization_in_progress">Optymalizacja twojego filmu...</string>
+	<string name="photo_picker_soft_ask_permissions_denied">%1$s nie ma dostępu do twoich zdjęć. Aby to naprawić, edytuj uprawnienia i włącz %2$s.</string>
+	<string name="format_bar_description_ellipsis_expand">Rozwiń pasek narzędzi</string>
+	<string name="format_bar_description_ellipsis_collapse">Zwiń pasek narzędzi</string>
+	<string name="format_bar_description_page">Znak końca strony</string>
+	<string name="format_bar_description_horizontal_rule">Pozioma linia</string>
+	<string name="format_bar_description_link">Odnośnik</string>
+	<string name="format_bar_description_list">Lista</string>
+	<string name="format_bar_description_heading">Nagłówek</string>
+	<string name="format_bar_description_media">Media</string>
+	<string name="reader_view_comments">Zobacz komentarze</string>
+	<string name="new_editor_promo_title_beta">Beta</string>
+	<string name="new_editor_promo_title">Wybróbuj nowy edytor</string>
+	<string name="new_editor_promo_link">Co nowego?</string>
+	<string name="new_editor_promo_description_image">Rysunek odręczny</string>
+	<string name="new_editor_promo_confirmation_message">Nowy edytor aktywowany!</string>
+	<string name="new_editor_promo_confirmation_action">Ustawienia</string>
+	<string name="new_editor_promo_button_positive">Wybróbuj</string>
+	<string name="new_editor_promo_button_negative">Nie teraz</string>
+	<string name="new_editor_beta_message">Nowy Edytor w fazie otwartych testów Beta!</string>
+	<string name="new_editor_beta_action">Czytaj więcej</string>
+	<string name="preference_editor_footer_description">Ikona informacyjna</string>
+	<string name="preference_editor_footer">Informacje o wydaniu edytora i raportowanie błędów</string>
+	<string name="site_settings_video_quality_hint">Jakość filmów. Wyższa wartość oznacza lepszą jakość filmów.</string>
+	<string name="site_settings_video_width_hint">Zmień rozmiar filmów we wpisie do tego rozmiaru</string>
+	<string name="site_settings_optimize_video_summary">Włącz aby zmienić rozmiar i skompresować filmy</string>
+	<string name="site_settings_optimize_videos">Optymalizuj filmy</string>
+	<string name="draft_uploaded">Szkic wczytany</string>
+	<string name="report_bug">Raportuj błąd</string>
+	<string name="video_quality">Jakość filmu</string>
+	<string name="max_video_px_width">Domyślna szerokość filmu</string>
 	<string name="permission_location">Lokalizacja</string>
 	<string name="permission_camera">Aparat</string>
 	<string name="permission_storage">Pamięć</string>
 	<string name="permissions_denied_message">Aby to zmienić, edytuj uprawnienia i upewnij się, że %s jest uaktywnione</string>
 	<string name="permissions_denied_title">Prawdopodobnie wyłączyłeś uprawnienia wymagane dla tej funkcjonalności</string>
 	<string name="button_edit_permissions">Edytuj uprawnienia</string>
-	<string name="photo_picker_soft_ask_permissions_denied">Odmowa dostępu do zdjęć dla %s </string>
 	<string name="photo_picker_soft_ask_allow">Zezwalaj</string>
 	<string name="photo_picker_soft_ask_label">%s potrzebuje uprawnień dostępu do twoich zdjęć</string>
 	<string name="sharing_twitter_message">Będzie to zawarte w tweetach kiedy ludzie udostępniają treści używając  przycisku Twitter</string>
@@ -67,7 +98,7 @@ Language: pl
 	<string name="button_not_now">Nie teraz</string>
 	<string name="media_error_timeout">Czas odpowiedzi serwera został przekroczony, możliwe że masz problemy z połączeniem lub jest to błąd serwera</string>
 	<string name="media_error_internal_server_error">Błąd przesyłania. Spróbuj włączyć funkcję optymalizacji obrazków w ustawieniach witryny</string>
-	<string name="media_error_too_large_upload">Plik zbyt duży aby go przesłać. Spróbuj włączyć funkcję optymalizacji obrazków w ustawieniach witryny</string>
+	<string name="media_error_http_too_large_upload">Plik zbyt duży aby go przesłać. Spróbuj włączyć funkcję optymalizacji obrazków w ustawieniach witryny</string>
 	<string name="media_downloading">Zapisywanie mediów na to urządzenie</string>
 	<string name="error_media_save">Nie można zapisać pliku mediów</string>
 	<string name="editor_scheduled_post_saved_online">Publikacja wpisu została zaplanowana</string>
@@ -123,7 +154,7 @@ Language: pl
 	<string name="media_upload_state_queued">W kolejce</string>
 	<string name="update_draft">Zaktualizuj szkic</string>
 	<string name="keep_editing">Kontynuuj edycję</string>
-	<string name="image_quality">Jakość obrazków</string>
+	<string name="image_quality">Jakość obrazka</string>
 	<string name="error_all_media_upload_canceled">Wszystkie zadania przesyłania mediów zostały anulowane z powodu nieznanego błędu. Proszę ponownie przesłać pliki mediów.</string>
 	<string name="error_unknown_post_type">Nieznany format wpisu</string>
 	<string name="error_unknown_post">Nieznany wpis, lokalna kopia wpisu może nie być zsynchronizowana z serwerem</string>
@@ -254,11 +285,9 @@ Language: pl
 	<string name="image_thumbnail">Miniaturka obrazka</string>
 	<string name="visual_editor">Edytor wizualny</string>
 	<string name="format_bar_description_html">Tryb HTML</string>
-	<string name="format_bar_description_ol">Lista numeryczna</string>
+	<string name="format_bar_description_ol">Lista numerowana</string>
 	<string name="format_bar_description_ul">Lista nieuporządkowana</string>
-	<string name="format_bar_description_media">Wstaw media</string>
-	<string name="format_bar_description_more">Wstaw więcej</string>
-	<string name="format_bar_description_link">Wstaw odnośnik</string>
+	<string name="format_bar_description_more">Czytaj więcej</string>
 	<string name="format_bar_description_quote">Cytat blokowy</string>
 	<string name="format_bar_description_strike">Przekreślenie</string>
 	<string name="format_bar_description_underline">Podkreślenie</string>
@@ -406,7 +435,7 @@ Language: pl
 	<string name="post_format_chat">Czat</string>
 	<string name="post_format_audio">Plik dźwiękowy</string>
 	<string name="post_format_aside">Notatka na marginesie</string>
-	<string name="notif_events">Informacje o kursach i wydarzeniach WordPress.com (online i osobiste)</string>
+	<string name="notif_events">Informacje o kursach i wydarzeniach WordPress.com (online i osobiście)</string>
 	<string name="notif_surveys">Możliwość uczestnictwa w badaniach i ankietach WordPress.com</string>
 	<string name="notif_tips">Wskazówki jak używać WordPress.com</string>
 	<string name="notif_community">Społeczność</string>
@@ -445,7 +474,6 @@ Language: pl
 	<string name="error_refresh_comments_showing_older">Odświeżenie komentarzy nie było możliwe - pokazane są starsze komentarze</string>
 	<string name="editor_post_settings_set_featured_image">Ustaw obrazek wyróżniający</string>
 	<string name="editor_post_settings_featured_image">Obrazek wyróżniający</string>
-	<string name="new_editor_promo_title">Nowy edytor</string>
 	<string name="visual_editor_enabled">Edytor wizualny włączony</string>
 	<string name="editor_content_placeholder">Podziel się swoją historią...</string>
 	<string name="editor_page_title_placeholder">Tytuł strony</string>

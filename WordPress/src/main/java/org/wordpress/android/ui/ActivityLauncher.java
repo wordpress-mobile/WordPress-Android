@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -24,7 +23,6 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
-import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
@@ -47,13 +45,10 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
-import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AppLockManager;
-
-import java.util.ArrayList;
 
 public class ActivityLauncher {
 
@@ -144,7 +139,7 @@ public class ActivityLauncher {
 
     public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {
         if (site == null) {
-            Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
 
@@ -156,30 +151,20 @@ public class ActivityLauncher {
 
     public static void viewBlogAdmin(Context context, SiteModel site) {
         if (site == null || site.getAdminUrl() == null) {
-            Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, site);
         openUrlExternal(context, site.getAdminUrl());
     }
 
-    public static void viewPostPreviewForResult(Activity activity, SiteModel site, PostModel post, boolean isPage) {
+    public static void viewPostPreviewForResult(Activity activity, SiteModel site, PostModel post) {
         if (post == null) return;
 
         Intent intent = new Intent(activity, PostPreviewActivity.class);
         intent.putExtra(PostPreviewActivity.EXTRA_POST, post);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
-    }
-
-    public static void newMediaPost(Activity context, SiteModel site, ArrayList<Long> mediaIds) {
-        if (site == null || mediaIds == null) return;
-        // Create a new post object and assign default settings
-        Intent intent = new Intent(context, EditPostActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.setAction(EditPostActivity.NEW_MEDIA_POST);
-        intent.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA_IDS, ListUtils.toLongArray(mediaIds));
-        context.startActivity(intent);
     }
 
     public static void addNewPostOrPageForResult(Activity activity, SiteModel site, boolean isPage, boolean isPromo) {
@@ -226,10 +211,6 @@ public class ActivityLauncher {
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
             WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()});
         }
-    }
-
-    public static void addMedia(Activity activity) {
-        WordPressMediaUtils.launchPictureLibrary(activity);
     }
 
     public static void viewMyProfile(Context context) {

@@ -464,6 +464,63 @@
         <item name="colorControlActivated">@color/blue_wordpress</item>
     </style>
 
+    <!--Post Settings Styles-->
+    <style name="PostSettingsCardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="PostSettingsCardViewInnerLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="PostSettingsSectionHeader">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginLeft">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="PostSettingsContainer">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="PostSettingsTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="PostSettingsSubtitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColorHint">@color/grey_darken_10</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="PostSettingsDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/list_divider_height</item>
+        <item name="android:background">@color/grey_lighten_20</item>
+    </style>
+
+    <!--Promo Dialog Styles-->
     <style name="PromoDialogTitle" parent="WordPress">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_height">wrap_content</item>
@@ -473,17 +530,8 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="PromoDialogTitleBeta" parent="WordPress">
-        <item name="android:background">@drawable/bg_beta_label</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="PromoDialogTitleBeta" parent="EditorTitleBeta">
         <item name="android:layout_marginLeft">@dimen/margin_large</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:paddingBottom">@dimen/dialog_beta_padding_vertical</item>
-        <item name="android:paddingLeft">@dimen/dialog_beta_padding_horizontal</item>
-        <item name="android:paddingRight">@dimen/dialog_beta_padding_horizontal</item>
-        <item name="android:paddingTop">@dimen/dialog_beta_padding_vertical</item>
-        <item name="android:textColor">@color/grey_dark</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
 
     <style name="PromoDialogDescription" parent="WordPress">
@@ -502,5 +550,4 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
     </style>
-
 </resources>

@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -139,7 +138,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
 
         if (site == null) {
             AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + localID + " cannot be loaded from the DB.");
-            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            ToastUtils.showToast(this, R.string.stats_no_blog, ToastUtils.Duration.LONG);
             finish();
             return;
         }
@@ -149,7 +148,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
             // Or a Jetpack blog whose options are not yet synched in the app
             // In both of these cases show a generic message that encourages the user to refresh
             // the blog within the app. There are so many different paths here that's better to handle them in the app.
-            Toast.makeText(this, R.string.stats_widget_error_jetpack_no_blogid, Toast.LENGTH_LONG).show();
+            ToastUtils.showToast(this, R.string.stats_widget_error_jetpack_no_blogid, ToastUtils.Duration.LONG);
             finish();
             return;
         }

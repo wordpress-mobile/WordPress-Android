@@ -1,18 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-21 22:44:20+0000
+Translation-Revision-Date: 2017-07-10 11:48:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+	<string name="video_optimization_generic_error_message">Ocurrió un error al comprimir tu vídeo. Se usará el archivo original.</string>
+	<string name="video_optimization_in_progress">Optimizando tu vídeo…</string>
+	<string name="photo_picker_soft_ask_permissions_denied">%1$s denegó el acceso a tus fotos. Para solucionar esto modifica tus permisos y activa %2$s.</string>
+	<string name="format_bar_description_ellipsis_expand">Expandir barra de herramientas</string>
+	<string name="format_bar_description_ellipsis_collapse">Contraer barra de herramientas</string>
+	<string name="format_bar_description_page">Salto de página</string>
+	<string name="format_bar_description_horizontal_rule">Regla horizontal</string>
+	<string name="format_bar_description_link">Enlace</string>
+	<string name="format_bar_description_list">Lista</string>
+	<string name="format_bar_description_heading">Cabecera</string>
+	<string name="format_bar_description_media">Medios</string>
+	<string name="reader_view_comments">Ver comentarios</string>
+	<string name="new_editor_promo_title_beta">Beta</string>
+	<string name="new_editor_promo_title">Prueba el nuevo editor</string>
+	<string name="new_editor_promo_link">¿Qué hay de nuevo?</string>
+	<string name="new_editor_promo_description_image">Imagen a mano alzada</string>
+	<string name="new_editor_promo_confirmation_message">¡Nuevo editor activo!</string>
+	<string name="new_editor_promo_confirmation_action">Ajustes</string>
+	<string name="new_editor_promo_button_positive">Pruébalo</string>
+	<string name="new_editor_promo_button_negative">Ahora no</string>
+	<string name="new_editor_beta_message">¡Nuevo editor en beta abierta!</string>
+	<string name="new_editor_beta_action">Leer más</string>
+	<string name="preference_editor_footer_description">Icono de información</string>
+	<string name="preference_editor_footer">Notas del lanzamiento del editor e informe de fallos</string>
+	<string name="site_settings_video_quality_hint">Calidad de los vídeos. Valores más altos implican vídeos de mejor calidad.</string>
+	<string name="site_settings_video_width_hint">Redimensiona los vídeos en las entradas a este tamaño</string>
+	<string name="site_settings_optimize_video_summary">Activa la redimensión y compresión de vídeos</string>
+	<string name="site_settings_optimize_videos">Optimizar vídeos</string>
+	<string name="draft_uploaded">Borrador subido</string>
+	<string name="report_bug">Informar de fallo</string>
+	<string name="video_quality">Calidad del vídeo</string>
+	<string name="max_video_px_width">Ancho por defecto del vídeo</string>
 	<string name="permission_location">Ubicación</string>
 	<string name="permission_camera">Cámara</string>
 	<string name="permission_storage">Almacenamiento</string>
 	<string name="permissions_denied_message">Para cambiar esto modifica tus permisos y asegúrate de que está activo %s</string>
 	<string name="permissions_denied_title">Parece que has desactivado permisos requeridos para esta funcionalidad</string>
 	<string name="button_edit_permissions">Editar permisos</string>
-	<string name="photo_picker_soft_ask_permissions_denied">%s no tiene permisos para acceder a tus fotos</string>
 	<string name="photo_picker_soft_ask_allow">Permitir</string>
 	<string name="photo_picker_soft_ask_label">%s necesita permisos para acceder a tus fotos</string>
 	<string name="sharing_twitter_message">Esto se incluirá en los tuits cuando la gente lo comparta usando el botón de Twitter</string>
@@ -67,7 +98,7 @@ Language: es
 	<string name="button_not_now">Ahora no</string>
 	<string name="media_error_timeout">Se agotó la respuesta del servidor, puede que tengas una conexión pobre o que sea un error del servidor</string>
 	<string name="media_error_internal_server_error">Error en la subida. Trata de activar Optimizar imágenes en Sitio->Ajustes</string>
-	<string name="media_error_too_large_upload">Archivo a subir demasiado grande. Trata de activar Optimizar imágenes en Sitio->Ajustes</string>
+	<string name="media_error_http_too_large_upload">Archivo a subir demasiado grande. Trata de activar Optimizar imágenes en Sitio->Ajustes</string>
 	<string name="media_downloading">Guardando medios en este dispositivo</string>
 	<string name="error_media_save">No fue posible guardar los medios</string>
 	<string name="editor_scheduled_post_saved_online">Entrada programada</string>
@@ -80,7 +111,7 @@ Language: es
 	<string name="smart_toast_photo_long_press">Toca y mantiene para elegir varias fotos</string>
 	<string name="photo_picker_choose_video">Elige un vídeo del dispositivo</string>
 	<string name="photo_picker_choose_photo">Elige una foto del dispositivo</string>
-	<string name="new_editor_promo_description">La app WordPress ahora incluye un bonito nuevo editor. Pruébalo creando una nueva entrada.</string>
+	<string name="new_editor_promo_description">La app WordPress ahora incluye un bonito nuevo editor. ¡Pruébalo creando una nueva entrada!</string>
 	<string name="wp_media_title">Medios de WordPress</string>
 	<string name="media_insert_as_gallery">Añadir como galería</string>
 	<string name="media_insert_individually">Añadir individualmente</string>
@@ -253,12 +284,10 @@ Language: es
 	<string name="editor_failed_uploads_switch_html">Algunas subidas de medios han fallado. Puedes cambiar al modo HTML \ncuando esto pasa. ¿Borramos todas las subidas fallidas y seguimos?</string>
 	<string name="image_thumbnail">Miniatura de la imagen</string>
 	<string name="visual_editor">Editor visual</string>
-	<string name="format_bar_description_html">Modo HTML</string>
-	<string name="format_bar_description_ol">Lista ordenada</string>
-	<string name="format_bar_description_ul">Lista no ordenada</string>
-	<string name="format_bar_description_media">Insertar archivo multimeda</string>
-	<string name="format_bar_description_more">Insertar más</string>
-	<string name="format_bar_description_link">Insertar enlace</string>
+	<string name="format_bar_description_html">HTML</string>
+	<string name="format_bar_description_ol">Lista numerada</string>
+	<string name="format_bar_description_ul">Lista en viñetas</string>
+	<string name="format_bar_description_more">Leer más</string>
 	<string name="format_bar_description_quote">Cita</string>
 	<string name="format_bar_description_strike">Tachado</string>
 	<string name="format_bar_description_underline">Subrayado</string>
@@ -445,7 +474,6 @@ Language: es
 	<string name="error_refresh_comments_showing_older">No se pudieron actualizar los comentarios ahora mismo - se muestran comentarios antiguos</string>
 	<string name="editor_post_settings_set_featured_image">Fijar la imagen destacada</string>
 	<string name="editor_post_settings_featured_image">Imagen destacada</string>
-	<string name="new_editor_promo_title">Nuevo editor</string>
 	<string name="visual_editor_enabled">Editor visual activado</string>
 	<string name="editor_content_placeholder">Comparte tu historia aquí...</string>
 	<string name="editor_page_title_placeholder">Título página</string>

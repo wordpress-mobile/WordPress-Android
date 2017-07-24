@@ -71,6 +71,11 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/com_google_android_geo_api_key"/>
+
         <activity
             android:name=".ui.WPLaunchActivity"
             android:noHistory="true"
@@ -162,10 +167,6 @@
 
         <!-- Posts activities -->
         <activity
-            android:name=".ui.posts.AddCategoryActivity"
-            android:label="@string/add_new_category"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
-        <activity
             android:name=".editor.legacy.EditLinkActivity"
             android:label="@string/create_a_link"
             android:theme="@style/Theme.AppCompat.Light.Dialog"
@@ -202,6 +203,10 @@
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
+            android:theme="@style/CalypsoTheme" />
+        <activity
+            android:name=".ui.posts.PostSettingsTagsActivity"
+            android:label="@string/post_settings_tags"
             android:theme="@style/CalypsoTheme" />
 
         <!-- plans -->
@@ -442,19 +447,6 @@
                 <data
                     android:host="editor"
                     android:scheme="wordpress" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".ui.AztecEditorOptionsReceiver">
-            <intent-filter>
-                <data android:host="aztec"
-                    android:scheme="wordpress" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
             </intent-filter>
         </activity>
 

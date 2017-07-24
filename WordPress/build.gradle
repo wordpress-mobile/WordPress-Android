@@ -15,7 +15,6 @@ repositories {
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
-
 }
 
 apply plugin: 'com.android.application'
@@ -36,22 +35,20 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "7.8-rc-1"
-        versionCode 425
+        versionName "7.9-rc-2"
+        versionCode 435
         minSdkVersion 16
         targetSdkVersion 25
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
-        buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
         buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "false"
         buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "false"
     }
 
     productFlavors {
         vanilla { // used for release and beta
-            buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
         }
 
         zalpha { // alpha version - enable experimental features
@@ -105,8 +102,9 @@ dependencies {
     compile 'com.android.support:percent:25.3.1'
     compile 'com.android.support:preference-v7:25.3.1'
 
-    compile 'com.google.android.gms:play-services-gcm:9.0.2'
-    compile 'com.google.android.gms:play-services-auth:9.0.2'
+    compile 'com.google.android.gms:play-services-gcm:10.0.1'
+    compile 'com.google.android.gms:play-services-auth:10.0.1'
+    compile 'com.google.android.gms:play-services-places:10.0.1'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.helpshift:android-helpshift-aar:4.9.1'
     compile 'de.greenrobot:eventbus:2.4.0'
@@ -114,7 +112,7 @@ dependencies {
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.2'
     compile 'org.wordpress:emailchecker2:1.1.0'
-    compile 'com.squareup.okio:okio:1.9.0'
+    compile 'com.squareup.okio:okio:1.13.0'
 
     compile ('com.yalantis:ucrop:2.2.0') {
         exclude group: 'com.squareup.okhttp3'
@@ -129,11 +127,9 @@ dependencies {
     androidTestCompile 'org.objenesis:objenesis:2.1'
     androidTestCompile 'org.mockito:mockito-core:1.10.19'
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
-    androidTestCompile 'com.squareup.okio:okio:1.9.0' // explicitly compile okio to match the version needed by ucrop
+    androidTestCompile 'com.squareup.okio:okio:1.13.0'
 
     // Provided by the WordPress-Android Repository
-    compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
-    compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
     compile 'org.wordpress:passcodelock:1.5.1'
 
     // Dagger
@@ -141,7 +137,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:b9f080afc39ceae71a6eac82d0547861eb3055e2') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:0f45e36dcca7e825d27f7cc3bac593f3d6790c85') {
         exclude group: "com.android.volley";
     }
 
@@ -169,18 +165,11 @@ configurations.all {
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
-    def inputFile = file("${rootDir}/gradle.properties")
-    if (!inputFile.exists()) {
-        throw new StopActionException("Build configuration file:" + inputFile
-                + " doesn't exist, follow README instructions")
-    }
+    def inputFile = checkGradlePropertiesFile()
     outputs.file outputFile
     inputs.file inputFile
     doLast {
-        def properties = new Properties()
-        inputFile.withInputStream { stream ->
-            properties.load(stream)
-        }
+        def properties = loadPropertiesFromFile(inputFile)
         def crashlyticsApiKey = properties.getProperty('wp.crashlytics.apikey', '0')
         def writer = new FileWriter(outputFile)
         writer.write("""// auto-generated file from ${rootDir}/gradle.properties do not modify
@@ -196,12 +185,38 @@ android.applicationVariants.all { variant ->
 
 // Add properties named "wp.xxx" to our BuildConfig
 android.buildTypes.all { buildType ->
-    project.properties.any { property ->
+    def inputFile = checkGradlePropertiesFile()
+    def properties = loadPropertiesFromFile(inputFile)
+    properties.any { property ->
         if (property.key.toLowerCase().startsWith("wp.")) {
             buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
                     "\"${property.value}\""
         }
+        if (property.key.toLowerCase().startsWith("wp.res.")) {
+            buildType.resValue "string", property.key.replace("wp.res.", "").replace(".", "_").toLowerCase(),
+                    "${property.value}"
+        }
     }
+}
+
+def checkGradlePropertiesFile() {
+    def inputFile = file("${rootDir}/gradle.properties")
+    if (!inputFile.exists()) {
+        // Try the BuddyBuild provided file if it's there
+        inputFile = file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/gradle.properties")
+        if (!inputFile.exists()) {
+            throw new StopActionException("Build configuration file gradle.properties doesn't exist, follow README instructions")
+        }
+    }
+    return inputFile
+}
+
+static def loadPropertiesFromFile(inputFile) {
+    def properties = new Properties()
+    inputFile.withInputStream { stream ->
+        properties.load(stream)
+    }
+    return properties
 }
 
 // For app signing

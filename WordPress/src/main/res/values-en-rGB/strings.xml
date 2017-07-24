@@ -1,18 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-21 18:05:21+0000
+Translation-Revision-Date: 2017-07-04 23:32:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="video_optimization_generic_error_message">An error occurred while compressing your video. Using the original file.</string>
+	<string name="video_optimization_in_progress">Optimising your video…</string>
+	<string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
+	<string name="format_bar_description_ellipsis_expand">Expand Toolbar</string>
+	<string name="format_bar_description_ellipsis_collapse">Collapse Toolbar</string>
+	<string name="format_bar_description_page">Page Break</string>
+	<string name="format_bar_description_horizontal_rule">Horizontal Rule</string>
+	<string name="format_bar_description_link">Link</string>
+	<string name="format_bar_description_list">List</string>
+	<string name="format_bar_description_heading">Heading</string>
+	<string name="format_bar_description_media">Media</string>
+	<string name="reader_view_comments">View comments</string>
+	<string name="new_editor_promo_title_beta">Beta</string>
+	<string name="new_editor_promo_title">Try the new Editor</string>
+	<string name="new_editor_promo_link">What\'s new?</string>
+	<string name="new_editor_promo_description_image">Hand Write Image</string>
+	<string name="new_editor_promo_confirmation_message">New Editor enabled!</string>
+	<string name="new_editor_promo_confirmation_action">Settings</string>
+	<string name="new_editor_promo_button_positive">Try It</string>
+	<string name="new_editor_promo_button_negative">Not Now</string>
+	<string name="new_editor_beta_message">New Editor in Open Beta!</string>
+	<string name="new_editor_beta_action">Read More</string>
+	<string name="preference_editor_footer_description">Info Icon</string>
+	<string name="preference_editor_footer">Editor release notes and bug reporting</string>
+	<string name="site_settings_video_quality_hint">Quality of videos. Higher values mean better quality videos.</string>
+	<string name="site_settings_video_width_hint">Resizes videos in posts to this size</string>
+	<string name="site_settings_optimize_video_summary">Enable to resize and compress videos</string>
+	<string name="site_settings_optimize_videos">Optimise Videos</string>
+	<string name="draft_uploaded">Draft uploaded</string>
+	<string name="report_bug">Report bug</string>
+	<string name="video_quality">Video Quality</string>
+	<string name="max_video_px_width">Default Video Width</string>
 	<string name="permission_location">Location</string>
 	<string name="permission_camera">Camera</string>
 	<string name="permission_storage">Storage</string>
 	<string name="permissions_denied_message">To change this, edit your permissions and make sure %s is enabled</string>
 	<string name="permissions_denied_title">It looks like you turned off permissions required for this feature</string>
 	<string name="button_edit_permissions">Edit permissions</string>
-	<string name="photo_picker_soft_ask_permissions_denied">%s was denied permissions to access your photos</string>
 	<string name="photo_picker_soft_ask_allow">Allow</string>
 	<string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
 	<string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
@@ -67,7 +98,7 @@ Language: en_GB
 	<string name="button_not_now">Not now</string>
 	<string name="media_error_timeout">Server response timed out, you may have a poor connection or server error</string>
 	<string name="media_error_internal_server_error">Upload error. Try enabling Optimise Images in Site->Settings</string>
-	<string name="media_error_too_large_upload">File too large to upload. Try enabling Optimise Images in Site->Settings</string>
+	<string name="media_error_http_too_large_upload">File too large to upload. Try enabling Optimise Images in Site->Settings</string>
 	<string name="media_downloading">Saving media to this device</string>
 	<string name="error_media_save">Unable to save media</string>
 	<string name="editor_scheduled_post_saved_online">Post scheduled</string>
@@ -80,7 +111,7 @@ Language: en_GB
 	<string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
 	<string name="photo_picker_choose_video">Choose video from device</string>
 	<string name="photo_picker_choose_photo">Choose photo from device</string>
-	<string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post.</string>
+	<string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post!</string>
 	<string name="wp_media_title">WordPress media</string>
 	<string name="media_insert_as_gallery">Add as gallery</string>
 	<string name="media_insert_individually">Add individually</string>
@@ -123,7 +154,7 @@ Language: en_GB
 	<string name="media_upload_state_queued">Queued</string>
 	<string name="update_draft">Update draft</string>
 	<string name="keep_editing">Keep editing</string>
-	<string name="image_quality">Image quality</string>
+	<string name="image_quality">Image Quality</string>
 	<string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 	<string name="error_unknown_post_type">Unknown post format</string>
 	<string name="error_unknown_post">Unknown post, local copy of this post may be out of sync with the server</string>
@@ -253,13 +284,11 @@ Language: en_GB
 	<string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode\n        in this state. Remove all failed uploads and continue?</string>
 	<string name="image_thumbnail">Image thumbnail</string>
 	<string name="visual_editor">Visual editor</string>
-	<string name="format_bar_description_html">HTML mode</string>
-	<string name="format_bar_description_ol">Ordered list</string>
-	<string name="format_bar_description_ul">Unordered list</string>
-	<string name="format_bar_description_media">Insert media</string>
-	<string name="format_bar_description_more">Insert more</string>
-	<string name="format_bar_description_link">Insert link</string>
-	<string name="format_bar_description_quote">Block quote</string>
+	<string name="format_bar_description_html">HTML</string>
+	<string name="format_bar_description_ol">Ordered List</string>
+	<string name="format_bar_description_ul">Unordered List</string>
+	<string name="format_bar_description_more">Read More</string>
+	<string name="format_bar_description_quote">Block Quote</string>
 	<string name="format_bar_description_strike">Strikethrough</string>
 	<string name="format_bar_description_underline">Underline</string>
 	<string name="format_bar_description_italic">Italic</string>
@@ -445,7 +474,6 @@ Language: en_GB
 	<string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
 	<string name="editor_post_settings_set_featured_image">Set Featured Image</string>
 	<string name="editor_post_settings_featured_image">Featured Image</string>
-	<string name="new_editor_promo_title">New editor</string>
 	<string name="visual_editor_enabled">Visual Editor enabled</string>
 	<string name="editor_content_placeholder">Share your story here…</string>
 	<string name="editor_page_title_placeholder">Page Title</string>

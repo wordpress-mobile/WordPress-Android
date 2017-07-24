@@ -41,7 +41,6 @@ Language: ru
 	<string name="media_upload_state_queued">В очереди</string>
 	<string name="update_draft">Обновить черновик</string>
 	<string name="keep_editing">Продолжить редактирование</string>
-	<string name="image_quality">Качество изображений</string>
 	<string name="error_all_media_upload_canceled">Все процессы загрузки медиафайлов были прерваны из-за неизвестной ошибки. Попробуйте начать загрузку заново</string>
 	<string name="error_unknown_post_type">Неизвестный формат записи</string>
 	<string name="error_unknown_post">Неизвестная запись. Возможно, локальная копия этой записи не синхронизирована с сервером</string>
@@ -87,13 +86,6 @@ Language: ru
 	<string name="editor_failed_uploads_switch_html">Некоторые загрузки завершились с ошибкой. В этом состоянии нельзя\nпереключиться в режим HTML. Удалить неудачные загрузки и продолжить?</string>
 	<string name="image_thumbnail">Миниатюра</string>
 	<string name="visual_editor">Визуальный редактор</string>
-	<string name="format_bar_description_html">Режим HTML</string>
-	<string name="format_bar_description_ol">Нумерованный список</string>
-	<string name="format_bar_description_ul">Маркированный список</string>
-	<string name="format_bar_description_media">Вставить файл</string>
-	<string name="format_bar_description_more">Вставить тег «далее»</string>
-	<string name="format_bar_description_link">Вставить ссылку</string>
-	<string name="format_bar_description_quote">Цитата</string>
 	<string name="format_bar_description_strike">Перечёркнутый</string>
 	<string name="format_bar_description_underline">Подчёркнутый</string>
 	<string name="format_bar_description_italic">Курсив</string>

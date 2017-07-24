@@ -101,8 +101,10 @@
     <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
     <string name="editor_dropped_unsupported_files">Warning: not all dropped items are supported!</string>
 
-    <!-- AZTEC -->
-    <string name="edit_hint">Share your story here&#8230;</string>
+    <!-- Aztec -->
+    <string name="editor_content_hint">Share your story here&#8230;</string>
+
+    <string name="editor_title_beta">Beta</string>
 
     <string name="dialog_title">Insert link</string>
     <string name="dialog_edit_hint">http(s)://</string>

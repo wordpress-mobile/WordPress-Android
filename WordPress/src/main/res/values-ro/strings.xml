@@ -1,18 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-21 17:48:33+0000
+Translation-Revision-Date: 2017-07-05 08:53:29+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="video_optimization_generic_error_message">A apărut o eroare în timpul comprimării videoului tău. Folosesc fișierul original.</string>
+	<string name="video_optimization_in_progress">Îți optimizez videoul...</string>
+	<string name="photo_picker_soft_ask_permissions_denied">%1$s a fost refuzat accesul la fotografiile tale. Pentru a corecta asta, editează-ți permisiunile și pornește %2$s.</string>
+	<string name="format_bar_description_ellipsis_expand">Extinde bara de unelte</string>
+	<string name="format_bar_description_ellipsis_collapse">Restrânge bara de unelte</string>
+	<string name="format_bar_description_page">Sfârșit de pagină</string>
+	<string name="format_bar_description_horizontal_rule">Linie orizontală</string>
+	<string name="format_bar_description_link">Legătură</string>
+	<string name="format_bar_description_list">Listă</string>
+	<string name="format_bar_description_heading">Subtitlu</string>
+	<string name="format_bar_description_media">Media</string>
+	<string name="reader_view_comments">Vezi comentariile</string>
+	<string name="new_editor_promo_title_beta">Beta</string>
+	<string name="new_editor_promo_title">Încearcă noul editor</string>
+	<string name="new_editor_promo_link">Ce este nou?</string>
+	<string name="new_editor_promo_description_image">Scriere de mână pe imagine</string>
+	<string name="new_editor_promo_confirmation_message">Noul editor activat!</string>
+	<string name="new_editor_promo_confirmation_action">Setări</string>
+	<string name="new_editor_promo_button_positive">Încearcă-l</string>
+	<string name="new_editor_promo_button_negative">Nu acum</string>
+	<string name="new_editor_beta_message">Editor nou în Open Beta!</string>
+	<string name="new_editor_beta_action">Citește mai mult</string>
+	<string name="preference_editor_footer_description">Informații icon</string>
+	<string name="preference_editor_footer">Note de lansare și raportarea erorilor pentru editor</string>
+	<string name="site_settings_video_quality_hint">Calitatea videourilor. Valorile mai mari înseamnă videouri de calitate mai bună.</string>
+	<string name="site_settings_video_width_hint">Redimensionează videourile în articole la această dimensiune</string>
+	<string name="site_settings_optimize_video_summary">Activează pentru a redimensiona și comprima videourile</string>
+	<string name="site_settings_optimize_videos">Optimizează videourile</string>
+	<string name="draft_uploaded">Ciornă încărcată</string>
+	<string name="report_bug">Raportează o eroare</string>
+	<string name="video_quality">Calitate video</string>
+	<string name="max_video_px_width">Lățime implicită video</string>
 	<string name="permission_location">Locație</string>
 	<string name="permission_camera">Aparat foto</string>
 	<string name="permission_storage">Stocare</string>
 	<string name="permissions_denied_message">Pentru a modifica asta, editează-ți permisiunile și asigură-te că %s este activat</string>
 	<string name="permissions_denied_title">Se pare că ai oprit permisiunile necesare pentru această funcționalitate</string>
 	<string name="button_edit_permissions">Editează permisiunile</string>
-	<string name="photo_picker_soft_ask_permissions_denied">Lui %s i s-au refuzat permisiunile de a accesa fotografiile tale</string>
 	<string name="photo_picker_soft_ask_allow">Permite</string>
 	<string name="photo_picker_soft_ask_label">%s are nevoie de permisiuni pentru a-ți accesa fotografiile</string>
 	<string name="sharing_twitter_message">Acest lucru va fi inclus în twituri când oamenii partajează folosind butonul Twitter</string>
@@ -67,7 +98,7 @@ Language: ro
 	<string name="button_not_now">Nu acum</string>
 	<string name="media_error_timeout">Răspunsul serverului a expirat, ar putea fi o conexiune slabă sau o eroare de server</string>
 	<string name="media_error_internal_server_error">Eroare la încărcare. Încearcă activarea Optimizează imagini în Sit->Setări</string>
-	<string name="media_error_too_large_upload">Fișier prea mare pentru a-l încărca. Încearcă activarea Optimizează imagini în Sit->Setări</string>
+	<string name="media_error_http_too_large_upload">Fișier prea mare pentru a-l încărca. Încearcă activarea Optimizează imagini în Sit->Setări</string>
 	<string name="media_downloading">Salvez media pe acest dispozitiv</string>
 	<string name="error_media_save">Nu pot salva media</string>
 	<string name="editor_scheduled_post_saved_online">Articol programat</string>
@@ -80,7 +111,7 @@ Language: ro
 	<string name="smart_toast_photo_long_press">Atinge și ține apăsat pentru a selecta mai multe fotografii</string>
 	<string name="photo_picker_choose_video">Alege video de pe dispozitiv</string>
 	<string name="photo_picker_choose_photo">Alege fotografie de pe dispozitiv</string>
-	<string name="new_editor_promo_description">Acum aplicația WordPress include un editor nou, frumos. Încearcă-l prin crearea unui articol nou.</string>
+	<string name="new_editor_promo_description">Acum aplicația WordPress include un editor nou, frumos. Încearcă-l prin crearea unui articol nou!</string>
 	<string name="wp_media_title">Media WordPress</string>
 	<string name="media_insert_as_gallery">Adaugă ca galerie</string>
 	<string name="media_insert_individually">Adaugă individual</string>
@@ -253,13 +284,11 @@ Language: ro
 	<string name="editor_failed_uploads_switch_html">Unele încărcări media au eșuat. Nu poți comuta la modul HTML\n        în această situație. Înlături toate încărcările eșuate și continui?</string>
 	<string name="image_thumbnail">Miniatură imagine</string>
 	<string name="visual_editor">Editor vizual</string>
-	<string name="format_bar_description_html">Mod HTML</string>
+	<string name="format_bar_description_html">HTML</string>
 	<string name="format_bar_description_ol">Listă ordonată</string>
 	<string name="format_bar_description_ul">Listă neordonată</string>
-	<string name="format_bar_description_media">Inserează media</string>
-	<string name="format_bar_description_more">Inserează mai multe</string>
-	<string name="format_bar_description_link">Inserează legătură</string>
-	<string name="format_bar_description_quote">Bloc citat</string>
+	<string name="format_bar_description_more">Citește mai mult</string>
+	<string name="format_bar_description_quote">Bloc de citate</string>
 	<string name="format_bar_description_strike">Barare</string>
 	<string name="format_bar_description_underline">Subliniere</string>
 	<string name="format_bar_description_italic">Italic</string>
@@ -445,7 +474,6 @@ Language: ro
 	<string name="error_refresh_comments_showing_older">Comentariile nu pot fi reîmprospătate acum - sunt arătate comentarii mai vechi</string>
 	<string name="editor_post_settings_set_featured_image">Setează imaginea reprezentativă</string>
 	<string name="editor_post_settings_featured_image">Imagine reprezentativă</string>
-	<string name="new_editor_promo_title">Editor nou</string>
 	<string name="visual_editor_enabled">Editor vizual validat</string>
 	<string name="editor_content_placeholder">Partajează aici povestea ta...</string>
 	<string name="editor_page_title_placeholder">Titlu pagină</string>

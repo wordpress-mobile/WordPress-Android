@@ -15,6 +15,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -159,6 +160,23 @@ public class WPNetworkImageView extends AppCompatImageView {
             return;
         }
 
+        int width = getWidth();
+        int height = getHeight();
+        ScaleType scaleType = getScaleType();
+
+        boolean wrapWidth = false, wrapHeight = false;
+        if (getLayoutParams() != null) {
+            wrapWidth = getLayoutParams().width == ViewGroup.LayoutParams.WRAP_CONTENT;
+            wrapHeight = getLayoutParams().height == ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+
+        // if the view's bounds aren't known yet, and this is not a wrap-content/wrap-content
+        // view, hold off on loading the image.
+        boolean isFullyWrapContent = wrapWidth && wrapHeight;
+        if (width == 0 && height == 0 && !isFullyWrapContent) {
+            return;
+        }
+
         // if the URL to be loaded in this view is empty, cancel any old requests and clear the
         // currently loaded image.
         if (TextUtils.isEmpty(mUrl)) {
@@ -193,10 +211,15 @@ public class WPNetworkImageView extends AppCompatImageView {
             return;
         }
 
+
+        // Calculate the max image width / height to use while ignoring WRAP_CONTENT dimens.
+        int maxWidth = wrapWidth ? 0 : width;
+        int maxHeight = wrapHeight ? 0 : height;
+
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
         ImageLoader.ImageContainer newContainer = WordPress.sImageLoader.get(mUrl,
-                new WPNetworkImageLoaderListener(mUrl, isInLayoutPass, imageLoadListener), 0, 0, getScaleType());
+                new WPNetworkImageLoaderListener(mUrl, isInLayoutPass, imageLoadListener), maxWidth, maxHeight, scaleType);
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
     }
@@ -418,7 +441,12 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
     }
 
-    public void showDefaultGravatarImage() {
+    public void showDefaultGravatarImageAndNullifyUrl() {
+        // Setting the image url `null` will result in showing the default image by calling `showErrorImage`
+        setImageUrl(null, ImageType.AVATAR);
+    }
+
+    private void showDefaultGravatarImage() {
         if (getContext() == null) return;
         try {
             new ShapeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
@@ -428,11 +456,15 @@ public class WPNetworkImageView extends AppCompatImageView {
         } catch (RejectedExecutionException e) {
             AppLog.w(AppLog.T.UTILS, "Too many tasks already available in the default AsyncTask.THREAD_POOL_EXECUTOR queue. " +
                     "The current DefaultGravatarImage was rejected");
-            return;
         }
     }
 
-    public void showDefaultBlavatarImage() {
+    public void showDefaultBlavatarImageAndNullifyUrl() {
+        // Setting the image url `null` will result in showing the default image by calling `showErrorImage`
+        setImageUrl(null, ImageType.BLAVATAR);
+    }
+
+    private void showDefaultBlavatarImage() {
         setImageResource(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
     }
 
