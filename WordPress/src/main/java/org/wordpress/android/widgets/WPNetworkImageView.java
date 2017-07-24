@@ -208,6 +208,9 @@ public class WPNetworkImageView extends AppCompatImageView {
         if (mUrlSkipList.contains(mUrl)) {
             AppLog.d(AppLog.T.UTILS, "skipping image request " + mUrl);
             showErrorImage();
+            if (imageLoadListener != null) {
+                imageLoadListener.onError();
+            }
             return;
         }
 
