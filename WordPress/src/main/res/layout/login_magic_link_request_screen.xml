@@ -22,7 +22,7 @@
 
         <ProgressBar
             android:id="@+id/avatar_progress"
-            style="@android:style/Widget.Holo.ProgressBar"
+            style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/margin_large"
