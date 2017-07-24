@@ -515,8 +515,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
             // convert JSON themes to Theme models and store them in database
             final ArrayList<Theme> themes = new ArrayList<>();
-            final int count = array.length();
-            for (int i = 0; i < count; i++) {
+            for (int i = 0; i < array.length(); i++) {
                 try {
                     JSONObject object = array.getJSONObject(i);
                     Theme theme = Theme.fromJSONV1_2(object, mSite);
