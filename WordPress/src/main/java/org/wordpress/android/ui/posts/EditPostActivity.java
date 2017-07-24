@@ -766,9 +766,9 @@ public class EditPostActivity extends AppCompatActivity implements
         if (itemId == R.id.menu_save_post) {
             publishPost();
         } else {
-            // TODO Drop this for Aztec when we have reattachment working
             // Disable other action bar buttons while a media upload is in progress
-            if (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress()) {
+            // (unnecessary for Aztec since it supports progress reattachment)
+            if (!mShowAztecEditor && (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress())) {
                 ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
                 return false;
             }
