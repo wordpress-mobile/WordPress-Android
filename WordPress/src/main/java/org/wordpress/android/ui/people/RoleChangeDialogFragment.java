@@ -34,6 +34,12 @@ public class RoleChangeDialogFragment extends DialogFragment {
     private RoleListAdapter mRoleListAdapter;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         String role = mRoleListAdapter.getSelectedRole();
