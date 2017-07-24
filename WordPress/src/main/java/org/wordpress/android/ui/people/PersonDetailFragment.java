@@ -65,6 +65,27 @@ public class PersonDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+
+        if (savedInstanceState == null) {
+            mCurrentUserId = getArguments().getLong(ARG_CURRENT_USER_ID);
+            mPersonId = getArguments().getLong(ARG_PERSON_ID);
+            mLocalTableBlogId = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+            mPersonType = (Person.PersonType) getArguments().getSerializable(ARG_PERSON_TYPE);
+        } else {
+            mCurrentUserId = savedInstanceState.getLong(ARG_CURRENT_USER_ID);
+            mPersonId = savedInstanceState.getLong(ARG_PERSON_ID);
+            mLocalTableBlogId = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
+            mPersonType = (Person.PersonType) savedInstanceState.getSerializable(ARG_PERSON_TYPE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(ARG_CURRENT_USER_ID, mCurrentUserId);
+        outState.putLong(ARG_PERSON_ID, mPersonId);
+        outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalTableBlogId);
+        outState.putSerializable(ARG_PERSON_TYPE, mPersonType);
     }
 
     @Override
@@ -76,11 +97,6 @@ public class PersonDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.person_detail_fragment, container, false);
-
-        mCurrentUserId = getArguments().getLong(ARG_CURRENT_USER_ID);
-        mPersonId = getArguments().getLong(ARG_PERSON_ID);
-        mLocalTableBlogId = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-        mPersonType = (Person.PersonType) getArguments().getSerializable(ARG_PERSON_TYPE);
 
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.person_avatar);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.person_display_name);
