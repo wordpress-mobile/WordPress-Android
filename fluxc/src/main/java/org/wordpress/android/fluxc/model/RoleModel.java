@@ -47,4 +47,13 @@ public class RoleModel implements Identifiable {
     public void setDisplayName(String displayName) {
         mDisplayName = displayName;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || !(other instanceof RoleModel)) return false;
+
+        RoleModel otherRole = (RoleModel) other;
+        return getName().equals(otherRole.getName());
+    }
 }
