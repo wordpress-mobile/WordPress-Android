@@ -113,15 +113,7 @@ public class UploadService extends Service {
         }
 
         // Update posts with any completed AND failed uploads in our post->media map
-        ConcurrentHashMap<Integer, List<MediaModel>> tmpMap = new ConcurrentHashMap<>();
-        tmpMap.putAll(sCompletedMediaByPost);
-        tmpMap.putAll(sFailedMediaByPost);
-
-        for (Integer postId : tmpMap.keySet()) {
-            PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
-            updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
-            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
-        }
+        updatePostModelWithCompletedAndFailedUploads();
 
         mDispatcher.unregister(this);
         AppLog.i(T.MAIN, "UploadService > Destroyed");
@@ -504,6 +496,13 @@ public class UploadService extends Service {
             return;
         }
 
+        updatePostModelWithCompletedAndFailedUploads();
+
+        AppLog.i(T.MAIN, "UploadService > Completed");
+        stopSelf();
+    }
+
+    private void updatePostModelWithCompletedAndFailedUploads(){
         if (!sCompletedMediaByPost.isEmpty() || !sFailedMediaByPost.isEmpty()) {
             ConcurrentHashMap<Integer, List<MediaModel>> tmpMap = new ConcurrentHashMap<>();
             tmpMap.putAll(sCompletedMediaByPost);
@@ -520,9 +519,6 @@ public class UploadService extends Service {
                 mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
             }
         }
-
-        AppLog.i(T.MAIN, "UploadService > Completed");
-        stopSelf();
     }
 
     private void cancelPostUploadMatchingMedia(MediaModel media, String mediaErrorMessage) {
