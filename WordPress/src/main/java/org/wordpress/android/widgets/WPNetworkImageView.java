@@ -441,7 +441,12 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
     }
 
-    public void showDefaultGravatarImage() {
+    public void showDefaultGravatarImageAndNullifyUrl() {
+        // Setting the image url `null` will result in showing the default image by calling `showErrorImage`
+        setImageUrl(null, ImageType.AVATAR);
+    }
+
+    private void showDefaultGravatarImage() {
         if (getContext() == null) return;
         try {
             new ShapeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
@@ -451,11 +456,15 @@ public class WPNetworkImageView extends AppCompatImageView {
         } catch (RejectedExecutionException e) {
             AppLog.w(AppLog.T.UTILS, "Too many tasks already available in the default AsyncTask.THREAD_POOL_EXECUTOR queue. " +
                     "The current DefaultGravatarImage was rejected");
-            return;
         }
     }
 
-    public void showDefaultBlavatarImage() {
+    public void showDefaultBlavatarImageAndNullifyUrl() {
+        // Setting the image url `null` will result in showing the default image by calling `showErrorImage`
+        setImageUrl(null, ImageType.BLAVATAR);
+    }
+
+    private void showDefaultBlavatarImage() {
         setImageResource(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
     }
 

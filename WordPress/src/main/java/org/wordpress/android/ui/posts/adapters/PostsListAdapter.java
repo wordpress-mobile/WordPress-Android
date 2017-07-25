@@ -39,10 +39,11 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -261,7 +262,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (UploadService.isPostUploading(post)) {
                 postHolder.disabledOverlay.setVisibility(View.VISIBLE);
                 postHolder.progressBar.setIndeterminate(true);
+            } else if (!AppPrefs.isAztecEditorEnabled() && UploadService.isPostUploadingOrQueued(post)) {
+                // Editing posts with uploading media is only supported in Aztec
+                postHolder.disabledOverlay.setVisibility(View.VISIBLE);
             } else {
+                postHolder.progressBar.setIndeterminate(false);
                 postHolder.disabledOverlay.setVisibility(View.GONE);
             }
 
@@ -308,8 +313,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (UploadService.isPostUploading(post)) {
                 pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
                 pageHolder.progressBar.setIndeterminate(true);
+            } else if (!AppPrefs.isAztecEditorEnabled() && UploadService.isPostUploadingOrQueued(post)) {
+                // Editing posts with uploading media is only supported in Aztec
+                pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
             } else {
                 pageHolder.disabledOverlay.setVisibility(View.GONE);
+                pageHolder.progressBar.setIndeterminate(false);
             }
         }
 
@@ -412,15 +421,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             UploadService.UploadError reason = UploadService.getUploadErrorForPost(post);
             if (reason != null) {
                 if (reason.mediaError != null) {
-                    errorMessage = UploadUtils.getErrorMessageFromMediaError(
-                            txtStatus.getContext(), reason.mediaError)  + " - " +
-                            txtStatus.getContext().getString(R.string.error_media_recover);
+                    errorMessage = txtStatus.getContext().getString(R.string.error_media_recover);
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(
                             txtStatus.getContext(), post, reason.postError);
                 }
                 statusIconResId = R.drawable.ic_notice_48dp;
-                statusColorResId = R.color.alert_yellow;
+                statusColorResId = R.color.alert_red;
             } else if (UploadService.isPostUploading(post)) {
                 statusTextResId = R.string.post_uploading;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;

@@ -95,7 +95,7 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
             holder.imgAvatar.setImageUrl(connection.getExternalProfilePictureUrl(),
                     WPNetworkImageView.ImageType.AVATAR);
         } else {
-            holder.imgAvatar.showDefaultGravatarImage();
+            holder.imgAvatar.showDefaultGravatarImageAndNullifyUrl();
         }
 
         holder.btnConnect.setAction(PublicizeConstants.ConnectAction.DISCONNECT);

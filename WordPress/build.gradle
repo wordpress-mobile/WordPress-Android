@@ -15,7 +15,6 @@ repositories {
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
-
 }
 
 apply plugin: 'com.android.application'
@@ -36,22 +35,20 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-64"
-        versionCode 430
+        versionName "alpha-66"
+        versionCode 436
         minSdkVersion 16
         targetSdkVersion 25
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
-        buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
         buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "false"
         buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "false"
     }
 
     productFlavors {
         vanilla { // used for release and beta
-            buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
         }
 
         zalpha { // alpha version - enable experimental features
@@ -133,8 +130,6 @@ dependencies {
     androidTestCompile 'com.squareup.okio:okio:1.13.0'
 
     // Provided by the WordPress-Android Repository
-    compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
-    compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
     compile 'org.wordpress:passcodelock:1.5.1'
 
     // Dagger
@@ -142,7 +137,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:0f45e36dcca7e825d27f7cc3bac593f3d6790c85') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3dc5db03892ad5cebd2f98911d8f99a00813b210') {
         exclude group: "com.android.volley";
     }
 

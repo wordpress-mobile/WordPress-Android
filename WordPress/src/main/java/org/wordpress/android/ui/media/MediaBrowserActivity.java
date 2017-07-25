@@ -451,8 +451,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mSearchView.setQuery(mQuery, true);
         }
 
-        // hide "add media" if this is used as a media picker
-        if (mBrowserType.isPicker()) {
+        // hide "add media" if this is used as a media picker or the user doesn't have upload permission
+        if (mBrowserType.isPicker() || !WordPressMediaUtils.currentUserCanUploadMedia(mSite)) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
         }
 
@@ -602,6 +602,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(OnMediaChanged event) {
+        AppLog.d(AppLog.T.MEDIA, "MediaBrowser onMediaChanged > " + event.cause);
+
         if (event.isError()) {
             AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.type
                     + " - " + event.error.message);
@@ -621,7 +623,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 break;
         }
 
-        updateViews();
+        if (event.mediaList != null && event.mediaList.size() == 1) {
+            updateMediaGridItem(event.mediaList.get(0));
+        } else {
+            reloadMediaGrid();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -636,14 +642,18 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             } else {
                 showMediaToastError(R.string.media_upload_error, event.error.message);
             }
-            updateViews();
         } else if (event.completed) {
             String title = "";
             if (event.media != null) {
                 title = event.media.getTitle();
             }
             AppLog.d(AppLog.T.MEDIA, "<" + title + "> upload complete");
-            updateViews();
+        }
+
+        if (event.media != null) {
+            updateMediaGridItem(event.media);
+        } else {
+            reloadMediaGrid();
         }
     }
 
@@ -947,6 +957,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         addMediaToUploadService(media);
+
+        updateMediaGridItem(media);
     }
 
     private void handleSharedMedia() {
@@ -993,7 +1005,19 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void updateViews() {
-        mMediaGridFragment.reload();
+    private void updateMediaGridItem(@NonNull MediaModel media) {
+        if (mMediaGridFragment != null) {
+            if (mMediaStore.getMediaWithLocalId(media.getId()) != null) {
+                mMediaGridFragment.updateMediaItem(media);
+            } else {
+                mMediaGridFragment.removeMediaItem(media);
+            }
+        }
+    }
+
+    private void reloadMediaGrid() {
+        if (mMediaGridFragment != null) {
+            mMediaGridFragment.reload();
+        }
     }
 }
