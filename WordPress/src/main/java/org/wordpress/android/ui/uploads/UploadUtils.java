@@ -5,9 +5,11 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
+import org.wordpress.android.util.WPMediaUtils;
 
 public class UploadUtils {
     /**
@@ -38,25 +40,14 @@ public class UploadUtils {
     /**
      * Returns an error message string for a failed media upload.
      */
-    public static @NonNull String getErrorMessageFromMediaError(Context context, MediaError error) {
-        switch (error.type) {
-            case FS_READ_PERMISSION_DENIED:
-                return context.getString(R.string.error_media_insufficient_fs_permissions);
-            case NOT_FOUND:
-                return context.getString(R.string.error_media_not_found);
-            case AUTHORIZATION_REQUIRED:
-                return context.getString(R.string.error_media_unauthorized);
-            case PARSE_ERROR:
-                return context.getString(R.string.error_media_parse_error);
-            case REQUEST_TOO_LARGE:
-                return context.getString(R.string.error_media_request_too_large);
-            case SERVER_ERROR:
-                return context.getString(R.string.media_error_internal_server_error);
-            case TIMEOUT:
-                return context.getString(R.string.media_error_timeout);
+    public static @NonNull String getErrorMessageFromMediaError(Context context, MediaModel media, MediaError error) {
+        String errorMessage = WPMediaUtils.getErrorMessage(context, media, error);
+
+        if (errorMessage == null) {
+            // In case of a generic or uncaught error, return the message from the API response or the error type
+            errorMessage = TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
         }
 
-        // In case of a generic or uncaught error, return the message from the API response or the error type
-        return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
+        return errorMessage;
     }
 }

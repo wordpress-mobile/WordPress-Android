@@ -613,7 +613,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                     + event.error.message);
             SiteModel site = mSiteStore.getSiteByLocalId(sCurrentUploadingPost.getLocalSiteId());
             Context context = WordPress.getContext();
-            String errorMessage = UploadUtils.getErrorMessageFromMediaError(context, event.error);
+            String errorMessage = UploadUtils.getErrorMessageFromMediaError(context, event.media, event.error);
             String notificationMessage = UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage);
             mPostUploadNotifier.cancelNotification(sCurrentUploadingPost);
             mPostUploadNotifier.updateNotificationError(sCurrentUploadingPost, site, notificationMessage, true);
