@@ -683,6 +683,7 @@ public class WPMainActivity extends AppCompatActivity {
         }
 
         if (mAccountStore.hasAccessToken() && hasMagicLinkLoginIntent()) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
             ActivityLauncher.showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         }
     }
