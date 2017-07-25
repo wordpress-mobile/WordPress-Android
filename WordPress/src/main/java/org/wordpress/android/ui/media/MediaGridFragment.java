@@ -320,7 +320,19 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             case FILTER_AUDIO:
                 return mMediaStore.getSiteAudio(mSite);
             default:
-                return mMediaStore.getAllSiteMedia(mSite);
+                if (mBrowserType == MediaBrowserType.IMAGE_AND_VIDEO_PICKER) {
+                    List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
+                    List<MediaModel> filteredMedia = new ArrayList<>();
+                    for (MediaModel media: allMedia) {
+                        String mime = media.getMimeType();
+                        if (mime != null && (mime.startsWith("image") || mime.startsWith("video"))) {
+                            filteredMedia.add(media);
+                        }
+                    }
+                    return filteredMedia;
+                } else {
+                    return mMediaStore.getAllSiteMedia(mSite);
+                }
         }
     }
 
