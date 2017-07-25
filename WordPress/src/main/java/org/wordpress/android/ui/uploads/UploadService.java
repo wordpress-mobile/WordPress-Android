@@ -403,9 +403,7 @@ public class UploadService extends Service {
     }
 
     private void showNotificationForPostWithPendingMedia(PostModel post) {
-        if (!mPostUploadNotifier.isDisplayingNotificationForPost(post)) {
-            mPostUploadNotifier.createNotificationForPost(post, getString(R.string.uploading_post_media));
-        }
+        mPostUploadNotifier.createNotificationForPost(post, getString(R.string.uploading_post_media));
     }
 
     // this keeps a map for all completed media for each post, so we can process the post easily
