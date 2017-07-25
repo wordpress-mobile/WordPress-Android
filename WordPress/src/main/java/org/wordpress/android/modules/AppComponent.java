@@ -44,6 +44,7 @@ import org.wordpress.android.ui.people.PeopleListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
+import org.wordpress.android.ui.people.RoleSelectDialogFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -152,6 +153,7 @@ public interface AppComponent {
     void inject(PersonDetailFragment object);
     void inject(RoleChangeDialogFragment object);
     void inject(PeopleInviteFragment object);
+    void inject(RoleSelectDialogFragment object);
     void inject(PlansActivity object);
     void inject(MediaBrowserActivity object);
     void inject(MediaGridFragment object);
