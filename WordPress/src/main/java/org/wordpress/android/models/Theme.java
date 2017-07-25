@@ -2,7 +2,6 @@ package org.wordpress.android.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 
 public class Theme {
@@ -175,9 +174,5 @@ public class Theme {
 
     public boolean isPremium() {
         return !mPrice.equals("");
-    }
-
-    public void save() {
-        WordPress.wpDB.saveTheme(this);
     }
 }

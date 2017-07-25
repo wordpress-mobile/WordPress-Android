@@ -24,6 +24,7 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.ThemeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.util.NetworkUtils;
@@ -318,12 +319,12 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         String blogId = String.valueOf(mSite.getSiteId());
         switch (position) {
             case THEME_FILTER_PREMIUM_INDEX:
-                return WordPress.wpDB.getThemesPremium(blogId);
+                return ThemeTable.getThemesPremium(WordPress.wpDB.getDatabase(), blogId);
             case THEME_FILTER_ALL_INDEX:
-                return WordPress.wpDB.getThemesAll(blogId);
+                return ThemeTable.getThemesAll(WordPress.wpDB.getDatabase(), blogId);
             case THEME_FILTER_FREE_INDEX:
             default:
-                return WordPress.wpDB.getThemesFree(blogId);
+                return ThemeTable.getThemesFree(WordPress.wpDB.getDatabase(), blogId);
         }
     }
 
