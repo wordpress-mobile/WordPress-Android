@@ -108,6 +108,14 @@
     </declare-styleable>
 
     <!--
+        WPNetworkImageView
+    -->
+    <declare-styleable name="wpNetworkImageView">
+        <attr name="wpDefaultImageDrawable" format="reference"/>
+        <attr name="wpErrorImageDrawable" format="reference"/>
+    </declare-styleable>
+
+    <!--
         WPLoginInputRow
     -->
     <declare-styleable name="wpLoginInputRow">

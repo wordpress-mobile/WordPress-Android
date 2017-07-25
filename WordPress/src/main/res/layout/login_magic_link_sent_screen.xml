@@ -16,7 +16,7 @@
         android:scaleType="centerInside"
         android:layout_marginTop="@dimen/margin_extra_extra_large"
         android:contentDescription="@string/login_magic_links_sent_description"
-        app:srcCompat="@drawable/ic_login_magic_link_sent"/>
+        app:srcCompat="@drawable/img_email_alert_120dp"/>
 
     <TextView
         android:id="@+id/label"
