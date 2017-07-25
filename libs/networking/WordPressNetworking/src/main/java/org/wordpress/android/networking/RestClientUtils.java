@@ -243,6 +243,18 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
+    public void setJetpackMonitor(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/jetpack/modules/monitor", siteId);
+        Map<String, String> params = new HashMap<>();
+        params.put("active", String.valueOf(enabled));
+        post(path, params, null, listener, errorListener);
+    }
+
+    public void getJetpackMonitor(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/jetpack/modules/monitor", siteId);
+        get(path, listener, errorListener);
+    }
+
     public void setJetpackSettings(long siteId, Listener listener, ErrorListener errorListener,
                                        Map<String, String> params) {
         String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
