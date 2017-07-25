@@ -54,7 +54,7 @@ class PostUploadNotifier {
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
     }
 
-    void createNotificationForPost(@NonNull PostModel post, String message) {
+    void showForegroundNotificationForPost(@NonNull PostModel post, String message) {
         mNotificationBuilder.setContentTitle(buildNotificationTitleForPost(post));
         if (message != null) {
             mNotificationBuilder.setContentText(message);

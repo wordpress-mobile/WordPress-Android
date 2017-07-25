@@ -210,7 +210,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                             : mContext.getString(R.string.post).toLowerCase()
             );
 
-            mPostUploadNotifier.createNotificationForPost(mPost, uploadingPostMessage);
+            mPostUploadNotifier.showForegroundNotificationForPost(mPost, uploadingPostMessage);
 
             mSite = mSiteStore.getSiteByLocalId(mPost.getLocalSiteId());
             if (mSite == null) {
