@@ -283,7 +283,7 @@ public class ActivityLauncher {
     public static void viewMediaPickerForResult(Activity activity, @NonNull SiteModel site) {
         Intent intent = new Intent(activity, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.IMAGE_AND_VIDEO_PICKER);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER);
         activity.startActivityForResult(intent, RequestCodes.MULTI_SELECT_MEDIA_PICKER);
     }
 
