@@ -339,7 +339,7 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void validateUsernames(final List<String> usernames, Role role, long dotComBlogId, final
+    public static void validateUsernames(final List<String> usernames, String role, long dotComBlogId, final
             ValidateUsernameCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -429,7 +429,7 @@ public class PeopleUtils {
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
         }
-        params.put("role", role.toRESTString());
+        params.put("role", role);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
@@ -448,7 +448,7 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void sendInvitations(final List<String> usernames, Role role, String message, long dotComBlogId,
+    public static void sendInvitations(final List<String> usernames, String role, String message, long dotComBlogId,
                                        final InvitationsSendCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -512,7 +512,7 @@ public class PeopleUtils {
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
         }
-        params.put("role", role.toRESTString());
+        params.put("role", role);
         params.put("message", message);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
