@@ -4,52 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="@dimen/margin_extra_extra_large"
-        android:layout_marginBottom="@dimen/margin_extra_large">
-
-        <org.wordpress.android.widgets.WPNetworkImageView
-            android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_sz_large"
-            android:layout_height="@dimen/avatar_sz_large" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/display_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-light"
-            tools:text="Full Name" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="username" />
-    </LinearLayout>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_large"
-        android:clipToPadding="false"
-        android:layout_below="@+id/header"
         android:layout_above="@+id/bottom_buttons"/>
 
     <ProgressBar
@@ -61,29 +20,34 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
+    <View
+        android:id="@+id/bottom_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@drawable/login_shadow"
+        android:layout_above="@+id/bottom_buttons"/>
+
     <LinearLayout
         android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:padding="@dimen/margin_large">
+        android:padding="@dimen/margin_large"
+        android:clipToPadding="false">
 
-        <Button
-            android:theme="@style/LoginTheme.Button"
-            style="@style/Widget.AppCompat.Button.Colored"
+        <android.support.v7.widget.AppCompatButton
+            android:theme="@style/WordPress.Button"
             android:id="@+id/login_connect_more"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:text="@string/connect_more" />
 
-        <Button
-            android:theme="@style/LoginTheme.Button"
-            style="@style/Widget.AppCompat.Button.Colored"
+        <android.support.v7.widget.AppCompatButton
+            style="@style/WordPress.Button.Primary"
             android:id="@+id/login_continue"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:text="@string/login_continue" />
-
     </LinearLayout>
 </RelativeLayout>

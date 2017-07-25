@@ -18,6 +18,7 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -26,17 +27,21 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
+import java.util.ArrayList;
+
 public class LoginUsernamePasswordFragment extends LoginBaseFormFragment implements TextWatcher,
         OnEditorCommitListener {
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
     private static final String KEY_REQUESTED_USERNAME = "KEY_REQUESTED_USERNAME";
     private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
+    private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
 
     private static final String ARG_INPUT_SITE_ADDRESS = "ARG_INPUT_SITE_ADDRESS";
     private static final String ARG_ENDPOINT_ADDRESS = "ARG_ENDPOINT_ADDRESS";
@@ -55,6 +60,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
 
     private String mRequestedUsername;
     private String mRequestedPassword;
+    ArrayList<Integer> mOldSitesIDs;
 
     private String mInputSiteAddress;
     private String mEndpointAddress;
@@ -153,6 +159,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         mInputSiteAddress = getArguments().getString(ARG_INPUT_SITE_ADDRESS);
         mEndpointAddress = getArguments().getString(ARG_ENDPOINT_ADDRESS);
@@ -170,6 +177,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
 
             mRequestedUsername = savedInstanceState.getString(KEY_REQUESTED_USERNAME);
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
+            mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         }
     }
 
@@ -180,6 +188,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         outState.putBoolean(KEY_LOGIN_FINISHED, mLoginFinished);
         outState.putString(KEY_REQUESTED_USERNAME, mRequestedUsername);
         outState.putString(KEY_REQUESTED_PASSWORD, mRequestedPassword);
+        outState.putIntegerArrayList(KEY_REQUESTED_PASSWORD, mOldSitesIDs);
     }
 
     protected void next() {
@@ -200,6 +209,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
 
         // clear up the authentication-failed flag before
         mAuthFailed = false;
+
+        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
         if (mIsWpcom) {
             AccountStore.AuthenticatePayload payload =
@@ -320,9 +331,12 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
 
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
-        if (mIsWpcom && mLoginListener != null) {
-            mLoginListener.loggedInViaPassword();
-        }
+        doFinishLogin();
+    }
+
+    @Override
+    protected void onLoginFinished() {
+        mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }
 
     @SuppressWarnings("unused")
@@ -369,13 +383,11 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         // continue with success, even if the operation was cancelled since the user got logged in regardless. So, go on
         //  with finishing the login process
 
-        endProgress();
-
         // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
         mLoginFinished = true;
 
         if (mLoginListener != null) {
-            mLoginListener.loggedInViaUsernamePassword();
+            mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
         }
     }
 }

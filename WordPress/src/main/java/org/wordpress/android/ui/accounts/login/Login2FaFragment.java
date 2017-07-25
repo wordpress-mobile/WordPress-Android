@@ -23,12 +23,16 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
+import java.util.ArrayList;
+
 public class Login2FaFragment extends LoginBaseFormFragment implements TextWatcher, OnEditorCommitListener {
     private static final String KEY_IN_PROGRESS_MESSAGE_ID = "KEY_IN_PROGRESS_MESSAGE_ID";
+    private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
 
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
@@ -38,6 +42,7 @@ public class Login2FaFragment extends LoginBaseFormFragment implements TextWatch
     private WPLoginInputRow m2FaInput;
 
     private @StringRes int mInProgressMessageId;
+    ArrayList<Integer> mOldSitesIDs;
 
     private String mEmailAddress;
     private String mPassword;
@@ -111,6 +116,7 @@ public class Login2FaFragment extends LoginBaseFormFragment implements TextWatch
         //  progress bar helper if in progress
         if (savedInstanceState != null) {
             mInProgressMessageId = savedInstanceState.getInt(KEY_IN_PROGRESS_MESSAGE_ID, 0);
+            mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         }
 
         super.onActivityCreated(savedInstanceState);
@@ -121,6 +127,7 @@ public class Login2FaFragment extends LoginBaseFormFragment implements TextWatch
         super.onSaveInstanceState(outState);
 
         outState.putInt(KEY_IN_PROGRESS_MESSAGE_ID, mInProgressMessageId);
+        outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
     }
 
     protected void next() {
@@ -139,6 +146,8 @@ public class Login2FaFragment extends LoginBaseFormFragment implements TextWatch
 
         mInProgressMessageId = messageId;
         startProgress();
+
+        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
         AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(mEmailAddress, mPassword);
         payload.twoStepCode = twoStepCode;
@@ -198,9 +207,9 @@ public class Login2FaFragment extends LoginBaseFormFragment implements TextWatch
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        endProgress();
-
         if (event.isError()) {
+            endProgress();
+
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
 
             if (isAdded()) {
@@ -212,9 +221,11 @@ public class Login2FaFragment extends LoginBaseFormFragment implements TextWatch
 
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
-        if (mLoginListener != null) {
-            mLoginListener.loggedInViaPassword();
-        }
+        doFinishLogin();
     }
 
+    @Override
+    protected void onLoginFinished() {
+        mLoginListener.loggedInViaPassword(mOldSitesIDs);
+    }
 }

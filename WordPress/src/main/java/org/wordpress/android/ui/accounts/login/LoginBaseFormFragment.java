@@ -24,15 +24,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
 public abstract class LoginBaseFormFragment extends Fragment implements TextWatcher {
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
+    private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
 
     private Button mPrimaryButton;
     private Button mSecondaryButton;
@@ -41,8 +52,10 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
     protected LoginListener mLoginListener;
 
     private boolean mInProgress;
+    private boolean mLoginFinished;
 
     @Inject Dispatcher mDispatcher;
+    @Inject SiteStore mSiteStore;
 
     protected abstract @LayoutRes int getContentLayout();
     protected abstract void setupLabel(TextView label);
@@ -108,6 +121,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
 
         if (savedInstanceState != null) {
             mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
+            mLoginFinished = savedInstanceState.getBoolean(KEY_LOGIN_FINISHED);
 
             if (mInProgress) {
                 startProgress();
@@ -148,6 +162,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
+        outState.putBoolean(KEY_LOGIN_FINISHED, mLoginFinished);
     }
 
     @Override
@@ -193,5 +208,84 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
 
         mPrimaryButton.setEnabled(true);
         mSecondaryButton.setEnabled(true);
+    }
+
+    protected void doFinishLogin() {
+        mProgressDialog.setCancelable(false);
+        mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+    }
+
+    protected void onLoginFinished() {
+    }
+
+    private void onLoginFinished(boolean success) {
+        mLoginFinished = true;
+
+        if (!success) {
+            endProgress();
+            return;
+        }
+
+        if (mLoginListener != null) {
+            onLoginFinished();
+        }
+    }
+
+    // OnChanged events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccountChanged(AccountStore.OnAccountChanged event) {
+        if (!isAdded() || mLoginFinished) {
+            return;
+        }
+
+        if (event.isError()) {
+            AppLog.e(AppLog.T.API, "onAccountChanged has error: " + event.error.type + " - " + event.error.message);
+            ToastUtils.showToast(getContext(), R.string.error_fetch_my_profile);
+            onLoginFinished(false);
+            return;
+        }
+
+        if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
+            // The user's account info has been fetched and stored - next, fetch the user's settings
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+        } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+            // The user's account settings have also been fetched and stored - now we can fetch the user's sites
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(SiteStore.OnSiteChanged event) {
+        if (!isAdded() || mLoginFinished) {
+            return;
+        }
+
+        if (event.isError()) {
+            AppLog.e(AppLog.T.API, "onSiteChanged has error: " + event.error.type + " - " + event.error.toString());
+            if (!isAdded() || event.error.type != SiteStore.SiteErrorType.DUPLICATE_SITE) {
+                onLoginFinished(false);
+                return;
+            }
+
+            if (event.rowsAffected == 0) {
+                // If there is a duplicate site and not any site has been added, show an error and
+                // stop the sign in process
+                ToastUtils.showToast(getContext(), R.string.cannot_add_duplicate_site);
+                onLoginFinished(false);
+                return;
+            } else {
+                // If there is a duplicate site, notify the user something could be wrong,
+                // but continue the sign in process
+                ToastUtils.showToast(getContext(), R.string.duplicate_site_detected);
+            }
+        }
+
+        // Start Notification service
+        NotificationsUpdateService.startService(getActivity().getApplicationContext());
+
+        onLoginFinished(true);
     }
 }

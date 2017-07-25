@@ -9,10 +9,13 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpilogueFragment.LoginEpilogueListener {
     public static final String EXTRA_SHOW_AND_RETURN = "EXTRA_SHOW_AND_RETURN";
+    public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
     protected @Inject AccountStore mAccountStore;
 
@@ -25,13 +28,14 @@ public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpi
 
         if (savedInstanceState == null) {
             boolean showAndReturn = getIntent().getBooleanExtra(EXTRA_SHOW_AND_RETURN, false);
+            ArrayList<Integer> oldSitesIds = getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS);
 
-            addPostLoginFragment(showAndReturn);
+            addPostLoginFragment(showAndReturn, oldSitesIds);
         }
     }
 
-    protected void addPostLoginFragment(boolean showAndReturn) {
-        LoginEpilogueFragment loginEpilogueFragment = LoginEpilogueFragment.newInstance(showAndReturn);
+    protected void addPostLoginFragment(boolean showAndReturn, ArrayList<Integer> oldSitesIds) {
+        LoginEpilogueFragment loginEpilogueFragment = LoginEpilogueFragment.newInstance(showAndReturn, oldSitesIds);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, loginEpilogueFragment, LoginEpilogueFragment.TAG);
         fragmentTransaction.commit();

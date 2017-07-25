@@ -34,9 +34,12 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -306,7 +309,9 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment implements T
                 if (mAccountStore.hasAccessToken()) {
                     String currentUsername = mAccountStore.getAccount().getUserName();
                     AppLog.e(T.NUX, "User is already logged in WordPress.com: " + currentUsername);
-                    mLoginListener.alreadyLoggedInWpcom();
+
+                    ArrayList<Integer> oldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, true);
+                    mLoginListener.alreadyLoggedInWpcom(oldSitesIDs);
                 } else {
                     mLoginListener.gotWpcomSiteInfo(event.failedEndpoint, null, null);
                 }

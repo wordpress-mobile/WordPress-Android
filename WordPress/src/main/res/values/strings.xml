@@ -1887,4 +1887,7 @@
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
+    <string name="login_logged_in_as">Logged in as</string>
+    <string name="login_epilogue_mysites_one">My site</string>
+    <string name="login_epilogue_mysites_other">My sites</string>
 </resources>

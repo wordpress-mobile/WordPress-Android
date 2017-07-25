@@ -24,6 +24,8 @@ import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
+import java.util.ArrayList;
+
 public class LoginActivity extends AppCompatActivity implements LoginListener {
     private static final String FORGOT_PASSWORD_URL = "https://wordpress.com/wp-login.php?action=lostpassword";
 
@@ -93,17 +95,17 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         return mLoginMode;
     }
 
-    private void loggedInAndFinish() {
+    private void loggedInAndFinish(ArrayList<Integer> oldSitesIds) {
         switch (getLoginMode()) {
             case FULL:
-                ActivityLauncher.showMainActivityAndLoginEpilogue(this);
+                ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds);
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
             case JETPACK_STATS:
             case WPCOM_LOGIN_DEEPLINK:
             case WPCOM_REAUTHENTICATE:
-                ActivityLauncher.showLoginEpilogueForResult(this, true);
+                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds);
                 break;
             case SELFHOSTED_ONLY:
                 // skip the epilogue when only added a selfhosted site
@@ -138,8 +140,8 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void loggedInViaSigUp() {
-        loggedInAndFinish();
+    public void loggedInViaSigUp(ArrayList<Integer> oldSitesIds) {
+        loggedInAndFinish(oldSitesIds);
     }
 
     @Override
@@ -205,14 +207,14 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void loggedInViaPassword() {
-        loggedInAndFinish();
+    public void loggedInViaPassword(ArrayList<Integer> oldSitesIds) {
+        loggedInAndFinish(oldSitesIds);
     }
 
     @Override
-    public void alreadyLoggedInWpcom() {
+    public void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds) {
         ToastUtils.showToast(this, R.string.already_logged_in_wpcom, ToastUtils.Duration.LONG);
-        loggedInAndFinish();
+        loggedInAndFinish(oldSitesIds);
     }
 
     public void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl) {
@@ -234,8 +236,8 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void loggedInViaUsernamePassword() {
-        loggedInAndFinish();
+    public void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds) {
+        loggedInAndFinish(oldSitesIds);
     }
 
     @Override
