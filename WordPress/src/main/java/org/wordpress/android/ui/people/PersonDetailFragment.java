@@ -219,7 +219,7 @@ public class PersonDetailFragment extends Fragment {
 
     // used to optimistically update the role
     public void changeRole(String newRole) {
-        mRoleTextView.setText(StringUtils.capitalize(newRole));
+        mRoleTextView.setText(RoleUtils.getDisplayName(newRole, mUserRoles));
     }
 
     @SuppressLint("ObsoleteSdkInt")

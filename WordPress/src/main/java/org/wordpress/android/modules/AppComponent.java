@@ -39,6 +39,7 @@ import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
+import org.wordpress.android.ui.people.PeopleListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
@@ -146,6 +147,7 @@ public interface AppComponent {
     void inject(BlogPreferencesActivity object);
     void inject(AppSettingsFragment object);
     void inject(PeopleManagementActivity object);
+    void inject(PeopleListFragment object);
     void inject(PersonDetailFragment object);
     void inject(RoleChangeDialogFragment object);
     void inject(PlansActivity object);

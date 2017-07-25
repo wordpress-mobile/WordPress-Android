@@ -17,10 +17,13 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -35,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class PeopleListFragment extends Fragment {
     private SiteModel mSite;
     private OnPersonSelectedListener mOnPersonSelectedListener;
@@ -42,6 +47,8 @@ public class PeopleListFragment extends Fragment {
 
     private FilteredRecyclerView mFilteredRecyclerView;
     private PeopleListFilter mPeopleListFilter;
+
+    @Inject SiteStore mSiteStore;
 
     public static PeopleListFragment newInstance(SiteModel site) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
@@ -64,6 +71,12 @@ public class PeopleListFragment extends Fragment {
         super.onDetach();
         mOnPersonSelectedListener = null;
         mOnFetchPeopleListener = null;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
     }
 
     @Override
@@ -288,12 +301,14 @@ public class PeopleListFragment extends Fragment {
         private final LayoutInflater mInflater;
         private List<Person> mPeopleList;
         private int mAvatarSz;
+        private List<RoleModel> mUserRoles;
 
         public PeopleAdapter(Context context, List<Person> peopleList) {
             mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.people_avatar_sz);
             mInflater = LayoutInflater.from(context);
             mPeopleList = peopleList;
             setHasStableIds(true);
+            refreshSiteUserRoles();
         }
 
         public void setPeopleList(List<Person> peopleList) {
@@ -306,6 +321,12 @@ public class PeopleListFragment extends Fragment {
                 return null;
             }
             return mPeopleList.get(position);
+        }
+
+        public void refreshSiteUserRoles() {
+            if (mSite != null) {
+                mUserRoles = mSiteStore.getUserRoles(mSite);
+            }
         }
 
         @Override
@@ -343,7 +364,7 @@ public class PeopleListFragment extends Fragment {
                 peopleViewHolder.txtDisplayName.setText(StringUtils.unescapeHTML(person.getDisplayName()));
                 if (person.getRole() != null) {
                     peopleViewHolder.txtRole.setVisibility(View.VISIBLE);
-                    peopleViewHolder.txtRole.setText(StringUtils.capitalize(person.getRole()));
+                    peopleViewHolder.txtRole.setText(RoleUtils.getDisplayName(person.getRole(), mUserRoles));
                 } else {
                     peopleViewHolder.txtRole.setVisibility(View.GONE);
                 }
