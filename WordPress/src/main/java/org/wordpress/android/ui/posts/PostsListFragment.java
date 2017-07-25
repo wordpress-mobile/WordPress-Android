@@ -778,7 +778,17 @@ public class PostsListFragment extends Fragment
 
         PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
         if (post != null) {
-            mPostsListAdapter.updateProgressForPost(post);
+            if ((event.media.isError() || event.canceled)){
+                // if a media is cancelled or ends in error, and the post is not uploading nor queued,
+                // (meaning there is no other pending media to be uploaded for this post)
+                // then we should refresh it to show its new state
+                if (!UploadService.isPostUploadingOrQueued(post)) {
+                    // TODO: replace loadPosts for getPostListAdapter().notifyItemChanged(); kind of thing
+                    loadPosts(LoadMode.FORCED);
+                }
+            } else {
+                mPostsListAdapter.updateProgressForPost(post);
+            }
         }
     }
 }
