@@ -74,6 +74,10 @@
         <item name="android:lineSpacingExtra">2dp</item>
     </style>
 
+    <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/wp_grey</item>
+    </style>
+
     <style name="LoginTheme.EditText" parent="LoginTheme">
         <item name="colorControlNormal">@color/grey</item>
         <item name="android:textColor">@color/grey_dark</item>

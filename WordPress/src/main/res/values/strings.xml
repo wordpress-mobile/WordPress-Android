@@ -1884,4 +1884,5 @@
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
     <string name="login_empty_site_url">Please enter a site address</string>
+    <string name="login_empty_username">Please enter a username</string>
 </resources>

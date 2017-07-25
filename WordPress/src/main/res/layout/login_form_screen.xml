@@ -9,17 +9,16 @@
         layout="@layout/toolbar_login" />
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/bottom_buttons"
-        android:fillViewport="true">
+        android:layout_above="@+id/bottom_buttons">
 
         <ViewStub
             android:id="@+id/login_form_content_stub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_marginTop="@dimen/margin_extra_large"
             android:layout_marginBottom="@dimen/margin_extra_large"/>
     </ScrollView>

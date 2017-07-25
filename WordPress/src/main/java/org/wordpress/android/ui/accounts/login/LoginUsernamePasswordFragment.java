@@ -1,34 +1,23 @@
 package org.wordpress.android.ui.accounts.login;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -39,12 +28,12 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
-import javax.inject.Inject;
-
-public class LoginUsernamePasswordFragment extends Fragment implements TextWatcher {
-    private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
+public class LoginUsernamePasswordFragment extends LoginBaseFormFragment implements TextWatcher,
+        OnEditorCommitListener {
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
     private static final String KEY_REQUESTED_USERNAME = "KEY_REQUESTED_USERNAME";
     private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
@@ -57,17 +46,10 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
 
     public static final String TAG = "login_username_password_fragment_tag";
 
-    private TextInputLayout mUsernameEditTextLayout;
-    private TextInputLayout mPasswordEditTextLayout;
+    private ScrollView mScrollView;
+    private WPLoginInputRow mUsernameInput;
+    private WPLoginInputRow mPasswordInput;
 
-    private EditText mUsernameEditText;
-    private EditText mPasswordEditText;
-    private Button mNextButton;
-    private ProgressDialog mProgressDialog;
-
-    private LoginListener mLoginListener;
-
-    private boolean mInProgress;
     private boolean mAuthFailed;
     private boolean mLoginFinished;
 
@@ -79,8 +61,6 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     private String mSiteName;
     private String mSiteIconUrl;
     private boolean mIsWpcom;
-
-    @Inject Dispatcher mDispatcher;
 
     public static LoginUsernamePasswordFragment newInstance(String inputSiteAddress, String endpointAddress,
             String siteName, String siteIconUrl, boolean isWpcom) {
@@ -96,22 +76,23 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
-
-        mInputSiteAddress = getArguments().getString(ARG_INPUT_SITE_ADDRESS);
-        mEndpointAddress = getArguments().getString(ARG_ENDPOINT_ADDRESS);
-        mSiteName = getArguments().getString(ARG_SITE_NAME);
-        mSiteIconUrl = getArguments().getString(ARG_SITE_ICON_URL);
-        mIsWpcom = getArguments().getBoolean(ARG_IS_WPCOM);
-
-        setHasOptionsMenu(true);
+    protected @LayoutRes int getContentLayout() {
+        return R.layout.login_username_password_screen;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_username_password_screen, container, false);
+    protected @LayoutRes int getProgressBarText() {
+        return R.string.logging_in;
+    }
+
+    @Override
+    protected void setupLabel(TextView label) {
+        // no label in this screen
+    }
+
+    @Override
+    protected void setupContent(ViewGroup rootView) {
+        mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
 
         rootView.findViewById(R.id.login_site_title_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
         rootView.findViewById(R.id.login_blavatar_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
@@ -130,51 +111,26 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         siteAddressView.setText(UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(mInputSiteAddress)));
         siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
-        mUsernameEditText = (EditText) rootView.findViewById(R.id.login_username);
-        mUsernameEditText.addTextChangedListener(this);
-
-        mPasswordEditText = (EditText) rootView.findViewById(R.id.login_password);
-        mPasswordEditText.addTextChangedListener(this);
-
-        mUsernameEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.login_username_layout);
-        mPasswordEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.login_password_layout);
-
-        mNextButton = (Button) rootView.findViewById(R.id.login_username_password_next_button);
-        mNextButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                next();
-            }
-        });
-
-        mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mUsernameInput = (WPLoginInputRow) rootView.findViewById(R.id.login_username_row);
+        mUsernameInput.addTextChangedListener(this);
+        mUsernameInput.setOnEditorCommitListener(new OnEditorCommitListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null
-                        && event.getAction() == KeyEvent.ACTION_UP
-                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    mPasswordEditText.requestFocus();
-                }
-
-                // always consume the event so the focus stays in the EditText
-                return true;
+            public void OnEditorCommit() {
+                showError(null);
+                mPasswordInput.getEditText().requestFocus();
             }
         });
 
-        mPasswordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null
-                        && event.getAction() == KeyEvent.ACTION_UP
-                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    next();
-                }
+        mPasswordInput = (WPLoginInputRow) rootView.findViewById(R.id.login_password_row);
+        mPasswordInput.addTextChangedListener(this);
 
-                // always consume the event so the focus stays in the EditText
-                return true;
-            }
-        });
+        mPasswordInput.setOnEditorCommitListener(this);
+    }
 
-        rootView.findViewById(R.id.login_lost_password).setOnClickListener(new OnClickListener() {
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setText(R.string.forgot_password);
+        secondaryButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
@@ -182,26 +138,27 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
                 }
             }
         });
-
-        return rootView;
+        primaryButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                next();
+            }
+        });
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected EditText getEditTextToFocusOnStart() {
+        return mUsernameInput.getEditText();
+    }
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        if (savedInstanceState == null) {
-            EditTextUtils.showSoftInput(mUsernameEditText);
-        }
+        mInputSiteAddress = getArguments().getString(ARG_INPUT_SITE_ADDRESS);
+        mEndpointAddress = getArguments().getString(ARG_ENDPOINT_ADDRESS);
+        mSiteName = getArguments().getString(ARG_SITE_NAME);
+        mSiteIconUrl = getArguments().getString(ARG_SITE_ICON_URL);
+        mIsWpcom = getArguments().getBoolean(ARG_IS_WPCOM);
     }
 
     @Override
@@ -209,60 +166,20 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
             mLoginFinished = savedInstanceState.getBoolean(KEY_LOGIN_FINISHED);
 
             mRequestedUsername = savedInstanceState.getString(KEY_REQUESTED_USERNAME);
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
-
-            if (mInProgress) {
-                showProgressDialog();
-            }
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof LoginListener) {
-            mLoginListener = (LoginListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement LoginListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mLoginListener = null;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
         outState.putBoolean(KEY_LOGIN_FINISHED, mLoginFinished);
         outState.putString(KEY_REQUESTED_USERNAME, mRequestedUsername);
         outState.putString(KEY_REQUESTED_PASSWORD, mRequestedPassword);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_login, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.help) {
-            if (mLoginListener != null) {
-                mLoginListener.help();
-            }
-
-            return true;
-        }
-
-        return false;
     }
 
     protected void next() {
@@ -270,10 +187,16 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
             return;
         }
 
-        showProgressDialog();
+        if (TextUtils.isEmpty(getCleanedUsername())) {
+            showError(getString(R.string.login_empty_username));
+            EditTextUtils.showSoftInput(mUsernameInput.getEditText());
+            return;
+        }
 
-        mRequestedUsername = mUsernameEditText.getText().toString();
-        mRequestedPassword = mPasswordEditText.getText().toString();
+        startProgress();
+
+        mRequestedUsername = getCleanedUsername();
+        mRequestedPassword = mPasswordInput.getEditText().getText().toString();
 
         // clear up the authentication-failed flag before
         mAuthFailed = false;
@@ -292,7 +215,13 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     }
 
     private String getCleanedUsername() {
-        return EditTextUtils.getText(mUsernameEditText).trim();
+        return EditTextUtils.getText(mUsernameInput.getEditText()).trim();
+    }
+
+    @Override
+    public void OnEditorCommit() {
+        showError(null);
+        next();
     }
 
     @Override
@@ -305,59 +234,30 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        updateNextButton();
-        mUsernameEditTextLayout.setError(null);
-        mPasswordEditTextLayout.setError(null);
-    }
-
-    private void updateNextButton() {
-        mNextButton.setEnabled(getCleanedUsername().length() > 0 && mPasswordEditText.getText().length() > 0);
+        showError(null);
     }
 
     private void showError(String errorMessage) {
-        mUsernameEditTextLayout.setError(" ");
-        mPasswordEditTextLayout.setError(errorMessage);
-    }
+        mUsernameInput.setError(errorMessage != null ? " " : null);
+        mPasswordInput.setError(errorMessage);
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mDispatcher.unregister(this);
-    }
-
-    private void showProgressDialog() {
-        mNextButton.setEnabled(false);
-        mProgressDialog =
-                ProgressDialog.show(getActivity(), "", getActivity().getString(R.string.logging_in), true, true,
-                        new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialogInterface) {
-                                if (mInProgress) {
-                                    endProgress();
-                                }
-                            }
-                        });
-        mInProgress = true;
-    }
-
-    private void endProgress() {
-        mInProgress = false;
-
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
+        if (errorMessage != null) {
+            mPasswordInput.post(new Runnable() {
+                @Override
+                public void run() {
+                    Rect rect = new Rect(); //coordinates to scroll to
+                    mPasswordInput.getHitRect(rect);
+                    mScrollView.requestChildRectangleOnScreen(mPasswordInput, rect, false);
+                }
+            });
         }
+    }
 
+    @Override
+    protected void endProgress() {
+        super.endProgress();
         mRequestedUsername = null;
         mRequestedPassword = null;
-
-        updateNextButton();
     }
 
     private void handleAuthError(AccountStore.AuthenticationErrorType error, String errorMessage) {
