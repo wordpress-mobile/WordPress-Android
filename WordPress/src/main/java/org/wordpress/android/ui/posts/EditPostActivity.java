@@ -1169,7 +1169,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     return;
                 }
 
-                boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
+                boolean hasChanges = mOriginalPost != null && PostUtils.postHasEdits(mOriginalPost, mPost);
                 boolean isPublishable = PostUtils.isPublishable(mPost);
                 boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT &&
                         isPublishable && hasLocalChanges;
