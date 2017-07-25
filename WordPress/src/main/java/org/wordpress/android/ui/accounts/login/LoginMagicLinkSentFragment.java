@@ -45,7 +45,7 @@ public class LoginMagicLinkSentFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.login_magic_link_sent_fragment, container, false);
+        View view = inflater.inflate(R.layout.login_magic_link_sent_screen, container, false);
 
         view.findViewById(R.id.login_open_email_client).setOnClickListener(new View.OnClickListener() {
             @Override

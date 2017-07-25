@@ -10,6 +10,7 @@ import android.support.design.widget.TextInputLayout;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -77,6 +78,9 @@ public class WPLoginInputRow extends RelativeLayout {
 
                 if (a.hasValue(R.styleable.wpLoginInputRow_wpIconDrawable)) {
                     mIcon.setImageResource(a.getResourceId(R.styleable.wpLoginInputRow_wpIconDrawable, 0));
+                    mIcon.setVisibility(View.VISIBLE);
+                } else {
+                    mIcon.setVisibility(View.GONE);
                 }
 
                 if (a.hasValue(R.styleable.wpLoginInputRow_android_hint)) {

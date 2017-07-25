@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -181,6 +182,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
         mInProgress = true;
     }
 
+    @CallSuper
     protected void endProgress() {
         mInProgress = false;
 

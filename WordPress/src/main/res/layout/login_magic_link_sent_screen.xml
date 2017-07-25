@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,13 +9,14 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="180dp"
-        android:layout_height="150dp"
+        android:layout_width="@dimen/magic_link_sent_illustration_sz"
+        android:layout_height="@dimen/magic_link_sent_illustration_sz"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/toolbar"
         android:scaleType="centerInside"
+        android:layout_marginTop="@dimen/margin_extra_extra_large"
         android:contentDescription="@string/login_magic_links_sent_description"
-        android:src="@drawable/login_magic_link_sent_illustration"/>
+        app:srcCompat="@drawable/ic_login_magic_link_sent"/>
 
     <TextView
         android:id="@+id/label"
@@ -33,6 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/label"
+        android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_centerHorizontal="true"
         android:text="@string/open_mail" />
 
@@ -42,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_open_email_client"
-        android:layout_marginTop="@dimen/margin_extra_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_extra_extra_large"
         android:layout_centerHorizontal="true"
         android:textColor="@color/blue_wordpress"
         android:text="@string/enter_your_password_instead" />

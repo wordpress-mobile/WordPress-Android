@@ -1,23 +1,12 @@
 package org.wordpress.android.ui.accounts.login;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -28,20 +17,17 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPLoginInputRow;
+import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
-import javax.inject.Inject;
-
-public class Login2FaFragment extends Fragment implements TextWatcher {
+public class Login2FaFragment extends LoginBaseFormFragment implements TextWatcher, OnEditorCommitListener {
     private static final String KEY_IN_PROGRESS_MESSAGE_ID = "KEY_IN_PROGRESS_MESSAGE_ID";
 
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
@@ -49,19 +35,12 @@ public class Login2FaFragment extends Fragment implements TextWatcher {
 
     public static final String TAG = "login_2fa_fragment_tag";
 
-    private TextInputLayout m2FaEditTextLayout;
-    private EditText m2FaEditText;
-    private Button mNextButton;
-    private ProgressDialog mProgressDialog;
-
-    private LoginListener mLoginListener;
+    private WPLoginInputRow m2FaInput;
 
     private @StringRes int mInProgressMessageId;
 
     private String mEmailAddress;
     private String mPassword;
-
-    @Inject Dispatcher mDispatcher;
 
     public static Login2FaFragment newInstance(String emailAddress, String password) {
         Login2FaFragment fragment = new Login2FaFragment();
@@ -73,45 +52,31 @@ public class Login2FaFragment extends Fragment implements TextWatcher {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
-
-        mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
-        mPassword = getArguments().getString(ARG_PASSWORD);
-
-        setHasOptionsMenu(true);
+    protected @LayoutRes int getContentLayout() {
+        return R.layout.login_2fa_screen;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_2fa_screen, container, false);
+    protected @LayoutRes int getProgressBarText() {
+        return mInProgressMessageId;
+    }
 
-        m2FaEditText = (EditText) rootView.findViewById(R.id.login_2fa);
-        m2FaEditText.addTextChangedListener(this);
-        m2FaEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.login_2fa_layout);
-        m2FaEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null
-                        && event.getAction() == KeyEvent.ACTION_UP
-                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    next();
-                }
+    @Override
+    protected void setupLabel(TextView label) {
+        // nothing special to do, just leave the string setup via the xml layout file
+    }
 
-                // always consume the event so the focus stays in the EditText
-                return true;
-            }
-        });
+    @Override
+    protected void setupContent(ViewGroup rootView) {
+        m2FaInput = (WPLoginInputRow) rootView.findViewById(R.id.login_2fa_row);
+        m2FaInput.addTextChangedListener(this);
+        m2FaInput.setOnEditorCommitListener(this);
+    }
 
-        mNextButton = (Button) rootView.findViewById(R.id.login_2fa_next_button);
-        mNextButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                next();
-            }
-        });
-
-        rootView.findViewById(R.id.login_text_otp).setOnClickListener(new OnClickListener() {
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setText(R.string.login_text_otp);
+        secondaryButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isAdded()) {
@@ -120,54 +85,35 @@ public class Login2FaFragment extends Fragment implements TextWatcher {
             }
         });
 
-        return rootView;
+        primaryButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                next();
+            }
+        });
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected EditText getEditTextToFocusOnStart() {
+        return m2FaInput.getEditText();
+    }
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        if (savedInstanceState == null) {
-            EditTextUtils.showSoftInput(m2FaEditText);
-        }
+        mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
+        mPassword = getArguments().getString(ARG_PASSWORD);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+        // retrieve mInProgressMessageId before super.onActivityCreated() so the string will be available to the
+        //  progress bar helper if in progress
         if (savedInstanceState != null) {
             mInProgressMessageId = savedInstanceState.getInt(KEY_IN_PROGRESS_MESSAGE_ID, 0);
-
-            if (mInProgressMessageId != 0) {
-                showProgressDialog(mInProgressMessageId);
-            }
         }
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof LoginListener) {
-            mLoginListener = (LoginListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement LoginListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mLoginListener = null;
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -177,23 +123,13 @@ public class Login2FaFragment extends Fragment implements TextWatcher {
         outState.putInt(KEY_IN_PROGRESS_MESSAGE_ID, mInProgressMessageId);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_login, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.help) {
-            mLoginListener.help();
-            return true;
+    protected void next() {
+        if (TextUtils.isEmpty(m2FaInput.getEditText().getText())) {
+            show2FaError(getString(R.string.login_empty_2fa));
+            return;
         }
 
-        return false;
-    }
-
-    protected void next() {
-        doAuthAction(R.string.logging_in, m2FaEditText.getText().toString(), false);
+        doAuthAction(R.string.logging_in, m2FaInput.getEditText().getText().toString(), false);
     }
 
     private void doAuthAction(@StringRes int messageId, String twoStepCode, boolean shouldSendTwoStepSMS) {
@@ -201,12 +137,18 @@ public class Login2FaFragment extends Fragment implements TextWatcher {
             return;
         }
 
-        showProgressDialog(messageId);
+        mInProgressMessageId = messageId;
+        startProgress();
 
         AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(mEmailAddress, mPassword);
         payload.twoStepCode = twoStepCode;
         payload.shouldSendTwoStepSms = shouldSendTwoStepSMS;
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+    }
+
+    @Override
+    public void OnEditorCommit() {
+        next();
     }
 
     @Override
@@ -219,54 +161,17 @@ public class Login2FaFragment extends Fragment implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        updateNextButton();
         show2FaError(null);
     }
 
-    private void updateNextButton() {
-        mNextButton.setEnabled(m2FaEditText.getText().length() > 0);
-    }
-
     private void show2FaError(String message) {
-        m2FaEditTextLayout.setError(message);
+        m2FaInput.setError(message);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mDispatcher.unregister(this);
-    }
-
-    private void showProgressDialog(@StringRes int messageId) {
-        mNextButton.setEnabled(false);
-        mProgressDialog =
-                ProgressDialog.show(getActivity(), "", getActivity().getString(messageId), true, true,
-                        new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialogInterface) {
-                                if (mInProgressMessageId != 0) {
-                                    endProgress();
-                                }
-                            }
-                        });
+    protected void endProgress() {
+        super.endProgress();
         mInProgressMessageId = 0;
-    }
-
-    private void endProgress() {
-        mInProgressMessageId = 0;
-
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
-        }
-
-        updateNextButton();
     }
 
     private void handleAuthError(AccountStore.AuthenticationErrorType error, String errorMessage) {

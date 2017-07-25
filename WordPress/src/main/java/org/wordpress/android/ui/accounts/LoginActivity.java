@@ -22,6 +22,7 @@ import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 
 public class LoginActivity extends AppCompatActivity implements LoginListener {
     private static final String FORGOT_PASSWORD_URL = "https://wordpress.com/wp-login.php?action=lostpassword";
@@ -179,7 +180,11 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void openEmailClient() {
-        ToastUtils.showToast(this, "Open email client is not implemented yet.");
+        if (WPActivityUtils.isEmailClientAvailable(this)) {
+            WPActivityUtils.openEmailClient(this);
+        } else {
+            ToastUtils.showToast(this, R.string.login_email_client_not_found);
+        }
     }
 
     @Override

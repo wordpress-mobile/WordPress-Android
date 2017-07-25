@@ -1860,7 +1860,7 @@
     <string name="enter_username_instead">Log in with username instead.</string>
     <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
-    <string name="login_text_otp">Text a code instead.</string>
+    <string name="login_text_otp">Text me a code instead.</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
     <string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
@@ -1885,4 +1885,6 @@
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
     <string name="login_empty_site_url">Please enter a site address</string>
     <string name="login_empty_username">Please enter a username</string>
+    <string name="login_empty_2fa">Please enter a verification code</string>
+    <string name="login_email_client_not_found">Can\'t detect your email client app</string>
 </resources>

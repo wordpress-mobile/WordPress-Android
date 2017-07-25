@@ -36,12 +36,14 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     public static final String TAG = "login_magic_link_request_fragment_tag";
 
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
+    private static final String KEY_GRAVATAR_IN_PROGRESS = "KEY_GRAVATAR_IN_PROGRESS";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
 
     private LoginListener mLoginListener;
 
     private String mEmail;
 
+    private View mAvatarProgressBar;
     private Button mRequestMagicLinkButton;
     private ProgressDialog mProgressDialog;
 
@@ -94,9 +96,20 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             }
         });
 
+        mAvatarProgressBar = view.findViewById(R.id.avatar_progress);
         WPNetworkImageView avatarView = (WPNetworkImageView) view.findViewById(R.id.gravatar);
-        avatarView.setImageUrl(GravatarUtils.gravatarFromEmail(mEmail, getContext().getResources()
-                .getDimensionPixelSize(R.dimen.avatar_sz_login)), WPNetworkImageView.ImageType.AVATAR);
+        avatarView.setImageUrl(GravatarUtils.gravatarFromEmail(mEmail, getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_login)), WPNetworkImageView.ImageType.AVATAR,
+                new WPNetworkImageView.ImageLoadListener() {
+            @Override
+            public void onLoaded() {
+                mAvatarProgressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError() {
+                mAvatarProgressBar.setVisibility(View.GONE);
+            }
+        });
 
         return view;
     }
@@ -124,6 +137,9 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             if (mInProgress) {
                 showMagicLinkRequestProgressDialog();
             }
+
+            boolean gravatarInProgress = savedInstanceState.getBoolean(KEY_GRAVATAR_IN_PROGRESS);
+            mAvatarProgressBar.setVisibility(gravatarInProgress ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -148,6 +164,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
+        outState.putBoolean(KEY_GRAVATAR_IN_PROGRESS, mAvatarProgressBar.getVisibility() == View.VISIBLE);
     }
 
     @Override
