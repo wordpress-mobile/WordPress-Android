@@ -454,7 +454,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
     private void updateJetpackMonitorSettings() {
         WordPress.getRestClientUtils().setJetpackMonitor(
-                mSite.getSiteId(), new RestRequest.Listener() {
+                mSite.getSiteId(), mJpSettings.monitorActive, new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         mRemoteJpSettings.monitorActive = response.optBoolean("active");
@@ -466,7 +466,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor settings: " + error);
                     }
-                }, mJpSettings.monitorActive);
+                });
     }
 
     private void saveJetpackSettings() {
