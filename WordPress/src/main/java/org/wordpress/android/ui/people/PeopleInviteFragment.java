@@ -120,7 +120,16 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         updateSiteOrFinishActivity();
+
+        // Setup invite roles
         mInviteRoles = mSiteStore.getUserRoles(mSite);
+        // The API doesn't return the follower/viewer role, so we need to manually add it for invites
+        RoleModel viewerOrFollowerRole = new RoleModel();
+        // the remote expects "follower" as the role parameter even if the role is "viewer"
+        viewerOrFollowerRole.setName("viewer");
+        int displayNameRes = mSite.isPrivate() ? R.string.role_viewer : R.string.role_follower;
+        viewerOrFollowerRole.setDisplayName(getString(displayNameRes));
+        mInviteRoles.add(viewerOrFollowerRole);
 
         if (savedInstanceState != null) {
             mCurrentRole = savedInstanceState.getString(KEY_SELECTED_ROLE);
