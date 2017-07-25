@@ -15,15 +15,18 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -37,6 +40,8 @@ public class PersonDetailFragment extends Fragment {
     private long mPersonId;
     private int mLocalTableBlogId;
     private Person.PersonType mPersonType;
+
+    private List<RoleModel> mUserRoles;
 
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
@@ -77,6 +82,9 @@ public class PersonDetailFragment extends Fragment {
             mLocalTableBlogId = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             mPersonType = (Person.PersonType) savedInstanceState.getSerializable(ARG_PERSON_TYPE);
         }
+
+        SiteModel siteModel = mSiteStore.getSiteByLocalId(mLocalTableBlogId);
+        mUserRoles = mSiteStore.getUserRoles(siteModel);
     }
 
     @Override
@@ -134,7 +142,7 @@ public class PersonDetailFragment extends Fragment {
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             mDisplayNameTextView.setText(StringUtils.unescapeHTML(person.getDisplayName()));
             if (person.getRole() != null) {
-                mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
+                mRoleTextView.setText(RoleUtils.getDisplayName(person.getRole(), mUserRoles));
             }
 
             if (!TextUtils.isEmpty(person.getUsername())) {
