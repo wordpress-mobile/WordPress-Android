@@ -44,7 +44,6 @@ import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
-import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
@@ -117,7 +116,6 @@ public class WordPress extends MultiDexApplication {
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
-    @Inject PostStore mPostStore;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
