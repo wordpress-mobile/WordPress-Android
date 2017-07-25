@@ -534,7 +534,7 @@ public class UploadService extends Service {
             if (event.media.getLocalPostId() > 0) {
                 AppLog.w(T.MAIN, "UploadService > Media upload failed for post " + event.media.getLocalPostId() + " : "
                         + event.error.type + ": " + event.error.message);
-                String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.error);
+                String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
                 cancelPostUploadMatchingMedia(event.media, errorMessage);
 
                 // now keep track of the error reason so it can be queried
