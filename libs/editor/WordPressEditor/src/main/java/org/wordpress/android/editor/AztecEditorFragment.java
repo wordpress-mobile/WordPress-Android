@@ -63,7 +63,6 @@ import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
-import org.wordpress.aztec.plugins.wpcomments.toolbar.PageToolbarButton;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -112,7 +111,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private AztecText content;
     private SourceViewEditText source;
     private AztecToolbar formattingToolbar;
-    private Html.ImageGetter imageLoader;
+    private Html.ImageGetter aztecImageLoader;
 
     private Handler invalidateOptionsHandler;
     private Runnable invalidateOptionsRunnable;
@@ -148,6 +147,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
 
+        // request dependency injection
+        if (getActivity() instanceof EditorFragmentActivity) {
+            ((EditorFragmentActivity)getActivity()).initializeEditorFragment();
+        }
+
         mUploadingMedia = new HashMap<>();
         mFailedMediaIds = new HashSet<>();
 
@@ -178,7 +182,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         invalidateOptionsRunnable = new Runnable() {
             @Override
             public void run() {
-                getActivity().invalidateOptionsMenu();
+                if (isAdded()) {
+                    getActivity().invalidateOptionsMenu();
+                }
             }
         };
 
@@ -191,7 +197,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         });
 
         Aztec.Factory.with(content, source, formattingToolbar, this)
-            .setImageGetter(imageLoader)
+            .setImageGetter(aztecImageLoader)
             .setOnImeBackListener(this)
             .setHistoryListener(this)
             .setOnImageTappedListener(this)
@@ -207,8 +213,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mEditorBetaClickListener = listener;
     }
 
-    public void setImageLoader(Html.ImageGetter imageLoader) {
-        this.imageLoader = imageLoader;
+    public void setAztecImageLoader(Html.ImageGetter imageLoader) {
+        this.aztecImageLoader = imageLoader;
     }
 
     @Override
@@ -579,6 +585,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 imageLoader.get(mediaUrl, new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        if (!isAdded()) {
+                            // the fragment is detached
+                            return;
+                        }
+
                         // Show failed placeholder.
                         ToastUtils.showToast(getActivity(), R.string.error_media_load);
                         Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
@@ -592,8 +603,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
                         Bitmap downloadedBitmap = container.getBitmap();
 
-                        if (downloadedBitmap == null) {
-                            // No bitmap downloaded from server.
+                        if (downloadedBitmap == null || !isAdded()) {
+                            // No bitmap downloaded from server or the fragment is detached
                             return;
                         }
 

@@ -95,22 +95,21 @@ public class PostUploadNotifier {
         }
 
         // Notification builder
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext());
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(mContext.getApplicationContext());
         String notificationTitle;
         if (PostStatus.DRAFT.equals(PostStatus.fromPost(post))) {
-            notificationTitle = (String) mContext.getResources().getText(R.string
-                    .draft_uploaded);
-        } else if (post.isPage()) {
-            notificationTitle = (String) mContext.getResources().getText(R.string
-                    .page_published);
+            notificationTitle = (String) mContext.getResources().getText(R.string.draft_uploaded);
         } else {
-            notificationTitle = (String) mContext.getResources().getText(R .string.post_published);
+            if (post.isPage()) {
+                notificationTitle = (String) mContext.getResources().getText(
+                        isFirstTimePublish ? R.string.page_published : R.string.page_updated);
+            } else {
+                notificationTitle = (String) mContext.getResources().getText(
+                        isFirstTimePublish ? R.string.post_published : R.string.post_updated);
+            }
         }
 
-        if (!isFirstTimePublish) {
-            notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
-                    .page_updated) : mContext.getResources().getText(R.string.post_updated));
-        }
         notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
 
         NotificationData notificationData = mPostIdToNotificationData.get(post.getId());

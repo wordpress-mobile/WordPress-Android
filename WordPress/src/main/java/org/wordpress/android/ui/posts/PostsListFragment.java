@@ -526,9 +526,15 @@ public class PostsListFragment extends Fragment
         }
 
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
+        boolean isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT
+                || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
         post.setStatus(PostStatus.PUBLISHED.toString());
 
-        PostUploadService.addPostToUpload(post);
+        if (isFirstTimePublish) {
+            PostUploadService.addPostToUploadAndTrackAnalytics(post);
+        } else {
+            PostUploadService.addPostToUpload(post);
+        }
         getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
         PostUtils.trackSavePostAnalytics(post, mSite);

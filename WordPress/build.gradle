@@ -35,8 +35,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-65"
-        versionCode 433
+        versionName "alpha-66"
+        versionCode 436
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -142,7 +142,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:0f45e36dcca7e825d27f7cc3bac593f3d6790c85') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3dc5db03892ad5cebd2f98911d8f99a00813b210') {
         exclude group: "com.android.volley";
     }
 

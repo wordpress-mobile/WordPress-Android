@@ -5,7 +5,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -130,15 +129,6 @@ public class AppPrefs {
 
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
-
-        // access token migrated to AccountStore, must wait for network calls to return before app access
-        ACCESS_TOKEN_MIGRATED,
-
-        // Self-hosted sites migration to FluxC
-        SELF_HOSTED_SITES_MIGRATED_TO_FLUXC,
-
-        // Draft migration to FluxC
-        DRAFTS_MIGRATED_TO_FLUXC,
 
         // aztec editor available
         AZTEC_EDITOR_AVAILABLE,
@@ -614,30 +604,4 @@ public class AppPrefs {
         String idsAsString = TextUtils.join(",", currentIds);
         setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
     }
-
-    public static boolean wasAccessTokenMigrated() {
-        return getBoolean(UndeletablePrefKey.ACCESS_TOKEN_MIGRATED, false);
-    }
-
-    public static void setAccessTokenMigrated(boolean migrated) {
-        setBoolean(UndeletablePrefKey.ACCESS_TOKEN_MIGRATED, migrated);
-    }
-
-    public static boolean wereSelfHostedSitesMigratedToFluxC() {
-        return getBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, false);
-    }
-
-    public static void setSelfHostedSitesMigratedToFluxC(boolean migrated) {
-        setBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, migrated);
-    }
-
-    public static boolean wereDraftsMigratedToFluxC() {
-        return getBoolean(UndeletablePrefKey.DRAFTS_MIGRATED_TO_FLUXC, false);
-    }
-
-    public static void setDraftsMigratedToFluxC(boolean migrated) {
-        setBoolean(UndeletablePrefKey.DRAFTS_MIGRATED_TO_FLUXC, migrated);
-    }
-
-
 }
