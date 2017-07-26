@@ -25,7 +25,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.Role;
 import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
@@ -251,7 +250,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             }
         });
 
-        if (Role.inviteRoles(mSite).length > 1) {
+        if (mInviteRoles.size() > 1) {
             view.findViewById(R.id.role_container).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
