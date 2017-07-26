@@ -444,6 +444,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     public void onResponse(JSONObject response) {
                         mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
                         mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
+                        notifyUpdatedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
