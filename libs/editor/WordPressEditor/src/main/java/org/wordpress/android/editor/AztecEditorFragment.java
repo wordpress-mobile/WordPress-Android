@@ -3,6 +3,7 @@ package org.wordpress.android.editor;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
@@ -33,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -60,10 +62,10 @@ import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.ITextFormat;
 import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
+import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
-import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -77,6 +79,7 @@ import java.util.UUID;
 public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnImeBackListener,
         AztecText.OnImageTappedListener,
+        AztecText.OnVideoTappedListener,
         EditorMediaUploadListener,
         IAztecToolbarClickListener,
         IHistoryListener {
@@ -91,7 +94,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static final int MIN_BITMAP_DIMENSION_DP = 48;
 
-    public static final int MAX_ACTION_TIME_MS = 2000;
+    private static final int MAX_ACTION_TIME_MS = 2000;
 
     private static final MediaFile DEFAULT_MEDIA = new MediaFile();
     private static final int DEFAULT_MEDIA_HEIGHT = DEFAULT_MEDIA.getHeight();
@@ -124,7 +127,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private ImagePredicate mTappedImagePredicate;
 
-    EditorBetaClickListener mEditorBetaClickListener;
+    private EditorBetaClickListener mEditorBetaClickListener;
 
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
@@ -166,12 +169,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         formattingToolbar.setExpanded(mIsToolbarExpanded);
 
         title.setOnFocusChangeListener(
-            new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean hasFocus) {
-                    formattingToolbar.enableFormatButtons(!hasFocus);
+                new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View view, boolean hasFocus) {
+                        formattingToolbar.enableFormatButtons(!hasFocus);
+                    }
                 }
-            }
         );
 
         content.setOnDragListener(mOnDragListener);
@@ -202,12 +205,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         });
 
         Aztec.Factory.with(content, source, formattingToolbar, this)
-            .setImageGetter(aztecImageLoader)
-            .setOnImeBackListener(this)
-            .setHistoryListener(this)
-            .setOnImageTappedListener(this)
-            .addPlugin(new WordPressCommentsPlugin(content))
-            .addPlugin(new MoreToolbarButton(content));
+                .setImageGetter(aztecImageLoader)
+                .setOnImeBackListener(this)
+                .setHistoryListener(this)
+                .setOnImageTappedListener(this)
+                .setOnVideoTappedListener(this)
+                .addPlugin(new WordPressCommentsPlugin(content))
+                .addPlugin(new MoreToolbarButton(content));
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
@@ -576,6 +580,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content.updateElementAttributes(localMediaIdPredicate, new AztecAttributes(attributes));
     }
 
+    private void overlayVideoIcon(int overlayLevel, AztecText.AttributePredicate predicate) {
+        Drawable videoDrawable = getResources().getDrawable(R.drawable.ic_overlay_video);
+        content.setOverlay(predicate, overlayLevel, videoDrawable, Gravity.BOTTOM | Gravity.START);
+    }
+
     /**
      * Returns the contents of the content field from the JavaScript editor. Should be called from a background thread
      * where possible.
@@ -595,93 +604,106 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
-        final String safeMediaUrl = Utils.escapeQuotes(mediaUrl);
+        // load a scaled version of the image to prevent OOM exception
+        final int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            if (mediaFile.isVideo()) {
-                // TODO: insert video
-                ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
-            } else {
-                imageLoader.get(mediaUrl, new ImageLoader.ImageListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (!isAdded()) {
-                            // the fragment is detached
-                            return;
-                        }
-
-                        // Show failed placeholder.
-                        ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                        Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
-                        AztecAttributes attributes = new AztecAttributes();
-                        attributes.setValue(ATTR_SRC, mediaUrl);
-                        setAttributeValuesIfNotDefault(attributes, mediaFile);
-                        content.insertImage(drawable, attributes);
+            final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
+            imageLoader.get(posterURL, new ImageLoader.ImageListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (!isAdded()) {
+                        // the fragment is detached
+                        return;
                     }
 
-                    @Override
-                    public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
-                        Bitmap downloadedBitmap = container.getBitmap();
+                    // Show failed placeholder.
+                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
+                    AztecAttributes attributes = new AztecAttributes();
+                    attributes.setValue(ATTR_SRC, mediaUrl);
+                    setAttributeValuesIfNotDefault(attributes, mediaFile);
+                    content.insertImage(drawable, attributes);
+                }
 
-                        if (downloadedBitmap == null || !isAdded()) {
-                            // No bitmap downloaded from server or the fragment is detached
-                            return;
-                        }
+                @Override
+                public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
+                    Bitmap downloadedBitmap = container.getBitmap();
+                    if (downloadedBitmap == null || !isAdded()) {
+                        // No bitmap downloaded from server or the fragment is detached
+                        return;
+                    }
 
-                        AztecAttributes attributes = new AztecAttributes();
-                        attributes.setValue(ATTR_SRC, mediaUrl);
-                        setAttributeValuesIfNotDefault(attributes, mediaFile);
+                    AztecAttributes attributes = new AztecAttributes();
+                    attributes.setValue(ATTR_SRC, mediaUrl);
+                    setAttributeValuesIfNotDefault(attributes, mediaFile);
 
-                        int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
+                    int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
 
-                        if (downloadedBitmap.getHeight() < minimumDimension || downloadedBitmap.getWidth() < minimumDimension) {
-                            // Bitmap is too small.  Show image placeholder.
-                            ToastUtils.showToast(getActivity(), R.string.error_media_small);
-                            Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
-                            content.insertImage(drawable, attributes);
-                            return;
-                        }
+                    if (downloadedBitmap.getHeight() < minimumDimension || downloadedBitmap.getWidth() < minimumDimension) {
+                        // Bitmap is too small.  Show image placeholder.
+                        ToastUtils.showToast(getActivity(), R.string.error_media_small);
+                        Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
+                        content.insertImage(drawable, attributes);
+                        return;
+                    }
 
-                        Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, DisplayUtils.getDisplayPixelWidth(getActivity()));
+                    // This call is not needed, since we're already asking the container to resize the picture after downloading.
+                    // It's here just for security.
+                    Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
+                    if(mediaFile.isVideo()) {
+                        content.insertVideo(new BitmapDrawable(getResources(), resizedBitmap), attributes);
+                        overlayVideoIcon(0, new ImagePredicate(mediaUrl, ATTR_SRC));
+                    } else {
                         content.insertImage(new BitmapDrawable(getResources(), resizedBitmap), attributes);
                     }
-                }, 0, 0);
-            }
+                }
+            }, maxWidth, maxWidth);
 
             mActionStartedAt = System.currentTimeMillis();
         } else {
             String localMediaId = String.valueOf(mediaFile.getId());
+            final String safeMediaUrl = mediaFile.isVideo() ?
+                    Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) :
+                    Utils.escapeQuotes(mediaUrl);
+
+            AztecAttributes attrs = new AztecAttributes();
+            attrs.setValue(ATTR_ID_WP, localMediaId);
+            attrs.setValue(ATTR_SRC, safeMediaUrl);
+            attrs.setValue(ATTR_CLASS, ATTR_STATUS_UPLOADING);
+
+            addDefaultSizeClassIfMissing(attrs);
+
+            Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
+            AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+
+            if (bitmapToShow != null) {
+                if(mediaFile.isVideo()) {
+                    content.insertVideo(new BitmapDrawable(getResources(), bitmapToShow), attrs);
+                } else {
+                    content.insertImage(new BitmapDrawable(getResources(), bitmapToShow), attrs);
+                }
+            } else {
+                // Failed to retrieve bitmap.  Show failed placeholder.
+                ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
+                drawable.setBounds(0, 0, maxWidth, maxWidth);
+                content.insertImage(drawable, attrs);
+            }
+
+            // set intermediate shade overlay
+            overlayProgressingMedia(localMediaId);
+
+            mUploadingMediaProgressMax.put(localMediaId, 0f);
 
             if (mediaFile.isVideo()) {
-                // TODO: insert local video
-                ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
-            } else {
-                AztecAttributes attrs = new AztecAttributes();
-                attrs.setValue(ATTR_ID_WP, localMediaId);
-                attrs.setValue(ATTR_SRC, safeMediaUrl);
-                attrs.setValue(ATTR_CLASS, ATTR_STATUS_UPLOADING);
-
-                addDefaultSizeClassIfMissing(attrs);
-
-                // load a scaled version of the image to prevent OOM exception
-                int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
-                Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
-
-                if (bitmapToShow != null) {
-                    content.insertImage(new BitmapDrawable(getResources(), bitmapToShow), attrs);
-                } else {
-                    // Failed to retrieve bitmap.  Show failed placeholder.
-                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                    Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
-                    drawable.setBounds(0, 0, maxWidth, maxWidth);
-                    content.insertImage(drawable, attrs);
-                }
-
-                // set intermediate shade overlay
-                overlayProgressingMedia(localMediaId);
-
-                mUploadingMediaProgressMax.put(localMediaId, 0f);
+                overlayVideoIcon(2, localMediaIdPredicate);
             }
+
+            content.updateElementAttributes(localMediaIdPredicate, attrs);
+
+            content.resetAttributedMediaSpan(localMediaIdPredicate);
+
         }
     }
 
@@ -740,7 +762,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             // we still need to refresh the screen visually, no matter whether the service already
             // saved the post to Db or not
             MediaType mediaType = EditorFragmentAbstract.getEditorMimeType(mediaFile);
-            if (mediaType.equals(MediaType.IMAGE)) {
+            if (mediaType.equals(MediaType.IMAGE) || mediaType.equals(MediaType.VIDEO)) {
                 // clear overlay
                 ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
 
@@ -753,16 +775,25 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 AztecAttributes attrs = attributesWithClass.getAttributes();
                 attrs.setValue("src", remoteUrl);
 
+                /* TODO add video press attribute -> value here
+                if (mediaType.equals(MediaType.VIDEO)) {
+                    String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
+                            mediaFile.getVideoPressShortCode());
+                    attrs.setValue( ?? , videoPressId);
+                }
+                */
+
                 addDefaultSizeClassIfMissing(attrs);
 
                 // clear overlay
                 content.clearOverlays(predicate);
+                if (mediaType.equals(MediaType.VIDEO)) {
+                    overlayVideoIcon(0, predicate);
+                }
                 content.updateElementAttributes(predicate, attrs);
                 content.resetAttributedMediaSpan(predicate);
 
                 mUploadingMediaProgressMax.remove(localMediaId);
-            } else if (mediaType.equals(MediaType.VIDEO)) {
-                // TODO: update video element
             }
         }
     }
@@ -838,6 +869,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mediaType != null) {
             switch (mediaType) {
                 case IMAGE:
+                case VIDEO:
                     ImagePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
                     AttributesWithClass attributesWithClass = new AttributesWithClass(
                             content.getElementAttributes(localMediaIdPredicate));
@@ -848,8 +880,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     overlayFailedMedia(localMediaId, attributesWithClass.getAttributes());
                     content.resetAttributedMediaSpan(localMediaIdPredicate);
                     break;
-                case VIDEO:
-                    // TODO: mark media as upload-failed
             }
             mFailedMediaIds.add(localMediaId);
             mUploadingMediaProgressMax.remove(localMediaId);
@@ -1041,11 +1071,23 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onImageTapped(@NotNull AztecAttributes attrs, int naturalWidth, int naturalHeight) {
-        Set<String> classes = MetadataUtils.getClassAttribute(attrs);
+        onMediaTapped(attrs, naturalWidth, naturalHeight, MediaType.IMAGE);
+    }
 
+    @Override
+    public void onVideoTapped(@NotNull AztecAttributes attrs) {
+        onMediaTapped(attrs, 0, 0, MediaType.VIDEO);
+    }
+
+    private void onMediaTapped(@NotNull AztecAttributes attrs, int naturalWidth, int naturalHeight, final MediaType mediaType) {
+        if (mediaType == null || !isAdded()) {
+            return;
+        }
+
+        Set<String> classes = MetadataUtils.getClassAttribute(attrs);
         String idName;
         String uploadStatus = "";
-        JSONObject meta = MetadataUtils.getMetadata(new AttributesWithClass(attrs), naturalWidth, naturalHeight);
+        final JSONObject meta = MetadataUtils.getMetadata(new AttributesWithClass(attrs), naturalWidth, naturalHeight);
         if (classes.contains(ATTR_STATUS_UPLOADING)) {
             uploadStatus = ATTR_STATUS_UPLOADING;
             idName = ATTR_ID_WP;
@@ -1056,24 +1098,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             idName = ATTR_ID;
         }
 
-        String id = attrs.getValue(idName);
-
+        final String localMediaId;
         // generate the element ID if ATTR_ID or ATTR_ID_WP are missing
         if (!attrs.hasAttribute(idName) || TextUtils.isEmpty(attrs.getValue(idName))) {
             idName = TEMP_IMAGE_ID;
-            id = UUID.randomUUID().toString();
+            localMediaId = UUID.randomUUID().toString();
+        } else {
+            localMediaId = attrs.getValue(idName);
         }
 
-        attrs.setValue(idName, id);
-        mTappedImagePredicate = new ImagePredicate(id, idName);
-
-        onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
-    }
-
-    public void onMediaTapped(final String localMediaId, final MediaType mediaType, final JSONObject meta, String uploadStatus) {
-        if (mediaType == null || !isAdded()) {
-            return;
-        }
+        attrs.setValue(idName, localMediaId);
+        mTappedImagePredicate = new ImagePredicate(localMediaId, idName);
 
         switch (uploadStatus) {
             case ATTR_STATUS_UPLOADING:
@@ -1091,7 +1126,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                     content.removeMedia(mTappedImagePredicate);
                                     break;
                                 case VIDEO:
-                                    // TODO: remove video
+                                    content.removeMedia(mTappedImagePredicate);
                             }
                             mUploadingMediaProgressMax.remove(localMediaId);
                         } else {
@@ -1118,6 +1153,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
                 switch (mediaType) {
                     case IMAGE:
+                    case VIDEO:
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
                                 content.getElementAttributes(mTappedImagePredicate));
                         attributesWithClass.removeClass(ATTR_STATUS_FAILED);
@@ -1136,13 +1172,29 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                         content.resetAttributedMediaSpan(mTappedImagePredicate);
                         break;
-                    case VIDEO:
-                        // TODO: unmark video failed
                 }
                 mFailedMediaIds.remove(localMediaId);
                 mUploadingMediaProgressMax.put(localMediaId, 0f);
                 break;
             default:
+                if (mediaType.equals(MediaType.VIDEO)) {
+                    try{
+                        // Open the video preview in the default browser for now.
+                        // TODO open the preview activity already available in media?
+                        final String imageSrc = meta.getString(ATTR_SRC);
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(imageSrc));
+                        startActivity(browserIntent);
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.EDITOR, "Could not retrieve image url from JSON metadata");
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(this.getActivity(),
+                                "No application can handle this request." + " Please install a Web browser",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    return;
+                }
+
+                // If it's not a picture skip the click
                 if (!mediaType.equals(MediaType.IMAGE)) {
                     return;
                 }
@@ -1284,7 +1336,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    protected void setAttributeValuesIfNotDefault(AztecAttributes attributes, MediaFile mediaFile) {
+    private void setAttributeValuesIfNotDefault(AztecAttributes attributes, MediaFile mediaFile) {
         if (mediaFile.getWidth() != DEFAULT_MEDIA_WIDTH) {
             attributes.setValue(ATTR_DIMEN_WIDTH, String.valueOf(mediaFile.getWidth()));
         }

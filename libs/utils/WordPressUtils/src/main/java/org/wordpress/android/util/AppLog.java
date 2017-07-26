@@ -305,7 +305,7 @@ public class AppLog {
      * @param context
      * @return The log as plain text
      */
-    public static String toPlainText(Context context) {
+    public synchronized static String toPlainText(Context context) {
         StringBuilder sb = new StringBuilder();
 
         // add version & device info
