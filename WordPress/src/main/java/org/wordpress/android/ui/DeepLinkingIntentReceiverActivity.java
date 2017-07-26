@@ -30,8 +30,6 @@ import javax.inject.Inject;
  */
 public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private static final int INTENT_WELCOME = 0;
-    private static final String VIEW_POST_HOST = "viewpost";
-    private static final String VIEW_STATS_HOST = "viewstats";
 
     private String mInterceptedUri;
     private String mBlogId;
@@ -46,7 +44,6 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
 
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
-        String host = uri.getHost();
 
         AnalyticsUtils.trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, uri);
 
@@ -60,11 +57,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
             // if user is signed in wpcom show the post right away - otherwise show welcome activity
             // and then show the post once the user has signed in
             if (mAccountStore.hasAccessToken()) {
-                if (host.equals(VIEW_POST_HOST)) {
-                        showPost();
-                } else if (host.equals(VIEW_STATS_HOST)) {
-
-                }
+                showPost();
             } else {
                 Intent intent = new Intent(this, SignInActivity.class);
                 startActivityForResult(intent, INTENT_WELCOME);
