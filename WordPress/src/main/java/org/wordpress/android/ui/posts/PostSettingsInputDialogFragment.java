@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.ActivityUtils;
 
 public class PostSettingsInputDialogFragment extends DialogFragment implements TextWatcher {
     interface PostSettingsInputDialogListener {
@@ -66,6 +67,12 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
         args.putBoolean(DISABLE_EMPTY_INPUT_TAG, disableEmptyInput);
         dialogFragment.setArguments(args);
         return dialogFragment;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        ActivityUtils.hideKeyboard(getActivity());
     }
 
     @Override
