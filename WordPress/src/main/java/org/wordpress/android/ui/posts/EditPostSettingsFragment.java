@@ -339,7 +339,6 @@ public class EditPostSettingsFragment extends Fragment {
             mFormatContainer.setVisibility(View.GONE);
         }
 
-        refreshViews();
         return rootView;
     }
 
