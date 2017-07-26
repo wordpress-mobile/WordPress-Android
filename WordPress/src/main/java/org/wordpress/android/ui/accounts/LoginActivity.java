@@ -30,6 +30,7 @@ import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
@@ -301,9 +302,19 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
+    private void launchHelpshift(String url, String username, HelpshiftHelper.Tag origin) {
+        Intent intent = new Intent(this, HelpActivity.class);
+        // Used to pass data to an eventual support service
+        intent.putExtra(HelpshiftHelper.ENTERED_URL_KEY, url);
+        intent.putExtra(HelpshiftHelper.ENTERED_USERNAME_KEY, username);
+        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
+        startActivity(intent);
+    }
+
     @Override
-    public void helpWithSiteAddress() {
-        ToastUtils.showToast(this, "Help finding site address is not implemented yet.");
+    public void helpSiteAddress(String url) {
+        launchHelpshift(url, null,
+                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, false));
     }
 
     @Override
@@ -312,8 +323,39 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void help() {
-        ToastUtils.showToast(this, "Help is not implemented yet.");
+    public void helpEmailScreen(String email) {
+        launchHelpshift(null, email,
+                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+    }
+
+    @Override
+    public void helpMagicLinkRequest(String email) {
+        launchHelpshift(null, email,
+                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+    }
+
+    @Override
+    public void helpMagicLinkSent(String email) {
+        launchHelpshift(null, email,
+                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+    }
+
+    @Override
+    public void helpEmailPasswordScreen(String email) {
+        launchHelpshift(null, email,
+                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+    }
+
+    @Override
+    public void help2FaScreen(String email) {
+        launchHelpshift(null, email,
+                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+    }
+
+    @Override
+    public void helpUsernamePassword(String url, String username, boolean isWpcom) {
+        launchHelpshift(url, username,
+                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, isWpcom));
     }
 
     @Override

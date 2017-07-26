@@ -116,6 +116,13 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment implements
     }
 
     @Override
+    protected void onHelp() {
+        if (mLoginListener != null) {
+            mLoginListener.helpEmailPasswordScreen(mEmailAddress);
+        }
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 

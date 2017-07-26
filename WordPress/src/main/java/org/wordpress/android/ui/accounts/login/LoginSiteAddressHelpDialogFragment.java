@@ -9,11 +9,27 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.accounts.LoginMode;
+import org.wordpress.android.util.HelpshiftHelper;
+
+import javax.inject.Inject;
 
 public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
     public static final String TAG = "login_site_address_help_dialog_fragment_tag";
 
     private LoginListener mLoginListener;
+
+    @Inject SiteStore mSiteStore;
+    @Inject AccountStore mAccountStore;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -40,7 +56,10 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
         alert.setNeutralButton(R.string.login_site_address_more_help, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mLoginListener.help();
+                HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
+                        HelpshiftHelper.chooseHelpshiftLoginTag(
+                                mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS, true),
+                        mAccountStore.getAccount().getUserName());
             }
         });
 

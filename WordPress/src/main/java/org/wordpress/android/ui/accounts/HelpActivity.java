@@ -83,9 +83,9 @@ public class HelpActivity extends AppCompatActivity {
                     // This could be moved to WelcomeFragmentSignIn directly, but better to have all Helpshift
                     // related code at the same place (Note: value can be null).
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, extras.getString(
-                            SignInFragment.ENTERED_URL_KEY));
+                            HelpshiftHelper.ENTERED_URL_KEY));
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
-                            SignInFragment.ENTERED_USERNAME_KEY));
+                            HelpshiftHelper.ENTERED_USERNAME_KEY));
                     origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
                 }
                 HelpshiftHelper.getInstance().showConversation(HelpActivity.this, mSiteStore, origin,
