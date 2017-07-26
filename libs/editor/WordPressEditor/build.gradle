@@ -51,8 +51,11 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.wordpress:utils:1.16.0'
-    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:2e21d0f69b01b76700516eb98664d12d73c6a46b')
-    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:v1.0-beta.5')
+    compile ('com.github.wordpress-mobile.AztecEditor-Android:aztec:v1.0-beta.6')
+    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:v1.0-beta.6')
+        {
+            exclude module: 'aztec'
+        }
 }
 
 signing {
