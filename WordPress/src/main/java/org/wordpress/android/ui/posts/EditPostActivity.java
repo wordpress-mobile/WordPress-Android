@@ -906,7 +906,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
-        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
     }
 
     private void savePostAsync(final AfterSavePostListener listener) {
@@ -1646,7 +1646,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
             mPost.setIsLocallyChanged(true);
-            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
         }
     }
 
