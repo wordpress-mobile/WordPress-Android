@@ -84,6 +84,16 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    private LoginPrologueFragment getLoginPrologueFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginPrologueFragment.TAG);
+        return fragment == null ? null : (LoginPrologueFragment) fragment;
+    }
+
+    private LoginEmailFragment getLoginEmailFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
+        return fragment == null ? null : (LoginEmailFragment) fragment;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -175,7 +185,18 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void startLogin() {
-        slideInFragment(new LoginEmailFragment(), true, LoginEmailFragment.TAG);
+        if (getLoginEmailFragment() != null) {
+            // email screen is already shown so, login has already started. Just bail.
+            return;
+        }
+
+        if (getLoginPrologueFragment() == null) {
+            // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
+            showFragment(new LoginEmailFragment(), LoginEmailFragment.TAG);
+        } else {
+            // prologue fragment is shown so, slide in the email screen (and add to history)
+            slideInFragment(new LoginEmailFragment(), true, LoginEmailFragment.TAG);
+        }
     }
 
     // LoginListener implementation methods
