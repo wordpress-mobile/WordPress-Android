@@ -21,7 +21,6 @@ import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceive
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 
@@ -55,7 +54,7 @@ class PostUploadNotifier {
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
     }
 
-    void createNotificationForPost(@NonNull PostModel post, String message) {
+    void showForegroundNotificationForPost(@NonNull PostModel post, String message) {
         mNotificationBuilder.setContentTitle(buildNotificationTitleForPost(post));
         if (message != null) {
             mNotificationBuilder.setContentText(message);
@@ -66,16 +65,6 @@ class PostUploadNotifier {
         notificationData.notificationId = notificationId;
         sPostIdToNotificationData.put(post.getId(), notificationData);
         mService.startForeground(notificationId, mNotificationBuilder.build());
-    }
-
-    boolean isDisplayingNotificationForPost(@NonNull PostModel post) {
-        return sPostIdToNotificationData.get(post.getId()) != null;
-    }
-
-    void updateNotificationMessage(@NonNull PostModel post, String message) {
-        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
-        mNotificationBuilder.setContentText(StringUtils.notNullStr(message));
-        doNotify(notificationData.notificationId, mNotificationBuilder.build());
     }
 
     void updateNotificationIcon(PostModel post, Bitmap icon) {
