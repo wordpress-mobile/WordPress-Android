@@ -833,9 +833,11 @@ public class EditPostSettingsFragment extends Fragment {
             postFormatKey = POST_FORMAT_STANDARD_KEY;
         }
 
-        for (int i = 0; i < mPostFormatKeys.size(); i++) {
-            if (postFormatKey.equalsIgnoreCase(mPostFormatKeys.get(i))) {
-                return mPostFormatNames.get(i);
+        if (mPostFormatKeys != null) {
+            for (int i = 0; i < mPostFormatKeys.size(); i++) {
+                if (postFormatKey.equalsIgnoreCase(mPostFormatKeys.get(i))) {
+                    return mPostFormatNames.get(i);
+                }
             }
         }
         // Since this is only used as a display name, if we can't find the key, we should just
