@@ -219,6 +219,7 @@ public class WPMainActivity extends AppCompatActivity {
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
                         false));
+                boolean openedFromDeepLink = (getIntent() != null && getIntent().getData() != null);
                 if (openedFromPush) {
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
                     if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
@@ -226,6 +227,26 @@ public class WPMainActivity extends AppCompatActivity {
                                 getIntent().getBooleanExtra(NotificationsPendingDraftsReceiver.IS_PAGE_EXTRA, false));
                     } else {
                         launchWithNoteId();
+                    }
+                } else if (openedFromDeepLink) {
+                    Uri uri = getIntent().getData();
+                    String host = uri.getHost();
+
+                    switch (host) {
+                        case "newpost":
+                            ActivityLauncher.addNewPostOrPageForResult(this, null, false, false);
+                            break;
+                        case "viewnotifications":
+                            launchWithNoteId();
+                            break;
+                        case "viewstats":
+                            String siteId = uri.getQueryParameter("notificationId");
+                            Long siteIdLong = Long.getLong(siteId);
+                            SiteModel siteForStat = mSiteStore.getSiteBySiteId(siteIdLong);
+                            ActivityLauncher.viewBlogStats(this, siteForStat);
+                        case "reader":
+                            setReaderTabActive();
+                            break;
                     }
                 } else {
                     int position = AppPrefs.getMainTabIndex();
