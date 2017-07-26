@@ -244,7 +244,7 @@ public class WPMainActivity extends AppCompatActivity {
                             Long siteIdLong = Long.getLong(siteId);
                             SiteModel siteForStat = mSiteStore.getSiteBySiteId(siteIdLong);
                             ActivityLauncher.viewBlogStats(this, siteForStat);
-                        case "reader":
+                        case "viewreader":
                             setReaderTabActive();
                             break;
                     }
