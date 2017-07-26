@@ -47,8 +47,6 @@ import de.greenrobot.event.EventBus;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
 public class PostPreviewActivity extends AppCompatActivity {
-    public static final String EXTRA_POST = "postModel";
-
     private boolean mIsUpdatingPost;
 
     private PostModel mPost;
