@@ -68,6 +68,7 @@ import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPViewPager;
@@ -614,8 +615,8 @@ public class WPMainActivity extends AppCompatActivity {
                 launchWithNoteId();
                 break;
             case VIEW_STATS_HOST:
-                String siteId = uri.getQueryParameter("notificationId");
-                Long siteIdLong = Long.getLong(siteId);
+                String siteId = uri.getQueryParameter("blogId");
+                Long siteIdLong = StringUtils.stringToLong(siteId);
                 SiteModel siteForStat = mSiteStore.getSiteBySiteId(siteIdLong);
                 ActivityLauncher.viewBlogStats(this, siteForStat);
             case VIEW_READER:
