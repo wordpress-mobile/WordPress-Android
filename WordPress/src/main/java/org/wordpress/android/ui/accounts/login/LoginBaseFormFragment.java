@@ -56,6 +56,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject AccountStore mAccountStore;
 
     protected abstract @LayoutRes int getContentLayout();
     protected abstract void setupLabel(TextView label);
@@ -69,6 +70,10 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
 
     protected boolean isInProgress() {
         return mInProgress;
+    }
+
+    protected Button getPrimaryButton() {
+        return mPrimaryButton;
     }
 
     @Override

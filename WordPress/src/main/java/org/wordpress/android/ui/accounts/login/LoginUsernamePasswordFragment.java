@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login;
 
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -23,9 +24,11 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.accounts.SmartLockHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -47,6 +50,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
     private static final String ARG_ENDPOINT_ADDRESS = "ARG_ENDPOINT_ADDRESS";
     private static final String ARG_SITE_NAME = "ARG_SITE_NAME";
     private static final String ARG_SITE_ICON_URL = "ARG_SITE_ICON_URL";
+    private static final String ARG_INPUT_USERNAME = "ARG_INPUT_USERNAME";
+    private static final String ARG_INPUT_PASSWORD = "ARG_INPUT_PASSWORD";
     private static final String ARG_IS_WPCOM = "ARG_IS_WPCOM";
 
     public static final String TAG = "login_username_password_fragment_tag";
@@ -66,16 +71,20 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
     private String mEndpointAddress;
     private String mSiteName;
     private String mSiteIconUrl;
+    private String mInputUsername;
+    private String mInputPassword;
     private boolean mIsWpcom;
 
     public static LoginUsernamePasswordFragment newInstance(String inputSiteAddress, String endpointAddress,
-            String siteName, String siteIconUrl, boolean isWpcom) {
+            String siteName, String siteIconUrl, String inputUsername, String inputPassword, boolean isWpcom) {
         LoginUsernamePasswordFragment fragment = new LoginUsernamePasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_INPUT_SITE_ADDRESS, inputSiteAddress);
         args.putString(ARG_ENDPOINT_ADDRESS, endpointAddress);
         args.putString(ARG_SITE_NAME, siteName);
         args.putString(ARG_SITE_ICON_URL, siteIconUrl);
+        args.putString(ARG_INPUT_USERNAME, inputUsername);
+        args.putString(ARG_INPUT_PASSWORD, inputPassword);
         args.putBoolean(ARG_IS_WPCOM, isWpcom);
         fragment.setArguments(args);
         return fragment;
@@ -118,6 +127,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
         mUsernameInput = (WPLoginInputRow) rootView.findViewById(R.id.login_username_row);
+        mUsernameInput.setText(mInputUsername);
         mUsernameInput.addTextChangedListener(this);
         mUsernameInput.setOnEditorCommitListener(new OnEditorCommitListener() {
             @Override
@@ -128,6 +138,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         });
 
         mPasswordInput = (WPLoginInputRow) rootView.findViewById(R.id.login_password_row);
+        mPasswordInput.setText(mInputPassword);
         mPasswordInput.addTextChangedListener(this);
 
         mPasswordInput.setOnEditorCommitListener(this);
@@ -165,6 +176,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         mEndpointAddress = getArguments().getString(ARG_ENDPOINT_ADDRESS);
         mSiteName = getArguments().getString(ARG_SITE_NAME);
         mSiteIconUrl = getArguments().getString(ARG_SITE_ICON_URL);
+        mInputUsername = getArguments().getString(ARG_INPUT_USERNAME);
+        mInputPassword = getArguments().getString(ARG_INPUT_PASSWORD);
         mIsWpcom = getArguments().getBoolean(ARG_IS_WPCOM);
     }
 
@@ -178,6 +191,16 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
             mRequestedUsername = savedInstanceState.getString(KEY_REQUESTED_USERNAME);
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
+        } else {
+            // auto-login if username and password are set for wpcom login
+            if (mIsWpcom && !TextUtils.isEmpty(mInputUsername) && !TextUtils.isEmpty(mInputPassword)) {
+                getPrimaryButton().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPrimaryButton().performClick();
+                    }
+                });
+            }
         }
     }
 
@@ -298,6 +321,15 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         }
     }
 
+    private void saveCredentialsInSmartLock(SmartLockHelper smartLockHelper) {
+        // mUsername and mPassword are null when the user log in with a magic link
+        if (smartLockHelper != null) {
+            smartLockHelper.saveCredentialsInSmartLock(mRequestedUsername, mRequestedPassword,
+                    HtmlUtils.fastUnescapeHtml(mAccountStore.getAccount().getDisplayName()),
+                    Uri.parse(mAccountStore.getAccount().getAvatarUrl()));
+        }
+    }
+
     // OnChanged events
 
     @SuppressWarnings("unused")
@@ -387,6 +419,10 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         mLoginFinished = true;
 
         if (mLoginListener != null) {
+            if (mIsWpcom) {
+                saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper());
+            }
+
             mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
         }
     }

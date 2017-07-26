@@ -3,13 +3,20 @@ package org.wordpress.android.ui.accounts;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.login.Login2FaFragment;
@@ -21,13 +28,18 @@ import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
+import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
 
-public class LoginActivity extends AppCompatActivity implements LoginListener {
+public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
+        Callback, LoginListener {
     private static final String FORGOT_PASSWORD_URL = "https://wordpress.com/wp-login.php?action=lostpassword";
+
+    private SmartLockHelper mSmartLockHelper;
 
     private LoginMode mLoginMode;
 
@@ -49,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
                 case JETPACK_STATS:
                 case WPCOM_LOGIN_DEEPLINK:
                 case WPCOM_REAUTHENTICATE:
-                    showFragment(new LoginEmailFragment(), LoginEmailFragment.TAG);
+                    checkSmartLockPasswordAndStartLogin();
                     break;
             }
         }
@@ -119,18 +131,58 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN) {
-            // we showed the epilogue screen as informational and sites got loaded so, just return to login caller now
-            setResult(RESULT_OK);
-            finish();
+        switch (requestCode) {
+            case RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN:
+                // we showed the epilogue screen as informational and sites got loaded so, just return to login caller now
+                setResult(RESULT_OK);
+                finish();
+                break;
+            case RequestCodes.SMART_LOCK_SAVE:
+                if (resultCode == RESULT_OK) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_UPDATED);
+                    AppLog.d(AppLog.T.NUX, "Credentials saved");
+                } else {
+                    AppLog.d(AppLog.T.NUX, "Credentials save cancelled");
+                }
+                break;
+            case RequestCodes.SMART_LOCK_READ:
+                if (resultCode == RESULT_OK) {
+                    AppLog.d(AppLog.T.NUX, "Credentials retrieved");
+                    Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
+                    onCredentialRetrieved(credential);
+                } else {
+                    AppLog.e(AppLog.T.NUX, "Credential read failed");
+                    onCredentialsUnavailable();
+                }
+                break;
         }
+    }
+
+    private void jumpToUsernamePassword(String username, String password) {
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
+                "wordpress.com", "wordpress.com", "WordPress.com", "https://s0.wp.com/i/webclip.png", username,
+                password, true);
+        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
+    }
+
+    private void checkSmartLockPasswordAndStartLogin() {
+        if (mSmartLockHelper == null) {
+            mSmartLockHelper = new SmartLockHelper(this);
+            mSmartLockHelper.initSmartLockForPasswords();
+        } else {
+            startLogin();
+        }
+    }
+
+    private void startLogin() {
+        slideInFragment(new LoginEmailFragment(), true, LoginEmailFragment.TAG);
     }
 
     // LoginListener implementation methods
 
     @Override
     public void showEmailLoginScreen() {
-        slideInFragment(new LoginEmailFragment(), true, LoginEmailFragment.TAG);
+        checkSmartLockPasswordAndStartLogin();
     }
 
     @Override
@@ -169,9 +221,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void loginViaWpcomUsernameInstead() {
-        LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
-                "wordpress.com", "wordpress.com", "WordPress.com", "https://s0.wp.com/i/webclip.png", true);
-        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
+        jumpToUsernamePassword(null, null);
     }
 
     @Override
@@ -218,15 +268,15 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     public void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl) {
-        LoginUsernamePasswordFragment loginUsernamePasswordFragment =
-                LoginUsernamePasswordFragment.newInstance(siteAddress, siteAddress, siteName, siteIconUrl, true);
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
+                siteAddress, siteAddress, siteName, siteIconUrl, null, null, true);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
     @Override
     public void gotXmlRpcEndpoint(String inputSiteAddress, String endpointAddress) {
-        LoginUsernamePasswordFragment loginUsernamePasswordFragment =
-                LoginUsernamePasswordFragment.newInstance(inputSiteAddress, endpointAddress, null, null, false);
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
+                inputSiteAddress, endpointAddress, null, null, null, null, false);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
@@ -248,5 +298,46 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     @Override
     public void setHelpContext(String faqId, String faqSection) {
         // nothing implemented here yet. This will set the context the `help()` callback should work with
+    }
+
+    // SmartLock
+
+    @Override
+    public SmartLockHelper getSmartLockHelper() {
+        return mSmartLockHelper;
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        AppLog.d(AppLog.T.NUX, "Connection result: " + connectionResult);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        AppLog.d(AppLog.T.NUX, "Google API client connected");
+
+        // force account chooser
+        mSmartLockHelper.disableAutoSignIn();
+
+        mSmartLockHelper.smartLockAutoFill(this);
+    }
+
+    @Override
+    public void onCredentialRetrieved(Credential credential) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
+
+        final String username = credential.getId();
+        final String password = credential.getPassword();
+        jumpToUsernamePassword(username, password);
+    }
+
+    @Override
+    public void onCredentialsUnavailable() {
+        startLogin();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        AppLog.d(AppLog.T.NUX, "Google API client connection suspended");
     }
 }
