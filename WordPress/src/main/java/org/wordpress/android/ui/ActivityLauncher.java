@@ -272,7 +272,7 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        Class<?> loginClass = BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE ? LoginActivity.class : SignInActivity.class;
+        Class<?> loginClass = AppPrefs.isLoginWizardStyleActivated() ? LoginActivity.class : SignInActivity.class;
 
         Intent intent = new Intent(activity, loginClass);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
