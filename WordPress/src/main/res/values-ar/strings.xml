@@ -10,7 +10,6 @@ Language: ar
 	<string name="smart_toast_photo_long_press">اضغط مع الاستمرار لتحديد العديد من الصور</string>
 	<string name="photo_picker_choose_video">اختيار مقطع فيديو من الجهاز</string>
 	<string name="photo_picker_choose_photo">اختيار صورة من الجهاز</string>
-	<string name="new_editor_promo_description">يتضمن تطبيق وردبرس.كوم الآن محررًا رائعًا جديدًا. جرِّبه من خلال إنشاء مقالة جديدة.</string>
 	<string name="wp_media_title">وسائط ووردبرس</string>
 	<string name="media_insert_as_gallery">إضافة كمعرض</string>
 	<string name="media_insert_individually">إضافة على حدى</string>
@@ -41,7 +40,6 @@ Language: ar
 	<string name="media_upload_state_queued">تم الوضع في قائمة الانتظار</string>
 	<string name="update_draft">تحديث المسودة</string>
 	<string name="keep_editing">متابعة التحرير</string>
-	<string name="image_quality">جودة الصورة</string>
 	<string name="error_all_media_upload_canceled">تم إلغاء جميع عمليات رفع الوسائط بسبب خطأ غير معروف. يُرجى إعادة محاولة الرفع</string>
 	<string name="error_unknown_post_type">تنسيق المقالة غير معروف</string>
 	<string name="error_unknown_post">مقالة غير معروفة، ربما تكون النسخة المحلية من هذه المقالة غير متزامنة مع الخادم</string>
@@ -129,13 +127,6 @@ Language: ar
 	<string name="editor_failed_uploads_switch_html">فشل رفع بعض الوسائط. يمكنك الإنتقال الى وضع HTML\nبهذه الحالة. إزالة جميع المرفوعات الفاشلة والمتابعة؟</string>
 	<string name="image_thumbnail">الصورة المصغرة</string>
 	<string name="visual_editor">المحرر المرئي</string>
-	<string name="format_bar_description_html">وضع HTML</string>
-	<string name="format_bar_description_ol">قائمة مرتبة</string>
-	<string name="format_bar_description_ul">قائمة غير مرتبة</string>
-	<string name="format_bar_description_media">إدراج وسائط</string>
-	<string name="format_bar_description_more">إدراج المزيد</string>
-	<string name="format_bar_description_link">إدراج رابط</string>
-	<string name="format_bar_description_quote">كتلة الإقتباس</string>
 	<string name="format_bar_description_strike">يتوسطه خط</string>
 	<string name="format_bar_description_underline">أسفله خط</string>
 	<string name="format_bar_description_italic">مائل</string>

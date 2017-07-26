@@ -18,7 +18,6 @@ import android.widget.BaseAdapter;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.Subscribe;
@@ -107,7 +106,7 @@ public class StatsActivity extends AppCompatActivity
         ((WordPress) getApplication()).component().inject(this);
 
         if (WordPress.wpDB == null) {
-            Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
+            ToastUtils.showToast(this, R.string.fatal_db_error, ToastUtils.Duration.LONG);
             finish();
             return;
         }

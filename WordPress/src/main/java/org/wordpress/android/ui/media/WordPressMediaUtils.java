@@ -2,7 +2,6 @@ package org.wordpress.android.ui.media;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,17 +11,19 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
+import android.view.ViewConfiguration;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -52,17 +53,7 @@ public class WordPressMediaUtils {
                 RequestCodes.VIDEO_LIBRARY);
     }
 
-    public static void launchVideoLibrary(Fragment fragment) {
-        if (!fragment.isAdded()) {
-            return;
-        }
-        AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(prepareVideoLibraryIntent(fragment.getActivity()),
-                RequestCodes.VIDEO_LIBRARY);
-    }
-
-
-    public static Intent prepareVideoLibraryIntent(Context context) {
+    private static Intent prepareVideoLibraryIntent(Context context) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
@@ -73,14 +64,6 @@ public class WordPressMediaUtils {
         activity.startActivityForResult(prepareVideoCameraIntent(), RequestCodes.TAKE_VIDEO);
     }
 
-    public static void launchVideoCamera(Fragment fragment) {
-        if (!fragment.isAdded()) {
-            return;
-        }
-        AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(prepareVideoCameraIntent(), RequestCodes.TAKE_VIDEO);
-    }
-
     private static Intent prepareVideoCameraIntent() {
         return new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
     }
@@ -89,15 +72,6 @@ public class WordPressMediaUtils {
         AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(preparePictureLibraryIntent(activity.getString(R.string.pick_photo)),
                 RequestCodes.PICTURE_LIBRARY);
-    }
-
-    public static void launchPictureLibrary(Fragment fragment) {
-        if (!fragment.isAdded()) {
-            return;
-        }
-        AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(preparePictureLibraryIntent(fragment.getActivity()
-                .getString(R.string.pick_photo)), RequestCodes.PICTURE_LIBRARY);
     }
 
     private static Intent preparePictureLibraryIntent(String title) {
@@ -113,25 +87,14 @@ public class WordPressMediaUtils {
     }
 
     public static void launchCamera(Activity activity, String applicationId, LaunchCameraCallback callback) {
-        Intent intent = preparelaunchCamera(activity, applicationId, callback);
+        Intent intent = prepareLaunchCamera(activity, applicationId, callback);
         if (intent != null) {
             AppLockManager.getInstance().setExtendedTimeout();
             activity.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
         }
     }
 
-    public static void launchCamera(Fragment fragment, String applicationId, LaunchCameraCallback callback) {
-        if (!fragment.isAdded()) {
-            return;
-        }
-        Intent intent = preparelaunchCamera(fragment.getActivity(), applicationId, callback);
-        if (intent != null) {
-            AppLockManager.getInstance().setExtendedTimeout();
-            fragment.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
-        }
-    }
-
-    private static Intent preparelaunchCamera(Context context, String applicationId, LaunchCameraCallback callback) {
+    private static Intent prepareLaunchCamera(Context context, String applicationId, LaunchCameraCallback callback) {
         String state = android.os.Environment.getExternalStorageState();
         if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
             showSDCardRequiredDialog(context);
@@ -184,17 +147,6 @@ public class WordPressMediaUtils {
         return intent;
     }
 
-    public static void launchPictureLibraryOrCapture(Fragment fragment, String applicationId, LaunchCameraCallback
-            callback) {
-        if (!fragment.isAdded()) {
-            return;
-        }
-        AppLockManager.getInstance().setExtendedTimeout();
-
-        Intent intent = makePickOrCaptureIntent(fragment.getActivity(), applicationId, callback);
-        fragment.startActivityForResult(intent, RequestCodes.PICTURE_LIBRARY_OR_CAPTURE);
-    }
-
     private static Intent makePickOrCaptureIntent(Context context, String applicationId, LaunchCameraCallback callback) {
         Intent pickPhotoIntent = prepareGalleryIntent(context.getString(R.string.capture_or_pick_photo));
 
@@ -212,25 +164,25 @@ public class WordPressMediaUtils {
         return pickPhotoIntent;
     }
 
-    public static int getPlaceholder(String url) {
+    static int getPlaceholder(String url) {
         if (MediaUtils.isValidImage(url)) {
-            return R.drawable.media_image_placeholder;
+            return R.drawable.ic_gridicons_image;
         } else if (MediaUtils.isDocument(url)) {
-            return R.drawable.media_document;
+            return R.drawable.ic_gridicons_page;
         } else if (MediaUtils.isPowerpoint(url)) {
             return R.drawable.media_powerpoint;
         } else if (MediaUtils.isSpreadsheet(url)) {
             return R.drawable.media_spreadsheet;
         } else if (MediaUtils.isVideo(url)) {
-            return org.wordpress.android.editor.R.drawable.media_movieclip;
+            return R.drawable.ic_gridicons_video_camera;
         } else if (MediaUtils.isAudio(url)) {
-            return R.drawable.media_audio;
+            return R.drawable.ic_gridicons_audio;
         } else {
             return 0;
         }
     }
 
-    public static boolean canDeleteMedia(MediaModel mediaModel) {
+    static boolean canDeleteMedia(MediaModel mediaModel) {
         String state = mediaModel.getUploadState();
         return state == null || (!state.equalsIgnoreCase("uploading") && !state.equalsIgnoreCase("deleted"));
     }
@@ -238,22 +190,23 @@ public class WordPressMediaUtils {
     /**
      * Loads the given network image URL into the {@link NetworkImageView}.
      */
-    public static void loadNetworkImage(String imageUrl, NetworkImageView imageView, ImageLoader imageLoader) {
+    public static void loadNetworkImage(String imageUrl, WPNetworkImageView imageView) {
         if (imageUrl != null) {
             Uri uri = Uri.parse(imageUrl);
             String filepath = uri.getLastPathSegment();
 
-            int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
-            imageView.setErrorImageResId(placeholderResId);
+            // re-use the default background drawable as error image for now.
+            // See: https://github.com/wordpress-mobile/WordPress-Android/pull/6295#issuecomment-315129759
+            imageView.setErrorImageResId(R.drawable.media_item_background);
 
             // default image while downloading
             imageView.setDefaultImageResId(R.drawable.media_item_background);
 
             if (MediaUtils.isValidImage(filepath)) {
                 imageView.setTag(imageUrl);
-                imageView.setImageUrl(imageUrl, imageLoader);
+                imageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
             } else {
-                imageView.setImageResource(placeholderResId);
+                imageView.setImageResource(R.drawable.media_item_background);
             }
         } else {
             imageView.setImageResource(0);
@@ -268,9 +221,9 @@ public class WordPressMediaUtils {
         String posterUrl = "";
 
         if (videoUrl != null) {
-            int filetypeLocation = videoUrl.lastIndexOf(".");
-            if (filetypeLocation > 0) {
-                posterUrl = videoUrl.substring(0, filetypeLocation) + "_std.original.jpg";
+            int fileTypeLocation = videoUrl.lastIndexOf(".");
+            if (fileTypeLocation > 0) {
+                posterUrl = videoUrl.substring(0, fileTypeLocation) + "_std.original.jpg";
             }
         }
 
@@ -290,5 +243,30 @@ public class WordPressMediaUtils {
                         AppLog.d(T.MEDIA, "Media scanner finished scanning " + path);
                     }
                 });
+    }
+
+    /*
+     * returns true if the current user has permission to upload new media to the passed site
+     */
+    public static boolean currentUserCanUploadMedia(@NonNull SiteModel site) {
+        if (site.isUsingWpComRestApi()) {
+            return site.getHasCapabilityUploadFiles();
+        } else {
+            // self-hosted sites don't have capabilities so always return true
+            return true;
+        }
+    }
+
+    public static boolean currentUserCanDeleteMedia(@NonNull SiteModel site) {
+        return currentUserCanUploadMedia(site);
+    }
+  
+    /*
+     * returns the minimum distance for a fling which determines whether to disable loading
+     * thumbnails in the media grid or photo picker - used to conserve memory usage during
+     * a reasonably-sized fling
+     */
+    public static int getFlingDistanceToDisableThumbLoading(@NonNull Context context) {
+        return ViewConfiguration.get(context).getScaledMaximumFlingVelocity() / 2;
     }
 }

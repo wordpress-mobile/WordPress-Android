@@ -264,7 +264,7 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void showNewEditorPromoDialogIfNeeded() {
-        if (AppPrefs.isNewEditorPromoRequired() && AppPrefs.isAztecEditorEnabled()) {
+        if (AppPrefs.isNewEditorPromoRequired()) {
             AppCompatDialogFragment newFragment = PromoDialogEditor.newInstance(
                     R.drawable.img_promo_editor,
                     R.string.new_editor_promo_title,
@@ -461,7 +461,8 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
-        if (position ==  WPMainTabAdapter.TAB_MY_SITE) {
+        if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
+                && position == WPMainTabAdapter.TAB_MY_SITE) {
             showNewEditorPromoDialogIfNeeded();
         }
 
