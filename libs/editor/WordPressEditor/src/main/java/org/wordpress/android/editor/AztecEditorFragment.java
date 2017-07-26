@@ -886,6 +886,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
                     attributesWithClass.addClass(ATTR_STATUS_FAILED);
 
+                    content.clearOverlays(localMediaIdPredicate);
                     overlayFailedMedia(localMediaId, attributesWithClass.getAttributes());
                     content.resetAttributedMediaSpan(localMediaIdPredicate);
                     break;
@@ -1167,6 +1168,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                 content.getElementAttributes(mTappedImagePredicate));
                         attributesWithClass.removeClass(ATTR_STATUS_FAILED);
                         attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
+                        if (mediaType.equals(MediaType.VIDEO)) {
+                            attributesWithClass.addClass(TEMP_VIDEO_UPLOADING_CLASS);
+                        }
 
                         // set intermediate shade overlay
                         content.setOverlay(mTappedImagePredicate, 0,
@@ -1178,6 +1182,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                         content.setOverlay(mTappedImagePredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
                         content.updateElementAttributes(mTappedImagePredicate, attributesWithClass.getAttributes());
+
+                        if (mediaType.equals(MediaType.VIDEO)) {
+                            overlayVideoIcon(2, mTappedImagePredicate);
+                        }
 
                         content.resetAttributedMediaSpan(mTappedImagePredicate);
                         break;
