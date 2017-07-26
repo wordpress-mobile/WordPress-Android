@@ -83,6 +83,10 @@ import de.greenrobot.event.EventBus;
  */
 public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
+    public static final String VIEW_STATS_HOST = "viewstats";
+    public static final String VIEW_NOTIFICATIONS_HOST = "viewnotifications";
+    public static final String NEW_POST_HOST = "newpost";
+    public static final String VIEW_READER = "viewreader";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -229,25 +233,7 @@ public class WPMainActivity extends AppCompatActivity {
                         launchWithNoteId();
                     }
                 } else if (openedFromDeepLink) {
-                    Uri uri = getIntent().getData();
-                    String host = uri.getHost();
-
-                    switch (host) {
-                        case "newpost":
-                            ActivityLauncher.addNewPostOrPageForResult(this, null, false, false);
-                            break;
-                        case "viewnotifications":
-                            launchWithNoteId();
-                            break;
-                        case "viewstats":
-                            String siteId = uri.getQueryParameter("notificationId");
-                            Long siteIdLong = Long.getLong(siteId);
-                            SiteModel siteForStat = mSiteStore.getSiteBySiteId(siteIdLong);
-                            ActivityLauncher.viewBlogStats(this, siteForStat);
-                        case "viewreader":
-                            setReaderTabActive();
-                            break;
-                    }
+                    handleDeepLink();
                 } else {
                     int position = AppPrefs.getMainTabIndex();
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
@@ -612,6 +598,28 @@ public class WPMainActivity extends AppCompatActivity {
                 if (getMeFragment() != null) {
                     getMeFragment().onActivityResult(requestCode, resultCode, data);
                 }
+                break;
+        }
+    }
+
+    private void handleDeepLink() {
+        Uri uri = getIntent().getData();
+        String host = uri.getHost();
+
+        switch (host) {
+            case NEW_POST_HOST:
+                ActivityLauncher.addNewPostOrPageForResult(this, null, false, false);
+                break;
+            case VIEW_NOTIFICATIONS_HOST:
+                launchWithNoteId();
+                break;
+            case VIEW_STATS_HOST:
+                String siteId = uri.getQueryParameter("notificationId");
+                Long siteIdLong = Long.getLong(siteId);
+                SiteModel siteForStat = mSiteStore.getSiteBySiteId(siteIdLong);
+                ActivityLauncher.viewBlogStats(this, siteForStat);
+            case VIEW_READER:
+                setReaderTabActive();
                 break;
         }
     }
