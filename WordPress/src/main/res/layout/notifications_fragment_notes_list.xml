@@ -94,7 +94,7 @@
                         android:id="@+id/notifications_filter_all"
                         style="@style/Calypso.SegmentedControl"
                         android:background="@drawable/calypso_segmented_control_button_start"
-                        android:text="@string/all" />
+                        android:text="@string/notifications_tab_title_all" />
 
                     <RadioButton
                         android:id="@+id/notifications_filter_unread"
@@ -102,7 +102,7 @@
                         android:layout_marginLeft="-1dp"
                         android:layout_marginStart="-1dp"
                         android:background="@drawable/calypso_segmented_control_button"
-                        android:text="@string/unread" />
+                        android:text="@string/notifications_tab_title_unread" />
 
                     <RadioButton
                         android:id="@+id/notifications_filter_comments"
@@ -110,7 +110,7 @@
                         android:layout_marginLeft="-1dp"
                         android:layout_marginStart="-1dp"
                         android:background="@drawable/calypso_segmented_control_button"
-                        android:text="@string/tab_comments" />
+                        android:text="@string/notifications_tab_title_comments" />
 
                     <RadioButton
                         android:id="@+id/notifications_filter_follows"
@@ -118,7 +118,7 @@
                         android:layout_marginLeft="-1dp"
                         android:layout_marginStart="-1dp"
                         android:background="@drawable/calypso_segmented_control_button"
-                        android:text="@string/follows" />
+                        android:text="@string/notifications_tab_title_follows" />
 
                     <RadioButton
                         android:id="@+id/notifications_filter_likes"
@@ -126,7 +126,7 @@
                         android:layout_marginLeft="-1dp"
                         android:layout_marginStart="-1dp"
                         android:background="@drawable/calypso_segmented_control_button_end"
-                        android:text="@string/stats_likes" />
+                        android:text="@string/notifications_tab_title_likes" />
                 </RadioGroup>
             </HorizontalScrollView>
 

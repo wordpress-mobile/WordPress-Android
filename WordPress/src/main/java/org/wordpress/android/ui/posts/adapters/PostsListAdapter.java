@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -42,6 +43,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -225,13 +227,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 postHolder.txtExcerpt.setVisibility(View.GONE);
             }
 
-            if (post.getFeaturedImageId() > 0 || mFeaturedImageUrls.containsKey(post.getId())) {
-                postHolder.imgFeatured.setVisibility(View.VISIBLE);
-                postHolder.imgFeatured.setImageUrl(mFeaturedImageUrls.get(post.getId()),
-                        WPNetworkImageView.ImageType.PHOTO);
-            } else {
-                postHolder.imgFeatured.setVisibility(View.GONE);
-            }
+            showFeaturedImage(post.getId(), postHolder.imgFeatured);
 
             // local drafts say "delete" instead of "trash"
             if (post.isLocalDraft()) {
@@ -307,6 +303,27 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             }
         });
+    }
+
+    private void showFeaturedImage(int postId, WPNetworkImageView imgFeatured) {
+        String imageUrl = mFeaturedImageUrls.get(postId);
+        if (imageUrl == null) {
+            imgFeatured.setVisibility(View.GONE);
+        } else if (imageUrl.startsWith("http")) {
+            String photonUrl =  ReaderUtils.getResizedImageUrl(
+                    imageUrl, mPhotonWidth, mPhotonHeight, !SiteUtils.isPhotonCapable(mSite));
+            imgFeatured.setVisibility(View.VISIBLE);
+            imgFeatured.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
+        } else {
+            Bitmap bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(
+                    imgFeatured.getContext(), imageUrl, mPhotonWidth);
+            if (bmp != null) {
+                imgFeatured.setVisibility(View.VISIBLE);
+                imgFeatured.setImageBitmap(bmp);
+            } else {
+                imgFeatured.setVisibility(View.GONE);
+            }
+        }
     }
 
     /*
@@ -672,7 +689,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         for (int position : indexList) {
             PostModel post = getItem(position);
             if (post != null) {
-                mFeaturedImageUrls.put(post.getId(), mediaModel.getUrl());
+                String imageUrl = mediaModel.getUrl();
+                if (imageUrl != null) {
+                    mFeaturedImageUrls.put(post.getId(), imageUrl);
+                } else {
+                    mFeaturedImageUrls.remove(post.getId());
+                }
                 notifyItemChanged(position);
             }
         }
@@ -681,7 +703,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private List<PostModel> tmpPosts;
         private final ArrayList<Long> mediaIdsToUpdate = new ArrayList<>();
-        private LoadMode mLoadMode;
+        private final LoadMode mLoadMode;
 
         LoadPostsTask(LoadMode loadMode) {
             mLoadMode = loadMode;
@@ -729,34 +751,24 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
 
             // Generate the featured image url for each post
-            String imageUrl = null;
             mFeaturedImageUrls.clear();
+            boolean isPrivate = !SiteUtils.isPhotonCapable(mSite);
             for (PostModel post : tmpPosts) {
-                if (post.isLocalDraft()) {
-                    imageUrl = null;
-                } else if (post.getFeaturedImageId() != 0) {
+                String imageUrl = null;
+                if (post.getFeaturedImageId() != 0) {
                     MediaModel media = mMediaStore.getSiteMediaWithId(mSite, post.getFeaturedImageId());
                     if (media != null) {
                         imageUrl = media.getUrl();
                     } else {
-                        // Reset the current `imageUrl` so it doesn't contain the previous post's image
-                        imageUrl = null;
-                    }
-                    // If the imageUrl isn't found it means the featured image info hasn't been added to
-                    // the local media library yet, so add to the list of media IDs to request info for
-                    if (TextUtils.isEmpty(imageUrl)) {
+                        // If the media isn't found it means the featured image info hasn't been added to
+                        // the local media library yet, so add to the list of media IDs to request info for
                         mediaIdsToUpdate.add(post.getFeaturedImageId());
                     }
-                } else if (StringUtils.isNotEmpty(post.getContent())) {
-                    ReaderImageScanner scanner = new ReaderImageScanner(post.getContent(), mSite.isPrivate());
-                    imageUrl = scanner.getLargestImage();
                 } else {
-                    imageUrl = null;
+                    imageUrl = new ReaderImageScanner(post.getContent(), isPrivate).getLargestImage();
                 }
-
                 if (!TextUtils.isEmpty(imageUrl)) {
-                    mFeaturedImageUrls.put(post.getId(), ReaderUtils.getResizedImageUrl(imageUrl, mPhotonWidth,
-                            mPhotonHeight, mSite.isPrivate()));
+                    mFeaturedImageUrls.put(post.getId(), imageUrl);
                 }
             }
 

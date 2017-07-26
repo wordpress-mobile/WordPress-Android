@@ -495,7 +495,7 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.browsePostOrPage(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_PREVIEW:
-                ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, post, mIsPage);
+                ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_STATS:
                 ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, mIsPage);
@@ -505,6 +505,8 @@ public class PostsListFragment extends Fragment
                 // prevent deleting post while it's being uploaded
                 if (!PostUploadService.isPostUploading(post)) {
                     trashPost(post);
+                } else {
+                    ToastUtils.showToast(getActivity(), R.string.toast_err_post_media_uploading);
                 }
                 break;
         }
@@ -524,9 +526,15 @@ public class PostsListFragment extends Fragment
         }
 
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
+        boolean isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT
+                || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
         post.setStatus(PostStatus.PUBLISHED.toString());
 
-        PostUploadService.addPostToUpload(post);
+        if (isFirstTimePublish) {
+            PostUploadService.addPostToUploadAndTrackAnalytics(post);
+        } else {
+            PostUploadService.addPostToUpload(post);
+        }
         getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
         PostUtils.trackSavePostAnalytics(post, mSite);

@@ -126,13 +126,6 @@ Language: el_GR
 	<string name="editor_failed_uploads_switch_html">Μερικές μεταφορτώσεις πολυμέσων απέτυχαν. Δεν μπορείτε να μεταβείτε σε λειτουργία HTML \n        σε αυτή την κατάσταση. Αφαίρεση όλων των αποτυχημένων μεταφορτώσεων και συνέχεια;</string>
 	<string name="image_thumbnail">Μικρογραφία εικόνας</string>
 	<string name="visual_editor">Κειμενογράφος</string>
-	<string name="format_bar_description_html">Λειτουργία HTML</string>
-	<string name="format_bar_description_ol">Αριθμητική λίστα</string>
-	<string name="format_bar_description_ul">Λίστα με κουκκίδες</string>
-	<string name="format_bar_description_media">Εισαγωγή πολυμέσων</string>
-	<string name="format_bar_description_more">Εισαγωγή περισσότερων</string>
-	<string name="format_bar_description_link">Εισαγωγή συνδέσμου</string>
-	<string name="format_bar_description_quote">Παράθεμα</string>
 	<string name="format_bar_description_strike">Διεγραμμένα</string>
 	<string name="format_bar_description_underline">Υπογράμμιση</string>
 	<string name="format_bar_description_italic">Πλάγια</string>

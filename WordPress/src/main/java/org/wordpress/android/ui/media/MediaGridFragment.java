@@ -36,7 +36,6 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
-import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
@@ -125,7 +124,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
-    @Inject FluxCImageLoader mImageLoader;
 
     private MediaBrowserType mBrowserType;
 
@@ -211,8 +209,28 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         int numColumns = MediaGridAdapter.getColumnCount(getActivity());
         mGridManager = new GridLayoutManager(getActivity(), numColumns);
         mRecycler.setLayoutManager(mGridManager);
-
         mRecycler.setAdapter(getAdapter());
+
+        // disable thumbnail loading during a fling to conserve memory
+        final int minDistance = WordPressMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
+        mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
+            @Override
+            public boolean onFling(int velocityX, int velocityY) {
+                if (Math.abs(velocityY) > minDistance) {
+                    getAdapter().setLoadThumbnails(false);
+                }
+                return false;
+            }
+        });
+        mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    getAdapter().setLoadThumbnails(true);
+                }
+            }
+        });
 
         mEmptyView = (TextView) view.findViewById(R.id.empty_view);
 
@@ -248,9 +266,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private MediaGridAdapter getAdapter() {
         if (!hasAdapter()) {
-            mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
+            boolean canMultiSelect = mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
+                    && WordPressMediaUtils.currentUserCanDeleteMedia(mSite);
+            mGridAdapter = new MediaGridAdapter(getActivity(), mSite);
             mGridAdapter.setCallback(this);
-            mGridAdapter.setAllowMultiselect(mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER);
+            mGridAdapter.setAllowMultiselect(canMultiSelect);
             mGridAdapter.setShowPreviewIcon(mBrowserType.isPicker());
         }
         return mGridAdapter;
@@ -289,6 +309,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (!TextUtils.isEmpty(mSearchTerm)) {
             return mMediaStore.searchSiteMedia(mSite, mSearchTerm);
         }
+
+        if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER) {
+            List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
+            List<MediaModel> imagesAndVideos = new ArrayList<>();
+            for (MediaModel media: allMedia) {
+                String mime = media.getMimeType();
+                if (mime != null && (mime.startsWith("image") || mime.startsWith("video"))) {
+                    imagesAndVideos.add(media);
+                }
+            }
+            return imagesAndVideos;
+        } else if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+            return mMediaStore.getSiteImages(mSite);
+        }
+
 
         switch (mFilter) {
             case FILTER_IMAGES:
@@ -357,7 +392,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_PICKER) {
+        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
             return;
         }
 
@@ -388,6 +423,26 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (isAdded()) {
             getAdapter().setMediaList(getFilteredMedia());
         }
+    }
+
+    /*
+     * update just the passed media item - if it doesn't exist it may be because
+     * it was just added, so reload the adapter
+     */
+    void updateMediaItem(@NonNull MediaModel media) {
+        if (!isAdded() || !hasAdapter()) return;
+
+        if (getAdapter().mediaExists(media)) {
+            getAdapter().updateMediaItem(media);
+        } else {
+            reload();
+        }
+    }
+
+    void removeMediaItem(@NonNull MediaModel media) {
+        if (!isAdded() || !hasAdapter()) return;
+
+        getAdapter().removeMediaItem(media);
     }
 
     public void search(String searchTerm) {
@@ -554,6 +609,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (!mIsRefreshing) {
             setRefreshing(true);
             updateEmptyView(EmptyViewMessageType.LOADING);
+            if (loadMore) {
+                mSwipeToRefreshHelper.setRefreshing(true);
+            }
 
             FetchMediaListPayload payload =
                     new FetchMediaListPayload(mSite, NUM_MEDIA_PER_FETCH, loadMore, mFilter.toMimeType());
@@ -600,13 +658,18 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
         }
 
-        boolean isPermissionError = (errorType == MediaErrorType.AUTHORIZATION_REQUIRED);
-        if (isPermissionError) {
+        int toastResId;
+        if (errorType == MediaErrorType.AUTHORIZATION_REQUIRED) {
             updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-            ToastUtils.showToast(getActivity(), getString(R.string.media_error_no_permission));
-        } else {
+            toastResId = R.string.media_error_no_permission;
+         } else {
             updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media));
+            toastResId = R.string.error_refresh_media;
+        }
+
+        // only show the toast if the list is NOT empty since the empty view shows the same message
+        if (!isEmpty()) {
+            ToastUtils.showToast(getActivity(), getString(toastResId));
         }
 
         setRefreshing(false);

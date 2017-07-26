@@ -29,6 +29,9 @@
     <dimen name="sourceview_top_margin">15dp</dimen>
     <dimen name="sourceview_title_bottom_margin">15dp</dimen>
 
+    <dimen name="dialog_beta_padding_horizontal">8dp</dimen>
+    <dimen name="dialog_beta_padding_vertical">6dp</dimen>
+
     <dimen name="link_dialog_margin_inner">4dp</dimen>
     <dimen name="link_dialog_margin_outer">16dp</dimen>
 
@@ -42,6 +45,7 @@
     <dimen name="image_settings_dialog_top_separator_margin_top">16dp</dimen>
     <dimen name="image_settings_dialog_thumbnail_container_margin_bottom">8dp</dimen>
     <dimen name="image_settings_dialog_thumbnail_size">100dp</dimen>
+    <dimen name="image_settings_dialog_thumbnail_progress_size">50dp</dimen>
     <dimen name="image_settings_dialog_thumbnail_left_margin">4dp</dimen>
     <dimen name="image_settings_dialog_thumbnail_right_margin">8dp</dimen>
     <dimen name="image_settings_dialog_filename_margin_left">16dp</dimen>
@@ -61,5 +65,7 @@
     <item name="spacing_multiplier_body" format="float" type="dimen">1.2</item>
 
     <dimen name="aztec_title_size">24sp</dimen>
+
+    <dimen name="text_small">12sp</dimen>
 
 </resources>

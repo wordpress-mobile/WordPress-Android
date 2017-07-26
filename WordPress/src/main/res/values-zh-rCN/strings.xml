@@ -41,7 +41,6 @@ Language: zh_CN
 	<string name="media_upload_state_queued">在排队</string>
 	<string name="update_draft">更新草稿</string>
 	<string name="keep_editing">继续编辑</string>
-	<string name="image_quality">图像质量</string>
 	<string name="error_all_media_upload_canceled">由于发生未知错误，所有媒体上传均已取消。请重新尝试上传</string>
 	<string name="error_unknown_post_type">未知文章格式</string>
 	<string name="error_unknown_post">未知文章，该文章的本地副本可能未与服务器同步</string>
@@ -85,13 +84,6 @@ Language: zh_CN
 	<string name="editor_failed_uploads_switch_html">部分媒体上传失败。在此状态下，您无法切换\n到 HTML 模式。删除所有失败的上传并继续？</string>
 	<string name="image_thumbnail">图片缩略图</string>
 	<string name="visual_editor">可视化编辑器</string>
-	<string name="format_bar_description_html">HTML 模式</string>
-	<string name="format_bar_description_ol">有序列表</string>
-	<string name="format_bar_description_ul">无序列表</string>
-	<string name="format_bar_description_media">插入媒体</string>
-	<string name="format_bar_description_more">插入更多</string>
-	<string name="format_bar_description_link">插入链接</string>
-	<string name="format_bar_description_quote">阻止引用</string>
 	<string name="format_bar_description_strike">删除线</string>
 	<string name="format_bar_description_underline">下划线</string>
 	<string name="format_bar_description_italic">斜体</string>
