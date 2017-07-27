@@ -8,7 +8,7 @@ public class JetpackSettingsModel {
     public boolean emailNotifications;
     public boolean wpNotifications;
     public boolean jetpackProtectEnabled;
-    public ArrayList<String> jetpackProtectWhitelist;
+    public final ArrayList<String> jetpackProtectWhitelist = new ArrayList<>();
 
     @Override
     public boolean equals(Object other) {
@@ -22,12 +22,6 @@ public class JetpackSettingsModel {
     }
 
     public boolean whitelistMatches(ArrayList<String> otherWhitelist) {
-        if (jetpackProtectWhitelist == null) {
-            return otherWhitelist == null;
-        } else if (otherWhitelist == null) {
-            return false;
-        }
-
-        return jetpackProtectWhitelist.equals(otherWhitelist);
+        return otherWhitelist != null && jetpackProtectWhitelist.equals(otherWhitelist);
     }
 }
