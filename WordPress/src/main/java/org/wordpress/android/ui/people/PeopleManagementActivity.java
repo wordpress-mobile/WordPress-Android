@@ -681,6 +681,9 @@ public class PeopleManagementActivity extends AppCompatActivity
             AppLog.e(AppLog.T.PEOPLE, "An error occurred while fetching the user roles with type: "
                     + event.error.type);
         }
-        // We don't need to do anything with the callback
+        PeopleListFragment peopleListFragment = getListFragment();
+        if (peopleListFragment != null) {
+            peopleListFragment.refreshUserRoles();
+        }
     }
 }

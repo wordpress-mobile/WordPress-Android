@@ -273,6 +273,15 @@ public class PeopleListFragment extends Fragment {
         }
     }
 
+    // Refresh the role display names after user roles is fetched
+    public void refreshUserRoles() {
+        PeopleAdapter peopleAdapter = (PeopleAdapter) mFilteredRecyclerView.getAdapter();
+        if (peopleAdapter != null) {
+            peopleAdapter.refreshUserRoles();
+            peopleAdapter.notifyDataSetChanged();
+        }
+    }
+
     public void fetchingRequestFinished(PeopleListFilter filter, boolean isFirstPage, boolean isSuccessful) {
         if (mPeopleListFilter == filter) {
             if (isFirstPage) {
@@ -308,7 +317,7 @@ public class PeopleListFragment extends Fragment {
             mInflater = LayoutInflater.from(context);
             mPeopleList = peopleList;
             setHasStableIds(true);
-            refreshSiteUserRoles();
+            refreshUserRoles();
         }
 
         public void setPeopleList(List<Person> peopleList) {
@@ -323,7 +332,7 @@ public class PeopleListFragment extends Fragment {
             return mPeopleList.get(position);
         }
 
-        public void refreshSiteUserRoles() {
+        public void refreshUserRoles() {
             if (mSite != null) {
                 mUserRoles = mSiteStore.getUserRoles(mSite);
             }
