@@ -131,7 +131,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     }, jsonParams);
         } catch (JSONException exception) {
             AppLog.w(AppLog.T.API, "Error serializing settings changes: " + exception);
-            notifySavedOnUiThread(new VolleyError(exception));
+            notifySavedOnUiThread(exception);
         }
     }
 
