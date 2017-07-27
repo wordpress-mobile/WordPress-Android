@@ -267,6 +267,12 @@
         <item>@string/filter_trashed_posts</item>
     </string-array>
 
+    <!-- post uploads -->
+    <string name="post_published_param">\"%s\" has been published!</string>
+    <string name="post_updated_param">\"%s\" has been updated!</string>
+    <string name="post_scheduled_param">\"%s\" has been scheduled!</string>
+    <string name="post_draft_param">\"%s\" has been saved as a draft!</string>
+
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
