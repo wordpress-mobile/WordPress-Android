@@ -20,6 +20,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.util.ViewUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -218,6 +219,7 @@ public class WPLoginInputRow extends RelativeLayout {
         SavedState(Parcel in) {
             super(in);
 
+            mIds = new ArrayList<>();
             in.readList(mIds, List.class.getClassLoader());
         }
 
