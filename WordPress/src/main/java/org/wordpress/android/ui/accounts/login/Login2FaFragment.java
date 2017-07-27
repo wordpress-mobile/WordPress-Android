@@ -7,6 +7,7 @@ import android.support.annotation.StringRes;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -76,6 +77,9 @@ public class Login2FaFragment extends LoginBaseFormFragment implements TextWatch
         m2FaInput = (WPLoginInputRow) rootView.findViewById(R.id.login_2fa_row);
         m2FaInput.addTextChangedListener(this);
         m2FaInput.setOnEditorCommitListener(this);
+
+        // restrict the allowed input chars to just numbers
+        m2FaInput.getEditText().setKeyListener(DigitsKeyListener.getInstance("0123456789"));
     }
 
     @Override

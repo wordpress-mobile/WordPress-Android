@@ -38,9 +38,12 @@ import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener {
+    private static final String KEY_SMARTLOCK_COMPLETED = "KEY_SMARTLOCK_COMPLETED";
+
     private static final String FORGOT_PASSWORD_URL = "https://wordpress.com/wp-login.php?action=lostpassword";
 
     private SmartLockHelper mSmartLockHelper;
+    private boolean mSmartLockCompleted;
 
     private LoginMode mLoginMode;
 
@@ -65,7 +68,16 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                     checkSmartLockPasswordAndStartLogin();
                     break;
             }
+        } else {
+            mSmartLockCompleted = savedInstanceState.getBoolean(KEY_SMARTLOCK_COMPLETED);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(KEY_SMARTLOCK_COMPLETED, mSmartLockCompleted);
     }
 
     private void showFragment(Fragment fragment, String tag) {
@@ -177,7 +189,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void checkSmartLockPasswordAndStartLogin() {
-        if (mSmartLockHelper == null) {
+        if (!mSmartLockCompleted && mSmartLockHelper == null) {
             mSmartLockHelper = new SmartLockHelper(this);
             mSmartLockHelper.initSmartLockForPasswords();
         } else {
@@ -264,7 +276,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void usePasswordInstead(String email) {
         LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, null);
-        slideInFragment(loginEmailPasswordFragment, true, LoginEmailFragment.TAG);
+        slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
     }
 
     @Override
@@ -379,6 +391,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void onConnected(Bundle bundle) {
         AppLog.d(AppLog.T.NUX, "Google API client connected");
 
+        if (mSmartLockCompleted) {
+            return;
+        }
+
         // force account chooser
         mSmartLockHelper.disableAutoSignIn();
 
@@ -389,6 +405,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void onCredentialRetrieved(Credential credential) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
 
+        mSmartLockCompleted = true;
+
         final String username = credential.getId();
         final String password = credential.getPassword();
         jumpToUsernamePassword(username, password);
@@ -396,6 +414,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onCredentialsUnavailable() {
+        mSmartLockCompleted = true;
+
         startLogin();
     }
 

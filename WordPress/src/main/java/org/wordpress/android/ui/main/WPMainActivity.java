@@ -215,7 +215,7 @@ public class WPMainActivity extends AppCompatActivity {
         });
 
 
-        String authTokenToSet= null;
+        String authTokenToSet = null;
 
         if (savedInstanceState == null) {
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
@@ -271,7 +271,7 @@ public class WPMainActivity extends AppCompatActivity {
             // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
             AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
-        } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false)) {
+        } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         }
     }
