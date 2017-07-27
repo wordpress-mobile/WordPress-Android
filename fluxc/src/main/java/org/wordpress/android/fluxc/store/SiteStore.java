@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostFormatModel;
+import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -78,6 +79,16 @@ public class SiteStore extends Store {
         public FetchedPostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
             this.site = site;
             this.postFormats = postFormats;
+        }
+    }
+
+    public static class FetchedUserRolesPayload extends Payload {
+        public SiteModel site;
+        public List<RoleModel> roles;
+        public UserRolesError error;
+        public FetchedUserRolesPayload(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
+            this.site = site;
+            this.roles = roles;
         }
     }
 
@@ -159,6 +170,20 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class UserRolesError implements OnChangedError {
+        public UserRolesErrorType type;
+        public String message;
+
+        public UserRolesError(UserRolesErrorType type) {
+            this(type, "");
+        }
+
+        UserRolesError(UserRolesErrorType type, String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     public static class NewSiteError implements OnChangedError {
         public NewSiteErrorType type;
         public String message;
@@ -230,6 +255,13 @@ public class SiteStore extends Store {
     public static class OnPostFormatsChanged extends OnChanged<PostFormatsError> {
         public SiteModel site;
         public OnPostFormatsChanged(SiteModel site) {
+            this.site = site;
+        }
+    }
+
+    public static class OnUserRolesChanged extends OnChanged<UserRolesError> {
+        public SiteModel site;
+        public OnUserRolesChanged(SiteModel site) {
             this.site = site;
         }
     }
@@ -312,6 +344,10 @@ public class SiteStore extends Store {
         INVALID_SITE,
         INVALID_RESPONSE,
         GENERIC_ERROR;
+    }
+
+    public enum UserRolesErrorType {
+        GENERIC_ERROR
     }
 
     public enum DeleteSiteErrorType {
@@ -672,6 +708,10 @@ public class SiteStore extends Store {
         return SiteSqlUtils.getPostFormats(site);
     }
 
+    public List<RoleModel> getUserRoles(SiteModel site) {
+        return SiteSqlUtils.getUserRoles(site);
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
@@ -740,6 +780,12 @@ public class SiteStore extends Store {
                 break;
             case FETCHED_POST_FORMATS:
                 updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
+                break;
+            case FETCH_USER_ROLES:
+                fetchUserRoles((SiteModel) action.getPayload());
+                break;
+            case FETCHED_USER_ROLES:
+                updateUserRoles((FetchedUserRolesPayload) action.getPayload());
                 break;
             case FETCH_CONNECT_SITE_INFO:
                 fetchConnectSiteInfo((String) action.getPayload());
@@ -930,6 +976,22 @@ public class SiteStore extends Store {
             event.error = payload.error;
         } else {
             SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats);
+        }
+        emitChange(event);
+    }
+
+    private void fetchUserRoles(SiteModel site) {
+        if (site.isUsingWpComRestApi()) {
+            mSiteRestClient.fetchUserRoles(site);
+        }
+    }
+
+    private void updateUserRoles(FetchedUserRolesPayload payload) {
+        OnUserRolesChanged event = new OnUserRolesChanged(payload.site);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            SiteSqlUtils.insertOrReplaceUserRoles(payload.site, payload.roles);
         }
         emitChange(event);
     }
