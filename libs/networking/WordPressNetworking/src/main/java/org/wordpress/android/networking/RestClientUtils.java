@@ -127,7 +127,7 @@ public class RestClientUtils {
      * https://developer.wordpress.com/docs/api/1/post/notifications/seen
      */
     public void markNotificationsSeen(String timestamp, Listener listener, ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("time", timestamp);
         post("notifications/seen", params, null, listener, errorListener);
     }
@@ -142,7 +142,7 @@ public class RestClientUtils {
     public void decrementUnreadCount(String noteId, String decrementAmount,
                                      Listener listener, ErrorListener errorListener) {
         String path = "notifications/read";
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put(String.format("counts[%s]", noteId), decrementAmount);
         post(path, params, null, listener, errorListener);
     }
