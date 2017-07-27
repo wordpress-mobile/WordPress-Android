@@ -302,7 +302,7 @@ public class PostUtils {
 
     static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
         if (shouldPublishImmediately(postModel)) {
-            postModel.setDateCreated(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
+            postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
         }
     }
 

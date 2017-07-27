@@ -911,7 +911,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // only makes sense to change the publish date and locallychanged date if the Post was actaully changed
         if (postTitleOrContentChanged) {
             PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
-            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
+            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
     }
 
@@ -1655,7 +1655,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
             mPost.setIsLocallyChanged(true);
-            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
+            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
 
         return titleChanged || contentChanged;
