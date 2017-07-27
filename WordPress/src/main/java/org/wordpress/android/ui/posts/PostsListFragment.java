@@ -662,7 +662,7 @@ public class PostsListFragment extends Fragment
                 mTrashedPosts.remove(post);
 
                 // here cancel all media uploads related to this Post
-                UploadService.abortPostAndRelatedMediaUpload(post);
+                UploadService.cancelQueuedPostUploadAndRelatedMedia(post);
 
                 if (post.isLocalDraft()) {
                     mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(post));

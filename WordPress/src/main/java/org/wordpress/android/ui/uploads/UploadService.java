@@ -318,16 +318,9 @@ public class UploadService extends Service {
         return post != null && PostUploadHandler.isPostUploading(post);
     }
 
-    public static void abortPostAndRelatedMediaUpload(PostModel post) {
+    public static void cancelQueuedPostUploadAndRelatedMedia(PostModel post) {
         if (post != null) {
-            synchronized (sPostsWithPendingMedia) {
-                for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
-                    PostModel postModel = uploadingPost.postModel;
-                    if (postModel.getId() == post.getId()) {
-                        uploadingPost.isCancelled = true;
-                    }
-                }
-            }
+            cancelQueuedPostUpload(post);
             EventBus.getDefault().post(new PostEvents.PostMediaCanceled(post));
         }
     }
