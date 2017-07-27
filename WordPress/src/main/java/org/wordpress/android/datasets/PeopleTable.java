@@ -101,7 +101,7 @@ public class PeopleTable {
             case TEAM_TABLE:
                 values.put("user_name", person.getUsername());
                 if (person.getRole() != null) {
-                    values.put("role", person.getRole().toString());
+                    values.put("role", person.getRole());
                 }
                 break;
             case FOLLOWERS_TABLE:
