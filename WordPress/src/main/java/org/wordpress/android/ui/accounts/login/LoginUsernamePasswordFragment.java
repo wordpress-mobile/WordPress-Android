@@ -415,6 +415,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         // continue with success, even if the operation was cancelled since the user got logged in regardless. So, go on
         //  with finishing the login process
 
+        startPostLoginServices();
+
         // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
         mLoginFinished = true;
 
