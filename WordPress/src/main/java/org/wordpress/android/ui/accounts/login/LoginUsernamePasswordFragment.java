@@ -47,6 +47,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
     private static final String ARG_ENDPOINT_ADDRESS = "ARG_ENDPOINT_ADDRESS";
     private static final String ARG_SITE_NAME = "ARG_SITE_NAME";
     private static final String ARG_SITE_ICON_URL = "ARG_SITE_ICON_URL";
+    private static final String ARG_INPUT_USERNAME = "ARG_INPUT_USERNAME";
+    private static final String ARG_INPUT_PASSWORD = "ARG_INPUT_PASSWORD";
     private static final String ARG_IS_WPCOM = "ARG_IS_WPCOM";
 
     public static final String TAG = "login_username_password_fragment_tag";
@@ -66,16 +68,20 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
     private String mEndpointAddress;
     private String mSiteName;
     private String mSiteIconUrl;
+    private String mInputUsername;
+    private String mInputPassword;
     private boolean mIsWpcom;
 
     public static LoginUsernamePasswordFragment newInstance(String inputSiteAddress, String endpointAddress,
-            String siteName, String siteIconUrl, boolean isWpcom) {
+            String siteName, String siteIconUrl, String inputUsername, String inputPassword, boolean isWpcom) {
         LoginUsernamePasswordFragment fragment = new LoginUsernamePasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_INPUT_SITE_ADDRESS, inputSiteAddress);
         args.putString(ARG_ENDPOINT_ADDRESS, endpointAddress);
         args.putString(ARG_SITE_NAME, siteName);
         args.putString(ARG_SITE_ICON_URL, siteIconUrl);
+        args.putString(ARG_INPUT_USERNAME, inputUsername);
+        args.putString(ARG_INPUT_PASSWORD, inputPassword);
         args.putBoolean(ARG_IS_WPCOM, isWpcom);
         fragment.setArguments(args);
         return fragment;
@@ -118,6 +124,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
         mUsernameInput = (WPLoginInputRow) rootView.findViewById(R.id.login_username_row);
+        mUsernameInput.setText(mInputUsername);
         mUsernameInput.addTextChangedListener(this);
         mUsernameInput.setOnEditorCommitListener(new OnEditorCommitListener() {
             @Override
@@ -128,6 +135,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         });
 
         mPasswordInput = (WPLoginInputRow) rootView.findViewById(R.id.login_password_row);
+        mPasswordInput.setText(mInputPassword);
         mPasswordInput.addTextChangedListener(this);
 
         mPasswordInput.setOnEditorCommitListener(this);
@@ -165,6 +173,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         mEndpointAddress = getArguments().getString(ARG_ENDPOINT_ADDRESS);
         mSiteName = getArguments().getString(ARG_SITE_NAME);
         mSiteIconUrl = getArguments().getString(ARG_SITE_ICON_URL);
+        mInputUsername = getArguments().getString(ARG_INPUT_USERNAME);
+        mInputPassword = getArguments().getString(ARG_INPUT_PASSWORD);
         mIsWpcom = getArguments().getBoolean(ARG_IS_WPCOM);
     }
 
@@ -178,6 +188,16 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
             mRequestedUsername = savedInstanceState.getString(KEY_REQUESTED_USERNAME);
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
+        } else {
+            // auto-login if username and password are set for wpcom login
+            if (mIsWpcom && !TextUtils.isEmpty(mInputUsername) && !TextUtils.isEmpty(mInputPassword)) {
+                getPrimaryButton().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPrimaryButton().performClick();
+                    }
+                });
+            }
         }
     }
 
@@ -383,10 +403,16 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         // continue with success, even if the operation was cancelled since the user got logged in regardless. So, go on
         //  with finishing the login process
 
+        startPostLoginServices();
+
         // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
         mLoginFinished = true;
 
         if (mLoginListener != null) {
+            if (mIsWpcom) {
+                saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mRequestedUsername, mRequestedPassword);
+            }
+
             mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
         }
     }

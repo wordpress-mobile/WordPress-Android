@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.login;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
@@ -34,10 +35,15 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.accounts.SmartLockHelper;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import java.util.EnumSet;
 
 import javax.inject.Inject;
 
@@ -56,6 +62,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject AccountStore mAccountStore;
 
     protected abstract @LayoutRes int getContentLayout();
     protected abstract void setupLabel(TextView label);
@@ -69,6 +76,10 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
 
     protected boolean isInProgress() {
         return mInProgress;
+    }
+
+    protected Button getPrimaryButton() {
+        return mPrimaryButton;
     }
 
     @Override
@@ -231,6 +242,26 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
         }
     }
 
+    protected void startPostLoginServices() {
+        // Get reader tags so they're available as soon as the Reader is accessed - done for
+        // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
+        // uses the application context since the activity is finished immediately below
+        ReaderUpdateService.startService(getActivity().getApplicationContext(), EnumSet.of(ReaderUpdateService
+                .UpdateTask.TAGS));
+
+        // Start Notification service
+        NotificationsUpdateService.startService(getActivity().getApplicationContext());
+    }
+
+    protected void saveCredentialsInSmartLock(SmartLockHelper smartLockHelper, String username, String password) {
+        // mUsername and mPassword are null when the user log in with a magic link
+        if (smartLockHelper != null) {
+            smartLockHelper.saveCredentialsInSmartLock(username, password,
+                    HtmlUtils.fastUnescapeHtml(mAccountStore.getAccount().getDisplayName()),
+                    Uri.parse(mAccountStore.getAccount().getAvatarUrl()));
+        }
+    }
+
     // OnChanged events
 
     @SuppressWarnings("unused")
@@ -283,8 +314,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
             }
         }
 
-        // Start Notification service
-        NotificationsUpdateService.startService(getActivity().getApplicationContext());
+        startPostLoginServices();
 
         onLoginFinished(true);
     }

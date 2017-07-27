@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login;
 
 import org.wordpress.android.ui.accounts.LoginMode;
+import org.wordpress.android.ui.accounts.SmartLockHelper;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,7 @@ public interface LoginListener {
     void helpWithSiteAddress();
 
     // Login username password callbacks
+    SmartLockHelper getSmartLockHelper();
     void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds);
 
     // Help callback

@@ -46,7 +46,7 @@ import javax.inject.Inject;
 public class LoginSiteAddressFragment extends LoginBaseFormFragment implements TextWatcher, OnEditorCommitListener {
     private static final String KEY_REQUESTED_SITE_ADDRESS = "KEY_REQUESTED_SITE_ADDRESS";
 
-    public static final String TAG = "login_email_fragment_tag";
+    public static final String TAG = "login_site_address_fragment_tag";
 
     private static final String XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION = "10";
     private static final String XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID = "102";
