@@ -486,7 +486,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (newValue == null || !mEditingEnabled) return false;
 
-        if (preference == mJpMonitorActivePref) {
+        if (preference == mJpWhitelistPref) {
+            mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
+        } else if (preference == mJpMonitorActivePref) {
             mJpMonitorActivePref.setChecked((Boolean) newValue);
             mSiteSettings.enableJetpackMonitor((Boolean) newValue);
         } else if (preference == mJpMonitorEmailNotesPref) {
@@ -644,6 +646,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             onPreferenceChange(mModerationHoldPref, mEditingList.size());
         } else if (mEditingList == mSiteSettings.getBlacklistKeys()) {
             onPreferenceChange(mBlacklistPref, mEditingList.size());
+        } else if (mEditingList == mSiteSettings.getJetpackWhitelistKeys()) {
+            onPreferenceChange(mJpWhitelistPref, mEditingList.size());
         }
         mEditingList = null;
     }
@@ -1120,6 +1124,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpMonitorEmailNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorEmailNotifications());
         mJpMonitorWpNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorWpNotifications());
         mJpBruteForcePref.setChecked(mSiteSettings.isJetpackProtectEnabled());
+        mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
     }
 
     private void setCategories() {

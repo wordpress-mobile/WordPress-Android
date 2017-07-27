@@ -536,6 +536,10 @@ public abstract class SiteSettingsInterface {
         return getKeysDescription(getBlacklistKeys().size());
     }
 
+    public @NonNull String getJetpackProtectWhitelistSummary() {
+        return getKeysDescription(getJetpackWhitelistKeys().size());
+    }
+
     public String getSharingLabel() {
         return mSettings.sharingLabel;
     }
