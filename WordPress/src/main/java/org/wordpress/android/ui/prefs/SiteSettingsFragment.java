@@ -459,7 +459,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mJpWhitelistPref) {
             mEditingList = mSiteSettings.getJetpackWhitelistKeys();
             showListEditorDialog(R.string.jetpack_brute_force_whitelist_title,
-                    R.string.site_settings_blacklist_description);
+                    R.string.site_settings_jetpack_whitelist_description);
         } else if (preference == mStartOverPref) {
             handleStartOver();
         } else if (preference == mCloseAfterPref) {
