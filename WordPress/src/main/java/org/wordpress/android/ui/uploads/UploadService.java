@@ -320,6 +320,13 @@ public class UploadService extends Service {
         return post != null && PostUploadHandler.isPostUploading(post);
     }
 
+    public static void cancelQueuedPostUploadAndRelatedMedia(PostModel post) {
+        if (post != null) {
+            cancelQueuedPostUpload(post);
+            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(post));
+        }
+    }
+
     public static void cancelQueuedPostUpload(PostModel post) {
         if (post != null) {
             synchronized (sPostsWithPendingMedia) {
@@ -510,14 +517,16 @@ public class UploadService extends Service {
         }
     }
 
-    private void cancelPostUploadMatchingMedia(MediaModel media, String mediaErrorMessage) {
+    private void cancelPostUploadMatchingMedia(MediaModel media, String mediaErrorMessage, boolean showErrorNotification) {
         PostModel postToCancel = removeQueuedPostByLocalId(media.getLocalPostId());
         if (postToCancel == null) return;
 
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
-        String message = UploadUtils.getErrorMessage(this, postToCancel, mediaErrorMessage);
         mPostUploadNotifier.cancelNotification(postToCancel);
-        mPostUploadNotifier.updateNotificationError(postToCancel, site, message, true);
+        if (showErrorNotification) {
+            String message = UploadUtils.getErrorMessage(this, postToCancel, mediaErrorMessage);
+            mPostUploadNotifier.updateNotificationError(postToCancel, site, message, true);
+        }
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
@@ -584,7 +593,7 @@ public class UploadService extends Service {
                         + event.error.type + ": " + event.error.message);
                 addMediaToPostFailedMediaListMap(event.media);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
-                cancelPostUploadMatchingMedia(event.media, errorMessage);
+                cancelPostUploadMatchingMedia(event.media, errorMessage, true);
 
                 // now keep track of the error reason so it can be queried
                 UploadError reason = new UploadError(event.error);
@@ -599,7 +608,17 @@ public class UploadService extends Service {
             if (event.media.getLocalPostId() > 0) {
                 AppLog.i(T.MAIN, "UploadService > Upload cancelled for post with id " + event.media.getLocalPostId()
                         + " - a media upload for this post has been cancelled, id: " + event.media.getId());
-                cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
+
+                // only show the media upload error notification if the post was not actively cancelled by the user
+                boolean showMediaErrorNotification = true;
+                for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
+                    if (uploadingPost.isCancelled && event.media.getLocalPostId() == uploadingPost.postModel.getId()) {
+                        showMediaErrorNotification = false;
+                        break;
+                    }
+                }
+                cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled),
+                        showMediaErrorNotification);
             }
             stopServiceIfUploadsComplete();
             return;

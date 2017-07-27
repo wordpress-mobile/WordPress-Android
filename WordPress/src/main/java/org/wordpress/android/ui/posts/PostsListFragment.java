@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -516,11 +518,11 @@ public class PostsListFragment extends Fragment
      * called by the adapter when the user clicks the edit/view/stats/trash button for a post
      */
     @Override
-    public void onPostButtonClicked(int buttonType, PostModel post) {
+    public void onPostButtonClicked(int buttonType, PostModel postClicked) {
         if (!isAdded()) return;
 
         // Get the latest version of the post, in case it's changed since the last time we refreshed the post list
-        post = mPostStore.getPostByLocalPostId(post.getId());
+        final PostModel post = mPostStore.getPostByLocalPostId(postClicked.getId());
         if (post == null) {
             loadPosts(LoadMode.FORCED);
             return;
@@ -552,14 +554,21 @@ public class PostsListFragment extends Fragment
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
-                // TODO: Async: Update this behavior to handle pressing Delete/Trash while the post has uploading media
-                // Currently, the button is tappable while media are uploading, but nothing happens
-
-                // prevent deleting post while it's being uploaded
                 if (!UploadService.isPostUploadingOrQueued(post)) {
                     trashPost(post);
                 } else {
-                    ToastUtils.showToast(getActivity(), R.string.toast_err_post_media_uploading);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getResources().getText(R.string.delete_post))
+                            .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    trashPost(post);
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .setCancelable(true);
+                    builder.create().show();
                 }
                 break;
         }
@@ -652,6 +661,9 @@ public class PostsListFragment extends Fragment
                 // times - this way the above check prevents us making the call to delete it twice
                 // https://code.google.com/p/android/issues/detail?id=190529
                 mTrashedPosts.remove(post);
+
+                // here cancel all media uploads related to this Post
+                UploadService.cancelQueuedPostUploadAndRelatedMedia(post);
 
                 if (post.isLocalDraft()) {
                     mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(post));
