@@ -98,17 +98,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         WordPressMediaUtils.LaunchCameraCallback {
 
     public enum MediaBrowserType {
-        BROWSER,                  // browse & manage media
-        MULTI_SELECT_PICKER,      // select multiple media items
-        SINGLE_SELECT_PICKER;     // select a single media item
+        BROWSER,                              // browse & manage media
+        MULTI_SELECT_IMAGE_AND_VIDEO_PICKER,  // select multiple images or videos
+        SINGLE_SELECT_IMAGE_PICKER;           // select a single image
 
         public boolean isPicker() {
-            return this == MULTI_SELECT_PICKER || this == SINGLE_SELECT_PICKER;
+            return this == MULTI_SELECT_IMAGE_AND_VIDEO_PICKER || this == SINGLE_SELECT_IMAGE_PICKER;
         }
     }
 
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
-    public static final String ARG_IMAGES_ONLY = "images_only";
     public static final String ARG_FILTER = "filter";
     public static final String RESULT_IDS = "result_ids";
 
@@ -133,7 +132,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private String mQuery;
     private String mMediaCapturePath;
-    private boolean mImagesOnly;
     private MediaBrowserType mBrowserType;
     private int mLastAddMediaItemClickedPosition;
 
@@ -146,11 +144,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(ARG_BROWSER_TYPE);
-            mImagesOnly = getIntent().getBooleanExtra(ARG_IMAGES_ONLY, false);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
-            mImagesOnly = savedInstanceState.getBoolean(ARG_IMAGES_ONLY);
             mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
             mQuery = savedInstanceState.getString(SAVED_QUERY);
         }
@@ -182,7 +178,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         // if media was shared add it to the library
         handleSharedMedia();
 
-        if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER) {
+        if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
             SmartToast.show(this, SmartToast.SmartToastType.WP_MEDIA_BROWSER_LONG_PRESS);
         }
 
@@ -190,7 +186,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         setupTabs();
 
         MediaFilter filter;
-        if (mImagesOnly) {
+        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
             filter = MediaFilter.FILTER_IMAGES;
         } else if (savedInstanceState != null) {
             filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
@@ -353,7 +349,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         outState.putString(SAVED_QUERY, mQuery);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
-        outState.putBoolean(ARG_IMAGES_ONLY, mImagesOnly);
         if (mMediaGridFragment != null) {
             outState.putSerializable(ARG_FILTER, mMediaGridFragment.getFilter());
         }

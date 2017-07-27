@@ -95,6 +95,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
+import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -911,7 +912,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
-        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
     }
 
     private void savePostAsync(final AfterSavePostListener listener) {
@@ -938,6 +939,7 @@ public class EditPostActivity extends AppCompatActivity implements
             AztecEditorFragment aztecEditorFragment = (AztecEditorFragment)mEditorFragment;
             aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
             aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext()));
+            aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext()));
         }
     }
 
@@ -1180,7 +1182,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         isPublishable && hasLocalChanges;
 
                 // if post was modified or has unpublished local changes, save it
-                boolean shouldSave = hasChanges || hasUnpublishedLocalDraftChanges;
+                boolean shouldSave = (mOriginalPost != null && hasChanges)
+                        || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
                 // if post is publishable or not new, sync it
                 boolean shouldSync = isPublishable || !isNewPost();
 
@@ -1657,7 +1660,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mPost.setIsLocallyChanged(true);
         }
 
-        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
     }
 
     private void updateMediaFileOnServer(MediaFile mediaFile) {
@@ -2087,8 +2090,10 @@ public class EditPostActivity extends AppCompatActivity implements
         try {
             File outputFile = File.createTempFile("thumb", ".png", getCacheDir());
             FileOutputStream outputStream = new FileOutputStream(outputFile);
-            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath,
-                    android.provider.MediaStore.Images.Thumbnails.MINI_KIND);
+            Bitmap thumb = ImageUtils.getVideoFrameFromVideo(
+                    videoPath,
+                    ImageUtils.getMaximumThumbnailWidthForEditor(this)
+            );
             if (thumb != null) {
                 thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream);
                 thumbnailPath = outputFile.getAbsolutePath();
