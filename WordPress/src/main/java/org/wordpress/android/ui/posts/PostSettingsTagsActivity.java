@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,6 +131,8 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
     }
 
     private void saveAndFinish() {
+        WPActivityUtils.hideKeyboard(mTagsEditText);
+
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SELECTED_TAGS, mTagsEditText.getText().toString());
         Intent intent = new Intent();

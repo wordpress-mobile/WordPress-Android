@@ -162,7 +162,7 @@ public class ActivityLauncher {
         if (post == null) return;
 
         Intent intent = new Intent(activity, PostPreviewActivity.class);
-        intent.putExtra(PostPreviewActivity.EXTRA_POST, post);
+        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
         intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
@@ -283,7 +283,7 @@ public class ActivityLauncher {
     public static void viewMediaPickerForResult(Activity activity, @NonNull SiteModel site) {
         Intent intent = new Intent(activity, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.MULTI_SELECT_PICKER);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER);
         activity.startActivityForResult(intent, RequestCodes.MULTI_SELECT_MEDIA_PICKER);
     }
 

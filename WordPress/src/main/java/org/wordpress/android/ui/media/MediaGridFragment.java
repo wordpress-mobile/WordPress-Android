@@ -266,7 +266,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private MediaGridAdapter getAdapter() {
         if (!hasAdapter()) {
-            boolean canMultiSelect = mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER
+            boolean canMultiSelect = mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
                     && WordPressMediaUtils.currentUserCanDeleteMedia(mSite);
             mGridAdapter = new MediaGridAdapter(getActivity(), mSite);
             mGridAdapter.setCallback(this);
@@ -309,6 +309,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (!TextUtils.isEmpty(mSearchTerm)) {
             return mMediaStore.searchSiteMedia(mSite, mSearchTerm);
         }
+
+        if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER) {
+            List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
+            List<MediaModel> imagesAndVideos = new ArrayList<>();
+            for (MediaModel media: allMedia) {
+                String mime = media.getMimeType();
+                if (mime != null && (mime.startsWith("image") || mime.startsWith("video"))) {
+                    imagesAndVideos.add(media);
+                }
+            }
+            return imagesAndVideos;
+        } else if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+            return mMediaStore.getSiteImages(mSite);
+        }
+
 
         switch (mFilter) {
             case FILTER_IMAGES:
@@ -377,7 +392,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_PICKER) {
+        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
             return;
         }
 
