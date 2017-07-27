@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
@@ -41,6 +42,7 @@ public class WellSqlConfig extends DefaultWellConfig {
         add(SiteModel.class);
         add(TaxonomyModel.class);
         add(TermModel.class);
+        add(RoleModel.class);
     }};
 
     @Override
