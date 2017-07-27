@@ -106,13 +106,15 @@ class PostUploadNotifier {
                 new NotificationCompat.Builder(mContext.getApplicationContext());
         String notificationTitle;
         if (PostStatus.DRAFT.equals(PostStatus.fromPost(post))) {
-            notificationTitle = (String) mContext.getResources().getText(R.string.draft_uploaded);
+            notificationTitle = mContext.getString(R.string.draft_uploaded);
+        } else if (PostStatus.SCHEDULED.equals(PostStatus.fromPost(post))) {
+            notificationTitle = mContext.getString(post.isPage() ? R.string.page_scheduled : R.string.post_scheduled);
         } else {
             if (post.isPage()) {
-                notificationTitle = (String) mContext.getResources().getText(
+                notificationTitle = mContext.getString(
                         isFirstTimePublish ? R.string.page_published : R.string.page_updated);
             } else {
-                notificationTitle = (String) mContext.getResources().getText(
+                notificationTitle = mContext.getString(
                         isFirstTimePublish ? R.string.post_published : R.string.post_updated);
             }
         }
