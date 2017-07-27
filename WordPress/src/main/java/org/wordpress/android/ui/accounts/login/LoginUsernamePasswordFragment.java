@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts.login;
 
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -24,11 +23,9 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.accounts.SmartLockHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -321,15 +318,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
         }
     }
 
-    private void saveCredentialsInSmartLock(SmartLockHelper smartLockHelper) {
-        // mUsername and mPassword are null when the user log in with a magic link
-        if (smartLockHelper != null) {
-            smartLockHelper.saveCredentialsInSmartLock(mRequestedUsername, mRequestedPassword,
-                    HtmlUtils.fastUnescapeHtml(mAccountStore.getAccount().getDisplayName()),
-                    Uri.parse(mAccountStore.getAccount().getAvatarUrl()));
-        }
-    }
-
     // OnChanged events
 
     @SuppressWarnings("unused")
@@ -422,7 +410,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
 
         if (mLoginListener != null) {
             if (mIsWpcom) {
-                saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper());
+                saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mRequestedUsername, mRequestedPassword);
             }
 
             mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);

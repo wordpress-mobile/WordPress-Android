@@ -179,6 +179,9 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment implements
                 showPasswordError();
                 break;
             case NEEDS_2FA:
+                // login credentials were correct anyway so, offer to save to SmartLock
+                saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mPassword);
+
                 mLoginListener.needs2fa(mEmailAddress, mRequestedPassword);
                 break;
             case INVALID_REQUEST:
@@ -210,6 +213,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment implements
         }
 
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
+
+        saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mRequestedPassword);
 
         doFinishLogin();
     }
