@@ -115,6 +115,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private SourceViewEditText source;
     private AztecToolbar formattingToolbar;
     private Html.ImageGetter aztecImageLoader;
+    private Html.VideoThumbnailGetter aztecVideoLoader;
 
     private Handler invalidateOptionsHandler;
     private Runnable invalidateOptionsRunnable;
@@ -201,6 +202,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         Aztec.Factory.with(content, source, formattingToolbar, this)
                 .setImageGetter(aztecImageLoader)
+                .setVideoThumbnailGetter(aztecVideoLoader)
                 .setOnImeBackListener(this)
                 .setHistoryListener(this)
                 .setOnImageTappedListener(this)
@@ -219,6 +221,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void setAztecImageLoader(Html.ImageGetter imageLoader) {
         this.aztecImageLoader = imageLoader;
+    }
+
+    public void setAztecVideoLoader(Html.VideoThumbnailGetter videoLoader) {
+        this.aztecVideoLoader = videoLoader;
     }
 
     @Override
