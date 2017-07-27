@@ -289,8 +289,8 @@ public class PostUtils {
         if (!shouldPublishImmediatelyOptionBeAvailable(postModel)) {
             return false;
         }
-        Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
-        Date now = new Date();
+        Date pubDate = DateTimeUtils.dateUTCFromIso8601(postModel.getDateCreated());
+        Date now = DateTimeUtils.nowUTC();
         // Publish immediately for posts that don't have any date set yet and drafts with publish dates in the past
         return pubDate == null || !pubDate.after(now);
     }
