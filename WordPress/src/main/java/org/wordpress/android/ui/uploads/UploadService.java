@@ -524,8 +524,8 @@ public class UploadService extends Service {
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
         mPostUploadNotifier.cancelNotification(postToCancel);
         if (showErrorNotification) {
-            String message = UploadUtils.getErrorMessage(this, postToCancel, mediaErrorMessage);
-            mPostUploadNotifier.updateNotificationError(postToCancel, site, message, true);
+            String message = UploadUtils.getErrorMessage(this, postToCancel, mediaErrorMessage, true);
+            mPostUploadNotifier.updateNotificationError(postToCancel, site, message);
         }
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);

@@ -166,12 +166,11 @@ class PostUploadNotifier {
         return post.getLocalSiteId() + remotePostId;
     }
 
-    void updateNotificationError(PostModel post, SiteModel site, String errorMessage, boolean isMediaError) {
+    void updateNotificationError(PostModel post, SiteModel site, String errorMessage) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationError: " + errorMessage);
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext());
-        String postOrPage = (String) (post.isPage() ? mContext.getResources().getText(R.string.page_id)
-                : mContext.getResources().getText(R.string.post_id));
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(mContext.getApplicationContext());
 
         long notificationId = getNotificationIdForPost(post);
         // Tap notification intent (open the post list)
@@ -187,18 +186,10 @@ class PostUploadNotifier {
                 (int)notificationId,
                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        String errorText = mContext.getResources().getText(R.string.upload_failed).toString();
-        if (isMediaError) {
-            errorText = mContext.getResources().getText(R.string.media) + " "
-                    + mContext.getResources().getText(R.string.error);
-        }
-
-        String message = (isMediaError) ? errorMessage : postOrPage + " " + errorText + ": " + errorMessage;
         notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
-        notificationBuilder.setContentTitle((isMediaError) ? errorText :
-                mContext.getResources().getText(R.string.upload_failed));
-        notificationBuilder.setContentText(message);
-        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+        notificationBuilder.setContentTitle(mContext.getString(R.string.upload_failed));
+        notificationBuilder.setContentText(errorMessage);
+        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(errorMessage));
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
 
