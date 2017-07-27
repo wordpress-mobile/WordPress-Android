@@ -256,6 +256,6 @@ class PostUploadNotifier {
 
     private String buildNotificationTitleForPost(PostModel post) {
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
-        return String.format(mContext.getString(R.string.posting_post), postTitle);
+        return String.format(mContext.getString(R.string.uploading_post), postTitle);
     }
 }

@@ -84,7 +84,7 @@
     <string name="sign_in_wpcom">Log in to WordPress.com</string>
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
-    <string name="posting_post">Posting \"%s\"</string>
+    <string name="uploading_post">Uploading \"%s\"</string>
     <string name="language">Language</string>
     <string name="interface_language">Interface Language</string>
     <string name="signout">Log out</string>
@@ -400,7 +400,7 @@
     <string name="view_in_browser">View in browser</string>
     <string name="preview">Preview</string>
     <string name="update_verb">Update</string>
-    <string name="sending_content">Uploading %s content</string>
+    <string name="sending_content">Uploading %s content…</string>
     <string name="uploading_total">Uploading %1$d of %2$d</string>
     <string name="uploading_post_media">Uploading media…</string>
 
