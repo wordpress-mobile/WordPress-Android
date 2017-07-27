@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -675,7 +676,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     // Fluxc events
 
     @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUserRolesChanged(SiteStore.OnUserRolesChanged event) {
         if (event.isError()) {
             AppLog.e(AppLog.T.PEOPLE, "An error occurred while fetching the user roles with type: "
