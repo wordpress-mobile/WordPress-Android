@@ -1177,7 +1177,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         isPublishable && hasLocalChanges;
 
                 // if post was modified or has unpublished local changes, save it
-                boolean shouldSave = hasChanges || hasUnpublishedLocalDraftChanges;
+                boolean shouldSave = (mOriginalPost != null && hasChanges)
+                        || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
                 // if post is publishable or not new, sync it
                 boolean shouldSync = isPublishable || !isNewPost();
 
