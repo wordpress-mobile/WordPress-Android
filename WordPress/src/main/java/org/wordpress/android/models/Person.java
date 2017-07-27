@@ -18,7 +18,7 @@ public class Person {
     private PersonType personType;
 
     // Only users have a role
-    private Role role;
+    private String role;
 
     // Users, followers & viewers has a username, email followers don't
     private String username;
@@ -47,7 +47,7 @@ public class Person {
             person.personType = PersonType.USER;
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.getJSONArray("roles").optString(0);
-            person.setRole(Role.fromString(role));
+            person.setRole(role);
 
             return person;
         } catch (NumberFormatException e) {
@@ -130,11 +130,11 @@ public class Person {
         this.displayName = displayName;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
