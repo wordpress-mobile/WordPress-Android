@@ -126,7 +126,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private long mActionStartedAt = -1;
 
-    private ImagePredicate mTappedImagePredicate;
+    private MediaPredicate mTappedMediaPredicate;
 
     private EditorBetaClickListener mEditorBetaClickListener;
 
@@ -540,7 +540,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private void overlayProgressingMedia() {
         for (String localMediaId : mUploadingMediaProgressMax.keySet()) {
-            ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+            MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
             overlayProgressingMedia(predicate);
             // here check if this is a video uploading in progress or not; if it is, show the video play icon
             for (Attributes attrs : content.getAllElementAttributes(predicate)) {
@@ -557,7 +557,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content.setOverlay(predicate, overlayLevel, videoDrawable, Gravity.BOTTOM | Gravity.START);
     }
 
-    private void overlayProgressingMedia(ImagePredicate predicate) {
+    private void overlayProgressingMedia(MediaPredicate predicate) {
         // set intermediate shade overlay
         content.setOverlay(predicate, 0,
                 new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
@@ -575,14 +575,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private void overlayFailedMedia() {
         for (String localMediaId : mFailedMediaIds) {
-            Attributes attributes = content.getElementAttributes(ImagePredicate.getLocalMediaIdPredicate(localMediaId));
+            Attributes attributes = content.getElementAttributes(MediaPredicate.getLocalMediaIdPredicate(localMediaId));
             overlayFailedMedia(localMediaId, attributes);
         }
     }
 
     private void overlayFailedMedia(String localMediaId, Attributes attributes) {
         // set intermediate shade overlay
-        AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+        AztecText.AttributePredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
         content.setOverlay(localMediaIdPredicate, 0,
                 new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_error_color)),
                 Gravity.FILL);
@@ -661,7 +661,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     if(mediaFile.isVideo()) {
                         addVideoUploadingClassIfMissing(attributes);
                         content.insertVideo(new BitmapDrawable(getResources(), resizedBitmap), attributes);
-                        overlayVideoIcon(0, new ImagePredicate(mediaUrl, ATTR_SRC));
+                        overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
                     } else {
                         content.insertImage(new BitmapDrawable(getResources(), resizedBitmap), attributes);
                     }
@@ -683,7 +683,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             addDefaultSizeClassIfMissing(attrs);
 
             Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
-            ImagePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+            MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
             if (bitmapToShow != null) {
                 if(mediaFile.isVideo()) {
@@ -773,7 +773,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             MediaType mediaType = EditorFragmentAbstract.getEditorMimeType(mediaFile);
             if (mediaType.equals(MediaType.IMAGE) || mediaType.equals(MediaType.VIDEO)) {
                 // clear overlay
-                ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+                MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
                 // remove the uploading class
                 AttributesWithClass attributesWithClass = new AttributesWithClass(
@@ -807,15 +807,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    private static class ImagePredicate implements AztecText.AttributePredicate {
+    private static class MediaPredicate implements AztecText.AttributePredicate {
         private final String mId;
         private final String mAttributeName;
 
-        static ImagePredicate getLocalMediaIdPredicate(String id) {
-            return new ImagePredicate(id, ATTR_ID_WP);
+        static MediaPredicate getLocalMediaIdPredicate(String id) {
+            return new MediaPredicate(id, ATTR_ID_WP);
         }
 
-        ImagePredicate(String id, String attributeName) {
+        MediaPredicate(String id, String attributeName) {
             mId = id;
             mAttributeName = attributeName;
         }
@@ -851,7 +851,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 mUploadingMediaProgressMax.put(localMediaId, maxProgressForLocalMediaId);
 
                 try {
-                    AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+                    AztecText.AttributePredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
                     content.setOverlayLevel(localMediaIdPredicate, 1, (int) (progress * 10000));
                     content.resetAttributedMediaSpan(localMediaIdPredicate);
                 } catch (IndexOutOfBoundsException ex) {
@@ -879,7 +879,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             switch (mediaType) {
                 case IMAGE:
                 case VIDEO:
-                    ImagePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+                    MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
                     AttributesWithClass attributesWithClass = new AttributesWithClass(
                             content.getElementAttributes(localMediaIdPredicate));
 
@@ -1118,7 +1118,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         attrs.setValue(idName, localMediaId);
-        mTappedImagePredicate = new ImagePredicate(localMediaId, idName);
+        mTappedMediaPredicate = new MediaPredicate(localMediaId, idName);
 
         switch (uploadStatus) {
             case ATTR_STATUS_UPLOADING:
@@ -1133,10 +1133,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                             switch (mediaType) {
                                 case IMAGE:
-                                    content.removeMedia(mTappedImagePredicate);
+                                    content.removeMedia(mTappedMediaPredicate);
                                     break;
                                 case VIDEO:
-                                    content.removeMedia(mTappedImagePredicate);
+                                    content.removeMedia(mTappedMediaPredicate);
                             }
                             mUploadingMediaProgressMax.remove(localMediaId);
                         } else {
@@ -1165,7 +1165,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     case IMAGE:
                     case VIDEO:
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
-                                content.getElementAttributes(mTappedImagePredicate));
+                                content.getElementAttributes(mTappedMediaPredicate));
                         attributesWithClass.removeClass(ATTR_STATUS_FAILED);
                         attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
                         if (mediaType.equals(MediaType.VIDEO)) {
@@ -1173,21 +1173,21 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         }
 
                         // set intermediate shade overlay
-                        content.setOverlay(mTappedImagePredicate, 0,
+                        content.setOverlay(mTappedMediaPredicate, 0,
                                 new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)), Gravity.FILL);
 
                         Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
                         // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
                         progressDrawable.setBounds(0, 0, 0, 4);
 
-                        content.setOverlay(mTappedImagePredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
-                        content.updateElementAttributes(mTappedImagePredicate, attributesWithClass.getAttributes());
+                        content.setOverlay(mTappedMediaPredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
+                        content.updateElementAttributes(mTappedMediaPredicate, attributesWithClass.getAttributes());
 
                         if (mediaType.equals(MediaType.VIDEO)) {
-                            overlayVideoIcon(2, mTappedImagePredicate);
+                            overlayVideoIcon(2, mTappedMediaPredicate);
                         }
 
-                        content.resetAttributedMediaSpan(mTappedImagePredicate);
+                        content.resetAttributedMediaSpan(mTappedMediaPredicate);
                         break;
                 }
                 mFailedMediaIds.remove(localMediaId);
@@ -1271,11 +1271,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
-            if (mTappedImagePredicate != null) {
-                AztecAttributes attributes = content.getElementAttributes(mTappedImagePredicate);
+            if (mTappedMediaPredicate != null) {
+                AztecAttributes attributes = content.getElementAttributes(mTappedMediaPredicate);
                 attributes.removeAttribute(TEMP_IMAGE_ID);
 
-                content.updateElementAttributes(mTappedImagePredicate, attributes);
+                content.updateElementAttributes(mTappedMediaPredicate, attributes);
 
                 if (data == null || data.getExtras() == null) {
                     return;
@@ -1348,7 +1348,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
                 }
 
-                mTappedImagePredicate = null;
+                mTappedMediaPredicate = null;
             }
         }
     }
@@ -1391,7 +1391,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             AztecText content = new AztecText(context);
             content.fromHtml(postContent);
 
-            ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+            MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
             // remove the uploading class
             AttributesWithClass attributesWithClass = new AttributesWithClass(
@@ -1425,7 +1425,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             AztecText content = new AztecText(context);
             content.fromHtml(postContent);
 
-            ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+            MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
             // remove the uploading class
             AttributesWithClass attributesWithClass = new AttributesWithClass(
