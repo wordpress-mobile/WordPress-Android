@@ -2067,8 +2067,10 @@ public class EditPostActivity extends AppCompatActivity implements
         try {
             File outputFile = File.createTempFile("thumb", ".png", getCacheDir());
             FileOutputStream outputStream = new FileOutputStream(outputFile);
-            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath,
-                    android.provider.MediaStore.Images.Thumbnails.MINI_KIND);
+            Bitmap thumb = ImageUtils.getVideoFrameFromVideo(
+                    videoPath,
+                    ImageUtils.getMaximumThumbnailWidthForEditor(this)
+            );
             if (thumb != null) {
                 thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream);
                 thumbnailPath = outputFile.getAbsolutePath();
