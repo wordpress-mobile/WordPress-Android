@@ -201,8 +201,7 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
-    public void setGeneralSiteSettings(long siteId, Listener listener, ErrorListener errorListener,
-                                       Map<String, String> params) {
+    public void setGeneralSiteSettings(long siteId, Listener listener, ErrorListener errorListener, JSONObject params) {
         String path = String.format(Locale.US, "sites/%d/settings", siteId);
         post(path, params, null, listener, errorListener);
     }
