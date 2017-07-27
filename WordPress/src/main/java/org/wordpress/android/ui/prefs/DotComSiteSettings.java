@@ -169,6 +169,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             mSettings.optimizedVideo = optimizedVideo;
                             mSettings.maxVideoWidth = maxVideoWidth;
                             mSettings.videoEncoderBitrate = videoEncoderBitrate;
+                            mJpSettings.jetpackProtectWhitelist.clear();
+                            mJpSettings.jetpackProtectWhitelist.addAll(mRemoteJpSettings.jetpackProtectWhitelist);
 
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);
@@ -268,6 +270,19 @@ class DotComSiteSettings extends SiteSettingsInterface {
             mRemoteSettings.sortCommentsBy = ASCENDING_SORT;
         } else {
             mRemoteSettings.sortCommentsBy = DESCENDING_SORT;
+        }
+
+        JSONObject jetpackProtectWhitelist = settingsObject.optJSONObject("jetpack_protect_whitelist");
+        if (jetpackProtectWhitelist != null) {
+            JSONArray whitelistItems = jetpackProtectWhitelist.optJSONArray("local");
+            if (whitelistItems != null) {
+                for (int i = 0; i < whitelistItems.length(); ++i) {
+                    String item = whitelistItems.optString(i, "");
+                    if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectWhitelist.contains(item)) {
+                        mRemoteJpSettings.jetpackProtectWhitelist.add(i, item);
+                    }
+                }
+            }
         }
 
         if (settingsObject.optBoolean(RELATED_POSTS_ALLOWED_KEY, false)) {
