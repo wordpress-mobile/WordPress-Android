@@ -560,12 +560,13 @@ public class PostsListFragment extends Fragment
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(getResources().getText(R.string.delete_post))
                             .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
-                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     trashPost(post);
                                 }
                             })
+                            .setNegativeButton(R.string.cancel, null)
                             .setCancelable(true);
                     builder.create().show();
                 }
