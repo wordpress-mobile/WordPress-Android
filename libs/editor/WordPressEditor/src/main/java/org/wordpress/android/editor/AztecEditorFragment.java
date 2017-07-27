@@ -115,6 +115,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private SourceViewEditText source;
     private AztecToolbar formattingToolbar;
     private Html.ImageGetter aztecImageLoader;
+    private Html.VideoThumbnailGetter aztecVideoLoader;
 
     private Handler invalidateOptionsHandler;
     private Runnable invalidateOptionsRunnable;
@@ -201,6 +202,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         Aztec.Factory.with(content, source, formattingToolbar, this)
                 .setImageGetter(aztecImageLoader)
+                .setVideoThumbnailGetter(aztecVideoLoader)
                 .setOnImeBackListener(this)
                 .setHistoryListener(this)
                 .setOnImageTappedListener(this)
@@ -219,6 +221,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void setAztecImageLoader(Html.ImageGetter imageLoader) {
         this.aztecImageLoader = imageLoader;
+    }
+
+    public void setAztecVideoLoader(Html.VideoThumbnailGetter videoLoader) {
+        this.aztecVideoLoader = videoLoader;
     }
 
     @Override
@@ -643,18 +649,18 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mActionStartedAt = System.currentTimeMillis();
         } else {
             String localMediaId = String.valueOf(mediaFile.getId());
-            final String safeMediaUrl = mediaFile.isVideo() ?
+            final String safeMediaPreviewUrl = mediaFile.isVideo() ?
                     Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) :
                     Utils.escapeQuotes(mediaUrl);
 
             AztecAttributes attrs = new AztecAttributes();
             attrs.setValue(ATTR_ID_WP, localMediaId);
-            attrs.setValue(ATTR_SRC, safeMediaUrl);
+            attrs.setValue(ATTR_SRC, Utils.escapeQuotes(mediaUrl));
             attrs.setValue(ATTR_CLASS, ATTR_STATUS_UPLOADING);
 
             addDefaultSizeClassIfMissing(attrs);
 
-            Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
+            Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaPreviewUrl, maxWidth);
             AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
 
             if (bitmapToShow != null) {

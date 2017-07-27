@@ -14,11 +14,14 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPWebViewClient;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
 public class PostPreviewFragment extends Fragment {
     private SiteModel mSite;
@@ -26,21 +29,15 @@ public class PostPreviewFragment extends Fragment {
     private WebView mWebView;
 
     @Inject AccountStore mAccountStore;
+    @Inject PostStore mPostStore;
 
     public static PostPreviewFragment newInstance(SiteModel site, PostModel post) {
         Bundle args = new Bundle();
         args.putSerializable(WordPress.SITE, site);
-        args.putSerializable(PostPreviewActivity.EXTRA_POST, post);
+        args.putInt(EXTRA_POST_LOCAL_ID, post.getId());
         PostPreviewFragment fragment = new PostPreviewFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-        mSite = (SiteModel) args.getSerializable(WordPress.SITE);
-        mPost = (PostModel) args.getSerializable(PostPreviewActivity.EXTRA_POST);
     }
 
     @Override
@@ -48,16 +45,21 @@ public class PostPreviewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        if (savedInstanceState != null) {
+        int localPostId;
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+            localPostId = getArguments().getInt(EXTRA_POST_LOCAL_ID);
+        } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mPost = (PostModel) savedInstanceState.getSerializable(PostPreviewActivity.EXTRA_POST);
+            localPostId = savedInstanceState.getInt(EXTRA_POST_LOCAL_ID);
         }
+        mPost = mPostStore.getPostByLocalPostId(localPostId);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(PostPreviewActivity.EXTRA_POST, mPost);
+        outState.putSerializable(EXTRA_POST_LOCAL_ID, mPost.getId());
         super.onSaveInstanceState(outState);
     }
 
