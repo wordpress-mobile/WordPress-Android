@@ -28,7 +28,7 @@ public class RoleUtils {
         // The API doesn't return the follower/viewer role, so we need to manually add it for invites
         RoleModel viewerOrFollowerRole = new RoleModel();
         // the remote expects "follower" as the role parameter even if the role is "viewer"
-        viewerOrFollowerRole.setName("viewer");
+        viewerOrFollowerRole.setName("follower");
         int displayNameRes = siteModel.isPrivate() ? R.string.role_viewer : R.string.role_follower;
         viewerOrFollowerRole.setDisplayName(fragment.getString(displayNameRes));
         inviteRoles.add(viewerOrFollowerRole);
