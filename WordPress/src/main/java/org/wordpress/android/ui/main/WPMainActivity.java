@@ -215,7 +215,7 @@ public class WPMainActivity extends AppCompatActivity {
         });
 
 
-        String authTokenToSet= null;
+        String authTokenToSet = null;
 
         if (savedInstanceState == null) {
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
