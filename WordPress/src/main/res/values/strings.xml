@@ -289,7 +289,7 @@
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Related media for this post is uploading. Cancel upload and delete post?</string>
+    <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
