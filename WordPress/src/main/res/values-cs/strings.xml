@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-26 10:58:13+0000
+Translation-Revision-Date: 2017-07-11 14:01:34+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -119,10 +119,7 @@ Language: cs_CZ
 	<string name="format_bar_description_html">HTML</string>
 	<string name="format_bar_description_ol">Uspořádaný seznam</string>
 	<string name="format_bar_description_ul">Neuspořádaný seznam</string>
-	<string name="format_bar_description_media">Vložit média</string>
-	<string name="format_bar_description_more">Vložit více</string>
-	<string name="format_bar_description_link">Vložit URL</string>
-	<string name="format_bar_description_quote">Citace</string>
+	<string name="format_bar_description_more">Číst více</string>
 	<string name="format_bar_description_strike">Přeškrtnutí</string>
 	<string name="format_bar_description_underline">Tlustě</string>
 	<string name="format_bar_description_italic">Kurzíva</string>
@@ -594,6 +591,7 @@ Language: cs_CZ
 	<string name="stats_insights">Přehledy</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Chcete-li zobrazit statistiky, přihlaste se do účtu WordPress.com, který jste použili pro připojení Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Hledáte vaše nedávné statistiky? Přesunuli jsme je na stránku statistiky.</string>
+	<string name="me_disconnect_from_wordpress_com">Odpojit od WordPress.com</string>
 	<string name="me_btn_login_logout">Přihlášení/Odhlášení</string>
 	<string name="me_connect_to_wordpress_com">Připojit k WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" nebyl skrytý, protože je to aktuální stránka</string>
@@ -738,6 +736,7 @@ Language: cs_CZ
 	<string name="mnu_comment_liked">To se mi líbí</string>
 	<string name="uploading_total">Nahrávám %1$d z %2$d</string>
 	<string name="sending_content">Nahrávání obsahu %s</string>
+	<string name="select_a_blog">Vybrat web WordPress</string>
 	<string name="stats_no_blog">Statistiky pro daný web nebylo možné načíst</string>
 	<string name="older_last_week">Starší než týden</string>
 	<string name="older_two_days">Starší než 2 dny</string>
@@ -1051,6 +1050,7 @@ Language: cs_CZ
 	<string name="stats_view_visitors_and_views">Návštěvnící a zobrazení</string>
 	<string name="stats">Statistiky</string>
 	<string name="share_action">Sdílet</string>
+	<string name="share_action_title">Přidat do...</string>
 	<string name="post_excerpt">Stručný obsah</string>
 	<string name="theme_auth_error_title">Nepodařilo se načíst vzhled</string>
 	<string name="theme_set_success">Úspěšně nastavený vzhled!</string>

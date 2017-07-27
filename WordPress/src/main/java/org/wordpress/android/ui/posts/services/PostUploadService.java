@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
@@ -46,6 +45,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
@@ -578,25 +578,13 @@ public class PostUploadService extends Service {
         return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
     }
 
-    private @NonNull String getErrorMessageFromMediaError(MediaError error) {
-         switch (error.type) {
-            case FS_READ_PERMISSION_DENIED:
-                return getString(R.string.error_media_insufficient_fs_permissions);
-            case NOT_FOUND:
-                return getString(R.string.error_media_not_found);
-            case AUTHORIZATION_REQUIRED:
-                return getString(R.string.error_media_unauthorized);
-             case PARSE_ERROR:
-                 return getString(R.string.error_media_parse_error);
-            case REQUEST_TOO_LARGE:
-                return getString(R.string.error_media_request_too_large);
-             case SERVER_ERROR:
-                 return getString(R.string.media_error_internal_server_error);
-             case TIMEOUT:
-                 return getString(R.string.media_error_timeout);
+    private @NonNull String getErrorMessageFromMediaError(OnMediaUploaded event) {
+        String errorMessage = WPMediaUtils.getErrorMessage(mContext, event.media, event.error);
+        if (errorMessage == null) {
+            // In case of a generic or uncaught error, return the message from the API response or the error type
+            errorMessage = TextUtils.isEmpty(event.error.message) ? event.error.type.toString() : event.error.message;
         }
-        // In case of a generic or uncaught error, return the message from the API response or the error type
-        return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
+        return errorMessage;
     }
 
     private @NonNull String getErrorMessage(PostModel post, String specificMessage) {
@@ -644,7 +632,7 @@ public class PostUploadService extends Service {
         if (event.isError()) {
             AppLog.e(T.MEDIA, "Media upload failed. " + event.error.type + ": " + event.error.message);
             SiteModel site = mSiteStore.getSiteByLocalId(mCurrentUploadingPost.getLocalSiteId());
-            String message = getErrorMessage(mCurrentUploadingPost, getErrorMessageFromMediaError(event.error));
+            String message = getErrorMessage(mCurrentUploadingPost, getErrorMessageFromMediaError(event));
             mPostUploadNotifier.updateNotificationError(mCurrentUploadingPost, site, message, true);
             mFirstPublishPosts.remove(mCurrentUploadingPost.getId());
             finishUpload();

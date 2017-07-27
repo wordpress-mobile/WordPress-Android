@@ -24,45 +24,45 @@ import java.util.Map;
 
 class DotComSiteSettings extends SiteSettingsInterface {
     // WP.com REST keys used in response to a settings GET and POST request
-    public static final String LANGUAGE_ID_KEY = "lang_id";
-    public static final String PRIVACY_KEY = "blog_public";
-    public static final String URL_KEY = "URL";
-    public static final String DEF_CATEGORY_KEY = "default_category";
-    public static final String DEF_POST_FORMAT_KEY = "default_post_format";
-    public static final String RELATED_POSTS_ALLOWED_KEY = "jetpack_relatedposts_allowed";
-    public static final String RELATED_POSTS_ENABLED_KEY = "jetpack_relatedposts_enabled";
-    public static final String RELATED_POSTS_HEADER_KEY = "jetpack_relatedposts_show_headline";
-    public static final String RELATED_POSTS_IMAGES_KEY = "jetpack_relatedposts_show_thumbnails";
-    public static final String ALLOW_COMMENTS_KEY = "default_comment_status";
-    public static final String SEND_PINGBACKS_KEY = "default_pingback_flag";
-    public static final String RECEIVE_PINGBACKS_KEY = "default_ping_status";
-    public static final String CLOSE_OLD_COMMENTS_KEY = "close_comments_for_old_posts";
-    public static final String CLOSE_OLD_COMMENTS_DAYS_KEY = "close_comments_days_old";
-    public static final String THREAD_COMMENTS_KEY = "thread_comments";
-    public static final String THREAD_COMMENTS_DEPTH_KEY = "thread_comments_depth";
-    public static final String PAGE_COMMENTS_KEY = "page_comments";
-    public static final String PAGE_COMMENT_COUNT_KEY = "comments_per_page";
-    public static final String COMMENT_SORT_ORDER_KEY = "comment_order";
-    public static final String COMMENT_MODERATION_KEY = "comment_moderation";
-    public static final String REQUIRE_IDENTITY_KEY = "require_name_email";
-    public static final String REQUIRE_USER_ACCOUNT_KEY = "comment_registration";
-    public static final String WHITELIST_KNOWN_USERS_KEY = "comment_whitelist";
-    public static final String MAX_LINKS_KEY = "comment_max_links";
-    public static final String MODERATION_KEYS_KEY = "moderation_keys";
-    public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
-    public static final String SHARING_LABEL_KEY = "sharing_label";
-    public static final String SHARING_BUTTON_STYLE_KEY = "sharing_button_style";
-    public static final String SHARING_REBLOGS_DISABLED_KEY = "disabled_reblogs";
-    public static final String SHARING_LIKES_DISABLED_KEY = "disabled_likes";
-    public static final String SHARING_COMMENT_LIKES_KEY = "jetpack_comment_likes_enabled";
-    public static final String TWITTER_USERNAME_KEY = "twitter_via";
-    public static final String JP_MONITOR_ACTIVE_KEY = "monitor_active";
-    public static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
-    public static final String JP_MONITOR_WP_NOTES_KEY = "wp_notifications";
+    private static final String LANGUAGE_ID_KEY = "lang_id";
+    private static final String PRIVACY_KEY = "blog_public";
+    private static final String URL_KEY = "URL";
+    private static final String DEF_CATEGORY_KEY = "default_category";
+    private static final String DEF_POST_FORMAT_KEY = "default_post_format";
+    private static final String RELATED_POSTS_ALLOWED_KEY = "jetpack_relatedposts_allowed";
+    private static final String RELATED_POSTS_ENABLED_KEY = "jetpack_relatedposts_enabled";
+    private static final String RELATED_POSTS_HEADER_KEY = "jetpack_relatedposts_show_headline";
+    private static final String RELATED_POSTS_IMAGES_KEY = "jetpack_relatedposts_show_thumbnails";
+    private static final String ALLOW_COMMENTS_KEY = "default_comment_status";
+    private static final String SEND_PINGBACKS_KEY = "default_pingback_flag";
+    private static final String RECEIVE_PINGBACKS_KEY = "default_ping_status";
+    private static final String CLOSE_OLD_COMMENTS_KEY = "close_comments_for_old_posts";
+    private static final String CLOSE_OLD_COMMENTS_DAYS_KEY = "close_comments_days_old";
+    private static final String THREAD_COMMENTS_KEY = "thread_comments";
+    private static final String THREAD_COMMENTS_DEPTH_KEY = "thread_comments_depth";
+    private static final String PAGE_COMMENTS_KEY = "page_comments";
+    private static final String PAGE_COMMENT_COUNT_KEY = "comments_per_page";
+    private static final String COMMENT_SORT_ORDER_KEY = "comment_order";
+    private static final String COMMENT_MODERATION_KEY = "comment_moderation";
+    private static final String REQUIRE_IDENTITY_KEY = "require_name_email";
+    private static final String REQUIRE_USER_ACCOUNT_KEY = "comment_registration";
+    private static final String WHITELIST_KNOWN_USERS_KEY = "comment_whitelist";
+    private static final String MAX_LINKS_KEY = "comment_max_links";
+    private static final String MODERATION_KEYS_KEY = "moderation_keys";
+    private static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
+    private static final String SHARING_LABEL_KEY = "sharing_label";
+    private static final String SHARING_BUTTON_STYLE_KEY = "sharing_button_style";
+    private static final String SHARING_REBLOGS_DISABLED_KEY = "disabled_reblogs";
+    private static final String SHARING_LIKES_DISABLED_KEY = "disabled_likes";
+    private static final String SHARING_COMMENT_LIKES_KEY = "jetpack_comment_likes_enabled";
+    private static final String TWITTER_USERNAME_KEY = "twitter_via";
+    private static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
+    private static final String JP_MONITOR_WP_NOTES_KEY = "wp_note_notifications";
+    private static final String JP_PROTECT_WHITELIST_KEY = "jetpack_protect_whitelist";
 
     // WP.com REST keys used to GET certain site settings
-    public static final String GET_TITLE_KEY = "name";
-    public static final String GET_DESC_KEY = "description";
+    private static final String GET_TITLE_KEY = "name";
+    private static final String GET_DESC_KEY = "description";
 
     // WP.com REST keys used to POST updates to site settings
     private static final String SET_TITLE_KEY = "blogname";
@@ -77,7 +77,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String CAT_POST_COUNT_KEY = "post_count";
     private static final String CAT_NUM_POSTS_KEY = "found";
     private static final String CATEGORIES_KEY = "categories";
-    public static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
+    private static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
 
     /**
      * Only instantiated by {@link SiteSettingsInterface}.
@@ -90,45 +90,50 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public void saveSettings() {
         super.saveSettings();
 
-        final Map<String, String> params = serializeDotComParams();
-        if (params == null || params.isEmpty()) return;
+        // save any Jetpack changes
+        if (mSite.isJetpackConnected()) {
+            saveJetpackSettings();
+            updateJetpackProtectSettings();
+            updateJetpackSsoSettings();
+        }
 
-        WordPress.getRestClientUtils().setGeneralSiteSettings(
-                mSite.getSiteId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Site Settings saved remotely");
-                        notifySavedOnUiThread(null);
-                        mRemoteSettings.copyFrom(mSettings);
+        try {
+            final JSONObject jsonParams = serializeDotComParamsToJSONObject();
+            WordPress.getRestClientUtils().setGeneralSiteSettings(
+                    mSite.getSiteId(), new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Site Settings saved remotely");
+                            notifySavedOnUiThread(null);
+                            mRemoteSettings.copyFrom(mSettings);
 
-                        if (response != null) {
-                            JSONObject updated = response.optJSONObject("updated");
-                            if (updated == null) return;
-                            HashMap<String, Object> properties = new HashMap<>();
-                            Iterator<String> keys = updated.keys();
-                            while (keys.hasNext()) {
-                                String currentKey = keys.next();
-                                Object currentValue = updated.opt(currentKey);
-                                if (currentValue != null) {
-                                    properties.put(SAVED_ITEM_PREFIX + currentKey, currentValue);
+                            if (response != null) {
+                                JSONObject updated = response.optJSONObject("updated");
+                                if (updated == null) return;
+                                HashMap<String, Object> properties = new HashMap<>();
+                                Iterator<String> keys = updated.keys();
+                                while (keys.hasNext()) {
+                                    String currentKey = keys.next();
+                                    Object currentValue = updated.opt(currentKey);
+                                    if (currentValue != null) {
+                                        properties.put(SAVED_ITEM_PREFIX + currentKey, currentValue);
+                                    }
                                 }
+                                AnalyticsUtils.trackWithSiteDetails(
+                                        AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
                             }
-                            AnalyticsUtils.trackWithSiteDetails(
-                                    AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
                         }
-                        if (mSite.isJetpackConnected()) {
-                            saveJetpackSettings();
-                            updateJetpackProtectSettings();
-                            updateJetpackSsoSettings();
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
+                            notifySavedOnUiThread(error);
                         }
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
-                        notifySavedOnUiThread(error);
-                    }
-                }, params);
+                    }, jsonParams);
+        } catch (JSONException exception) {
+            AppLog.w(AppLog.T.API, "Error serializing settings changes: " + exception);
+            notifySavedOnUiThread(exception);
+        }
     }
 
     /**
@@ -169,6 +174,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             mSettings.optimizedVideo = optimizedVideo;
                             mSettings.maxVideoWidth = maxVideoWidth;
                             mSettings.videoEncoderBitrate = videoEncoderBitrate;
+                            mJpSettings.jetpackProtectWhitelist.clear();
+                            mJpSettings.jetpackProtectWhitelist.addAll(mRemoteJpSettings.jetpackProtectWhitelist);
 
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);
@@ -195,8 +202,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mSite.getSiteId(), "protect", new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        mRemoteSettings.jetpackProtectEnabled = response.optBoolean("active");
-                        mSettings.jetpackProtectEnabled = response.optBoolean("active");
+                        mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
+                        mJpSettings.jetpackProtectEnabled = response.optBoolean("active");
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -211,8 +218,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mSite.getSiteId(), "sso", new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        mRemoteSettings.ssoActive = response.optBoolean("active");
-                        mSettings.ssoActive = response.optBoolean("active");
+                        mRemoteJpSettings.ssoActive = response.optBoolean("active");
+                        mJpSettings.ssoActive = response.optBoolean("active");
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -220,9 +227,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         AppLog.w(AppLog.T.API, "Error getting Jetpack Protect settings: " + error);
                     }
                 });
-    }
-
-    private void setJetpackSsoModule(boolean enabled) {
     }
 
     private void getJetpackModules() {
@@ -241,14 +245,18 @@ class DotComSiteSettings extends SiteSettingsInterface {
     }
 
     private void fetchJetpackSettings() {
+        fetchJetpackMonitorSettings();
         WordPress.getRestClientUtils().getJetpackSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.v(AppLog.T.API, "Received response to Jetpack Settings REST request.");
-                        mRemoteSettings.localTableId = mSite.getId();
+                        mRemoteJpSettings.localTableId = mSite.getId();
                         deserializeJetpackRestResponse(mSite, response);
-                        mSettings.copyFrom(mRemoteSettings);
+                        mJpSettings.localTableId = mRemoteJpSettings.localTableId;
+                        mJpSettings.emailNotifications = mRemoteJpSettings.emailNotifications;
+                        mJpSettings.wpNotifications = mRemoteJpSettings.wpNotifications;
+                        SiteSettingsTable.saveJpSettings(mJpSettings);
                         notifyUpdatedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
@@ -318,6 +326,19 @@ class DotComSiteSettings extends SiteSettingsInterface {
             mRemoteSettings.sortCommentsBy = DESCENDING_SORT;
         }
 
+        JSONObject jetpackProtectWhitelist = settingsObject.optJSONObject(JP_PROTECT_WHITELIST_KEY);
+        if (jetpackProtectWhitelist != null) {
+            JSONArray whitelistItems = jetpackProtectWhitelist.optJSONArray("local");
+            if (whitelistItems != null) {
+                for (int i = 0; i < whitelistItems.length(); ++i) {
+                    String item = whitelistItems.optString(i, "");
+                    if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectWhitelist.contains(item)) {
+                        mRemoteJpSettings.jetpackProtectWhitelist.add(i, item);
+                    }
+                }
+            }
+        }
+
         if (settingsObject.optBoolean(RELATED_POSTS_ALLOWED_KEY, false)) {
             mRemoteSettings.showRelatedPosts = settingsObject.optBoolean(RELATED_POSTS_ENABLED_KEY, false);
             mRemoteSettings.showRelatedPostHeader = settingsObject.optBoolean(RELATED_POSTS_HEADER_KEY, false);
@@ -326,16 +347,16 @@ class DotComSiteSettings extends SiteSettingsInterface {
     }
 
     /**
-     * Helper method to create the parameters for the site settings POST request
-     *
-     * Using undocumented endpoint WPCOM_JSON_API_Site_Settings_Endpoint
-     * https://wpcom.trac.automattic.com/browser/trunk/public.api/rest/json-endpoints.php#L1903
+     * Need to use JSONObject's instead of HashMap<String, String> to serialize array values (Jetpack Whitelist)
      */
-    private Map<String, String> serializeDotComParams() {
-        Map<String, String> params = new HashMap<>();
+    private JSONObject serializeDotComParamsToJSONObject() throws JSONException {
+        JSONObject params = new JSONObject();
 
         if (mSettings.title!= null && !mSettings.title.equals(mRemoteSettings.title)) {
             params.put(SET_TITLE_KEY, mSettings.title);
+        }
+        if (mSettings.tagline != null && !mSettings.tagline.equals(mRemoteSettings.tagline)) {
+            params.put(SET_DESC_KEY, mSettings.tagline);
         }
         if (mSettings.tagline != null && !mSettings.tagline.equals(mRemoteSettings.tagline)) {
             params.put(SET_DESC_KEY, mSettings.tagline);
@@ -454,6 +475,11 @@ class DotComSiteSettings extends SiteSettingsInterface {
             params.put(TWITTER_USERNAME_KEY, mSettings.twitterUsername);
         }
 
+        if (!mJpSettings.whitelistMatches(mRemoteJpSettings.jetpackProtectWhitelist)) {
+            JSONArray protectWhitelist = new JSONArray(mJpSettings.jetpackProtectWhitelist);
+            params.put(JP_PROTECT_WHITELIST_KEY, protectWhitelist);
+        }
+
         return params;
     }
 
@@ -485,52 +511,87 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 });
     }
 
-    private void updateJetpackProtectSettings() {
-        WordPress.getRestClientUtils().setJetpackProtect(
-                mSite.getSiteId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
-                        mRemoteSettings.jetpackProtectEnabled = response.optBoolean("active");
-                        mSettings.jetpackProtectEnabled = response.optBoolean("active");
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
-                    }
-                }, mSettings.jetpackProtectEnabled);
-    }
-
     private void updateJetpackSsoSettings() {
         WordPress.getRestClientUtils().setJetpackSso(
-                mSite.getSiteId(), new RestRequest.Listener() {
+                mSite.getSiteId(), mJpSettings.ssoActive, new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
-                        mRemoteSettings.ssoActive = response.optBoolean("active");
-                        mSettings.ssoActive = response.optBoolean("active");
+                        mRemoteJpSettings.ssoActive = response.optBoolean("active");
+                        mJpSettings.ssoActive = response.optBoolean("active");
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
                     }
-                }, mSettings.ssoActive);
+                });
+    }
+
+    private void fetchJetpackMonitorSettings() {
+        WordPress.getRestClientUtils().getJetpackMonitor(
+                mSite.getSiteId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        mRemoteJpSettings.monitorActive = response.optBoolean("active");
+                        mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
+                        notifyUpdatedOnUiThread(null);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error getting Jetpack Monitor settings: " + error);
+                    }
+                });
+    }
+
+    private void updateJetpackProtectSettings() {
+        WordPress.getRestClientUtils().setJetpackProtect(
+                mSite.getSiteId(), mJpSettings.jetpackProtectEnabled, new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
+                        mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
+                        mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
+                    }
+                });
+    }
+
+    private void updateJetpackMonitorSettings() {
+        WordPress.getRestClientUtils().setJetpackMonitor(
+                mSite.getSiteId(), mJpSettings.monitorActive, new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        mRemoteJpSettings.monitorActive = response.optBoolean("active");
+                        mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
+                        notifySavedOnUiThread(null);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor settings: " + error);
+                    }
+                });
     }
 
     private void saveJetpackSettings() {
+        updateJetpackMonitorSettings();
         final Map<String, String> params = serializeJetpackParams();
         if (params == null || params.isEmpty()) return;
+
         WordPress.getRestClientUtils().setJetpackSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack Settings saved remotely");
+                        mRemoteJpSettings.emailNotifications = mJpSettings.emailNotifications;
+                        mRemoteJpSettings.wpNotifications = mJpSettings.wpNotifications;
                         notifySavedOnUiThread(null);
-                        mRemoteSettings.monitorActive = mSettings.monitorActive;
-                        mRemoteSettings.emailNotifications = mSettings.emailNotifications;
-                        mRemoteSettings.wpNotifications = mSettings.wpNotifications;
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -544,16 +605,14 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private void deserializeJetpackRestResponse(SiteModel site, JSONObject response) {
         if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
-        mRemoteSettings.monitorActive = settingsObject.optBoolean(JP_MONITOR_ACTIVE_KEY, false);
-        mRemoteSettings.emailNotifications = settingsObject.optBoolean(JP_MONITOR_EMAIL_NOTES_KEY, false);
-        mRemoteSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
+        mRemoteJpSettings.emailNotifications = settingsObject.optBoolean(JP_MONITOR_EMAIL_NOTES_KEY, false);
+        mRemoteJpSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
     }
 
     private Map<String, String> serializeJetpackParams() {
         Map<String, String> params = new HashMap<>();
-        params.put(JP_MONITOR_ACTIVE_KEY, String.valueOf(mSettings.monitorActive));
-        params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mSettings.emailNotifications));
-        params.put(JP_MONITOR_WP_NOTES_KEY, String.valueOf(mSettings.wpNotifications));
+        params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mJpSettings.emailNotifications));
+        params.put(JP_MONITOR_WP_NOTES_KEY, String.valueOf(mJpSettings.wpNotifications));
         return params;
     }
 

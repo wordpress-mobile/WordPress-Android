@@ -1,11 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-03 04:26:44+0000
+Translation-Revision-Date: 2017-07-11 05:34:36+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+	<string name="video_optimization_generic_error_message">動画圧縮中にエラーが発生しました。元のファイルを使用します。</string>
+	<string name="video_optimization_in_progress">動画を最適化中…</string>
+	<string name="format_bar_description_ellipsis_expand">ツールバーを表示</string>
+	<string name="format_bar_description_ellipsis_collapse">ツールバーを非表示</string>
+	<string name="format_bar_description_page">改ページ</string>
+	<string name="format_bar_description_horizontal_rule">横線</string>
+	<string name="format_bar_description_link">リンク</string>
+	<string name="format_bar_description_list">リスト</string>
+	<string name="format_bar_description_heading">見出し</string>
+	<string name="format_bar_description_media">メディア</string>
+	<string name="reader_view_comments">コメントを表示</string>
+	<string name="new_editor_promo_title_beta">ベータ</string>
+	<string name="new_editor_promo_title">新エディターを試す</string>
+	<string name="new_editor_promo_link">新着情報</string>
+	<string name="new_editor_promo_description_image">画像を手描きする</string>
+	<string name="new_editor_promo_confirmation_message">新エディターを有効化しました。</string>
+	<string name="new_editor_promo_confirmation_action">設定</string>
+	<string name="new_editor_promo_button_positive">試してみる</string>
+	<string name="new_editor_promo_button_negative">後で</string>
+	<string name="new_editor_beta_message">新エディターのオープンベータ版です。</string>
+	<string name="new_editor_beta_action">もっと読む</string>
+	<string name="preference_editor_footer_description">情報アイコン</string>
+	<string name="preference_editor_footer">エディターのリリースノートとバグ報告</string>
+	<string name="site_settings_optimize_video_summary">サイズ変更と動画圧縮を可能にするには有効化してください</string>
+	<string name="site_settings_optimize_videos">ビデオを最適化</string>
+	<string name="draft_uploaded">下書きをアップロードしました</string>
+	<string name="report_bug">バグを報告</string>
+	<string name="video_quality">動画の画質</string>
+	<string name="max_video_px_width">ビデオのデフォルト幅</string>
+	<string name="permission_location">位置</string>
+	<string name="permission_camera">カメラ</string>
+	<string name="permission_storage">容量</string>
+	<string name="button_edit_permissions">権限を編集</string>
+	<string name="photo_picker_soft_ask_allow">許可</string>
+	<string name="connecting_account">連携済みアカウント</string>
+	<string name="cannot_connect_account_error">アカウントが選択されていなかったため、%s の連携を確立できませんでした。</string>
+	<string name="connected">連携済み</string>
+	<string name="twitter">Twitter</string>
+	<string name="likes">いいね</string>
+	<string name="sharing_comment_likes_description">すべてのコメントに対して自分や他の読者が「いいね」の評価を付けられるようにします。</string>
+	<string name="visual">ビジュアル</string>
+	<string name="buttons">ボタン</string>
+	<string name="twitter_username">Twitter ユーザー名</string>
+	<string name="sharing_comment_likes">コメントへのいいね</string>
+	<string name="button_style">ボタンスタイル</string>
+	<string name="label">ラベル</string>
+	<string name="more_buttons">「More」ボタン</string>
+	<string name="sharing_buttons">共有ボタン</string>
+	<string name="site_settings_like">「いいね」ボタン表示</string>
+	<string name="site_settings_reblog">リブログボタンを表示</string>
+	<string name="site_settings_reblog_and_like_header">リブログといいね</string>
+	<string name="publicize_text_only">テキストのみ</string>
+	<string name="publicize_icon_and_text">アイコンとテキスト</string>
+	<string name="publicize_icon_only">アイコンのみ</string>
+	<string name="publicize_official_buttons">公式ボタン</string>
+	<string name="official_buttons_display">公式ボタン</string>
+	<string name="text_only_display">テキストのみ</string>
+	<string name="icon_only_display">アイコンのみ</string>
+	<string name="icon_and_text_display">アイコンとテキスト</string>
+	<string name="dlg_confirm_publicize_disconnect">%s との連携を解除しますか ?</string>
+	<string name="share_btn_connect_another_account">別のアカウントを連携</string>
+	<string name="share_btn_reconnect">再連携</string>
+	<string name="share_btn_disconnect">切断</string>
+	<string name="share_btn_connect">連携</string>
+	<string name="connection_service_label">%s でパブリサイズ共有</string>
+	<string name="connected_accounts_label">連携済みアカウント</string>
+	<string name="connections_description">お気に入りの SNS に連携し、新しい投稿を自動的に共有しましょう。</string>
+	<string name="connections_label">連携</string>
+	<string name="sharing">共有</string>
+	<string name="tabbar_accessibility_label_reader">Reader。他のサイトのコンテンツをフォローできます。</string>
+	<string name="fab_content_description_write">投稿</string>
+	<string name="my_site_btn_sharing">共有</string>
+	<string name="button_not_now">後で</string>
+	<string name="media_error_timeout">サーバーのレスポンスがタイムアウトしました。接続状態が悪いかサーバーエラーが起こっている可能性があります。</string>
+	<string name="media_error_internal_server_error">アップロード失敗。「サイト > 設定」で画像最適化を有効化してみてください</string>
+	<string name="media_error_too_large_upload">アップロードするファイルの容量が大きすぎます。「サイト > 設定」で画像最適化を有効化してみてください</string>
+	<string name="media_downloading">メディアを端末に保存中</string>
 	<string name="error_media_save">メディアを保存できません</string>
 	<string name="editor_scheduled_post_saved_online">投稿を予約しました</string>
 	<string name="editor_draft_saved_locally">下書きを端末に保存しました</string>
@@ -17,7 +94,7 @@ Language: ja_JP
 	<string name="smart_toast_photo_long_press">複数の写真を選択するにはタップしてホールド</string>
 	<string name="photo_picker_choose_video">端末から動画を選択</string>
 	<string name="photo_picker_choose_photo">端末から写真を選択</string>
-	<string name="new_editor_promo_description">WordPress アプリにステキな新エディタが含まれるようになりました。新しい投稿を作成し、お試しください。</string>
+	<string name="new_editor_promo_description">WordPress アプリに美しい新エディタが含まれるようになりました。新しい投稿を作成し、お試しください。</string>
 	<string name="wp_media_title">WordPress メディア</string>
 	<string name="media_insert_as_gallery">ギャラリーとして追加</string>
 	<string name="media_insert_individually">個別に追加</string>
@@ -190,13 +267,11 @@ Language: ja_JP
 	<string name="editor_failed_uploads_switch_html">一部のメディアのアップロードに失敗しました。この状態では、HTML モードに切り替えることは\nできません。失敗したアップロードをすべて削除して続行しますか ?</string>
 	<string name="image_thumbnail">画像サムネイル</string>
 	<string name="visual_editor">ビジュアルエディター</string>
-	<string name="format_bar_description_html">HTML モード</string>
-	<string name="format_bar_description_ol">順序付きリスト</string>
+	<string name="format_bar_description_html">HTML</string>
+	<string name="format_bar_description_ol">番号つきリスト</string>
 	<string name="format_bar_description_ul">番号なしリスト</string>
-	<string name="format_bar_description_media">メディアを挿入</string>
-	<string name="format_bar_description_more">more タグを挿入</string>
-	<string name="format_bar_description_link">リンクを挿入</string>
-	<string name="format_bar_description_quote">引用をブロック</string>
+	<string name="format_bar_description_more">もっと読む</string>
+	<string name="format_bar_description_quote">ブロック引用</string>
 	<string name="format_bar_description_strike">打ち消し</string>
 	<string name="format_bar_description_underline">下線</string>
 	<string name="format_bar_description_italic">斜体</string>
@@ -382,7 +457,6 @@ Language: ja_JP
 	<string name="error_refresh_comments_showing_older">現在、コメントを更新することができないため、古いコメントが表示されます。</string>
 	<string name="editor_post_settings_set_featured_image">アイキャッチ画像を設定</string>
 	<string name="editor_post_settings_featured_image">アイキャッチ画像</string>
-	<string name="new_editor_promo_title">新エディター</string>
 	<string name="visual_editor_enabled">ビジュアルエディターを有効化しました</string>
 	<string name="editor_content_placeholder">こちらでストーリーを共有してください...</string>
 	<string name="editor_page_title_placeholder">ページタイトル</string>

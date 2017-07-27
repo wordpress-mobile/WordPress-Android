@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -17,6 +16,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
@@ -121,8 +121,7 @@ public class StatsViewAllActivity extends AppCompatActivity {
         }
 
         if (mStatsViewType == null || mTimeframe == null || mDate == null) {
-            Toast.makeText(this, getResources().getText(R.string.stats_generic_error),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(this, R.string.stats_generic_error, ToastUtils.Duration.SHORT);
             finish();
         }
 

@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.models.CategoryModel;
+import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -75,22 +76,22 @@ public abstract class SiteSettingsInterface {
     /**
      * Name of the {@link SharedPreferences} that is used to store local settings.
      */
-    public static final String SITE_SETTINGS_PREFS = "site-settings-prefs";
+    private static final String SITE_SETTINGS_PREFS = "site-settings-prefs";
 
     /**
      * Key used to access the language preference stored in {@link SharedPreferences}.
      */
-    public static final String LANGUAGE_PREF_KEY = "site-settings-language-pref";
+    private static final String LANGUAGE_PREF_KEY = "site-settings-language-pref";
 
     /**
      * Key used to access the default category preference stored in {@link SharedPreferences}.
      */
-    public static final String DEF_CATEGORY_PREF_KEY = "site-settings-category-pref";
+    private static final String DEF_CATEGORY_PREF_KEY = "site-settings-category-pref";
 
     /**
      * Key used to access the default post format preference stored in {@link SharedPreferences}.
      */
-    public static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
+    private static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
 
     /**
      * Key used to access the sharing button style stored in {@link SharedPreferences}.
@@ -100,17 +101,17 @@ public abstract class SiteSettingsInterface {
     /**
      * Identifies an Ascending (oldest to newest) sort order.
      */
-    public static final int ASCENDING_SORT = 0;
+    static final int ASCENDING_SORT = 0;
 
     /**
      * Identifies an Descending (newest to oldest) sort order.
      */
-    public static final int DESCENDING_SORT = 1;
+    static final int DESCENDING_SORT = 1;
 
     /**
      * Used to prefix keys in an analytics property list.
      */
-    protected static final String SAVED_ITEM_PREFIX = "item_saved_";
+    static final String SAVED_ITEM_PREFIX = "item_saved_";
 
     /**
      * Key for the Standard post format. Used as default if post format is not set/known.
@@ -207,6 +208,8 @@ public abstract class SiteSettingsInterface {
     protected final SiteSettingsListener mListener;
     protected final SiteSettingsModel mSettings;
     protected final SiteSettingsModel mRemoteSettings;
+    protected final JetpackSettingsModel mJpSettings;
+    protected final JetpackSettingsModel mRemoteJpSettings;
     private final Map<String, String> mLanguageCodes;
 
     @Inject SiteStore mSiteStore;
@@ -220,6 +223,8 @@ public abstract class SiteSettingsInterface {
         mListener = listener;
         mSettings = new SiteSettingsModel();
         mRemoteSettings = new SiteSettingsModel();
+        mJpSettings = new JetpackSettingsModel();
+        mRemoteJpSettings = new JetpackSettingsModel();
         mLanguageCodes = WPPrefUtils.generateLanguageMap(host);
     }
 
@@ -531,6 +536,10 @@ public abstract class SiteSettingsInterface {
         return getKeysDescription(getBlacklistKeys().size());
     }
 
+    public @NonNull String getJetpackProtectWhitelistSummary() {
+        return getKeysDescription(getJetpackWhitelistKeys().size());
+    }
+
     public String getSharingLabel() {
         return mSettings.sharingLabel;
     }
@@ -584,35 +593,44 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean isJetpackMonitorEnabled() {
-        return mSettings.monitorActive;
+        return mJpSettings.monitorActive;
     }
 
     public boolean shouldSendJetpackMonitorEmailNotifications() {
-        return mSettings.emailNotifications;
+        return mJpSettings.emailNotifications;
     }
 
     public boolean shouldSendJetpackMonitorWpNotifications() {
-        return mSettings.wpNotifications;
+        return mJpSettings.wpNotifications;
     }
 
     public void enableJetpackMonitor(boolean monitorActive) {
-        mSettings.monitorActive = monitorActive;
+        mJpSettings.monitorActive = monitorActive;
     }
 
     public void enableJetpackMonitorEmailNotifications(boolean emailNotifications) {
-        mSettings.emailNotifications = emailNotifications;
+        mJpSettings.emailNotifications = emailNotifications;
     }
 
     public void enableJetpackMonitorWpNotifications(boolean wpNotifications) {
-        mSettings.wpNotifications = wpNotifications;
+        mJpSettings.wpNotifications = wpNotifications;
     }
 
     public boolean isJetpackProtectEnabled() {
-        return mSettings.jetpackProtectEnabled;
+        return mJpSettings.jetpackProtectEnabled;
     }
 
     public void enableJetpackProtect(boolean enabled) {
-        mSettings.jetpackProtectEnabled = enabled;
+        mJpSettings.jetpackProtectEnabled = enabled;
+    }
+
+    public @NonNull List<String> getJetpackWhitelistKeys() {
+        return mJpSettings.jetpackProtectWhitelist;
+    }
+
+    public void setJetpackWhitelistKeys(@NonNull List<String> whitelistKeys) {
+        mJpSettings.jetpackProtectWhitelist.clear();
+        mJpSettings.jetpackProtectWhitelist.addAll(whitelistKeys);
     }
 
     public void setTitle(String title) {
@@ -869,12 +887,29 @@ public abstract class SiteSettingsInterface {
     public SiteSettingsInterface init(boolean fetchRemote) {
         loadCachedSettings();
 
+        if (mSite.isJetpackConnected()) {
+            loadCachedJpSettings();
+        }
+
         if (fetchRemote) {
             fetchRemoteData();
             mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
         }
 
         return this;
+    }
+
+    private void loadCachedJpSettings() {
+        Cursor localSettings = SiteSettingsTable.getJpSettings(mSite.getId());
+
+        if (localSettings != null && localSettings.getCount() > 0) {
+            SiteSettingsTable.deserializeJetpackDatabaseCursor(mJpSettings, localSettings);
+            notifyUpdatedOnUiThread(null);
+        }
+
+        if (localSettings != null) {
+            localSettings.close();
+        }
     }
 
     /**

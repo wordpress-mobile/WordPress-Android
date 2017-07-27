@@ -41,7 +41,6 @@ Language: ko_KR
 	<string name="media_upload_state_queued">대기열에 추가됨</string>
 	<string name="update_draft">임시글 업데이트</string>
 	<string name="keep_editing">계속 편집하기</string>
-	<string name="image_quality">이미지 품질</string>
 	<string name="error_all_media_upload_canceled">알 수 없는 오류로 인해 모든 미디어 업로드가 취소되었습니다. 업로드를 다시 시도하세요.</string>
 	<string name="error_unknown_post_type">알 수 없는 글 형식입니다.</string>
 	<string name="error_unknown_post">알 수 없는 글로 인해 이 글의 로컬 복사본을 서버와 동기화할 수 없습니다.</string>
@@ -100,13 +99,6 @@ Language: ko_KR
 	<string name="editor_failed_uploads_switch_html">일부 미디어 업로드에 실패했습니다. 이 상태에서는 HTML 모드로 전환할 수\n 없습니다. 실패한 업로드를 모두 제거하고 계속할까요?</string>
 	<string name="image_thumbnail">이미지 썸네일</string>
 	<string name="visual_editor">비주얼 편집기</string>
-	<string name="format_bar_description_html">HTML 모드</string>
-	<string name="format_bar_description_ol">순서 있는 목록</string>
-	<string name="format_bar_description_ul">순서 없는 목록</string>
-	<string name="format_bar_description_media">미디어 삽입</string>
-	<string name="format_bar_description_more">추가 삽입</string>
-	<string name="format_bar_description_link">링크 삽입</string>
-	<string name="format_bar_description_quote">인용 차단</string>
 	<string name="format_bar_description_strike">취소선</string>
 	<string name="format_bar_description_underline">밑줄</string>
 	<string name="format_bar_description_italic">이탤릭</string>

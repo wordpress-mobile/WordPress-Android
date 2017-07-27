@@ -16,7 +16,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
@@ -59,6 +58,11 @@ public class PublicizeListActivity extends AppCompatActivity
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             PublicizeTable.createTables(WordPress.wpDB.getDatabase());
             showListFragment();
+            if (mSite == null) {
+                ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+                finish();
+                return;
+            }
             PublicizeUpdateService.updateConnectionsForSite(this, mSite);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);

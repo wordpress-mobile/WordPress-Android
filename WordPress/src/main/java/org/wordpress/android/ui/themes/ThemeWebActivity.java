@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -14,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.ThemeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -42,7 +42,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
 
     public static void openTheme(Activity activity, SiteModel site, String themeId, ThemeWebActivityType type,
                                  boolean isCurrentTheme) {
-        Theme currentTheme = WordPress.wpDB.getTheme(String.valueOf(site.getSiteId()), themeId);
+        Theme currentTheme = ThemeTable.getTheme(WordPress.wpDB.getDatabase(),
+                String.valueOf(site.getSiteId()), themeId);
         if (currentTheme == null) {
             ToastUtils.showToast(activity, R.string.could_not_load_theme);
             return;
@@ -65,7 +66,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
      * opens the current theme for the current blog
      */
     public static void openCurrentTheme(Activity activity, SiteModel site, ThemeWebActivityType type) {
-        String themeId = WordPress.wpDB.getCurrentThemeId(String.valueOf(site.getSiteId()));
+        String themeId = ThemeTable.getCurrentThemeId(WordPress.wpDB.getDatabase(), String.valueOf(site.getSiteId()));
         if (themeId.isEmpty()) {
             requestAndOpenCurrentTheme(activity, site);
         } else {
@@ -82,8 +83,9 @@ public class ThemeWebActivity extends WPWebViewActivity {
                     Theme currentTheme = Theme.fromJSONV1_1(response, site);
                     if (currentTheme != null) {
                         currentTheme.setIsCurrent(true);
-                        currentTheme.save();
-                        WordPress.wpDB.setCurrentTheme(String.valueOf(site.getSiteId()), currentTheme.getId());
+                        ThemeTable.saveTheme(WordPress.wpDB.getDatabase(), currentTheme);
+                        ThemeTable.setCurrentTheme(WordPress.wpDB.getDatabase(),
+                                String.valueOf(site.getSiteId()), currentTheme.getId());
                         openTheme(activity, site, currentTheme.getId(), ThemeWebActivityType.PREVIEW, true);
                     }
                 } catch (JSONException e) {
@@ -108,8 +110,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openWPCOMURL");
-            Toast.makeText(activity, activity.getResources().getText(R.string.invalid_site_url_message),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(activity, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
             return;
         }
 

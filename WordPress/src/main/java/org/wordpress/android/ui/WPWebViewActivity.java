@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -21,6 +20,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.URLFilteredWebViewClient;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -136,8 +136,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL");
-            Toast.makeText(context, context.getResources().getText(R.string.invalid_site_url_message),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(context, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
             return;
         }
 
@@ -171,8 +170,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL");
-            Toast.makeText(context, context.getResources().getText(R.string.invalid_site_url_message),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(context, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
             return;
         }
 
@@ -192,8 +190,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openUrlByUsingMainWPCOMCredentials");
-            Toast.makeText(context, context.getResources().getText(R.string.invalid_site_url_message),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(context, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
             return false;
         }
         return true;
@@ -279,8 +276,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");
-            Toast.makeText(this, getText(R.string.invalid_site_url_message),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(this, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
             finish();
             return;
         }
@@ -315,14 +311,13 @@ public class WPWebViewActivity extends WebViewActivity {
         } else {
             if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
                 AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity");
-                Toast.makeText(this, getText(R.string.invalid_site_url_message),
-                        Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(this, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
                 finish();
             }
 
             if (TextUtils.isEmpty(username)) {
                 AppLog.e(AppLog.T.UTILS, "Username empty/null");
-                Toast.makeText(this, getText(R.string.incorrect_credentials), Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(this, R.string.incorrect_credentials, ToastUtils.Duration.SHORT);
                 finish();
             }
 

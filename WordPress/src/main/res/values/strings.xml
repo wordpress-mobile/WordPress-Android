@@ -140,9 +140,12 @@
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_error_no_permission_upload">You don\'t have permission to upload media to the site</string>
-    <string name="media_error_too_large_upload">File too large to upload. Try enabling Optimize Images in Site->Settings</string>
-    <string name="media_error_internal_server_error">Upload error. Try enabling Optimize Images in Site->Settings</string>
-    <string name="media_error_timeout">Server response timed out, you may have a poor connection or server error</string>
+    <string name="media_error_http_too_large_photo_upload">Image too large to upload. Try changing Optimize Images in your site\'s settings</string>
+    <string name="media_error_http_too_large_video_upload">Video too large to upload</string>
+    <string name="media_error_exceeds_php_filesize">File exceeds the maximum upload size for this site</string>
+    <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
+    <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your site\'s settings</string>
+    <string name="media_error_timeout">Server took too long to respond</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
@@ -200,9 +203,6 @@
     <string name="media_details_label_file_type">File type</string>
     <string name="media_details_copy_url">Copy URL</string>
     <string name="media_details_copy_url_toast">URL copied to clipboard</string>
-
-    <!-- tab titles -->
-    <string name="tab_comments" translatable="false">@string/comments</string>
 
     <!-- themes -->
     <string name="themes_live_preview">Live preview</string>
@@ -287,6 +287,7 @@
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
+    <string name="toast_err_post_media_uploading">Unable to delete a post while it\'s uploading</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -629,6 +630,7 @@
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="site_settings_blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+    <string name="site_settings_jetpack_whitelist_description">You may whitelist an IP address or series of addresses preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
 
     <!-- Dialogs -->
     <string name="site_settings_discussion_title" translatable="false">@string/discussion</string>
@@ -670,12 +672,6 @@
         <item>@string/preference_editor_visual</item>
         <item>@string/preference_editor_beta</item>
     </string-array>
-
-    <string-array name="editor_entries_without_aztec" translatable="false">
-        <item>@string/preference_editor_legacy</item>
-        <item>@string/preference_editor_visual</item>
-    </string-array>
-
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -884,10 +880,14 @@
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
     <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
-    <string name="unread">Unread</string>
     <string name="follows">Follows</string>
     <string name="notifications_label_new_notifications">New notifications</string>
     <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
+    <string name="notifications_tab_title_all">All</string>
+    <string name="notifications_tab_title_unread">Unread</string>
+    <string name="notifications_tab_title_comments" translatable="false">@string/comments</string>
+    <string name="notifications_tab_title_follows" translatable="false">@string/follows</string>
+    <string name="notifications_tab_title_likes" translatable="false">@string/stats_likes</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
@@ -1138,7 +1138,7 @@
     <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
-    <string name="error_refresh_media">Something went wrong while refreshing the media library. Try again later.</string>
+    <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
 
     <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
@@ -1154,15 +1154,13 @@
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
     <string name="error_upload_params">Error while uploading the %1$s: %2$s</string>
-    <string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
+    <string name="error_media_insufficient_fs_permissions">Read permission denied on device media</string>
     <string name="error_media_not_found">Media could not be found</string>
     <string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
-    <string name="error_media_parse_error">Could not parse response after media upload</string>
+    <string name="error_media_parse_error">Unexpected response from server</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
-    <string name="error_media_upload_connection">A connection error occurred while uploading media</string>
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_media_load">Unable to load media</string>
-    <string name="error_media_request_too_large">Media too large, can\'t be uploaded</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
@@ -1452,9 +1450,6 @@
     <string name="launch_your_email_app">Launch your email app</string>
     <string name="checking_email">Checking email</string>
     <string name="not_on_wordpress_com">Not on WordPress.com?</string>
-    <string name="migration_message">Updating the WordPress app&#8230;</string>
-    <string name="migration_error_not_connected">Migration process failed: try launching the app when you have a
-        network connection.</string>
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
     <string name="already_logged_in_wpcom_same_username">You\'re already logged in your WordPress.com account. Your site should appear in the site picker, make sure it\'s not hidden.</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>

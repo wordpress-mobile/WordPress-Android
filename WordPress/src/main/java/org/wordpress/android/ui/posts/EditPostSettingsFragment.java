@@ -31,7 +31,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -60,7 +59,6 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
-import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
@@ -77,6 +75,7 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -106,6 +105,10 @@ public class EditPostSettingsFragment extends Fragment {
     private EditPostActivityHook mEditPostActivityHook;
     private SiteSettingsInterface mSiteSettings;
 
+    private LinearLayout mCategoriesContainer;
+    private LinearLayout mExcerptContainer;
+    private LinearLayout mFormatContainer;
+    private LinearLayout mTagsContainer;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
     private TextView mLocationTextView;
@@ -115,7 +118,7 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mPostFormatTextView;
     private TextView mPasswordTextView;
     private TextView mPublishDateTextView;
-    private NetworkImageView mFeaturedImageView;
+    private WPNetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
 
     private PostLocation mPostLocation;
@@ -127,7 +130,6 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
-    @Inject FluxCImageLoader mImageLoader;
 
     interface EditPostActivityHook {
         PostModel getPost();
@@ -143,9 +145,14 @@ public class EditPostSettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         mDispatcher.register(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         updatePostFormatKeysAndNames();
-        fetchSiteSettingsAndUpdateDefaultPostFormat();
+        fetchSiteSettingsAndUpdateDefaultPostFormatIfNecessary();
 
         // Update post formats and categories, in case anything changed.
         SiteModel siteModel = getSite();
@@ -153,15 +160,21 @@ public class EditPostSettingsFragment extends Fragment {
         if (!getPost().isPage()) {
             mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel));
         }
+
+        refreshViews();
     }
 
-    private void fetchSiteSettingsAndUpdateDefaultPostFormat() {
+    private void fetchSiteSettingsAndUpdateDefaultPostFormatIfNecessary() {
+        // A format is already set for the post, no need to fetch the default post format
+        if (!TextUtils.isEmpty(getPost().getPostFormat())) {
+            return;
+        }
         // we need to fetch site settings in order to get the latest default post format
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSite(),
                 new SiteSettingsListener() {
                     @Override
                     public void onSettingsUpdated(Exception error) {
-                        if (error == null && TextUtils.isEmpty(getPost().getPostFormat())) {
+                        if (error == null) {
                             updatePostFormat(mSiteSettings.getDefaultPostFormat());
                         }
                     }
@@ -223,7 +236,7 @@ public class EditPostSettingsFragment extends Fragment {
         mPasswordTextView = (TextView) rootView.findViewById(R.id.post_password);
         mPublishDateTextView = (TextView) rootView.findViewById(R.id.publish_date);
 
-        mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.post_featured_image);
+        mFeaturedImageView = (WPNetworkImageView) rootView.findViewById(R.id.post_featured_image);
         mFeaturedImageButton = (Button) rootView.findViewById(R.id.post_add_featured_image_button);
         CardView featuredImageCardView = (CardView) rootView.findViewById(R.id.post_featured_image_card_view);
 
@@ -245,8 +258,8 @@ public class EditPostSettingsFragment extends Fragment {
             featuredImageCardView.setVisibility(View.GONE);
         }
 
-        final LinearLayout excerptContainer = (LinearLayout) rootView.findViewById(R.id.post_excerpt_container);
-        excerptContainer.setOnClickListener(new View.OnClickListener() {
+        mExcerptContainer = (LinearLayout) rootView.findViewById(R.id.post_excerpt_container);
+        mExcerptContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showPostExcerptDialog();
@@ -269,16 +282,16 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        final LinearLayout categoriesContainer = (LinearLayout) rootView.findViewById(R.id.post_categories_container);
-        categoriesContainer.setOnClickListener(new View.OnClickListener() {
+        mCategoriesContainer = (LinearLayout) rootView.findViewById(R.id.post_categories_container);
+        mCategoriesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showCategoriesActivity();
             }
         });
 
-        final LinearLayout tagsContainer = (LinearLayout) rootView.findViewById(R.id.post_tags_container);
-        tagsContainer.setOnClickListener(new View.OnClickListener() {
+        mTagsContainer = (LinearLayout) rootView.findViewById(R.id.post_tags_container);
+        mTagsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showTagsActivity();
@@ -293,8 +306,8 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        final LinearLayout formatContainer = (LinearLayout) rootView.findViewById(R.id.post_format_container);
-        formatContainer.setOnClickListener(new View.OnClickListener() {
+        mFormatContainer = (LinearLayout) rootView.findViewById(R.id.post_format_container);
+        mFormatContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showPostFormatDialog();
@@ -317,14 +330,15 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
+
         if (getPost().isPage()) { // remove post specific views
-            excerptContainer.setVisibility(View.GONE);
-            categoriesContainer.setVisibility(View.GONE);
-            tagsContainer.setVisibility(View.GONE);
-            formatContainer.setVisibility(View.GONE);
+            final View categoriesTagsContainer = rootView.findViewById(R.id.post_categories_and_tags_card);
+            final View formatBottomSeparator = rootView.findViewById(R.id.post_format_bottom_separator);
+            categoriesTagsContainer.setVisibility(View.GONE);
+            formatBottomSeparator.setVisibility(View.GONE);
+            mFormatContainer.setVisibility(View.GONE);
         }
 
-        refreshViews();
         return rootView;
     }
 
@@ -352,7 +366,15 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
+
         PostModel postModel = getPost();
+        if (postModel.isPage()) {
+            // remove post specific views
+            mCategoriesContainer.setVisibility(View.GONE);
+            mExcerptContainer.setVisibility(View.GONE);
+            mFormatContainer.setVisibility(View.GONE);
+            mTagsContainer.setVisibility(View.GONE);
+        }
         mExcerptTextView.setText(postModel.getExcerpt());
         mSlugTextView.setText(postModel.getSlug());
         mPasswordTextView.setText(postModel.getPassword());
@@ -603,10 +625,18 @@ public class EditPostSettingsFragment extends Fragment {
     // Helpers
 
     private PostModel getPost() {
+        if (mEditPostActivityHook == null) {
+            // This can only happen during a callback while activity is re-created for some reason (config changes etc)
+            return null;
+        }
         return mEditPostActivityHook.getPost();
     }
 
     private SiteModel getSite() {
+        if (mEditPostActivityHook == null) {
+            // This can only happen during a callback while activity is re-created for some reason (config changes etc)
+            return null;
+        }
         return mEditPostActivityHook.getSite();
     }
 
@@ -717,6 +747,10 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateCategoriesTextView() {
+        if (getPost() == null || getSite() == null) {
+            // Since this method can get called after a callback, we have to make sure we have the post and site
+            return;
+        }
         List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(getPost(), getSite());
         StringBuilder sb = new StringBuilder();
         Iterator<TermModel> it = categories.iterator();
@@ -765,7 +799,8 @@ public class EditPostSettingsFragment extends Fragment {
     // Post Format Helpers
 
     private void updatePostFormatKeysAndNames() {
-        if (getActivity() == null) {
+        if (getActivity() == null || getSite() == null) {
+            // Since this method can get called after a callback, we have to make sure we have the site
             return;
         }
         // Default values
@@ -853,7 +888,7 @@ public class EditPostSettingsFragment extends Fragment {
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }
 
-        WordPressMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView, mImageLoader);
+        WordPressMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView);
     }
 
     private void launchFeaturedMediaPicker() {
@@ -862,8 +897,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, getSite());
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
-        intent.putExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, true);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER);
         startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
     }
 
@@ -915,6 +949,7 @@ public class EditPostSettingsFragment extends Fragment {
             AppLog.e(T.POSTS, "An error occurred while updating the post formats with type: " + event.error.type);
             return;
         }
+        AppLog.v(T.POSTS, "Post formats successfully fetched!");
         updatePostFormatKeysAndNames();
     }
 

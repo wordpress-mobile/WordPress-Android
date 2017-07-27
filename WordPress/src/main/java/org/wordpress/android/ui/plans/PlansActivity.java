@@ -19,7 +19,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -34,6 +33,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
@@ -77,7 +77,7 @@ public class PlansActivity extends AppCompatActivity {
 
         if (mSelectedSite == null) {
             AppLog.e(T.PLANS, "Selected site is null");
-            Toast.makeText(this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
+            ToastUtils.showToast(this, R.string.plans_loading_error, ToastUtils.Duration.LONG);
             finish();
             return;
         }
@@ -110,7 +110,7 @@ public class PlansActivity extends AppCompatActivity {
                 return;
             }
             if (!PlanUpdateService.startService(this, mSelectedSite)) {
-                Toast.makeText(this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
+                ToastUtils.showToast(this, R.string.plans_loading_error, ToastUtils.Duration.LONG);
                 finish();
                 return;
             }
@@ -151,7 +151,7 @@ public class PlansActivity extends AppCompatActivity {
     private void setupPlansUI() {
         if (mAvailablePlans == null || mAvailablePlans.length == 0) {
             // This should never be called with empty plans.
-            Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
+            ToastUtils.showToast(PlansActivity.this, R.string.plans_loading_error, ToastUtils.Duration.LONG);
             finish();
             return;
         }
@@ -303,7 +303,7 @@ public class PlansActivity extends AppCompatActivity {
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PlanEvents.PlansUpdateFailed event) {
-        Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
+        ToastUtils.showToast(PlansActivity.this, R.string.plans_loading_error, ToastUtils.Duration.LONG);
         finish();
     }
 
