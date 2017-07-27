@@ -263,7 +263,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void usePasswordInstead(String email) {
         LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, null);
-        slideInFragment(loginEmailPasswordFragment, true, LoginEmailFragment.TAG);
+        slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
     }
 
     @Override
