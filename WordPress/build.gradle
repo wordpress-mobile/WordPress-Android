@@ -50,14 +50,12 @@ android {
 
     productFlavors {
         vanilla { // used for release and beta
-            buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "true"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
