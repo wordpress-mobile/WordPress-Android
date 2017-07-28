@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
+import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.aztec.Html;
 
@@ -32,7 +33,9 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
         }
 
         Drawable drawable = context.getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
-        drawable.setBounds(0, 0, 196, 196);
+        drawable.setBounds(0, 0,
+                AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
+                AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
         callbacks.onThumbnailLoading(drawable);
 
         new AsyncTask<Void, Void, Bitmap>() {
