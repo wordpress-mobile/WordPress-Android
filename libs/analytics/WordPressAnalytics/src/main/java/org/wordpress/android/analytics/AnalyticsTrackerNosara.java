@@ -698,8 +698,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_url_help_screen_viewed";
             case LOGIN_USERNAME_PASSWORD_FORM_VIEWED:
                 return "login_username_password_form_viewed";
-            case LOGIN_USERNAME_PASSWORD_RETRY_VIEWED:
-                return "login_username_password_retry_viewed";
             case LOGIN_TWO_FACTOR_FORM_VIEWED:
                 return "login_two_factor_form_viewed";
             case LOGIN_EPILOGUE_VIEWED:
