@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.accounts.login;
 
-public interface LoginEpilogueListener extends LoginBaseListener {
+public interface LoginEpilogueListener {
     void onConnectAnotherSite();
     void onContinue();
 }

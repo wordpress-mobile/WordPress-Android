@@ -28,7 +28,6 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -47,8 +46,7 @@ import java.util.EnumSet;
 
 import javax.inject.Inject;
 
-public abstract class LoginBaseFormFragment<LoginListenerType extends LoginBaseListener>
-        extends Fragment implements TextWatcher {
+public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment implements TextWatcher {
 
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
