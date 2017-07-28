@@ -38,14 +38,14 @@
 
         <android.support.v7.widget.AppCompatButton
             android:theme="@style/WordPress.Button"
-            android:id="@+id/login_connect_more"
+            android:id="@+id/secondary_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/connect_more" />
 
         <android.support.v7.widget.AppCompatButton
             style="@style/WordPress.Button.Primary"
-            android:id="@+id/login_continue"
+            android:id="@+id/primary_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/login_continue" />

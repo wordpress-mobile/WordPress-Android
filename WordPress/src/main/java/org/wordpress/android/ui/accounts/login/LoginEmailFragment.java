@@ -32,7 +32,7 @@ import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginEmailFragment extends LoginBaseFormFragment implements TextWatcher, OnEditorCommitListener {
+public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher, OnEditorCommitListener {
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
 
     public static final String TAG = "login_email_fragment_tag";
@@ -129,6 +129,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
         if (mLoginListener != null) {
             mLoginListener.helpEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()));
         }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
     }
 
     @Override

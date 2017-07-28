@@ -2,18 +2,23 @@ package org.wordpress.android.ui.accounts;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.ui.accounts.login.LoginBaseFormFragment;
+import org.wordpress.android.ui.accounts.login.LoginBaseListener;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
@@ -23,13 +28,12 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
+public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueFragment.LoginEpilogueListener> {
     public static final String TAG = "login_epilogue_fragment_tag";
 
     private static final String ARG_SHOW_AND_RETURN = "ARG_SHOW_AND_RETURN";
     private static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
-    private View mSitesProgress;
     private RecyclerView mSitesList;
     private View mBottomShadow;
     private View mBottomButtonsContainer;
@@ -40,7 +44,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     private boolean mShowAndReturn;
     private ArrayList<Integer> mOldSitesIds;
 
-    interface LoginEpilogueListener {
+    interface LoginEpilogueListener extends LoginBaseListener {
         void onConnectAnotherSite();
         void onContinue();
     }
@@ -56,26 +60,42 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
-
-        mShowAndReturn = getArguments().getBoolean(ARG_SHOW_AND_RETURN);
-        mOldSitesIds = getArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
+    protected @LayoutRes int getContentLayout() {
+        return 0; // nothing specia here. The view is inflated in createMainView()
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_epilogue_screen, container, false);
+    protected @LayoutRes int getProgressBarText() {
+        return R.string.logging_in;
+    }
 
-        mSitesProgress = rootView.findViewById(R.id.sites_progress);
+    @Override
+    protected void setupLabel(TextView label) {
+        // nothing special to do, no main label on epilogue screen
+    }
 
+    @Override
+    protected ViewGroup createMainView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return (ViewGroup) inflater.inflate(R.layout.login_epilogue_screen, container, false);
+    }
+
+    @Override
+    protected void setupContent(ViewGroup rootView) {
         mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
+
         mBottomButtonsContainer = rootView.findViewById(R.id.bottom_buttons);
 
-        View connectMore = rootView.findViewById(R.id.login_connect_more);
-        connectMore.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
-        connectMore.setOnClickListener(new View.OnClickListener() {
+        mSitesList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mSitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mSitesList.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        mSitesList.setItemAnimator(null);
+        mSitesList.setAdapter(getAdapter());
+    }
+
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
+        secondaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginEpilogueListener != null) {
@@ -84,7 +104,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        rootView.findViewById(R.id.login_continue).setOnClickListener(new View.OnClickListener() {
+        primaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginEpilogueListener != null) {
@@ -92,14 +112,15 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
                 }
             }
         });
+    }
 
-        mSitesList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mSitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mSitesList.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        mSitesList.setItemAnimator(null);
-        mSitesList.setAdapter(getAdapter());
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        return rootView;
+        mShowAndReturn = getArguments().getBoolean(ARG_SHOW_AND_RETURN);
+        mOldSitesIds = getArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
     }
 
     private SitePickerAdapter getAdapter() {
@@ -155,12 +176,6 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
                 refreshAccountDetails((HeaderViewHolder) holder, numberOfSites);
             }
         }, mOldSitesIds);
-    }
-
-    public void showProgress(boolean show) {
-        if (mSitesProgress != null) {
-            mSitesProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-        }
     }
 
     @Override
@@ -220,5 +235,25 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     private String constructGravatarUrl(AccountModel account) {
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+
+    @Override
+    protected void onHelp() {
+        // nothing to do. No help button on the epilogue screen
     }
 }

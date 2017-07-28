@@ -5,7 +5,7 @@ import org.wordpress.android.ui.accounts.SmartLockHelper;
 
 import java.util.ArrayList;
 
-public interface LoginListener {
+public interface LoginListener extends LoginBaseListener {
     LoginMode getLoginMode();
 
     // Login Prologue callbacks
