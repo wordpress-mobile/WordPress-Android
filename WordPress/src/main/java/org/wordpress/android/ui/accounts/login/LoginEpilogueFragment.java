@@ -64,7 +64,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Override
     protected @LayoutRes int getContentLayout() {
-        return 0; // nothing specia here. The view is inflated in createMainView()
+        return 0; // nothing special here. The view is inflated in createMainView()
     }
 
     @Override
