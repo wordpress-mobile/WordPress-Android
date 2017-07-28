@@ -503,6 +503,17 @@ public class PostsListFragment extends Fragment
         } else if (postCount > 0) {
             hideEmptyView();
         }
+
+        // If the activity was given a target post, and this is the first time posts are loaded, scroll to that post
+        if (mTargetPost != null) {
+            if (mPostsListAdapter != null) {
+                final int position = mPostsListAdapter.getPositionForPost(mTargetPost);
+                if (position > -1) {
+                    mRecyclerView.smoothScrollToPosition(position);
+                }
+            }
+            mTargetPost = null;
+        }
     }
 
     /*
