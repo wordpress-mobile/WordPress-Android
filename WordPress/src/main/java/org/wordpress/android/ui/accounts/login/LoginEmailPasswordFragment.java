@@ -131,6 +131,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PASSWORD_FORM_VIEWED);
+
             mPasswordInput.setText(mPassword);
         } else {
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
