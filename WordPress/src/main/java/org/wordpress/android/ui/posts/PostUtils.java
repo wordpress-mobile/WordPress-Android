@@ -302,7 +302,23 @@ public class PostUtils {
 
     static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
         if (shouldPublishImmediately(postModel)) {
-            postModel.setDateCreated(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
+            postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
         }
+    }
+
+    static boolean updatePostTitleIfDifferent(PostModel post, String newTitle) {
+        if (post.getTitle().compareTo(newTitle) != 0) {
+            post.setTitle(newTitle);
+            return true;
+        }
+        return false;
+    }
+
+    static boolean updatePostContentIfDifferent(PostModel post, String newContent) {
+        if (post.getContent().compareTo(newContent) != 0) {
+            post.setContent(newContent);
+            return true;
+        }
+        return false;
     }
 }

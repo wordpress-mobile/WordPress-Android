@@ -896,18 +896,23 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Update post object from fragment fields
+        boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
             if (mShowNewEditor || mShowAztecEditor) {
-                updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
+                postTitleOrContentChanged =
+                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
                         (String) mEditorFragment.getContent());
             } else {
                 // TODO: Remove when legacy editor is dropped
-                updatePostContent(isAutosave);
+                postTitleOrContentChanged = updatePostContent(isAutosave);
             }
         }
 
-        PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
-        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
+        // only makes sense to change the publish date and locallychanged date if the Post was actaully changed
+        if (postTitleOrContentChanged) {
+            PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
+            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        }
     }
 
     private void savePostAsync(final AfterSavePostListener listener) {
@@ -1542,9 +1547,9 @@ public class EditPostActivity extends AppCompatActivity implements
     /**
      * Updates post object with content of this fragment
      */
-    public void updatePostContent(boolean isAutoSave) throws IllegalEditorStateException {
+    public boolean updatePostContent(boolean isAutoSave) throws IllegalEditorStateException {
         if (mPost == null) {
-            return;
+            return false;
         }
         String title = StringUtils.notNullStr((String) mEditorFragment.getTitle());
         SpannableStringBuilder postContent;
@@ -1623,34 +1628,37 @@ public class EditPostActivity extends AppCompatActivity implements
             content = postContent.toString();
         }
 
-        mPost.setTitle(title);
-        mPost.setContent(content);
+        boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
+        boolean contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
 
-        if (!mPost.isLocalDraft()) {
+        if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
             mPost.setIsLocallyChanged(true);
         }
+
+        return titleChanged || contentChanged;
     }
 
     /**
      * Updates post object with given title and content
      */
-    public void updatePostContentNewEditor(boolean isAutoSave, String title, String content) {
+    public boolean updatePostContentNewEditor(boolean isAutoSave, String title, String content) {
         if (mPost == null) {
-            return;
+            return false;
         }
 
         if (!isAutoSave) {
             // TODO: Shortcode handling, media handling
         }
 
-        mPost.setTitle(title);
-        mPost.setContent(content);
+        boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
+        boolean contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
 
-        if (!mPost.isLocalDraft()) {
+        if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
             mPost.setIsLocallyChanged(true);
+            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
 
-        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
+        return titleChanged || contentChanged;
     }
 
     private void updateMediaFileOnServer(MediaFile mediaFile) {
