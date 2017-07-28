@@ -44,9 +44,9 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class PostPreviewActivity extends AppCompatActivity {
-    public static final String EXTRA_POST = "postModel";
+import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
+public class PostPreviewActivity extends AppCompatActivity {
     private boolean mIsUpdatingPost;
 
     private PostModel mPost;
@@ -70,17 +70,15 @@ public class PostPreviewActivity extends AppCompatActivity {
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
-        if (savedInstanceState != null) {
-            mPost = (PostModel) savedInstanceState.getSerializable(EXTRA_POST);
-        } else {
-            mPost = (PostModel) getIntent().getSerializableExtra(EXTRA_POST);
-        }
-
+        int localPostId;
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            localPostId = getIntent().getIntExtra(EXTRA_POST_LOCAL_ID, 0);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            localPostId = savedInstanceState.getInt(EXTRA_POST_LOCAL_ID);
         }
+        mPost = mPostStore.getPostByLocalPostId(localPostId);
         if (mSite == null || mPost == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
@@ -156,7 +154,7 @@ public class PostPreviewActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(EXTRA_POST, mPost);
+        outState.putSerializable(EXTRA_POST_LOCAL_ID, mPost.getId());
         super.onSaveInstanceState(outState);
     }
 
