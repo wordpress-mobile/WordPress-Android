@@ -223,6 +223,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void doStartSignup() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
         NewUserFragment newUserFragment = NewUserFragment.newInstance();
         slideInFragment(newUserFragment, true, NewUserFragment.TAG);
     }
