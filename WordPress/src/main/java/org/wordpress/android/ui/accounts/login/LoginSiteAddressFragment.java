@@ -20,6 +20,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -310,6 +311,9 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         }
 
         if (event.isError()) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+                    event.error.name(), event.error.toString());
+
             if (event.error == DiscoveryError.WORDPRESS_COM_SITE) {
                 AppLog.e(T.API, "Inputted a wpcom address in site address screen.");
 

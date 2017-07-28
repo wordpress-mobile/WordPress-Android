@@ -19,6 +19,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
@@ -224,6 +225,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             endProgress();
 
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+                    event.error.type.toString(), event.error.message);
 
             if (isAdded()) {
                 handleAuthError(event.error.type, event.error.message);
