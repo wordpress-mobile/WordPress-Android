@@ -314,7 +314,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
-    private void launchHelpshift(String url, String username, HelpshiftHelper.Tag origin) {
+    private void launchHelpshift(String url, String username, boolean isWpcom) {
+        HelpshiftHelper.Tag origin = HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS,
+                isWpcom);
+
         Intent intent = new Intent(this, HelpActivity.class);
         // Used to pass data to an eventual support service
         intent.putExtra(HelpshiftHelper.ENTERED_URL_KEY, url);
@@ -325,8 +328,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpSiteAddress(String url) {
-        launchHelpshift(url, null,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, false));
+        launchHelpshift(url, null, false);
     }
 
     @Override
@@ -336,38 +338,32 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpEmailScreen(String email) {
-        launchHelpshift(null, email,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+        launchHelpshift(null, email, true);
     }
 
     @Override
     public void helpMagicLinkRequest(String email) {
-        launchHelpshift(null, email,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+        launchHelpshift(null, email, true);
     }
 
     @Override
     public void helpMagicLinkSent(String email) {
-        launchHelpshift(null, email,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+        launchHelpshift(null, email, true);
     }
 
     @Override
     public void helpEmailPasswordScreen(String email) {
-        launchHelpshift(null, email,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+        launchHelpshift(null, email, true);
     }
 
     @Override
     public void help2FaScreen(String email) {
-        launchHelpshift(null, email,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+        launchHelpshift(null, email, true);
     }
 
     @Override
     public void helpUsernamePassword(String url, String username, boolean isWpcom) {
-        launchHelpshift(url, username,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, isWpcom));
+        launchHelpshift(url, username, isWpcom);
     }
 
     @Override

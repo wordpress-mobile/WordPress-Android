@@ -49,8 +49,5 @@ public interface LoginListener extends LoginBaseListener {
     // Login 2FA screen callbacks
     void help2FaScreen(String email);
 
-    // Help callback
-//    void help();
-
     void setHelpContext(String faqId, String faqSection);
 }
