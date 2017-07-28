@@ -110,6 +110,13 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment implements T
     }
 
     @Override
+    protected void onHelp() {
+        if (mLoginListener != null) {
+            mLoginListener.helpSiteAddress(mRequestedSiteAddress);
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);

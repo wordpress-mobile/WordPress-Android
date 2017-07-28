@@ -35,6 +35,9 @@ public class HelpshiftHelper {
     private static HelpshiftHelper mInstance = null;
     private static HashMap<String, Object> mMetadata = new HashMap<String, Object>();
 
+    public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
+    public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
+
     public enum MetadataKey {
         USER_ENTERED_URL("user-entered-url"),
         USER_ENTERED_USERNAME("user-entered-username");

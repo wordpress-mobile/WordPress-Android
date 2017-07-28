@@ -165,6 +165,13 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment impleme
     }
 
     @Override
+    protected void onHelp() {
+        if (mLoginListener != null) {
+            mLoginListener.helpUsernamePassword(mInputSiteAddress, mRequestedUsername, mIsWpcom);
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);

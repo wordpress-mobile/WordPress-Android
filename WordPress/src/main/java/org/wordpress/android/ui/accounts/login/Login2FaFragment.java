@@ -107,6 +107,13 @@ public class Login2FaFragment extends LoginBaseFormFragment implements TextWatch
     }
 
     @Override
+    protected void onHelp() {
+        if (mLoginListener != null) {
+            mLoginListener.help2FaScreen(mEmailAddress);
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

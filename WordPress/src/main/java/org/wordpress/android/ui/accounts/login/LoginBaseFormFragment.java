@@ -82,6 +82,8 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
         return mPrimaryButton;
     }
 
+    protected abstract void onHelp();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -184,7 +186,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.help) {
-            mLoginListener.help();
+            onHelp();
             return true;
         }
 

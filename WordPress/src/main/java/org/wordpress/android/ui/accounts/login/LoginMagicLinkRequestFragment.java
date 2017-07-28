@@ -176,7 +176,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.help) {
             if (mLoginListener != null) {
-                mLoginListener.help();
+                mLoginListener.helpMagicLinkRequest(mEmail);
             }
             return true;
         }
