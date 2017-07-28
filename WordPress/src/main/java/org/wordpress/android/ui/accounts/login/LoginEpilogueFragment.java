@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueFragment.LoginEpilogueListener> {
+public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueListener> {
     public static final String TAG = "login_epilogue_fragment_tag";
 
     private static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
@@ -44,10 +44,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueFr
     private boolean mShowAndReturn;
     private ArrayList<Integer> mOldSitesIds;
 
-    interface LoginEpilogueListener extends LoginBaseListener {
-        void onConnectAnotherSite();
-        void onContinue();
-    }
     private LoginEpilogueListener mLoginEpilogueListener;
 
     public static LoginEpilogueFragment newInstance(boolean doLoginUpdate, boolean showAndReturn,
