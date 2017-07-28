@@ -221,6 +221,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 break;
             case INVALID_URL:
                 showError(R.string.invalid_site_url_message, null, null);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_INSERTED_INVALID_URL);
                 break;
             case MISSING_XMLRPC_METHOD:
                 showError(R.string.xmlrpc_missing_method_error,
