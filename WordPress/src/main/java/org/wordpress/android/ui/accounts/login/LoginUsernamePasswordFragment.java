@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -368,6 +369,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
     @Override
     protected void onLoginFinished() {
+        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+
         mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }
 
@@ -414,6 +417,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
         // continue with success, even if the operation was cancelled since the user got logged in regardless. So, go on
         //  with finishing the login process
+
+        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
 
         startPostLoginServices();
 

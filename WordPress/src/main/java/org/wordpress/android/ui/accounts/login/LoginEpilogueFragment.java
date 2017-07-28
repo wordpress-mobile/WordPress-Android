@@ -20,6 +20,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.main.SitePickerAdapter;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -280,6 +281,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Override
     protected void onLoginFinished() {
         // we needed to complete the login process so, now just show an updated screen to the user
+
+        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
         endProgress();
         setNewAdapter();
