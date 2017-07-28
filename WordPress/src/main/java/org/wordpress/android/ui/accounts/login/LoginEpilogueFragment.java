@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts;
+package org.wordpress.android.ui.accounts.login;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,8 +17,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.ui.accounts.login.LoginBaseFormFragment;
-import org.wordpress.android.ui.accounts.login.LoginBaseListener;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
@@ -39,7 +37,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueFr
     private View mBottomShadow;
     private View mBottomButtonsContainer;
 
-    protected @Inject AccountStore mAccountStore;
+    @Inject AccountStore mAccountStore;
 
     private SitePickerAdapter mAdapter;
     private boolean mDoLoginUpdate;

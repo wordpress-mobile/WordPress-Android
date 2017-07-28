@@ -4,6 +4,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
