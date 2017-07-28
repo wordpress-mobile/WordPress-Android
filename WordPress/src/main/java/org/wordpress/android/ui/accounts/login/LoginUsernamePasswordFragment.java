@@ -36,7 +36,7 @@ import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
 import java.util.ArrayList;
 
-public class LoginUsernamePasswordFragment extends LoginBaseFormFragment implements TextWatcher,
+public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener {
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
     private static final String KEY_REQUESTED_USERNAME = "KEY_REQUESTED_USERNAME";

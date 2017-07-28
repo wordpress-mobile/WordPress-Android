@@ -15,6 +15,7 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
@@ -29,7 +30,8 @@ import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
 import java.util.ArrayList;
 
-public class LoginEmailPasswordFragment extends LoginBaseFormFragment implements TextWatcher, OnEditorCommitListener {
+public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
+        OnEditorCommitListener {
     private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
 
@@ -58,6 +60,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
         mPassword = getArguments().getString(ARG_PASSWORD);

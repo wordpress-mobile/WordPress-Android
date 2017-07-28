@@ -1,13 +1,16 @@
-package org.wordpress.android.ui.accounts;
+package org.wordpress.android.ui.accounts.login;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -23,32 +26,31 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
+public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueListener> {
     public static final String TAG = "login_epilogue_fragment_tag";
 
+    private static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
     private static final String ARG_SHOW_AND_RETURN = "ARG_SHOW_AND_RETURN";
     private static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
-    private View mSitesProgress;
     private RecyclerView mSitesList;
     private View mBottomShadow;
     private View mBottomButtonsContainer;
 
-    protected @Inject AccountStore mAccountStore;
+    @Inject AccountStore mAccountStore;
 
     private SitePickerAdapter mAdapter;
+    private boolean mDoLoginUpdate;
     private boolean mShowAndReturn;
     private ArrayList<Integer> mOldSitesIds;
 
-    interface LoginEpilogueListener {
-        void onConnectAnotherSite();
-        void onContinue();
-    }
     private LoginEpilogueListener mLoginEpilogueListener;
 
-    public static LoginEpilogueFragment newInstance(boolean showAndReturn, ArrayList<Integer> oldSitesIds) {
+    public static LoginEpilogueFragment newInstance(boolean doLoginUpdate, boolean showAndReturn,
+            ArrayList<Integer> oldSitesIds) {
         LoginEpilogueFragment fragment = new LoginEpilogueFragment();
         Bundle args = new Bundle();
+        args.putBoolean(ARG_DO_LOGIN_UPDATE, doLoginUpdate);
         args.putBoolean(ARG_SHOW_AND_RETURN, showAndReturn);
         args.putIntegerArrayList(ARG_OLD_SITES_IDS, oldSitesIds);
         fragment.setArguments(args);
@@ -56,26 +58,47 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
-
-        mShowAndReturn = getArguments().getBoolean(ARG_SHOW_AND_RETURN);
-        mOldSitesIds = getArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
+    protected boolean listenForLogin() {
+        return mDoLoginUpdate;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_epilogue_screen, container, false);
+    protected @LayoutRes int getContentLayout() {
+        return 0; // nothing special here. The view is inflated in createMainView()
+    }
 
-        mSitesProgress = rootView.findViewById(R.id.sites_progress);
+    @Override
+    protected @LayoutRes int getProgressBarText() {
+        return R.string.logging_in;
+    }
 
+    @Override
+    protected void setupLabel(TextView label) {
+        // nothing special to do, no main label on epilogue screen
+    }
+
+    @Override
+    protected ViewGroup createMainView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return (ViewGroup) inflater.inflate(R.layout.login_epilogue_screen, container, false);
+    }
+
+    @Override
+    protected void setupContent(ViewGroup rootView) {
         mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
+
         mBottomButtonsContainer = rootView.findViewById(R.id.bottom_buttons);
 
-        View connectMore = rootView.findViewById(R.id.login_connect_more);
-        connectMore.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
-        connectMore.setOnClickListener(new View.OnClickListener() {
+        mSitesList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mSitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mSitesList.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        mSitesList.setItemAnimator(null);
+        mSitesList.setAdapter(getAdapter());
+    }
+
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
+        secondaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginEpilogueListener != null) {
@@ -84,7 +107,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        rootView.findViewById(R.id.login_continue).setOnClickListener(new View.OnClickListener() {
+        primaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginEpilogueListener != null) {
@@ -92,14 +115,16 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
                 }
             }
         });
+    }
 
-        mSitesList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mSitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mSitesList.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        mSitesList.setItemAnimator(null);
-        mSitesList.setAdapter(getAdapter());
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        return rootView;
+        mDoLoginUpdate = getArguments().getBoolean(ARG_DO_LOGIN_UPDATE);
+        mShowAndReturn = getArguments().getBoolean(ARG_SHOW_AND_RETURN);
+        mOldSitesIds = getArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
     }
 
     private SitePickerAdapter getAdapter() {
@@ -157,12 +182,6 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         }, mOldSitesIds);
     }
 
-    public void showProgress(boolean show) {
-        if (mSitesProgress != null) {
-            mSitesProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -176,6 +195,11 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        if (mDoLoginUpdate) {
+            // when from magiclink, we need to complete the login process here (update account and settings)
+            doFinishLogin();
+        }
     }
 
     private void refreshAccountDetails(HeaderViewHolder holder, int numberOfSites) {
@@ -220,5 +244,34 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     private String constructGravatarUrl(AccountModel account) {
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+
+    @Override
+    protected void onHelp() {
+        // nothing to do. No help button on the epilogue screen
+    }
+
+    @Override
+    protected void onLoginFinished() {
+        // we needed to complete the login process so, now just show an updated screen to the user
+
+        endProgress();
+        setNewAdapter();
+        mSitesList.setAdapter(mAdapter);
     }
 }

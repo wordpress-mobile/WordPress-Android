@@ -28,7 +28,6 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -47,7 +46,8 @@ import java.util.EnumSet;
 
 import javax.inject.Inject;
 
-public abstract class LoginBaseFormFragment extends Fragment implements TextWatcher {
+public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment implements TextWatcher {
+
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
 
@@ -55,7 +55,7 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
     private Button mSecondaryButton;
     private ProgressDialog mProgressDialog;
 
-    protected LoginListener mLoginListener;
+    protected LoginListenerType mLoginListener;
 
     private boolean mInProgress;
     private boolean mLoginFinished;
@@ -69,6 +69,10 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
     protected abstract void setupContent(ViewGroup rootView);
     protected abstract void setupBottomButtons(Button secondaryButton, Button primaryButton);
     protected abstract @StringRes int getProgressBarText();
+
+    protected boolean listenForLogin() {
+        return true;
+    }
 
     protected EditText getEditTextToFocusOnStart() {
         return null;
@@ -87,17 +91,21 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    protected ViewGroup createMainView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_form_screen, container, false);
         ViewStub form_container = ((ViewStub) rootView.findViewById(R.id.login_form_content_stub));
         form_container.setLayoutResource(getContentLayout());
         form_container.inflate();
+        return rootView;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ViewGroup rootView = createMainView(inflater, container, savedInstanceState);
 
         setupLabel((TextView) rootView.findViewById(R.id.label));
 
@@ -143,13 +151,12 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof LoginListener) {
-            mLoginListener = (LoginListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement LoginListener");
-        }
+
+        // this will throw if parent activity doesn't implement the login listener interface
+        mLoginListener = (LoginListenerType) context;
     }
 
     @Override
@@ -161,13 +168,19 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
     @Override
     public void onStart() {
         super.onStart();
-        mDispatcher.register(this);
+
+        if (listenForLogin()) {
+            mDispatcher.register(this);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mDispatcher.unregister(this);
+
+        if (listenForLogin()) {
+            mDispatcher.unregister(this);
+        }
     }
 
     @Override
@@ -224,6 +237,15 @@ public abstract class LoginBaseFormFragment extends Fragment implements TextWatc
     }
 
     protected void doFinishLogin() {
+        if (mLoginFinished) {
+            onLoginFinished(false);
+            return;
+        }
+
+        if (mProgressDialog == null) {
+            startProgress();
+        }
+
         mProgressDialog.setCancelable(false);
         mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
     }

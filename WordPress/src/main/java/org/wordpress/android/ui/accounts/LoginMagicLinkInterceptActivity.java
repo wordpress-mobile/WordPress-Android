@@ -21,7 +21,8 @@ public class LoginMagicLinkInterceptActivity extends Activity {
             Intent intent = new Intent(this, WPMainActivity.class);
             intent.setAction(getIntent().getAction());
             intent.setData(getIntent().getData());
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
             // just hand over control to the SignInActivity and don't come back

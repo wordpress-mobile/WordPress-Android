@@ -17,14 +17,14 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
-import org.wordpress.android.ui.accounts.LoginEpilogueFragment;
+import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.NewBlogFragment;
 import org.wordpress.android.ui.accounts.NewUserFragment;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.accounts.login.Login2FaFragment;
-import org.wordpress.android.ui.accounts.login.LoginBaseFormFragment;
+import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
@@ -128,8 +128,8 @@ public interface AppComponent {
     void inject(NewUserFragment object);
 
     void inject(LoginActivity object);
-    void inject(LoginBaseFormFragment object);
     void inject(LoginMagicLinkRequestFragment object);
+    void inject(LoginEmailFragment object);
     void inject(LoginEmailPasswordFragment object);
     void inject(Login2FaFragment object);
     void inject(LoginSiteAddressFragment object);
