@@ -285,6 +285,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void forgotPassword() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FORGOT_PASSWORD_CLICKED);
         ActivityLauncher.openUrlExternal(this, FORGOT_PASSWORD_URL);
     }
 
