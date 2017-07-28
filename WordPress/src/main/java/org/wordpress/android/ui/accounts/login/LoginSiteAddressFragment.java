@@ -130,6 +130,8 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
         if (savedInstanceState != null) {
             mRequestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_URL_FORM_VIEWED);
         }
     }
 
