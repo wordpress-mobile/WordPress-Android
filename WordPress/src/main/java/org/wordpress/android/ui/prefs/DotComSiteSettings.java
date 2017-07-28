@@ -287,7 +287,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 for (int i = 0; i < whitelistItems.length(); ++i) {
                     String item = whitelistItems.optString(i, "");
                     if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectWhitelist.contains(item)) {
-                        mRemoteJpSettings.jetpackProtectWhitelist.add(i, item);
+                        mRemoteJpSettings.jetpackProtectWhitelist.add(item);
                     }
                 }
             }
