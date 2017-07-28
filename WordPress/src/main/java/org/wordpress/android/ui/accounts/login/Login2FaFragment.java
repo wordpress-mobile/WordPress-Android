@@ -131,6 +131,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         if (savedInstanceState != null) {
             mInProgressMessageId = savedInstanceState.getInt(KEY_IN_PROGRESS_MESSAGE_ID, 0);
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_TWO_FACTOR_FORM_VIEWED);
         }
 
         super.onActivityCreated(savedInstanceState);
