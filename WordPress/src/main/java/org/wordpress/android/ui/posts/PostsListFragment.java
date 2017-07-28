@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,7 +29,6 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -48,6 +46,7 @@ import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -190,106 +189,21 @@ public class PostsListFragment extends Fragment
     }
 
     public void handleEditPostResult(int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK || data == null || !isAdded()) {
-            return;
-        }
-        boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
-        if (!hasChanges) {
-            // if there are no changes, we don't need to do anything
-            return;
-        }
-
-        boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
-        if (savedLocally && !NetworkUtils.isNetworkAvailable(getActivity())) {
-            // The network is not available, we can't do anything
-            ToastUtils.showToast(getActivity(), R.string.error_publish_no_network,
-                    ToastUtils.Duration.SHORT);
+        if (!isAdded()) {
             return;
         }
 
         final PostModel post = mPostStore.
                 getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
-        boolean hasFailedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_FAILED_MEDIA, false);
-        if (hasFailedMedia) {
-            showSnackbar(R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
-                        }
-                    });
-            return;
-        }
 
-        View.OnClickListener publishPostListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                publishPost(post);
-            }
-        };
-        boolean isScheduledPost = post != null && PostStatus.fromPost(post) == PostStatus.SCHEDULED;
-        if (isScheduledPost) {
-            // if it's a scheduled post, we only want to show a "Sync" button if it's locally saved
-            if (savedLocally) {
-                showSnackbar(R.string.editor_post_saved_locally, R.string.button_sync, publishPostListener);
-            }
-            return;
-        }
-
-        boolean isPublished = post != null && PostStatus.fromPost(post) == PostStatus.PUBLISHED;
-        if (isPublished) {
-            // if it's a published post, we only want to show a "Sync" button if it's locally saved
-            if (savedLocally) {
-                showSnackbar(R.string.editor_post_saved_locally, R.string.button_sync, publishPostListener);
-            } else {
-                showSnackbar(getString(R.string.editor_uploading_post));
-            }
-            return;
-        }
-
-        boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
-        if (isDraft) {
-            if (PostUtils.isPublishable(post)) {
-                // if the post is publishable, we offer the PUBLISH button
-                if (savedLocally) {
-                    showSnackbar(R.string.editor_draft_saved_locally, R.string.button_publish, publishPostListener);
-                }
-                else {
-                    if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post) ||
-                            UploadService.isPostUploadingOrQueued(post)) {
-                        showSnackbar(getString(R.string.editor_uploading_post));
-                    } else {
-                        showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
+        UploadUtils.handleEditPostResultSnackbars(getActivity(), resultCode, data, post, mSite,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UploadUtils.publishPost(getActivity(), post, mSite, mDispatcher);
                     }
-                }
-            } else {
-                showSnackbar(getString(R.string.editor_draft_saved_locally));
-            }
-        } else {
-            if (savedLocally) {
-                showSnackbar(R.string.editor_post_saved_locally, R.string.button_publish, publishPostListener);
-            }
-            else {
-                if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post) ||
-                        UploadService.isPostUploadingOrQueued(post)) {
-                    showSnackbar(getString(R.string.editor_uploading_post));
-                } else {
-                    showSnackbar(R.string.editor_post_saved_online, R.string.button_publish, publishPostListener);
-                }
-            }
-        }
+                });
     }
-
-    private void showSnackbar(int messageRes, int buttonTitleRes, View.OnClickListener onClickListener) {
-        Snackbar.make(getActivity().findViewById(R.id.coordinator), messageRes, Snackbar.LENGTH_LONG)
-                .setAction(buttonTitleRes, onClickListener).show();
-    }
-
-    private void showSnackbar(String text) {
-        Snackbar.make(getView().findViewById(R.id.coordinator),
-                text, Snackbar.LENGTH_LONG).show();
-    }
-
 
     private void initSwipeToRefreshHelper(View view) {
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(
@@ -541,7 +455,7 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_SYNC:
             case PostListButton.BUTTON_RETRY:
             case PostListButton.BUTTON_PUBLISH:
-                publishPost(post);
+                UploadUtils.publishPost(getActivity(), post, mSite, mDispatcher);
                 break;
             case PostListButton.BUTTON_VIEW:
                 ActivityLauncher.browsePostOrPage(getActivity(), mSite, post);
@@ -572,36 +486,6 @@ public class PostsListFragment extends Fragment
                 }
                 break;
         }
-    }
-
-    private void publishPost(final PostModel post) {
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            ToastUtils.showToast(getActivity(), R.string.error_publish_no_network,
-                    ToastUtils.Duration.SHORT);
-            return;
-        }
-
-        // If the post is empty, don't publish
-        if (!PostUtils.isPublishable(post)) {
-            ToastUtils.showToast(getActivity(), R.string.error_publish_empty_post, ToastUtils.Duration.SHORT);
-            return;
-        }
-
-        PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
-        boolean isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT
-                || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
-        post.setStatus(PostStatus.PUBLISHED.toString());
-
-        // save the post in the DB so the UploadService will get the latest change
-        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
-
-        if (isFirstTimePublish) {
-            UploadService.uploadPostAndTrackAnalytics(getActivity(), post);
-        } else {
-            UploadService.uploadPost(getActivity(), post);
-        }
-
-        PostUtils.trackSavePostAnalytics(post, mSite);
     }
 
     /*
@@ -739,25 +623,7 @@ public class PostsListFragment extends Fragment
         final PostModel post = event.post;
         if (isAdded() && event.post != null && event.post.getLocalSiteId() == mSite.getId()) {
             loadPosts(LoadMode.FORCED);
-
-            if (event.isError()) {
-                showSnackbar(getString(R.string.editor_draft_saved_locally));
-            } else {
-                boolean isDraft = PostStatus.fromPost(post) == PostStatus.DRAFT;
-                if (isDraft) {
-                    View.OnClickListener publishPostListener = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            publishPost(post);
-                        }
-                    };
-                    showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
-                } else {
-                    String message = post.isPage() ? getString(R.string.page_published) :
-                            getString(R.string.post_published);
-                    showSnackbar(message);
-                }
-            }
+            UploadUtils.onPostUploadedSnackbarHandler(getActivity(), event, mSite, mDispatcher);
         }
     }
 

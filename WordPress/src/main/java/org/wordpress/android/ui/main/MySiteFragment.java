@@ -23,8 +23,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -33,6 +36,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
@@ -82,6 +86,8 @@ public class MySiteFragment extends Fragment
     private int mBlavatarSz;
 
     @Inject AccountStore mAccountStore;
+    @Inject PostStore mPostStore;
+    @Inject Dispatcher mDispatcher;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
@@ -99,6 +105,13 @@ public class MySiteFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        mDispatcher.unregister(this);
+        super.onDestroy();
     }
 
     @Override
@@ -296,6 +309,19 @@ public class MySiteFragment extends Fragment
                         && data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
+                final PostModel post = mPostStore.
+                        getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+
+                if (post != null) {
+                    final SiteModel site = getSelectedSite();
+                    UploadUtils.handleEditPostResultSnackbars(getActivity(), resultCode, data, post, site,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    UploadUtils.publishPost(getActivity(), post, site, mDispatcher);
+                                }
+                            });
+                }
                 break;
         }
     }
@@ -458,5 +484,15 @@ public class MySiteFragment extends Fragment
             return;
         }
         refreshSelectedSiteDetails();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostUploaded(PostStore.OnPostUploaded event) {
+        final PostModel post = event.post;
+        SiteModel site = getSelectedSite();
+        if (isAdded() && event.post != null && event.post.getLocalSiteId() == site.getId()) {
+            UploadUtils.onPostUploadedSnackbarHandler(getActivity(), event, site, mDispatcher);
+        }
     }
 }

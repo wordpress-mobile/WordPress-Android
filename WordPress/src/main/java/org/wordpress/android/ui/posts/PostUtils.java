@@ -300,7 +300,7 @@ public class PostUtils {
         return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
     }
 
-    static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
+    public static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
         if (shouldPublishImmediately(postModel)) {
             postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
         }
