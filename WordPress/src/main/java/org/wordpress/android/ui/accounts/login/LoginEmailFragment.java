@@ -127,6 +127,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment implements TextWat
     @Override
     protected void onHelp() {
         if (mLoginListener != null) {
+            // send to Help the exact string the user has inputted for email
             mLoginListener.helpEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()));
         }
     }
