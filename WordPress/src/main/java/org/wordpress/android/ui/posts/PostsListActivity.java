@@ -11,7 +11,9 @@ import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
@@ -21,6 +23,7 @@ import javax.inject.Inject;
 
 public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
+    public static final String EXTRA_TARGET_POST_ID = "targetPostId";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
 
     private boolean mIsPage = false;
@@ -28,6 +31,7 @@ public class PostsListActivity extends AppCompatActivity {
     private SiteModel mSite;
 
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,10 +93,16 @@ public class PostsListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        PostModel targetPost = null;
+        int targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_ID, 0);
+        if (targetPostId > 0) {
+            targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_ID, 0));
+        }
+
         mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
-        if (mPostList == null || siteHasChanged || pageHasChanged) {
+        if (mPostList == null || siteHasChanged || pageHasChanged || targetPost != null) {
             PostsListFragment oldFragment = mPostList;
-            mPostList = PostsListFragment.newInstance(mSite, mIsPage);
+            mPostList = PostsListFragment.newInstance(mSite, mIsPage, targetPost);
             if (oldFragment == null) {
                 getFragmentManager().beginTransaction()
                         .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)

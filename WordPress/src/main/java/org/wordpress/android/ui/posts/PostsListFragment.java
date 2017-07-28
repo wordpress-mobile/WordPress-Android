@@ -85,6 +85,7 @@ public class PostsListFragment extends Fragment
 
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
+    private PostModel mTargetPost;
     private boolean mIsFetchingPosts;
     private boolean mShouldCancelPendingDraftNotification = false;
     private int mPostIdForPostToBeDeleted = 0;
@@ -97,11 +98,14 @@ public class PostsListFragment extends Fragment
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
 
-    public static PostsListFragment newInstance(SiteModel site, boolean isPage) {
+    public static PostsListFragment newInstance(SiteModel site, boolean isPage, @Nullable PostModel targetPost) {
         PostsListFragment fragment = new PostsListFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
         bundle.putBoolean(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
+        if (targetPost != null) {
+            bundle.putInt(PostsListActivity.EXTRA_TARGET_POST_ID, targetPost.getId());
+        }
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -130,18 +134,23 @@ public class PostsListFragment extends Fragment
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
                 mIsPage = getArguments().getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
+                mTargetPost = mPostStore.getPostByLocalPostId(
+                        getArguments().getInt(PostsListActivity.EXTRA_TARGET_POST_ID));
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
                 mIsPage = getActivity().getIntent().getBooleanExtra(PostsListActivity.EXTRA_VIEW_PAGES, false);
+                mTargetPost = mPostStore.getPostByLocalPostId(
+                        getActivity().getIntent().getIntExtra(PostsListActivity.EXTRA_TARGET_POST_ID, 0));
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mIsPage = savedInstanceState.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
+            mTargetPost = mPostStore.getPostByLocalPostId(
+                    savedInstanceState.getInt(PostsListActivity.EXTRA_TARGET_POST_ID));
         }
 
         if (mSite == null) {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found,
-                    ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
     }
