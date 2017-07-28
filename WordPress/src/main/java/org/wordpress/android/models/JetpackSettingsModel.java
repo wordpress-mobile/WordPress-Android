@@ -1,7 +1,9 @@
 package org.wordpress.android.models;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class JetpackSettingsModel {
     public long localTableId;
@@ -23,6 +25,12 @@ public class JetpackSettingsModel {
     }
 
     public boolean whitelistMatches(List<String> otherWhitelist) {
-        return otherWhitelist != null && jetpackProtectWhitelist.equals(otherWhitelist);
+        if (otherWhitelist == null) {
+            return false;
+        }
+
+        Set<String> whitelistSet = new HashSet<>(jetpackProtectWhitelist);
+        Set<String> otherSet = new HashSet<>(otherWhitelist);
+        return whitelistSet.equals(otherSet);
     }
 }
