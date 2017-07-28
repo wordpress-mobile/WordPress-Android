@@ -323,10 +323,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         startActivity(intent);
     }
 
+    private boolean isJetpackLogin() {
+        return getLoginMode() == LoginMode.JETPACK_STATS;
+    }
+
     @Override
     public void helpSiteAddress(String url) {
-        launchHelpshift(url, null,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, false));
+        launchHelpshift(url, null, HelpshiftHelper.chooseHelpshiftLoginTag(isJetpackLogin(), false));
     }
 
     @Override
@@ -336,38 +339,32 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpEmailScreen(String email) {
-        launchHelpshift(null, email,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+        launchHelpshift(null, email, HelpshiftHelper.chooseHelpshiftLoginTag(isJetpackLogin(), true));
     }
 
     @Override
     public void helpMagicLinkRequest(String email) {
-        launchHelpshift(null, email,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+        launchHelpshift(null, email, HelpshiftHelper.chooseHelpshiftLoginTag(isJetpackLogin(), true));
     }
 
     @Override
     public void helpMagicLinkSent(String email) {
-        launchHelpshift(null, email,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+        launchHelpshift(null, email, HelpshiftHelper.chooseHelpshiftLoginTag(isJetpackLogin(), true));
     }
 
     @Override
     public void helpEmailPasswordScreen(String email) {
-        launchHelpshift(null, email,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+        launchHelpshift(null, email, HelpshiftHelper.chooseHelpshiftLoginTag(isJetpackLogin(), true));
     }
 
     @Override
     public void help2FaScreen(String email) {
-        launchHelpshift(null, email,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, true));
+        launchHelpshift(null, email, HelpshiftHelper.chooseHelpshiftLoginTag(isJetpackLogin(), true));
     }
 
     @Override
     public void helpUsernamePassword(String url, String username, boolean isWpcom) {
-        launchHelpshift(url, username,
-                HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS, isWpcom));
+        launchHelpshift(url, username, HelpshiftHelper.chooseHelpshiftLoginTag(isJetpackLogin(), isWpcom));
     }
 
     @Override
