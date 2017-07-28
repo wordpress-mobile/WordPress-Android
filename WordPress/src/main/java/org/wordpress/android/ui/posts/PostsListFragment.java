@@ -509,7 +509,7 @@ public class PostsListFragment extends Fragment
             if (mPostsListAdapter != null) {
                 final int position = mPostsListAdapter.getPositionForPost(mTargetPost);
                 if (position > -1) {
-                    mRecyclerView.smoothScrollToPosition(position);
+                    mRecyclerView.scrollToPosition(position);
                 }
             }
             mTargetPost = null;
