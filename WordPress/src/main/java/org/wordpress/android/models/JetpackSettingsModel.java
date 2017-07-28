@@ -1,6 +1,7 @@
 package org.wordpress.android.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class JetpackSettingsModel {
     public long localTableId;
@@ -8,7 +9,7 @@ public class JetpackSettingsModel {
     public boolean emailNotifications;
     public boolean wpNotifications;
     public boolean jetpackProtectEnabled;
-    public final ArrayList<String> jetpackProtectWhitelist = new ArrayList<>();
+    public final List<String> jetpackProtectWhitelist = new ArrayList<>();
 
     @Override
     public boolean equals(Object other) {
@@ -21,7 +22,7 @@ public class JetpackSettingsModel {
                 whitelistMatches(otherModel.jetpackProtectWhitelist);
     }
 
-    public boolean whitelistMatches(ArrayList<String> otherWhitelist) {
+    public boolean whitelistMatches(List<String> otherWhitelist) {
         return otherWhitelist != null && jetpackProtectWhitelist.equals(otherWhitelist);
     }
 }
