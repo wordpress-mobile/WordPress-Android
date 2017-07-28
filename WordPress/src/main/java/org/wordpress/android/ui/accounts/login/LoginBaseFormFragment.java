@@ -72,6 +72,10 @@ public abstract class LoginBaseFormFragment<LoginListenerType extends LoginBaseL
     protected abstract void setupBottomButtons(Button secondaryButton, Button primaryButton);
     protected abstract @StringRes int getProgressBarText();
 
+    protected boolean listenForLogin() {
+        return true;
+    }
+
     protected EditText getEditTextToFocusOnStart() {
         return null;
     }
@@ -166,13 +170,19 @@ public abstract class LoginBaseFormFragment<LoginListenerType extends LoginBaseL
     @Override
     public void onStart() {
         super.onStart();
-        mDispatcher.register(this);
+
+        if (listenForLogin()) {
+            mDispatcher.register(this);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mDispatcher.unregister(this);
+
+        if (listenForLogin()) {
+            mDispatcher.unregister(this);
+        }
     }
 
     @Override
@@ -229,6 +239,15 @@ public abstract class LoginBaseFormFragment<LoginListenerType extends LoginBaseL
     }
 
     protected void doFinishLogin() {
+        if (mLoginFinished) {
+            onLoginFinished(false);
+            return;
+        }
+
+        if (mProgressDialog == null) {
+            startProgress();
+        }
+
         mProgressDialog.setCancelable(false);
         mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
     }

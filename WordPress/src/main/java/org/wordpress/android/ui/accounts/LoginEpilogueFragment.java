@@ -31,6 +31,7 @@ import javax.inject.Inject;
 public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueFragment.LoginEpilogueListener> {
     public static final String TAG = "login_epilogue_fragment_tag";
 
+    private static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
     private static final String ARG_SHOW_AND_RETURN = "ARG_SHOW_AND_RETURN";
     private static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
@@ -41,6 +42,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueFr
     protected @Inject AccountStore mAccountStore;
 
     private SitePickerAdapter mAdapter;
+    private boolean mDoLoginUpdate;
     private boolean mShowAndReturn;
     private ArrayList<Integer> mOldSitesIds;
 
@@ -50,13 +52,20 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueFr
     }
     private LoginEpilogueListener mLoginEpilogueListener;
 
-    public static LoginEpilogueFragment newInstance(boolean showAndReturn, ArrayList<Integer> oldSitesIds) {
+    public static LoginEpilogueFragment newInstance(boolean doLoginUpdate, boolean showAndReturn,
+            ArrayList<Integer> oldSitesIds) {
         LoginEpilogueFragment fragment = new LoginEpilogueFragment();
         Bundle args = new Bundle();
+        args.putBoolean(ARG_DO_LOGIN_UPDATE, doLoginUpdate);
         args.putBoolean(ARG_SHOW_AND_RETURN, showAndReturn);
         args.putIntegerArrayList(ARG_OLD_SITES_IDS, oldSitesIds);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    protected boolean listenForLogin() {
+        return mDoLoginUpdate;
     }
 
     @Override
@@ -119,6 +128,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueFr
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
+        mDoLoginUpdate = getArguments().getBoolean(ARG_DO_LOGIN_UPDATE);
         mShowAndReturn = getArguments().getBoolean(ARG_SHOW_AND_RETURN);
         mOldSitesIds = getArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
     }
@@ -191,6 +201,11 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueFr
     @Override
     public void onResume() {
         super.onResume();
+
+        if (mDoLoginUpdate) {
+            // when from magiclink, we need to complete the login process here (update account and settings)
+            doFinishLogin();
+        }
     }
 
     private void refreshAccountDetails(HeaderViewHolder holder, int numberOfSites) {
@@ -255,5 +270,14 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueFr
     @Override
     protected void onHelp() {
         // nothing to do. No help button on the epilogue screen
+    }
+
+    @Override
+    protected void onLoginFinished() {
+        // we needed to complete the login process so, now just show an updated screen to the user
+
+        endProgress();
+        setNewAdapter();
+        mSitesList.setAdapter(mAdapter);
     }
 }

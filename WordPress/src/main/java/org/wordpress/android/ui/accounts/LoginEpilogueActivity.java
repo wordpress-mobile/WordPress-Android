@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpilogueFragment.LoginEpilogueListener {
+    public static final String EXTRA_DO_LOGIN_UPDATE = "EXTRA_DO_LOGIN_UPDATE";
     public static final String EXTRA_SHOW_AND_RETURN = "EXTRA_SHOW_AND_RETURN";
     public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
@@ -27,15 +28,17 @@ public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpi
         setContentView(R.layout.login_epilogue_activity);
 
         if (savedInstanceState == null) {
+            boolean doLoginUpdate = getIntent().getBooleanExtra(EXTRA_DO_LOGIN_UPDATE, false);
             boolean showAndReturn = getIntent().getBooleanExtra(EXTRA_SHOW_AND_RETURN, false);
             ArrayList<Integer> oldSitesIds = getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS);
 
-            addPostLoginFragment(showAndReturn, oldSitesIds);
+            addPostLoginFragment(doLoginUpdate, showAndReturn, oldSitesIds);
         }
     }
 
-    protected void addPostLoginFragment(boolean showAndReturn, ArrayList<Integer> oldSitesIds) {
-        LoginEpilogueFragment loginEpilogueFragment = LoginEpilogueFragment.newInstance(showAndReturn, oldSitesIds);
+    protected void addPostLoginFragment(boolean doLoginUpdate, boolean showAndReturn, ArrayList<Integer> oldSitesIds) {
+        LoginEpilogueFragment loginEpilogueFragment = LoginEpilogueFragment.newInstance(doLoginUpdate, showAndReturn,
+                oldSitesIds);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, loginEpilogueFragment, LoginEpilogueFragment.TAG);
         fragmentTransaction.commit();

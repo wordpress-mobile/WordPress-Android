@@ -272,7 +272,7 @@ public class WPMainActivity extends AppCompatActivity {
             AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
-            ActivityLauncher.showLoginEpilogue(this, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+            ActivityLauncher.showLoginEpilogue(this, false, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         }
     }
 
@@ -683,7 +683,7 @@ public class WPMainActivity extends AppCompatActivity {
         }
 
         if (mAccountStore.hasAccessToken() && hasMagicLinkLoginIntent()) {
-            ActivityLauncher.showLoginEpilogue(this, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+            ActivityLauncher.showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         }
     }
 
