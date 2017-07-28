@@ -197,6 +197,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_USERNAME_PASSWORD_FORM_VIEWED);
+
             // auto-login if username and password are set for wpcom login
             if (mIsWpcom && !TextUtils.isEmpty(mInputUsername) && !TextUtils.isEmpty(mInputPassword)) {
                 getPrimaryButton().post(new Runnable() {
