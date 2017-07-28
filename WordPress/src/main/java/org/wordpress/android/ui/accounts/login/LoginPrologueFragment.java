@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPViewPager;
 
 public class LoginPrologueFragment extends Fragment {
@@ -46,6 +47,10 @@ public class LoginPrologueFragment extends Fragment {
         // Using a TabLayout for simulating a page indicator strip
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout_indicator);
         tabLayout.setupWithViewPager(pager, true);
+
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_VIEWED);
+        }
 
         return view;
     }
