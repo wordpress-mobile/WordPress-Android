@@ -596,13 +596,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (URLUtil.isNetworkUrl(mediaUrl)) {
             final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
             imageLoader.get(posterURL, new ImageLoader.ImageListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    if (!isAdded()) {
-                        // the fragment is detached
-                        return;
-                    }
 
+                private void showErrorPlaceholder() {
                     // Show failed placeholder.
                     ToastUtils.showToast(getActivity(), R.string.error_media_load);
                     Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
@@ -613,10 +608,24 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
 
                 @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (!isAdded()) {
+                        // the fragment is detached
+                        return;
+                    }
+                    showErrorPlaceholder();
+                }
+
+                @Override
                 public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
+                    if (!isAdded()) {
+                        // the fragment is detached
+                        return;
+                    }
                     Bitmap downloadedBitmap = container.getBitmap();
-                    if (downloadedBitmap == null || !isAdded()) {
-                        // No bitmap downloaded from server or the fragment is detached
+                    if ((downloadedBitmap == null && !isImmediate)) {
+                        // No bitmap downloaded from server. (isImmediate is true as soon as the request starts).
+                        showErrorPlaceholder();
                         return;
                     }
 
@@ -645,6 +654,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
                 }
             }, maxWidth, maxWidth);
+
 
             mActionStartedAt = System.currentTimeMillis();
         } else {
