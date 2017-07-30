@@ -270,7 +270,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void openEmailClient() {
         if (WPActivityUtils.isEmailClientAvailable(this)) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED);
             WPActivityUtils.openEmailClient(this);
         } else {
             ToastUtils.showToast(this, R.string.login_email_client_not_found);
