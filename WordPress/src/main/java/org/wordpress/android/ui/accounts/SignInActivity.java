@@ -84,7 +84,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         }
 
         mSmartLockHelper = new SmartLockHelper(this);
-        mSmartLockHelper.initSmartLockForPasswords();
+        mSmartLockHelper.initSmartLockForPasswords(null);
 
         ActivityId.trackLastActivity(ActivityId.LOGIN);
     }
