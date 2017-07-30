@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
@@ -334,5 +335,10 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
         AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);
         mLoginListener.gotXmlRpcEndpoint(requestedSiteAddress, event.xmlRpcEndpoint);
+    }
+
+    @Override
+    public HelpshiftHelper.Tag helpshiftOriginTag() {
+        return HelpshiftHelper.Tag.ORIGIN_LOGIN_SITE_ADDRESS;
     }
 }

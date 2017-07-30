@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -232,5 +233,10 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     @Override
     protected void onLoginFinished() {
         mLoginListener.loggedInViaPassword(mOldSitesIDs);
+    }
+
+    @Override
+    public HelpshiftHelper.Tag helpshiftOriginTag() {
+        return HelpshiftHelper.Tag.ORIGIN_LOGIN_EMAIL_PASSWORD;
     }
 }

@@ -25,6 +25,7 @@ import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -257,5 +258,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 AppLog.e(T.API, "OnAvailabilityChecked unhandled event type: " + event.error.type);
                 break;
         }
+    }
+
+    @Override
+    public HelpshiftHelper.Tag helpshiftOriginTag() {
+        return HelpshiftHelper.Tag.ORIGIN_LOGIN_EMAIL;
     }
 }
