@@ -19,10 +19,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -197,6 +199,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_USERNAME_PASSWORD_FORM_VIEWED);
+
             // auto-login if username and password are set for wpcom login
             if (mIsWpcom && !TextUtils.isEmpty(mInputUsername) && !TextUtils.isEmpty(mInputPassword)) {
                 getPrimaryButton().post(new Runnable() {
@@ -347,6 +351,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             mAuthFailed = true;
             AppLog.e(T.API, "Login with username/pass onAuthenticationChanged has error: " + event.error.type + " - " +
                     event.error.message);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+                    event.error.type.toString(), event.error.message);
 
             handleAuthError(event.error.type, event.error.message);
 
@@ -364,6 +370,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
     @Override
     protected void onLoginFinished() {
+        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+
         mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }
 
@@ -410,6 +418,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
         // continue with success, even if the operation was cancelled since the user got logged in regardless. So, go on
         //  with finishing the login process
+
+        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
 
         startPostLoginServices();
 

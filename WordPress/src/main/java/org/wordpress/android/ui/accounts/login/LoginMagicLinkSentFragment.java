@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.HelpshiftHelper;
 
 public class LoginMagicLinkSentFragment extends Fragment implements LoginHelpshiftOriginProvider {
@@ -80,6 +81,10 @@ public class LoginMagicLinkSentFragment extends Fragment implements LoginHelpshi
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED);
         }
     }
 

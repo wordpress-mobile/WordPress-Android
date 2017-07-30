@@ -20,6 +20,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -130,6 +131,8 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
         if (savedInstanceState != null) {
             mRequestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_URL_FORM_VIEWED);
         }
     }
 
@@ -221,6 +224,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 break;
             case INVALID_URL:
                 showError(R.string.invalid_site_url_message, null, null);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_INSERTED_INVALID_URL);
                 break;
             case MISSING_XMLRPC_METHOD:
                 showError(R.string.xmlrpc_missing_method_error,
@@ -311,6 +315,9 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         }
 
         if (event.isError()) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+                    event.error.name(), event.error.toString());
+
             if (event.error == DiscoveryError.WORDPRESS_COM_SITE) {
                 AppLog.e(T.API, "Inputted a wpcom address in site address screen.");
 

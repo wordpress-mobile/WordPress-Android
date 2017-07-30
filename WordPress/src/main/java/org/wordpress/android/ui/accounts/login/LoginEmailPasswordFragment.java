@@ -16,10 +16,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -131,6 +133,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PASSWORD_FORM_VIEWED);
+
             mPasswordInput.setText(mPassword);
         } else {
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
@@ -215,6 +219,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             endProgress();
 
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+                    event.error.type.toString(), event.error.message);
 
             if (isAdded()) {
                 handleAuthError(event.error.type, event.error.message);
@@ -232,6 +238,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     @Override
     protected void onLoginFinished() {
+        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+
         mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }
 

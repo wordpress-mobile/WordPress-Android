@@ -19,6 +19,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.ui.accounts.LoginMode;
@@ -145,6 +146,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
         if (savedInstanceState != null) {
             mRequestedEmail = savedInstanceState.getString(KEY_REQUESTED_EMAIL);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
         }
     }
 
