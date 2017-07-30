@@ -61,7 +61,13 @@ public class HelpshiftHelper {
         ORIGIN_SIGNUP_SCREEN("origin:signup-screen"),
         ORIGIN_ME_SCREEN_HELP("origin:me-screen-help"),
         ORIGIN_DELETE_SITE("origin:delete-site"),
-        ORIGIN_FEEDBACK_AZTEC("origin:aztec-feedback");
+        ORIGIN_FEEDBACK_AZTEC("origin:aztec-feedback"),
+        ORIGIN_LOGIN_EMAIL("origin:login-email"),
+        ORIGIN_LOGIN_MAGIC_LINK("origin:login-magic-link"),
+        ORIGIN_LOGIN_EMAIL_PASSWORD("origin:login-wpcom-password"),
+        ORIGIN_LOGIN_2FA("origin:login-2fa"),
+        ORIGIN_LOGIN_SITE_ADDRESS("origin:login-site-address"),
+        ORIGIN_LOGIN_USERNAME_PASSWORD("origin:login-username-password");
 
         private final String mStringValue;
 
