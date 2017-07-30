@@ -688,6 +688,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_email_form_viewed";
             case LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED:
                 return "login_magic_link_open_email_client_viewed";
+            case LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED:
+                return "login_magic_link_open_email_client_clicked";
             case LOGIN_MAGIC_LINK_REQUEST_FORM_VIEWED:
                 return "login_magic_link_request_form_viewed";
             case LOGIN_PASSWORD_FORM_VIEWED:
@@ -698,8 +700,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_url_help_screen_viewed";
             case LOGIN_USERNAME_PASSWORD_FORM_VIEWED:
                 return "login_username_password_form_viewed";
-            case LOGIN_USERNAME_PASSWORD_RETRY_VIEWED:
-                return "login_username_password_retry_viewed";
             case LOGIN_TWO_FACTOR_FORM_VIEWED:
                 return "login_two_factor_form_viewed";
             case LOGIN_EPILOGUE_VIEWED:

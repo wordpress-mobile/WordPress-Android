@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.login;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -15,9 +16,11 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.main.SitePickerAdapter;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -125,6 +128,15 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         mDoLoginUpdate = getArguments().getBoolean(ARG_DO_LOGIN_UPDATE);
         mShowAndReturn = getArguments().getBoolean(ARG_SHOW_AND_RETURN);
         mOldSitesIds = getArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EPILOGUE_VIEWED);
+        }
     }
 
     private SitePickerAdapter getAdapter() {
@@ -269,6 +281,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Override
     protected void onLoginFinished() {
         // we needed to complete the login process so, now just show an updated screen to the user
+
+        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
         endProgress();
         setNewAdapter();

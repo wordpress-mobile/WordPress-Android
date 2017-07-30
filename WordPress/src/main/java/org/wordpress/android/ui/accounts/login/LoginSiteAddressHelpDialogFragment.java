@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.LoginMode;
@@ -62,6 +63,10 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
                         mAccountStore.getAccount().getUserName());
             }
         });
+
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_URL_HELP_SCREEN_VIEWED);
+        }
 
         return alert.create();
     }

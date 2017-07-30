@@ -55,6 +55,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         setContentView(R.layout.login_activity);
 
         if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_ACCESSED);
+
             switch (getLoginMode()) {
                 case FULL:
                     showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
@@ -221,6 +223,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void doStartSignup() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
         NewUserFragment newUserFragment = NewUserFragment.newInstance();
         slideInFragment(newUserFragment, true, NewUserFragment.TAG);
     }
@@ -267,6 +270,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void openEmailClient() {
         if (WPActivityUtils.isEmailClientAvailable(this)) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED);
             WPActivityUtils.openEmailClient(this);
         } else {
             ToastUtils.showToast(this, R.string.login_email_client_not_found);
@@ -275,12 +279,14 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void usePasswordInstead(String email) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
         LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, null);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
     }
 
     @Override
     public void forgotPassword() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FORGOT_PASSWORD_CLICKED);
         ActivityLauncher.openUrlExternal(this, FORGOT_PASSWORD_URL);
     }
 

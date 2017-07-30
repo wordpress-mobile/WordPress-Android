@@ -21,6 +21,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -30,6 +31,8 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 public class LoginMagicLinkRequestFragment extends Fragment {
@@ -38,6 +41,8 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
     private static final String KEY_GRAVATAR_IN_PROGRESS = "KEY_GRAVATAR_IN_PROGRESS";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
+
+    private static final String ERROR_KEY = "error";
 
     private LoginListener mLoginListener;
 
@@ -125,6 +130,10 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUEST_FORM_VIEWED);
         }
     }
 
@@ -239,6 +248,10 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         endProgress();
 
         if (event.isError()) {
+            HashMap<String, String> errorProperties = new HashMap<>();
+            errorProperties.put(ERROR_KEY, event.error.message);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, errorProperties);
+
             AppLog.e(AppLog.T.API, "OnAuthEmailSent has error: " + event.error.type + " - " + event.error.message);
             if (isAdded()) {
                 ToastUtils.showToast(getActivity(), R.string.magic_link_unavailable_error_message, ToastUtils
@@ -246,6 +259,8 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             }
             return;
         }
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUESTED);
 
         if (mLoginListener != null) {
             mLoginListener.showMagicLinkSentScreen(mEmail);

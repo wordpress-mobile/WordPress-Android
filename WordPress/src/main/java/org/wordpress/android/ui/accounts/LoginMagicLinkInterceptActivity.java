@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 
@@ -18,6 +19,8 @@ public class LoginMagicLinkInterceptActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         if (AppPrefs.isLoginWizardStyleActivated()) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPENED);
+
             Intent intent = new Intent(this, WPMainActivity.class);
             intent.setAction(getIntent().getAction());
             intent.setData(getIntent().getData());
