@@ -22,6 +22,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.login.Login2FaFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
+import org.wordpress.android.ui.accounts.login.LoginHelpshiftOriginProvider;
 import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
@@ -315,14 +316,26 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void launchHelpshift(String url, String username, boolean isWpcom) {
-        HelpshiftHelper.Tag origin = HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS,
-                isWpcom);
+        HelpshiftHelper.Tag origin;
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        if (currentFragment instanceof LoginHelpshiftOriginProvider) {
+            origin = ((LoginHelpshiftOriginProvider) currentFragment).helpshiftOriginTag();
+        } else {
+            // For backward compatibility with the old Login activity
+            origin = HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS,
+                    isWpcom);
+        }
 
         Intent intent = new Intent(this, HelpActivity.class);
         // Used to pass data to an eventual support service
         intent.putExtra(HelpshiftHelper.ENTERED_URL_KEY, url);
         intent.putExtra(HelpshiftHelper.ENTERED_USERNAME_KEY, username);
         intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
+        if (getLoginMode() == LoginMode.JETPACK_STATS) {
+            HelpshiftHelper.Tag[] tags = new HelpshiftHelper.Tag[]{HelpshiftHelper.Tag.CONNECTING_JETPACK};
+            intent.putExtra(HelpshiftHelper.EXTRA_TAGS_KEY, tags);
+        }
         startActivity(intent);
     }
 
