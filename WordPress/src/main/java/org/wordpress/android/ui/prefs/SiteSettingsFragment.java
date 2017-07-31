@@ -208,6 +208,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mJpMonitorWpNotesPref;
     private WPSwitchPreference mJpBruteForcePref;
     private WPPreference mJpWhitelistPref;
+    private WPSwitchPreference mJpSsoPref;
+    private WPSwitchPreference mJpMatchEmailPref;
+    private WPSwitchPreference mJpUseTwoFactorPref;
 
     public boolean mEditingEnabled = true;
 
@@ -500,6 +503,15 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mJpBruteForcePref) {
             mJpBruteForcePref.setChecked((Boolean) newValue);
             mSiteSettings.enableJetpackProtect((Boolean) newValue);
+        } else if (preference == mJpSsoPref) {
+            mJpSsoPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackSso((Boolean) newValue);
+        } else if (preference == mJpMatchEmailPref) {
+            mJpMatchEmailPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackSsoMatchEmail((Boolean) newValue);
+        } else if (preference == mJpUseTwoFactorPref) {
+            mJpUseTwoFactorPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackSsoTwoFactor((Boolean) newValue);
         } else if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
             changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
@@ -744,7 +756,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpMonitorActivePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_monitor_uptime);
         mJpMonitorEmailNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_email_notifications);
         mJpMonitorWpNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_wp_notifications);
+        mJpSsoPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_allow_wpcom_sign_in);
         mJpBruteForcePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_prevent_brute_force);
+        mJpMatchEmailPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_match_via_email);
+        mJpUseTwoFactorPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_require_two_factor);
         mJpWhitelistPref = (WPPreference) getClickPref(R.string.pref_key_jetpack_brute_force_whitelist);
 
         sortLanguages();
@@ -1124,6 +1139,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpMonitorEmailNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorEmailNotifications());
         mJpMonitorWpNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorWpNotifications());
         mJpBruteForcePref.setChecked(mSiteSettings.isJetpackProtectEnabled());
+        mJpSsoPref.setChecked(mSiteSettings.isJetpackSsoEnabled());
+        mJpMatchEmailPref.setChecked(mSiteSettings.isJetpackSsoMatchEmailEnabled());
+        mJpUseTwoFactorPref.setChecked(mSiteSettings.isJetpackSsoTwoFactorEnabled());
         mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
     }
 
