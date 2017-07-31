@@ -65,8 +65,10 @@ public class UploadUtils {
         return errorMessage;
     }
 
-    public static void handleEditPostResultSnackbars(final Activity activity, View view, int resultCode, Intent data,
-                                                     final PostModel post, final SiteModel site, View.OnClickListener publishPostListener) {
+    public static void handleEditPostResultSnackbars(final Activity activity, View snackbarAttachView,
+                                                     int resultCode, Intent data,
+                                                     final PostModel post, final SiteModel site,
+                                                     View.OnClickListener publishPostListener) {
         if (resultCode != Activity.RESULT_OK || data == null) {
             return;
         }
@@ -86,7 +88,7 @@ public class UploadUtils {
 
         boolean hasFailedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_FAILED_MEDIA, false);
         if (hasFailedMedia) {
-            showSnackbar(view, R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
+            showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -100,7 +102,8 @@ public class UploadUtils {
         if (isScheduledPost) {
             // if it's a scheduled post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
-                showSnackbar(view, R.string.editor_post_saved_locally, R.string.button_sync, publishPostListener);
+                showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
+                        publishPostListener);
             }
             return;
         }
@@ -109,9 +112,10 @@ public class UploadUtils {
         if (isPublished) {
             // if it's a published post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
-                showSnackbar(view, R.string.editor_post_saved_locally, R.string.button_sync, publishPostListener);
+                showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
+                        publishPostListener);
             } else {
-                showSnackbar(view, R.string.editor_uploading_post);
+                showSnackbar(snackbarAttachView, R.string.editor_uploading_post);
             }
             return;
         }
@@ -121,35 +125,40 @@ public class UploadUtils {
             if (PostUtils.isPublishable(post)) {
                 // if the post is publishable, we offer the PUBLISH button
                 if (savedLocally) {
-                    showSnackbar(view, R.string.editor_draft_saved_locally, R.string.button_publish, publishPostListener);
+                    showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally, R.string.button_publish,
+                            publishPostListener);
                 }
                 else {
                     if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post) ||
                             UploadService.isPostUploadingOrQueued(post)) {
-                        showSnackbar(view, R.string.editor_uploading_post);
+                        showSnackbar(snackbarAttachView, R.string.editor_uploading_post);
                     } else {
-                        showSnackbar(view, R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
+                        showSnackbar(snackbarAttachView, R.string.editor_draft_saved_online, R.string.button_publish,
+                                publishPostListener);
                     }
                 }
             } else {
-                showSnackbar(view, R.string.editor_draft_saved_locally);
+                showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally);
             }
         } else {
             if (savedLocally) {
-                showSnackbar(view, R.string.editor_post_saved_locally, R.string.button_publish, publishPostListener);
+                showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_publish,
+                        publishPostListener);
             }
             else {
                 if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post) ||
                         UploadService.isPostUploadingOrQueued(post)) {
-                    showSnackbar(view, R.string.editor_uploading_post);
+                    showSnackbar(snackbarAttachView, R.string.editor_uploading_post);
                 } else {
-                    showSnackbar(view, R.string.editor_post_saved_online, R.string.button_publish, publishPostListener);
+                    showSnackbar(snackbarAttachView, R.string.editor_post_saved_online, R.string.button_publish,
+                            publishPostListener);
                 }
             }
         }
     }
 
-    private static void showSnackbar(View view, int messageRes, int buttonTitleRes, View.OnClickListener onClickListener) {
+    private static void showSnackbar(View view, int messageRes, int buttonTitleRes,
+                                     View.OnClickListener onClickListener) {
         Snackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
                 .setAction(buttonTitleRes, onClickListener).show();
     }
@@ -189,7 +198,8 @@ public class UploadUtils {
         PostUtils.trackSavePostAnalytics(post, site);
     }
 
-    public static void onPostUploadedSnackbarHandler(final Activity activity, View snackbarAttachView, PostStore.OnPostUploaded event,
+    public static void onPostUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
+                                                     PostStore.OnPostUploaded event,
                                                      final SiteModel site, final Dispatcher dispatcher) {
         final PostModel post = event.post;
         if (event.isError()) {
@@ -203,7 +213,8 @@ public class UploadUtils {
                         UploadUtils.publishPost(activity, post, site, dispatcher);
                     }
                 };
-                UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_online, R.string.button_publish, publishPostListener);
+                UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_online,
+                        R.string.button_publish, publishPostListener);
             } else {
                 int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
                 UploadUtils.showSnackbar(snackbarAttachView, messageRes);
