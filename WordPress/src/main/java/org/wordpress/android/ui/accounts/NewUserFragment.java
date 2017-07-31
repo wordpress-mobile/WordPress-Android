@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
@@ -72,7 +71,6 @@ import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
