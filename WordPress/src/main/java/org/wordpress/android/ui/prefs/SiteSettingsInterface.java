@@ -633,6 +633,30 @@ public abstract class SiteSettingsInterface {
         mJpSettings.jetpackProtectWhitelist.addAll(whitelistKeys);
     }
 
+    public void enableJetpackSsoMatchEmail(boolean enabled) {
+        mJpSettings.ssoMatchEmail = enabled;
+    }
+
+    public void enableJetpackSso(boolean enabled) {
+        mJpSettings.ssoActive = enabled;
+    }
+
+    public boolean isJetpackSsoEnabled() {
+        return mJpSettings.ssoActive;
+    }
+
+    public boolean isJetpackSsoMatchEmailEnabled() {
+        return mJpSettings.ssoMatchEmail;
+    }
+
+    public void enableJetpackSsoTwoFactor(boolean enabled) {
+        mJpSettings.ssoRequireTwoFactor = enabled;
+    }
+
+    public boolean isJetpackSsoTwoFactorEnabled() {
+        return mJpSettings.ssoRequireTwoFactor;
+    }
+
     public void setTitle(String title) {
         mSettings.title = title;
     }
