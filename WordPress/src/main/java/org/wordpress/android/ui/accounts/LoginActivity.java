@@ -19,17 +19,16 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.Login2FaFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
-import org.wordpress.android.ui.accounts.login.LoginHelpshiftOriginProvider;
 import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
-import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ToastUtils;
@@ -321,18 +320,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
-    private void launchHelpshift(String url, String username, boolean isWpcom) {
-        HelpshiftHelper.Tag origin;
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-
-        if (currentFragment instanceof LoginHelpshiftOriginProvider) {
-            origin = ((LoginHelpshiftOriginProvider) currentFragment).helpshiftOriginTag();
-        } else {
-            // For backward compatibility with the old Login activity
-            origin = HelpshiftHelper.chooseHelpshiftLoginTag(getLoginMode() == LoginMode.JETPACK_STATS,
-                    isWpcom);
-        }
-
+    private void launchHelpshift(String url, String username, boolean isWpcom, HelpshiftHelper.Tag origin) {
         Intent intent = new Intent(this, HelpActivity.class);
         // Used to pass data to an eventual support service
         intent.putExtra(HelpshiftHelper.ENTERED_URL_KEY, url);
@@ -347,7 +335,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpSiteAddress(String url) {
-        launchHelpshift(url, null, false);
+        launchHelpshift(url, null, false, HelpshiftHelper.Tag.ORIGIN_LOGIN_SITE_ADDRESS);
     }
 
     @Override
@@ -357,32 +345,32 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpEmailScreen(String email) {
-        launchHelpshift(null, email, true);
+        launchHelpshift(null, email, true, HelpshiftHelper.Tag.ORIGIN_LOGIN_EMAIL);
     }
 
     @Override
     public void helpMagicLinkRequest(String email) {
-        launchHelpshift(null, email, true);
+        launchHelpshift(null, email, true, HelpshiftHelper.Tag.ORIGIN_LOGIN_MAGIC_LINK);
     }
 
     @Override
     public void helpMagicLinkSent(String email) {
-        launchHelpshift(null, email, true);
+        launchHelpshift(null, email, true, HelpshiftHelper.Tag.ORIGIN_LOGIN_MAGIC_LINK);
     }
 
     @Override
     public void helpEmailPasswordScreen(String email) {
-        launchHelpshift(null, email, true);
+        launchHelpshift(null, email, true, HelpshiftHelper.Tag.ORIGIN_LOGIN_EMAIL_PASSWORD);
     }
 
     @Override
     public void help2FaScreen(String email) {
-        launchHelpshift(null, email, true);
+        launchHelpshift(null, email, true, HelpshiftHelper.Tag.ORIGIN_LOGIN_2FA);
     }
 
     @Override
     public void helpUsernamePassword(String url, String username, boolean isWpcom) {
-        launchHelpshift(url, username, isWpcom);
+        launchHelpshift(url, username, isWpcom, HelpshiftHelper.Tag.ORIGIN_LOGIN_USERNAME_PASSWORD);
     }
 
     @Override
