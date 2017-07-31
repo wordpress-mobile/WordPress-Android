@@ -106,7 +106,7 @@ public class PostsListFragment extends Fragment
         bundle.putSerializable(WordPress.SITE, site);
         bundle.putBoolean(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
         if (targetPost != null) {
-            bundle.putInt(PostsListActivity.EXTRA_TARGET_POST_ID, targetPost.getId());
+            bundle.putInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, targetPost.getId());
         }
         fragment.setArguments(bundle);
         return fragment;
@@ -137,18 +137,18 @@ public class PostsListFragment extends Fragment
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
                 mIsPage = getArguments().getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
                 mTargetPost = mPostStore.getPostByLocalPostId(
-                        getArguments().getInt(PostsListActivity.EXTRA_TARGET_POST_ID));
+                        getArguments().getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID));
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
                 mIsPage = getActivity().getIntent().getBooleanExtra(PostsListActivity.EXTRA_VIEW_PAGES, false);
                 mTargetPost = mPostStore.getPostByLocalPostId(
-                        getActivity().getIntent().getIntExtra(PostsListActivity.EXTRA_TARGET_POST_ID, 0));
+                        getActivity().getIntent().getIntExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, 0));
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mIsPage = savedInstanceState.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             mTargetPost = mPostStore.getPostByLocalPostId(
-                    savedInstanceState.getInt(PostsListActivity.EXTRA_TARGET_POST_ID));
+                    savedInstanceState.getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID));
         }
 
         if (mSite == null) {

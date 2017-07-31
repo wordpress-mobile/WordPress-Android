@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
-    public static final String EXTRA_TARGET_POST_ID = "targetPostId";
+    public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
@@ -91,9 +91,9 @@ public class PostsListActivity extends AppCompatActivity {
         }
 
         PostModel targetPost = null;
-        int targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_ID, 0);
+        int targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0);
         if (targetPostId > 0) {
-            targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_ID, 0));
+            targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
         }
 
         mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
