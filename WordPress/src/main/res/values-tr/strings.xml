@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-23 12:03:08+0000
+Translation-Revision-Date: 2017-07-21 21:32:21+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+	<string name="format_bar_description_horizontal_rule">Yatay cetvel</string>
+	<string name="format_bar_description_link">Bağlantı</string>
+	<string name="format_bar_description_list">Liste</string>
+	<string name="format_bar_description_heading">Başlık</string>
+	<string name="format_bar_description_media">Ortam</string>
+	<string name="reader_view_comments">Yorumları görüntüle</string>
+	<string name="new_editor_promo_title_beta">Beta</string>
+	<string name="new_editor_promo_title">Yeni metin düzenleyiciyi deneyin</string>
+	<string name="new_editor_promo_link">Neler yeni?</string>
+	<string name="new_editor_promo_description_image">El yazısı görseli</string>
+	<string name="new_editor_promo_confirmation_message">Yeni metin düzenleyici etkinleştirildi!</string>
+	<string name="new_editor_promo_confirmation_action">Ayarlar</string>
+	<string name="new_editor_promo_button_positive">Deneyin</string>
+	<string name="new_editor_promo_button_negative">Şimdi değil</string>
 	<string name="permission_location">Konum</string>
 	<string name="permission_camera">Kamera</string>
 	<string name="permission_storage">Depolama</string>
@@ -64,9 +78,6 @@ Language: tr
 	<string name="fab_content_description_write">Yaz</string>
 	<string name="my_site_btn_sharing">Paylaşım</string>
 	<string name="button_not_now">Şimdi değil</string>
-	<string name="media_error_timeout">Sunucu cevabı zaman aşımına uğradı, zayıf bir bağlantınız olabilir ya da sunucu hatası</string>
-	<string name="media_error_internal_server_error">Yükleme hatası. Site->Ayarlar bölümünden görsellerin optimize edilmesini etkinleştirin</string>
-	<string name="media_error_http_too_large_upload">Dosya yüklemek için çok büyük. Site->Ayarlar bölümünden görsellerin optimize edilmesini etkinleştirmeyi deneyin</string>
 	<string name="media_downloading">Ortam dosyaları bu cihazda saklanıyor</string>
 	<string name="error_media_save">Ortam dosyası kaydedilemiyor</string>
 	<string name="editor_scheduled_post_saved_online">Yazı zamanlandı</string>
@@ -79,6 +90,7 @@ Language: tr
 	<string name="smart_toast_photo_long_press">Birden çok fotoğraf seçmek için dokunun ve basılı tutun</string>
 	<string name="photo_picker_choose_video">Cihazdan bir video seçin</string>
 	<string name="photo_picker_choose_photo">Cihazdan bir fotoğraf seçin</string>
+	<string name="new_editor_promo_description">WordPress uygulaması artık beraberinde yeni bir düzenleyici içeriyor. Yeni bir yazı oluşturup deneyimleyin.</string>
 	<string name="wp_media_title">WordPress ortam dosyaları</string>
 	<string name="media_insert_as_gallery">Galeri olarak ekle</string>
 	<string name="media_insert_individually">Tekil olarak ekle</string>
@@ -121,12 +133,11 @@ Language: tr
 	<string name="media_upload_state_queued">Sırada</string>
 	<string name="update_draft">Taslağı güncelle</string>
 	<string name="keep_editing">Düzenlemeye devam et</string>
+	<string name="image_quality">Görsel kalitesi</string>
 	<string name="error_all_media_upload_canceled">Tüm ortam yüklemeleri bilimeyen bir hata sebebiyle iptal edildi. Lütfen tekrar yüklemeyi deneyin</string>
 	<string name="error_unknown_post_type">Bilinmeyen yazı biçimi</string>
 	<string name="error_unknown_post">Bilinmeyen yazı, yazının yerel kopyası sunucu ile eşzamanlı olmayabilir</string>
 	<string name="error_fetch_site_after_creation">Site oluşturuldu, site seçicideki siteleri yenilemeniz gerekebilir.</string>
-	<string name="error_media_request_too_large">Ortam çok büyük, yüklenemiyor</string>
-	<string name="error_media_parse_error">Ortam yüklemesinden sonra sonuç ayrıştırılamıyor</string>
 	<string name="error_upload_params">%1$s yüklemesinde problem: %2$s</string>
 	<string name="submit_for_review">Gönder</string>
 	<string name="role_subscriber">Abone</string>
@@ -145,7 +156,6 @@ Language: tr
 	<string name="error_media_refresh_no_connection">Kütüphaneyi yenilemek için bağlantı gereklidir</string>
 	<string name="error_media_unauthorized">Ortamı görüntülemek ya da düzenlemek için izniniz yok</string>
 	<string name="error_media_not_found">Ortam bulunamadı</string>
-	<string name="error_media_insufficient_fs_permissions">Ortam dosyası için okuma izni gerekiyor</string>
 	<string name="site_settings_optimize_images">Görselleri iyileştir</string>
 	<string name="no_site_error">WordPress sitesine bağlanılamıyor. Bu adreste geçerli bir WordPress sitesi\n     bulunmuyor. Lütfen site adresini kontrol edin.</string>
 	<string name="media_generic_error">Ortam hatası oluştu</string>
@@ -250,6 +260,11 @@ Language: tr
 	<string name="editor_failed_uploads_switch_html">Bazı ortam yüklemeleri başarısız oldu. HTML moduna geçebilirsiniz\n        Tüm başarısız yüklemeleri kaldırılıp devam edilsin mi?</string>
 	<string name="image_thumbnail">Görsel küçük resm</string>
 	<string name="visual_editor">Görsel düzenleyici</string>
+	<string name="format_bar_description_html">HTML</string>
+	<string name="format_bar_description_ol">Sıralı liste</string>
+	<string name="format_bar_description_ul">Sırasız liste</string>
+	<string name="format_bar_description_more">Daha fazlasını oku</string>
+	<string name="format_bar_description_quote">Alıntı</string>
 	<string name="format_bar_description_strike">Üzeri çizili</string>
 	<string name="format_bar_description_underline">Altı çizgili</string>
 	<string name="format_bar_description_italic">Eğik</string>
@@ -433,8 +448,6 @@ Language: tr
 	<string name="pending_email_change_snackbar">Yeni adresinizin onaylanması için %1$s adresine gönderilen e-postadaki doğrulama bağlantısına tıklayın.</string>
 	<string name="editor_toast_uploading_please_wait">Şu anda medya yüklüyorsunuz. Lütfen bu işlem tamamlanıncaya kadar bekleyin.</string>
 	<string name="error_refresh_comments_showing_older">Yorumlar şu anda yenilenemiyor, eski yorumlar gösteriliyor</string>
-	<string name="editor_post_settings_set_featured_image">Öne çıkarılan görsel ayarla</string>
-	<string name="editor_post_settings_featured_image">Öne Çıkan Görüntü</string>
 	<string name="visual_editor_enabled">Görsel Düzenleyici etkinleştirildi</string>
 	<string name="editor_content_placeholder">Hikayenizi burada paylaşın...</string>
 	<string name="editor_page_title_placeholder">Sayfa Başlığı</string>
@@ -483,7 +496,6 @@ Language: tr
 	<string name="cd_related_post_preview_image">İlgili yazı önizleme görseli</string>
 	<string name="error_post_remote_site_settings">Site bilgileri kaydedilemedi</string>
 	<string name="error_fetch_remote_site_settings">Site bilgileri alınamadı</string>
-	<string name="error_media_upload_connection">Medya yüklenirken bağlantı hatası oluştu</string>
 	<string name="site_settings_disconnected_toast">Çıkış yapılmış, düzenleme devre dışı.</string>
 	<string name="site_settings_unsupported_version_error">Desteklenmeyen WordPress sürümü</string>
 	<string name="site_settings_multiple_links_dialog_description">Belirtilenden fazla sayıda bağlantı içeren yorumlar için onay iste.</string>
@@ -624,7 +636,6 @@ Language: tr
 	<string name="reader_label_gap_marker">Daha fazla yazı yükle</string>
 	<string name="notifications_no_search_results">\'%s\' hiçbir siteyle eşleşmedi</string>
 	<string name="search_sites">Sitelerde ara</string>
-	<string name="unread">Okunmadı</string>
 	<string name="notifications_empty_view_reader">Okuyucuyu görüntüle</string>
 	<string name="notifications_empty_action_followers_likes">Ortaya çıkın: okuduğunuz yazılara yorum yapın.</string>
 	<string name="notifications_empty_action_comments">Konuşmalara katılın: takip ettiğiniz bloglarda yorum yapın.</string>
@@ -643,7 +654,6 @@ Language: tr
 	<string name="stats_widget_loading_data">Veri yükleniyor...</string>
 	<string name="stats_widget_name_for_blog">%1$s için bugünün istatistikleri</string>
 	<string name="stats_widget_name">Bugünkü WordPress istatistikleri</string>
-	<string name="add_location_permission_required">Konum eklemek için izin gerekiyor</string>
 	<string name="add_media_permission_required">Medya eklemek için izin gerekiyor</string>
 	<string name="access_media_permission_required">Medyaya erişmek için izin gerekiyor</string>
 	<string name="stats_enable_rest_api_in_jetpack">İstatistiklerinizi görmek için Jetpack içindeki JSON API modülünü etkinleştirin.</string>
@@ -696,7 +706,6 @@ Language: tr
 	<string name="button_stats">İstatistikler</string>
 	<string name="page_deleted">Sayfa silindi</string>
 	<string name="button_back">Geri</string>
-	<string name="trashed">Çöpe taşındı</string>
 	<string name="stats_no_activity_this_period">Bu dönemde aktivite yok</string>
 	<string name="post_trashed">Yazı çöpe taşındı</string>
 	<string name="post_deleted">Yazı silindi</string>
@@ -904,11 +913,6 @@ Language: tr
 	<string name="hs__new_conversation_header">Destek sohbeti</string>
 	<string name="hs__conversation_detail_error">Karşılaştığınız problemi açıklayın</string>
 	<string name="contact_us">İletişim kurun</string>
-	<string name="current_location">Şimdiki Konumunuz</string>
-	<string name="add_location">Konum Ekle</string>
-	<string name="search_current_location">Yerleştir</string>
-	<string name="edit_location">Düzenle</string>
-	<string name="search_location">Arama</string>
 	<string name="preference_send_usage_stats_summary">Android için WordPress\'i geliştirmemize yardımcı olmak için bize otomatik olarak kullanım istatistiklerini gönderin. </string>
 	<string name="preference_send_usage_stats">Kullanım istatistiklerini gönder</string>
 	<string name="schedule_verb">Zamanla</string>
@@ -1019,18 +1023,13 @@ Language: tr
 	<string name="new_media">Yeni medya</string>
 	<string name="new_post">Yeni yazı</string>
 	<string name="notifications_empty_all">Bildirim yok...henüz.</string>
-	<string name="post_format">Yazı formatı</string>
 	<string name="http_authorization_required">Yetkilendirme gerekli</string>
 	<string name="http_credentials">HTTP bilgileri (seçime bağlı)</string>
-	<string name="pending_review">İnceleme bekliyor</string>
 	<string name="invalid_site_url_message">Girdiğiniz site URL\'sinin geçerli olduğunu kontrol edin</string>
 	<string name="open_source_licenses">Açık kaynak lisanslar</string>
-	<string name="location_not_found">Bilinmeyen konum</string>
 	<string name="file_error_create">Geçici medya dosyası oluşturulamıyor. Cihazınızda yeterli boş alan olduğundan emin olun.</string>
 	<string name="share_action_media">Medya kütüphanesi</string>
 	<string name="share_action_post">Yeni yazı</string>
-	<string name="category_parent">Üst kategori (opsiyonel)</string>
-	<string name="category_desc">Kategori açıklaması (opsiyonel)</string>
 	<string name="category_name">Kategori adı</string>
 	<string name="add_new_category">Yeni kategori ekle</string>
 	<string name="view_in_browser">Tarayıcıda görüntüle</string>
@@ -1100,7 +1099,6 @@ Language: tr
 	<string name="deleting_page">Sayfa siliniyor</string>
 	<string name="creating_your_site">Siteniz oluşturuluyor</string>
 	<string name="creating_your_account">Hesabınız oluşturuluyor</string>
-	<string name="error_refresh_media">Medya kütüphanesi yenilenirken bir şeyler ters gitti. Daha sonra tekrar deneyin.</string>
 	<string name="reader_empty_posts_in_tag_updating">Yazılar getiriliyor...</string>
 	<string name="cant_share_no_visible_blog">Görünürbir bloğunuz olmadan WordPress ile paylaşamazsınız</string>
 	<string name="comment_spammed">Yorum istenmeyen olarak işaretlendi</string>
@@ -1181,7 +1179,6 @@ Language: tr
 	<string name="stats">İstatistikler</string>
 	<string name="share_action">Paylaş</string>
 	<string name="share_action_title">Şuna ekle</string>
-	<string name="post_excerpt">Özet</string>
 	<string name="theme_auth_error_title">Temalar alınamadı</string>
 	<string name="theme_set_success">Tema başarıyla ayarlandı!</string>
 	<string name="theme_activating_button">Aktifleştiriliyor</string>
@@ -1201,9 +1198,6 @@ Language: tr
 	<string name="media_gallery_type_tiled">Döşeme</string>
 	<string name="media_gallery_type_squares">Kare</string>
 	<string name="media_gallery_type">Tip</string>
-	<string name="unattached">Bağlantısız</string>
-	<string name="images">Resimler</string>
-	<string name="all">Tamamı</string>
 	<string name="themes">Temalar</string>
 	<string name="discard">Vazgeç</string>
 	<string name="manage">Yönet</string>
@@ -1238,7 +1232,6 @@ Language: tr
 	<string name="blogusername">blogkullanıcıadı</string>
 	<string name="scaled_image">Oranlanmış görsel genişliği</string>
 	<string name="upload_scaled_image">Boyutlandırılmış görseli yükle ve bağlantı ver</string>
-	<string name="scheduled">Zamanlandı</string>
 	<string name="link_enter_url">Adres</string>
 	<string name="uploading">Yükleniyor...</string>
 	<string name="app_title">Android için WordPress</string>
@@ -1252,27 +1245,20 @@ Language: tr
 	<string name="page_id">Sayfa</string>
 	<string name="post_id">Yazı</string>
 	<string name="immediately">Hemen</string>
-	<string name="post_password">Parola (seçime bağlı)</string>
 	<string name="quickpress_add_alert_title">Kısayol ismi belirle</string>
 	<string name="settings">Ayarlar</string>
 	<string name="today">Bugün</string>
 	<string name="share_url">Adresi paylaş</string>
 	<string name="quickpress_add_error">Kısayol ismi boş olamaz</string>
 	<string name="quickpress_window_title">QuickPress kısayolu için blog seçin</string>
-	<string name="post_private">Özel</string>
-	<string name="draft">Taslak</string>
-	<string name="publish_post">Yayımla</string>
 	<string name="upload_full_size_image">Yükle ve tam resme bağlantı ver</string>
 	<string name="categories">Kategoriler</string>
-	<string name="tags_separate_with_commas">Etiketler (etiketleri virgül ile ayırın)</string>
 	<string name="title">Başlık</string>
 	<string name="dlg_deleting_comments">Yorumlar siliniyor</string>
 	<string name="notification_vibrate">Titre</string>
 	<string name="notification_sound">Bilgilendirme sesi</string>
 	<string name="notification_blink">Bilgilendirme ışığını parlat</string>
-	<string name="status">Durum</string>
 	<string name="sdcard_title">SD kart gerekli</string>
-	<string name="location">Konum</string>
 	<string name="media">Ortam</string>
 	<string name="approve">Onayla</string>
 	<string name="delete">Sil</string>
