@@ -67,6 +67,7 @@
     <string name="edit_post">Edit post</string>
     <string name="add_comment">Add comment</string>
     <string name="connection_error">Connection error</string>
+    <string name="connection_to_server_lost">The connection to the server was lost</string>
     <string name="category_refresh_error">Category refresh error</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="cancel_edit">Cancel edit</string>
@@ -1150,8 +1151,8 @@
     <string name="error_edit_comment">An error occurred while editing the comment</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
-    <string name="error_upload_post_params">There was an error uploading this %1$s: %2$s</string>
-    <string name="error_upload_post_media_params">There was an error uploading the media in this %1$s: %2$s</string>
+    <string name="error_upload_post_params">There was an error uploading this %1$s: %2$s.</string>
+    <string name="error_upload_post_media_params">There was an error uploading the media in this %1$s: %2$s.</string>
     <string name="error_media_insufficient_fs_permissions">Read permission denied on device media</string>
     <string name="error_media_not_found">Media could not be found</string>
     <string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
@@ -1182,7 +1183,7 @@
     <string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
 
     <!-- Post Error -->
-    <string name="error_unknown_post">Unknown post, local copy of this post may be out of sync with the server</string>
+    <string name="error_unknown_post">Could not find the post on the server</string>
     <string name="error_unknown_post_type">Unknown post format</string>
 
     <!-- Image Descriptions for Accessibility -->

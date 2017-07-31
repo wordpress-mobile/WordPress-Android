@@ -187,7 +187,7 @@ public class WPMediaUtils {
             case TIMEOUT:
                 return context.getString(R.string.media_error_timeout);
             case CONNECTION_ERROR:
-                return context.getString(R.string.connection_error);
+                return context.getString(R.string.connection_to_server_lost);
             case EXCEEDS_FILESIZE_LIMIT:
                 return context.getString(R.string.media_error_exceeds_php_filesize);
             case EXCEEDS_MEMORY_LIMIT:
