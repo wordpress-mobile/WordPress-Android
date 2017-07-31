@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -511,9 +512,20 @@ public class PostsListFragment extends Fragment
                 final int position = mPostsListAdapter.getPositionForPost(mTargetPost);
                 if (position > -1) {
                     RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getActivity()) {
+                        private static final int SCROLL_OFFSET_DP = 23;
+
                         @Override
                         protected int getVerticalSnapPreference() {
                             return LinearSmoothScroller.SNAP_TO_START;
+                        }
+
+                        @Override
+                        public int calculateDtToFit(int viewStart, int viewEnd, int boxStart, int boxEnd,
+                                                    int snapPreference) {
+                            // Assume SNAP_TO_START, and offset the scroll, so the bottom of the above post shows
+                            int offsetPx = (int) TypedValue.applyDimension(
+                                    TypedValue.COMPLEX_UNIT_DIP, SCROLL_OFFSET_DP, getResources().getDisplayMetrics());
+                            return boxStart - viewStart + offsetPx;
                         }
                     };
 
