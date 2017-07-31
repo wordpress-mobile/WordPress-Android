@@ -1183,7 +1183,7 @@
     <string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
 
     <!-- Post Error -->
-    <string name="error_unknown_post">Unknown post, local copy of this post may be out of sync with the server</string>
+    <string name="error_unknown_post">Could not find the post on the server</string>
     <string name="error_unknown_post_type">Unknown post format</string>
 
     <!-- Image Descriptions for Accessibility -->
