@@ -243,6 +243,20 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
+    public void setJetpackSsoTwoStepOption(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/option/?option_name=jetpack_sso_require_two_step", siteId);
+        Map<String, String> params = new HashMap<>();
+        params.put("option_value", String.valueOf(enabled));
+        post(path, params, null, listener, errorListener);
+    }
+
+    public void setJetpacSsokMatchEmailOption(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/option/backup/?option_name=jetpack_sso_match_by_email", siteId);
+        Map<String, String> params = new HashMap<>();
+        params.put("option_value", String.valueOf(enabled));
+        post(path, params, null, listener, errorListener);
+    }
+
     public void setJetpackSso(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/jetpack/modules/sso", siteId);
         Map<String, String> params = new HashMap<>();
