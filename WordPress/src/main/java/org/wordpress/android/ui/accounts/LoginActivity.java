@@ -31,6 +31,7 @@ import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
@@ -320,14 +321,14 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
-    private void launchHelpshift(String url, String username, boolean isWpcom, HelpshiftHelper.Tag origin) {
+    private void launchHelpshift(String url, String username, boolean isWpcom, Tag origin) {
         Intent intent = new Intent(this, HelpActivity.class);
         // Used to pass data to an eventual support service
         intent.putExtra(HelpshiftHelper.ENTERED_URL_KEY, url);
         intent.putExtra(HelpshiftHelper.ENTERED_USERNAME_KEY, username);
         intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
         if (getLoginMode() == LoginMode.JETPACK_STATS) {
-            HelpshiftHelper.Tag[] tags = new HelpshiftHelper.Tag[]{HelpshiftHelper.Tag.CONNECTING_JETPACK};
+            Tag[] tags = new Tag[]{Tag.CONNECTING_JETPACK};
             intent.putExtra(HelpshiftHelper.EXTRA_TAGS_KEY, tags);
         }
         startActivity(intent);
@@ -335,7 +336,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpSiteAddress(String url) {
-        launchHelpshift(url, null, false, HelpshiftHelper.Tag.ORIGIN_LOGIN_SITE_ADDRESS);
+        launchHelpshift(url, null, false, Tag.ORIGIN_LOGIN_SITE_ADDRESS);
     }
 
     @Override
@@ -345,32 +346,32 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void helpEmailScreen(String email) {
-        launchHelpshift(null, email, true, HelpshiftHelper.Tag.ORIGIN_LOGIN_EMAIL);
+        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_EMAIL);
     }
 
     @Override
     public void helpMagicLinkRequest(String email) {
-        launchHelpshift(null, email, true, HelpshiftHelper.Tag.ORIGIN_LOGIN_MAGIC_LINK);
+        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_MAGIC_LINK);
     }
 
     @Override
     public void helpMagicLinkSent(String email) {
-        launchHelpshift(null, email, true, HelpshiftHelper.Tag.ORIGIN_LOGIN_MAGIC_LINK);
+        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_MAGIC_LINK);
     }
 
     @Override
     public void helpEmailPasswordScreen(String email) {
-        launchHelpshift(null, email, true, HelpshiftHelper.Tag.ORIGIN_LOGIN_EMAIL_PASSWORD);
+        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_EMAIL_PASSWORD);
     }
 
     @Override
     public void help2FaScreen(String email) {
-        launchHelpshift(null, email, true, HelpshiftHelper.Tag.ORIGIN_LOGIN_2FA);
+        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_2FA);
     }
 
     @Override
     public void helpUsernamePassword(String url, String username, boolean isWpcom) {
-        launchHelpshift(url, username, isWpcom, HelpshiftHelper.Tag.ORIGIN_LOGIN_USERNAME_PASSWORD);
+        launchHelpshift(url, username, isWpcom, Tag.ORIGIN_LOGIN_USERNAME_PASSWORD);
     }
 
     @Override
