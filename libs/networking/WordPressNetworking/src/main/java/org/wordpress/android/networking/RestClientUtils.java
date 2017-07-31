@@ -1,6 +1,3 @@
-/**
- * Interface to the WordPress.com REST API.
- */
 package org.wordpress.android.networking;
 
 import android.content.Context;
@@ -24,6 +21,10 @@ import org.wordpress.android.util.LanguageUtils;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+/**
+ * Interface to the WordPress.com REST API.
+ */
 
 public class RestClientUtils {
     public static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
@@ -200,8 +201,7 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
-    public void setGeneralSiteSettings(long siteId, Listener listener, ErrorListener errorListener,
-                                       Map<String, String> params) {
+    public void setGeneralSiteSettings(long siteId, Listener listener, ErrorListener errorListener, JSONObject params) {
         String path = String.format(Locale.US, "sites/%d/settings", siteId);
         post(path, params, null, listener, errorListener);
     }
@@ -211,8 +211,13 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
-    public void setJetpackMonitor(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/jetpack/modules/monitor", siteId);
+    public void getJetpackProtect(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/jetpack/modules/protect", siteId);
+        get(path, listener, errorListener);
+    }
+
+    public void setJetpackProtect(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/jetpack/modules/protect", siteId);
         Map<String, String> params = new HashMap<>();
         params.put("active", String.valueOf(enabled));
         post(path, params, null, listener, errorListener);
@@ -221,6 +226,13 @@ public class RestClientUtils {
     public void getJetpackMonitor(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/jetpack/modules/monitor", siteId);
         get(path, listener, errorListener);
+    }
+
+    public void setJetpackMonitor(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/jetpack/modules/monitor", siteId);
+        Map<String, String> params = new HashMap<>();
+        params.put("active", String.valueOf(enabled));
+        post(path, params, null, listener, errorListener);
     }
 
     public void setJetpackSettings(long siteId, Listener listener, ErrorListener errorListener,

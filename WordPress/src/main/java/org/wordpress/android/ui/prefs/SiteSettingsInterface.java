@@ -536,6 +536,10 @@ public abstract class SiteSettingsInterface {
         return getKeysDescription(getBlacklistKeys().size());
     }
 
+    public @NonNull String getJetpackProtectWhitelistSummary() {
+        return getKeysDescription(getJetpackWhitelistKeys().size());
+    }
+
     public String getSharingLabel() {
         return mSettings.sharingLabel;
     }
@@ -610,6 +614,23 @@ public abstract class SiteSettingsInterface {
 
     public void enableJetpackMonitorWpNotifications(boolean wpNotifications) {
         mJpSettings.wpNotifications = wpNotifications;
+    }
+
+    public boolean isJetpackProtectEnabled() {
+        return mJpSettings.jetpackProtectEnabled;
+    }
+
+    public void enableJetpackProtect(boolean enabled) {
+        mJpSettings.jetpackProtectEnabled = enabled;
+    }
+
+    public @NonNull List<String> getJetpackWhitelistKeys() {
+        return mJpSettings.jetpackProtectWhitelist;
+    }
+
+    public void setJetpackWhitelistKeys(@NonNull List<String> whitelistKeys) {
+        mJpSettings.jetpackProtectWhitelist.clear();
+        mJpSettings.jetpackProtectWhitelist.addAll(whitelistKeys);
     }
 
     public void setTitle(String title) {
