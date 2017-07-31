@@ -194,7 +194,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 // This block only runs if the PUSH_POST action was never dispatched - if it was dispatched, any error
                 // will be handled in OnPostChanged instead of here
                 mPostUploadNotifier.cancelNotification(mPost);
-                mPostUploadNotifier.updateNotificationError(mPost, mSite, mErrorMessage, mIsMediaError);
+                mPostUploadNotifier.updateNotificationError(mPost, mSite, mErrorMessage);
                 finishUpload();
             }
         }
@@ -561,8 +561,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                     + event.error.message);
             Context context = WordPress.getContext();
             String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
-            String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage);
-            mPostUploadNotifier.updateNotificationError(event.post, site, notificationMessage, false);
+            String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
+            mPostUploadNotifier.updateNotificationError(event.post, site, notificationMessage);
             mPostUploadNotifier.cancelNotification(event.post);
             sFirstPublishPosts.remove(event.post.getId());
         } else {
@@ -610,9 +610,10 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             SiteModel site = mSiteStore.getSiteByLocalId(sCurrentUploadingPost.getLocalSiteId());
             Context context = WordPress.getContext();
             String errorMessage = UploadUtils.getErrorMessageFromMediaError(context, event.media, event.error);
-            String notificationMessage = UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage);
+            String notificationMessage =
+                    UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage, true);
             mPostUploadNotifier.cancelNotification(sCurrentUploadingPost);
-            mPostUploadNotifier.updateNotificationError(sCurrentUploadingPost, site, notificationMessage, true);
+            mPostUploadNotifier.updateNotificationError(sCurrentUploadingPost, site, notificationMessage);
             sFirstPublishPosts.remove(sCurrentUploadingPost.getId());
             finishUpload();
             return;

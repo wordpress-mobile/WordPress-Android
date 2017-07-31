@@ -15,9 +15,11 @@ public class UploadUtils {
     /**
      * Returns a post-type specific error message string.
      */
-    static @NonNull String getErrorMessage(Context context, PostModel post, String specificMessage) {
+    static @NonNull String getErrorMessage(Context context, PostModel post, String errorMessage, boolean isMediaError) {
+        String baseErrorString = context.getString(
+                isMediaError ? R.string.error_upload_post_media_params : R.string.error_upload_post_params);
         String postType = context.getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
-        return String.format(context.getText(R.string.error_upload_params).toString(), postType, specificMessage);
+        return String.format(baseErrorString, postType, errorMessage);
     }
 
     /**
