@@ -99,6 +99,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
         try {
             final JSONObject jsonParams = serializeDotComParamsToJSONObject();
+            // skip network requests if there are no changes
+            if (jsonParams.length() <= 0) {
+                return;
+            }
             WordPress.getRestClientUtils().setGeneralSiteSettings(
                     mSite.getSiteId(), new RestRequest.Listener() {
                         @Override
@@ -333,7 +337,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 for (int i = 0; i < whitelistItems.length(); ++i) {
                     String item = whitelistItems.optString(i, "");
                     if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectWhitelist.contains(item)) {
-                        mRemoteJpSettings.jetpackProtectWhitelist.add(i, item);
+                        mRemoteJpSettings.jetpackProtectWhitelist.add(item);
                     }
                 }
             }

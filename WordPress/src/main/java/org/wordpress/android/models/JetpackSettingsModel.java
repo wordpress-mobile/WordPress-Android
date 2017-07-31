@@ -1,6 +1,9 @@
 package org.wordpress.android.models;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class JetpackSettingsModel {
     public final ArrayList<String> jetpackProtectWhitelist = new ArrayList<>();
@@ -28,7 +31,13 @@ public class JetpackSettingsModel {
                 whitelistMatches(otherModel.jetpackProtectWhitelist);
     }
 
-    public boolean whitelistMatches(ArrayList<String> otherWhitelist) {
-        return otherWhitelist != null && jetpackProtectWhitelist.equals(otherWhitelist);
+    public boolean whitelistMatches(List<String> otherWhitelist) {
+        if (otherWhitelist == null) {
+            return false;
+        }
+
+        Set<String> whitelistSet = new HashSet<>(jetpackProtectWhitelist);
+        Set<String> otherSet = new HashSet<>(otherWhitelist);
+        return whitelistSet.equals(otherSet);
     }
 }
