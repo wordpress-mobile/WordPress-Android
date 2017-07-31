@@ -94,6 +94,9 @@ public class PostsListActivity extends AppCompatActivity {
         int targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0);
         if (targetPostId > 0) {
             targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
+            if (targetPost == null) {
+                ToastUtils.showToast(this, R.string.error_post_does_not_exist);
+            }
         }
 
         mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
