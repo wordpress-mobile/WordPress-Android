@@ -1181,6 +1181,11 @@
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="cd_related_post_preview_image">Related post preview image</string>
+    <string name="login_email_image">Login email icon</string>
+    <string name="login_globe_icon">Site address globe icon</string>
+    <string name="login_site_address_help_image">Site address positioning image</string>
+    <string name="login_username_image">Login username icon</string>
+    <string name="login_password_image">Login password icon</string>
 
     <!-- Passcode lock -->
     <string name="passcode_manage">Manage PIN lock</string>
@@ -1388,6 +1393,7 @@
     <string name="username_contains_invalid_characters">Username may not contain the character “_”</string>
     <string name="username_must_include_letters">Username must have a least 1 letter (a-z)</string>
     <string name="email_invalid">Enter a valid email address</string>
+    <string name="email_not_found">We didn\'t find a WordPress.com user with that email address</string>
     <string name="email_not_allowed">That email address isn\'t allowed</string>
     <string name="username_exists">That username already exists</string>
     <string name="email_exists">That email address is already being used</string>
@@ -1831,10 +1837,55 @@
     <string name="video_optimization_in_progress">Optimizing your video&#8230;</string>
     <string name="video_optimization_generic_error_message">An error occurred while compressing your video. Using the original file.</string>
 
-
     <!-- Image Optimization promo -->
     <string name="turn_on">Turn on</string>
     <string name="leave_off">Leave off</string>
     <string name="image_optimization_promo_title">Turn on image optimization?</string>
     <string name="image_optimization_promo_desc">Image optimization shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
+
+    <!-- Login -->
+    <string name="log_in">Log In</string>
+    <string name="create_wordpress_site">Create a WordPress site</string>
+    <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
+    <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
+    <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
+    <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
+    <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
+    <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="next">Next</string>
+    <string name="open_mail">Open mail</string>
+    <string name="enter_site_address_instead">Log in to your site by entering your site address instead.</string>
+    <string name="enter_username_instead">Log in with username instead.</string>
+    <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
+    <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
+    <string name="login_text_otp">Text me a code instead.</string>
+    <string name="requesting_otp">Requesting a verification code via SMS.</string>
+    <string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
+    <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
+    <string name="login_error_while_checking_email">An error occurred while checking the email address!</string>
+    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
+    <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
+    <string name="login_magic_links_sent_description">Magic link sent illustration</string>
+    <string name="login_magic_link_email_requesting">Requesting log-in email</string>
+    <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
+    <string name="connect_more">Connect Another Site</string>
+    <string name="login_continue">Continue</string>
+    <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
+    <string name="login_username_at">\@%s</string>
+    <string name="enter_site_address">Enter the address of your WordPress site you\'d like to connect.</string>
+    <string name="login_site_address">Site address</string>
+    <string name="login_site_address_help">Need help finding your site address?</string>
+    <string name="login_site_address_help_title">What\'s my site address?</string>
+    <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
+    <string name="login_site_address_more_help">Need more help?</string>
+    <string name="login_checking_site_address">Checking site address</string>
+    <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
+    <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
+    <string name="login_empty_site_url">Please enter a site address</string>
+    <string name="login_empty_username">Please enter a username</string>
+    <string name="login_empty_2fa">Please enter a verification code</string>
+    <string name="login_email_client_not_found">Can\'t detect your email client app</string>
+    <string name="login_logged_in_as">Logged in as</string>
+    <string name="login_epilogue_mysites_one">My site</string>
+    <string name="login_epilogue_mysites_other">My sites</string>
 </resources>

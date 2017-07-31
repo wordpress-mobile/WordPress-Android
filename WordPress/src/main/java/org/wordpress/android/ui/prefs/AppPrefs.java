@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -143,7 +144,10 @@ public class AppPrefs {
         ASKED_PERMISSION_STORAGE_READ,
         ASKED_PERMISSION_CAMERA,
         ASKED_PERMISSION_LOCATION_COURSE,
-        ASKED_PERMISSION_LOCATION_FINE
+        ASKED_PERMISSION_LOCATION_FINE,
+
+        // wizard style login flow active
+        LOGIN_WIZARD_STYLE_ACTIVE
     }
 
     private static SharedPreferences prefs() {
@@ -393,6 +397,18 @@ public class AppPrefs {
         } else {
             return getInt(UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH);
         }
+    }
+
+    // Wizard-style login flow
+    public static void setLoginWizardStyleActive(boolean loginWizardActive) {
+        setBoolean(UndeletablePrefKey.LOGIN_WIZARD_STYLE_ACTIVE, loginWizardActive);
+        if (loginWizardActive) {
+            AnalyticsTracker.track(Stat.LOGIN_WIZARD_STYLE_ACTIVATED);
+        }
+    }
+
+    public static boolean isLoginWizardStyleActivated() {
+        return BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE || getBoolean(UndeletablePrefKey.LOGIN_WIZARD_STYLE_ACTIVE, false);
     }
 
     // Aztec Editor

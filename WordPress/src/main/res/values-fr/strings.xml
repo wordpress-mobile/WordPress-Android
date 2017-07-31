@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-07 15:46:38+0000
+Translation-Revision-Date: 2017-07-27 14:28:24+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+	<string name="image_optimization_promo_desc">L’optimisation réduit la taille des images pour une mise en ligne plus rapide.\n\nVous pouvez l’activer ou non à tout moment, dans les réglages du site.</string>
+	<string name="image_optimization_promo_title">Activer l’optimisation des images ?</string>
+	<string name="leave_off">Laisser désactivée</string>
+	<string name="turn_on">Activer</string>
+	<string name="me_profile_photo">Photographie de profil.</string>
+	<string name="error_media_parse_error">Réponse inattendue reçue du serveur.</string>
+	<string name="post_settings_slug">Identifiant</string>
+	<string name="post_settings_excerpt">Extrait</string>
+	<string name="post_settings_not_set">Non configuré</string>
+	<string name="media_documents">Documents</string>
+	<string name="media_images">Images</string>
+	<string name="media_all">Tous</string>
+	<string name="video_optimization_generic_error_message">Une erreur s’est produite lors de la compression de votre vidéo. Utilisation du fichier d’origine.</string>
+	<string name="format_bar_description_page">Saut de page</string>
 	<string name="format_bar_description_link">Lien</string>
 	<string name="format_bar_description_list">Liste</string>
 	<string name="format_bar_description_heading">En-tête</string>
@@ -14,6 +28,11 @@ Language: fr
 	<string name="new_editor_promo_title_beta">Beta</string>
 	<string name="new_editor_promo_title">Essayer le nouvel éditeur</string>
 	<string name="new_editor_promo_link">Quoi de neuf ?</string>
+	<string name="new_editor_promo_button_negative">Pas maintenant</string>
+	<string name="new_editor_beta_message">Nouvel éditeur en bêta ouverte !</string>
+	<string name="new_editor_beta_action">Lire la suite</string>
+	<string name="preference_editor_footer_description">Icône d’informations</string>
+	<string name="preference_editor_footer">Notes de version de l’éditeur et signalement des bugs</string>
 	<string name="site_settings_optimize_videos">Optimiser les vidéos</string>
 	<string name="draft_uploaded">Brouillon envoyé</string>
 	<string name="report_bug">Rapport de bug</string>
@@ -35,6 +54,7 @@ Language: fr
 	<string name="sharing_sharing_buttons_description">Choisissez quels boutons seront affichés sous vos articles</string>
 	<string name="twitter_username">Nom d’utilisateur Twitter</string>
 	<string name="button_style">Style de bouton</string>
+	<string name="more_buttons">Boutons « Plus »</string>
 	<string name="sharing_buttons">Boutons de partage</string>
 	<string name="site_settings_like">Voir le bouton "J\'aime"</string>
 	<string name="site_settings_reblog">Voir le bouton "Rebloguer"</string>
@@ -67,9 +87,6 @@ Language: fr
 	<string name="fab_content_description_write">Écrire</string>
 	<string name="my_site_btn_sharing">Partage</string>
 	<string name="button_not_now">Pas maintenant</string>
-	<string name="media_error_timeout">Le serveur a mis trop de temps à répondre. Il se peut que vous ayez une connexion trop lente, ou qu\'une erreur serveur soit survenue.</string>
-	<string name="media_error_internal_server_error">Erreur de mise en ligne. Essayez d\'activer l\'option « Optimiser les images » dans l\'écran Site -> Réglages.</string>
-	<string name="media_error_http_too_large_upload">Le fichier est trop gros pour être mis en ligne. Essayez d\'activer l\'option « Optimiser les images » dans l\'écran Site -> Réglages.</string>
 	<string name="media_downloading">Enregistrement du fichier sur cet appareil</string>
 	<string name="error_media_save">Impossible d’enregistrer les médias</string>
 	<string name="editor_scheduled_post_saved_online">Article programmé</string>
@@ -130,8 +147,6 @@ Language: fr
 	<string name="error_unknown_post_type">Format d\'article inconnu</string>
 	<string name="error_unknown_post">Article inconnu, la copie locale de cet article n’est peut-être pas synchronisée avec le serveur</string>
 	<string name="error_fetch_site_after_creation">Le site a été créé. Vous devrez peut-être actualiser vos sites dans le sélecteur de site.</string>
-	<string name="error_media_request_too_large">Média trop volumineux. Chargement impossible</string>
-	<string name="error_media_parse_error">Impossible d’analyser la réponse après le chargement du média</string>
 	<string name="error_upload_params">Erreur lors du chargement - %1$s : %2$s</string>
 	<string name="submit_for_review">Envoyer</string>
 	<string name="role_subscriber">Abonné</string>
@@ -150,7 +165,6 @@ Language: fr
 	<string name="error_media_refresh_no_connection">Connexion obligatoire pour actualiser la bibliothèque</string>
 	<string name="error_media_unauthorized">Vous n’avez pas le droit de voir ni de modifier le média</string>
 	<string name="error_media_not_found">Média introuvable</string>
-	<string name="error_media_insufficient_fs_permissions">Droit de lecture obligatoire sur le fichier média</string>
 	<string name="site_settings_optimize_images">Optimiser les images</string>
 	<string name="no_site_error">Impossible de se connecter au site WordPress. Aucun site WordPress valide \nn’est présent à cette adresse. Vérifier l’adresse du site (URL) saisie.</string>
 	<string name="media_generic_error">Une erreur de média s’est produite</string>
@@ -442,8 +456,6 @@ Language: fr
 	<string name="pending_email_change_snackbar">Cliquez sur le lien de vérification de l\'e-mail envoyé à %1$s pour confirmer votre nouvelle adresse.</string>
 	<string name="editor_toast_uploading_please_wait">Vous êtes actuellement en train de mettre en ligne un média. Veuillez patienter jusqu\'à ce que soit terminé.</string>
 	<string name="error_refresh_comments_showing_older">Les commentaires ne peuvent pas être actualisés en ce moment - affichage des commentaires plus anciens</string>
-	<string name="editor_post_settings_set_featured_image">Définir une image mise à la une</string>
-	<string name="editor_post_settings_featured_image">Image à la une</string>
 	<string name="visual_editor_enabled">Éditeur visuel activé</string>
 	<string name="editor_content_placeholder">Partagez ici votre histoire...</string>
 	<string name="editor_page_title_placeholder">Titre de la page</string>
@@ -492,7 +504,6 @@ Language: fr
 	<string name="cd_related_post_preview_image">Prévisualisation de l\'image de l\'article connexe</string>
 	<string name="error_post_remote_site_settings">Impossible d\'enregistrer les infos du site</string>
 	<string name="error_fetch_remote_site_settings">Impossible de retrouver les infos du site</string>
-	<string name="error_media_upload_connection">Désolé, une erreur est survenue pendant l\'envoi du média</string>
 	<string name="site_settings_disconnected_toast">Déconnecté, modification désactivée.</string>
 	<string name="site_settings_unsupported_version_error">Version de WordPress non supportée</string>
 	<string name="site_settings_multiple_links_dialog_description">Approbation requise pour les commentaires incluant plus de liens que ce nombre.</string>
@@ -633,7 +644,6 @@ Language: fr
 	<string name="reader_label_gap_marker">Charger plus d\'artilces</string>
 	<string name="notifications_no_search_results">Aucun site ne correspond à \'%s\'</string>
 	<string name="search_sites">Rechercher les sites</string>
-	<string name="unread">Non lus</string>
 	<string name="notifications_empty_view_reader">Voir le Lecteur</string>
 	<string name="notifications_empty_action_followers_likes">Soyez remarqué : commentez les articles que vous avez lus.</string>
 	<string name="notifications_empty_action_comments">Rejoignez une conversation : commentez les articles des sites que vous suivez.</string>
@@ -652,7 +662,6 @@ Language: fr
 	<string name="stats_widget_loading_data">Chargement des données…</string>
 	<string name="stats_widget_name_for_blog">Stats du jour pour %1$s</string>
 	<string name="stats_widget_name">Stats du jour WordPress</string>
-	<string name="add_location_permission_required">Permission nécessaire pour ajouter la Geolocalisation</string>
 	<string name="add_media_permission_required">Droits requis pour ajouter du contenu multimédia</string>
 	<string name="access_media_permission_required">Droits requis pour accéder au contenu multimédia</string>
 	<string name="stats_enable_rest_api_in_jetpack">Pour voir vos stats, vous devez d\'abord activer le module Jetpack nommé JSON API.</string>
@@ -705,7 +714,6 @@ Language: fr
 	<string name="button_stats">Stats</string>
 	<string name="page_deleted">Page supprimée</string>
 	<string name="button_back">Retour</string>
-	<string name="trashed">À la corbeille</string>
 	<string name="stats_no_activity_this_period">Pas d\'activité durant cette période</string>
 	<string name="post_trashed">Article envoyé à la corbeille</string>
 	<string name="post_deleted">Article supprimé</string>
@@ -913,11 +921,6 @@ Language: fr
 	<string name="hs__new_conversation_header">Discussion support</string>
 	<string name="hs__conversation_detail_error">Décrivez le problème rencontré</string>
 	<string name="contact_us">Contactez nous</string>
-	<string name="current_location">Localisation courante</string>
-	<string name="add_location">Ajouter localisation</string>
-	<string name="search_current_location">Localiser</string>
-	<string name="edit_location">Editer</string>
-	<string name="search_location">Rechercher</string>
 	<string name="preference_send_usage_stats_summary">Envoyer automatiquement des statistiques d\'utilisation pour nous aider à améliorer WordPress pour Android</string>
 	<string name="preference_send_usage_stats">Envoyer statistiques</string>
 	<string name="schedule_verb">Programmer</string>
@@ -1028,18 +1031,13 @@ Language: fr
 	<string name="new_media">Nouveau média</string>
 	<string name="new_post">Nouvel article</string>
 	<string name="notifications_empty_all">Pas (encore) de notifications.</string>
-	<string name="post_format">Format d\'article</string>
 	<string name="http_authorization_required">Autorisation requise</string>
 	<string name="http_credentials">Identification HTTP (facultatif)</string>
-	<string name="pending_review">En attente de relecture</string>
 	<string name="invalid_site_url_message">Vérifiez que l\'URL saisie est valide</string>
 	<string name="open_source_licenses">Licences open sources</string>
-	<string name="location_not_found">Localisation inconnue</string>
 	<string name="file_error_create">Impossible de créer un fichier temporaire pendant l\'envoi de média. Veuillez vérifier que vous disposez d\'assez d\'espace libre sur votre appareil.</string>
 	<string name="share_action_media">Bibliothèque de médias</string>
 	<string name="share_action_post">Nouvel article</string>
-	<string name="category_parent">Catégorie mère (optionnel)</string>
-	<string name="category_desc">Description de la catégorie (optionnel)</string>
 	<string name="category_name">Nom de la catégorie</string>
 	<string name="add_new_category">Ajouter une nouvelle catégorie</string>
 	<string name="view_in_browser">Voir dans le navigateur</string>
@@ -1109,7 +1107,6 @@ Language: fr
 	<string name="deleting_page">Suppression de la page</string>
 	<string name="creating_your_site">Création de votre site</string>
 	<string name="creating_your_account">Création de votre compte</string>
-	<string name="error_refresh_media">Une erreur est survenue pendant le chargement de la bibliothèque média. Veuillez réessayer.</string>
 	<string name="reader_empty_posts_in_tag_updating">Récupération des articles…</string>
 	<string name="cant_share_no_visible_blog">Vous ne pouvez pas partager vers WordPress sans avoir publié au moins un blog.</string>
 	<string name="comment_spammed">Commentaire marqué comme indésirable</string>
@@ -1190,7 +1187,6 @@ Language: fr
 	<string name="stats">Stats</string>
 	<string name="share_action">Partager</string>
 	<string name="share_action_title">Ajouter à...</string>
-	<string name="post_excerpt">Extrait</string>
 	<string name="theme_auth_error_title">Impossible de récupérer les thèmes</string>
 	<string name="theme_set_success">Le thème a bien été sélectionné !</string>
 	<string name="theme_activating_button">Activation</string>
@@ -1210,9 +1206,6 @@ Language: fr
 	<string name="media_gallery_type_tiled">Mosaïque</string>
 	<string name="media_gallery_type_squares">Carrés</string>
 	<string name="media_gallery_type">Catégorie</string>
-	<string name="unattached">Non attachés</string>
-	<string name="images">Images</string>
-	<string name="all">Tout</string>
 	<string name="themes">Thèmes</string>
 	<string name="discard">Rejeter</string>
 	<string name="manage">Organiser</string>
@@ -1247,7 +1240,6 @@ Language: fr
 	<string name="blogusername">blogusername</string>
 	<string name="scaled_image">Largeur de l\'image à l\'échelle</string>
 	<string name="upload_scaled_image">Envoyer et lier l\'image à l\'échelle</string>
-	<string name="scheduled">Programmé</string>
 	<string name="link_enter_url">URL</string>
 	<string name="uploading">Mise en ligne...</string>
 	<string name="app_title">WordPress pour Android</string>
@@ -1261,27 +1253,20 @@ Language: fr
 	<string name="page_id">Page</string>
 	<string name="post_id">Article</string>
 	<string name="immediately">Immédiatement</string>
-	<string name="post_password">Mot de passe (optionnel)</string>
 	<string name="quickpress_add_alert_title">Choisir le nom du raccourci</string>
 	<string name="settings">Paramètres</string>
 	<string name="today">Aujourd\'hui</string>
 	<string name="share_url">Partager cette URL</string>
 	<string name="quickpress_add_error">Le nom du raccourci ne peut pas être vide</string>
 	<string name="quickpress_window_title">Sélectionner le blog pour le raccourci QuickPress</string>
-	<string name="post_private">Privé</string>
-	<string name="draft">Brouillon</string>
-	<string name="publish_post">Publier</string>
 	<string name="upload_full_size_image">Envoyer l\'image et ajouter un lien vers la taille originale</string>
 	<string name="categories">Catégories</string>
-	<string name="tags_separate_with_commas">Étiquettes (séparez les par des virgules)</string>
 	<string name="title">Titre</string>
 	<string name="dlg_deleting_comments">Effacement de commentaires en cours</string>
 	<string name="notification_vibrate">Vibrer</string>
 	<string name="notification_sound">Son de notification</string>
 	<string name="notification_blink">Faire clignoter le voyant de notification</string>
-	<string name="status">Avancement</string>
 	<string name="sdcard_title">Carte SD requise</string>
-	<string name="location">Localisation</string>
 	<string name="media">Multimedia</string>
 	<string name="approve">Approuver</string>
 	<string name="delete">Effacer</string>

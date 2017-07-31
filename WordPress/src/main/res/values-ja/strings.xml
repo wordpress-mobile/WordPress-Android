@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-11 05:34:36+0000
+Translation-Revision-Date: 2017-07-21 02:21:31+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
@@ -8,6 +8,7 @@ Language: ja_JP
 <resources>
 	<string name="video_optimization_generic_error_message">動画圧縮中にエラーが発生しました。元のファイルを使用します。</string>
 	<string name="video_optimization_in_progress">動画を最適化中…</string>
+	<string name="photo_picker_soft_ask_permissions_denied">%1$sは写真へのアクセスを拒否されました。これを解決するには、権限を編集して、%2$sをオンにしてください。</string>
 	<string name="format_bar_description_ellipsis_expand">ツールバーを表示</string>
 	<string name="format_bar_description_ellipsis_collapse">ツールバーを非表示</string>
 	<string name="format_bar_description_page">改ページ</string>
@@ -29,6 +30,8 @@ Language: ja_JP
 	<string name="new_editor_beta_action">もっと読む</string>
 	<string name="preference_editor_footer_description">情報アイコン</string>
 	<string name="preference_editor_footer">エディターのリリースノートとバグ報告</string>
+	<string name="site_settings_video_quality_hint">動画の画質。値が高いほど、画質が良いことを意味します。</string>
+	<string name="site_settings_video_width_hint">投稿の動画をこのサイズにする</string>
 	<string name="site_settings_optimize_video_summary">サイズ変更と動画圧縮を可能にするには有効化してください</string>
 	<string name="site_settings_optimize_videos">ビデオを最適化</string>
 	<string name="draft_uploaded">下書きをアップロードしました</string>
@@ -38,8 +41,13 @@ Language: ja_JP
 	<string name="permission_location">位置</string>
 	<string name="permission_camera">カメラ</string>
 	<string name="permission_storage">容量</string>
+	<string name="permissions_denied_message">これを変更するには、権限を編集して %s が有効であることを確認してください</string>
+	<string name="permissions_denied_title">この機能に必要な権限を無効化したようです</string>
 	<string name="button_edit_permissions">権限を編集</string>
 	<string name="photo_picker_soft_ask_allow">許可</string>
+	<string name="photo_picker_soft_ask_label">%s は写真にアクセスするための権限が必要です</string>
+	<string name="sharing_twitter_message">これは、Twitter ボタンを使って読者が共有するときのツイートに含まれます</string>
+	<string name="sharing_label_message">共有ボタンのラベルテキストを変更します。このテキストを表示するには、少なくとも1つの共有ボタンを追加する必要があります。</string>
 	<string name="connecting_account">連携済みアカウント</string>
 	<string name="cannot_connect_account_error">アカウントが選択されていなかったため、%s の連携を確立できませんでした。</string>
 	<string name="connected">連携済み</string>
@@ -48,6 +56,9 @@ Language: ja_JP
 	<string name="sharing_comment_likes_description">すべてのコメントに対して自分や他の読者が「いいね」の評価を付けられるようにします。</string>
 	<string name="visual">ビジュアル</string>
 	<string name="buttons">ボタン</string>
+	<string name="sharing_edit_more_buttons">「その他」ボタンを編集</string>
+	<string name="sharing_more_description">「その他」ボタンには共有ボタンを表示するドロップダウンリストが含まれています</string>
+	<string name="sharing_sharing_buttons_description">投稿の下に表示されているボタンを選択してください</string>
 	<string name="twitter_username">Twitter ユーザー名</string>
 	<string name="sharing_comment_likes">コメントへのいいね</string>
 	<string name="button_style">ボタンスタイル</string>
@@ -65,23 +76,26 @@ Language: ja_JP
 	<string name="text_only_display">テキストのみ</string>
 	<string name="icon_only_display">アイコンのみ</string>
 	<string name="icon_and_text_display">アイコンとテキスト</string>
+	<string name="connection_chooser_message">認証するアカウントを選択してください。投稿は、選択されたアカウントに自動で共有されることに注意してください。</string>
+	<string name="connecting_social_network">%s を連携中</string>
 	<string name="dlg_confirm_publicize_disconnect">%s との連携を解除しますか ?</string>
 	<string name="share_btn_connect_another_account">別のアカウントを連携</string>
 	<string name="share_btn_reconnect">再連携</string>
 	<string name="share_btn_disconnect">切断</string>
 	<string name="share_btn_connect">連携</string>
+	<string name="connection_service_description">連携して自動的にブログ投稿を %s に共有します。</string>
 	<string name="connection_service_label">%s でパブリサイズ共有</string>
 	<string name="connected_accounts_label">連携済みアカウント</string>
 	<string name="connections_description">お気に入りの SNS に連携し、新しい投稿を自動的に共有しましょう。</string>
 	<string name="connections_label">連携</string>
 	<string name="sharing">共有</string>
+	<string name="tabbar_accessibility_label_notifications">通知。通知を管理します。</string>
 	<string name="tabbar_accessibility_label_reader">Reader。他のサイトのコンテンツをフォローできます。</string>
+	<string name="tabbar_accessibility_label_me">自分。プロフィールを表示して変更します。</string>
+	<string name="tabbar_accessibility_label_my_site">参加サイト。サイトを表示して、統計情報などを管理します。</string>
 	<string name="fab_content_description_write">投稿</string>
 	<string name="my_site_btn_sharing">共有</string>
 	<string name="button_not_now">後で</string>
-	<string name="media_error_timeout">サーバーのレスポンスがタイムアウトしました。接続状態が悪いかサーバーエラーが起こっている可能性があります。</string>
-	<string name="media_error_internal_server_error">アップロード失敗。「サイト > 設定」で画像最適化を有効化してみてください</string>
-	<string name="media_error_too_large_upload">アップロードするファイルの容量が大きすぎます。「サイト > 設定」で画像最適化を有効化してみてください</string>
 	<string name="media_downloading">メディアを端末に保存中</string>
 	<string name="error_media_save">メディアを保存できません</string>
 	<string name="editor_scheduled_post_saved_online">投稿を予約しました</string>
@@ -142,8 +156,6 @@ Language: ja_JP
 	<string name="error_unknown_post_type">投稿フォーマットが不明です</string>
 	<string name="error_unknown_post">不明な投稿です。この投稿のローカルコピーがサーバーと同期されていない可能性があります。</string>
 	<string name="error_fetch_site_after_creation">サイトは作成されているので、サイトピッカーでサイトを最新表示してください。</string>
-	<string name="error_media_request_too_large">メディアのサイズが大きすぎるため、アップロードできません</string>
-	<string name="error_media_parse_error">メディアのアップロード後の応答を解析できませんでした</string>
 	<string name="error_upload_params">%1$sをアップロードする際にエラーが発生しました。%2$s</string>
 	<string name="submit_for_review">送信</string>
 	<string name="role_subscriber">購読者</string>
@@ -162,7 +174,6 @@ Language: ja_JP
 	<string name="error_media_refresh_no_connection">ライブラリのリフレッシュに接続が必要</string>
 	<string name="error_media_unauthorized">メディアを表示または編集する権限がありません</string>
 	<string name="error_media_not_found">メディアを検出できませんでした</string>
-	<string name="error_media_insufficient_fs_permissions">メディアファイルに対する読み取り権限が必要です</string>
 	<string name="site_settings_optimize_images">画像を最適化</string>
 	<string name="no_site_error">WordPress サイトに接続できませんでした。有効な WordPress サイトはこの\nアドレスにはありません。入力したサイトアドレス (URL) を確認してください。</string>
 	<string name="media_generic_error">メディアエラーが発生しました</string>
@@ -455,8 +466,6 @@ Language: ja_JP
 	<string name="pending_email_change_snackbar">%1$s へ送信されたメール内の認証リンクをクリックして、新しいアドレスを承認してください。</string>
 	<string name="editor_toast_uploading_please_wait">メディアをアップロードしています。完了するまで、しばらくお待ちください。</string>
 	<string name="error_refresh_comments_showing_older">現在、コメントを更新することができないため、古いコメントが表示されます。</string>
-	<string name="editor_post_settings_set_featured_image">アイキャッチ画像を設定</string>
-	<string name="editor_post_settings_featured_image">アイキャッチ画像</string>
 	<string name="visual_editor_enabled">ビジュアルエディターを有効化しました</string>
 	<string name="editor_content_placeholder">こちらでストーリーを共有してください...</string>
 	<string name="editor_page_title_placeholder">ページタイトル</string>
@@ -505,7 +514,6 @@ Language: ja_JP
 	<string name="cd_related_post_preview_image">関連記事のプレビュー画像</string>
 	<string name="error_post_remote_site_settings">サイト情報を保存できませんでした</string>
 	<string name="error_fetch_remote_site_settings">サイト情報を取得できませんでした</string>
-	<string name="error_media_upload_connection">メディアのアップロード中に接続エラーが発生しました</string>
 	<string name="site_settings_disconnected_toast">ログアウトしたため編集を無効化しました。</string>
 	<string name="site_settings_unsupported_version_error">サポートされていない WordPress バージョン</string>
 	<string name="site_settings_multiple_links_dialog_description">この数より多くのリンクがコメントに含まれる場合、承認が必要です。</string>
@@ -646,7 +654,6 @@ Language: ja_JP
 	<string name="reader_label_gap_marker">さらに投稿を読み込む</string>
 	<string name="notifications_no_search_results">「%s」に一致するサイトはありません</string>
 	<string name="search_sites">サイトを検索</string>
-	<string name="unread">未読</string>
 	<string name="notifications_empty_view_reader">Reader を表示</string>
 	<string name="notifications_empty_action_followers_likes">存在に気づいてもらうため、読んだ投稿にコメントしてみましょう。</string>
 	<string name="notifications_empty_action_comments">会話に参加しましょう。フォローしているブログの投稿にコメントしてみませんか。</string>
@@ -665,7 +672,6 @@ Language: ja_JP
 	<string name="stats_widget_loading_data">データを読み込み中…</string>
 	<string name="stats_widget_name_for_blog">WordPress 統計情報 (%1$s)</string>
 	<string name="stats_widget_name">WordPress 今日の統計情報</string>
-	<string name="add_location_permission_required">位置情報を追加するために必要なアクセス権限</string>
 	<string name="add_media_permission_required">メディアを追加するには権限が必要です</string>
 	<string name="access_media_permission_required">メディアにアクセスするには権限が必要です</string>
 	<string name="stats_enable_rest_api_in_jetpack">統計情報を表示するには、Jetpack の JSON API モジュールを有効化してください。</string>
@@ -718,7 +724,6 @@ Language: ja_JP
 	<string name="button_stats">統計情報</string>
 	<string name="page_deleted">ページを削除しました</string>
 	<string name="button_back">戻る</string>
-	<string name="trashed">ゴミ箱移動済み</string>
 	<string name="stats_no_activity_this_period">この期間中のアクティビティがありません</string>
 	<string name="post_trashed">投稿をゴミ箱へ移動しました</string>
 	<string name="post_deleted">投稿を削除しました</string>
@@ -926,11 +931,6 @@ Language: ja_JP
 	<string name="hs__new_conversation_header">サポートチャット</string>
 	<string name="hs__conversation_detail_error">発生している問題を説明してください</string>
 	<string name="contact_us">お問い合わせ</string>
-	<string name="current_location">現在の位置</string>
-	<string name="add_location">位置情報を追加</string>
-	<string name="search_current_location">位置情報取得</string>
-	<string name="edit_location">編集</string>
-	<string name="search_location">検索</string>
 	<string name="preference_send_usage_stats_summary">WordPress for Android を改善するため、利用統計情報を自動的に送信する</string>
 	<string name="preference_send_usage_stats">統計情報を送信</string>
 	<string name="schedule_verb">予約</string>
@@ -1041,18 +1041,13 @@ Language: ja_JP
 	<string name="new_media">新規メディア</string>
 	<string name="new_post">新規投稿</string>
 	<string name="notifications_empty_all">通知はまだありません。</string>
-	<string name="post_format">投稿フォーマット</string>
 	<string name="http_authorization_required">認証が必要です</string>
 	<string name="http_credentials">HTTP ログイン情報 (オプション)</string>
-	<string name="pending_review">レビュー待ち</string>
 	<string name="invalid_site_url_message">入力したサイト URL が正しいか確認してください</string>
 	<string name="open_source_licenses">オープンソースライセンス</string>
-	<string name="location_not_found">位置情報が見つかりません</string>
 	<string name="file_error_create">メディアアップロードの際に一時ファイルを作成できませんでした。端末上に空き容量があるか確認してください。</string>
 	<string name="share_action_media">メディアギャラリー</string>
 	<string name="share_action_post">新規投稿</string>
-	<string name="category_parent">親カテゴリー (オプション):</string>
-	<string name="category_desc">カテゴリーの説明 (オプション):</string>
 	<string name="category_name">カテゴリー名</string>
 	<string name="add_new_category">新規カテゴリーを追加</string>
 	<string name="view_in_browser">ブラウザで表示</string>
@@ -1122,7 +1117,6 @@ Language: ja_JP
 	<string name="deleting_page">ページを削除中</string>
 	<string name="creating_your_site">サイトを作成しています</string>
 	<string name="creating_your_account">アカウントを作成しています</string>
-	<string name="error_refresh_media">メディアライブラリを再読込する際にエラーが発生しました。後ほどもう一度お試しください。</string>
 	<string name="reader_empty_posts_in_tag_updating">投稿を取得中…</string>
 	<string name="cant_share_no_visible_blog">公開ブログがないため WordPress で共有できません</string>
 	<string name="comment_spammed">コメントをスパムとしてマークしました</string>
@@ -1203,7 +1197,6 @@ Language: ja_JP
 	<string name="stats">統計</string>
 	<string name="share_action">共有</string>
 	<string name="share_action_title">追加先</string>
-	<string name="post_excerpt">抜粋</string>
 	<string name="theme_auth_error_title">テーマ情報の取得に失敗しました</string>
 	<string name="theme_set_success">テーマの設定を完了しました。</string>
 	<string name="theme_activating_button">有効化中</string>
@@ -1223,9 +1216,6 @@ Language: ja_JP
 	<string name="media_gallery_type_tiled">タイルモザイク</string>
 	<string name="media_gallery_type_squares">正方形タイル</string>
 	<string name="media_gallery_type">表示形式</string>
-	<string name="unattached">未使用</string>
-	<string name="images">画像</string>
-	<string name="all">すべて</string>
 	<string name="themes">テーマ</string>
 	<string name="discard">削除</string>
 	<string name="manage">管理</string>
@@ -1260,7 +1250,6 @@ Language: ja_JP
 	<string name="blogusername">blogusername</string>
 	<string name="scaled_image">変更後の画像幅</string>
 	<string name="upload_scaled_image">アップロードしてサイズを変更した画像にリンク</string>
-	<string name="scheduled">予約済み</string>
 	<string name="link_enter_url">URL</string>
 	<string name="uploading">アップロード中…</string>
 	<string name="app_title">WordPress for Android</string>
@@ -1274,27 +1263,20 @@ Language: ja_JP
 	<string name="page_id">固定ページ</string>
 	<string name="post_id">投稿</string>
 	<string name="immediately">すぐに</string>
-	<string name="post_password">パスワード (オプション)</string>
 	<string name="quickpress_add_alert_title">ショートカット名を設定する</string>
 	<string name="settings">設定</string>
 	<string name="today">今日</string>
 	<string name="share_url">URLを共有</string>
 	<string name="quickpress_add_error">ショートカット名を記入してください</string>
 	<string name="quickpress_window_title">QuickPress ショートカット用のブログを選択</string>
-	<string name="post_private">非公開</string>
-	<string name="draft">下書き</string>
-	<string name="publish_post">公開</string>
 	<string name="upload_full_size_image">アップロードしてフルサイズの画像にリンクする</string>
 	<string name="categories">カテゴリー</string>
-	<string name="tags_separate_with_commas">タグ (コンマ区切り)</string>
 	<string name="title">タイトル</string>
 	<string name="dlg_deleting_comments">コメントを削除中</string>
 	<string name="notification_vibrate">バイブ</string>
 	<string name="notification_sound">通知音</string>
 	<string name="notification_blink">通知ライトを点滅</string>
-	<string name="status">状態</string>
 	<string name="sdcard_title">SD カードが必要です</string>
-	<string name="location">場所</string>
 	<string name="media">メディア</string>
 	<string name="approve">承認</string>
 	<string name="delete">削除</string>

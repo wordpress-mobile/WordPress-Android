@@ -6,9 +6,6 @@ Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
-	<string name="media_error_timeout">伺服器回應逾時，可能是因為你的連線品質不佳或伺服器發生錯誤</string>
-	<string name="media_error_internal_server_error">上傳錯誤。請嘗試在「網站」->「設定」中啟用「將圖片最佳化」的功能</string>
-	<string name="media_error_http_too_large_upload">檔案太大，無法上傳。請嘗試在「網站」->「設定」中啟用「將圖片最佳化」的功能</string>
 	<string name="media_downloading">將媒體儲存到此裝置</string>
 	<string name="error_media_save">無法儲存媒體</string>
 	<string name="editor_scheduled_post_saved_online">文章已排程</string>
@@ -67,8 +64,6 @@ Language: zh_TW
 	<string name="error_unknown_post_type">未知的文章格式</string>
 	<string name="error_unknown_post">未知的文章，此文章的本機副本可能並未與伺服器同步</string>
 	<string name="error_fetch_site_after_creation">網站已建立，你可能需要重新整理網站挑選器中的網站清單。</string>
-	<string name="error_media_request_too_large">媒體檔案太大，無法上傳</string>
-	<string name="error_media_parse_error">媒體上傳後，無法剖析回應</string>
 	<string name="error_upload_params">上傳 %1$s 時發生錯誤：%2$s</string>
 	<string name="submit_for_review">送出</string>
 	<string name="role_subscriber">訂閱者</string>
@@ -87,7 +82,6 @@ Language: zh_TW
 	<string name="error_media_refresh_no_connection">需要網路連線，才能重新整理媒體庫</string>
 	<string name="error_media_unauthorized">你沒有查看或編輯媒體的權限</string>
 	<string name="error_media_not_found">找不到媒體</string>
-	<string name="error_media_insufficient_fs_permissions">需要媒體檔案的讀取權限</string>
 	<string name="site_settings_optimize_images">將圖片最佳化</string>
 	<string name="no_site_error">無法連線至 WordPress 網站。此地址沒有有效的\nWordPress 網站。請檢查你輸入的網站地址 (URL)。</string>
 	<string name="media_generic_error">發生媒體錯誤</string>
@@ -375,8 +369,6 @@ Language: zh_TW
 	<string name="pending_email_change_snackbar">按一下電子郵件 (收件者：%1$s) 中的驗證連結以確認您的新地址</string>
 	<string name="editor_toast_uploading_please_wait">你目前正在上傳媒體。請等待此作業完成。</string>
 	<string name="error_refresh_comments_showing_older">目前無法重新整理留言 – 顯示較舊的留言</string>
-	<string name="editor_post_settings_set_featured_image">設定特色圖片</string>
-	<string name="editor_post_settings_featured_image">特色圖片</string>
 	<string name="visual_editor_enabled">視覺化編輯器已啟用</string>
 	<string name="editor_content_placeholder">在此分享你的故事...</string>
 	<string name="editor_page_title_placeholder">頁面標題</string>
@@ -425,7 +417,6 @@ Language: zh_TW
 	<string name="cd_related_post_preview_image">相關文章預覽圖片</string>
 	<string name="error_post_remote_site_settings">無法儲存網站資訊</string>
 	<string name="error_fetch_remote_site_settings">無法擷取網站資訊</string>
-	<string name="error_media_upload_connection">上傳媒體時發生連線錯誤</string>
 	<string name="site_settings_disconnected_toast">已中斷連線，編輯功能已停用。</string>
 	<string name="site_settings_unsupported_version_error">不支援的 WordPress 版本</string>
 	<string name="site_settings_multiple_links_dialog_description">如果留言包含的連結超過此數量，留言就必須經過審核。</string>
@@ -566,7 +557,6 @@ Language: zh_TW
 	<string name="reader_label_gap_marker">載入更多文章</string>
 	<string name="notifications_no_search_results">沒有網站符合「%s」</string>
 	<string name="search_sites">搜尋網站</string>
-	<string name="unread">未讀</string>
 	<string name="notifications_empty_view_reader">檢視讀取器</string>
 	<string name="notifications_empty_action_followers_likes">取得通知：在已閱讀的文章上留言。</string>
 	<string name="notifications_empty_action_comments">加入討論：在關注的網誌文章上留言。</string>
@@ -585,7 +575,6 @@ Language: zh_TW
 	<string name="stats_widget_loading_data">正在載入資料…</string>
 	<string name="stats_widget_name_for_blog">%1$s 的本日統計資料</string>
 	<string name="stats_widget_name">WordPress 本日統計</string>
-	<string name="add_location_permission_required">需要擁有權限才能新增位置</string>
 	<string name="add_media_permission_required">需要擁有權限才能新增媒體</string>
 	<string name="access_media_permission_required">需要擁有權限才能存取媒體</string>
 	<string name="stats_enable_rest_api_in_jetpack">若要查看統計資料，請啟用 Jetpack 的 JSON API 模組。</string>
@@ -638,7 +627,6 @@ Language: zh_TW
 	<string name="button_stats">統計</string>
 	<string name="page_deleted">頁面已刪除</string>
 	<string name="button_back">返回</string>
-	<string name="trashed">已移至垃圾桶</string>
 	<string name="stats_no_activity_this_period">此期間沒有任何活動</string>
 	<string name="post_trashed">文章已移至垃圾桶</string>
 	<string name="post_deleted">文章已刪除</string>
@@ -846,11 +834,6 @@ Language: zh_TW
 	<string name="hs__new_conversation_header">支援交談</string>
 	<string name="hs__conversation_detail_error">描述你遇到的問題</string>
 	<string name="contact_us">聯絡我們</string>
-	<string name="current_location">目前的位置</string>
-	<string name="add_location">新增位置</string>
-	<string name="search_current_location">尋找</string>
-	<string name="edit_location">編輯</string>
-	<string name="search_location">搜尋</string>
 	<string name="preference_send_usage_stats_summary">自動傳送使用統計資料，協助我們改善 Android 版 WordPress</string>
 	<string name="preference_send_usage_stats">傳送統計資料</string>
 	<string name="schedule_verb">排程</string>
@@ -961,18 +944,13 @@ Language: zh_TW
 	<string name="new_media">新媒體</string>
 	<string name="new_post">新文章</string>
 	<string name="notifications_empty_all">尚未有任何通知。</string>
-	<string name="post_format">文章格式</string>
 	<string name="http_authorization_required">需要授權</string>
 	<string name="http_credentials">HTTP 憑證 (選填)</string>
-	<string name="pending_review">待審中</string>
 	<string name="invalid_site_url_message">檢查輸入的網站 URL 是否有效</string>
 	<string name="open_source_licenses">開啟來源授權</string>
-	<string name="location_not_found">未知的位置</string>
 	<string name="file_error_create">無法建立暫存檔進行媒體上傳。確認裝置上有足夠的可用空間。</string>
 	<string name="share_action_media">媒體庫</string>
 	<string name="share_action_post">新文章</string>
-	<string name="category_parent">類別上層 (選填)</string>
-	<string name="category_desc">類別描述 (選填)</string>
 	<string name="category_name">類別名稱</string>
 	<string name="add_new_category">新增類別</string>
 	<string name="view_in_browser">在瀏覽器中檢視</string>
@@ -1042,7 +1020,6 @@ Language: zh_TW
 	<string name="deleting_page">正在刪除頁面</string>
 	<string name="creating_your_site">建立你的網站</string>
 	<string name="creating_your_account">建立你的帳號</string>
-	<string name="error_refresh_media">重新整理媒體櫃時發生某種錯誤。請稍後再試一次。</string>
 	<string name="reader_empty_posts_in_tag_updating">正在擷取文章…</string>
 	<string name="cant_share_no_visible_blog">你無法在沒有可見網誌的情形下分享至 WordPress</string>
 	<string name="comment_spammed">已將留言標記為垃圾</string>
@@ -1123,7 +1100,6 @@ Language: zh_TW
 	<string name="stats">統計</string>
 	<string name="share_action">分享</string>
 	<string name="share_action_title">加入到</string>
-	<string name="post_excerpt">文章摘要</string>
 	<string name="theme_auth_error_title">抓取佈景主題失敗</string>
 	<string name="theme_set_success">成功設定佈景主題</string>
 	<string name="theme_activating_button">啟用中</string>
@@ -1143,9 +1119,6 @@ Language: zh_TW
 	<string name="media_gallery_type_tiled">磁磚</string>
 	<string name="media_gallery_type_squares">方塊</string>
 	<string name="media_gallery_type">型態</string>
-	<string name="unattached">未附加</string>
-	<string name="images">圖片</string>
-	<string name="all">全部</string>
 	<string name="themes">佈景主題</string>
 	<string name="discard">放棄</string>
 	<string name="manage">管理</string>
@@ -1180,7 +1153,6 @@ Language: zh_TW
 	<string name="blogusername">網誌使用者帳號</string>
 	<string name="scaled_image">圖片縮放寬度</string>
 	<string name="upload_scaled_image">上傳並建立縮圖連結</string>
-	<string name="scheduled">定時</string>
 	<string name="link_enter_url">URL</string>
 	<string name="uploading">上傳中…</string>
 	<string name="app_title">WordPress for Android</string>
@@ -1194,27 +1166,20 @@ Language: zh_TW
 	<string name="page_id">頁面</string>
 	<string name="post_id">文章</string>
 	<string name="immediately">立即</string>
-	<string name="post_password">密碼（非必要）</string>
 	<string name="quickpress_add_alert_title">設定捷徑名稱</string>
 	<string name="settings">設定</string>
 	<string name="today">今天</string>
 	<string name="share_url">分享網址</string>
 	<string name="quickpress_add_error">捷徑名稱不能為空</string>
 	<string name="quickpress_window_title">選擇用於 QuickPress 捷徑的網誌</string>
-	<string name="post_private">私密</string>
-	<string name="draft">草稿</string>
-	<string name="publish_post">發佈</string>
 	<string name="upload_full_size_image">上傳並連結到完整圖片</string>
 	<string name="categories">分類</string>
-	<string name="tags_separate_with_commas">標籤（多個標籤請以英文逗號“,”隔開）</string>
 	<string name="title">標題</string>
 	<string name="dlg_deleting_comments">刪除留言</string>
 	<string name="notification_vibrate">振動</string>
 	<string name="notification_sound">通知音效</string>
 	<string name="notification_blink">閃爍通知燈</string>
-	<string name="status">狀態</string>
 	<string name="sdcard_title">需要 SD 卡</string>
-	<string name="location">位置</string>
 	<string name="media">媒體</string>
 	<string name="approve">通過</string>
 	<string name="delete">刪除</string>
