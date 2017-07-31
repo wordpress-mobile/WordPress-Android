@@ -69,6 +69,8 @@ public class PostsListFragment extends Fragment
 
     public static final int POSTS_REQUEST_COUNT = 20;
     public static final String TAG = "posts_list_fragment_tag";
+    private static final String RV_POSITION = "rv_position";
+    private static final String RV_OFFSET = "rv_offset";
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
@@ -85,6 +87,9 @@ public class PostsListFragment extends Fragment
     private boolean mIsFetchingPosts;
     private boolean mShouldCancelPendingDraftNotification = false;
     private int mPostIdForPostToBeDeleted = 0;
+    private boolean mDoReplayPosition = false;
+    private int mRVPosition = 0;
+    private int mRVOffset = 0;
 
     private final List<PostModel> mTrashedPosts = new ArrayList<>();
 
@@ -110,6 +115,12 @@ public class PostsListFragment extends Fragment
 
         EventBus.getDefault().register(this);
         mDispatcher.register(this);
+
+        if (savedInstanceState != null) {
+            mDoReplayPosition = true;
+            mRVPosition = savedInstanceState.getInt(RV_POSITION);
+            mRVOffset = savedInstanceState.getInt(RV_OFFSET);
+        }
 
         updateSiteOrFinishActivity(savedInstanceState);
     }
@@ -454,6 +465,12 @@ public class PostsListFragment extends Fragment
             }
         } else if (postCount > 0) {
             hideEmptyView();
+
+            if (mDoReplayPosition) {
+                mDoReplayPosition = false;
+                ((LinearLayoutManager)mRecyclerView.getLayoutManager())
+                        .scrollToPositionWithOffset(mRVPosition, mRVOffset);
+            }
         }
     }
 
@@ -621,6 +638,11 @@ public class PostsListFragment extends Fragment
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(PostsListActivity.EXTRA_VIEW_PAGES, mIsPage);
+        outState.putInt(RV_POSITION,
+                ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition());
+        View firstItemView = mRecyclerView.getChildAt(0);
+        int offset = (firstItemView == null) ? 0 : (firstItemView.getTop() - mRecyclerView.getPaddingTop());
+        outState.putInt(RV_OFFSET, offset);
     }
 
     @SuppressWarnings("unused")
