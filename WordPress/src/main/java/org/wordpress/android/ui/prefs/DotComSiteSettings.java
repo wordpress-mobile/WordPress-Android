@@ -207,7 +207,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
-                        mJpSettings.jetpackProtectEnabled = response.optBoolean("active");
+                        mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -222,13 +222,61 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mSite.getSiteId(), "sso", new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received response to Jetpack SSO REST request.");
                         mRemoteJpSettings.ssoActive = response.optBoolean("active");
                         mJpSettings.ssoActive = response.optBoolean("active");
+                        if (mJpSettings.ssoActive) {
+                            fetchJetpackSsoModuleSettings();
+                        }
+                        notifyUpdatedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error getting Jetpack Protect settings: " + error);
+                        AppLog.w(AppLog.T.API, "Error getting Jetpack SSO settings: " + error);
+                    }
+                });
+    }
+
+    private void fetchJetpackSsoModuleSettings() {
+        WordPress.getRestClientUtils().getJetpackSsoMatchByEmailOption(
+                mSite.getSiteId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received response to Jetpack SSO module settings REST request.");
+                        JSONArray options = response.optJSONArray("options");
+                        if (options != null && options.length() > 0) {
+                            try {
+                                JSONObject ssoValue = options.getJSONObject(0);
+                                if (ssoValue != null && ssoValue.optString("option_name", null) != null) {
+                                    mRemoteJpSettings.ssoMatchEmail = ssoValue.optString("option_value", "0").equals("1");
+                                    mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            notifyUpdatedOnUiThread(null);
+                        }
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error getting Jetpack SSO module settings settings: " + error);
+                    }
+                });
+        WordPress.getRestClientUtils().getJetpackSsoTwoStepOption(
+                mSite.getSiteId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received response to Jetpack SSO module settings REST request.");
+                        mRemoteJpSettings.ssoRequireTwoFactor = response.optString("option_value", "0").equals("1");
+                        mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
+                            notifyUpdatedOnUiThread(null);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error getting Jetpack SSO module settings settings: " + error);
                     }
                 });
     }
