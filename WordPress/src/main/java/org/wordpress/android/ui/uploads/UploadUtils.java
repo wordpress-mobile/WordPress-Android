@@ -149,12 +149,12 @@ public class UploadUtils {
         }
     }
 
-    public static void showSnackbar(Activity activity, int messageRes, int buttonTitleRes, View.OnClickListener onClickListener) {
+    private static void showSnackbar(Activity activity, int messageRes, int buttonTitleRes, View.OnClickListener onClickListener) {
         Snackbar.make(activity.findViewById(R.id.coordinator), messageRes, Snackbar.LENGTH_LONG)
                 .setAction(buttonTitleRes, onClickListener).show();
     }
 
-    public static void showSnackbar(Activity activity, String text) {
+    private static void showSnackbar(Activity activity, String text) {
         Snackbar.make(activity.findViewById(R.id.coordinator),
                 text, Snackbar.LENGTH_LONG).show();
     }
