@@ -250,8 +250,8 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
-    public void setJetpacSsokMatchEmailOption(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/option/backup/?option_name=jetpack_sso_match_by_email", siteId);
+    public void setJetpacSsoMatchEmailOption(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/options/backup?option_name=jetpack_sso_match_by_email", siteId);
         Map<String, String> params = new HashMap<>();
         params.put("option_value", String.valueOf(enabled));
         post(path, params, null, listener, errorListener);
