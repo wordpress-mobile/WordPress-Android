@@ -269,7 +269,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.v(AppLog.T.API, "Received response to Jetpack SSO module settings REST request.");
-                        mRemoteJpSettings.ssoRequireTwoFactor = response.optString("option_value", "0").equals("1");
+                        mRemoteJpSettings.ssoRequireTwoFactor = response.optBoolean("option_value");
                         mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
                             notifyUpdatedOnUiThread(null);
                     }
@@ -564,20 +564,56 @@ class DotComSiteSettings extends SiteSettingsInterface {
     }
 
     private void updateJetpackSsoSettings() {
-        WordPress.getRestClientUtils().setJetpackSso(
-                mSite.getSiteId(), mJpSettings.ssoActive, new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
-                        mRemoteJpSettings.ssoActive = response.optBoolean("active");
-                        mJpSettings.ssoActive = response.optBoolean("active");
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
-                    }
-                });
+        if (mJpSettings.ssoRequireTwoFactor != mRemoteJpSettings.ssoRequireTwoFactor) {
+            WordPress.getRestClientUtilsV1_1().setJetpackSsoTwoStepOption(
+                    mSite.getSiteId(), mJpSettings.ssoRequireTwoFactor, new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
+                            mRemoteJpSettings.ssoRequireTwoFactor = response.optBoolean("option_value");
+                            mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
+                        }
+                    });
+        }
+
+        if (mJpSettings.ssoMatchEmail != mRemoteJpSettings.ssoMatchEmail) {
+            WordPress.getRestClientUtilsV1_1().setJetpacSsoMatchEmailOption(
+                    mSite.getSiteId(), mJpSettings.ssoMatchEmail, new RestRequest.Listener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
+                    mRemoteJpSettings.ssoMatchEmail = response.optBoolean("option_value");
+                    mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
+                }
+            }, new RestRequest.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
+                }
+            });
+        }
+
+        if (mJpSettings.ssoActive != mRemoteJpSettings.ssoActive) {
+            WordPress.getRestClientUtils().setJetpackSso(
+                    mSite.getSiteId(), mJpSettings.ssoActive, new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
+                            mRemoteJpSettings.ssoActive = response.optBoolean("active");
+                            mJpSettings.ssoActive = response.optBoolean("active");
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
+                        }
+                    });
+        }
     }
 
     private void fetchJetpackMonitorSettings() {
