@@ -87,7 +87,7 @@ public class HelpshiftHelper {
             }
             String[] res = new String[tags.length];
             for (int i = 0; i < res.length; i++) {
-                res[0] = tags[0].toString();
+                res[i] = tags[i].toString();
             }
             return res;
         }
