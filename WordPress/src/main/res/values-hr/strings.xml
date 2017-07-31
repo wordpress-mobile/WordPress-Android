@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-23 13:31:24+0000
+Translation-Revision-Date: 2017-07-24 14:42:27+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -41,7 +41,6 @@ Language: hr
 	<string name="cd_related_post_preview_image">Predpregled slika srodnih objava</string>
 	<string name="error_post_remote_site_settings">Nije moguće snimiti info o web-stranici</string>
 	<string name="error_fetch_remote_site_settings">Nije moguće dohvatiti info o web-stranici</string>
-	<string name="error_media_upload_connection">Tijekom prijenosa medijskoga zapisa dogodila se greška u spajanju</string>
 	<string name="site_settings_disconnected_toast">Odjavljeno, uređivanje onemogućeno</string>
 	<string name="site_settings_unsupported_version_error">WordPress inačica koja nije podržana</string>
 	<string name="site_settings_multiple_links_dialog_description">Potrebno odobrenje za komentare koji sadrže više od ovog broja komentara.</string>
@@ -182,7 +181,6 @@ Language: hr
 	<string name="reader_label_gap_marker">Učitaj više objava</string>
 	<string name="notifications_no_search_results">Nijedna web-stranica se ne podudara sa \'%s\'</string>
 	<string name="search_sites">Pretraživanje web-stranica</string>
-	<string name="unread">Označi kao ne pročitano</string>
 	<string name="notifications_empty_view_reader">Pregledaj čitač</string>
 	<string name="notifications_empty_action_followers_likes">Budite primijećeni: komentirajte pročitane objave.</string>
 	<string name="notifications_empty_action_comments">Pridružite se raspravi: komentirajte objave blogova koje pratite.</string>
@@ -201,7 +199,7 @@ Language: hr
 	<string name="stats_widget_loading_data">Učitavanje podataka...</string>
 	<string name="stats_widget_name_for_blog">Današnja statistika za %1$s</string>
 	<string name="stats_widget_name">Današnja WordPress statistika</string>
-	<string name="add_location_permission_required">Potrebno je dopuštenje kako bi se dodala lokacija</string>
+	<string name="post_settings_add_location_permission_required">Potrebno je dopuštenje kako bi se dodala lokacija</string>
 	<string name="add_media_permission_required">Potrebno je dopuštenje kako bi se dodao media zapis</string>
 	<string name="access_media_permission_required">Potrebno je dopuštenje kako bi se pristupilo media zapisu</string>
 	<string name="stats_enable_rest_api_in_jetpack">Za pregled statistike uključite JSON API modul u Jetpacku.</string>
@@ -254,7 +252,6 @@ Language: hr
 	<string name="button_stats">Statistika</string>
 	<string name="page_deleted">Stranica obrisana</string>
 	<string name="button_back">Nazad</string>
-	<string name="trashed">Stavljeno u smeće</string>
 	<string name="stats_no_activity_this_period">U ovom periodu nema aktivnosti</string>
 	<string name="post_trashed">Objava poslana u smeće</string>
 	<string name="post_deleted">Objava obrisana</string>
@@ -461,11 +458,6 @@ Language: hr
 	<string name="hs__new_conversation_header">Razgovor s podrškom</string>
 	<string name="hs__conversation_detail_error">Opišite problem koji se pojavljuje</string>
 	<string name="contact_us">Kontaktirajte nas</string>
-	<string name="current_location">Trenutna lokacija</string>
-	<string name="add_location">Dodaj lokaciju</string>
-	<string name="search_current_location">Pronaći</string>
-	<string name="edit_location">Uredi</string>
-	<string name="search_location">Pretraga</string>
 	<string name="preference_send_usage_stats_summary">Automatski šalji statistiku o korištenju kako bi nam pomogli poboljšati WordPress za Andorid</string>
 	<string name="preference_send_usage_stats">Šalji statistiku</string>
 	<string name="schedule_verb">Zakazati</string>
@@ -576,17 +568,12 @@ Language: hr
 	<string name="new_media">Novi medijski zapis</string>
 	<string name="new_post">Nova objava</string>
 	<string name="notifications_empty_all">Nema obavijesti... još.</string>
-	<string name="post_format">Format objave</string>
 	<string name="http_authorization_required">Potrebna autorizacija</string>
 	<string name="http_credentials">HTTP akreditiv (opcionalno)</string>
-	<string name="pending_review">Čeka moderaciju</string>
 	<string name="open_source_licenses">Licence otvorenog softvera</string>
-	<string name="location_not_found">Nepoznata lokacija</string>
 	<string name="file_error_create">Nije moguće kreirati privremeni zapis za prijenos medijskog zapisa. Provjerite da ima dovoljno slobodnog mjesta na vašem uređaju.</string>
 	<string name="share_action_media">Medijski zapisi</string>
 	<string name="share_action_post">Nova objava</string>
-	<string name="category_parent">Matična kategorija (opcionalno)</string>
-	<string name="category_desc">Opis kategorije (opcionalno)</string>
 	<string name="category_name">Ime kategorije</string>
 	<string name="add_new_category">Dodaj novu kategoriju</string>
 	<string name="view_in_browser">Pregled u pregledniku</string>
@@ -656,7 +643,6 @@ Language: hr
 	<string name="deleting_page">Brišem stranicu</string>
 	<string name="creating_your_site">Napravi svoju stranicu</string>
 	<string name="creating_your_account">Napravi svoj račun</string>
-	<string name="error_refresh_media">Nešto je pošlo krivo tijekom osvježavanja medijskih zapisa. Pokušajte ponovno kasnije.</string>
 	<string name="reader_empty_posts_in_tag_updating">Dohvaćanje objava...</string>
 	<string name="cant_share_no_visible_blog">Ne možete dijeliti na WordPressu bez vidljivog bloga</string>
 	<string name="comment_spammed">Komentar označen kao spam</string>
@@ -736,7 +722,6 @@ Language: hr
 	<string name="stats">Statistika</string>
 	<string name="share_action">Podjeli</string>
 	<string name="share_action_title">Dodaj u</string>
-	<string name="post_excerpt">Izvadak</string>
 	<string name="theme_auth_error_title">Nije moguće dohvatiti teme</string>
 	<string name="theme_set_success">Uspješno postavljena tema!</string>
 	<string name="theme_activating_button">Aktiviranje</string>
@@ -756,9 +741,6 @@ Language: hr
 	<string name="media_gallery_type_tiled">Pločice</string>
 	<string name="media_gallery_type_squares">Kvadrati</string>
 	<string name="media_gallery_type">Tip</string>
-	<string name="unattached">Nepriloženo</string>
-	<string name="images">Slike</string>
-	<string name="all">Sve</string>
 	<string name="themes">Teme</string>
 	<string name="upload">Prijenos</string>
 	<string name="more_notifications">i %d više.</string>
@@ -791,7 +773,6 @@ Language: hr
 	<string name="blogusername">blogusername</string>
 	<string name="scaled_image">Širina dimenzionirane slike</string>
 	<string name="upload_scaled_image">Prenesi i poveži do dimenzionirane slike</string>
-	<string name="scheduled">Zakazano</string>
 	<string name="link_enter_url">URL</string>
 	<string name="uploading">Prijenos...</string>
 	<string name="app_title">WordPress za Android</string>
@@ -805,16 +786,12 @@ Language: hr
 	<string name="page_id">Stranica</string>
 	<string name="post_id">Objava</string>
 	<string name="immediately">Odmah</string>
-	<string name="post_password">Lozinka (opcionalno)</string>
 	<string name="quickpress_add_alert_title">Postavi naziv prečaca</string>
 	<string name="settings">Postavke</string>
 	<string name="today">Danas</string>
 	<string name="share_url">Podijeli URL</string>
 	<string name="quickpress_add_error">Naziv prečaca ne može biti prazan</string>
 	<string name="quickpress_window_title">Odaberi blog za QuickPress prečac</string>
-	<string name="post_private">Privatno</string>
-	<string name="draft">Skica</string>
-	<string name="publish_post">Objavi</string>
 	<string name="upload_full_size_image">Prenesi i poveži do original slike</string>
 	<string name="categories">Kategorije</string>
 	<string name="tags_separate_with_commas">Oznake (razdvoji oznake zarezima)</string>
@@ -823,9 +800,7 @@ Language: hr
 	<string name="notification_vibrate">Vibracija</string>
 	<string name="notification_sound">Zvučna obavijest </string>
 	<string name="notification_blink">Trepereće svjetlo za obavijesti</string>
-	<string name="status">Status</string>
 	<string name="sdcard_title">Neophodna SD kartica</string>
-	<string name="location">Lokacija</string>
 	<string name="media">Medijski zapisi</string>
 	<string name="approve">Odobri</string>
 	<string name="delete">Izbriši</string>
