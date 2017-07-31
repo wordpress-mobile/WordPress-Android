@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -509,7 +510,15 @@ public class PostsListFragment extends Fragment
             if (mPostsListAdapter != null) {
                 final int position = mPostsListAdapter.getPositionForPost(mTargetPost);
                 if (position > -1) {
-                    mRecyclerView.scrollToPosition(position);
+                    RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getActivity()) {
+                        @Override
+                        protected int getVerticalSnapPreference() {
+                            return LinearSmoothScroller.SNAP_TO_START;
+                        }
+                    };
+
+                    smoothScroller.setTargetPosition(position);
+                    mRecyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
                 }
             }
             mTargetPost = null;
