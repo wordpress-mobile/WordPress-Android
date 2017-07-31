@@ -77,6 +77,8 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 public class NewUserFragment extends AbstractFragment {
+    private static final String KEY_UNDER_LOGIN_WIZARD = "KEY_UNDER_LOGIN_WIZARD";
+
     public static final String TAG = "new_user_fragment_tag";
 
     public static final int NEW_USER = 1;
@@ -90,6 +92,8 @@ public class NewUserFragment extends AbstractFragment {
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
     private boolean mEmailAutoCorrected;
+
+    private boolean mUnderLoginWizard;
 
     private LoginListener mLoginListener;
 
@@ -414,7 +418,7 @@ public class NewUserFragment extends AbstractFragment {
             return;
         }
 
-        if (AppPrefs.isLoginWizardStyleActivated()) {
+        if (mUnderLoginWizard) {
             if (mLoginListener != null) {
                 ArrayList<Integer> oldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                 mLoginListener.loggedInViaSigUp(oldSitesIDs);
@@ -441,7 +445,7 @@ public class NewUserFragment extends AbstractFragment {
             return;
         }
 
-        if (AppPrefs.isLoginWizardStyleActivated()) {
+        if (mUnderLoginWizard) {
             if (mLoginListener != null) {
                 mLoginListener.newUserCreatedButErrored(getEmail(), getPassword());
             }
@@ -493,9 +497,8 @@ public class NewUserFragment extends AbstractFragment {
         super.onAttach(context);
         if (AppPrefs.isLoginWizardStyleActivated()) {
             if (context instanceof LoginListener) {
+                mUnderLoginWizard = true;
                 mLoginListener = (LoginListener) context;
-            } else {
-                throw new RuntimeException(context.toString() + " must implement LoginListener");
             }
         }
     }
@@ -517,6 +520,10 @@ public class NewUserFragment extends AbstractFragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.register(this);
+
+        if (savedInstanceState != null) {
+            mUnderLoginWizard = savedInstanceState.getBoolean(KEY_UNDER_LOGIN_WIZARD);
+        }
     }
 
     @Override
@@ -618,6 +625,13 @@ public class NewUserFragment extends AbstractFragment {
         initPasswordVisibilityButton(rootView, mPasswordTextField);
         initInfoButton(rootView);
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(KEY_UNDER_LOGIN_WIZARD, mUnderLoginWizard);
     }
 
     private final TextWatcher mCheckFieldsFilledWatcher = new TextWatcher() {
