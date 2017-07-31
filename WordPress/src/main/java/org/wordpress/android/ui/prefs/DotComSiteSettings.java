@@ -189,7 +189,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             getJetpackModules();
                             fetchJetpackSettings();
                             getJetpackProtectModule();
-                            getJetpackSsoModule();
+                            fetchJetpackSsoModule();
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -217,7 +217,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 });
     }
 
-    private void getJetpackSsoModule() {
+    private void fetchJetpackSsoModule() {
         WordPress.getRestClientUtils().getJetpackModule(
                 mSite.getSiteId(), "sso", new RestRequest.Listener() {
                     @Override
