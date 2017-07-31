@@ -119,5 +119,4 @@ public class LoginMagicLinkSentFragment extends Fragment {
 
         return false;
     }
-
 }

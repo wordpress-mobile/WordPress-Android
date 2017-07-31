@@ -342,5 +342,4 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
 
         onLoginFinished(true);
     }
-
 }

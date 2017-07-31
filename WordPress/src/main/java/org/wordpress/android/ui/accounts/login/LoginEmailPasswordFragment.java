@@ -241,5 +241,4 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }
-
 }

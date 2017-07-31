@@ -266,5 +266,4 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             mLoginListener.showMagicLinkSentScreen(mEmail);
         }
     }
-
 }

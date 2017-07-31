@@ -28,7 +28,6 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -434,5 +433,4 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
         }
     }
-
 }

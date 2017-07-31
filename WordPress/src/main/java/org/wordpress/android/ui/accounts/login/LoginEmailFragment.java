@@ -261,5 +261,4 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 break;
         }
     }
-
 }
