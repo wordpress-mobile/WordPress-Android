@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.photopicker;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +25,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SqlUtils;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -390,7 +394,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private class BuildDeviceMediaListTask extends AsyncTask<Void, Void, Boolean> {
         private final ArrayList<PhotoPickerItem> tmpList = new ArrayList<>();
         private final boolean reload;
-        private static final String ID_COL = MediaStore.Images.Media._ID;
+        private static final String ID_COL = MediaStore.MediaColumns._ID;
 
         BuildDeviceMediaListTask(boolean mustReload) {
             super();
@@ -423,10 +427,11 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         }
 
         private void addMedia(Uri baseUri, boolean isVideo) {
+            ContentResolver resolver = mContext.getContentResolver();
             String[] projection = { ID_COL };
             Cursor cursor = null;
             try {
-                cursor = mContext.getContentResolver().query(
+                cursor = resolver.query(
                         baseUri,
                         projection,
                         null,
@@ -443,11 +448,23 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             try {
                 int idIndex = cursor.getColumnIndexOrThrow(ID_COL);
                 while (cursor.moveToNext()) {
-                    PhotoPickerItem item = new PhotoPickerItem();
-                    item._id = cursor.getLong(idIndex);
-                    item.uri = Uri.withAppendedPath(baseUri, "" + item._id);
-                    item.isVideo = isVideo;
-                    tmpList.add(item);
+                    long id = cursor.getLong(idIndex);
+                    Uri uri = Uri.withAppendedPath(baseUri, "" + id);
+                    try {
+                        // open the file descriptor to ensure it exists - will throw FileNotFoundException if not
+                        ParcelFileDescriptor descriptor = resolver.openFileDescriptor(uri, "r");
+                        descriptor.close();
+
+                        PhotoPickerItem item = new PhotoPickerItem();
+                        item._id = id;
+                        item.uri = uri;
+                        item.isVideo = isVideo;
+                        tmpList.add(item);
+                    } catch (FileNotFoundException e) {
+                        AppLog.w(AppLog.T.MEDIA, "Media FileNotFoundException " + uri);
+                    } catch (IOException e) {
+                        AppLog.w(AppLog.T.MEDIA, "Media IOException " + uri);
+                    }
                 }
             } finally {
                 SqlUtils.closeCursor(cursor);
