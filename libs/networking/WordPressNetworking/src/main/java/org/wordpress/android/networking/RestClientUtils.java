@@ -233,6 +233,16 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
+    public void getJetpackSsoMatchByEmailOption(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/options/backup?name=jetpack_sso_match_by_email", siteId);
+        get(path, listener, errorListener);
+    }
+
+    public void getJetpackSsoTwoStepOption(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/option/?option_name=jetpack_sso_require_two_step", siteId);
+        get(path, listener, errorListener);
+    }
+
     public void setJetpackSso(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/jetpack/modules/sso", siteId);
         Map<String, String> params = new HashMap<>();
