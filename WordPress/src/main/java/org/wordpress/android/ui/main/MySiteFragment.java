@@ -494,10 +494,14 @@ public class MySiteFragment extends Fragment
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(PostStore.OnPostUploaded event) {
         final PostModel post = event.post;
-        SiteModel site = getSelectedSite();
-        if (isAdded() && event.post != null && event.post.getLocalSiteId() == site.getId()) {
-            UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                    getActivity().findViewById(R.id.coordinator), event, site, mDispatcher);
+        if (isAdded() && event.post != null) {
+            SiteModel site = getSelectedSite();
+            if (site != null) {
+                if (event.post.getLocalSiteId() == site.getId()) {
+                    UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
+                            getActivity().findViewById(R.id.coordinator), event, site, mDispatcher);
+                }
+            }
         }
     }
 }
