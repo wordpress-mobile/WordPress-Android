@@ -63,8 +63,7 @@ import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
 import org.wordpress.aztec.source.SourceViewEditText;
-import org.wordpress.aztec.spans.AztecImageSpan;
-import org.wordpress.aztec.spans.AztecVideoSpan;
+import org.wordpress.aztec.spans.AztecMediaSpan;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 import org.xml.sax.Attributes;
@@ -619,21 +618,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             imageLoader.get(posterURL, new ImageLoader.ImageListener() {
 
                 private void replaceDrawable(Drawable newDrawable){
-                    if (mediaFile.isVideo()) {
-                        AztecVideoSpan[] clazzes = content.getText().getSpans(0, content.getText().length(), AztecVideoSpan.class);
-                        for (AztecVideoSpan currentClass: clazzes) {
-                            if (currentClass.getAttributes().hasAttribute(ATTR_SRC) &&
-                                    mediaUrl.equals(currentClass.getAttributes().getValue(ATTR_SRC))) {
-                                currentClass.setDrawable(newDrawable);
-                            }
-                        }
-                    } else {
-                        AztecImageSpan[] clazzes = content.getText().getSpans(0, content.getText().length(), AztecImageSpan.class);
-                        for (AztecImageSpan currentClass: clazzes) {
-                            if (currentClass.getAttributes().hasAttribute(ATTR_SRC) &&
-                                    mediaUrl.equals(currentClass.getAttributes().getValue(ATTR_SRC))) {
-                                currentClass.setDrawable(newDrawable);
-                            }
+                    AztecMediaSpan[] imageOrVideoSpans = content.getText().getSpans(0, content.getText().length(), AztecMediaSpan.class);
+                    for (AztecMediaSpan currentClass: imageOrVideoSpans) {
+                        if (currentClass.getAttributes().hasAttribute(ATTR_SRC) &&
+                                mediaUrl.equals(currentClass.getAttributes().getValue(ATTR_SRC))) {
+                            currentClass.setDrawable(newDrawable);
                         }
                     }
                     content.refreshText();
