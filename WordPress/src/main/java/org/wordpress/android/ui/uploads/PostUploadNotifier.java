@@ -188,7 +188,7 @@ class PostUploadNotifier {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
         notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
-        notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, errorMessage);
+        notificationIntent.putExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         notificationIntent.setAction(String.valueOf(notificationId));
 
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext,

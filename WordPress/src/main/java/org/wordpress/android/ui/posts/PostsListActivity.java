@@ -1,17 +1,17 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
@@ -21,13 +21,14 @@ import javax.inject.Inject;
 
 public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
-    public static final String EXTRA_ERROR_MSG = "errorMessage";
+    public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
     private SiteModel mSite;
 
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,10 +90,19 @@ public class PostsListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        PostModel targetPost = null;
+        int targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0);
+        if (targetPostId > 0) {
+            targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
+            if (targetPost == null) {
+                ToastUtils.showToast(this, R.string.error_post_does_not_exist);
+            }
+        }
+
         mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
-        if (mPostList == null || siteHasChanged || pageHasChanged) {
+        if (mPostList == null || siteHasChanged || pageHasChanged || targetPost != null) {
             PostsListFragment oldFragment = mPostList;
-            mPostList = PostsListFragment.newInstance(mSite, mIsPage);
+            mPostList = PostsListFragment.newInstance(mSite, mIsPage, targetPost);
             if (oldFragment == null) {
                 getFragmentManager().beginTransaction()
                         .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
@@ -103,8 +113,6 @@ public class PostsListActivity extends AppCompatActivity {
                         .commit();
             }
         }
-
-        showErrorDialogIfNeeded(intent.getExtras());
     }
 
     @Override
@@ -120,30 +128,6 @@ public class PostsListActivity extends AppCompatActivity {
         if (requestCode == RequestCodes.EDIT_POST) {
             mPostList.handleEditPostResult(resultCode, data);
         }
-    }
-
-    /**
-     * intent extras will contain error info if this activity was started from an
-     * upload error notification
-     */
-    private void showErrorDialogIfNeeded(Bundle extras) {
-        if (extras == null || !extras.containsKey(EXTRA_ERROR_MSG) || isFinishing()) {
-            return;
-        }
-
-        final String errorMessage = extras.getString(EXTRA_ERROR_MSG);
-
-        if (TextUtils.isEmpty(errorMessage)) {
-            return;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getResources().getText(R.string.error))
-               .setMessage(errorMessage)
-               .setPositiveButton(android.R.string.ok, null)
-               .setCancelable(true);
-
-        builder.create().show();
     }
 
     public boolean isRefreshing() {

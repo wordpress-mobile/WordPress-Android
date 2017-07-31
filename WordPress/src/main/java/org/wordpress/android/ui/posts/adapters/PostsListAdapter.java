@@ -632,6 +632,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         animOut.start();
     }
 
+    public int getPositionForPost(PostModel post) {
+        return PostUtils.indexOfPostInList(post, mPosts);
+    }
+
     public void loadPosts(LoadMode mode) {
         if (mIsLoadingPosts) {
             AppLog.d(AppLog.T.POSTS, "post adapter > already loading posts");
@@ -642,7 +646,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void updateProgressForPost(@NonNull PostModel post) {
         if (mRecyclerView != null) {
-            int position = PostUtils.indexOfPostInList(post, mPosts);
+            int position = getPositionForPost(post);
             if (position > -1) {
                 RecyclerView.ViewHolder viewHolder = mRecyclerView.findViewHolderForAdapterPosition(position);
                 if (viewHolder instanceof PostViewHolder) {
@@ -661,7 +665,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void hidePost(PostModel post) {
         mHiddenPosts.add(post);
 
-        int position = PostUtils.indexOfPostInList(post, mPosts);
+        int position = getPositionForPost(post);
         if (position > -1) {
             mPosts.remove(position);
             if (mPosts.size() > 0) {
