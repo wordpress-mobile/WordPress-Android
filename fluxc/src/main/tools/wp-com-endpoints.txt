@@ -21,6 +21,7 @@
 /sites/$site/exports/start
 /sites/$site/post-formats/
 /sites/$site/roles
+/sites/$site/plugins
 /sites/new/
 
 /sites/$site/comments/

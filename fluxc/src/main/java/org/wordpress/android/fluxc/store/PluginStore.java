@@ -1,7 +1,10 @@
 package org.wordpress.android.fluxc.store;
 
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.PluginAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
+import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.util.AppLog;
 
@@ -23,6 +26,20 @@ public class PluginStore extends Store {
 
     @Override
     public void onAction(Action action) {
+        IAction actionType = action.getType();
+        if (!(actionType instanceof PluginAction)) {
+            return;
+        }
+        switch ((PluginAction) actionType) {
+            case FETCH_PLUGINS:
+                fetchPlugins((SiteModel) action.getPayload());
+                break;
+        }
+    }
 
+    private void fetchPlugins(SiteModel site) {
+        if (site.isUsingWpComRestApi()) {
+            mPluginRestClient.fetchPlugins(site);
+        }
     }
 }
