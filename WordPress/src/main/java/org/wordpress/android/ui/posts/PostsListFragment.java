@@ -196,7 +196,8 @@ public class PostsListFragment extends Fragment
         final PostModel post = mPostStore.
                 getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
 
-        UploadUtils.handleEditPostResultSnackbars(getActivity(), resultCode, data, post, mSite,
+        UploadUtils.handleEditPostResultSnackbars(getActivity(),
+                getActivity().findViewById(R.id.coordinator), resultCode, data, post, mSite,
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -623,7 +624,8 @@ public class PostsListFragment extends Fragment
         final PostModel post = event.post;
         if (isAdded() && event.post != null && event.post.getLocalSiteId() == mSite.getId()) {
             loadPosts(LoadMode.FORCED);
-            UploadUtils.onPostUploadedSnackbarHandler(getActivity(), event, mSite, mDispatcher);
+            UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), event, mSite, mDispatcher);
         }
     }
 

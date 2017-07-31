@@ -309,18 +309,22 @@ public class MySiteFragment extends Fragment
                         && data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
-                final PostModel post = mPostStore.
-                        getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
 
-                if (post != null) {
-                    final SiteModel site = getSelectedSite();
-                    UploadUtils.handleEditPostResultSnackbars(getActivity(), resultCode, data, post, site,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    UploadUtils.publishPost(getActivity(), post, site, mDispatcher);
-                                }
-                            });
+                if (isAdded()) {
+                    final PostModel post = mPostStore.
+                            getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+
+                    if (post != null) {
+                        final SiteModel site = getSelectedSite();
+                        UploadUtils.handleEditPostResultSnackbars(getActivity(),
+                                getActivity().findViewById(R.id.coordinator), resultCode, data, post, site,
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        UploadUtils.publishPost(getActivity(), post, site, mDispatcher);
+                                    }
+                                });
+                    }
                 }
                 break;
         }
@@ -492,7 +496,8 @@ public class MySiteFragment extends Fragment
         final PostModel post = event.post;
         SiteModel site = getSelectedSite();
         if (isAdded() && event.post != null && event.post.getLocalSiteId() == site.getId()) {
-            UploadUtils.onPostUploadedSnackbarHandler(getActivity(), event, site, mDispatcher);
+            UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), event, site, mDispatcher);
         }
     }
 }
