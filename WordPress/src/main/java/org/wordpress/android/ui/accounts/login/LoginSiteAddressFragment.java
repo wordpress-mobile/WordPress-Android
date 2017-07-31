@@ -344,8 +344,4 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         mLoginListener.gotXmlRpcEndpoint(requestedSiteAddress, event.xmlRpcEndpoint);
     }
 
-    @Override
-    public HelpshiftHelper.Tag helpshiftOriginTag() {
-        return HelpshiftHelper.Tag.ORIGIN_LOGIN_SITE_ADDRESS;
-    }
 }

@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -36,7 +35,7 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-public class LoginMagicLinkRequestFragment extends Fragment implements LoginHelpshiftOriginProvider {
+public class LoginMagicLinkRequestFragment extends Fragment {
     public static final String TAG = "login_magic_link_request_fragment_tag";
 
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
@@ -268,7 +267,4 @@ public class LoginMagicLinkRequestFragment extends Fragment implements LoginHelp
         }
     }
 
-    public HelpshiftHelper.Tag helpshiftOriginTag() {
-        return HelpshiftHelper.Tag.ORIGIN_LOGIN_MAGIC_LINK;
-    }
 }

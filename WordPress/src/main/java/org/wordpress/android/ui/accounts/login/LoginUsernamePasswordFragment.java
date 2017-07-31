@@ -435,8 +435,4 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         }
     }
 
-    @Override
-    public HelpshiftHelper.Tag helpshiftOriginTag() {
-        return HelpshiftHelper.Tag.ORIGIN_LOGIN_USERNAME_PASSWORD;
-    }
 }

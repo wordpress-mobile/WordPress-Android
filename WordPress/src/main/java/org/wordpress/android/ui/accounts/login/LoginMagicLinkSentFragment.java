@@ -16,9 +16,8 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.util.HelpshiftHelper;
 
-public class LoginMagicLinkSentFragment extends Fragment implements LoginHelpshiftOriginProvider {
+public class LoginMagicLinkSentFragment extends Fragment {
     public static final String TAG = "login_magic_link_sent_fragment_tag";
 
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
@@ -121,7 +120,4 @@ public class LoginMagicLinkSentFragment extends Fragment implements LoginHelpshi
         return false;
     }
 
-    public HelpshiftHelper.Tag helpshiftOriginTag() {
-        return HelpshiftHelper.Tag.ORIGIN_LOGIN_MAGIC_LINK;
-    }
 }

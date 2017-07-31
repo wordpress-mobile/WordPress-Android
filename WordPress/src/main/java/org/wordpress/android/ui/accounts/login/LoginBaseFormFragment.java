@@ -39,7 +39,6 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -47,7 +46,7 @@ import java.util.EnumSet;
 
 import javax.inject.Inject;
 
-public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment implements TextWatcher, LoginHelpshiftOriginProvider {
+public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment implements TextWatcher {
 
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
@@ -344,7 +343,4 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         onLoginFinished(true);
     }
 
-    public HelpshiftHelper.Tag helpshiftOriginTag() {
-        return HelpshiftHelper.Tag.ORIGIN_UNKNOWN;
-    }
 }
