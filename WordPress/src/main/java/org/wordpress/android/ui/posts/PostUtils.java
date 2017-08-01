@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -114,7 +115,7 @@ public class PostUtils {
                     properties.put("post_id", post.getRemotePostId());
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
-                    // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadService
+                    // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadHandler
                 }
                 break;
             case SCHEDULED:
@@ -123,6 +124,9 @@ public class PostUtils {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
+                    properties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec" :
+                            AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
+
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
                             properties);
                 }
@@ -300,7 +304,7 @@ public class PostUtils {
         return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
     }
 
-    static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
+    public static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
         if (shouldPublishImmediately(postModel)) {
             postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
         }

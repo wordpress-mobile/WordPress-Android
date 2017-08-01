@@ -45,7 +45,6 @@ import org.wordpress.android.ui.media.MediaEditFragment;
 import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
-import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
@@ -66,7 +65,6 @@ import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
@@ -99,6 +97,9 @@ import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeWebActivity;
+import org.wordpress.android.ui.uploads.MediaUploadHandler;
+import org.wordpress.android.ui.uploads.PostUploadHandler;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.wordpress.android.util.WPWebViewClient;
 
@@ -126,6 +127,10 @@ public interface AppComponent {
     void inject(SignInDialogFragment object);
     void inject(LoginEpilogueFragment object);
     void inject(NewUserFragment object);
+
+    void inject(UploadService object);
+    void inject(MediaUploadHandler object);
+    void inject(PostUploadHandler object);
 
     void inject(LoginActivity object);
     void inject(LoginMagicLinkRequestFragment object);
@@ -219,11 +224,9 @@ public interface AppComponent {
     void inject(EditorReleaseNotesActivity object);
     void inject(WPWebViewActivity object);
     void inject(WPWebViewClient object);
-    void inject(PostUploadService object);
 
     void inject(ThemeWebActivity object);
 
-    void inject(MediaUploadService object);
     void inject(MediaDeleteService object);
 
     void inject(SelectCategoriesActivity object);
