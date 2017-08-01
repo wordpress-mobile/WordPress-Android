@@ -11,6 +11,13 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import java.util.List;
 
 public class PluginSqlUtils {
+    public static List<PluginModel> getPlugins(@NonNull SiteModel site) {
+        return WellSql.select(PluginModel.class)
+                .where()
+                .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
+                .endWhere().getAsModel();
+    }
+
     public static void insertOrReplacePlugins(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
         // Remove previous post formats for this site
         WellSql.delete(PluginModel.class)

@@ -88,6 +88,10 @@ public class PluginStore extends Store {
         }
     }
 
+    public List<PluginModel> getPlugins(SiteModel site) {
+        return PluginSqlUtils.getPlugins(site);
+    }
+
     private void fetchPlugins(SiteModel site) {
         if (site.isUsingWpComRestApi()) {
             mPluginRestClient.fetchPlugins(site);
