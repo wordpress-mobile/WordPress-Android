@@ -2,11 +2,14 @@ package org.wordpress.android.datasets;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.SqlUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -111,5 +114,41 @@ public final class SiteSettingsTable {
 
     private static String sqlWhere(String variable, String value) {
         return "WHERE " + variable + "=\"" + value + "\" ";
+    }
+
+    public static boolean migrateMediaOptimizeSettings(SQLiteDatabase db) {
+        Cursor cursor = null;
+        try {
+            String sqlCommand = "SELECT * FROM " + SiteSettingsModel.SETTINGS_TABLE_NAME + ";";
+            cursor = db.rawQuery(sqlCommand, null);
+            if (cursor == null || cursor.getCount() == 0 || !cursor.moveToFirst()) {
+                return false;
+            }
+            int columnIndex = cursor.getColumnIndex("optimizedImage");
+            if (columnIndex == -1) {
+                // No old settings
+                return false;
+            }
+            // we're safe to read all the settings now
+            int optimizeImageOldSettings = cursor.getInt(columnIndex);
+            AppPrefs.setImageOptimize(optimizeImageOldSettings == 1);
+            AppPrefs.setImageOptimizeWidth(
+                    cursor.getInt(cursor.getColumnIndex("maxImageWidth")));
+            AppPrefs.setImageOptimizeQuality(
+                    cursor.getInt(cursor.getColumnIndex("imageEncoderQuality")));
+            AppPrefs.setVideoOptimize(
+                    cursor.getInt(cursor.getColumnIndex("optimizedVideo")) == 1
+            );
+            AppPrefs.setVideoOptimizeWidth(
+                    cursor.getInt(cursor.getColumnIndex("maxVideoWidth")));
+            AppPrefs.setVideoOptimizeQuality(
+                    cursor.getInt(cursor.getColumnIndex("videoEncoderBitrate")));
+            return true;
+        } catch (SQLException e) {
+            // Nope
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+        return false;
     }
 }

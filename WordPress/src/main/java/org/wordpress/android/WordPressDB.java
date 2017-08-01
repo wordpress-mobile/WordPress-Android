@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 57;
+    private static final int DATABASE_VERSION = 58;
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
@@ -189,6 +189,12 @@ public class WordPressDB {
             case 56:
                 // no op - was used for old video optimization settings
                 currentVersion++;
+            case 57:
+                // Migrate media optimization settings
+                SiteSettingsTable.migrateMediaOptimizeSettings(db);
+                currentVersion++;
+               // default:
+                 //   SiteSettingsTable.migrateMediaOptimizeSettings(db);
         }
         db.setVersion(DATABASE_VERSION);
     }
