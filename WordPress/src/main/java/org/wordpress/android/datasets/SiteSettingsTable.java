@@ -9,6 +9,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
 import java.util.HashMap;
@@ -143,9 +144,12 @@ public final class SiteSettingsTable {
                     cursor.getInt(cursor.getColumnIndex("maxVideoWidth")));
             AppPrefs.setVideoOptimizeQuality(
                     cursor.getInt(cursor.getColumnIndex("videoEncoderBitrate")));
+
+            // Delete the old columns? --> cannot drop a specific column in SQLite 3 ;(
+
             return true;
         } catch (SQLException e) {
-            // Nope
+            AppLog.e(AppLog.T.DB, "Failed to copy media optimization settings", e);
         } finally {
             SqlUtils.closeCursor(cursor);
         }

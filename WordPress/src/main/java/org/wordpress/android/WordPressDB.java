@@ -193,8 +193,6 @@ public class WordPressDB {
                 // Migrate media optimization settings
                 SiteSettingsTable.migrateMediaOptimizeSettings(db);
                 currentVersion++;
-               // default:
-                 //   SiteSettingsTable.migrateMediaOptimizeSettings(db);
         }
         db.setVersion(DATABASE_VERSION);
     }
