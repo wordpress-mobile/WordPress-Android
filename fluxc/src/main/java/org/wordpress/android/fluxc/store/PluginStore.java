@@ -21,7 +21,7 @@ public class PluginStore extends Store {
     // Payloads
     public static class FetchedPluginsPayload extends Payload {
         public SiteModel site;
-        List<PluginModel> plugins;
+        public List<PluginModel> plugins;
         public FetchPluginsError error;
 
         public FetchedPluginsPayload(FetchPluginsError error) {
