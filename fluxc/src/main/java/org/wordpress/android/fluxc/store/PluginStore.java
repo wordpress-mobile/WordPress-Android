@@ -49,7 +49,8 @@ public class PluginStore extends Store {
 
     public enum FetchPluginsErrorType {
         GENERIC_ERROR,
-        UNAUTHORIZED
+        UNAUTHORIZED,
+        NOT_AVAILABLE // Return for non-jetpack sites
     }
 
     public static class OnPluginsChanged extends OnChanged<FetchPluginsError> {
@@ -95,6 +96,10 @@ public class PluginStore extends Store {
     private void fetchPlugins(SiteModel site) {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             mPluginRestClient.fetchPlugins(site);
+        } else {
+            FetchPluginsError error = new FetchPluginsError(FetchPluginsErrorType.NOT_AVAILABLE);
+            FetchedPluginsPayload payload = new FetchedPluginsPayload(error);
+            fetchedPlugins(payload);
         }
     }
 
