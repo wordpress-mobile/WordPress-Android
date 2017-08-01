@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
+import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.List;
@@ -51,6 +52,13 @@ public class PluginStore extends Store {
         UNAUTHORIZED
     }
 
+    public static class OnPluginsChanged extends OnChanged<FetchPluginsError> {
+        public SiteModel site;
+        public OnPluginsChanged(SiteModel site) {
+            this.site = site;
+        }
+    }
+
     private final PluginRestClient mPluginRestClient;
 
     @Inject
@@ -87,6 +95,12 @@ public class PluginStore extends Store {
     }
 
     private void fetchedPlugins(FetchedPluginsPayload payload) {
-        // TODO
+        OnPluginsChanged event = new OnPluginsChanged(payload.site);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            PluginSqlUtils.insertOrReplacePlugins(payload.site, payload.plugins);
+        }
+        emitChange(event);
     }
 }
