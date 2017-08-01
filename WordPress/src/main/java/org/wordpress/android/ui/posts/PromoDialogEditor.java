@@ -24,29 +24,25 @@ import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPTextView;
 
-public class PromoDialogEditor extends PromoDialog {
-    public static class Builder extends PromoDialog.Builder {
-        @StringRes int titleBetaId;
-        @StringRes int linkId;
-        @StringRes int buttonNegativeId;
+public class PromoDialogEditor extends PromoDialogAdvanced {
+    public static class Builder extends PromoDialogAdvanced.Builder {
+        @StringRes private int titleBetaId;
 
         public Builder(@DrawableRes int drawableId, @StringRes int titleId, @StringRes int descriptionId,
                        @StringRes int buttonPositiveId) {
             super(drawableId, titleId, descriptionId, buttonPositiveId);
         }
 
-        public Builder setTitleBetaText(@StringRes int titleBetaId) {
-            this.titleBetaId = titleBetaId;
-            return this;
-        }
-
         public Builder setLinkText(@StringRes int linkId) {
-            this.linkId = linkId;
-            return this;
+            return (Builder) super.setLinkText(linkId);
         }
 
         public Builder setNegativeButtonText(@StringRes int buttonNegativeId) {
-            this.buttonNegativeId = buttonNegativeId;
+            return (Builder) super.setNegativeButtonText(buttonNegativeId);
+        }
+
+        public Builder setTitleBetaText(@StringRes int titleBetaId) {
+            this.titleBetaId = titleBetaId;
             return this;
         }
 
@@ -56,8 +52,6 @@ public class PromoDialogEditor extends PromoDialog {
         }
     }
 
-    protected int mButtonNegativeId;
-    protected int mLinkId;
     protected int mTitleBetaId;
 
     protected static PromoDialogEditor newInstance(Builder builder) {
@@ -114,27 +108,31 @@ public class PromoDialogEditor extends PromoDialog {
 
         WPTextView link = (WPTextView) view.findViewById(R.id.promo_dialog_link);
         link.setText(mLinkId);
-        link.setOnClickListener(
-            new View.OnClickListener() {
+        if (mLinkOnClickListener == null) {
+            link.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     startActivity(new Intent(getActivity(), EditorReleaseNotesActivity.class));
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_AZTEC_PROMO_LINK);
                 }
-            }
-        );
+            });
+        } else {
+            link.setOnClickListener(mLinkOnClickListener);
+        }
 
         Button buttonNegative = (Button) view.findViewById(R.id.promo_dialog_button_negative);
         buttonNegative.setText(mButtonNegativeId);
-        buttonNegative.setOnClickListener(
-            new View.OnClickListener() {
+        if (mNegativeButtonOnClickListener == null) {
+            buttonNegative.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     getDialog().cancel();
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_AZTEC_PROMO_NEGATIVE);
                 }
-            }
-        );
+            });
+        } else {
+            buttonNegative.setOnClickListener(mNegativeButtonOnClickListener);
+        }
 
         Button buttonPositive = (Button) view.findViewById(R.id.promo_dialog_button_positive);
         buttonPositive.setText(mButtonPositiveId);

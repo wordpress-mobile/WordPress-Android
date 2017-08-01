@@ -308,9 +308,9 @@ public class WPMainActivity extends AppCompatActivity {
                     R.string.new_editor_promo_title,
                     R.string.new_editor_promo_description,
                     R.string.new_editor_promo_button_positive)
-                    .setTitleBetaText(R.string.new_editor_promo_title_beta)
                     .setLinkText(R.string.new_editor_promo_link)
                     .setNegativeButtonText(R.string.new_editor_promo_button_negative)
+                    .setTitleBetaText(R.string.new_editor_promo_title_beta)
                     .build();
             newFragment.show(getSupportFragmentManager(), "new-editor-promo");
             AppPrefs.setNewEditorPromoRequired(false);
