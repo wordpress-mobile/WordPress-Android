@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PluginAction;
@@ -73,6 +75,7 @@ public class PluginStore extends Store {
         AppLog.d(AppLog.T.API, "PluginStore onRegister");
     }
 
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
         IAction actionType = action.getType();
