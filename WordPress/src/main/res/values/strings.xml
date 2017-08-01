@@ -463,7 +463,6 @@
     <string name="site_settings_discussion_header" translatable="false">@string/discussion</string>
     <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
     <string name="site_settings_comments_header" translatable="false">@string/comments</string>
-    <string name="site_settings_this_device_header">This device</string>
     <string name="site_settings_advanced_header">Advanced</string>
 
     <!-- Preference Titles -->
