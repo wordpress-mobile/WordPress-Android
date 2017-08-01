@@ -16,8 +16,11 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResponse.FetchPluginsResponse;
+import org.wordpress.android.fluxc.store.PluginStore.FetchPluginsError;
+import org.wordpress.android.fluxc.store.PluginStore.FetchPluginsErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginsPayload;
 
 import java.util.ArrayList;
@@ -53,7 +56,19 @@ public class PluginRestClient extends BaseWPComRestClient {
                 },
                 new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                        FetchPluginsError fetchPluginsError
+                                = new FetchPluginsError(FetchPluginsErrorType.GENERIC_ERROR);
+                        if (networkError instanceof WPComGsonNetworkError) {
+                            switch (((WPComGsonNetworkError) networkError).apiError) {
+                                case "unauthorized":
+                                    fetchPluginsError.type = FetchPluginsErrorType.UNAUTHORIZED;
+                                    break;
+                            }
+                        }
+                        fetchPluginsError.message = networkError.message;
+                        FetchedPluginsPayload payload = new FetchedPluginsPayload(fetchPluginsError);
+                        mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginsAction(payload));
                     }
                 }
         );

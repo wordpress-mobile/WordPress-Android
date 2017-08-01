@@ -20,11 +20,35 @@ public class PluginStore extends Store {
     // Payloads
     public static class FetchedPluginsPayload extends Payload {
         public SiteModel site;
-        public List<PluginModel> plugins;
+        List<PluginModel> plugins;
+        public FetchPluginsError error;
+
+        public FetchedPluginsPayload(FetchPluginsError error) {
+            this.error = error;
+        }
+
         public FetchedPluginsPayload(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
             this.site = site;
             this.plugins = plugins;
         }
+    }
+
+    public static class FetchPluginsError implements OnChangedError {
+        public FetchPluginsErrorType type;
+        public String message;
+        public FetchPluginsError(FetchPluginsErrorType type) {
+            this(type, "");
+        }
+
+        FetchPluginsError(FetchPluginsErrorType type, String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public enum FetchPluginsErrorType {
+        GENERIC_ERROR,
+        UNAUTHORIZED
     }
 
     private final PluginRestClient mPluginRestClient;
