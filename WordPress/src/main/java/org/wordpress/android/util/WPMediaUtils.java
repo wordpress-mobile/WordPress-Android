@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import org.wordpress.android.BuildConfig;
@@ -143,8 +144,9 @@ public class WPMediaUtils {
      * @param error The media error occurred
      * @return String  The associated error message.
      */
-    public static String getErrorMessage(final Context context, final MediaModel media, final MediaStore.MediaError error) {
-        if (context == null || media == null || error == null) {
+    public static @Nullable String getErrorMessage(final Context context, final MediaModel media,
+                                                   final MediaStore.MediaError error) {
+        if (context == null || error == null) {
             return null;
         }
 
@@ -156,6 +158,8 @@ public class WPMediaUtils {
             case AUTHORIZATION_REQUIRED:
                 return context.getString(R.string.media_error_no_permission_upload);
             case REQUEST_TOO_LARGE:
+                if (media == null) return null;
+
                 if (media.isVideo()) {
                     return context.getString(R.string.media_error_http_too_large_video_upload);
                 } else {
@@ -166,7 +170,7 @@ public class WPMediaUtils {
             case TIMEOUT:
                 return context.getString(R.string.media_error_timeout);
             case CONNECTION_ERROR:
-                return context.getString(R.string.connection_error);
+                return context.getString(R.string.connection_to_server_lost);
             case EXCEEDS_FILESIZE_LIMIT:
                 return context.getString(R.string.media_error_exceeds_php_filesize);
             case EXCEEDS_MEMORY_LIMIT:
