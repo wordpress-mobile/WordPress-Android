@@ -310,7 +310,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
             return comments;
         }
         Object[] responseArray = (Object[]) response;
-        for (Object commentObject: responseArray) {
+        for (Object commentObject : responseArray) {
             CommentModel commentModel = commentResponseToComment(commentObject, site);
             if (commentModel != null) {
                 comments.add(commentModel);
