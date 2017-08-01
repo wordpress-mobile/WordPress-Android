@@ -93,8 +93,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
         // save any Jetpack changes
         if (mSite.isJetpackConnected()) {
             pushJetpackSettings();
-            pushJetpackProtectSettings();
-            pushJetpackSsoSettings();
         }
 
         try {
@@ -146,6 +144,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     @Override
     protected void fetchRemoteData() {
         fetchCategories();
+
         WordPress.getRestClientUtils().getGeneralSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
@@ -186,135 +185,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         }
 
                         if (mSite.isJetpackConnected()) {
-                            fetchJetpackModules();
                             fetchJetpackSettings();
-                            fetchJetpackProtectModule();
-                            fetchJetpackSsoModule();
                         }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error response to Settings REST request: " + error);
-                        notifyUpdatedOnUiThread(error);
-                    }
-                });
-    }
-
-    private void fetchJetpackProtectModule() {
-        WordPress.getRestClientUtils().getJetpackModule(
-                mSite.getSiteId(), "protect", new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
-                        mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error getting Jetpack Protect settings: " + error);
-                    }
-                });
-    }
-
-    private void fetchJetpackSsoModule() {
-        WordPress.getRestClientUtils().getJetpackModule(
-                mSite.getSiteId(), "sso", new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.v(AppLog.T.API, "Received response to Jetpack SSO REST request.");
-                        mRemoteJpSettings.ssoActive = response.optBoolean("active");
-                        mJpSettings.ssoActive = response.optBoolean("active");
-                        if (mJpSettings.ssoActive) {
-                            fetchJetpackSsoModuleSettings();
-                        }
-                        notifyUpdatedOnUiThread(null);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error getting Jetpack SSO settings: " + error);
-                    }
-                });
-    }
-
-    private void fetchJetpackSsoModuleSettings() {
-        WordPress.getRestClientUtils().getJetpackSsoMatchByEmailOption(
-                mSite.getSiteId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.v(AppLog.T.API, "Received response to Jetpack SSO module settings REST request.");
-                        JSONArray options = response.optJSONArray("options");
-                        if (options != null && options.length() > 0) {
-                            try {
-                                JSONObject ssoValue = options.getJSONObject(0);
-                                if (ssoValue != null && ssoValue.optString("option_name", null) != null) {
-                                    mRemoteJpSettings.ssoMatchEmail = ssoValue.optString("option_value", "0").equals("1");
-                                    mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            notifyUpdatedOnUiThread(null);
-                        }
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error getting Jetpack SSO module settings settings: " + error);
-                    }
-                });
-        WordPress.getRestClientUtils().getJetpackSsoTwoStepOption(
-                mSite.getSiteId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.v(AppLog.T.API, "Received response to Jetpack SSO module settings REST request.");
-                        mRemoteJpSettings.ssoRequireTwoFactor = response.optBoolean("option_value");
-                        mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
-                            notifyUpdatedOnUiThread(null);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error getting Jetpack SSO module settings settings: " + error);
-                    }
-                });
-    }
-
-    private void fetchJetpackModules() {
-        WordPress.getRestClientUtils().getJetpackModules(
-                mSite.getSiteId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.v(AppLog.T.API, "Received response to Jetpack Settings REST request.");
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.v(AppLog.T.API, "Received response to Jetpack Settings REST request.");
-                    }
-                });
-    }
-
-    private void fetchJetpackSettings() {
-        fetchJetpackMonitorSettings();
-        WordPress.getRestClientUtils().getJetpackSettings(
-                mSite.getSiteId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.v(AppLog.T.API, "Received response to Jetpack Settings REST request.");
-                        mRemoteJpSettings.localTableId = mSite.getId();
-                        deserializeJetpackRestResponse(mSite, response);
-                        mJpSettings.localTableId = mRemoteJpSettings.localTableId;
-                        mJpSettings.emailNotifications = mRemoteJpSettings.emailNotifications;
-                        mJpSettings.wpNotifications = mRemoteJpSettings.wpNotifications;
-                        SiteSettingsTable.saveJpSettings(mJpSettings);
-                        notifyUpdatedOnUiThread(null);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(AppLog.T.API, "Error response to Jetpack Settings REST request: " + error);
                         notifyUpdatedOnUiThread(error);
                     }
                 });
@@ -327,7 +204,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Received response to Categories REST request.");
+                        AppLog.v(AppLog.T.API, "Received site Categories");
                         credentialsVerified(true);
 
                         CategoryModel[] models = deserializeJsonRestResponse(response);
@@ -346,11 +223,105 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 });
     }
 
+    private void fetchJetpackSettings() {
+        fetchJetpackMonitorSettings();
+        fetchJetpackProtectSettings();
+        fetchJetpackSsoSettings();
+    }
+
+    private void pushJetpackSettings() {
+        pushJetpackMonitorSettings();
+        pushJetpackProtectSettings();
+        pushJetpackSsoSettings();
+    }
+
+    private void fetchJetpackProtectSettings() {
+        WordPress.getRestClientUtils().getJetpackModule(
+                mSite.getSiteId(), "protect", new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received Jetpack Protect module");
+                        mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
+                        mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error fetching Jetpack Protect module: " + error);
+                    }
+                });
+    }
+
+    private void fetchJetpackSsoSettings() {
+        WordPress.getRestClientUtils().getJetpackModule(
+                mSite.getSiteId(), "sso", new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received Jetpack SSO module");
+                        mRemoteJpSettings.ssoActive = response.optBoolean("active");
+                        mJpSettings.ssoActive = response.optBoolean("active");
+                        if (mJpSettings.ssoActive) {
+                            fetchJetpackSsoModuleSettings();
+                        }
+                        notifyUpdatedOnUiThread(null);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error fetching Jetpack SSO module: " + error);
+                    }
+                });
+    }
+
+    private void fetchJetpackSsoModuleSettings() {
+        WordPress.getRestClientUtils().getJetpackSsoMatchByEmailOption(
+                mSite.getSiteId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received Jetpack SSO module match emails option");
+                        JSONArray options = response.optJSONArray("options");
+                        if (options != null && options.length() > 0) {
+                            try {
+                                JSONObject ssoValue = options.getJSONObject(0);
+                                if (ssoValue != null && ssoValue.optString("option_name", null) != null) {
+                                    mRemoteJpSettings.ssoMatchEmail = ssoValue.optString("option_value", "0").equals("1");
+                                    mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            notifyUpdatedOnUiThread(null);
+                        }
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error fetching Jetpack SSO module match emails option: " + error);
+                    }
+                });
+        WordPress.getRestClientUtils().getJetpackSsoTwoStepOption(
+                mSite.getSiteId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received Jetpack SSO module 2FA option");
+                        mRemoteJpSettings.ssoRequireTwoFactor = response.optBoolean("option_value");
+                        mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
+                            notifyUpdatedOnUiThread(null);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error fetching Jetpack SSO module 2FA option: " + error);
+                    }
+                });
+    }
+
     private void fetchJetpackMonitorSettings() {
         WordPress.getRestClientUtils().getJetpackMonitor(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received Jetpack Monitor module");
                         mRemoteJpSettings.monitorActive = response.optBoolean("active");
                         mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
                         notifyUpdatedOnUiThread(null);
@@ -358,7 +329,28 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error getting Jetpack Monitor settings: " + error);
+                        AppLog.w(AppLog.T.API, "Error fetching Jetpack Monitor module: " + error);
+                    }
+                });
+
+        WordPress.getRestClientUtils().getJetpackSettings(
+                mSite.getSiteId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received Jetpack Monitor module options");
+                        mRemoteJpSettings.localTableId = mSite.getId();
+                        deserializeJetpackRestResponse(mSite, response);
+                        mJpSettings.localTableId = mRemoteJpSettings.localTableId;
+                        mJpSettings.emailNotifications = mRemoteJpSettings.emailNotifications;
+                        mJpSettings.wpNotifications = mRemoteJpSettings.wpNotifications;
+                        SiteSettingsTable.saveJpSettings(mJpSettings);
+                        notifyUpdatedOnUiThread(null);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error fetching Jetpack Monitor module options: " + error);
+                        notifyUpdatedOnUiThread(error);
                     }
                 });
     }
@@ -368,14 +360,16 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mSite.getSiteId(), mJpSettings.jetpackProtectEnabled, new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
                         mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
                         mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
+                        String status = mJpSettings.jetpackProtectEnabled ? "activated" : "deactivated";
+                        AppLog.d(AppLog.T.API, "Jetpack Protect module " + status);
+                        notifySavedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
+                        AppLog.w(AppLog.T.API, "Error updating Jetpack Protect module: " + error);
                     }
                 });
     }
@@ -387,19 +381,18 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     public void onResponse(JSONObject response) {
                         mRemoteJpSettings.monitorActive = response.optBoolean("active");
                         mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
+                        String status = mJpSettings.jetpackProtectEnabled ? "activated" : "deactivated";
+                        AppLog.d(AppLog.T.API, "Jetpack Monitor module " + status);
                         notifySavedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor settings: " + error);
+                        AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module: " + error);
                         notifySavedOnUiThread(error);
                     }
                 });
-    }
 
-    private void pushJetpackSettings() {
-        pushJetpackMonitorSettings();
         final Map<String, String> params = serializeJetpackParams();
         if (params == null || params.isEmpty()) return;
 
@@ -407,7 +400,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Jetpack Settings saved remotely");
+                        AppLog.d(AppLog.T.API, "Jetpack Monitor module options updated");
                         mRemoteJpSettings.emailNotifications = mJpSettings.emailNotifications;
                         mRemoteJpSettings.wpNotifications = mJpSettings.wpNotifications;
                         notifySavedOnUiThread(null);
@@ -415,26 +408,44 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error POSTing Jetpack site settings changes: " + error);
+                        AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module options: " + error);
                         notifySavedOnUiThread(error);
                     }
                 }, params);
     }
 
     private void pushJetpackSsoSettings() {
+        if (mJpSettings.ssoActive != mRemoteJpSettings.ssoActive) {
+            WordPress.getRestClientUtils().setJetpackSso(
+                    mSite.getSiteId(), mJpSettings.ssoActive, new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            mRemoteJpSettings.ssoActive = response.optBoolean("active");
+                            mJpSettings.ssoActive = mRemoteJpSettings.ssoActive;
+                            String status = mJpSettings.ssoActive ? "activated" : "deactivated";
+                            AppLog.d(AppLog.T.API, "Jetpack SSO module " + status);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack SSO module: " + error);
+                        }
+                    });
+        }
+
         if (mJpSettings.ssoRequireTwoFactor != mRemoteJpSettings.ssoRequireTwoFactor) {
             WordPress.getRestClientUtilsV1_1().setJetpackSsoTwoStepOption(
                     mSite.getSiteId(), mJpSettings.ssoRequireTwoFactor, new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
                             mRemoteJpSettings.ssoRequireTwoFactor = response.optBoolean("option_value");
                             mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
+                            AppLog.d(AppLog.T.API, "Jetpack SSO module 2FA option updated");
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack SSO module 2FA option: " + error);
                         }
                     });
         }
@@ -444,31 +455,14 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     mSite.getSiteId(), mJpSettings.ssoMatchEmail, new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
+                            AppLog.d(AppLog.T.API, "Jetpack SSO module match email option updated");
                             mRemoteJpSettings.ssoMatchEmail = response.optBoolean("option_value");
                             mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
-                        }
-                    });
-        }
-
-        if (mJpSettings.ssoActive != mRemoteJpSettings.ssoActive) {
-            WordPress.getRestClientUtils().setJetpackSso(
-                    mSite.getSiteId(), mJpSettings.ssoActive, new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
-                            mRemoteJpSettings.ssoActive = response.optBoolean("active");
-                            mJpSettings.ssoActive = response.optBoolean("active");
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack SSO module match email option: " + error);
                         }
                     });
         }
