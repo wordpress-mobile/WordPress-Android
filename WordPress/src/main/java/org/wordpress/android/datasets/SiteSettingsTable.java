@@ -127,10 +127,10 @@ public final class SiteSettingsTable {
             }
             int columnIndex = cursor.getColumnIndex("optimizedImage");
             if (columnIndex == -1) {
-                // No old settings
+                // No old columns for media optimization settings
                 return false;
             }
-            // we're safe to read all the settings now
+            // we're safe to read all the settings now since all the columns must be there
             int optimizeImageOldSettings = cursor.getInt(columnIndex);
             AppPrefs.setImageOptimize(optimizeImageOldSettings == 1);
             AppPrefs.setImageOptimizeWidth(
