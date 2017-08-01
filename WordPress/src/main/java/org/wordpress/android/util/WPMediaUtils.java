@@ -68,10 +68,6 @@ public class WPMediaUtils {
         return isVideoOptimizationAvailable() && AppPrefs.isVideoOptimize();
     }
 
-    public static boolean isImageOptimizationEnabled() {
-        return AppPrefs.isImageOptimize();
-    }
-
     /**
      *
      * Check if we should advertise image optimization feature for the current site.
@@ -99,7 +95,7 @@ public class WPMediaUtils {
         }
 
         // Check whether image optimization is already available for the site
-       return !isImageOptimizationEnabled();
+       return !AppPrefs.isImageOptimize();
     }
 
     public interface OnAdvertiseImageOptimizationListener {
