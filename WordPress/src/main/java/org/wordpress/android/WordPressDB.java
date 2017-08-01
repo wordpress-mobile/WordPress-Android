@@ -172,28 +172,23 @@ public class WordPressDB {
                 // fix #5373 - no op
                 currentVersion++;
             case 51:
-                SiteSettingsTable.addOptimizedImageToSiteSettingsTable(db);
+                // no op - was SiteSettingsTable.addOptimizedImageToSiteSettingsTable(db);
                 currentVersion++;
             case 52:
-                // fix #5373 for users who already upgraded to 52 but missed the first migration
-                try {
-                    SiteSettingsTable.addOptimizedImageToSiteSettingsTable(db);
-                } catch(SQLiteException e) {
-                    // ignore "duplicate column" exception
-                }
+                // no op - was used for old image optimization settings
                 currentVersion++;
             case 53:
                 // Clean up empty cache files caused by #5417
                 clearEmptyCacheFiles(ctx);
                 currentVersion++;
             case 54:
-                SiteSettingsTable.addImageResizeWidthAndQualityToSiteSettingsTable(db);
+                // no op - was used for old image optimization settings
                 currentVersion++;
             case 55:
                 SiteSettingsTable.addSharingColumnsToSiteSettingsTable(db);
                 currentVersion++;
             case 56:
-                SiteSettingsTable.addVideoResizeWidthAndQualityToSiteSettingsTable(db);
+                // no op - was used for old video optimization settings
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
