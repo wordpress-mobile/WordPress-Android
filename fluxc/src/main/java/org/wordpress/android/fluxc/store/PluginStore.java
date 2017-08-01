@@ -93,7 +93,7 @@ public class PluginStore extends Store {
     }
 
     private void fetchPlugins(SiteModel site) {
-        if (site.isUsingWpComRestApi()) {
+        if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             mPluginRestClient.fetchPlugins(site);
         }
     }
