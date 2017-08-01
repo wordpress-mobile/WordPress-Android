@@ -8,7 +8,6 @@ import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -66,13 +65,9 @@ public class PromoDialogAdvanced extends PromoDialog {
 
     @Override
     public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
         mLinkId = getArguments().getInt("linkId");
         mButtonNegativeId = getArguments().getInt("buttonNegativeId");
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);  // Request window without title.
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
-        return dialog;
+        return super.onCreateDialog(savedInstanceState);
     }
 
     @Override

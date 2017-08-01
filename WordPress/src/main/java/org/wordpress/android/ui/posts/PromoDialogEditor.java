@@ -11,7 +11,6 @@ import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -70,12 +69,8 @@ public class PromoDialogEditor extends PromoDialogAdvanced {
 
     @Override
     public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
         mTitleBetaId = getArguments().getInt("titleBetaId");
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);  // Request window without title.
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
-        return dialog;
+        return super.onCreateDialog(savedInstanceState);
     }
 
     @Override

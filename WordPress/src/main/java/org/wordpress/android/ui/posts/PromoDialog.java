@@ -73,14 +73,15 @@ public class PromoDialog extends AppCompatDialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button btn = (Button) view.findViewById(R.id.promo_dialog_button_positive);
-        btn.setText(mButtonPositiveId);
         ImageView image = (ImageView) view.findViewById(R.id.promo_dialog_image);
         image.setImageResource(mDrawableId);
         WPTextView title = (WPTextView) view.findViewById(R.id.promo_dialog_title);
         title.setText(mTitleId);
         WPTextView desc = (WPTextView) view.findViewById(R.id.promo_dialog_description);
         desc.setText(mDescriptionId);
+
+        Button btn = (Button) view.findViewById(R.id.promo_dialog_button_positive);
+        btn.setText(mButtonPositiveId);
         if (mPositiveButtonOnClickListener == null) {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
