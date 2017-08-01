@@ -176,6 +176,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
+    private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
 
     private Handler mHandler;
     private boolean mShowAztecEditor;
@@ -765,7 +766,11 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (itemId == R.id.menu_save_post) {
-            publishPost();
+            if (!AppPrefs.isAsyncPromoRequired()) {
+                publishPost();
+            } else {
+                showAsyncPromoDialog();
+            }
         } else {
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
@@ -2505,6 +2510,25 @@ public class EditPostActivity extends AppCompatActivity implements
                     )
                     .show();
         }
+    }
+
+    private void showAsyncPromoDialog() {
+        PromoDialogAdvanced asyncPromoDialog = new PromoDialogAdvanced.Builder(
+                R.drawable.img_promo_editor,
+                R.string.async_promo_title,
+                R.string.async_promo_description,
+                android.R.string.ok)
+                .setLinkText(R.string.async_promo_link).build();
+
+        asyncPromoDialog.setPositiveButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                publishPost();
+            }
+        });
+
+        asyncPromoDialog.show(getSupportFragmentManager(), ASYNC_PROMO_DIALOG_TAG);
+        AppPrefs.setAsyncPromoRequired(false);
     }
 
     // EditPostActivityHook methods
