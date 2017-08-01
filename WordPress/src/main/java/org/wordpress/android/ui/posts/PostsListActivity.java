@@ -1,17 +1,17 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
@@ -21,13 +21,14 @@ import javax.inject.Inject;
 
 public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
-    public static final String EXTRA_ERROR_MSG = "errorMessage";
+    public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
     private SiteModel mSite;
 
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,22 +37,44 @@ public class PostsListActivity extends AppCompatActivity {
 
         setContentView(R.layout.post_list_activity);
 
-        mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+
+        // get new intent extras and compare whether the running instance of PostsListActivity has
+        // the same values or not. If not, we need to create a new fragment and show the corresponding
+        // requested content
+        boolean pageHasChanged = false;
+        if (intent.hasExtra(EXTRA_VIEW_PAGES)) {
+            boolean isPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+            pageHasChanged = isPage != mIsPage;
+        }
+        mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+
+        boolean siteHasChanged = false;
+        if (intent.hasExtra(WordPress.SITE)) {
+            SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+            if (mSite != null && site != null) {
+                siteHasChanged = site.getId() != mSite.getId();
+            }
+            mSite = site;
         }
 
         if (mSite == null) {
@@ -60,15 +83,36 @@ public class PostsListActivity extends AppCompatActivity {
             return;
         }
 
-        mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
-        if (mPostList == null) {
-            mPostList = PostsListFragment.newInstance(mSite, mIsPage);
-            getFragmentManager().beginTransaction()
-                    .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
-                    .commit();
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        showErrorDialogIfNeeded(getIntent().getExtras());
+        PostModel targetPost = null;
+        int targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0);
+        if (targetPostId > 0) {
+            targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
+            if (targetPost == null) {
+                ToastUtils.showToast(this, R.string.error_post_does_not_exist);
+            }
+        }
+
+        mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
+        if (mPostList == null || siteHasChanged || pageHasChanged || targetPost != null) {
+            PostsListFragment oldFragment = mPostList;
+            mPostList = PostsListFragment.newInstance(mSite, mIsPage, targetPost);
+            if (oldFragment == null) {
+                getFragmentManager().beginTransaction()
+                        .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                        .commit();
+            } else {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                        .commit();
+            }
+        }
     }
 
     @Override
@@ -84,30 +128,6 @@ public class PostsListActivity extends AppCompatActivity {
         if (requestCode == RequestCodes.EDIT_POST) {
             mPostList.handleEditPostResult(resultCode, data);
         }
-    }
-
-    /**
-     * intent extras will contain error info if this activity was started from an
-     * upload error notification
-     */
-    private void showErrorDialogIfNeeded(Bundle extras) {
-        if (extras == null || !extras.containsKey(EXTRA_ERROR_MSG) || isFinishing()) {
-            return;
-        }
-
-        final String errorMessage = extras.getString(EXTRA_ERROR_MSG);
-
-        if (TextUtils.isEmpty(errorMessage)) {
-            return;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getResources().getText(R.string.error))
-               .setMessage(errorMessage)
-               .setPositiveButton(android.R.string.ok, null)
-               .setCancelable(true);
-
-        builder.create().show();
     }
 
     public boolean isRefreshing() {
