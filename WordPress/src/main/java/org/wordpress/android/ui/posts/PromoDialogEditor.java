@@ -138,10 +138,10 @@ public class PromoDialogEditor extends PromoDialog {
 
         Button buttonPositive = (Button) view.findViewById(R.id.promo_dialog_button_positive);
         buttonPositive.setText(mButtonPositiveId);
-        buttonPositive.setOnClickListener(
-            new View.OnClickListener() {
+        if (mPositiveButtonOnClickListener == null) {
+            buttonPositive.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View v) {
                     getDialog().cancel();
 
                     // Set Aztec enabled and Visual disabled if Aztec is not already enabled.
@@ -153,9 +153,12 @@ public class PromoDialogEditor extends PromoDialog {
                         preferences.edit().putString(getString(R.string.pref_key_editor_type), "2").apply();
                     }
 
-                    ActivityLauncher.addNewPostOrPageForResult(getActivity(), ((WPMainActivity) getActivity()).getSelectedSite(), false, true);
+                    ActivityLauncher.addNewPostOrPageForResult(getActivity(),
+                            ((WPMainActivity) getActivity()).getSelectedSite(), false, true);
                 }
-            }
-        );
+            });
+        } else {
+            buttonPositive.setOnClickListener(mPositiveButtonOnClickListener);
+        }
     }
 }

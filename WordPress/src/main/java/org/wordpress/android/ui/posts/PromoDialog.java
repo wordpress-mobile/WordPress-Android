@@ -47,6 +47,7 @@ public class PromoDialog extends AppCompatDialogFragment {
     protected int mDrawableId;
     protected int mTitleId;
 
+    protected View.OnClickListener mPositiveButtonOnClickListener;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -79,11 +80,19 @@ public class PromoDialog extends AppCompatDialogFragment {
         title.setText(mTitleId);
         WPTextView desc = (WPTextView) view.findViewById(R.id.promo_dialog_description);
         desc.setText(mDescriptionId);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().cancel();
-            }
-        });
+        if (mPositiveButtonOnClickListener == null) {
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getDialog().cancel();
+                }
+            });
+        } else {
+            btn.setOnClickListener(mPositiveButtonOnClickListener);
+        }
+    }
+
+    public void setPositiveButtonOnClickListener(View.OnClickListener listener) {
+        mPositiveButtonOnClickListener = listener;
     }
 }
