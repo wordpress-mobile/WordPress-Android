@@ -766,6 +766,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public void onMediaUploadReattached(String localId, float currentProgress) {
+        mUploadingMediaProgressMax.put(localId, currentProgress);
+    }
+
+    @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
         if(!isAdded() || content == null || !mAztecReady) {
             return;

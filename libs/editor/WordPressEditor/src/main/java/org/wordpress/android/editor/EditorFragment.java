@@ -1106,6 +1106,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void onMediaUploadReattached(String localId, float currentProgress) {
+        // no op (no reattachment in Visual Editor)
+    }
+
+    @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
         if(!isAdded()) {
             return;

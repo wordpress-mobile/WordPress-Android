@@ -409,6 +409,19 @@ public class UploadService extends Service {
         return 1;
     }
 
+    public static float getUploadProgressForMedia(MediaModel mediaModel) {
+        return MediaUploadHandler.getProgressForMedia(mediaModel);
+    }
+
+    public static List<MediaModel> getPendingMediaForPost(PostModel postModel) {
+        for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
+            if (uploadingPost.postModel.getId() == postModel.getId()) {
+                return uploadingPost.pendingMedia;
+            }
+        }
+        return null;
+    }
+
     private void showNotificationForPostWithPendingMedia(PostModel post) {
         mPostUploadNotifier.showForegroundNotificationForPost(post, getString(R.string.uploading_post_media));
     }
