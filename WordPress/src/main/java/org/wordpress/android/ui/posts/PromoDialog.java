@@ -2,6 +2,8 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,21 +16,37 @@ import org.wordpress.android.R;
 import org.wordpress.android.widgets.WPTextView;
 
 public class PromoDialog extends AppCompatDialogFragment {
+    public static class Builder {
+        @StringRes int buttonPositiveId;
+        @StringRes int descriptionId;
+        @DrawableRes int drawableId;
+        @StringRes int titleId;
+
+        public Builder(@DrawableRes int drawableId, @StringRes int titleId, @StringRes int descriptionId,
+                       @StringRes int buttonPositiveId) {
+            this.drawableId = drawableId;
+            this.titleId = titleId;
+            this.descriptionId = descriptionId;
+            this.buttonPositiveId = buttonPositiveId;
+        }
+
+        public PromoDialog build() {
+            PromoDialog fragment = new PromoDialog();
+            Bundle args = new Bundle();
+            args.putInt("drawableId", drawableId);
+            args.putInt("titleId", titleId);
+            args.putInt("descriptionId", descriptionId);
+            args.putInt("buttonPositiveId", buttonPositiveId);
+            fragment.setArguments(args);
+            return fragment;
+        }
+    }
+
     protected int mButtonPositiveId;
     protected int mDescriptionId;
     protected int mDrawableId;
     protected int mTitleId;
 
-    public static PromoDialog newInstance(int drawableId, int titleId, int descriptionId, int buttonPositiveId) {
-        PromoDialog fragment = new PromoDialog();
-        Bundle args = new Bundle();
-        args.putInt("drawableId", drawableId);
-        args.putInt("titleId", titleId);
-        args.putInt("descriptionId", descriptionId);
-        args.putInt("buttonPositiveId", buttonPositiveId);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
