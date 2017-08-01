@@ -69,15 +69,9 @@ public class PromoDialogEditor extends PromoDialogAdvanced {
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        mDrawableId = getArguments().getInt("drawableId");
-        mTitleId = getArguments().getInt("titleId");
         mTitleBetaId = getArguments().getInt("titleBetaId");
-        mDescriptionId = getArguments().getInt("descriptionId");
-        mLinkId = getArguments().getInt("linkId");
-        mButtonNegativeId = getArguments().getInt("buttonNegativeId");
-        mButtonPositiveId = getArguments().getInt("buttonPositiveId");
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);  // Request window without title.
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);

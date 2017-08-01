@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
@@ -50,7 +51,7 @@ public class PromoDialog extends AppCompatDialogFragment {
     protected View.OnClickListener mPositiveButtonOnClickListener;
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         mDrawableId = getArguments().getInt("drawableId");
         mTitleId = getArguments().getInt("titleId");
