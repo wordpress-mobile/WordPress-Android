@@ -286,6 +286,8 @@ public class PostUploadService extends Service {
             // Calculate the words count
             mCurrentUploadingPostAnalyticsProperties = new HashMap<>();
             mCurrentUploadingPostAnalyticsProperties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
+            mCurrentUploadingPostAnalyticsProperties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec" :
+                    AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
 
             if (hasGallery()) {
                 mCurrentUploadingPostAnalyticsProperties.put("with_galleries", true);
