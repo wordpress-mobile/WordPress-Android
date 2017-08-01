@@ -211,11 +211,6 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
-    public void getJetpackModules(long siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/jetpack/modules", siteId);
-        get(path, listener, errorListener);
-    }
-
     public void getJetpackSettings(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
         get(path, listener, errorListener);
