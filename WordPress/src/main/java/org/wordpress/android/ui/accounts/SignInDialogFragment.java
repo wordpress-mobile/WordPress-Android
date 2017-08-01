@@ -178,9 +178,9 @@ public class SignInDialogFragment extends DialogFragment {
                 break;
             case ACTION_OPEN_SUPPORT_CHAT:
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, arguments.getString(
-                        SignInFragment.ENTERED_URL_KEY));
+                        HelpshiftHelper.ENTERED_URL_KEY));
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
-                        SignInFragment.ENTERED_USERNAME_KEY));
+                        HelpshiftHelper.ENTERED_USERNAME_KEY));
                 Tag origin = (Tag) arguments.getSerializable(HelpshiftHelper.ORIGIN_KEY);
                 HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
                         origin, mAccountStore.getAccount().getUserName());

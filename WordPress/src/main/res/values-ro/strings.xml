@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-05 08:53:29+0000
+Translation-Revision-Date: 2017-07-24 19:37:19+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="image_optimization_promo_desc">Optimizarea imaginilor micșorează imaginile pentru a le încărca mai rapid.\n\nPoți modifica asta oricând în setările sitului.</string>
+	<string name="image_optimization_promo_title">Pornești optimizarea imaginilor?</string>
+	<string name="leave_off">Las-o oprită</string>
+	<string name="turn_on">Pornește</string>
+	<string name="me_profile_photo">Fotografie de profil</string>
+	<string name="error_media_parse_error">Răspuns neașteptat de la server</string>
+	<string name="upload_finished_toast">Nu pot opri încărcarea deoarece este deja terminată</string>
+	<string name="post_title">Titlu</string>
+	<string name="menu_redo">Refacere</string>
+	<string name="menu_undo">Revenire</string>
+	<string name="media_insert_unimplemented">Scuze! Funcționalitatea n-a fost încă implementată :(</string>
+	<string name="error_media_small">Fișier media prea mic pentru a-l arăta</string>
+	<string name="editor_dropped_unsupported_files">Avertizare: nu sunt suportate toate elementele plasate!</string>
+	<string name="editor_dropped_title_images_not_allowed">Plasarea imaginilor în titlu nu este permisă</string>
+	<string name="editor_dropped_text_error">A apărut o eroare în timpul plasării textului</string>
+	<string name="editor_dropped_html_images_not_allowed">Plasarea imaginilor în modul HTML nu este permisă</string>
+	<string name="editor_content_hint">Partajează-ți povestea aici...</string>
+	<string name="post_status_trashed">Aruncat la gunoi</string>
+	<string name="post_status_scheduled">Programat</string>
+	<string name="post_status_post_private">Privat</string>
+	<string name="post_status_draft">Ciornă</string>
+	<string name="post_status_pending_review">Revizie în așteptare</string>
+	<string name="post_status_publish_post">Public</string>
+	<string name="change_location">Schimbă locația</string>
+	<string name="remove_location">Înlătură locația</string>
+	<string name="post_settings_error_placepicker_missing_play_services">Nu pot deschide selectorul de locație, serviciile Google Play nu sunt disponibile</string>
+	<string name="post_settings_location">Locație</string>
+	<string name="now">Acum</string>
+	<string name="post_settings_password_dialog_hint">Numai cei care au această parolă pot vedea acest articol</string>
+	<string name="post_settings_excerpt_dialog_hint">Rezumatele sunt scurte expuneri manuale, opționale, ale conținutului tău.</string>
+	<string name="post_settings_slug_dialog_hint">Descriptorul este versiunea prietenoasă a URL-ului pentru titlu articolului.</string>
+	<string name="post_settings_post_format">Format articol</string>
+	<string name="post_settings_tags">Etichete</string>
+	<string name="post_settings_slug">Descriptor</string>
+	<string name="post_settings_excerpt">Rezumat</string>
+	<string name="post_settings_not_set">Nesetate</string>
+	<string name="post_settings_more_options">Mai multe opțiuni</string>
+	<string name="post_settings_categories_and_tags">Categorii și etichete</string>
+	<string name="post_settings_status">Stare</string>
+	<string name="notifications_tab_title_unread">Necitite</string>
+	<string name="notifications_tab_title_all">Toate</string>
+	<string name="top_level_category_name">Nivel superior</string>
+	<string name="category_parent">Categorie părinte (opțional):</string>
+	<string name="toast_err_post_media_uploading">Nu pot șterge un articol în timp ce se încarcă</string>
+	<string name="media_empty_audio_list">Nu ai niciun audio</string>
+	<string name="media_empty_documents_list">Nu ai niciun document</string>
+	<string name="media_empty_videos_list">Nu ai niciun video</string>
+	<string name="media_empty_image_list">Nu ai nicio imagine</string>
+	<string name="media_error_timeout">Serverului îi ia prea mult timp pentru a răspunde</string>
+	<string name="media_error_exceeds_memory_limit">Fișier prea mare pentru a fi încărcat pe acest sit</string>
+	<string name="media_error_exceeds_php_filesize">Fișierul depășește dimensiunea maximă de încărcare pentru acest sit</string>
+	<string name="media_error_http_too_large_video_upload">Video prea mare pentru a-l încărca</string>
+	<string name="media_error_http_too_large_photo_upload">Imagine prea mare pentru a o încărca. Încearcă să modifici Optimizează imaginile în setările sitului tău.</string>
+	<string name="media_audio">Audio</string>
+	<string name="media_videos">Videouri</string>
+	<string name="media_documents">Documente</string>
+	<string name="media_images">Imagini</string>
+	<string name="media_all">Toată</string>
 	<string name="video_optimization_generic_error_message">A apărut o eroare în timpul comprimării videoului tău. Folosesc fișierul original.</string>
 	<string name="video_optimization_in_progress">Îți optimizez videoul...</string>
 	<string name="photo_picker_soft_ask_permissions_denied">%1$s a fost refuzat accesul la fotografiile tale. Pentru a corecta asta, editează-ți permisiunile și pornește %2$s.</string>
@@ -96,9 +154,7 @@ Language: ro
 	<string name="fab_content_description_write">Scrie</string>
 	<string name="my_site_btn_sharing">Partajare</string>
 	<string name="button_not_now">Nu acum</string>
-	<string name="media_error_timeout">Răspunsul serverului a expirat, ar putea fi o conexiune slabă sau o eroare de server</string>
-	<string name="media_error_internal_server_error">Eroare la încărcare. Încearcă activarea Optimizează imagini în Sit->Setări</string>
-	<string name="media_error_http_too_large_upload">Fișier prea mare pentru a-l încărca. Încearcă activarea Optimizează imagini în Sit->Setări</string>
+	<string name="media_error_internal_server_error">Eroare la încărcare. Încearcă să modifici Optimizează imaginile în setările sitului tău.</string>
 	<string name="media_downloading">Salvez media pe acest dispozitiv</string>
 	<string name="error_media_save">Nu pot salva media</string>
 	<string name="editor_scheduled_post_saved_online">Articol programat</string>
@@ -159,8 +215,6 @@ Language: ro
 	<string name="error_unknown_post_type">Format de articol necunoscut</string>
 	<string name="error_unknown_post">Articol necunoscut, copia locală a acestui articol poate nu este sincronizată cu serverul</string>
 	<string name="error_fetch_site_after_creation">Situl a fost creat, ar trebui să-ți reîmprospătezi siturile în selectorul de sit.</string>
-	<string name="error_media_request_too_large">Media prea mare, nu poate fi încărcată</string>
-	<string name="error_media_parse_error">N-am putut interpreta răspunsul după încărcarea media</string>
 	<string name="error_upload_params">Eroare în timpul încărcării %1$s: %2$s</string>
 	<string name="submit_for_review">Trimite</string>
 	<string name="role_subscriber">Abonat</string>
@@ -179,8 +233,8 @@ Language: ro
 	<string name="error_media_refresh_no_connection">Este necesară o conexiune pentru a împrospăta biblioteca</string>
 	<string name="error_media_unauthorized">Nu ai permisiunea de a vedea sau edita media</string>
 	<string name="error_media_not_found">Media n-a putut fi găsită</string>
-	<string name="error_media_insufficient_fs_permissions">Este necesară permisiunea de citire în fișierul media</string>
-	<string name="site_settings_optimize_images">Optimizează imagini</string>
+	<string name="error_media_insufficient_fs_permissions">Permisiunea de citire refuzată pe media dispozitivului</string>
+	<string name="site_settings_optimize_images">Optimizează imaginile</string>
 	<string name="no_site_error">Nu m-am putut conecta la situl WordPress. Nu este niciun sit WordPress valid la\n        această adresă. Verifică adresa sitului (URL) pe care ai introdus-o.</string>
 	<string name="media_generic_error">A apărut o eroare media</string>
 	<string name="media_upload_error">A apărut o eroare la încarcarea media</string>
@@ -472,8 +526,8 @@ Language: ro
 	<string name="pending_email_change_snackbar">Dă clic pe legătura de verificare din emailul trimis la %1$s pentru a confirma noua ta adresă</string>
 	<string name="editor_toast_uploading_please_wait">Acum încarci media. Te rog așteaptă până ce asta se termină.</string>
 	<string name="error_refresh_comments_showing_older">Comentariile nu pot fi reîmprospătate acum - sunt arătate comentarii mai vechi</string>
-	<string name="editor_post_settings_set_featured_image">Setează imaginea reprezentativă</string>
-	<string name="editor_post_settings_featured_image">Imagine reprezentativă</string>
+	<string name="post_settings_set_featured_image">Setează imaginea reprezentativă</string>
+	<string name="post_settings_featured_image">Imagine reprezentativă</string>
 	<string name="visual_editor_enabled">Editor vizual validat</string>
 	<string name="editor_content_placeholder">Partajează aici povestea ta...</string>
 	<string name="editor_page_title_placeholder">Titlu pagină</string>
@@ -522,7 +576,6 @@ Language: ro
 	<string name="cd_related_post_preview_image">Imagine previzualizare articol similar</string>
 	<string name="error_post_remote_site_settings">N-am putut salva informațiile despre sit</string>
 	<string name="error_fetch_remote_site_settings">N-am putut primi informațiile despre sit</string>
-	<string name="error_media_upload_connection">A apărut o eroare în timp ce se încărca media</string>
 	<string name="site_settings_disconnected_toast">Dezautentificat, editare dezactivată.</string>
 	<string name="site_settings_unsupported_version_error">Versiune de WordPress nesuportată</string>
 	<string name="site_settings_multiple_links_dialog_description">Necesită aprobarea pentru comentarii ce includ mai mult decât acest număr de legături.</string>
@@ -663,7 +716,6 @@ Language: ro
 	<string name="reader_label_gap_marker">Încarcă mai multe articole</string>
 	<string name="notifications_no_search_results">Niciun site nu s-a potrivit cu \'%s\'</string>
 	<string name="search_sites">Căutare situri</string>
-	<string name="unread">Necitite</string>
 	<string name="notifications_empty_view_reader">Vezi Cititorul</string>
 	<string name="notifications_empty_action_followers_likes">Remarcă-te: comentează articolele pe care le-ai citit.</string>
 	<string name="notifications_empty_action_comments">Alătură-te conversației: comentează articolele blogurilor pe care le urmărești.</string>
@@ -682,7 +734,7 @@ Language: ro
 	<string name="stats_widget_loading_data">Încarc date...</string>
 	<string name="stats_widget_name_for_blog">Statisticile zilei pentru %1$s</string>
 	<string name="stats_widget_name">Statisticile WordPress ale zilei </string>
-	<string name="add_location_permission_required">Ai nevoie de permisiune pentru a adăuga locația</string>
+	<string name="post_settings_add_location_permission_required">Ai nevoie de permisiune pentru a adăuga locația</string>
 	<string name="add_media_permission_required">Permisiuni necesare pentru a adăuga media</string>
 	<string name="access_media_permission_required">Permisiuni necesare pentru a accesa media</string>
 	<string name="stats_enable_rest_api_in_jetpack">Pentru a vedea statisticile tale, validează extensia JSON API din Jetpack.</string>
@@ -735,7 +787,6 @@ Language: ro
 	<string name="button_stats">Statistici</string>
 	<string name="page_deleted">Pagină ștearsă</string>
 	<string name="button_back">Înapoi</string>
-	<string name="trashed">Aruncat la gunoi</string>
 	<string name="stats_no_activity_this_period">Nicio activitate în această perioadă</string>
 	<string name="post_trashed">Articol trimis la gunoi</string>
 	<string name="post_deleted">Articol șters</string>
@@ -943,11 +994,6 @@ Language: ro
 	<string name="hs__new_conversation_header">Chat cu suportul</string>
 	<string name="hs__conversation_detail_error">Descrie problema pe care o ai</string>
 	<string name="contact_us">Contactează-ne</string>
-	<string name="current_location">Locație curentă</string>
-	<string name="add_location">Adaugă locație</string>
-	<string name="search_current_location">Localizează</string>
-	<string name="edit_location">Editare</string>
-	<string name="search_location">Caută</string>
 	<string name="preference_send_usage_stats_summary">Trimite automat statistici pentru a ajuta la îmbunătățirea aplicației WordPress pentru Android</string>
 	<string name="preference_send_usage_stats">Trimite statistici</string>
 	<string name="schedule_verb">Programare</string>
@@ -1049,6 +1095,7 @@ Language: ro
 	<string name="jetpack_message_not_admin">Este necesar modulul Jetpack. Contactează administratorul sitului.</string>
 	<string name="fatal_db_error">A apărut o eroare în timp ce se creea baza de date a aplicației. Încearcă reinstalarea ei.</string>
 	<string name="error_blog_hidden">Acest blog este ascuns și nu poate fi încărcat. Validează-l din nou din setări și încearcă din nou.</string>
+	<string name="error_refresh_media">Media nu a putut fi reîmprospătată în acest moment</string>
 	<string name="wordpress_blog">Blog WordPress</string>
 	<string name="add_account_blog_url">Adresă blog</string>
 	<string name="image_settings">Setări imagine</string>
@@ -1058,18 +1105,13 @@ Language: ro
 	<string name="new_media">Media nouă</string>
 	<string name="new_post">Articol nou</string>
 	<string name="notifications_empty_all">Nicio notificare... încă.</string>
-	<string name="post_format">Format articol</string>
 	<string name="http_authorization_required">Autorizație necesară</string>
 	<string name="http_credentials">Acreditări HTTP (opțional)</string>
-	<string name="pending_review">Revizie în așteptare</string>
 	<string name="invalid_site_url_message">Verifică dacă URL-ul de sit introdus e corect</string>
 	<string name="open_source_licenses">Licențe Open source</string>
-	<string name="location_not_found">Locație necunoscută</string>
 	<string name="file_error_create">Nu am putut crea fișierul temporar pentru a încărca media. Asigură-te că este destul spațiu liber pe dispozitiv.</string>
 	<string name="share_action_media">Bibliotecă media</string>
 	<string name="share_action_post">Articol nou</string>
-	<string name="category_parent">Părintele categoriei (opțional):</string>
-	<string name="category_desc">Descriere categorie (opțional)</string>
 	<string name="category_name">Nume categorie</string>
 	<string name="add_new_category">Adaugă categorie nouă</string>
 	<string name="view_in_browser">Vezi în browser</string>
@@ -1139,7 +1181,6 @@ Language: ro
 	<string name="deleting_page">Ștergere pagină</string>
 	<string name="creating_your_site">Creez situl tău</string>
 	<string name="creating_your_account">Creez contul tău</string>
-	<string name="error_refresh_media">Ceva nu a mers bine când s-a reîmprospătat biblioteca media. Încearcă din nou mai târziu.</string>
 	<string name="reader_empty_posts_in_tag_updating">Se aduc articole...</string>
 	<string name="cant_share_no_visible_blog">Nu poți partaja pe WordPress fără ca blogul să fie vizibil</string>
 	<string name="comment_spammed">Comentariu marcat ca spam</string>
@@ -1220,7 +1261,6 @@ Language: ro
 	<string name="stats">statistici</string>
 	<string name="share_action">Partajare</string>
 	<string name="share_action_title">Adaugă la</string>
-	<string name="post_excerpt">Rezumat</string>
 	<string name="theme_auth_error_title">Eșec în extragerea temelor</string>
 	<string name="theme_set_success">Temă setată cu succes!</string>
 	<string name="theme_activating_button">Se activează</string>
@@ -1240,9 +1280,6 @@ Language: ro
 	<string name="media_gallery_type_tiled">Placat</string>
 	<string name="media_gallery_type_squares">Pătrate</string>
 	<string name="media_gallery_type">Tip</string>
-	<string name="unattached">Neatașate</string>
-	<string name="images">Imagini</string>
-	<string name="all">Toate</string>
 	<string name="themes">Teme</string>
 	<string name="discard">Renunță</string>
 	<string name="manage">Gestionează</string>
@@ -1277,7 +1314,6 @@ Language: ro
 	<string name="blogusername">nume utilizator blog</string>
 	<string name="scaled_image">Lățime imagine scalată</string>
 	<string name="upload_scaled_image">Încarcă și leagă la imaginea scalată</string>
-	<string name="scheduled">Programat</string>
 	<string name="link_enter_url">URL</string>
 	<string name="uploading">Încărcare...</string>
 	<string name="app_title">WordPress pentru Android</string>
@@ -1291,27 +1327,21 @@ Language: ro
 	<string name="page_id">Pagină</string>
 	<string name="post_id">Articol</string>
 	<string name="immediately">Imediat</string>
-	<string name="post_password">Parolă (opțional)</string>
 	<string name="quickpress_add_alert_title">Setare nume scurtătură</string>
 	<string name="settings">Setări</string>
 	<string name="today">Azi</string>
 	<string name="share_url">Partajare URL</string>
 	<string name="quickpress_add_error">Numele scurtăturii nu poate fi gol</string>
 	<string name="quickpress_window_title">Selecție blog pentru scurtătură QuickPress</string>
-	<string name="post_private">Privat</string>
-	<string name="draft">Ciornă</string>
-	<string name="publish_post">Publicare</string>
 	<string name="upload_full_size_image">Încarcă și leagă la imaginea completă</string>
 	<string name="categories">Categorii</string>
-	<string name="tags_separate_with_commas">Etichete (separă etichetele cu virgule)</string>
+	<string name="tags_separate_with_commas">Separă etichetele cu virgulă</string>
 	<string name="title">Titlu</string>
 	<string name="dlg_deleting_comments">Ștergere comentarii</string>
 	<string name="notification_vibrate">Vibrare</string>
 	<string name="notification_sound">Sunet pentru notificare</string>
 	<string name="notification_blink">Clipește lumina de notificare</string>
-	<string name="status">Stare</string>
 	<string name="sdcard_title">Cardul SD e necesar</string>
-	<string name="location">Locație</string>
 	<string name="media">Media</string>
 	<string name="approve">Aprobă</string>
 	<string name="delete">Șterge</string>

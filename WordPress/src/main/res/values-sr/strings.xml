@@ -51,7 +51,6 @@ Language: sr_RS
 	<string name="post_deleted">Чланак је обрисан</string>
 	<string name="post_trashed">Чланак је послат на отпад</string>
 	<string name="stats_no_activity_this_period">Нема активности за овај период</string>
-	<string name="trashed">На отпаду</string>
 	<string name="button_back">Назад</string>
 	<string name="page_deleted">Страна је обрисана</string>
 	<string name="button_stats">Статистике</string>
@@ -249,11 +248,6 @@ Language: sr_RS
 	<string name="hs__new_conversation_header">Ћаскање са подршком</string>
 	<string name="hs__conversation_header">Ћаскање са подршком</string>
 	<string name="contact_us">Контактирајте нас</string>
-	<string name="add_location">Додајте локацију</string>
-	<string name="current_location">Тренутна локација</string>
-	<string name="search_current_location">Лоцирај</string>
-	<string name="edit_location">Уреди</string>
-	<string name="search_location">Претрага</string>
 	<string name="preference_send_usage_stats_summary">Аутоматски пошаљи статистике ради унапређења Вордпреса за Андроид</string>
 	<string name="preference_send_usage_stats">Пошаљи статистике</string>
 	<string name="update_verb">Ажурирај</string>
@@ -346,7 +340,6 @@ Language: sr_RS
 	<string name="comment_status_spam">Непожељни коментар</string>
 	<string name="dlg_spamming_comments">Означавам као непожељно</string>
 	<string name="mnu_comment_spam">Непожељни коментар</string>
-	<string name="post_format">Облик чланка</string>
 	<string name="horizontal_alignment">Водоравно поравнање</string>
 	<string name="fatal_db_error">Дошло је до грешке током прављења базе података апликације. Покушајте поново са инсталацијом апликације.</string>
 	<string name="reader_title_applog">Белешка апликације</string>
@@ -358,9 +351,7 @@ Language: sr_RS
 	<string name="blog_title_invalid">Неисправан наслов веб места</string>
 	<string name="blog_name_invalid">Неисправна адреса веб места</string>
 	<string name="email_hint">Адреса е-поште</string>
-	<string name="category_parent">Надређена категорија (опционо):</string>
 	<string name="share_action_post">Нови чланак</string>
-	<string name="category_desc">Опис категорије (опционо)</string>
 	<string name="add_new_category">Додај нову категорију</string>
 	<string name="category_name">Име категорије</string>
 	<string name="post_not_published">Стање чланка није објављено</string>
@@ -372,7 +363,6 @@ Language: sr_RS
 	<string name="error_blog_hidden">Овај блог је сакривен и не може се учитати. У подешавањима поново омогућите да буде видљив и пробајте поново.</string>
 	<string name="add_account_blog_url">Адреса блога</string>
 	<string name="open_source_licenses">Дозволе Отвореног кода</string>
-	<string name="location_not_found">Непозната локација</string>
 	<string name="post_settings">Подешавања чланка</string>
 	<string name="local_draft">Локални нацрт</string>
 	<string name="upload_failed">Отпремање неуспешно</string>
@@ -390,7 +380,6 @@ Language: sr_RS
 	<string name="new_post">Нови чланак</string>
 	<string name="http_authorization_required">Неопходно овлашћење</string>
 	<string name="http_credentials">HTTP акредитиви (опционо)</string>
-	<string name="pending_review">Чека преглед</string>
 	<string name="preview_post">Прегледајте чланак</string>
 	<string name="delete_draft">Обриши нацрт</string>
 	<string name="toast_comment_unedited">Коментар није промењен</string>
@@ -440,7 +429,6 @@ Language: sr_RS
 	<string name="share_url_page">Поделите страну</string>
 	<string name="creating_your_site">Прављење веб места</string>
 	<string name="creating_your_account">Прави се ваш налог</string>
-	<string name="error_refresh_media">Дошло је до грешке током освеживања библиотеке медија. Покушајте касније.</string>
 	<string name="reader_empty_posts_in_tag_updating">Добављам чланке...</string>
 	<string name="reader_likes_you_and_multi">Вама и %,d других се ово свиђа</string>
 	<string name="reader_likes_multi">%,d људи се ово свиђа</string>
@@ -490,7 +478,6 @@ Language: sr_RS
 	<string name="reader_hint_comment_on_comment">Одговор на коментар…</string>
 	<string name="media_gallery_type_slideshow">Приказ слајдова</string>
 	<string name="media_gallery_type">Врста</string>
-	<string name="post_excerpt">Исечак</string>
 	<string name="themes_features_label">Особине</string>
 	<string name="theme_activating_button">Уклучивање</string>
 	<string name="theme_activate_button">Укључи</string>
@@ -498,10 +485,7 @@ Language: sr_RS
 	<string name="media_edit_failure">Ажурирање неуспешно</string>
 	<string name="media_edit_success">Ажуриран</string>
 	<string name="media_gallery_type_tiled">Поплочан</string>
-	<string name="unattached">Непридружено</string>
 	<string name="themes">Теме</string>
-	<string name="all">Све</string>
-	<string name="images">Слике</string>
 	<string name="passcode_turn_on">Укључи ПИН закључавање</string>
 	<string name="passcode_turn_off">Искључи ПИН закључавање</string>
 	<string name="passcode_preference_title">ПИН кључ</string>
@@ -570,7 +554,6 @@ Language: sr_RS
 	<string name="blogusername">korisnickoimebloga</string>
 	<string name="scaled_image">Ширина сразмерне слике</string>
 	<string name="upload_scaled_image">Отпреми и повежи са сразмерном сликом</string>
-	<string name="scheduled">Заказано</string>
 	<string name="link_enter_url">URL</string>
 	<string name="tos">Услови сервиса</string>
 	<string name="version">Издање</string>
@@ -582,25 +565,18 @@ Language: sr_RS
 	<string name="post_id">Чланак</string>
 	<string name="page_id">Страна</string>
 	<string name="immediately">Одмах</string>
-	<string name="post_password">Лозинка (опционо)</string>
 	<string name="quickpress_add_alert_title">Подеси име пречице</string>
 	<string name="settings">Подешавања</string>
 	<string name="today">Данас</string>
 	<string name="share_url">Подели URL</string>
 	<string name="quickpress_window_title">Одаберите блог за QuickPress пречицу</string>
 	<string name="quickpress_add_error">Име пречице не може бити празно</string>
-	<string name="post_private">Приватно</string>
-	<string name="draft">Нацрт</string>
-	<string name="publish_post">Објави</string>
 	<string name="upload_full_size_image">Отпреми и повежи са целокупном сликом</string>
-	<string name="tags_separate_with_commas">Ознаке (одвојите их запетама)</string>
 	<string name="categories">Категорије</string>
 	<string name="title">Наслов</string>
 	<string name="notification_vibrate">Вибрирај</string>
 	<string name="notification_blink">Трепћи светло за обавештење</string>
-	<string name="status">Стање</string>
 	<string name="sdcard_title">SD картица неопходна</string>
-	<string name="location">Локација</string>
 	<string name="media">Медији</string>
 	<string name="delete">Обриши</string>
 	<string name="none">Ниједан</string>

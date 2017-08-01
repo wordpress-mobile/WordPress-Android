@@ -1,5 +1,6 @@
-package org.wordpress.android.ui.posts.services;
+package org.wordpress.android.ui.uploads;
 
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.util.StringUtils;
 
 public class PostEvents {
@@ -9,6 +10,14 @@ public class PostEvents {
 
         PostUploadStarted(int localBlogId) {
             mLocalBlogId = localBlogId;
+        }
+    }
+
+    public static class PostUploadCanceled {
+        public final int localSiteId;
+
+        public PostUploadCanceled(int localSiteId) {
+            this.localSiteId = localSiteId;
         }
     }
 
@@ -29,17 +38,10 @@ public class PostEvents {
     }
 
     public static class PostMediaCanceled {
-        public int localMediaId;
-        public boolean delete;
-        public boolean all;
+        public PostModel post;
 
-        public PostMediaCanceled(int localMediaId, boolean delete) {
-            this.localMediaId = localMediaId;
-            this.delete = delete;
-            this.all = false;
-        }
-        public PostMediaCanceled(boolean all) {
-            this.all = all;
+        public PostMediaCanceled(PostModel post) {
+            this.post = post;
         }
     }
 }

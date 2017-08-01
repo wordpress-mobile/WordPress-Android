@@ -152,6 +152,13 @@ public class WPActivityUtils {
         return !emailApps.isEmpty();
     }
 
+    public static void openEmailClient(Context context) {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
     public static void disableComponent(Context context, Class<?> klass) {
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(new ComponentName(context, klass),

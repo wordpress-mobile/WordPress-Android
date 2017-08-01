@@ -24,6 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.MagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.MagicLinkSentFragment;
@@ -38,8 +39,6 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     public static final int SIGN_IN_REQUEST = 1;
     public static final int REQUEST_CODE = 5000;
     public static final int ADD_SELF_HOSTED_BLOG = 2;
-    public static final int SMART_LOCK_SAVE = 5;
-    public static final int SMART_LOCK_READ = 6;
 
     public static final String EXTRA_START_FRAGMENT = "start-fragment";
     public static final String EXTRA_JETPACK_SITE_AUTH = "EXTRA_JETPACK_SITE_AUTH";
@@ -124,14 +123,14 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == SMART_LOCK_SAVE) {
+        if (requestCode == RequestCodes.SMART_LOCK_SAVE) {
             if (resultCode == RESULT_OK) {
                 AnalyticsTracker.track(Stat.LOGIN_AUTOFILL_CREDENTIALS_UPDATED);
                 AppLog.d(T.NUX, "Credentials saved");
             } else {
                 AppLog.d(T.NUX, "Credentials save cancelled");
             }
-        } else if (requestCode == SMART_LOCK_READ) {
+        } else if (requestCode == RequestCodes.SMART_LOCK_READ) {
             if (resultCode == RESULT_OK) {
                 AppLog.d(T.NUX, "Credentials retrieved");
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
@@ -269,6 +268,9 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
                         signInFragment.onCredentialRetrieved(credential);
                     }
                 }
+
+                @Override
+                public void onCredentialsUnavailable() {}
             });
         }
     }
