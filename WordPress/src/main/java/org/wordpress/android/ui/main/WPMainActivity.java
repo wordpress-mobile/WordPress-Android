@@ -303,15 +303,15 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void showNewEditorPromoDialogIfNeeded() {
         if (AppPrefs.isNewEditorPromoRequired()) {
-            AppCompatDialogFragment newFragment = PromoDialogEditor.newInstance(
+            AppCompatDialogFragment newFragment = new PromoDialogEditor.Builder(
                     R.drawable.img_promo_editor,
                     R.string.new_editor_promo_title,
-                    R.string.new_editor_promo_title_beta,
                     R.string.new_editor_promo_description,
-                    R.string.new_editor_promo_link,
-                    R.string.new_editor_promo_button_negative,
-                    R.string.new_editor_promo_button_positive
-            );
+                    R.string.new_editor_promo_button_positive)
+                    .setTitleBetaText(R.string.new_editor_promo_title_beta)
+                    .setLinkText(R.string.new_editor_promo_link)
+                    .setNegativeButtonText(R.string.new_editor_promo_button_negative)
+                    .build();
             newFragment.show(getSupportFragmentManager(), "new-editor-promo");
             AppPrefs.setNewEditorPromoRequired(false);
         }

@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,20 +25,51 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 public class PromoDialogEditor extends PromoDialog {
+    public static class Builder extends PromoDialog.Builder {
+        @StringRes int titleBetaId;
+        @StringRes int linkId;
+        @StringRes int buttonNegativeId;
+
+        public Builder(@DrawableRes int drawableId, @StringRes int titleId, @StringRes int descriptionId,
+                       @StringRes int buttonPositiveId) {
+            super(drawableId, titleId, descriptionId, buttonPositiveId);
+        }
+
+        public Builder setTitleBetaText(@StringRes int titleBetaId) {
+            this.titleBetaId = titleBetaId;
+            return this;
+        }
+
+        public Builder setLinkText(@StringRes int linkId) {
+            this.linkId = linkId;
+            return this;
+        }
+
+        public Builder setNegativeButtonText(@StringRes int buttonNegativeId) {
+            this.buttonNegativeId = buttonNegativeId;
+            return this;
+        }
+
+        @Override
+        public PromoDialogEditor build() {
+            return PromoDialogEditor.newInstance(this);
+        }
+    }
+
     protected int mButtonNegativeId;
     protected int mLinkId;
     protected int mTitleBetaId;
 
-    public static PromoDialogEditor newInstance(int drawableId, int titleId, int titleBetaId, int descriptionId, int linkId, int buttonNegativeId, int buttonPositiveId) {
+    protected static PromoDialogEditor newInstance(Builder builder) {
         PromoDialogEditor fragment = new PromoDialogEditor();
         Bundle args = new Bundle();
-        args.putInt("drawableId", drawableId);
-        args.putInt("titleId", titleId);
-        args.putInt("titleBetaId", titleBetaId);
-        args.putInt("descriptionId", descriptionId);
-        args.putInt("linkId", linkId);
-        args.putInt("buttonNegativeId", buttonNegativeId);
-        args.putInt("buttonPositiveId", buttonPositiveId);
+        args.putInt("drawableId", builder.drawableId);
+        args.putInt("titleId", builder.titleId);
+        args.putInt("titleBetaId", builder.titleBetaId);
+        args.putInt("descriptionId", builder.descriptionId);
+        args.putInt("linkId", builder.linkId);
+        args.putInt("buttonNegativeId", builder.buttonNegativeId);
+        args.putInt("buttonPositiveId", builder.buttonPositiveId);
         fragment.setArguments(args);
         return fragment;
     }
