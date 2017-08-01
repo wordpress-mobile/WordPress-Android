@@ -270,6 +270,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             // Calculate the words count
             sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
             sCurrentUploadingPostAnalyticsProperties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
+            sCurrentUploadingPostAnalyticsProperties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec" :
+                    AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
 
             if (hasGallery()) {
                 sCurrentUploadingPostAnalyticsProperties.put("with_galleries", true);

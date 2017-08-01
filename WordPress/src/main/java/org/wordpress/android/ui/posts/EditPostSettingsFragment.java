@@ -174,7 +174,8 @@ public class EditPostSettingsFragment extends Fragment {
                 new SiteSettingsListener() {
                     @Override
                     public void onSettingsUpdated(Exception error) {
-                        if (error == null) {
+                        // mEditPostActivityHook will be null if the fragment is detached
+                        if (error == null && mEditPostActivityHook != null) {
                             updatePostFormat(mSiteSettings.getDefaultPostFormat());
                         }
                     }
