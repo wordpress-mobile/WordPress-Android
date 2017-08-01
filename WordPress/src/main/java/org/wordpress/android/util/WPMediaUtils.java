@@ -27,7 +27,6 @@ public class WPMediaUtils {
         if (isVideo) {
             return null;
         }
-        // TODO implement site settings for .org sites
         int resizeWidth = AppPrefs.getImageOptimizeWidth() > 0 ? AppPrefs.getImageOptimizeWidth() : Integer.MAX_VALUE;
         int quality = AppPrefs.getImageOptimizeQuality();
         // do not optimize if original-size and 100% quality are set.
