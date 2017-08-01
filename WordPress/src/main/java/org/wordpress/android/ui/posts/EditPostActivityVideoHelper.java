@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
