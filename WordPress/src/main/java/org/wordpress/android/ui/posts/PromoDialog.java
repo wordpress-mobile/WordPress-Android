@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 public class PromoDialog extends AppCompatDialogFragment {
@@ -100,5 +102,10 @@ public class PromoDialog extends AppCompatDialogFragment {
 
     public void setPositiveButtonOnClickListener(View.OnClickListener listener) {
         mPositiveButtonOnClickListener = listener;
+    }
+
+    public void redrawForOrientationChange() {
+        LinearLayout imageContainer = (LinearLayout) getView().findViewById(R.id.promo_dialog_image_container);
+        imageContainer.setVisibility(DisplayUtils.isLandscape(getActivity()) ? View.GONE : View.VISIBLE);
     }
 }
