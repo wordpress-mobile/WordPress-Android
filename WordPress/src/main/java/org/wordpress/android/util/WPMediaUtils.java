@@ -28,7 +28,7 @@ public class WPMediaUtils {
         if (isVideo) {
             return null;
         }
-        int resizeWidth = AppPrefs.getImageOptimizeWidth() > 0 ? AppPrefs.getImageOptimizeWidth() : Integer.MAX_VALUE;
+        int resizeWidth = AppPrefs.getImageOptimizeWidth() > 1 ? AppPrefs.getImageOptimizeWidth() : Integer.MAX_VALUE;
         int quality = AppPrefs.getImageOptimizeQuality();
         // do not optimize if original-size and 100% quality are set.
         if (resizeWidth == Integer.MAX_VALUE && quality == 100) {
