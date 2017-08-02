@@ -356,7 +356,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mIsNewPost) {
             trackEditorCreatedPost(action, getIntent());
         } else {
-            UploadService.resetUploadingMediaToFailedIfNotInProgressOrQueued(this, mPost);
+            resetUploadingMediaToFailedIfNotInProgressOrQueued(this, mPost);
         }
 
         setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
@@ -403,6 +403,40 @@ public class EditPostActivity extends AppCompatActivity implements
         });
 
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+    }
+
+    // this method aims at recovering the current state of media items if they're inconsistent within the PostModel.
+    private void resetUploadingMediaToFailedIfNotInProgressOrQueued(Context context, PostModel post) {
+        boolean useAztec = AppPrefs.isAztecEditorEnabled();
+        if (useAztec && context != null && post != null) {
+
+            String oldContent = post.getContent();
+            if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(post) &&
+                    ( AztecEditorFragment.hasMediaItemsMarkedUploading(context, oldContent)
+                            || AztecEditorFragment.hasMediaItemsMarkedFailed(context, oldContent))) {
+
+                String newContent = AztecEditorFragment.resetUploadingMediaToFailed(context, oldContent);
+
+                // now check if the newcontent still has items marked as failed. If it does,
+                // then hook this post up to our error list, so it can be queried by the Posts List later
+                // and be shown properly to the user
+                if (AztecEditorFragment.hasMediaItemsMarkedFailed(context, newContent)) {
+                    UploadService.markPostAsError(post);
+                } else {
+                    UploadService.removeUploadErrorForPost(post);
+                }
+
+                if (!TextUtils.isEmpty(oldContent) && newContent != null && oldContent.compareTo(newContent) != 0) {
+                    post.setContent(newContent);
+
+                    // we changed the post, so let’s mark this down
+                    if (!post.isLocalDraft()) {
+                        post.setIsLocallyChanged(true);
+                    }
+                    post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+                }
+            }
+        }
     }
 
     private Runnable mAutoSave = new Runnable() {

@@ -5,13 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -23,7 +21,6 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -381,41 +378,7 @@ public class UploadService extends Service {
         return post;
     }
 
-    // this method aims at recovering the current state of media items if they're inconsistent within the PostModel.
-    public static void resetUploadingMediaToFailedIfNotInProgressOrQueued(Context context, PostModel post) {
-        boolean useAztec = AppPrefs.isAztecEditorEnabled();
-        if (useAztec && context != null && post != null) {
-
-            String oldContent = post.getContent();
-            if (!hasPendingOrInProgressMediaUploadsForPost(post) &&
-                    ( AztecEditorFragment.hasMediaItemsMarkedUploading(context, oldContent)
-                        || AztecEditorFragment.hasMediaItemsMarkedFailed(context, oldContent))) {
-
-                String newContent = AztecEditorFragment.resetUploadingMediaToFailed(context, oldContent);
-
-                // now check if the newcontent still has items marked as failed. If it does,
-                // then hook this post up to our error list, so it can be queried by the Posts List later
-                // and be shown properly to the user
-                if (AztecEditorFragment.hasMediaItemsMarkedFailed(context, newContent)) {
-                    markPostAsError(post);
-                } else {
-                    removeUploadErrorForPost(post);
-                }
-
-                if (!TextUtils.isEmpty(oldContent) && newContent != null && oldContent.compareTo(newContent) != 0) {
-                    post.setContent(newContent);
-
-                    // we changed the post, so let’s mark this down
-                    if (!post.isLocalDraft()) {
-                        post.setIsLocallyChanged(true);
-                    }
-                    post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
-                }
-            }
-        }
-    }
-
-    private static void markPostAsError(PostModel post) {
+    public static void markPostAsError(PostModel post) {
         // now keep track of the error reason so it can be queried
         MediaStore.MediaError error = new MediaStore.MediaError(MediaStore.MediaErrorType.GENERIC_ERROR);
         UploadError reason = new UploadError(error);
