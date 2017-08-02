@@ -31,7 +31,11 @@ public class RecyclerViewScrollPositionManager implements RecyclerViewScrollPosi
 
     @Override
     public void restoreScrollOffset(RecyclerView recyclerView) {
-        ((LinearLayoutManager)recyclerView.getLayoutManager())
-                .scrollToPositionWithOffset(mRVPosition, mRVOffset);
+        if (mRVPosition > 0 || mRVOffset > 0) {
+            ((LinearLayoutManager)recyclerView.getLayoutManager())
+                    .scrollToPositionWithOffset(mRVPosition, mRVOffset);
+        }
+        mRVPosition = 0;
+        mRVOffset = 0;
     }
 }

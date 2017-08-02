@@ -93,7 +93,6 @@ public class PostsListFragment extends Fragment
     private boolean mIsFetchingPosts;
     private boolean mShouldCancelPendingDraftNotification = false;
     private int mPostIdForPostToBeDeleted = 0;
-    private boolean mDoReplayPosition = false;
 
     private final List<PostModel> mTrashedPosts = new ArrayList<>();
 
@@ -121,7 +120,6 @@ public class PostsListFragment extends Fragment
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
-            mDoReplayPosition = true;
             mRVScrollPositionSaver.onRestoreInstanceState(savedInstanceState);
         }
 
@@ -428,11 +426,7 @@ public class PostsListFragment extends Fragment
             }
         } else if (postCount > 0) {
             hideEmptyView();
-
-            if (mDoReplayPosition) {
-                mDoReplayPosition = false;
-                mRVScrollPositionSaver.restoreScrollOffset(mRecyclerView);
-            }
+            mRVScrollPositionSaver.restoreScrollOffset(mRecyclerView);
         }
 
         // If the activity was given a target post, and this is the first time posts are loaded, scroll to that post
