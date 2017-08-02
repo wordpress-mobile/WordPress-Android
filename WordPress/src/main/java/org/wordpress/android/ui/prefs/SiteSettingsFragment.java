@@ -42,6 +42,7 @@ import android.widget.NumberPicker.Formatter;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.helpshift.network.util.InetAddressUtils;
 import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -1378,6 +1379,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                     public void onClick(DialogInterface dialog, int which) {
                         String entry = input.getText().toString();
                         if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
+                            if (mEditingList == mSiteSettings.getJetpackWhitelistKeys() && !isValidIpOrRange(entry)) {
+                                ToastUtils.showToast(getActivity(), R.string.invalid_ip_or_range);
+                                return;
+                            }
+
                             mEditingList.add(entry);
                             getAdapter().notifyItemInserted(getAdapter().getItemCount() - 1);
                             list.post(
@@ -1415,6 +1421,31 @@ public class SiteSettingsFragment extends PreferenceFragment
         });
 
         return view;
+    }
+
+    private boolean isValidIpOrRange(String entry) {
+        if (entry == null || entry.isEmpty()) {
+            return false;
+        }
+
+        // remove whitespace
+        entry = entry.trim();
+        entry = entry.replaceAll(" ", "");
+        String[] ipStrings = entry.split("-");
+
+        // should not be more than 2 IP address strings (IP range) in an entry
+        if (ipStrings.length > 2 || ipStrings.length < 1) {
+            return false;
+        }
+
+        // if any IP string is invalid return false
+        for (String ip : ipStrings) {
+            if (!InetAddressUtils.isIPv4Address(ip)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean shouldShowListPreference(DetailListPreference preference) {
