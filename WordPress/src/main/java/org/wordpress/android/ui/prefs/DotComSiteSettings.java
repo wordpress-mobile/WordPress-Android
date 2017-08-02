@@ -356,62 +356,66 @@ class DotComSiteSettings extends SiteSettingsInterface {
     }
 
     private void pushJetpackProtectSettings() {
-        WordPress.getRestClientUtils().setJetpackProtect(
-                mSite.getSiteId(), mJpSettings.jetpackProtectEnabled, new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
-                        mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
-                        String status = mJpSettings.jetpackProtectEnabled ? "activated" : "deactivated";
-                        AppLog.d(AppLog.T.API, "Jetpack Protect module " + status);
-                        notifySavedOnUiThread(null);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error updating Jetpack Protect module: " + error);
-                    }
-                });
+        if (mJpSettings.jetpackProtectEnabled != mRemoteJpSettings.jetpackProtectEnabled) {
+            WordPress.getRestClientUtils().setJetpackProtect(
+                    mSite.getSiteId(), mJpSettings.jetpackProtectEnabled, new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
+                            mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
+                            String status = mJpSettings.jetpackProtectEnabled ? "activated" : "deactivated";
+                            AppLog.d(AppLog.T.API, "Jetpack Protect module " + status);
+                            notifySavedOnUiThread(null);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack Protect module: " + error);
+                        }
+                    });
+        }
     }
 
     private void pushJetpackMonitorSettings() {
-        WordPress.getRestClientUtils().setJetpackMonitor(
-                mSite.getSiteId(), mJpSettings.monitorActive, new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        mRemoteJpSettings.monitorActive = response.optBoolean("active");
-                        mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
-                        String status = mJpSettings.jetpackProtectEnabled ? "activated" : "deactivated";
-                        AppLog.d(AppLog.T.API, "Jetpack Monitor module " + status);
-                        notifySavedOnUiThread(null);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module: " + error);
-                        notifySavedOnUiThread(error);
-                    }
-                });
+        if (mJpSettings.monitorActive != mRemoteJpSettings.monitorActive) {
+            WordPress.getRestClientUtils().setJetpackMonitor(
+                    mSite.getSiteId(), mJpSettings.monitorActive, new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            mRemoteJpSettings.monitorActive = response.optBoolean("active");
+                            mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
+                            String status = mJpSettings.monitorActive ? "activated" : "deactivated";
+                            AppLog.d(AppLog.T.API, "Jetpack Monitor module " + status);
+                            notifySavedOnUiThread(null);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module: " + error);
+                            notifySavedOnUiThread(error);
+                        }
+                    });
+        }
 
         final Map<String, String> params = serializeJetpackParams();
-        if (params == null || params.isEmpty()) return;
-
-        WordPress.getRestClientUtils().setJetpackSettings(
-                mSite.getSiteId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Jetpack Monitor module options updated");
-                        mRemoteJpSettings.emailNotifications = mJpSettings.emailNotifications;
-                        mRemoteJpSettings.wpNotifications = mJpSettings.wpNotifications;
-                        notifySavedOnUiThread(null);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module options: " + error);
-                        notifySavedOnUiThread(error);
-                    }
-                }, params);
+        if (params != null && !params.isEmpty()) {
+            WordPress.getRestClientUtils().setJetpackSettings(
+                    mSite.getSiteId(), new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Jetpack Monitor module options updated");
+                            mRemoteJpSettings.emailNotifications = mJpSettings.emailNotifications;
+                            mRemoteJpSettings.wpNotifications = mJpSettings.wpNotifications;
+                            notifySavedOnUiThread(null);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module options: " + error);
+                            notifySavedOnUiThread(error);
+                        }
+                    }, params);
+        }
     }
 
     private void pushJetpackSsoSettings() {
