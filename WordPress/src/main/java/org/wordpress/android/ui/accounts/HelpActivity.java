@@ -79,6 +79,7 @@ public class HelpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Bundle extras = getIntent().getExtras();
                 Tag origin = Tag.ORIGIN_UNKNOWN;
+                Tag[] extraTags = null;
                 if (extras != null) {
                     // This could be moved to WelcomeFragmentSignIn directly, but better to have all Helpshift
                     // related code at the same place (Note: value can be null).
@@ -87,9 +88,11 @@ public class HelpActivity extends AppCompatActivity {
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
                             HelpshiftHelper.ENTERED_USERNAME_KEY));
                     origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
+                    extraTags = (Tag[]) extras.get(HelpshiftHelper.EXTRA_TAGS_KEY);
                 }
+
                 HelpshiftHelper.getInstance().showConversation(HelpActivity.this, mSiteStore, origin,
-                        mAccountStore.getAccount().getUserName());
+                        mAccountStore.getAccount().getUserName(), extraTags);
             }
         });
 
@@ -99,11 +102,13 @@ public class HelpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Bundle extras = getIntent().getExtras();
                 Tag origin = Tag.ORIGIN_UNKNOWN;
+                Tag[] extraTags = null;
                 if (extras != null) {
                     origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
+                    extraTags = (Tag[]) extras.get(HelpshiftHelper.EXTRA_TAGS_KEY);
                 }
                 HelpshiftHelper.getInstance().showFAQ(HelpActivity.this, mSiteStore, origin,
-                        mAccountStore.getAccount().getUserName());
+                        mAccountStore.getAccount().getUserName(), extraTags);
             }
         });
     }

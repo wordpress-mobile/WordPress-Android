@@ -52,6 +52,7 @@ import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -74,6 +75,7 @@ public class PostsListFragment extends Fragment
     public static final int POSTS_REQUEST_COUNT = 20;
     public static final String TAG = "posts_list_fragment_tag";
 
+    private final RecyclerViewScrollPositionManager mRVScrollPositionSaver = new RecyclerViewScrollPositionManager();
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
     private View mFabView;
@@ -115,6 +117,10 @@ public class PostsListFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+
+        if (savedInstanceState != null) {
+            mRVScrollPositionSaver.onRestoreInstanceState(savedInstanceState);
+        }
 
         updateSiteOrFinishActivity(savedInstanceState);
 
@@ -419,6 +425,7 @@ public class PostsListFragment extends Fragment
             }
         } else if (postCount > 0) {
             hideEmptyView();
+            mRVScrollPositionSaver.restoreScrollOffset(mRecyclerView);
         }
 
         // If the activity was given a target post, and this is the first time posts are loaded, scroll to that post
@@ -614,6 +621,7 @@ public class PostsListFragment extends Fragment
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(PostsListActivity.EXTRA_VIEW_PAGES, mIsPage);
+        mRVScrollPositionSaver.onSaveInstanceState(outState, mRecyclerView);
     }
 
     @SuppressWarnings("unused")

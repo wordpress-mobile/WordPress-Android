@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login;
 
+import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -33,6 +34,10 @@ import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher, OnEditorCommitListener {
     private static final String KEY_IN_PROGRESS_MESSAGE_ID = "KEY_IN_PROGRESS_MESSAGE_ID";
@@ -147,6 +152,16 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Insert authentication code if copied to clipboard
+        if (TextUtils.isEmpty(m2FaInput.getEditText().getText())) {
+            m2FaInput.setText(getAuthCodeFromClipboard());
+        }
+    }
+
     protected void next() {
         if (TextUtils.isEmpty(m2FaInput.getEditText().getText())) {
             show2FaError(getString(R.string.login_empty_2fa));
@@ -170,6 +185,25 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         payload.twoStepCode = twoStepCode;
         payload.shouldSendTwoStepSms = shouldSendTwoStepSMS;
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+    }
+
+    private String getAuthCodeFromClipboard() {
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
+
+        if (clipboard.getPrimaryClip() != null && clipboard.getPrimaryClip().getItemAt(0) != null
+                && clipboard.getPrimaryClip().getItemAt(0).getText() != null) {
+            String code = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
+
+            final Pattern TWO_STEP_AUTH_CODE = Pattern.compile("^[0-9]{6}");
+            final Matcher twoStepAuthCodeMatcher = TWO_STEP_AUTH_CODE.matcher("");
+            twoStepAuthCodeMatcher.reset(code);
+
+            if (!code.isEmpty() && twoStepAuthCodeMatcher.matches()) {
+                return code;
+            }
+        }
+
+        return "";
     }
 
     @Override
