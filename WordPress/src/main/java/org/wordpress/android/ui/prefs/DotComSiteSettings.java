@@ -288,7 +288,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                                     mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
                                 }
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                AppLog.e(AppLog.T.API, "Error reading REST response to SSO settings fetch: " + e);
                             }
                             notifyUpdatedOnUiThread(null);
                         }
