@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v7.app.AppCompatDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,11 +58,14 @@ public class PromoDialog extends AppCompatDialogFragment {
         mTitleId = getArguments().getInt("titleId");
         mDescriptionId = getArguments().getInt("descriptionId");
         mButtonPositiveId = getArguments().getInt("buttonPositiveId");
-        // request a window without the title
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
         return dialog;
+    }
+
+    @Override
+    public void setupDialog(Dialog dialog, int style) {
+        ((AppCompatDialog) dialog).supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
     }
 
     @Override
