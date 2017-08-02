@@ -76,7 +76,7 @@ public class PostsListFragment extends Fragment
     public static final int POSTS_REQUEST_COUNT = 20;
     public static final String TAG = "posts_list_fragment_tag";
 
-    private RecyclerViewScrollPositionSaver mRVScrollPositionSaver = new RecyclerViewScrollPositionManager();
+    private final RecyclerViewScrollPositionSaver mRVScrollPositionSaver = new RecyclerViewScrollPositionManager();
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
     private View mFabView;
