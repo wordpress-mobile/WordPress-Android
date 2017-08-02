@@ -2525,7 +2525,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 R.string.async_promo_title,
                 R.string.async_promo_description,
                 android.R.string.ok)
-                .setLinkText(R.string.async_promo_link).build();
+                // TODO: Re-enable once a release notes page exists for Async
+//                .setLinkText(R.string.async_promo_link)
+                .build();
 
         asyncPromoDialog.setPositiveButtonOnClickListener(new View.OnClickListener() {
             @Override
