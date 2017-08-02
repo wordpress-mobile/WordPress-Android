@@ -6,13 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 
-public class RecyclerViewScrollPositionManager implements RecyclerViewScrollPositionSaver {
+public class RecyclerViewScrollPositionManager {
     private static final String RV_POSITION = "rv_position";
     private static final String RV_OFFSET = "rv_offset";
     private int mRVPosition = 0;
     private int mRVOffset = 0;
 
-    @Override
     public void onSaveInstanceState(Bundle outState, RecyclerView recyclerView) {
         // make sure the layout manager is assigned to the RecyclerView
         // also take into account this needs to be a LinearLayoutManager, otherwise ClassCastException occurs
@@ -23,13 +22,11 @@ public class RecyclerViewScrollPositionManager implements RecyclerViewScrollPosi
         outState.putInt(RV_OFFSET, offset);
     }
 
-    @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         mRVPosition = savedInstanceState.getInt(RV_POSITION);
         mRVOffset = savedInstanceState.getInt(RV_OFFSET);
     }
 
-    @Override
     public void restoreScrollOffset(RecyclerView recyclerView) {
         if (mRVPosition > 0 || mRVOffset > 0) {
             ((LinearLayoutManager)recyclerView.getLayoutManager())

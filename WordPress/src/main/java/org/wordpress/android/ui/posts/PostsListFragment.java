@@ -53,7 +53,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager;
-import org.wordpress.android.util.helpers.RecyclerViewScrollPositionSaver;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -76,7 +75,7 @@ public class PostsListFragment extends Fragment
     public static final int POSTS_REQUEST_COUNT = 20;
     public static final String TAG = "posts_list_fragment_tag";
 
-    private final RecyclerViewScrollPositionSaver mRVScrollPositionSaver = new RecyclerViewScrollPositionManager();
+    private final RecyclerViewScrollPositionManager mRVScrollPositionSaver = new RecyclerViewScrollPositionManager();
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
     private View mFabView;
