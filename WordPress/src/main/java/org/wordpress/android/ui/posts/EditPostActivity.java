@@ -2514,7 +2514,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void showAsyncPromoDialog() {
         PromoDialogAdvanced asyncPromoDialog = new PromoDialogAdvanced.Builder(
-                R.drawable.img_promo_editor,
+                R.drawable.img_promo_async,
                 R.string.async_promo_title,
                 R.string.async_promo_description,
                 android.R.string.ok)
