@@ -259,7 +259,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     public void onResponse(JSONObject response) {
                         AppLog.v(AppLog.T.API, "Received Jetpack SSO module");
                         mRemoteJpSettings.ssoActive = response.optBoolean("active");
-                        mJpSettings.ssoActive = response.optBoolean("active");
+                        mJpSettings.ssoActive = mRemoteJpSettings.ssoActive;
                         if (mJpSettings.ssoActive) {
                             fetchJetpackSsoModuleSettings();
                         }
