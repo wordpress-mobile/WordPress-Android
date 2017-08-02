@@ -355,6 +355,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (mIsNewPost) {
             trackEditorCreatedPost(action, getIntent());
+        } else {
+            UploadService.resetUploadingMediaToFailedIfNotInProgressOrQueued(this, mPost);
         }
 
         setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
