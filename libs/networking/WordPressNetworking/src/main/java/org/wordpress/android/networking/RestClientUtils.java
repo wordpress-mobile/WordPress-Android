@@ -201,7 +201,7 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
-    public void setGeneralSiteSettings(long siteId, Listener listener, ErrorListener errorListener, JSONObject params) {
+    public void setGeneralSiteSettings(long siteId, JSONObject params, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/settings", siteId);
         post(path, params, null, listener, errorListener);
     }
@@ -231,14 +231,16 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
-    public void setJetpackSsoTwoStepOption(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
+    public void setJetpackSsoTwoStepOption(long siteId, boolean enabled,
+                                           Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/option/?option_name=jetpack_sso_require_two_step", siteId);
         Map<String, String> params = new HashMap<>();
         params.put("option_value", String.valueOf(enabled));
         post(path, params, null, listener, errorListener);
     }
 
-    public void setJetpacSsoMatchEmailOption(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
+    public void setJetpackSsoMatchEmailOption(long siteId, boolean enabled,
+                                              Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/options/backup?option_name=jetpack_sso_match_by_email", siteId);
         Map<String, String> params = new HashMap<>();
         params.put("option_value", String.valueOf(enabled));
@@ -259,8 +261,8 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
-    public void setJetpackSettings(long siteId, Listener listener, ErrorListener errorListener,
-                                       Map<String, String> params) {
+    public void setJetpackSettings(long siteId, Map<String, String> params,
+                                   Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
         post(path, params, null, listener, errorListener);
     }

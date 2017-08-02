@@ -79,9 +79,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String CATEGORIES_KEY = "categories";
     private static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
 
-    /**
-     * Only instantiated by {@link SiteSettingsInterface}.
-     */
+    /** Only instantiated by {@link SiteSettingsInterface}. */
     DotComSiteSettings(Activity host, SiteModel site, SiteSettingsListener listener) {
         super(host, site, listener);
     }
@@ -95,57 +93,18 @@ class DotComSiteSettings extends SiteSettingsInterface {
             pushJetpackSettings();
         }
 
-        try {
-            final JSONObject jsonParams = serializeDotComParamsToJSONObject();
-            // skip network requests if there are no changes
-            if (jsonParams.length() <= 0) {
-                return;
-            }
-            WordPress.getRestClientUtils().setGeneralSiteSettings(
-                    mSite.getSiteId(), new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            AppLog.d(AppLog.T.API, "Site Settings saved remotely");
-                            notifySavedOnUiThread(null);
-                            mRemoteSettings.copyFrom(mSettings);
-
-                            if (response != null) {
-                                JSONObject updated = response.optJSONObject("updated");
-                                if (updated == null) return;
-                                HashMap<String, Object> properties = new HashMap<>();
-                                Iterator<String> keys = updated.keys();
-                                while (keys.hasNext()) {
-                                    String currentKey = keys.next();
-                                    Object currentValue = updated.opt(currentKey);
-                                    if (currentValue != null) {
-                                        properties.put(SAVED_ITEM_PREFIX + currentKey, currentValue);
-                                    }
-                                }
-                                AnalyticsUtils.trackWithSiteDetails(
-                                        AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
-                            }
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
-                            notifySavedOnUiThread(error);
-                        }
-                    }, jsonParams);
-        } catch (JSONException exception) {
-            AppLog.w(AppLog.T.API, "Error serializing settings changes: " + exception);
-            notifySavedOnUiThread(exception);
-        }
+        pushWpSettings();
     }
 
-    /**
-     * Request remote site data via the WordPress REST API.
-     */
+    /** Request remote site data via the WordPress REST API. */
     @Override
     protected void fetchRemoteData() {
         fetchCategories();
+        fetchWpSettings();
+    }
 
-        WordPress.getRestClientUtils().getGeneralSettings(
+    private void fetchWpSettings() {
+        WordPress.getRestClientUtilsV1_1().getGeneralSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -355,6 +314,50 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 });
     }
 
+    private void pushWpSettings() {
+        try {
+            final JSONObject jsonParams = serializeDotComParamsToJSONObject();
+            // skip network requests if there are no changes
+            if (jsonParams.length() <= 0) {
+                return;
+            }
+            WordPress.getRestClientUtils().setGeneralSiteSettings(
+                    mSite.getSiteId(), jsonParams, new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Site Settings saved remotely");
+                            notifySavedOnUiThread(null);
+                            mRemoteSettings.copyFrom(mSettings);
+
+                            if (response != null) {
+                                JSONObject updated = response.optJSONObject("updated");
+                                if (updated == null) return;
+                                HashMap<String, Object> properties = new HashMap<>();
+                                Iterator<String> keys = updated.keys();
+                                while (keys.hasNext()) {
+                                    String currentKey = keys.next();
+                                    Object currentValue = updated.opt(currentKey);
+                                    if (currentValue != null) {
+                                        properties.put(SAVED_ITEM_PREFIX + currentKey, currentValue);
+                                    }
+                                }
+                                AnalyticsUtils.trackWithSiteDetails(
+                                        AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
+                            }
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
+                            notifySavedOnUiThread(error);
+                        }
+                    });
+        } catch (JSONException exception) {
+            AppLog.w(AppLog.T.API, "Error serializing settings changes: " + exception);
+            notifySavedOnUiThread(exception);
+        }
+    }
+
     private void pushJetpackProtectSettings() {
         if (mJpSettings.jetpackProtectEnabled != mRemoteJpSettings.jetpackProtectEnabled) {
             WordPress.getRestClientUtils().setJetpackProtect(
@@ -400,7 +403,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         final Map<String, String> params = serializeJetpackParams();
         if (params != null && !params.isEmpty()) {
             WordPress.getRestClientUtils().setJetpackSettings(
-                    mSite.getSiteId(), new RestRequest.Listener() {
+                    mSite.getSiteId(), params, new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
                             AppLog.d(AppLog.T.API, "Jetpack Monitor module options updated");
@@ -414,7 +417,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module options: " + error);
                             notifySavedOnUiThread(error);
                         }
-                    }, params);
+                    });
         }
     }
 
@@ -455,7 +458,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         }
 
         if (mJpSettings.ssoMatchEmail != mRemoteJpSettings.ssoMatchEmail) {
-            WordPress.getRestClientUtilsV1_1().setJetpacSsoMatchEmailOption(
+            WordPress.getRestClientUtilsV1_1().setJetpackSsoMatchEmailOption(
                     mSite.getSiteId(), mJpSettings.ssoMatchEmail, new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
