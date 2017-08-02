@@ -95,6 +95,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
+import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -309,6 +310,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
                 }
                 mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
+                mPost.setStatus(PostStatus.PUBLISHED.toString());
             } else if (extras != null) {
                 // Load post passed in extras
                 mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
@@ -894,18 +896,23 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Update post object from fragment fields
+        boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
             if (mShowNewEditor || mShowAztecEditor) {
-                updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
+                postTitleOrContentChanged =
+                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
                         (String) mEditorFragment.getContent());
             } else {
                 // TODO: Remove when legacy editor is dropped
-                updatePostContent(isAutosave);
+                postTitleOrContentChanged = updatePostContent(isAutosave);
             }
         }
 
-        PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
-        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        // only makes sense to change the publish date and locallychanged date if the Post was actaully changed
+        if (postTitleOrContentChanged) {
+            PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
+            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        }
     }
 
     private void savePostAsync(final AfterSavePostListener listener) {
@@ -932,6 +939,7 @@ public class EditPostActivity extends AppCompatActivity implements
             AztecEditorFragment aztecEditorFragment = (AztecEditorFragment)mEditorFragment;
             aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
             aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext()));
+            aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext()));
         }
     }
 
@@ -1174,7 +1182,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         isPublishable && hasLocalChanges;
 
                 // if post was modified or has unpublished local changes, save it
-                boolean shouldSave = hasChanges || hasUnpublishedLocalDraftChanges;
+                boolean shouldSave = (mOriginalPost != null && hasChanges)
+                        || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
                 // if post is publishable or not new, sync it
                 boolean shouldSync = isPublishable || !isNewPost();
 
@@ -1213,7 +1222,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean isFirstTimePublish() {
-        return PostStatus.fromPost(mPost) == PostStatus.PUBLISHED &&
+        return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) &&
                 (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT);
     }
 
@@ -1538,9 +1547,9 @@ public class EditPostActivity extends AppCompatActivity implements
     /**
      * Updates post object with content of this fragment
      */
-    public void updatePostContent(boolean isAutoSave) throws IllegalEditorStateException {
+    public boolean updatePostContent(boolean isAutoSave) throws IllegalEditorStateException {
         if (mPost == null) {
-            return;
+            return false;
         }
         String title = StringUtils.notNullStr((String) mEditorFragment.getTitle());
         SpannableStringBuilder postContent;
@@ -1619,34 +1628,37 @@ public class EditPostActivity extends AppCompatActivity implements
             content = postContent.toString();
         }
 
-        mPost.setTitle(title);
-        mPost.setContent(content);
+        boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
+        boolean contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
 
-        if (!mPost.isLocalDraft()) {
+        if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
             mPost.setIsLocallyChanged(true);
         }
+
+        return titleChanged || contentChanged;
     }
 
     /**
      * Updates post object with given title and content
      */
-    public void updatePostContentNewEditor(boolean isAutoSave, String title, String content) {
+    public boolean updatePostContentNewEditor(boolean isAutoSave, String title, String content) {
         if (mPost == null) {
-            return;
+            return false;
         }
 
         if (!isAutoSave) {
             // TODO: Shortcode handling, media handling
         }
 
-        mPost.setTitle(title);
-        mPost.setContent(content);
+        boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
+        boolean contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
 
-        if (!mPost.isLocalDraft()) {
+        if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
             mPost.setIsLocallyChanged(true);
+            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
 
-        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        return titleChanged || contentChanged;
     }
 
     private void updateMediaFileOnServer(MediaFile mediaFile) {
@@ -2064,8 +2076,10 @@ public class EditPostActivity extends AppCompatActivity implements
         try {
             File outputFile = File.createTempFile("thumb", ".png", getCacheDir());
             FileOutputStream outputStream = new FileOutputStream(outputFile);
-            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath,
-                    android.provider.MediaStore.Images.Thumbnails.MINI_KIND);
+            Bitmap thumb = ImageUtils.getVideoFrameFromVideo(
+                    videoPath,
+                    ImageUtils.getMaximumThumbnailWidthForEditor(this)
+            );
             if (thumb != null) {
                 thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream);
                 thumbnailPath = outputFile.getAbsolutePath();
@@ -2162,10 +2176,13 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddMediaClicked() {
-        if (!isPhotoPickerShowing()) {
+        if (isPhotoPickerShowing()) {
+            hidePhotoPicker();
+        } else if (WordPressMediaUtils.currentUserCanUploadMedia(mSite)) {
             showPhotoPicker();
         } else {
-            hidePhotoPicker();
+            // show the WP media library instead of the photo picker if the user doesn't have upload permission
+            ActivityLauncher.viewMediaPickerForResult(this, mSite);
         }
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-15 08:09:18+0000
+Translation-Revision-Date: 2017-07-26 06:52:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
@@ -96,9 +96,7 @@ Language: nl
 	<string name="fab_content_description_write">Schrijven</string>
 	<string name="my_site_btn_sharing">Delen</string>
 	<string name="button_not_now">Niet nu</string>
-	<string name="media_error_timeout">Time-out van serverrespons: je hebt een slechte verbinding of er is een serverfout opgetreden</string>
-	<string name="media_error_internal_server_error">Uploadfout. Probeer Afbeeldingen optimaliseren in te schakelen via Site -> Instellingen</string>
-	<string name="media_error_too_large_upload">Bestand te groot om te uploaden. Probeer Afbeeldingen optimaliseren in te schakelen via Site -> Instellingen</string>
+	<string name="media_error_internal_server_error">Uploadfout. Probeer "Afbeeldingen optimaliseren" in te schakelen via de instellingen van je site</string>
 	<string name="media_downloading">Media op dit apparaat opslaan</string>
 	<string name="error_media_save">Media opslaan is mislukt</string>
 	<string name="editor_scheduled_post_saved_online">Bericht is ingepland</string>
@@ -159,8 +157,6 @@ Language: nl
 	<string name="error_unknown_post_type">Onbekende berichtindeling</string>
 	<string name="error_unknown_post">Onbekend bericht. Lokaal bericht is mogelijk niet gesynchroniseerd met de server</string>
 	<string name="error_fetch_site_after_creation">Site is aangemaakt. Je moet mogelijk je sites vernieuwen in de sitekiezer.</string>
-	<string name="error_media_request_too_large">Media te groot, kunnen niet worden geüpload</string>
-	<string name="error_media_parse_error">Kan reactie niet parseren na media-upload</string>
 	<string name="error_upload_params">Fout bij het uploaden van %1$s: %2$s</string>
 	<string name="submit_for_review">Verzenden</string>
 	<string name="role_subscriber">Abonnee</string>
@@ -179,7 +175,7 @@ Language: nl
 	<string name="error_media_refresh_no_connection">Een verbinding is vereist om de bibliotheek te vernieuwen</string>
 	<string name="error_media_unauthorized">Je bent niet gemachtigd media weer te geven of te bewerken</string>
 	<string name="error_media_not_found">Kan media niet vinden</string>
-	<string name="error_media_insufficient_fs_permissions">Leesrechten zijn vereist voor mediabestand</string>
+	<string name="error_media_insufficient_fs_permissions">Leesrechten geweigerd voor mediabestand</string>
 	<string name="site_settings_optimize_images">Afbeeldingen optimaliseren</string>
 	<string name="no_site_error">Kan geen verbinding maken met de WordPress-site. Er is geen geldige WordPress-site op dit\n adres. Controleer of je het goede websiteadres (URL) hebt opgegeven.</string>
 	<string name="media_generic_error">Er is een mediafout opgetreden</string>
@@ -472,8 +468,8 @@ Language: nl
 	<string name="pending_email_change_snackbar">Klik op de link in de verificatiemail die verzonden is naar %1$s om je nieuwe adres te bevestigen</string>
 	<string name="editor_toast_uploading_please_wait">Je bent media aan het uploaden. Wacht totdat dit is afgerond.</string>
 	<string name="error_refresh_comments_showing_older">Reacties konden momenteel niet worden vernieuwd - oudere reacties worden weergegeven</string>
-	<string name="editor_post_settings_set_featured_image">Stel aanbevolen afbeelding in</string>
-	<string name="editor_post_settings_featured_image">Aanbevolen afbeelding</string>
+	<string name="post_settings_set_featured_image">Stel uitgelichte afbeelding in</string>
+	<string name="post_settings_featured_image">Uitgelichte afbeelding</string>
 	<string name="visual_editor_enabled">Visual Editor ingeschakeld</string>
 	<string name="editor_content_placeholder">Deel hier je verhaal...</string>
 	<string name="editor_page_title_placeholder">Paginatitel</string>
@@ -522,7 +518,6 @@ Language: nl
 	<string name="cd_related_post_preview_image">Voorbeeldafbeelding van gerelateerd bericht bekijken</string>
 	<string name="error_post_remote_site_settings">Kan site-informatie niet opslaan</string>
 	<string name="error_fetch_remote_site_settings">Kan site-informatie niet ophalen</string>
-	<string name="error_media_upload_connection">Er is een verbindingsfout opgetreden bij het uploaden van media</string>
 	<string name="site_settings_disconnected_toast">Niet ingelogd, bewerken uitgeschakeld.</string>
 	<string name="site_settings_unsupported_version_error">Niet-ondersteunde versie van WordPress</string>
 	<string name="site_settings_multiple_links_dialog_description">Vereist goedkeuring voor reacties die meer dan dit aantal koppelingen bevatten.</string>
@@ -663,7 +658,6 @@ Language: nl
 	<string name="reader_label_gap_marker">Meer berichten laden</string>
 	<string name="notifications_no_search_results">Geen sites overeengekomen met \'%s\'</string>
 	<string name="search_sites">Zoek sites</string>
-	<string name="unread">Ongelezen</string>
 	<string name="notifications_empty_view_reader">Reader weergeven</string>
 	<string name="notifications_empty_action_followers_likes">Trek de aandacht: reageer op berichten die je hebt gelezen.</string>
 	<string name="notifications_empty_action_comments">Deelnemen aan een gesprek: reageer op berichten uit blogs die je volgt.</string>
@@ -682,7 +676,7 @@ Language: nl
 	<string name="stats_widget_loading_data">Gegevens laden…</string>
 	<string name="stats_widget_name_for_blog">Huidige statistieken voor %1$s</string>
 	<string name="stats_widget_name">Huidige statistieken van WordPress</string>
-	<string name="add_location_permission_required">Toestemming vereist om locatie toe te voegen</string>
+	<string name="post_settings_add_location_permission_required">Toestemming vereist om locatie toe te voegen</string>
 	<string name="add_media_permission_required">Toestemming vereist om media toe te voegen</string>
 	<string name="access_media_permission_required">Toestemming vereist om media toe te voegen</string>
 	<string name="stats_enable_rest_api_in_jetpack">Om je statistieken te bekijken moet je de JSON API module in Jetpack activeren.</string>
@@ -735,7 +729,6 @@ Language: nl
 	<string name="button_stats">Statistieken</string>
 	<string name="page_deleted">Pagina verwijderd</string>
 	<string name="button_back">Terug</string>
-	<string name="trashed">Verwijderd</string>
 	<string name="stats_no_activity_this_period">Geen activiteit deze periode</string>
 	<string name="post_trashed">Bericht naar de prullenbak verplaatst</string>
 	<string name="post_deleted">Bericht verwijderd</string>
@@ -943,11 +936,6 @@ Language: nl
 	<string name="hs__new_conversation_header">Ondersteuning chat</string>
 	<string name="hs__conversation_detail_error">Beschrijf het probleem dat je ziet</string>
 	<string name="contact_us">Contact</string>
-	<string name="current_location">Huidige Locatie</string>
-	<string name="add_location">Locatie toevoegen</string>
-	<string name="search_current_location">Locatie bepalen</string>
-	<string name="edit_location">Bewerken</string>
-	<string name="search_location">Zoeken</string>
 	<string name="preference_send_usage_stats_summary">Stuur automatisch gebruiksstatistieken om ons te helpen WordPress voor Android te verbeteren</string>
 	<string name="preference_send_usage_stats">Verstuur statistieken</string>
 	<string name="schedule_verb">Inplannen</string>
@@ -1058,18 +1046,13 @@ Language: nl
 	<string name="new_media">Nieuwe media</string>
 	<string name="new_post">Nieuw bericht</string>
 	<string name="notifications_empty_all">Nog geen meldingen.</string>
-	<string name="post_format">Berichtindeling</string>
 	<string name="http_authorization_required">Autorisatie vereist</string>
 	<string name="http_credentials">HTTP-verificatiegegevens (optioneel)</string>
-	<string name="pending_review">In afwachting van controle</string>
 	<string name="invalid_site_url_message">Controleer of de ingevoerde site-URL geldig is</string>
 	<string name="open_source_licenses">Open-sourcelicenties</string>
-	<string name="location_not_found">Onbekende locatie</string>
 	<string name="file_error_create">Kan geen tijdelijk bestand maken voor het uploaden van media. Controleer of er genoeg vrije ruimte is op je apparaat.</string>
 	<string name="share_action_media">Mediabibliotheek</string>
 	<string name="share_action_post">Nieuw bericht</string>
-	<string name="category_parent">Bovenliggende categorie (optioneel)</string>
-	<string name="category_desc">Beschrijving categorie (optioneel)</string>
 	<string name="category_name">Naam categorie</string>
 	<string name="add_new_category">Nieuwe categorie toevoegen</string>
 	<string name="view_in_browser">Weergeven in browser</string>
@@ -1139,7 +1122,6 @@ Language: nl
 	<string name="deleting_page">Verwijderen van pagina</string>
 	<string name="creating_your_site">Je site aanmaken</string>
 	<string name="creating_your_account">Je account aanmaken</string>
-	<string name="error_refresh_media">Er is iets verkeerd gegaan met het vernieuwen van de mediabibliotheek. Probeer het later nog eens.</string>
 	<string name="reader_empty_posts_in_tag_updating">Berichten ophalen...</string>
 	<string name="cant_share_no_visible_blog">Je kan niet delen naar WordPress zonder een zichtbare blog</string>
 	<string name="comment_spammed">Reactie als spam gemarkeerd</string>
@@ -1220,7 +1202,6 @@ Language: nl
 	<string name="stats">Statistieken</string>
 	<string name="share_action">Deel</string>
 	<string name="share_action_title">Voeg toe aan...</string>
-	<string name="post_excerpt">Samenvatting</string>
 	<string name="theme_auth_error_title">Kon geen thema\'s ophalen</string>
 	<string name="theme_set_success">Thema succesvol ingesteld!</string>
 	<string name="theme_activating_button">Activeren</string>
@@ -1240,9 +1221,6 @@ Language: nl
 	<string name="media_gallery_type_tiled">Tegels</string>
 	<string name="media_gallery_type_squares">Vierkanten</string>
 	<string name="media_gallery_type">Type</string>
-	<string name="unattached">Niet gekoppeld</string>
-	<string name="images">Afbeeldingen</string>
-	<string name="all">Alle</string>
 	<string name="themes">Thema\'s</string>
 	<string name="discard">Verwijder</string>
 	<string name="manage">Beheer</string>
@@ -1277,7 +1255,6 @@ Language: nl
 	<string name="blogusername">blogusername</string>
 	<string name="scaled_image">Breedte geschaalde afbeelding</string>
 	<string name="upload_scaled_image">Upload en link naar afbeelding</string>
-	<string name="scheduled">Gepland</string>
 	<string name="link_enter_url">URL</string>
 	<string name="uploading">Uploaden …</string>
 	<string name="app_title">WordPress voor Android</string>
@@ -1291,27 +1268,21 @@ Language: nl
 	<string name="page_id">Pagina</string>
 	<string name="post_id">Bericht</string>
 	<string name="immediately">Direct</string>
-	<string name="post_password">Wachtwoord (optioneel) </string>
 	<string name="quickpress_add_alert_title">Geef een snelkoppelingsnaam</string>
 	<string name="settings">Instellingen</string>
 	<string name="today">Vandaag</string>
 	<string name="share_url">Deel URL</string>
 	<string name="quickpress_add_error">Snelkoppelingsnaam kan niet leeg zijn.</string>
 	<string name="quickpress_window_title">Selecteer een blog voor de QuickPress snelkoppeling</string>
-	<string name="post_private">Privé</string>
-	<string name="draft">Concept</string>
-	<string name="publish_post">Publiceer</string>
 	<string name="upload_full_size_image">Upload en link naar de volledige afbeelding</string>
 	<string name="categories">Categorieën </string>
-	<string name="tags_separate_with_commas">Tags (gescheiden door komma\'s)</string>
+	<string name="tags_separate_with_commas">Scheid tags met komma\'s</string>
 	<string name="title">Titel</string>
 	<string name="dlg_deleting_comments">Reacties verwijderen</string>
 	<string name="notification_vibrate">Vibreren </string>
 	<string name="notification_sound">Meldingsgeluid</string>
 	<string name="notification_blink">Flikker het notificatie licht</string>
-	<string name="status">Status</string>
 	<string name="sdcard_title">SD kaart is vereist </string>
-	<string name="location">Locatie</string>
 	<string name="media">Media</string>
 	<string name="approve">Goedkeuren</string>
 	<string name="delete">Verwijderen</string>

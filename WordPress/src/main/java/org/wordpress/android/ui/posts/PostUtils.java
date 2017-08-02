@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -123,6 +124,9 @@ public class PostUtils {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
+                    properties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec" :
+                            AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
+
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
                             properties);
                 }
@@ -304,5 +308,21 @@ public class PostUtils {
         if (shouldPublishImmediately(postModel)) {
             postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
         }
+    }
+
+    static boolean updatePostTitleIfDifferent(PostModel post, String newTitle) {
+        if (post.getTitle().compareTo(newTitle) != 0) {
+            post.setTitle(newTitle);
+            return true;
+        }
+        return false;
+    }
+
+    static boolean updatePostContentIfDifferent(PostModel post, String newContent) {
+        if (post.getContent().compareTo(newContent) != 0) {
+            post.setContent(newContent);
+            return true;
+        }
+        return false;
     }
 }

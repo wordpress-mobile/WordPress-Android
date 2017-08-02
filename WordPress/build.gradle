@@ -35,8 +35,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "7.9-rc-2"
-        versionCode 435
+        versionName "8.0-rc-2"
+        versionCode 443
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -45,6 +45,7 @@ android {
 
         buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "false"
         buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "false"
+        buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
     }
 
     productFlavors {
@@ -114,6 +115,8 @@ dependencies {
     compile 'org.wordpress:emailchecker2:1.1.0'
     compile 'com.squareup.okio:okio:1.13.0'
 
+    compile 'com.airbnb.android:lottie:2.0.0-rc2'
+
     compile ('com.yalantis:ucrop:2.2.0') {
         exclude group: 'com.squareup.okhttp3'
     }
@@ -137,7 +140,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:0f45e36dcca7e825d27f7cc3bac593f3d6790c85') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:156b375bd13409f7fca092c39c7e35a9272022ff') {
         exclude group: "com.android.volley";
     }
 

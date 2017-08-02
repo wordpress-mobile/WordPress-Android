@@ -131,15 +131,6 @@ public class AppPrefs {
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
 
-        // access token migrated to AccountStore, must wait for network calls to return before app access
-        ACCESS_TOKEN_MIGRATED,
-
-        // Self-hosted sites migration to FluxC
-        SELF_HOSTED_SITES_MIGRATED_TO_FLUXC,
-
-        // Draft migration to FluxC
-        DRAFTS_MIGRATED_TO_FLUXC,
-
         // aztec editor available
         AZTEC_EDITOR_AVAILABLE,
 
@@ -153,7 +144,10 @@ public class AppPrefs {
         ASKED_PERMISSION_STORAGE_READ,
         ASKED_PERMISSION_CAMERA,
         ASKED_PERMISSION_LOCATION_COURSE,
-        ASKED_PERMISSION_LOCATION_FINE
+        ASKED_PERMISSION_LOCATION_FINE,
+
+        // wizard style login flow active
+        LOGIN_WIZARD_STYLE_ACTIVE
     }
 
     private static SharedPreferences prefs() {
@@ -405,6 +399,18 @@ public class AppPrefs {
         }
     }
 
+    // Wizard-style login flow
+    public static void setLoginWizardStyleActive(boolean loginWizardActive) {
+        setBoolean(UndeletablePrefKey.LOGIN_WIZARD_STYLE_ACTIVE, loginWizardActive);
+        if (loginWizardActive) {
+            AnalyticsTracker.track(Stat.LOGIN_WIZARD_STYLE_ACTIVATED);
+        }
+    }
+
+    public static boolean isLoginWizardStyleActivated() {
+        return BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE || getBoolean(UndeletablePrefKey.LOGIN_WIZARD_STYLE_ACTIVE, false);
+    }
+
     // Aztec Editor
     public static void setAztecEditorEnabled(boolean isEnabled) {
         setBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
@@ -599,30 +605,4 @@ public class AppPrefs {
         String idsAsString = TextUtils.join(",", currentIds);
         setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
     }
-
-    public static boolean wasAccessTokenMigrated() {
-        return getBoolean(UndeletablePrefKey.ACCESS_TOKEN_MIGRATED, false);
-    }
-
-    public static void setAccessTokenMigrated(boolean migrated) {
-        setBoolean(UndeletablePrefKey.ACCESS_TOKEN_MIGRATED, migrated);
-    }
-
-    public static boolean wereSelfHostedSitesMigratedToFluxC() {
-        return getBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, false);
-    }
-
-    public static void setSelfHostedSitesMigratedToFluxC(boolean migrated) {
-        setBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, migrated);
-    }
-
-    public static boolean wereDraftsMigratedToFluxC() {
-        return getBoolean(UndeletablePrefKey.DRAFTS_MIGRATED_TO_FLUXC, false);
-    }
-
-    public static void setDraftsMigratedToFluxC(boolean migrated) {
-        setBoolean(UndeletablePrefKey.DRAFTS_MIGRATED_TO_FLUXC, migrated);
-    }
-
-
 }
