@@ -291,6 +291,24 @@
 
             </RelativeLayout>
 
+            <!--Plugin-->
+            <RelativeLayout
+                android:id="@+id/row_plugins"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_plugins_icon"
+                    style="@style/MySiteListRowIcon"
+                    app:srcCompat="@drawable/ic_user_grey_24dp" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_plugins_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/my_site_plugins_icon"
+                    android:text="@string/my_site_btn_plugins" />
+
+            </RelativeLayout>
+
             <!--Sharing-->
             <RelativeLayout
                 android:id="@+id/row_sharing"

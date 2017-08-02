@@ -1486,6 +1486,7 @@
     <string name="my_site_btn_switch_site">Switch Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
+    <string name="my_site_btn_plugins">Plugins</string>
     <string name="my_site_no_sites_view_drake">Illustration</string>
     <string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
     <string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
