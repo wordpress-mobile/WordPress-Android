@@ -76,9 +76,16 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="@dimen/default_dialog_width"
+        android:layout_height="1dp"
+        android:layout_below="@+id/promo_dialog_text"
+        android:background="@color/grey_lighten_30" />
+
     <LinearLayout
         android:gravity="end|right"
-        android:layout_below="@+id/promo_dialog_text"
+        android:layout_below="@+id/divider"
         android:layout_height="wrap_content"
         android:layout_width="@dimen/default_dialog_width"
         android:orientation="horizontal"
