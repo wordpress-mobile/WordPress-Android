@@ -14,6 +14,8 @@ public class RecyclerViewScrollPositionManager implements RecyclerViewScrollPosi
 
     @Override
     public void onSaveInstanceState(Bundle outState, RecyclerView recyclerView) {
+        // make sure the layout manager is assigned to the RecyclerView
+        // also take into account this needs to be a LinearLayoutManager, otherwise ClassCastException occurs
         outState.putInt(RV_POSITION,
                 ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
         View firstItemView = recyclerView.getChildAt(0);
