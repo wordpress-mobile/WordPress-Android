@@ -19,6 +19,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -201,7 +202,18 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
             return;
         }
 
+        // optimize videos before passing them to FluxC
+        if (next.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
+            if (optimizeVideo(next)) {
+                return;
+            }
+        }
+
         dispatchUploadAction(next, site);
+    }
+
+    private boolean optimizeVideo(@NonNull MediaModel media) {
+
     }
 
     private synchronized void completeUploadWithId(int id) {
