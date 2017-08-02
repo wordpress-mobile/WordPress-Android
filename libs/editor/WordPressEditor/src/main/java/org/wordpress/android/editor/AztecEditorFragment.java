@@ -1183,7 +1183,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                         if (!attributesWithClass.hasClass(ATTR_STATUS_FAILED)) {
                             // just save the item and leave
-                            // TODO here save the Post and leave
                             content.clearOverlays(mTappedMediaPredicate);
                             content.resetAttributedMediaSpan(mTappedMediaPredicate);
                             return;
