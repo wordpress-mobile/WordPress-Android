@@ -39,8 +39,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     // TODO This should be moved to FluxC, perhaps in a new UploadMediaTable
     private static final ConcurrentHashMap<Integer, Float> sProgressByMediaId = new ConcurrentHashMap<>();
 
-    @Inject Dispatcher mDispatcher;
-    @Inject SiteStore mSiteStore;
+    @Inject
+    Dispatcher mDispatcher;
+    @Inject
+    SiteStore mSiteStore;
 
     MediaUploadHandler() {
         ((WordPress) WordPress.getContext()).component().inject(this);
@@ -193,30 +195,13 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
             return;
         }
 
-        SiteModel site = mSiteStore.getSiteByLocalId(next.getLocalSiteId());
-
-        // somehow lost our reference to the site, complete this action
-        if (site == null) {
-            AppLog.w(T.MEDIA, "MediaUploadHandler > Unexpected state, site is null. Skipping this request.");
-            notifyServiceIfUploadsComplete();
-            return;
-        }
-
         // optimize videos before passing them to FluxC
         if (next.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
-            if (optimizeVideo(next)) {
-                return;
-            }
+            new VideoOptimizer(next, this).start();
+        } else {
+            SiteModel site = mSiteStore.getSiteByLocalId(next.getLocalSiteId());
+            dispatchUploadAction(next, site);
         }
-
-        dispatchUploadAction(next, site);
-    }
-
-    /*
-     * starts the optimizer for the passed video media, returns true if optimizer successfully started
-     */
-    private boolean optimizeVideo(@NonNull MediaModel media) {
-        return new VideoOptimizer(media).start();
     }
 
     private synchronized void completeUploadWithId(int id) {
@@ -266,7 +251,14 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         }
     }
 
-    private void dispatchUploadAction(@NonNull final MediaModel media, @NonNull final SiteModel site) {
+    private void dispatchUploadAction(@NonNull final MediaModel media, final SiteModel site) {
+        // somehow lost our reference to the site, complete this action
+        if (site == null) {
+            AppLog.w(T.MEDIA, "MediaUploadHandler > Unexpected state, site is null. Skipping this request.");
+            notifyServiceIfUploadsComplete();
+            return;
+        }
+
         AppLog.i(T.MEDIA, "MediaUploadHandler > Dispatching upload action for media with local id: "
                 + media.getId() + " and path: " + media.getFilePath());
         sInProgressUploads.add(media);
@@ -378,8 +370,16 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
                 StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
     }
 
-    @Override
-    public void onVideoOptimizationDone(@NonNull String path) {
 
+    @Override
+    public void onVideoOptimizationSuccess(@NonNull MediaModel media) {
+        SiteModel site = mSiteStore.getSiteByLocalId(media.getLocalSiteId());
+        dispatchUploadAction(media, site);
+    }
+
+    @Override
+    public void onVideoOptimizationFailed(@NonNull MediaModel media) {
+        SiteModel site = mSiteStore.getSiteByLocalId(media.getLocalSiteId());
+        dispatchUploadAction(media, site);
     }
 }

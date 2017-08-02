@@ -23,7 +23,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_
 public class VideoOptimizer implements org.m4m.IProgressListener {
 
     public interface VideoOptimizationListener {
-        void onVideoOptimizationDone(@NonNull MediaModel media, @NonNull String path);
+        void onVideoOptimizationSuccess(@NonNull MediaModel media);
         void onVideoOptimizationFailed(@NonNull MediaModel media);
     }
 
@@ -119,7 +119,8 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
                     + optimizedFileSize + " > " + originalFileSize );
             mListener.onVideoOptimizationFailed(mMedia);
         } else {
-            mListener.onVideoOptimizationDone(mMedia, mOutputPath);
+            mMedia.setUrl(mOutputPath);
+            mListener.onVideoOptimizationSuccess(mMedia);
         }
     }
 
