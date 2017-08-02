@@ -32,7 +32,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class MediaUploadHandler implements UploadHandler<MediaModel> {
+public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptimizer.VideoOptimizationListener {
     private static final List<MediaModel> sPendingUploads = new ArrayList<>();
     private static final List<MediaModel> sInProgressUploads = new ArrayList<>();
 
@@ -212,8 +212,11 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
         dispatchUploadAction(next, site);
     }
 
+    /*
+     * starts the optimizer for the passed video media, returns true if optimizer successfully started
+     */
     private boolean optimizeVideo(@NonNull MediaModel media) {
-
+        return new VideoOptimizer(media).start();
     }
 
     private synchronized void completeUploadWithId(int id) {
@@ -373,5 +376,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
     private boolean compareBySiteAndFilePath(MediaModel media1, MediaModel media2) {
         return (media1.getLocalSiteId() == media2.getLocalSiteId() &&
                 StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
+    }
+
+    @Override
+    public void onVideoOptimizationDone(@NonNull String path) {
+
     }
 }
