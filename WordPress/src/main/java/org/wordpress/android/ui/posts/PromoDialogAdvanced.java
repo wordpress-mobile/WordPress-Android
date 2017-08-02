@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.DisplayUtils;
@@ -81,7 +82,8 @@ public class PromoDialogAdvanced extends PromoDialog {
 
         ImageView image = (ImageView) view.findViewById(R.id.promo_dialog_image);
         image.setImageResource(mDrawableId);
-        image.setVisibility(DisplayUtils.isLandscape(getActivity()) ? View.GONE : View.VISIBLE);
+        LinearLayout imageContainer = (LinearLayout) view.findViewById(R.id.promo_dialog_image_container);
+        imageContainer.setVisibility(DisplayUtils.isLandscape(getActivity()) ? View.GONE : View.VISIBLE);
 
         WPTextView title = (WPTextView) view.findViewById(R.id.promo_dialog_title);
         title.setText(mTitleId);
