@@ -878,7 +878,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (TextUtils.isEmpty(filePath)) {
             return originalUri;
         }
-        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, filePath, false);
+        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, filePath, false);
         if (optimizedMedia != null) {
             return optimizedMedia;
         } else {

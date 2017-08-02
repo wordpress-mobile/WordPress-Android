@@ -608,7 +608,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onPhotoPickerMediaChosen(@NonNull final List<Uri> uriList) {
         hidePhotoPicker();
 
-        if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
+        if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
             boolean hasSelectedPicture = false;
             for (Uri uri : uriList) {
                 if (!MediaUtils.isVideo(uri.toString())) {
@@ -617,7 +617,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
             if (hasSelectedPicture) {
-                WPMediaUtils.advertiseImageOptimization(this, mSite,
+                WPMediaUtils.advertiseImageOptimization(this,
                         new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
                             @Override
                             public void done() {
@@ -1758,7 +1758,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Video optimization -> API18 or higher
-        if (isVideo && WPMediaUtils.isVideoOptimizationEnabled(this, mSite)) {
+        if (isVideo && WPMediaUtils.isVideoOptimizationEnabled()) {
             // Setting up the lister that's called when the video optimization finishes
             EditPostActivityVideoHelper.IVideoOptimizationListener listener = new EditPostActivityVideoHelper.IVideoOptimizationListener() {
                 @Override
@@ -1778,7 +1778,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 return true;
             }
         }
-        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, path, isVideo);
+        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, path, isVideo);
         if (optimizedMedia != null) {
             uri = optimizedMedia;
             path = MediaUtils.getRealPathFromURI(this, uri);
@@ -1846,8 +1846,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     final Uri imageUri = data.getData();
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
-                        WPMediaUtils.advertiseImageOptimization(this, mSite,
+                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
+                        WPMediaUtils.advertiseImageOptimization(this,
                                 new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
                                     @Override
                                     public void done() {
@@ -1861,8 +1861,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case RequestCodes.TAKE_PHOTO:
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
-                        WPMediaUtils.advertiseImageOptimization(this, mSite,
+                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
+                        WPMediaUtils.advertiseImageOptimization(this,
                                 new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
                                     @Override
                                     public void done() {

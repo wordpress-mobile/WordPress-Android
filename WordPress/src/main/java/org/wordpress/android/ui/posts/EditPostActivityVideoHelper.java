@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -10,6 +9,7 @@ import org.m4m.MediaComposer;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -56,7 +56,7 @@ public class EditPostActivityVideoHelper {
             return false;
         }
 
-        if (!WPMediaUtils.isVideoOptimizationEnabled(parentActivity, siteModel)) {
+        if (!WPMediaUtils.isVideoOptimizationEnabled()) {
             // Video optimization -> API18 or higher
             return false;
         }
@@ -81,7 +81,7 @@ public class EditPostActivityVideoHelper {
         // Setup video optimization objects
         final VideoOptimizationProgressListener progressListener = new VideoOptimizationProgressListener();
         final MediaComposer mediaComposer = WPVideoUtils.getVideoOptimizationComposer(parentActivity, mOriginalPath, mOutFilePath, progressListener,
-                siteSettings.getMaxVideoWidth(),siteSettings.getVideoEncoderBitrate());
+                AppPrefs.getVideoOptimizeWidth(), AppPrefs.getVideoOptimizeQuality());
         if (mediaComposer == null) {
             AppLog.w(AppLog.T.MEDIA, "Can't optimize this video. Using the original file");
             AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE,

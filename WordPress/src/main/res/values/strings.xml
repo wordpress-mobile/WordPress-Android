@@ -141,11 +141,11 @@
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_error_no_permission_upload">You don\'t have permission to upload media to the site</string>
-    <string name="media_error_http_too_large_photo_upload">Image too large to upload. Try changing Optimize Images in your site\'s settings</string>
+    <string name="media_error_http_too_large_photo_upload">Image too large to upload. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_error_http_too_large_video_upload">Video too large to upload</string>
     <string name="media_error_exceeds_php_filesize">File exceeds the maximum upload size for this site</string>
     <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
-    <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your site\'s settings</string>
+    <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_error_timeout">Server took too long to respond</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
@@ -475,7 +475,6 @@
     <string name="site_settings_discussion_header" translatable="false">@string/discussion</string>
     <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
     <string name="site_settings_comments_header" translatable="false">@string/comments</string>
-    <string name="site_settings_this_device_header">This device</string>
     <string name="site_settings_advanced_header">Advanced</string>
 
     <!-- Preference Titles -->

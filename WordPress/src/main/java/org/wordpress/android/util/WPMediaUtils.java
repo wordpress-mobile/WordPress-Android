@@ -13,10 +13,8 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 
 public class WPMediaUtils {
 
@@ -26,29 +24,24 @@ public class WPMediaUtils {
     public static final int OPTIMIZE_VIDEO_MAX_WIDTH = 1280;
     public static final int OPTIMIZE_VIDEO_ENCODER_BITRATE_KB = 3000;
 
-    public static Uri getOptimizedMedia(Activity activity, SiteModel siteModel, String path, boolean isVideo) {
+    public static Uri getOptimizedMedia(Activity activity, String path, boolean isVideo) {
         if (isVideo) {
             return null;
         }
-        // TODO implement site settings for .org sites
-        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
-        // Site Settings are implemented on .com/Jetpack sites only
-        if (siteSettings != null && siteSettings.init(false).getOptimizedImage()) {
-            int resizeWidth = siteSettings.getMaxImageWidth() > 0 ? siteSettings.getMaxImageWidth() : Integer.MAX_VALUE;
-            int quality = siteSettings.getImageQuality();
-            // do not optimize if original-size and 100% quality are set.
-            if (resizeWidth == Integer.MAX_VALUE && quality == 100) {
-                return null;
-            }
+        int resizeWidth = AppPrefs.getImageOptimizeWidth() > 1 ? AppPrefs.getImageOptimizeWidth() : Integer.MAX_VALUE;
+        int quality = AppPrefs.getImageOptimizeQuality();
+        // do not optimize if original-size and 100% quality are set.
+        if (resizeWidth == Integer.MAX_VALUE && quality == 100) {
+            return null;
+        }
 
-            String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeWidth, quality);
-            if (optimizedPath == null) {
-                AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
-                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);
-            } else {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZED);
-                return Uri.parse(optimizedPath);
-            }
+        String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeWidth, quality);
+        if (optimizedPath == null) {
+            AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
+            AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZED);
+            return Uri.parse(optimizedPath);
         }
         return null;
     }
@@ -71,14 +64,8 @@ public class WPMediaUtils {
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 
-    public static boolean isVideoOptimizationEnabled(Activity activity, SiteModel siteModel) {
-        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
-        return isVideoOptimizationAvailable() && siteSettings != null && siteSettings.init(false).getOptimizedVideo();
-    }
-
-    public static boolean isImageOptimizationEnabled(Activity activity, SiteModel siteModel) {
-        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
-        return siteSettings != null && siteSettings.init(false).getOptimizedImage();
+    public static boolean isVideoOptimizationEnabled() {
+        return isVideoOptimizationAvailable() && AppPrefs.isVideoOptimize();
     }
 
     /**
@@ -92,10 +79,9 @@ public class WPMediaUtils {
      * This is because we don't want to ask so much things to users the first time they try to add a picture to the app.
      *
      * @param act The host activity
-     * @param site The site where to check if optimize image is already on or not.
      * @return true if we should advertise the feature, false otherwise.
      */
-    public static boolean shouldAdvertiseImageOptimization(final Activity act, final SiteModel site) {
+    public static boolean shouldAdvertiseImageOptimization(final Activity act) {
         boolean isPromoRequired = AppPrefs.isImageOptimizePromoRequired();
         if (!isPromoRequired) {
             return false;
@@ -109,7 +95,7 @@ public class WPMediaUtils {
         }
 
         // Check whether image optimization is already available for the site
-       return !isImageOptimizationEnabled(act, site);
+       return !AppPrefs.isImageOptimize();
     }
 
     public interface OnAdvertiseImageOptimizationListener {
@@ -117,19 +103,16 @@ public class WPMediaUtils {
     }
 
     public static void advertiseImageOptimization(final Activity activity,
-                                                  final SiteModel site,
                                                   final OnAdvertiseImageOptimizationListener listener) {
 
         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == DialogInterface.BUTTON_POSITIVE) {
-                    SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, site, null);
-                    if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
+                    if (AppPrefs.isImageOptimize()) {
                         // null or image optimization already ON. We should not be here though.
                     } else {
-                        siteSettings.setOptimizedImage(true);
-                        siteSettings.saveSettings();
+                        AppPrefs.setImageOptimize(true);
                     }
                 }
 

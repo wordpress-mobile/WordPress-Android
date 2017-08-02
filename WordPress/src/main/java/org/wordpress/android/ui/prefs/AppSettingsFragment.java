@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.HashMap;
@@ -41,6 +42,14 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
     private DetailListPreference mLanguagePreference;
     private SharedPreferences mSettings;
+
+    // This Device settings
+    private WPSwitchPreference mOptimizedImage;
+    private DetailListPreference mImageWidthPref;
+    private DetailListPreference mImageQualityPref;
+    private WPSwitchPreference mOptimizedVideo;
+    private DetailListPreference mVideoWidthPref;
+    private DetailListPreference mVideoEncorderBitratePref;
 
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
@@ -66,6 +75,40 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_oss_licenses))
                 .setOnPreferenceClickListener(this);
+
+        mOptimizedImage =
+                (WPSwitchPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
+        mImageWidthPref = (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_image_width, this);
+        mImageQualityPref =
+                (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_image_quality, this);
+        mOptimizedVideo =
+                (WPSwitchPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_optimize_video, this);
+        mVideoWidthPref =
+                (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_video_width, this);
+        mVideoEncorderBitratePref =
+                (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_video_encoder_bitrate, this);
+
+        // Set Local settings
+        mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
+        setDetailListPreferenceValue(mImageWidthPref,
+                String.valueOf(AppPrefs.getImageOptimizeWidth()),
+                getLabelForImageMaxWidthValue(AppPrefs.getImageOptimizeWidth()));
+        setDetailListPreferenceValue(mImageQualityPref,
+                String.valueOf(AppPrefs.getImageOptimizeQuality()),
+                getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+
+        mOptimizedVideo.setChecked(AppPrefs.isVideoOptimize());
+        setDetailListPreferenceValue(mVideoWidthPref,
+                String.valueOf(AppPrefs.getVideoOptimizeWidth()),
+                getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+        setDetailListPreferenceValue(mVideoEncorderBitratePref,
+                String.valueOf(AppPrefs.getVideoOptimizeQuality()),
+                getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+        if (!WPMediaUtils.isVideoOptimizationAvailable()) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_optimize_video);
+            WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_site_video_width);
+            WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_site_video_encoder_bitrate);
+        }
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -103,8 +146,38 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         if (preference == mLanguagePreference) {
             changeLanguage(newValue.toString());
             return false;
+        } else if (preference == mOptimizedImage) {
+            AppPrefs.setImageOptimize((Boolean) newValue);
+            mImageWidthPref.setEnabled((Boolean) newValue);
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("enabled", newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED, properties);
+        } else if (preference == mImageWidthPref) {
+            int newWidth = Integer.parseInt(newValue.toString());
+            AppPrefs.setImageOptimizeWidth(newWidth);
+            setDetailListPreferenceValue(mImageWidthPref,
+                    newValue.toString(),
+                    getLabelForImageMaxWidthValue(AppPrefs.getImageOptimizeWidth()));
+        } else if (preference == mImageQualityPref) {
+            AppPrefs.setImageOptimizeQuality(Integer.parseInt(newValue.toString()));
+            setDetailListPreferenceValue(mImageQualityPref,
+                    newValue.toString(),
+                    getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+        } else if (preference == mOptimizedVideo) {
+            AppPrefs.setVideoOptimize((Boolean) newValue);
+            mVideoEncorderBitratePref.setEnabled((Boolean) newValue);
+        } else if (preference == mVideoWidthPref) {
+            int newWidth = Integer.parseInt(newValue.toString());
+            AppPrefs.setVideoOptimizeWidth(newWidth);
+            setDetailListPreferenceValue(mVideoWidthPref,
+                    newValue.toString(),
+                    getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+        } else if (preference == mVideoEncorderBitratePref) {
+            AppPrefs.setVideoOptimizeQuality(Integer.parseInt(newValue.toString()));
+            setDetailListPreferenceValue(mVideoEncorderBitratePref,
+                    newValue.toString(),
+                    getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
         }
-
         return true;
     }
 
@@ -260,5 +333,59 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private boolean handleOssPreferenceClick() {
         startActivity(new Intent(getActivity(), LicensesActivity.class));
         return true;
+    }
+
+    private String getLabelForImageMaxWidthValue(int newValue) {
+        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_width_values);
+        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_width_entries);
+        for (int i = 0; i < values.length ; i++) {
+            if (values[i].equals(String.valueOf(newValue))) {
+                return entries[i];
+            }
+        }
+
+        return entries[0];
+    }
+
+    private String getLabelForImageQualityValue(int newValue) {
+        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_values);
+        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_entries);
+        for (int i = 0; i < values.length ; i++) {
+            if (values[i].equals(String.valueOf(newValue))) {
+                return entries[i];
+            }
+        }
+
+        return entries[0];
+    }
+
+    private String getLabelForVideoMaxWidthValue(int newValue) {
+        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_video_width_values);
+        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_video_width_entries);
+        for (int i = 0; i < values.length ; i++) {
+            if (values[i].equals(String.valueOf(newValue))) {
+                return entries[i];
+            }
+        }
+
+        return entries[0];
+    }
+
+    private String getLabelForVideoEncoderBitrateValue(int newValue) {
+        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_video_bitrate_values);
+        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_video_bitrate_entries);
+        for (int i = 0; i < values.length ; i++) {
+            if (values[i].equals(String.valueOf(newValue))) {
+                return entries[i];
+            }
+        }
+
+        return entries[0];
+    }
+
+    private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
+        pref.setValue(value);
+        pref.setSummary(summary);
+        pref.refreshAdapter();
     }
 }
