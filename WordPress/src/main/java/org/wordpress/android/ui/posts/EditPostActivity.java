@@ -1757,27 +1757,6 @@ public class EditPostActivity extends AppCompatActivity implements
             return false;
         }
 
-        // Video optimization -> API18 or higher
-        if (isVideo && WPMediaUtils.isVideoOptimizationEnabled()) {
-            // Setting up the lister that's called when the video optimization finishes
-            EditPostActivityVideoHelper.IVideoOptimizationListener listener = new EditPostActivityVideoHelper.IVideoOptimizationListener() {
-                @Override
-                public void done(String path) {
-                    android.net.Uri uri = android.net.Uri.parse(path);
-                    MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
-                    MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-                    if (media != null) {
-                        mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
-                    }
-                }
-            };
-            EditPostActivityVideoHelper vHelper = new EditPostActivityVideoHelper(this, listener, path);
-            boolean videoOptimizationStarted = vHelper.startVideoOptimization(mSite);
-            // This is true only when video optimization can be started. In this case we just need to wait until it finishes
-            if (videoOptimizationStarted) {
-                return true;
-            }
-        }
         Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, path, isVideo);
         if (optimizedMedia != null) {
             uri = optimizedMedia;

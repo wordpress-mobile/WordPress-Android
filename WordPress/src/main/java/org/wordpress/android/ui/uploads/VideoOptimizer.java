@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.uploads;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import org.m4m.MediaComposer;
@@ -41,8 +40,9 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
 
     public VideoOptimizer(@NonNull MediaModel media, @NonNull VideoOptimizationListener listener) {
         mCacheDir = MediaUtils.getDiskCacheDir(getContext());
-        mMedia = media;
         mListener = listener;
+        mMedia = media;
+        mInputPath = mMedia.getFilePath();
     }
 
     private Context getContext() {
@@ -50,8 +50,6 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
     }
 
     public void start() {
-        Uri videoUri = Uri.parse(mMedia.getUrl());
-        mInputPath = MediaUtils.getRealPathFromURI(getContext(), videoUri);
         if (mInputPath == null) {
             AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > empty input path");
             mListener.onVideoOptimizationFailed(mMedia);
@@ -159,7 +157,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
                     + optimizedFileSize + " > " + originalFileSize );
             mListener.onVideoOptimizationFailed(mMedia);
         } else {
-            mMedia.setUrl(mOutputPath);
+            mMedia.setFilePath(mOutputPath);
             mListener.onVideoOptimizationSuccess(mMedia);
         }
     }
