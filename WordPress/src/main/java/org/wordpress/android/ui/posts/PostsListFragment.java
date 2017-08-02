@@ -52,6 +52,8 @@ import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager;
+import org.wordpress.android.util.helpers.RecyclerViewScrollPositionSaver;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -73,9 +75,8 @@ public class PostsListFragment extends Fragment
 
     public static final int POSTS_REQUEST_COUNT = 20;
     public static final String TAG = "posts_list_fragment_tag";
-    private static final String RV_POSITION = "rv_position";
-    private static final String RV_OFFSET = "rv_offset";
 
+    private RecyclerViewScrollPositionSaver mRVScrollPositionSaver = new RecyclerViewScrollPositionManager();
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
     private View mFabView;
@@ -93,8 +94,6 @@ public class PostsListFragment extends Fragment
     private boolean mShouldCancelPendingDraftNotification = false;
     private int mPostIdForPostToBeDeleted = 0;
     private boolean mDoReplayPosition = false;
-    private int mRVPosition = 0;
-    private int mRVOffset = 0;
 
     private final List<PostModel> mTrashedPosts = new ArrayList<>();
 
@@ -123,8 +122,7 @@ public class PostsListFragment extends Fragment
 
         if (savedInstanceState != null) {
             mDoReplayPosition = true;
-            mRVPosition = savedInstanceState.getInt(RV_POSITION);
-            mRVOffset = savedInstanceState.getInt(RV_OFFSET);
+            mRVScrollPositionSaver.onRestoreInstanceState(savedInstanceState);
         }
 
         updateSiteOrFinishActivity(savedInstanceState);
@@ -433,8 +431,7 @@ public class PostsListFragment extends Fragment
 
             if (mDoReplayPosition) {
                 mDoReplayPosition = false;
-                ((LinearLayoutManager)mRecyclerView.getLayoutManager())
-                        .scrollToPositionWithOffset(mRVPosition, mRVOffset);
+                mRVScrollPositionSaver.restoreScrollOffset(mRecyclerView);
             }
         }
 
@@ -631,11 +628,7 @@ public class PostsListFragment extends Fragment
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(PostsListActivity.EXTRA_VIEW_PAGES, mIsPage);
-        outState.putInt(RV_POSITION,
-                ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition());
-        View firstItemView = mRecyclerView.getChildAt(0);
-        int offset = (firstItemView == null) ? 0 : (firstItemView.getTop() - mRecyclerView.getPaddingTop());
-        outState.putInt(RV_OFFSET, offset);
+        mRVScrollPositionSaver.onSaveInstanceState(outState, mRecyclerView);
     }
 
     @SuppressWarnings("unused")
