@@ -202,6 +202,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         AppLog.v(AppLog.T.API, "Received Jetpack Protect module");
                         mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
                         mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
+                        notifyUpdatedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -265,7 +266,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         AppLog.v(AppLog.T.API, "Received Jetpack SSO module 2FA option");
                         mRemoteJpSettings.ssoRequireTwoFactor = response.optBoolean("option_value");
                         mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
-                            notifyUpdatedOnUiThread(null);
+                        notifyUpdatedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -368,7 +369,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
                             String status = mJpSettings.jetpackProtectEnabled ? "activated" : "deactivated";
                             AppLog.d(AppLog.T.API, "Jetpack Protect module " + status);
-                            notifySavedOnUiThread(null);
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
@@ -389,7 +389,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
                             String status = mJpSettings.monitorActive ? "activated" : "deactivated";
                             AppLog.d(AppLog.T.API, "Jetpack Monitor module " + status);
-                            notifySavedOnUiThread(null);
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
@@ -409,7 +408,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             AppLog.d(AppLog.T.API, "Jetpack Monitor module options updated");
                             mRemoteJpSettings.emailNotifications = mJpSettings.emailNotifications;
                             mRemoteJpSettings.wpNotifications = mJpSettings.wpNotifications;
-                            notifySavedOnUiThread(null);
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
