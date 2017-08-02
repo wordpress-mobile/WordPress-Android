@@ -8,18 +8,30 @@
     android:layout_height="wrap_content"
     android:layout_width="@dimen/default_dialog_width" >
 
-    <ImageView
-        android:id="@+id/promo_dialog_image"
-        android:contentDescription="@string/new_editor_promo_description_image"
+    <LinearLayout
+        android:id="@+id/promo_dialog_image_container"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        app:srcCompat="@drawable/img_promo_editor" >
-    </ImageView>
+        android:layout_width="@dimen/default_dialog_width"
+        android:orientation="vertical"
+        android:background="@color/grey_light" >
+
+        <ImageView
+            android:id="@+id/promo_dialog_image"
+            android:contentDescription="@string/new_editor_promo_description_image"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/grey_light"
+            app:srcCompat="@drawable/img_promo_editor" >
+        </ImageView>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/promo_dialog_text"
-        android:layout_below="@+id/promo_dialog_image"
+        android:layout_below="@+id/promo_dialog_image_container"
         android:layout_height="wrap_content"
         android:layout_width="@dimen/default_dialog_width"
         android:orientation="vertical"
