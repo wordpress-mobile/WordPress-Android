@@ -96,7 +96,7 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
+import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -109,6 +109,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -482,7 +483,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onBetaClicked() {
-        startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+        ActivityLauncher.showAztecEditorReleaseNotes(this);
         AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LABEL);
     }
 
@@ -2488,7 +2489,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+                                ActivityLauncher.showAztecEditorReleaseNotes(EditPostActivity.this);
                                 AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LINK);
                             }
                         }

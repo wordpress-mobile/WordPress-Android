@@ -19,9 +19,12 @@ import org.wordpress.android.util.HelpshiftHelper;
 import javax.inject.Inject;
 
 /**
- * Display release notes for editor.
+ * Display release notes in a WebView, with share and bug report buttons.
  */
-public class EditorReleaseNotesActivity extends WebViewActivity {
+public class ReleaseNotesActivity extends WebViewActivity {
+    public static final String KEY_TARGET_URL = "targetUrl";
+    public static final String KEY_HELPSHIFT_TAG = "helpshiftTag";
+
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
@@ -34,7 +37,7 @@ public class EditorReleaseNotesActivity extends WebViewActivity {
 
     @Override
     protected void loadContent() {
-        loadUrl("https://make.wordpress.org/mobile/whats-new-in-beta-android-editor/");
+        loadUrl(getIntent().getStringExtra(KEY_TARGET_URL));
     }
 
     @Override
@@ -45,7 +48,7 @@ public class EditorReleaseNotesActivity extends WebViewActivity {
             new WebViewClient() {
                 @Override
                 public void onPageFinished(WebView view, String url) {
-                    EditorReleaseNotesActivity.this.setTitle(view.getTitle());
+                    ReleaseNotesActivity.this.setTitle(view.getTitle());
                 }
             }
         );
@@ -55,7 +58,7 @@ public class EditorReleaseNotesActivity extends WebViewActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.webview_editor_release_notes, menu);
+        inflater.inflate(R.menu.webview_release_notes, menu);
         return true;
     }
 
@@ -74,8 +77,9 @@ public class EditorReleaseNotesActivity extends WebViewActivity {
                 startActivity(Intent.createChooser(share, getText(R.string.share_link)));
                 return true;
             case R.id.menu_bug:
-                HelpshiftHelper.Tag origin = HelpshiftHelper.Tag.ORIGIN_FEEDBACK_AZTEC;
-                HelpshiftHelper.getInstance().showConversation(EditorReleaseNotesActivity.this, mSiteStore, origin, mAccountStore.getAccount().getUserName());
+                HelpshiftHelper.Tag origin = (HelpshiftHelper.Tag) getIntent().getSerializableExtra(KEY_HELPSHIFT_TAG);
+                HelpshiftHelper.getInstance().showConversation(ReleaseNotesActivity.this, mSiteStore, origin,
+                        mAccountStore.getAccount().getUserName());
                 return true;
         }
 
