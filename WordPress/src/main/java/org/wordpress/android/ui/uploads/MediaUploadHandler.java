@@ -372,13 +372,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
 
     @Override
-    public void onVideoOptimizationSuccess(@NonNull MediaModel media) {
-        SiteModel site = mSiteStore.getSiteByLocalId(media.getLocalSiteId());
-        dispatchUploadAction(media, site);
-    }
-
-    @Override
-    public void onVideoOptimizationFailed(@NonNull MediaModel media) {
+    public void onVideoOptimizationCompleted(@NonNull MediaModel media) {
         SiteModel site = mSiteStore.getSiteByLocalId(media.getLocalSiteId());
         dispatchUploadAction(media, site);
     }

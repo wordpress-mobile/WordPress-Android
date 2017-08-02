@@ -26,8 +26,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_
 public class VideoOptimizer implements org.m4m.IProgressListener {
 
     public interface VideoOptimizationListener {
-        void onVideoOptimizationSuccess(@NonNull MediaModel media);
-        void onVideoOptimizationFailed(@NonNull MediaModel media);
+        void onVideoOptimizationCompleted(@NonNull MediaModel media);
     }
 
     private final File mCacheDir;
@@ -52,19 +51,19 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
     public void start() {
         if (mInputPath == null) {
             AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > empty input path");
-            mListener.onVideoOptimizationFailed(mMedia);
+            mListener.onVideoOptimizationCompleted(mMedia);
             return;
         }
 
         if (mCacheDir == null) {
             AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > null cache dir");
-            mListener.onVideoOptimizationFailed(mMedia);
+            mListener.onVideoOptimizationCompleted(mMedia);
             return;
         }
 
         if (!mCacheDir.exists() && !mCacheDir.mkdirs()) {
             AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > cannot create cache dir");
-            mListener.onVideoOptimizationFailed(mMedia);
+            mListener.onVideoOptimizationCompleted(mMedia);
             return;
         }
 
@@ -83,7 +82,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE,
                     AnalyticsUtils.getMediaProperties(getContext(), true, null, mInputPath)
             );
-            mListener.onVideoOptimizationFailed(mMedia);
+            mListener.onVideoOptimizationCompleted(mMedia);
             return;
         }
 
@@ -93,7 +92,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         } catch(IllegalStateException e) {
             AppLog.e(AppLog.T.MEDIA, "VideoOptimizer > failed to start composer", e);
             CrashlyticsUtils.logException(e, AppLog.T.MEDIA);
-            mListener.onVideoOptimizationFailed(mMedia);
+            mListener.onVideoOptimizationCompleted(mMedia);
             return;
         }
     }
@@ -155,10 +154,10 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         if (optimizedFileSize > originalFileSize) {
             AppLog.w(AppLog.T.MEDIA, "Optimized video is larger than original file "
                     + optimizedFileSize + " > " + originalFileSize );
-            mListener.onVideoOptimizationFailed(mMedia);
+            mListener.onVideoOptimizationCompleted(mMedia);
         } else {
             mMedia.setFilePath(mOutputPath);
-            mListener.onVideoOptimizationSuccess(mMedia);
+            mListener.onVideoOptimizationCompleted(mMedia);
         }
     }
 
@@ -178,6 +177,6 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
     public void onError(Exception e) {
         AppLog.e(AppLog.T.MEDIA, "VideoOptimizer > Can't optimize the video", e);
         trackVideoProcessingEvents(true, e);
-        mListener.onVideoOptimizationFailed(mMedia);
+        mListener.onVideoOptimizationCompleted(mMedia);
     }
 }
