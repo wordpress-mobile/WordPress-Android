@@ -146,16 +146,22 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
      * it's assumed to be a completed upload (returned progress is 1).
      */
     static float getProgressForMedia(MediaModel media) {
-        // TODO
-        /*if (sOptimizationProgressByMediaId.containsKey(media.getId())) {
-            float optimizationProgress = sOptimizationProgressByMediaId.get(media.getId());
-            return optimizationProgress / 2;
-        }*/
-
-        if (sProgressByMediaId.containsKey(media.getId())) {
-            return sProgressByMediaId.get(media.getId());
+        if (!sProgressByMediaId.containsKey(media.getId())) {
+            return 1;
         }
-        return 1;
+
+        float uploadProgress = sProgressByMediaId.get(media.getId());
+
+        // if this is a video and video optimization is enabled, include the optimization progress in the outcome
+        if (media.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
+            if (sOptimizationProgressByMediaId.containsKey(media.getId())) {
+                float optimizationProgress = sOptimizationProgressByMediaId.get(media.getId());
+                return optimizationProgress * 0.5F;
+            }
+            return 0.5F + (uploadProgress * 0.5F);
+        }
+
+        return uploadProgress;
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
