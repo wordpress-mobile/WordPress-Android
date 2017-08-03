@@ -16,6 +16,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.WPVideoUtils;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
 
     private String mInputPath;
     private String mOutputPath;
+    private String mFilename;
     private long mStartTimeMS;
 
     public VideoOptimizer(@NonNull MediaModel media, @NonNull VideoOptimizationListener listener) {
@@ -67,7 +69,9 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             return;
         }
 
-        mOutputPath = mCacheDir.getPath()+ "/" + MediaUtils.generateTimeStampedFileName("video/mp4");
+        // TODO: remove "opt-" - it's here only for testing
+        mFilename = "opt-" + MediaUtils.generateTimeStampedFileName("video/mp4");
+        mOutputPath = mCacheDir.getPath() + "/" + mFilename;
 
         MediaComposer mediaComposer = WPVideoUtils.getVideoOptimizationComposer(
                 getContext(),
@@ -89,6 +93,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         // setup done. We're ready to optimize!
         try {
             mediaComposer.start();
+            AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > composer started");
         } catch(IllegalStateException e) {
             AppLog.e(AppLog.T.MEDIA, "VideoOptimizer > failed to start composer", e);
             CrashlyticsUtils.logException(e, AppLog.T.MEDIA);
@@ -151,12 +156,17 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         // Make sure the resulting file is smaller than the original
         long originalFileSize = FileUtils.length(mInputPath);
         long optimizedFileSize = FileUtils.length(mOutputPath);
-        if (optimizedFileSize > originalFileSize) {
-            AppLog.w(AppLog.T.MEDIA, "Optimized video is larger than original file "
+        long savings = originalFileSize - optimizedFileSize;
+        if (savings <= 0) {
+            AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > Optimized video is larger than original file "
                     + optimizedFileSize + " > " + originalFileSize );
             mListener.onVideoOptimizationCompleted(mMedia);
         } else {
+            double kbSavings = savings / 1024;
+            DecimalFormat dec = new DecimalFormat("0.00");
+            AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > reduced by " + dec.format(kbSavings).concat("KB"));
             mMedia.setFilePath(mOutputPath);
+            mMedia.setFileName(mFilename);
             mListener.onVideoOptimizationCompleted(mMedia);
         }
     }
