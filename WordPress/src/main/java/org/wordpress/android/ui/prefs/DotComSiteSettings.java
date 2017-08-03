@@ -169,7 +169,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         AppLog.v(AppLog.T.API, "Received site Categories");
                         credentialsVerified(true);
 
-                        CategoryModel[] models = deserializeJsonRestResponse(response);
+                        CategoryModel[] models = deserializeCategoryRestResponse(response);
                         if (models == null) return;
 
                         SiteSettingsTable.saveCategories(models);
@@ -614,7 +614,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         return model;
     }
 
-    private CategoryModel[] deserializeJsonRestResponse(JSONObject response) {
+    private CategoryModel[] deserializeCategoryRestResponse(JSONObject response) {
         try {
             int num = response.getInt(CAT_NUM_POSTS_KEY);
             JSONArray categories = response.getJSONArray(CATEGORIES_KEY);
