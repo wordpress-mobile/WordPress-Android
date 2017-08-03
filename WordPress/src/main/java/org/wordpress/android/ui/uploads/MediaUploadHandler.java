@@ -148,15 +148,16 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     static float getProgressForMedia(MediaModel media) {
         if (sOptimizationProgressByMediaId.containsKey(media.getId())) {
             float optimizationProgress = sOptimizationProgressByMediaId.get(media.getId());
+            // TODO: this won't be an accurate progress
             return optimizationProgress / 2;
         }
 
         if (sProgressByMediaId.containsKey(media.getId())) {
-            float mediaProgress = sProgressByMediaId.get(media.getId());
-            return mediaProgress;
+            float uploadProgress = sProgressByMediaId.get(media.getId());
+            return uploadProgress;
         }
 
-        return 0;
+        return 1;
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
@@ -382,9 +383,15 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
                 StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
     }
 
+    public boolean isOptimizingMedia(@NonNull MediaModel media) {
+        return sOptimizationProgressByMediaId.containsKey(media.getId());
+    }
+
     @Override
     public void onVideoOptimizationProgress(@NonNull MediaModel media, float progress) {
         sOptimizationProgressByMediaId.put(media.getId(), progress);
+        VideoOptimizer.ProgressEvent event = new VideoOptimizer.ProgressEvent(media, progress);
+        EventBus.getDefault().post(event);
     }
 
     @Override

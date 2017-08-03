@@ -49,6 +49,7 @@ import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -718,6 +719,14 @@ public class PostsListFragment extends Fragment
             } else {
                 mPostsListAdapter.updateProgressForPost(post);
             }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(VideoOptimizer.ProgressEvent event) {
+        PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
+        if (post != null) {
+            mPostsListAdapter.updateProgressForPost(post);
         }
     }
 }

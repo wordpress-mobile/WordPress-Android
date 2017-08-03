@@ -31,6 +31,15 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         void onVideoOptimizationProgress(@NonNull MediaModel media, float progress);
     }
 
+    public static class ProgressEvent {
+        public MediaModel media;
+        public float progress;
+        public ProgressEvent(@NonNull MediaModel media, float progress) {
+            this.media = media;
+            this.progress = progress;
+        }
+    }
+
     private final File mCacheDir;
     private final MediaModel mMedia;
     private final VideoOptimizationListener mListener;
@@ -158,16 +167,16 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         long optimizedFileSize = FileUtils.length(mOutputPath);
         long savings = originalFileSize - optimizedFileSize;
 
+        double savingsKb = Math.abs(savings) / 1024;
+        String strSavingsKb = new DecimalFormat("0.00").format(savingsKb).concat("KB");
+
         // make sure the resulting file is smaller than the original
         if (savings <= 0) {
-            AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > optimized video is larger than original file "
-                    + optimizedFileSize + " > " + originalFileSize );
+            AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > no savings, optimized file is " + strSavingsKb + " larger");
             // no savings, so use original unoptimized media
             mListener.onVideoOptimizationCompleted(mMedia);
         } else {
-            double kbSavings = savings / 1024;
-            DecimalFormat dec = new DecimalFormat("0.00");
-            AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > reduced by " + dec.format(kbSavings).concat("KB"));
+            AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > reduced by " + strSavingsKb);
             // update media object to point to optimized video
             mMedia.setFilePath(mOutputPath);
             mListener.onVideoOptimizationCompleted(mMedia);
