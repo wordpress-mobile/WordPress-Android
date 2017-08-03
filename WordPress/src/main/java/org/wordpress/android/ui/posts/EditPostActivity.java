@@ -947,6 +947,29 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    public void findMissingMediaAndCancelUpload(List<String> mediaIdsInPost) {
+        List<MediaModel> mediaItemsProcessingList =
+                UploadService.getAllInProgressOrQueuedMediaItemsForPost(mPost);
+
+        if (mediaIdsInPost != null && mediaItemsProcessingList != null) {
+            for (MediaModel media : mediaItemsProcessingList) {
+                if (!mediaIdsInPost.contains(String.valueOf(media.getId()))) {
+                    // found it, cancel it
+                    cancelMediaUpload(media.getId());
+                    return;
+                }
+            }
+        }
+    }
+
+    private void cancelMediaUpload(int localMediaId) {
+        MediaModel mediaModel = mMediaStore.getMediaWithLocalId(localMediaId);
+        if (mediaModel != null) {
+            CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel);
+            mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+        }
+    }
+
     private interface AfterSavePostListener {
         void onPostSave();
     }
@@ -2264,16 +2287,17 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaUploadCancelClicked(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(Integer.valueOf(localMediaId));
-            if (mediaModel != null) {
-                CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel);
-                mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
-            }
+            cancelMediaUpload(Integer.valueOf(localMediaId));
         } else {
             // Passed mediaId is incorrect: cancel all uploads for this post
             ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
             EventBus.getDefault().post(new PostEvents.PostMediaCanceled(mPost));
         }
+    }
+
+    @Override
+    public void onMediaUploadingDeleted(List<String> mediaIdsInPost) {
+        findMissingMediaAndCancelUpload(mediaIdsInPost);
     }
 
     @Override
@@ -2518,4 +2542,5 @@ public class EditPostActivity extends AppCompatActivity implements
     public SiteModel getSite() {
         return mSite;
     }
+
 }

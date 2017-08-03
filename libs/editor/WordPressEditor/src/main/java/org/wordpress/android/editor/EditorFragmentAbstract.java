@@ -15,6 +15,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
@@ -175,6 +176,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddMediaClicked();
         void onMediaRetryClicked(String mediaId);
         void onMediaUploadCancelClicked(String mediaId);
+        void onMediaUploadingDeleted(List<String> remainingMediaIdsInPost);
         void onFeaturedImageChanged(long mediaId);
         void onVideoPressInfoRequested(String videoId);
         String onAuthHeaderRequested(String url);
