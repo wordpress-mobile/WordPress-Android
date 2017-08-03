@@ -311,11 +311,20 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack settings updated");
+                        mRemoteJpSettings.monitorActive = mJpSettings.monitorActive;
+                        mRemoteJpSettings.jetpackProtectEnabled = mJpSettings.jetpackProtectEnabled;
+                        mRemoteJpSettings.jetpackProtectWhitelist.clear();
+                        mRemoteJpSettings.jetpackProtectWhitelist.addAll(mJpSettings.jetpackProtectWhitelist);
+                        mRemoteJpSettings.ssoActive = mJpSettings.ssoActive;
+                        mRemoteJpSettings.ssoMatchEmail = mJpSettings.ssoMatchEmail;
+                        mRemoteJpSettings.ssoRequireTwoFactor = mJpSettings.ssoRequireTwoFactor;
+                        notifySavedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error updating Jetpack settings: " + error);
+                        notifySavedOnUiThread(error);
                     }
                 });
     }
