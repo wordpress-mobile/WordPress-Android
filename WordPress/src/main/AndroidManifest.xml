@@ -450,6 +450,12 @@
             android:label="@string/people"
             android:theme="@style/Calypso.NoActionBar"/>
 
+        <!--Plugins-->
+        <activity
+            android:name=".ui.plugins.PluginListActivity"
+            android:label="@string/plugins"
+            android:theme="@style/Calypso.NoActionBar"/>
+
         <!-- Me activities -->
         <activity
             android:name=".ui.prefs.MyProfileActivity"

@@ -1683,6 +1683,9 @@
     <string name="role_follower">Follower</string>
     <string name="role_viewer">Viewer</string>
 
+    <!--Plugins-->
+    <string name="plugins">Plugins</string>
+
     <!--My profile-->
     <string name="my_profile">My Profile</string>
     <string name="first_name">First name</string>
