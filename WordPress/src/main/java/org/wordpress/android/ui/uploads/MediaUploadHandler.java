@@ -390,6 +390,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     @Override
     public void onVideoOptimizationProgress(@NonNull MediaModel media, float progress) {
         sOptimizationProgressByMediaId.put(media.getId(), progress);
+        // fire an event so EditPostActivity and PostsListFragment can show progress
         VideoOptimizer.ProgressEvent event = new VideoOptimizer.ProgressEvent(media, progress);
         EventBus.getDefault().post(event);
     }

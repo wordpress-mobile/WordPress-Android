@@ -55,8 +55,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         mListener = listener;
         mMedia = media;
         mInputPath = mMedia.getFilePath();
-        // TODO: remove "opt-" - it's here only for testing
-        mFilename = "opt-" + MediaUtils.generateTimeStampedFileName("video/mp4");
+        mFilename = MediaUtils.generateTimeStampedFileName("video/mp4");
     }
 
     private Context getContext() {
