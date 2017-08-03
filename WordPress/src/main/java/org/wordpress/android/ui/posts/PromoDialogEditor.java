@@ -23,24 +23,26 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 public class PromoDialogEditor extends PromoDialogAdvanced {
+    protected static final String KEY_TITLE_BETA_RES_ID = "titleBetaResId";
+
     public static class Builder extends PromoDialogAdvanced.Builder {
-        @StringRes private int titleBetaId;
+        @StringRes private int titleBetaResId;
 
-        public Builder(@DrawableRes int drawableId, @StringRes int titleId, @StringRes int descriptionId,
-                       @StringRes int buttonPositiveId) {
-            super(drawableId, titleId, descriptionId, buttonPositiveId);
+        public Builder(@DrawableRes int drawableResId, @StringRes int titleResId, @StringRes int descriptionResId,
+                       @StringRes int buttonPositiveResId) {
+            super(drawableResId, titleResId, descriptionResId, buttonPositiveResId);
         }
 
-        public Builder setLinkText(@StringRes int linkId) {
-            return (Builder) super.setLinkText(linkId);
+        public Builder setLinkText(@StringRes int linkResId) {
+            return (Builder) super.setLinkText(linkResId);
         }
 
-        public Builder setNegativeButtonText(@StringRes int buttonNegativeId) {
-            return (Builder) super.setNegativeButtonText(buttonNegativeId);
+        public Builder setNegativeButtonText(@StringRes int buttonNegativeResId) {
+            return (Builder) super.setNegativeButtonText(buttonNegativeResId);
         }
 
-        public Builder setTitleBetaText(@StringRes int titleBetaId) {
-            this.titleBetaId = titleBetaId;
+        public Builder setTitleBetaText(@StringRes int titleBetaResId) {
+            this.titleBetaResId = titleBetaResId;
             return this;
         }
 
@@ -50,25 +52,25 @@ public class PromoDialogEditor extends PromoDialogAdvanced {
         }
     }
 
-    protected int mTitleBetaId;
+    @StringRes protected int mTitleBetaId;
 
     protected static PromoDialogEditor newInstance(Builder builder) {
         PromoDialogEditor fragment = new PromoDialogEditor();
         Bundle args = new Bundle();
-        args.putInt("drawableId", builder.drawableId);
-        args.putInt("titleId", builder.titleId);
-        args.putInt("titleBetaId", builder.titleBetaId);
-        args.putInt("descriptionId", builder.descriptionId);
-        args.putInt("linkId", builder.linkId);
-        args.putInt("buttonNegativeId", builder.buttonNegativeId);
-        args.putInt("buttonPositiveId", builder.buttonPositiveId);
+        args.putInt(KEY_DRAWABLE_RES_ID, builder.drawableResId);
+        args.putInt(KEY_TITLE_RES_ID, builder.titleResId);
+        args.putInt(KEY_TITLE_BETA_RES_ID, builder.titleBetaResId);
+        args.putInt(KEY_DESCRIPTION_RES_ID, builder.descriptionResId);
+        args.putInt(KEY_LINK_RES_ID, builder.linkResId);
+        args.putInt(KEY_BUTTON_NEGATIVE_RES_ID, builder.buttonNegativeResId);
+        args.putInt(KEY_BUTTON_POSITIVE_RES_ID, builder.buttonPositiveResId);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
-        mTitleBetaId = getArguments().getInt("titleBetaId");
+        mTitleBetaId = getArguments().getInt(KEY_TITLE_BETA_RES_ID);
         return super.onCreateDialog(savedInstanceState);
     }
 
@@ -82,21 +84,21 @@ public class PromoDialogEditor extends PromoDialogAdvanced {
         super.onViewCreated(view, savedInstanceState);
 
         ImageView image = (ImageView) view.findViewById(R.id.promo_dialog_image);
-        image.setImageResource(mDrawableId);
+        image.setImageResource(mDrawableResId);
         LinearLayout imageContainer = (LinearLayout) view.findViewById(R.id.promo_dialog_image_container);
         imageContainer.setVisibility(DisplayUtils.isLandscape(getActivity()) ? View.GONE : View.VISIBLE);
 
         WPTextView title = (WPTextView) view.findViewById(R.id.promo_dialog_title);
-        title.setText(mTitleId);
+        title.setText(mTitleResId);
 
         WPTextView titleBeta = (WPTextView) view.findViewById(R.id.promo_dialog_title_beta);
         titleBeta.setText(mTitleBetaId);
 
         WPTextView description = (WPTextView) view.findViewById(R.id.promo_dialog_description);
-        description.setText(mDescriptionId);
+        description.setText(mDescriptionResId);
 
         WPTextView link = (WPTextView) view.findViewById(R.id.promo_dialog_link);
-        link.setText(mLinkId);
+        link.setText(mLinkResId);
         if (mLinkOnClickListener == null) {
             link.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -110,7 +112,7 @@ public class PromoDialogEditor extends PromoDialogAdvanced {
         }
 
         Button buttonNegative = (Button) view.findViewById(R.id.promo_dialog_button_negative);
-        buttonNegative.setText(mButtonNegativeId);
+        buttonNegative.setText(mButtonNegativeResId);
         if (mNegativeButtonOnClickListener == null) {
             buttonNegative.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -124,7 +126,7 @@ public class PromoDialogEditor extends PromoDialogAdvanced {
         }
 
         Button buttonPositive = (Button) view.findViewById(R.id.promo_dialog_button_positive);
-        buttonPositive.setText(mButtonPositiveId);
+        buttonPositive.setText(mButtonPositiveResId);
         if (mPositiveButtonOnClickListener == null) {
             buttonPositive.setOnClickListener(new View.OnClickListener() {
                 @Override

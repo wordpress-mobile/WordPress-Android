@@ -20,46 +20,51 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 public class PromoDialog extends AppCompatDialogFragment {
-    public static class Builder {
-        @StringRes int buttonPositiveId;
-        @StringRes int descriptionId;
-        @DrawableRes int drawableId;
-        @StringRes int titleId;
+    protected static final String KEY_DRAWABLE_RES_ID = "drawableResId";
+    protected static final String KEY_TITLE_RES_ID = "titleResId";
+    protected static final String KEY_DESCRIPTION_RES_ID = "descriptionResId";
+    protected static final String KEY_BUTTON_POSITIVE_RES_ID = "buttonPositiveResId";
 
-        public Builder(@DrawableRes int drawableId, @StringRes int titleId, @StringRes int descriptionId,
-                       @StringRes int buttonPositiveId) {
-            this.drawableId = drawableId;
-            this.titleId = titleId;
-            this.descriptionId = descriptionId;
-            this.buttonPositiveId = buttonPositiveId;
+    public static class Builder {
+        @StringRes int buttonPositiveResId;
+        @StringRes int descriptionResId;
+        @DrawableRes int drawableResId;
+        @StringRes int titleResId;
+
+        public Builder(@DrawableRes int drawableResId, @StringRes int titleResId, @StringRes int descriptionResId,
+                       @StringRes int buttonPositiveResId) {
+            this.drawableResId = drawableResId;
+            this.titleResId = titleResId;
+            this.descriptionResId = descriptionResId;
+            this.buttonPositiveResId = buttonPositiveResId;
         }
 
         public PromoDialog build() {
             PromoDialog fragment = new PromoDialog();
             Bundle args = new Bundle();
-            args.putInt("drawableId", drawableId);
-            args.putInt("titleId", titleId);
-            args.putInt("descriptionId", descriptionId);
-            args.putInt("buttonPositiveId", buttonPositiveId);
+            args.putInt(KEY_DRAWABLE_RES_ID, drawableResId);
+            args.putInt(KEY_TITLE_RES_ID, titleResId);
+            args.putInt(KEY_DESCRIPTION_RES_ID, descriptionResId);
+            args.putInt(KEY_BUTTON_POSITIVE_RES_ID, buttonPositiveResId);
             fragment.setArguments(args);
             return fragment;
         }
     }
 
-    protected int mButtonPositiveId;
-    protected int mDescriptionId;
-    protected int mDrawableId;
-    protected int mTitleId;
+    @StringRes protected int mButtonPositiveResId;
+    @StringRes protected int mDescriptionResId;
+    @DrawableRes protected int mDrawableResId;
+    @StringRes protected int mTitleResId;
 
     protected View.OnClickListener mPositiveButtonOnClickListener;
 
     @Override
     public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        mDrawableId = getArguments().getInt("drawableId");
-        mTitleId = getArguments().getInt("titleId");
-        mDescriptionId = getArguments().getInt("descriptionId");
-        mButtonPositiveId = getArguments().getInt("buttonPositiveId");
+        mDrawableResId = getArguments().getInt(KEY_DRAWABLE_RES_ID);
+        mTitleResId = getArguments().getInt(KEY_TITLE_RES_ID);
+        mDescriptionResId = getArguments().getInt(KEY_DESCRIPTION_RES_ID);
+        mButtonPositiveResId = getArguments().getInt(KEY_BUTTON_POSITIVE_RES_ID);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
         return dialog;
@@ -80,14 +85,14 @@ public class PromoDialog extends AppCompatDialogFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ImageView image = (ImageView) view.findViewById(R.id.promo_dialog_image);
-        image.setImageResource(mDrawableId);
+        image.setImageResource(mDrawableResId);
         WPTextView title = (WPTextView) view.findViewById(R.id.promo_dialog_title);
-        title.setText(mTitleId);
+        title.setText(mTitleResId);
         WPTextView desc = (WPTextView) view.findViewById(R.id.promo_dialog_description);
-        desc.setText(mDescriptionId);
+        desc.setText(mDescriptionResId);
 
         Button btn = (Button) view.findViewById(R.id.promo_dialog_button_positive);
-        btn.setText(mButtonPositiveId);
+        btn.setText(mButtonPositiveResId);
         if (mPositiveButtonOnClickListener == null) {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
