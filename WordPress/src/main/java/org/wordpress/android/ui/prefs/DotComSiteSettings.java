@@ -322,7 +322,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
             if (jsonParams.length() <= 0) {
                 return;
             }
-            WordPress.getRestClientUtils().setGeneralSiteSettings(
+            WordPress.getRestClientUtilsV1_1().setGeneralSiteSettings(
                     mSite.getSiteId(), jsonParams, new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
