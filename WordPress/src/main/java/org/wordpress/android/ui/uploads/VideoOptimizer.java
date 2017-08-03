@@ -28,15 +28,16 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
 
     public interface VideoOptimizationListener {
         void onVideoOptimizationCompleted(@NonNull MediaModel media);
+        void onVideoOptimizationProgress(float progress);
     }
 
     private final File mCacheDir;
     private final MediaModel mMedia;
     private final VideoOptimizationListener mListener;
 
-    private String mInputPath;
+    private final String mFilename;
+    private final String mInputPath;
     private String mOutputPath;
-    private String mFilename;
     private long mStartTimeMS;
 
     public VideoOptimizer(@NonNull MediaModel media, @NonNull VideoOptimizationListener listener) {
@@ -44,6 +45,8 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         mListener = listener;
         mMedia = media;
         mInputPath = mMedia.getFilePath();
+        // TODO: remove "opt-" - it's here only for testing
+        mFilename = "opt-" + MediaUtils.generateTimeStampedFileName("video/mp4");
     }
 
     private Context getContext() {
@@ -69,8 +72,6 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             return;
         }
 
-        // TODO: remove "opt-" - it's here only for testing
-        mFilename = "opt-" + MediaUtils.generateTimeStampedFileName("video/mp4");
         mOutputPath = mCacheDir.getPath() + "/" + mFilename;
 
         MediaComposer mediaComposer = WPVideoUtils.getVideoOptimizationComposer(
@@ -98,7 +99,6 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             AppLog.e(AppLog.T.MEDIA, "VideoOptimizer > failed to start composer", e);
             CrashlyticsUtils.logException(e, AppLog.T.MEDIA);
             mListener.onVideoOptimizationCompleted(mMedia);
-            return;
         }
     }
 
@@ -145,26 +145,30 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
     }
 
     @Override
-    public void onMediaProgress(float v) {
-
+    public void onMediaProgress(float progress) {
+        AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > progress " + progress);
+        mListener.onVideoOptimizationProgress(progress);
     }
 
     @Override
     public void onMediaDone() {
         trackVideoProcessingEvents(false, null);
 
-        // Make sure the resulting file is smaller than the original
         long originalFileSize = FileUtils.length(mInputPath);
         long optimizedFileSize = FileUtils.length(mOutputPath);
         long savings = originalFileSize - optimizedFileSize;
+
+        // make sure the resulting file is smaller than the original
         if (savings <= 0) {
-            AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > Optimized video is larger than original file "
+            AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > optimized video is larger than original file "
                     + optimizedFileSize + " > " + originalFileSize );
+            // no savings, so use original unoptimized media
             mListener.onVideoOptimizationCompleted(mMedia);
         } else {
             double kbSavings = savings / 1024;
             DecimalFormat dec = new DecimalFormat("0.00");
             AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > reduced by " + dec.format(kbSavings).concat("KB"));
+            // update media object to point to optimized video
             mMedia.setFilePath(mOutputPath);
             mMedia.setFileName(mFilename);
             mListener.onVideoOptimizationCompleted(mMedia);
@@ -173,7 +177,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
 
     @Override
     public void onMediaPause() {
-
+        AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > paused");
     }
 
     @Override
@@ -181,6 +185,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         // This seems to be called called in 2 cases. Do not use to check if we've manually stopped the composer.
         // 1. When the encoding is done without errors, before onMediaDone
         // 2. When we call 'stop' on the media composer
+        AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > stopped");
     }
 
     @Override

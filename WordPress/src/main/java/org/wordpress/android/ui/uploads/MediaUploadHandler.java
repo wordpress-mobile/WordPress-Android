@@ -370,6 +370,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
                 StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
     }
 
+    @Override
+    public void onVideoOptimizationProgress(float progress) {
+
+    }
 
     @Override
     public void onVideoOptimizationCompleted(@NonNull MediaModel media) {
