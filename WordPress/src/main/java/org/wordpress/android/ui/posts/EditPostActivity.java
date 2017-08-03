@@ -429,6 +429,16 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onResume();
         mHandler = new Handler();
         mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
+
+        if (mEditorMediaUploadListener != null) {
+            List<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
+            for (MediaModel media : uploadingMediaInPost) {
+                if (media != null) {
+                    mEditorMediaUploadListener.onMediaUploadReattached(String.valueOf(media.getId()),
+                            UploadService.getUploadProgressForMedia(media));
+                }
+            }
+        }
     }
 
     @Override
