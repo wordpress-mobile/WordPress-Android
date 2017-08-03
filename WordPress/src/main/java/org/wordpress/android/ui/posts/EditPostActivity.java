@@ -432,12 +432,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (mEditorMediaUploadListener != null) {
             List<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
-            if (uploadingMediaInPost != null) {
-                for (MediaModel media : uploadingMediaInPost) {
-                    if (media != null) {
-                        mEditorMediaUploadListener.onMediaUploadReattached(String.valueOf(media.getId()),
-                                UploadService.getUploadProgressForMedia(media));
-                    }
+            for (MediaModel media : uploadingMediaInPost) {
+                if (media != null) {
+                    mEditorMediaUploadListener.onMediaUploadReattached(String.valueOf(media.getId()),
+                            UploadService.getUploadProgressForMedia(media));
                 }
             }
         }
