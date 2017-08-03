@@ -1193,7 +1193,7 @@
     <string name="cd_related_post_preview_image">Related post preview image</string>
     <string name="login_email_image">Login email icon</string>
     <string name="login_globe_icon">Site address globe icon</string>
-    <string name="login_site_address_help_image">Site address positioning image</string>
+    <string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
     <string name="login_username_image">Login username icon</string>
     <string name="login_password_image">Login password icon</string>
 
