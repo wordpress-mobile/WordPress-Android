@@ -233,7 +233,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     }
 
     private void fetchJetpackMonitorSettings() {
-        WordPress.getRestClientUtils().getJetpackMonitorSettings(
+        WordPress.getRestClientUtilsV1_1().getJetpackMonitorSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -324,7 +324,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (params.isEmpty()) {
             return;
         }
-        WordPress.getRestClientUtils().setJetpackMonitorSettings(
+        WordPress.getRestClientUtilsV1_1().setJetpackMonitorSettings(
                 mSite.getSiteId(), params, new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
