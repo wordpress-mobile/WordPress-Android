@@ -524,34 +524,23 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 params.put(BLACKLIST_KEYS_KEY, "");
             }
         }
-
         if (mSettings.sharingLabel != null && !mSettings.sharingLabel.equals(mRemoteSettings.sharingLabel)) {
             params.put(SHARING_LABEL_KEY, String.valueOf(mSettings.sharingLabel));
         }
-
         if (mSettings.sharingButtonStyle != null && !mSettings.sharingButtonStyle.equals(mRemoteSettings.sharingButtonStyle)) {
             params.put(SHARING_BUTTON_STYLE_KEY, mSettings.sharingButtonStyle);
         }
-
         if (mSettings.allowReblogButton != mRemoteSettings.allowReblogButton) {
             params.put(SHARING_REBLOGS_DISABLED_KEY, String.valueOf(!mSettings.allowReblogButton));
         }
-
         if (mSettings.allowLikeButton != mRemoteSettings.allowLikeButton) {
             params.put(SHARING_LIKES_DISABLED_KEY, String.valueOf(!mSettings.allowLikeButton));
         }
-
         if (mSettings.allowCommentLikes != mRemoteSettings.allowCommentLikes) {
             params.put(SHARING_COMMENT_LIKES_KEY, String.valueOf(mSettings.allowCommentLikes));
         }
-
         if (mSettings.twitterUsername != null && !mSettings.twitterUsername.equals(mRemoteSettings.twitterUsername)) {
             params.put(TWITTER_USERNAME_KEY, mSettings.twitterUsername);
-        }
-
-        if (!mJpSettings.whitelistMatches(mRemoteJpSettings.jetpackProtectWhitelist)) {
-            JSONArray protectWhitelist = new JSONArray(mJpSettings.jetpackProtectWhitelist);
-            params.put(JP_PROTECT_WHITELIST_KEY, protectWhitelist);
         }
 
         return params;
