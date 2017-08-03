@@ -27,6 +27,5 @@
         android:hint="@string/email_address"
         android:inputType="textEmailAddress"
         android:imeOptions="actionNext"
-        app:wpIconContentDescription="@string/login_email_image"
         app:wpIconDrawable="@drawable/ic_user_grey_24dp"/>
 </LinearLayout>
