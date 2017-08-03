@@ -32,8 +32,8 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
     }
 
     public static class ProgressEvent {
-        public MediaModel media;
-        public float progress;
+        public final MediaModel media;
+        public final float progress;
         public ProgressEvent(@NonNull MediaModel media, float progress) {
             this.media = media;
             this.progress = progress;
@@ -155,7 +155,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
 
     @Override
     public void onMediaProgress(float progress) {
-        // this event fires quite often so we only call the listener when progress increases by 1 or more
+        // this event fires quite often so we only call the listener when progress increases by 1% or more
         if (mLastProgress == 0 || (progress - mLastProgress > 0.01F)) {
             AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > " + mMedia.getId() + " - progress: " + progress);
             mLastProgress = progress;
