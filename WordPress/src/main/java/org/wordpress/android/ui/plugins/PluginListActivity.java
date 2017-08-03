@@ -46,6 +46,12 @@ public class PluginListActivity extends AppCompatActivity {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
         setupViews();
     }
 
