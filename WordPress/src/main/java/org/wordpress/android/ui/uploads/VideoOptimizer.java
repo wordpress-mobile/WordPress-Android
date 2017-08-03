@@ -28,7 +28,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
 
     public interface VideoOptimizationListener {
         void onVideoOptimizationCompleted(@NonNull MediaModel media);
-        void onVideoOptimizationProgress(float progress);
+        void onVideoOptimizationProgress(@NonNull MediaModel media, float progress);
     }
 
     private final File mCacheDir;
@@ -146,8 +146,8 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
 
     @Override
     public void onMediaProgress(float progress) {
-        AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > progress " + progress);
-        mListener.onVideoOptimizationProgress(progress);
+        AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > " + mMedia.getId() + " - progress: " + progress);
+        mListener.onVideoOptimizationProgress(mMedia, progress);
     }
 
     @Override
@@ -170,7 +170,6 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > reduced by " + dec.format(kbSavings).concat("KB"));
             // update media object to point to optimized video
             mMedia.setFilePath(mOutputPath);
-            mMedia.setFileName(mFilename);
             mListener.onVideoOptimizationCompleted(mMedia);
         }
     }

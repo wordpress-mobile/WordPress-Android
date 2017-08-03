@@ -38,6 +38,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
     // TODO This should be moved to FluxC, perhaps in a new UploadMediaTable
     private static final ConcurrentHashMap<Integer, Float> sProgressByMediaId = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Float> sOptimizationProgressByMediaId = new ConcurrentHashMap<>();
 
     @Inject
     Dispatcher mDispatcher;
@@ -53,6 +54,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
     void unregister() {
         sProgressByMediaId.clear();
+        sOptimizationProgressByMediaId.clear();
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
     }
@@ -144,8 +146,17 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
      * it's assumed to be a completed upload (returned progress is 1).
      */
     static float getProgressForMedia(MediaModel media) {
-        Float progress = sProgressByMediaId.get(media.getId());
-        return progress == null ? 0 : progress;
+        if (sOptimizationProgressByMediaId.containsKey(media.getId())) {
+            float optimizationProgress = sOptimizationProgressByMediaId.get(media.getId());
+            return optimizationProgress / 2;
+        }
+
+        if (sProgressByMediaId.containsKey(media.getId())) {
+            float mediaProgress = sProgressByMediaId.get(media.getId());
+            return mediaProgress;
+        }
+
+        return 0;
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
@@ -195,13 +206,8 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
             return;
         }
 
-        // optimize videos before passing them to FluxC
-        if (next.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
-            new VideoOptimizer(next, this).start();
-        } else {
-            SiteModel site = mSiteStore.getSiteByLocalId(next.getLocalSiteId());
-            dispatchUploadAction(next, site);
-        }
+        boolean optimize = next.isVideo() && WPMediaUtils.isVideoOptimizationEnabled();
+        dispatchUploadAction(next, optimize);
     }
 
     private synchronized void completeUploadWithId(int id) {
@@ -251,7 +257,9 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         }
     }
 
-    private void dispatchUploadAction(@NonNull final MediaModel media, final SiteModel site) {
+    private void dispatchUploadAction(@NonNull final MediaModel media, boolean optimize) {
+        SiteModel site = mSiteStore.getSiteByLocalId(media.getLocalSiteId());
+
         // somehow lost our reference to the site, complete this action
         if (site == null) {
             AppLog.w(T.MEDIA, "MediaUploadHandler > Unexpected state, site is null. Skipping this request.");
@@ -262,10 +270,14 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         AppLog.i(T.MEDIA, "MediaUploadHandler > Dispatching upload action for media with local id: "
                 + media.getId() + " and path: " + media.getFilePath());
         sInProgressUploads.add(media);
-        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
-        MediaPayload payload = new MediaPayload(site, media);
-        mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
+        if (optimize) {
+            new VideoOptimizer(media, this).start();
+        } else {
+            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+            MediaPayload payload = new MediaPayload(site, media);
+            mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
+        }
     }
 
     private void dispatchCancelAction(@NonNull final MediaModel media, @NonNull final SiteModel site, boolean delete) {
@@ -371,13 +383,13 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     }
 
     @Override
-    public void onVideoOptimizationProgress(float progress) {
-
+    public void onVideoOptimizationProgress(@NonNull MediaModel media, float progress) {
+        sOptimizationProgressByMediaId.put(media.getId(), progress);
     }
 
     @Override
     public void onVideoOptimizationCompleted(@NonNull MediaModel media) {
-        SiteModel site = mSiteStore.getSiteByLocalId(media.getLocalSiteId());
-        dispatchUploadAction(media, site);
+        sOptimizationProgressByMediaId.remove(media.getId());
+        dispatchUploadAction(media, false);
     }
 }
