@@ -64,6 +64,7 @@ import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
 import org.wordpress.aztec.source.SourceViewEditText;
+import org.wordpress.aztec.spans.AztecMediaSpan;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 import org.xml.sax.Attributes;
@@ -94,6 +95,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String TEMP_VIDEO_UPLOADING_CLASS = "data-temp-aztec-video";
 
     private static final int MIN_BITMAP_DIMENSION_DP = 48;
+    public static final int DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP = 196;
 
     private static final int MAX_ACTION_TIME_MS = 2000;
 
@@ -621,29 +623,69 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         final int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
+            // We're download the image/video from the network. Show the placeholder immediately since it could require time.
+            final Drawable placeholder;
+            if(mediaFile.isVideo()) {
+                placeholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
+            } else {
+                placeholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
+            }
+            placeholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+
+            AztecAttributes attributes = new AztecAttributes();
+            attributes.setValue(ATTR_SRC, mediaUrl);
+            setAttributeValuesIfNotDefault(attributes, mediaFile);
+            if(mediaFile.isVideo()) {
+                addVideoUploadingClassIfMissing(attributes);
+                content.insertVideo(placeholder, attributes);
+                overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
+            } else {
+                content.insertImage(placeholder, attributes);
+            }
+
             final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
             imageLoader.get(posterURL, new ImageLoader.ImageListener() {
+
+                private void replaceDrawable(Drawable newDrawable){
+                    AztecMediaSpan[] imageOrVideoSpans = content.getText().getSpans(0, content.getText().length(), AztecMediaSpan.class);
+                    for (AztecMediaSpan currentClass: imageOrVideoSpans) {
+                        if (currentClass.getAttributes().hasAttribute(ATTR_SRC) &&
+                                mediaUrl.equals(currentClass.getAttributes().getValue(ATTR_SRC))) {
+                            currentClass.setDrawable(newDrawable);
+                        }
+                    }
+                    content.refreshText();
+                }
+
+                private void showErrorPlaceholder() {
+                    // Show failed placeholder.
+                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
+                    replaceDrawable(drawable);
+                }
+
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     if (!isAdded()) {
                         // the fragment is detached
                         return;
                     }
-
-                    // Show failed placeholder.
-                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                    Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
-                    AztecAttributes attributes = new AztecAttributes();
-                    attributes.setValue(ATTR_SRC, mediaUrl);
-                    setAttributeValuesIfNotDefault(attributes, mediaFile);
-                    content.insertImage(drawable, attributes);
+                    showErrorPlaceholder();
                 }
 
                 @Override
                 public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
+                    if (!isAdded()) {
+                        // the fragment is detached
+                        return;
+                    }
                     Bitmap downloadedBitmap = container.getBitmap();
-                    if (downloadedBitmap == null || !isAdded()) {
-                        // No bitmap downloaded from server or the fragment is detached
+                    if (downloadedBitmap == null) {
+                        if (isImmediate) {
+                            // Bitmap is null but isImmediate is true (as soon as the request starts).
+                            return;
+                        }
+                        showErrorPlaceholder();
                         return;
                     }
 
@@ -657,22 +699,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         // Bitmap is too small.  Show image placeholder.
                         ToastUtils.showToast(getActivity(), R.string.error_media_small);
                         Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
-                        content.insertImage(drawable, attributes);
+                        replaceDrawable(drawable);
                         return;
                     }
 
-                    // This call is not needed, since we're already asking the container to resize the picture after downloading.
-                    // It's here just for security.
                     Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
-                    if(mediaFile.isVideo()) {
-                        addVideoUploadingClassIfMissing(attributes);
-                        content.insertVideo(new BitmapDrawable(getResources(), resizedBitmap), attributes);
-                        overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
-                    } else {
-                        content.insertImage(new BitmapDrawable(getResources(), resizedBitmap), attributes);
-                    }
+                    replaceDrawable(new BitmapDrawable(getResources(), resizedBitmap));
                 }
-            }, maxWidth, maxWidth);
+            }, maxWidth, 0);
 
             mActionStartedAt = System.currentTimeMillis();
         } else {
