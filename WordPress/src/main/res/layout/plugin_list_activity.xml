@@ -8,8 +8,9 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <FrameLayout
-        android:id="@+id/plugin_list_container"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/plugins_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 </LinearLayout>
