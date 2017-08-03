@@ -474,7 +474,7 @@ public class EditPostActivity extends AppCompatActivity implements
             resizePhotoPicker();
         }
 
-        // If we're showing the Async promo dialog, we need to redraw it so it takes into account
+        // If we're showing the Async promo dialog, we need to notify it to take the new orientation into account
         PromoDialog fragment = (PromoDialog) getSupportFragmentManager().findFragmentByTag(ASYNC_PROMO_DIALOG_TAG);
         if (fragment != null) {
             fragment.redrawForOrientationChange();
