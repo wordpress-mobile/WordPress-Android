@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -38,30 +37,15 @@
         android:orientation="vertical"
         android:padding="@dimen/margin_dialog" >
 
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="horizontal" >
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/promo_dialog_title"
-                tools:text="@string/new_editor_promo_title"
-                style="@style/PromoDialogTitle" >
-            </org.wordpress.android.widgets.WPTextView>
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/promo_dialog_title_beta"
-                tools:text="@string/new_editor_promo_title_beta"
-                style="@style/PromoDialogTitleBeta" >
-            </org.wordpress.android.widgets.WPTextView>
-
-        </LinearLayout>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/promo_dialog_title"
+            style="@style/PromoDialogTitle" >
+        </org.wordpress.android.widgets.WPTextView>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/promo_dialog_description"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            tools:text="@string/new_editor_promo_description"
             style="@style/PromoDialogDescription" >
         </org.wordpress.android.widgets.WPTextView>
 
@@ -70,7 +54,6 @@
             android:clickable="true"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            tools:text="@string/new_editor_promo_link"
             style="@style/PromoDialogLink" >
         </org.wordpress.android.widgets.WPTextView>
 
@@ -98,7 +81,6 @@
             android:minHeight="@dimen/default_dialog_button_height"
             android:textAllCaps="true"
             android:textColor="@color/color_accent"
-            tools:text="@string/new_editor_promo_button_negative"
             style="?android:attr/borderlessButtonStyle" >
         </android.support.v7.widget.AppCompatButton>
 
@@ -109,7 +91,6 @@
             android:minHeight="@dimen/default_dialog_button_height"
             android:textAllCaps="true"
             android:textColor="@color/color_accent"
-            tools:text="@string/new_editor_promo_button_positive"
             style="?android:attr/borderlessButtonStyle" >
         </android.support.v7.widget.AppCompatButton>
 

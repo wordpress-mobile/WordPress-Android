@@ -982,6 +982,10 @@
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
 
+    <string name="async_promo_title">Publish with Confidence</string>
+    <string name="async_promo_description">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
+    <string name="async_promo_link">How does it work?</string>
+
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
     <string name="post_settings_status">Status</string>
