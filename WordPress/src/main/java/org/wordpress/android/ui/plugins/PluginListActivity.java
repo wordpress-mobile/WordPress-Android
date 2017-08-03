@@ -7,16 +7,27 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.fluxc.store.PluginStore.OnPluginsChanged;
+import org.wordpress.android.util.ToastUtils;
+
+import javax.inject.Inject;
 
 public class PluginListActivity extends AppCompatActivity {
     private SiteModel mSite;
+    private PluginListAdapter mAdapter;
+
+    @Inject PluginStore mPluginStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.plugin_list_activity);
 
@@ -55,6 +66,23 @@ public class PluginListActivity extends AppCompatActivity {
 
     private void setupViews() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.plugins_recycler_view);
-        recyclerView.setAdapter(new PluginListAdapter(this, mSite));
+        mAdapter = new PluginListAdapter(this);
+        recyclerView.setAdapter(mAdapter);
+
+        refreshPluginList();
+    }
+
+    private void refreshPluginList() {
+        mAdapter.setPlugins(mPluginStore.getPlugins(mSite));
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPluginsChanged(OnPluginsChanged event) {
+        if (event.isError()) {
+            ToastUtils.showToast(this, "An error occurred while fetching the plugins: " + event.error.message);
+            return;
+        }
+        refreshPluginList();
     }
 }
