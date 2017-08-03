@@ -198,6 +198,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
                 AppLog.v(AppLog.T.API, "Received Jetpack settings response");
 
+                mRemoteJpSettings.monitorActive = data.optBoolean("monitor", false);
                 mRemoteJpSettings.jetpackProtectEnabled = data.optBoolean("protect", false);
                 mRemoteJpSettings.ssoActive = data.optBoolean("sso", false);
                 mRemoteJpSettings.ssoMatchEmail = data.optBoolean("jetpack_sso_match_by_email", false);
@@ -216,6 +217,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     }
                 }
 
+                mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
                 mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
                 mJpSettings.jetpackProtectWhitelist.clear();
                 mJpSettings.jetpackProtectWhitelist.addAll(mRemoteJpSettings.jetpackProtectWhitelist);
@@ -241,7 +243,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         mRemoteJpSettings.localTableId = mSite.getId();
                         deserializeJetpackRestResponse(mSite, response);
                         mJpSettings.localTableId = mRemoteJpSettings.localTableId;
-                        mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
                         mJpSettings.emailNotifications = mRemoteJpSettings.emailNotifications;
                         mJpSettings.wpNotifications = mRemoteJpSettings.wpNotifications;
                         SiteSettingsTable.saveJpSettings(mJpSettings);
@@ -329,7 +330,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack Monitor module updated");
-                        mRemoteJpSettings.monitorActive = mJpSettings.monitorActive;
                         mRemoteJpSettings.emailNotifications = mJpSettings.emailNotifications;
                         mRemoteJpSettings.wpNotifications = mJpSettings.wpNotifications;
                     }
@@ -549,16 +549,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private void deserializeJetpackRestResponse(SiteModel site, JSONObject response) {
         if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
-        mRemoteJpSettings.monitorActive = settingsObject.optBoolean("monitor_active", false);
         mRemoteJpSettings.emailNotifications = settingsObject.optBoolean(JP_MONITOR_EMAIL_NOTES_KEY, false);
         mRemoteJpSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
     }
 
     private @NonNull Map<String, String> serializeJetpackMonitorParams() {
         Map<String, String> params = new HashMap<>();
-        if (mJpSettings.monitorActive != mRemoteJpSettings.monitorActive) {
-            params.put("monitor_active", String.valueOf(mJpSettings.monitorActive));
-        }
         if (mJpSettings.emailNotifications != mRemoteJpSettings.emailNotifications) {
             params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mJpSettings.emailNotifications));
         }
@@ -570,6 +566,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
     private Map<String, Object> serializeJetpackProtectAndSsoParams() {
         Map<String, Object> params = new HashMap<>();
+        if (mJpSettings.monitorActive != mRemoteJpSettings.monitorActive) {
+            params.put("monitor", mJpSettings.monitorActive);
+        }
         if (mJpSettings.jetpackProtectEnabled != mRemoteJpSettings.jetpackProtectEnabled) {
             params.put("protect", mJpSettings.jetpackProtectEnabled);
         }
