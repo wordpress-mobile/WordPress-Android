@@ -96,10 +96,10 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -109,7 +109,6 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -432,6 +431,8 @@ public class EditPostActivity extends AppCompatActivity implements
         mHandler = new Handler();
         mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
 
+        EventBus.getDefault().register(this);
+
         if (mEditorMediaUploadListener != null) {
             List<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
             for (MediaModel media : uploadingMediaInPost) {
@@ -449,6 +450,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
         mHandler.removeCallbacks(mAutoSave);
         mHandler = null;
+
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -2464,6 +2467,15 @@ public class EditPostActivity extends AppCompatActivity implements
         }
         else {
             onUploadProgress(event.media, event.progress);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(VideoOptimizer.ProgressEvent event) {
+        if (!isFinishing()) {
+            // use upload progress rather than optimizer progress since the former includes upload+optimization
+            float progress = UploadService.getUploadProgressForMedia(event.media);
+            onUploadProgress(event.media, progress);
         }
     }
 

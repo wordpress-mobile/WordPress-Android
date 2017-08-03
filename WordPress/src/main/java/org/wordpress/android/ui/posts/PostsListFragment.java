@@ -724,9 +724,11 @@ public class PostsListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(VideoOptimizer.ProgressEvent event) {
-        PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
-        if (post != null) {
-            mPostsListAdapter.updateProgressForPost(post);
+        if (isAdded()) {
+            PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
+            if (post != null) {
+                mPostsListAdapter.updateProgressForPost(post);
+            }
         }
     }
 }
