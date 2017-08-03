@@ -636,7 +636,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             attributes.setValue(ATTR_SRC, mediaUrl);
             setAttributeValuesIfNotDefault(attributes, mediaFile);
             if(mediaFile.isVideo()) {
+                addVideoUploadingClassIfMissing(attributes);
                 content.insertVideo(placeholder, attributes);
+                overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
             } else {
                 content.insertImage(placeholder, attributes);
             }
@@ -703,16 +705,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                     Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
                     replaceDrawable(new BitmapDrawable(getResources(), resizedBitmap));
-                    if(mediaFile.isVideo()) {
-                        addVideoUploadingClassIfMissing(attributes);
-                        content.insertVideo(new BitmapDrawable(getResources(), resizedBitmap), attributes);
-                        overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
-                    } else {
-                        content.insertImage(new BitmapDrawable(getResources(), resizedBitmap), attributes);
-                    }
                 }
             }, maxWidth, 0);
-
 
             mActionStartedAt = System.currentTimeMillis();
         } else {
