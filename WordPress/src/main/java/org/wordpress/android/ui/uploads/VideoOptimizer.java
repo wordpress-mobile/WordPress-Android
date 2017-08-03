@@ -48,6 +48,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
     private final String mInputPath;
     private String mOutputPath;
     private long mStartTimeMS;
+    private float mLastProgress;
 
     public VideoOptimizer(@NonNull MediaModel media, @NonNull VideoOptimizationListener listener) {
         mCacheDir = MediaUtils.getDiskCacheDir(getContext());
@@ -155,8 +156,12 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
 
     @Override
     public void onMediaProgress(float progress) {
-        AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > " + mMedia.getId() + " - progress: " + progress);
-        mListener.onVideoOptimizationProgress(mMedia, progress);
+        // this event fires quite often so we only call the listener when progress increases by 1 or more
+        if (mLastProgress == 0 || (progress - mLastProgress > 0.01F)) {
+            AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > " + mMedia.getId() + " - progress: " + progress);
+            mLastProgress = progress;
+            mListener.onVideoOptimizationProgress(mMedia, progress);
+        }
     }
 
     @Override
