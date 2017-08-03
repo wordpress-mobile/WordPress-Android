@@ -179,6 +179,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > reduced by " + strSavingsKb);
             // update media object to point to optimized video
             mMedia.setFilePath(mOutputPath);
+            mMedia.setFileName(mFilename);
             mListener.onVideoOptimizationCompleted(mMedia);
         }
     }

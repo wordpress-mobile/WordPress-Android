@@ -146,17 +146,15 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
      * it's assumed to be a completed upload (returned progress is 1).
      */
     static float getProgressForMedia(MediaModel media) {
-        if (sOptimizationProgressByMediaId.containsKey(media.getId())) {
+        // TODO
+        /*if (sOptimizationProgressByMediaId.containsKey(media.getId())) {
             float optimizationProgress = sOptimizationProgressByMediaId.get(media.getId());
-            // TODO: this won't be an accurate progress
             return optimizationProgress / 2;
-        }
+        }*/
 
         if (sProgressByMediaId.containsKey(media.getId())) {
-            float uploadProgress = sProgressByMediaId.get(media.getId());
-            return uploadProgress;
+            return sProgressByMediaId.get(media.getId());
         }
-
         return 1;
     }
 
@@ -383,10 +381,6 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
                 StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
     }
 
-    public boolean isOptimizingMedia(@NonNull MediaModel media) {
-        return sOptimizationProgressByMediaId.containsKey(media.getId());
-    }
-
     @Override
     public void onVideoOptimizationProgress(@NonNull MediaModel media, float progress) {
         sOptimizationProgressByMediaId.put(media.getId(), progress);
@@ -397,6 +391,11 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     @Override
     public void onVideoOptimizationCompleted(@NonNull MediaModel media) {
         sOptimizationProgressByMediaId.remove(media.getId());
-        dispatchUploadAction(media, false);
+        // make sure this media should still be uploaded (may have been cancelled during optimization)
+        if (sInProgressUploads.contains(media)) {
+            dispatchUploadAction(media, false);
+        } else {
+            AppLog.d(T.MEDIA, "MediaUploadHandler > skipping upload of optimized media");
+        }
     }
 }
