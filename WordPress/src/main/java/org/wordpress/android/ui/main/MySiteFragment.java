@@ -406,8 +406,7 @@ public class MySiteFragment extends Fragment
         mThemesContainer.setVisibility(themesVisibility);
 
         // sharing is only exposed for sites accessed via the WPCOM REST API (wpcom or Jetpack)
-        int sharingVisibility = BuildConfig.SHARING_FEATURE_AVAILABLE &&
-                SiteUtils.isAccessedViaWPComRest(getSelectedSite()) ? View.VISIBLE : View.GONE;
+        int sharingVisibility = SiteUtils.isAccessedViaWPComRest(getSelectedSite()) ? View.VISIBLE : View.GONE;
         mSharingView.setVisibility(sharingVisibility);
 
         // show settings for all self-hosted to expose Delete Site

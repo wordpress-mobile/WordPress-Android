@@ -96,7 +96,7 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
+import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -109,6 +109,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -176,6 +177,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
+    private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
 
     private Handler mHandler;
     private boolean mShowAztecEditor;
@@ -429,6 +431,16 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onResume();
         mHandler = new Handler();
         mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
+
+        if (mEditorMediaUploadListener != null) {
+            List<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
+            for (MediaModel media : uploadingMediaInPost) {
+                if (media != null) {
+                    mEditorMediaUploadListener.onMediaUploadReattached(String.valueOf(media.getId()),
+                            UploadService.getUploadProgressForMedia(media));
+                }
+            }
+        }
     }
 
     @Override
@@ -471,11 +483,17 @@ public class EditPostActivity extends AppCompatActivity implements
         if (orientation != mPhotoPickerOrientation) {
             resizePhotoPicker();
         }
+
+        // If we're showing the Async promo dialog, we need to notify it to take the new orientation into account
+        PromoDialog fragment = (PromoDialog) getSupportFragmentManager().findFragmentByTag(ASYNC_PROMO_DIALOG_TAG);
+        if (fragment != null) {
+            fragment.redrawForOrientationChange();
+        }
     }
 
     @Override
     public void onBetaClicked() {
-        startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+        ActivityLauncher.showAztecEditorReleaseNotes(this);
         AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LABEL);
     }
 
@@ -765,7 +783,11 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (itemId == R.id.menu_save_post) {
-            publishPost();
+            if (!AppPrefs.isAsyncPromoRequired()) {
+                publishPost();
+            } else {
+                showAsyncPromoDialog();
+            }
         } else {
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
@@ -2456,7 +2478,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+                                ActivityLauncher.showAztecEditorReleaseNotes(EditPostActivity.this);
                                 AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LINK);
                             }
                         }
@@ -2484,6 +2506,27 @@ public class EditPostActivity extends AppCompatActivity implements
                     )
                     .show();
         }
+    }
+
+    private void showAsyncPromoDialog() {
+        PromoDialogAdvanced asyncPromoDialog = new PromoDialogAdvanced.Builder(
+                R.drawable.img_promo_async,
+                R.string.async_promo_title,
+                R.string.async_promo_description,
+                android.R.string.ok)
+                // TODO: Re-enable once a release notes page exists for Async
+//                .setLinkText(R.string.async_promo_link)
+                .build();
+
+        asyncPromoDialog.setPositiveButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                publishPost();
+            }
+        });
+
+        asyncPromoDialog.show(getSupportFragmentManager(), ASYNC_PROMO_DIALOG_TAG);
+        AppPrefs.setAsyncPromoRequired(false);
     }
 
     // EditPostActivityHook methods
