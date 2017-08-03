@@ -2,6 +2,7 @@ package org.wordpress.android.networking;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -15,6 +16,7 @@ import com.wordpress.rest.RestRequest;
 import com.wordpress.rest.RestRequest.ErrorListener;
 import com.wordpress.rest.RestRequest.Listener;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.LanguageUtils;
 
@@ -231,20 +233,19 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
-    public void setJetpackSsoTwoStepOption(long siteId, boolean enabled,
-                                           Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/option/?option_name=jetpack_sso_require_two_step", siteId);
-        Map<String, String> params = new HashMap<>();
-        params.put("option_value", String.valueOf(enabled));
-        post(path, params, null, listener, errorListener);
-    }
-
-    public void setJetpackSsoMatchEmailOption(long siteId, boolean enabled,
-                                              Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/options/backup?option_name=jetpack_sso_match_by_email", siteId);
-        Map<String, String> params = new HashMap<>();
-        params.put("option_value", String.valueOf(enabled));
-        post(path, params, null, listener, errorListener);
+    public void setJetpackSetting(long siteId, @NonNull String key, @NonNull Object value,
+                                  Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d/rest-api/", siteId);
+        JSONObject params = new JSONObject();
+        JSONObject body = new JSONObject();
+        try {
+            body.put(key, value);
+            params.put("path", "/jetpack/v4/settings/");
+            params.put("body", body.toString());
+            post(path, params, null, listener, errorListener);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setJetpackSso(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {

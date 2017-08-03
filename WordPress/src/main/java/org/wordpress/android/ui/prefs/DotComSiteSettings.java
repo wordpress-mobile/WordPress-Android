@@ -439,13 +439,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
         }
 
         if (mJpSettings.ssoRequireTwoFactor != mRemoteJpSettings.ssoRequireTwoFactor) {
-            WordPress.getRestClientUtilsV1_1().setJetpackSsoTwoStepOption(
-                    mSite.getSiteId(), mJpSettings.ssoRequireTwoFactor, new RestRequest.Listener() {
+            WordPress.getRestClientUtilsV1_1().setJetpackSetting(
+                    mSite.getSiteId(), "jetpack_sso_require_two_step", mJpSettings.ssoRequireTwoFactor,
+                    new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            mRemoteJpSettings.ssoRequireTwoFactor = response.optBoolean("option_value");
-                            mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
                             AppLog.d(AppLog.T.API, "Jetpack SSO module 2FA option updated");
+                            mRemoteJpSettings.ssoRequireTwoFactor = mJpSettings.ssoRequireTwoFactor;
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
@@ -456,13 +456,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
         }
 
         if (mJpSettings.ssoMatchEmail != mRemoteJpSettings.ssoMatchEmail) {
-            WordPress.getRestClientUtilsV1_1().setJetpackSsoMatchEmailOption(
-                    mSite.getSiteId(), mJpSettings.ssoMatchEmail, new RestRequest.Listener() {
+            WordPress.getRestClientUtilsV1_1().setJetpackSetting(
+                    mSite.getSiteId(), "jetpack_sso_match_by_email", mJpSettings.ssoMatchEmail,
+                    new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
                             AppLog.d(AppLog.T.API, "Jetpack SSO module match email option updated");
-                            mRemoteJpSettings.ssoMatchEmail = response.optBoolean("option_value");
-                            mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
+                            mRemoteJpSettings.ssoMatchEmail = mJpSettings.ssoMatchEmail;
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
