@@ -27,6 +27,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -407,6 +408,19 @@ public class UploadService extends Service {
         }
 
         return 1;
+    }
+
+    public static float getUploadProgressForMedia(MediaModel mediaModel) {
+        return MediaUploadHandler.getProgressForMedia(mediaModel);
+    }
+
+    public static @NonNull List<MediaModel> getPendingMediaForPost(PostModel postModel) {
+        for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
+            if (uploadingPost.postModel.getId() == postModel.getId()) {
+                return uploadingPost.pendingMedia;
+            }
+        }
+        return Collections.emptyList();
     }
 
     private void showNotificationForPostWithPendingMedia(PostModel post) {
