@@ -11,6 +11,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginsChanged;
@@ -23,6 +25,7 @@ public class PluginListActivity extends AppCompatActivity {
     private PluginListAdapter mAdapter;
 
     @Inject PluginStore mPluginStore;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,9 @@ public class PluginListActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        mDispatcher.register(this);
+        mDispatcher.dispatch(PluginActionBuilder.newFetchPluginsAction(mSite));
 
         setupViews();
     }
