@@ -49,7 +49,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 12;
+        return 13;
     }
 
     @Override
