@@ -192,10 +192,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void checkSmartLockPasswordAndStartLogin() {
+        boolean smartLockStarted = false;
         if (!mSmartLockCompleted && mSmartLockHelper == null) {
             mSmartLockHelper = new SmartLockHelper(this);
-            mSmartLockHelper.initSmartLockForPasswords();
-        } else {
+            smartLockStarted = mSmartLockHelper.initSmartLockForPasswords();
+        }
+
+        if (!smartLockStarted) {
             startLogin();
         }
     }

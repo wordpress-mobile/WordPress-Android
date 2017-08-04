@@ -222,7 +222,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         if (event.isError()) {
             // report the error but don't bail yet.
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
-            showEmailError(R.string.login_error_while_checking_email);
+            showEmailError(R.string.email_not_registered_wpcom);
             return;
         }
 
