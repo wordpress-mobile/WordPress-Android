@@ -34,6 +34,10 @@ import java.io.IOException;
 
 public class WPMediaUtils {
 
+    public interface LaunchCameraCallback {
+        void onMediaCapturePathReady(String mediaCapturePath);
+    }
+
     // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
     public static final int OPTIMIZE_IMAGE_MAX_WIDTH = 3000;
     public static final int OPTIMIZE_IMAGE_ENCODER_QUALITY = 85;
@@ -197,10 +201,6 @@ public class WPMediaUtils {
         }
 
         return null;
-    }
-
-    public interface LaunchCameraCallback {
-        void onMediaCapturePathReady(String mediaCapturePath);
     }
 
     private static void showSDCardRequiredDialog(Context context) {
