@@ -119,7 +119,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WordPressMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -618,7 +618,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onPhotoPickerMediaChosen(@NonNull final List<Uri> uriList) {
         hidePhotoPicker();
 
-        if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
+        if (WordPressMediaUtils.shouldAdvertiseImageOptimization(this)) {
             boolean hasSelectedPicture = false;
             for (Uri uri : uriList) {
                 if (!MediaUtils.isVideo(uri.toString())) {
@@ -627,8 +627,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
             if (hasSelectedPicture) {
-                WPMediaUtils.advertiseImageOptimization(this,
-                        new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                WordPressMediaUtils.advertiseImageOptimization(this,
+                        new WordPressMediaUtils.OnAdvertiseImageOptimizationListener() {
                             @Override
                             public void done() {
                                 for (Uri uri: uriList) {
@@ -826,7 +826,7 @@ public class EditPostActivity extends AppCompatActivity implements
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED, properties);
 
         // Display custom error depending on error type
-        String errorMessage = WPMediaUtils.getErrorMessage(this, media, error);
+        String errorMessage = WordPressMediaUtils.getErrorMessage(this, media, error);
         if (errorMessage == null) {
             errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
         }
@@ -1768,7 +1768,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Video optimization -> API18 or higher
-        if (isVideo && WPMediaUtils.isVideoOptimizationEnabled()) {
+        if (isVideo && WordPressMediaUtils.isVideoOptimizationEnabled()) {
             // Setting up the lister that's called when the video optimization finishes
             EditPostActivityVideoHelper.IVideoOptimizationListener listener = new EditPostActivityVideoHelper.IVideoOptimizationListener() {
                 @Override
@@ -1788,7 +1788,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 return true;
             }
         }
-        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, path, isVideo);
+        Uri optimizedMedia = WordPressMediaUtils.getOptimizedMedia(this, path, isVideo);
         if (optimizedMedia != null) {
             uri = optimizedMedia;
             path = MediaUtils.getRealPathFromURI(this, uri);
@@ -1796,7 +1796,7 @@ public class EditPostActivity extends AppCompatActivity implements
             // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
             if (!mSite.isWPCom()) {
                 // If it's not wpcom we must rotate the picture locally
-                Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
+                Uri rotatedMedia = WordPressMediaUtils.fixOrientationIssue(this, path, isVideo);
                 if (rotatedMedia != null) {
                     uri = rotatedMedia;
                     path = MediaUtils.getRealPathFromURI(this, uri);
@@ -1805,7 +1805,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // It's a wpcom site. Just create a version of the picture rotated for the old visual editor
                 // All the other editors read EXIF data
                 if (mShowNewEditor) {
-                    Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
+                    Uri rotatedMedia = WordPressMediaUtils.fixOrientationIssue(this, path, isVideo);
                     if (rotatedMedia != null) {
                         // The uri variable should remain the same since wpcom rotates the picture server side
                         path = MediaUtils.getRealPathFromURI(this, rotatedMedia);
@@ -1856,9 +1856,9 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     final Uri imageUri = data.getData();
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this,
-                                new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                    if (WordPressMediaUtils.shouldAdvertiseImageOptimization(this)) {
+                        WordPressMediaUtils.advertiseImageOptimization(this,
+                                new WordPressMediaUtils.OnAdvertiseImageOptimizationListener() {
                                     @Override
                                     public void done() {
                                         fetchMedia(imageUri);
@@ -1871,9 +1871,9 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case RequestCodes.TAKE_PHOTO:
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this,
-                                new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                    if (WordPressMediaUtils.shouldAdvertiseImageOptimization(this)) {
+                        WordPressMediaUtils.advertiseImageOptimization(this,
+                                new WordPressMediaUtils.OnAdvertiseImageOptimizationListener() {
                                     @Override
                                     public void done() {
                                         addLastTakenPicture();

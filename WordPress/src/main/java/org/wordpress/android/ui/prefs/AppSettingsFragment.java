@@ -27,7 +27,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LanguageUtils;
-import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WordPressMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.HashMap;
@@ -104,7 +104,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         setDetailListPreferenceValue(mVideoEncorderBitratePref,
                 String.valueOf(AppPrefs.getVideoOptimizeQuality()),
                 getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
-        if (!WPMediaUtils.isVideoOptimizationAvailable()) {
+        if (!WordPressMediaUtils.isVideoOptimizationAvailable()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_optimize_video);
             WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_site_video_width);
             WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_site_video_encoder_bitrate);

@@ -78,7 +78,7 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WordPressMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WordPressMediaUtils;
 
@@ -632,7 +632,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (event.isError()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
                     + " - " + event.error.message);
-            String errorMessage = WPMediaUtils.getErrorMessage(this, event.media, event.error);
+            String errorMessage = WordPressMediaUtils.getErrorMessage(this, event.media, event.error);
             if (errorMessage != null) {
                 ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
             } else {
@@ -879,7 +879,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (TextUtils.isEmpty(filePath)) {
             return originalUri;
         }
-        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, filePath, false);
+        Uri optimizedMedia = WordPressMediaUtils.getOptimizedMedia(this, filePath, false);
         if (optimizedMedia != null) {
             return optimizedMedia;
         } else {
@@ -887,7 +887,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
             if (!mSite.isWPCom()) {
                 // If it's not wpcom we must rotate the picture locally
-                Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, filePath, false);
+                Uri rotatedMedia = WordPressMediaUtils.fixOrientationIssue(this, filePath, false);
                 if (rotatedMedia != null) {
                     return rotatedMedia;
                 }
