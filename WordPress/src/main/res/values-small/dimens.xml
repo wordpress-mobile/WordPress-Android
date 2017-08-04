@@ -4,5 +4,6 @@
     <dimen name="avatar_sz_login_epilogue">38dp</dimen>
     <dimen name="margin_extra_extra_large">24dp</dimen>
     <dimen name="margin_extra_large">8dp</dimen>
-    <dimen name="magic_link_sent_illustration_sz">86dp</dimen>
+    <dimen name="magic_link_sent_illustration_sz">72dp</dimen>
+    <dimen name="margin_medium_large">4dp</dimen>
 </resources>
