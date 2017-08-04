@@ -97,8 +97,8 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
         isStopped = true;
     }
@@ -214,7 +214,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     private void popBackStackToSignInFragment() {
 
         // this can bee called asynchronously from Volley onError handler so we must check if state is OK
-        if (!this.isStopped) {
+        if (!this.isStopped || !isFinishing()) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             while (fragmentManager.getBackStackEntryCount() > 1) {
                 fragmentManager.popBackStackImmediate();
