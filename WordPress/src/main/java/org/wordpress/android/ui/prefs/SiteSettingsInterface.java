@@ -25,7 +25,6 @@ import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.ArrayList;

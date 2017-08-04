@@ -31,6 +31,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -187,7 +188,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.fileContainer.setVisibility(View.VISIBLE);
             holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
             holder.fileTypeView.setText(fileExtension.toUpperCase());
-            int placeholderResId = WordPressMediaUtils.getPlaceholder(fileName);
+            int placeholderResId = WPMediaUtils.getPlaceholder(fileName);
             holder.fileTypeImageView.setImageResource(placeholderResId);
         }
 

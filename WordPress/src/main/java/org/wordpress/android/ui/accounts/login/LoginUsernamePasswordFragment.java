@@ -33,8 +33,8 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
-import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 
