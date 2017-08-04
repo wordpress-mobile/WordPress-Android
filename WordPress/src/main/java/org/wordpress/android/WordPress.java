@@ -23,7 +23,6 @@ import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
 import com.crashlytics.android.Crashlytics;
-
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;

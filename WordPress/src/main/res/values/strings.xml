@@ -141,11 +141,11 @@
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_error_no_permission_upload">You don\'t have permission to upload media to the site</string>
-    <string name="media_error_http_too_large_photo_upload">Image too large to upload. Try changing Optimize Images in your site\'s settings</string>
+    <string name="media_error_http_too_large_photo_upload">Image too large to upload. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_error_http_too_large_video_upload">Video too large to upload</string>
     <string name="media_error_exceeds_php_filesize">File exceeds the maximum upload size for this site</string>
     <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
-    <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your site\'s settings</string>
+    <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_error_timeout">Server took too long to respond</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
@@ -475,7 +475,6 @@
     <string name="site_settings_discussion_header" translatable="false">@string/discussion</string>
     <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
     <string name="site_settings_comments_header" translatable="false">@string/comments</string>
-    <string name="site_settings_this_device_header">This device</string>
     <string name="site_settings_advanced_header">Advanced</string>
 
     <!-- Preference Titles -->
@@ -983,6 +982,10 @@
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
 
+    <string name="async_promo_title">Publish with Confidence</string>
+    <string name="async_promo_description">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
+    <string name="async_promo_link">How does it work?</string>
+
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
     <string name="post_settings_status">Status</string>
@@ -1192,11 +1195,7 @@
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="cd_related_post_preview_image">Related post preview image</string>
-    <string name="login_email_image">Login email icon</string>
-    <string name="login_globe_icon">Site address globe icon</string>
     <string name="login_site_address_help_image">Site address positioning image</string>
-    <string name="login_username_image">Login username icon</string>
-    <string name="login_password_image">Login password icon</string>
 
     <!-- Passcode lock -->
     <string name="passcode_manage">Manage PIN lock</string>
