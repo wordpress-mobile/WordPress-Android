@@ -17,9 +17,9 @@ import android.view.MenuItem;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
