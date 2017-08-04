@@ -13,10 +13,14 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
+import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
+import org.wordpress.android.fluxc.post.PostTestUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -83,11 +87,52 @@ public class UploadSqlUtilsTest {
         Assert.assertNull(mediaUploadModel);
     }
 
+    // Attempts to insert null then verifies there is no post
+    @Test
+    public void testInsertNullPost() {
+        Assert.assertEquals(0, UploadSqlUtils.insertOrUpdatePost(null));
+        Assert.assertEquals(0, WellSql.select(PostUploadModel.class).getAsCursor().getCount());
+    }
+
+    @Test
+    public void testInsertPost() {
+        PostModel testPost = getTestPost();
+        Assert.assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost));
+        List<PostModel> postList = PostTestUtils.getPosts();
+        Assert.assertEquals(1, postList.size());
+        Assert.assertNotNull(postList.get(0));
+
+        // Store a PostUploadModel corresponding to this PostModel
+        testPost = postList.get(0);
+        PostUploadModel postUploadModel = new PostUploadModel(testPost.getId());
+        UploadSqlUtils.insertOrUpdatePost(postUploadModel);
+
+        postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(testPost.getId());
+        Assert.assertNotNull(postUploadModel);
+        Assert.assertEquals(testPost.getId(), postUploadModel.getId());
+        Assert.assertEquals(PostUploadModel.PENDING, postUploadModel.getUploadState());
+
+        // Deleting the PostModel should cause the corresponding PostUploadModel to be deleted also
+        PostSqlUtils.deletePost(testPost);
+
+        postList = PostTestUtils.getPosts();
+        Assert.assertTrue(postList.isEmpty());
+
+        postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(testPost.getId());
+        Assert.assertNull(postUploadModel);
+    }
+
     private MediaModel getTestMedia(long mediaId) {
         MediaModel media = new MediaModel();
         media.setLocalSiteId(TEST_LOCAL_SITE_ID);
         media.setMediaId(mediaId);
         return media;
+    }
+
+    private PostModel getTestPost() {
+        PostModel post = new PostModel();
+        post.setLocalSiteId(TEST_LOCAL_SITE_ID);
+        return post;
     }
 
     private SiteModel getTestSiteWithLocalId(int localSiteId) {

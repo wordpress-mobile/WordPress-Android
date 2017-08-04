@@ -11,6 +11,8 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
@@ -20,6 +22,10 @@ import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -74,6 +80,25 @@ public class UploadStore extends Store {
     // TODO Might be better never to return UploadModels and instead have methods like getUploadProgressForMedia()
     public MediaUploadModel getMediaUploadModelForMediaModel(MediaModel mediaModel) {
         return UploadSqlUtils.getMediaUploadModelForLocalId(mediaModel.getId());
+    }
+
+    public void registerPostModel(PostModel postModel, List<MediaModel> mediaModelList) {
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId());
+        Set<Integer> mediaIdSet = new HashSet<>();
+
+        if (postUploadModel != null) {
+            // Keep any existing media associated with this post
+            mediaIdSet.addAll(postUploadModel.getAssociatedMediaIdSet());
+        } else {
+            postUploadModel = new PostUploadModel(postModel.getId());
+        }
+
+        for (MediaModel mediaModel : mediaModelList) {
+            mediaIdSet.add(mediaModel.getId());
+        }
+
+        postUploadModel.setAssociatedMediaIdSet(mediaIdSet);
+        UploadSqlUtils.insertOrUpdatePost(postUploadModel);
     }
 
     private void handleUploadMedia(MediaPayload payload) {
