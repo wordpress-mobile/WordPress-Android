@@ -14,6 +14,7 @@ import com.yarolegovich.wellsql.mapper.SQLiteMapper;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -38,12 +39,13 @@ public class WellSqlConfig extends DefaultWellConfig {
         add(CommentModel.class);
         add(HTTPAuthModel.class);
         add(MediaModel.class);
+        add(MediaUploadModel.class);
         add(PostFormatModel.class);
         add(PostModel.class);
+        add(RoleModel.class);
         add(SiteModel.class);
         add(TaxonomyModel.class);
         add(TermModel.class);
-        add(RoleModel.class);
     }};
 
     @Override
@@ -117,6 +119,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("CREATE TABLE RoleModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,SITE_ID INTEGER,"
                         + "NAME TEXT,DISPLAY_NAME TEXT)");
                 oldVersion++;
+            // TODO migration for upload models
         }
         db.setTransactionSuccessful();
         db.endTransaction();
