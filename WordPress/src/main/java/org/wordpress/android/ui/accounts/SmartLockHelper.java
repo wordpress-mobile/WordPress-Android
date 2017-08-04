@@ -45,7 +45,7 @@ public class SmartLockHelper {
         }
     }
 
-    private FragmentActivity getActivityAndCheckAvailability() {
+    private FragmentActivity getActivityAndCheckAvailability(final Callback callback) {
         FragmentActivity activity = mActivity.get();
         if (activity == null) {
             return null;
@@ -54,11 +54,16 @@ public class SmartLockHelper {
         if (status == ConnectionResult.SUCCESS) {
             return activity;
         }
+
+        if (callback != null) {
+            callback.onCredentialsUnavailable();
+        }
+
         return null;
     }
 
-    public void initSmartLockForPasswords() {
-        FragmentActivity activity = getActivityAndCheckAvailability();
+    public void initSmartLockForPasswords(final Callback callback) {
+        FragmentActivity activity = getActivityAndCheckAvailability(callback);
         if (activity == null) {
             return;
         }
@@ -70,8 +75,12 @@ public class SmartLockHelper {
     }
 
     public void smartLockAutoFill(@NonNull final Callback callback) {
-        Activity activity = getActivityAndCheckAvailability();
-        if (activity == null || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
+        Activity activity = getActivityAndCheckAvailability(callback);
+        if (activity == null) {
+            return;
+        }
+        if (mCredentialsClient == null || !mCredentialsClient.isConnected()) {
+            callback.onCredentialsUnavailable();
             return;
         }
         CredentialRequest credentialRequest = new CredentialRequest.Builder()
@@ -88,7 +97,7 @@ public class SmartLockHelper {
                         } else {
                             if (status.getStatusCode() == CommonStatusCodes.RESOLUTION_REQUIRED) {
                                 try {
-                                    Activity activity = getActivityAndCheckAvailability();
+                                    Activity activity = getActivityAndCheckAvailability(callback);
                                     if (activity == null) {
                                         return;
                                     }
@@ -121,7 +130,7 @@ public class SmartLockHelper {
             return;
         }
 
-        Activity activity = getActivityAndCheckAvailability();
+        Activity activity = getActivityAndCheckAvailability(null);
         if (activity == null || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
             return;
         }
@@ -133,7 +142,7 @@ public class SmartLockHelper {
                     public void onResult(@NonNull Status status) {
                         if (!status.isSuccess() && status.hasResolution()) {
                             try {
-                                Activity activity = getActivityAndCheckAvailability();
+                                Activity activity = getActivityAndCheckAvailability(null);
                                 if (activity == null) {
                                     return;
                                 }
@@ -148,7 +157,7 @@ public class SmartLockHelper {
     }
 
     public void deleteCredentialsInSmartLock(@NonNull final String username, @NonNull final String password) {
-        Activity activity = getActivityAndCheckAvailability();
+        Activity activity = getActivityAndCheckAvailability(null);
         if (activity == null || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
             return;
         }
