@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
@@ -27,8 +26,6 @@ import java.util.Random;
 
 @RunWith(RobolectricTestRunner.class)
 public class UploadSqlUtilsTest {
-    private static final int TEST_LOCAL_SITE_ID = 42;
-
     private Random mRandom = new Random(System.currentTimeMillis());
 
     @Before
@@ -50,9 +47,9 @@ public class UploadSqlUtilsTest {
     @Test
     public void testInsertMedia() {
         long testId = Math.abs(mRandom.nextLong());
-        MediaModel testMedia = getTestMedia(testId);
+        MediaModel testMedia = UploadTestUtils.getTestMedia(testId);
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testMedia));
-        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), testId);
+        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(UploadTestUtils.getTestSite(), testId);
         Assert.assertEquals(1, media.size());
         Assert.assertNotNull(media.get(0));
 
@@ -80,7 +77,7 @@ public class UploadSqlUtilsTest {
         // Deleting the MediaModel should cause the corresponding MediaUploadModel to be deleted also
         MediaSqlUtils.deleteMedia(testMedia);
 
-        media = MediaSqlUtils.getSiteMediaWithId(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), testId);
+        media = MediaSqlUtils.getSiteMediaWithId(UploadTestUtils.getTestSite(), testId);
         Assert.assertTrue(media.isEmpty());
 
         mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(testMedia.getId());
@@ -96,7 +93,7 @@ public class UploadSqlUtilsTest {
 
     @Test
     public void testInsertPost() {
-        PostModel testPost = getTestPost();
+        PostModel testPost = UploadTestUtils.getTestPost();
         Assert.assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost));
         List<PostModel> postList = PostTestUtils.getPosts();
         Assert.assertEquals(1, postList.size());
@@ -120,24 +117,5 @@ public class UploadSqlUtilsTest {
 
         postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(testPost.getId());
         Assert.assertNull(postUploadModel);
-    }
-
-    private MediaModel getTestMedia(long mediaId) {
-        MediaModel media = new MediaModel();
-        media.setLocalSiteId(TEST_LOCAL_SITE_ID);
-        media.setMediaId(mediaId);
-        return media;
-    }
-
-    private PostModel getTestPost() {
-        PostModel post = new PostModel();
-        post.setLocalSiteId(TEST_LOCAL_SITE_ID);
-        return post;
-    }
-
-    private SiteModel getTestSiteWithLocalId(int localSiteId) {
-        SiteModel siteModel = new SiteModel();
-        siteModel.setId(localSiteId);
-        return siteModel;
     }
 }
