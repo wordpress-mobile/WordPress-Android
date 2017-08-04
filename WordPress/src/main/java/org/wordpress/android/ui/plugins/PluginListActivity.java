@@ -3,6 +3,7 @@ package org.wordpress.android.ui.plugins;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -78,6 +79,7 @@ public class PluginListActivity extends AppCompatActivity {
 
     private void setupViews() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.plugins_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new PluginListAdapter(this);
         recyclerView.setAdapter(mAdapter);
 
