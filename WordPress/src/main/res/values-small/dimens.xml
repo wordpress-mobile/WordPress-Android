@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="avatar_sz_login">64dp</dimen>
+    <dimen name="avatar_sz_login_epilogue">38dp</dimen>
+    <dimen name="margin_extra_extra_large">24dp</dimen>
+    <dimen name="margin_extra_large">12dp</dimen>
+</resources>
