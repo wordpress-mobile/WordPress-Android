@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TaxonomyModel;
@@ -42,6 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
         add(MediaUploadModel.class);
         add(PostFormatModel.class);
         add(PostModel.class);
+        add(PostUploadModel.class);
         add(RoleModel.class);
         add(SiteModel.class);
         add(TaxonomyModel.class);
