@@ -18,10 +18,10 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
-import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
+import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.io.IOException;
@@ -310,6 +310,17 @@ public class MediaStore extends Store {
                 default:
                     return MediaErrorType.GENERIC_ERROR;
             }
+        }
+
+        public static MediaErrorType fromString(String string) {
+            if (string != null) {
+                for (MediaErrorType v : MediaErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
         }
     }
 
@@ -619,8 +630,9 @@ public class MediaStore extends Store {
     }
 
     private void performUploadMedia(MediaPayload payload) {
-        String errorMessage = isWellFormedForUpload(payload.media);
+        String errorMessage = MediaUtils.getMediaValidationError(payload.media);
         if (errorMessage != null) {
+            AppLog.e(AppLog.T.MEDIA, "Media doesn't have required data: " + errorMessage);
             payload.media.setUploadState(MediaUploadState.FAILED);
             MediaSqlUtils.insertOrUpdateMedia(payload.media);
             notifyMediaUploadError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, payload.media);
@@ -798,14 +810,6 @@ public class MediaStore extends Store {
             onMediaChanged.mediaList.add(payload.media);
         }
         emitChange(onMediaChanged);
-    }
-
-    private String isWellFormedForUpload(@NonNull MediaModel media) {
-        String error = BaseUploadRequestBody.hasRequiredData(media);
-        if (error != null) {
-            AppLog.e(AppLog.T.MEDIA, "Media doesn't have required data: " + error);
-        }
-        return error;
     }
 
     private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause,

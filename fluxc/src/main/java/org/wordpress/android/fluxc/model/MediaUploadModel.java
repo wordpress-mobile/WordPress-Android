@@ -10,6 +10,8 @@ import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaError;
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 
 import java.io.Serializable;
 import java.lang.annotation.Retention;
@@ -29,13 +31,19 @@ public class MediaUploadModel extends Payload implements Identifiable, Serializa
     @PrimaryKey(autoincrement = false)
     @Column private int mId;
 
-    @Column private int mUploadState;
+    @Column private int mUploadState = UPLOADING;
 
     @Column private float mProgress;
 
     // Serialization of a MediaError
     @Column private String mErrorType;
     @Column private String mErrorMessage;
+
+    public MediaUploadModel() {}
+
+    public MediaUploadModel(int id) {
+        mId = id;
+    }
 
     @Override
     public void setId(int id) {
@@ -77,6 +85,15 @@ public class MediaUploadModel extends Payload implements Identifiable, Serializa
 
     public void setErrorMessage(String errorMessage) {
         mErrorMessage = errorMessage;
+    }
+
+    public MediaError getMediaError() {
+        return new MediaError(MediaErrorType.fromString(getErrorType()), getErrorMessage());
+    }
+
+    public void setMediaError(MediaError mediaError) {
+        setErrorType(mediaError.type.toString());
+        setErrorMessage(mediaError.message);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
+import android.support.annotation.NonNull;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -7,6 +9,13 @@ import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.MediaUploadModel;
+import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
+import org.wordpress.android.fluxc.store.MediaStore.MediaError;
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
+import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -49,11 +58,52 @@ public class UploadStore extends Store {
     private void onMediaAction(MediaAction actionType, Object payload) {
         switch (actionType) {
             case UPLOAD_MEDIA:
-                // TODO
+                handleUploadMedia((MediaPayload) payload);
                 break;
             case UPLOADED_MEDIA:
-                // TODO
+                handleMediaUploaded((ProgressPayload) payload);
                 break;
         }
+    }
+
+    private void handleUploadMedia(MediaPayload payload) {
+        MediaUploadModel mediaUploadModel = new MediaUploadModel(payload.media.getId());
+        String errorMessage = MediaUtils.getMediaValidationError(payload.media);
+        if (errorMessage != null) {
+            mediaUploadModel.setUploadState(MediaUploadModel.FAILED);
+            mediaUploadModel.setMediaError(new MediaError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage));
+        }
+        UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+    }
+
+    private void handleMediaUploaded(@NonNull ProgressPayload payload) {
+        if (payload.media == null) {
+            return;
+        }
+
+        MediaUploadModel mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(payload.media.getId());
+        if (mediaUploadModel == null) {
+            mediaUploadModel = new MediaUploadModel(payload.media.getId());
+        }
+
+        if (payload.isError() || payload.canceled) {
+            // TODO Find waiting posts and mark them as cancelled
+            mediaUploadModel.setUploadState(MediaUploadModel.FAILED);
+            if (payload.isError()) {
+                mediaUploadModel.setMediaError(payload.error);
+            }
+            UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+            return;
+        }
+
+        if (payload.completed) {
+            mediaUploadModel.setUploadState(MediaUploadModel.COMPLETED);
+            mediaUploadModel.setProgress(1F);
+        } else {
+            if (mediaUploadModel.getProgress() < payload.progress) {
+                mediaUploadModel.setProgress(payload.progress);
+            }
+        }
+        UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
     }
 }
