@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
@@ -64,6 +65,11 @@ public class UploadStore extends Store {
                 handleMediaUploaded((ProgressPayload) payload);
                 break;
         }
+    }
+
+    // TODO Might be better never to return UploadModels and instead have methods like getUploadProgressForMedia()
+    public MediaUploadModel getMediaUploadModelForMediaModel(MediaModel mediaModel) {
+        return UploadSqlUtils.getMediaUploadModelForLocalId(mediaModel.getId());
     }
 
     private void handleUploadMedia(MediaPayload payload) {
