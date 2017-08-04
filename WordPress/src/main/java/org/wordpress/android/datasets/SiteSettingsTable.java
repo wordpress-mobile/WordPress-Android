@@ -125,33 +125,25 @@ public final class SiteSettingsTable {
             if (cursor == null || cursor.getCount() == 0 || !cursor.moveToFirst()) {
                 return false;
             }
-            if (cursor.getColumnIndex("optimizedImage") == -1) {
+            int columnIndex = cursor.getColumnIndex("optimizedImage");
+            if (columnIndex == -1) {
                 // No old columns for media optimization settings
                 return false;
             }
-            AppPrefs.setImageOptimize(cursor.getInt(cursor.getColumnIndex("optimizedImage")) == 1);
-
-            if (cursor.getColumnIndex("maxImageWidth") != -1) {
-                AppPrefs.setImageOptimizeWidth(
-                        cursor.getInt(cursor.getColumnIndex("maxImageWidth")));
-            }
-            if (cursor.getColumnIndex("imageEncoderQuality") != -1) {
-                AppPrefs.setImageOptimizeQuality(
-                        cursor.getInt(cursor.getColumnIndex("imageEncoderQuality")));
-            }
-            if (cursor.getColumnIndex("optimizedVideo") != -1) {
-                AppPrefs.setVideoOptimize(
-                        cursor.getInt(cursor.getColumnIndex("optimizedVideo")) == 1
-                );
-            }
-            if (cursor.getColumnIndex("maxVideoWidth") != -1) {
-                AppPrefs.setVideoOptimizeWidth(
-                        cursor.getInt(cursor.getColumnIndex("maxVideoWidth")));
-            }
-            if (cursor.getColumnIndex("videoEncoderBitrate") != -1) {
-                AppPrefs.setVideoOptimizeQuality(
-                        cursor.getInt(cursor.getColumnIndex("videoEncoderBitrate")));
-            }
+            // we're safe to read all the settings now since all the columns must be there
+            int optimizeImageOldSettings = cursor.getInt(columnIndex);
+            AppPrefs.setImageOptimize(optimizeImageOldSettings == 1);
+            AppPrefs.setImageOptimizeWidth(
+                    cursor.getInt(cursor.getColumnIndex("maxImageWidth")));
+            AppPrefs.setImageOptimizeQuality(
+                    cursor.getInt(cursor.getColumnIndex("imageEncoderQuality")));
+            AppPrefs.setVideoOptimize(
+                    cursor.getInt(cursor.getColumnIndex("optimizedVideo")) == 1
+            );
+            AppPrefs.setVideoOptimizeWidth(
+                    cursor.getInt(cursor.getColumnIndex("maxVideoWidth")));
+            AppPrefs.setVideoOptimizeQuality(
+                    cursor.getInt(cursor.getColumnIndex("videoEncoderBitrate")));
 
             // Delete the old columns? --> cannot drop a specific column in SQLite 3 ;(
 
