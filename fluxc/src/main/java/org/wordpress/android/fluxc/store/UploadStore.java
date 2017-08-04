@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
+import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
@@ -64,6 +65,9 @@ public class UploadStore extends Store {
             case UPLOADED_MEDIA:
                 handleMediaUploaded((ProgressPayload) payload);
                 break;
+            case CANCEL_MEDIA_UPLOAD:
+                handleCancelMedia((CancelMediaPayload) payload);
+                break;
         }
     }
 
@@ -110,6 +114,21 @@ public class UploadStore extends Store {
                 mediaUploadModel.setProgress(payload.progress);
             }
         }
+        UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+    }
+
+    private void handleCancelMedia(@NonNull CancelMediaPayload payload) {
+        if (payload.media == null || payload.delete) {
+            // If the cancel action has the delete flag, the corresponding MediaModel will be deleted anyway - ignore
+            return;
+        }
+        MediaUploadModel mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(payload.media.getId());
+        if (mediaUploadModel == null) {
+            mediaUploadModel = new MediaUploadModel(payload.media.getId());
+        }
+
+        // TODO Find waiting posts and mark them as cancelled
+        mediaUploadModel.setUploadState(MediaUploadModel.FAILED);
         UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
     }
 }
