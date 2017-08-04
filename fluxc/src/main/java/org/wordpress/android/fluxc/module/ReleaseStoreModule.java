@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
+import org.wordpress.android.fluxc.store.UploadStore;
 
 import javax.inject.Singleton;
 
@@ -70,5 +71,11 @@ public class ReleaseStoreModule {
     public TaxonomyStore provideTaxonomyStore(Dispatcher dispatcher, TaxonomyRestClient taxonomyRestClient,
                                               TaxonomyXMLRPCClient taxonomyXMLRPCClient) {
         return new TaxonomyStore(dispatcher, taxonomyRestClient, taxonomyXMLRPCClient);
+    }
+
+    @Provides
+    @Singleton
+    public UploadStore provideUploadStore(Dispatcher dispatcher) {
+        return new UploadStore(dispatcher);
     }
 }
