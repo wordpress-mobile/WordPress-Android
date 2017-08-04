@@ -3,7 +3,6 @@ package org.wordpress.android.util;
 import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.store.SiteStore;
 
 import java.util.ArrayList;
