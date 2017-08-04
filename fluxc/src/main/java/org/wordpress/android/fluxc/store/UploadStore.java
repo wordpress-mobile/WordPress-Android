@@ -101,6 +101,10 @@ public class UploadStore extends Store {
         UploadSqlUtils.insertOrUpdatePost(postUploadModel);
     }
 
+    public PostUploadModel getPostUploadModelForPostModel(PostModel postModel) {
+        return UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId());
+    }
+
     private void handleUploadMedia(MediaPayload payload) {
         MediaUploadModel mediaUploadModel = new MediaUploadModel(payload.media.getId());
         String errorMessage = MediaUtils.getMediaValidationError(payload.media);
