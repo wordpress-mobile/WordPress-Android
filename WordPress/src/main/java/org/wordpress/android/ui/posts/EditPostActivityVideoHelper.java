@@ -17,7 +17,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.FileUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WordPressMediaUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPVideoUtils;
 
 import java.io.File;
@@ -56,7 +56,7 @@ public class EditPostActivityVideoHelper {
             return false;
         }
 
-        if (!WordPressMediaUtils.isVideoOptimizationEnabled()) {
+        if (!WPMediaUtils.isVideoOptimizationEnabled()) {
             // Video optimization -> API18 or higher
             return false;
         }

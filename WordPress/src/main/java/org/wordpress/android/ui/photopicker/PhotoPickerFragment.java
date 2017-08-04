@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.util.WordPressMediaUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -129,7 +129,7 @@ public class PhotoPickerFragment extends Fragment {
         mRecycler.setHasFixedSize(true);
 
         // disable thumbnail loading during a fling to conserve memory
-        final int minDistance = WordPressMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
+        final int minDistance = WPMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
         mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
             @Override
             public boolean onFling(int velocityX, int velocityY) {

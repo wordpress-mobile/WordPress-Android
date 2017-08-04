@@ -23,7 +23,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WordPressMediaUtils;
+import org.wordpress.android.util.WPMediaUtils;
 
 public class UploadUtils {
     /**
@@ -57,7 +57,7 @@ public class UploadUtils {
      * Returns an error message string for a failed media upload.
      */
     public static @NonNull String getErrorMessageFromMediaError(Context context, MediaModel media, MediaError error) {
-        String errorMessage = WordPressMediaUtils.getErrorMessage(context, media, error);
+        String errorMessage = WPMediaUtils.getErrorMessage(context, media, error);
 
         if (errorMessage == null) {
             // In case of a generic or uncaught error, return the message from the API response or the error type

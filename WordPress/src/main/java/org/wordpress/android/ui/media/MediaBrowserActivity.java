@@ -78,9 +78,8 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WordPressMediaUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
-import org.wordpress.android.util.WordPressMediaUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -96,7 +95,7 @@ import javax.inject.Inject;
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         OnQueryTextListener, OnActionExpandListener,
-        WordPressMediaUtils.LaunchCameraCallback {
+        WPMediaUtils.LaunchCameraCallback {
 
     public enum MediaBrowserType {
         BROWSER,                              // browse & manage media
@@ -378,7 +377,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 break;
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
+                    WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
                     Uri uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
                     mMediaCapturePath = null;
                     queueFileForUpload(uri, getContentResolver().getType(uri));
@@ -448,7 +447,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         // hide "add media" if this is used as a media picker or the user doesn't have upload permission
-        if (mBrowserType.isPicker() || !WordPressMediaUtils.currentUserCanUploadMedia(mSite)) {
+        if (mBrowserType.isPicker() || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
         }
 
@@ -632,7 +631,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (event.isError()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
                     + " - " + event.error.message);
-            String errorMessage = WordPressMediaUtils.getErrorMessage(this, event.media, event.error);
+            String errorMessage = WPMediaUtils.getErrorMessage(this, event.media, event.error);
             if (errorMessage != null) {
                 ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
             } else {
@@ -676,7 +675,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 continue;
             }
 
-            if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
+            if (WPMediaUtils.canDeleteMedia(mediaModel)) {
                 if (mediaModel.getUploadState() != null &&
                         MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
                     mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
@@ -836,16 +835,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
             switch (position) {
                 case ITEM_CAPTURE_PHOTO:
-                    WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
+                    WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
                     break;
                 case ITEM_CAPTURE_VIDEO:
-                    WordPressMediaUtils.launchVideoCamera(this);
+                    WPMediaUtils.launchVideoCamera(this);
                     break;
                 case ITEM_CHOOSE_PHOTO:
-                    WordPressMediaUtils.launchPictureLibrary(this);
+                    WPMediaUtils.launchPictureLibrary(this);
                     break;
                 case ITEM_CHOOSE_VIDEO:
-                    WordPressMediaUtils.launchVideoLibrary(this);
+                    WPMediaUtils.launchVideoLibrary(this);
                     break;
             }
         }
@@ -879,7 +878,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (TextUtils.isEmpty(filePath)) {
             return originalUri;
         }
-        Uri optimizedMedia = WordPressMediaUtils.getOptimizedMedia(this, filePath, false);
+        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, filePath, false);
         if (optimizedMedia != null) {
             return optimizedMedia;
         } else {
@@ -887,7 +886,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
             if (!mSite.isWPCom()) {
                 // If it's not wpcom we must rotate the picture locally
-                Uri rotatedMedia = WordPressMediaUtils.fixOrientationIssue(this, filePath, false);
+                Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, filePath, false);
                 if (rotatedMedia != null) {
                     return rotatedMedia;
                 }

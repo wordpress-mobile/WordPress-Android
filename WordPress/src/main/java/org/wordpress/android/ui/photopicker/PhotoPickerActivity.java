@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.util.WordPressMediaUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.passcodelock.AppLockManager;
@@ -139,7 +139,7 @@ public class PhotoPickerActivity extends AppCompatActivity
             // user took a photo with the device camera
             case RequestCodes.TAKE_PHOTO:
                 try {
-                    WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
+                    WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
                     File f = new File(mMediaCapturePath);
                     Uri capturedImageUri = Uri.fromFile(f);
                     mediaSelected(capturedImageUri, PhotoPickerMediaSource.ANDROID_CAMERA);
@@ -151,8 +151,8 @@ public class PhotoPickerActivity extends AppCompatActivity
     }
 
     private void launchCamera() {
-        WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
-                new WordPressMediaUtils.LaunchCameraCallback() {
+        WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
+                new WPMediaUtils.LaunchCameraCallback() {
                     @Override
                     public void onMediaCapturePathReady(String mediaCapturePath) {
                         mMediaCapturePath = mediaCapturePath;
@@ -162,7 +162,7 @@ public class PhotoPickerActivity extends AppCompatActivity
     }
 
     private void launchPictureLibrary() {
-        WordPressMediaUtils.launchPictureLibrary(this);
+        WPMediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
