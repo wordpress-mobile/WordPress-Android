@@ -80,6 +80,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
+import org.wordpress.android.util.WordPressMediaUtils;
 
 import java.io.File;
 import java.util.ArrayList;
