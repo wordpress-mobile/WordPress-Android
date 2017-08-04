@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import static org.junit.Assert.assertNotEquals;
 @RunWith(RobolectricTestRunner.class)
 public class PostStoreUnitTest {
     private PostStore mPostStore = new PostStore(new Dispatcher(), Mockito.mock(PostRestClient.class),
-            Mockito.mock(PostXMLRPCClient.class));
+            Mockito.mock(PostXMLRPCClient.class), Mockito.mock(UploadStore.class));
 
     @Before
     public void setUp() {

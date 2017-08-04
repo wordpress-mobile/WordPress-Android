@@ -215,12 +215,18 @@ public class PostStore extends Store {
 
     private final PostRestClient mPostRestClient;
     private final PostXMLRPCClient mPostXMLRPCClient;
+    // Ensures that the UploadStore is initialized whenever the PostStore is,
+    // to ensure actions are shadowed and repeated by the UploadStore
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
+    private final UploadStore mUploadStore;
 
     @Inject
-    public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient) {
+    public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient,
+                     UploadStore uploadStore) {
         super(dispatcher);
         mPostRestClient = postRestClient;
         mPostXMLRPCClient = postXMLRPCClient;
+        mUploadStore = uploadStore;
     }
 
     @Override
