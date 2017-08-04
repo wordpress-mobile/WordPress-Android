@@ -30,9 +30,10 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)
 public class UploadStoreUnitTest {
-    private PostStore mPostStore = new PostStore(new Dispatcher(), Mockito.mock(PostRestClient.class),
-            Mockito.mock(PostXMLRPCClient.class));
-    private UploadStore mUploadStore = new UploadStore(new Dispatcher());
+    private Dispatcher mDispatcher = new Dispatcher();
+    private UploadStore mUploadStore = new UploadStore(mDispatcher);
+    private PostStore mPostStore = new PostStore(mDispatcher, Mockito.mock(PostRestClient.class),
+            Mockito.mock(PostXMLRPCClient.class), mUploadStore);
 
     @Before
     public void setUp() {

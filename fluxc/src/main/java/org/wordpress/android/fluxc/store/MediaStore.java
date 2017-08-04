@@ -324,14 +324,20 @@ public class MediaStore extends Store {
         }
     }
 
-    private MediaRestClient mMediaRestClient;
-    private MediaXMLRPCClient mMediaXmlrpcClient;
+    private final MediaRestClient mMediaRestClient;
+    private final MediaXMLRPCClient mMediaXmlrpcClient;
+    // Ensures that the UploadStore is initialized whenever the MediaStore is,
+    // to ensure actions are shadowed and repeated by the UploadStore
+    @SuppressWarnings({"unused", "FieldCanBeLocal"})
+    private final UploadStore mUploadStore;
 
     @Inject
-    public MediaStore(Dispatcher dispatcher, MediaRestClient restClient, MediaXMLRPCClient xmlrpcClient) {
+    public MediaStore(Dispatcher dispatcher, MediaRestClient restClient, MediaXMLRPCClient xmlrpcClient,
+                      UploadStore uploadStore) {
         super(dispatcher);
         mMediaRestClient = restClient;
         mMediaXmlrpcClient = xmlrpcClient;
+        mUploadStore = uploadStore;
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)

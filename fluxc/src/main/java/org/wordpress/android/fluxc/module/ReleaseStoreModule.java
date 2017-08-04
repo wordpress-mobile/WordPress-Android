@@ -40,8 +40,8 @@ public class ReleaseStoreModule {
     @Provides
     @Singleton
     public MediaStore provideMediaStore(Dispatcher dispatcher, MediaRestClient mediaRestClient,
-                                        MediaXMLRPCClient mediaXMLRPCClient) {
-        return new MediaStore(dispatcher, mediaRestClient, mediaXMLRPCClient);
+                                        MediaXMLRPCClient mediaXMLRPCClient, UploadStore uploadStore) {
+        return new MediaStore(dispatcher, mediaRestClient, mediaXMLRPCClient, uploadStore);
     }
 
     @Provides
@@ -55,8 +55,8 @@ public class ReleaseStoreModule {
     @Provides
     @Singleton
     public PostStore providePostStore(Dispatcher dispatcher, PostRestClient postRestClient,
-                                      PostXMLRPCClient postXMLRPCClient) {
-        return new PostStore(dispatcher, postRestClient, postXMLRPCClient);
+                                      PostXMLRPCClient postXMLRPCClient, UploadStore uploadStore) {
+        return new PostStore(dispatcher, postRestClient, postXMLRPCClient, uploadStore);
     }
 
     @Provides
