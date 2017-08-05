@@ -6,10 +6,11 @@ import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.util.StringUtils;
 
 @Table
-public class AccountModel extends Payload implements Identifiable {
+public class AccountModel extends Payload<BaseNetworkError> implements Identifiable {
     @PrimaryKey(autoincrement = false)
     @Column private int mId;
 

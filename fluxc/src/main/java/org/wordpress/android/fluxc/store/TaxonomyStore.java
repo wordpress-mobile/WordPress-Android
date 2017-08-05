@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.TermsModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.TaxonomySqlUtils;
@@ -27,7 +28,7 @@ public class TaxonomyStore extends Store {
     public static final String DEFAULT_TAXONOMY_CATEGORY = "category";
     public static final String DEFAULT_TAXONOMY_TAG = "post_tag";
 
-    public static class FetchTermsPayload extends Payload {
+    public static class FetchTermsPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public TaxonomyModel taxonomy;
 
@@ -37,8 +38,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    public static class FetchTermsResponsePayload extends Payload {
-        public TaxonomyError error;
+    public static class FetchTermsResponsePayload extends Payload<TaxonomyError> {
         public TermsModel terms;
         public SiteModel site;
         public String taxonomy;
@@ -55,8 +55,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    public static class RemoteTermPayload extends Payload {
-        public TaxonomyError error;
+    public static class RemoteTermPayload extends Payload<TaxonomyError> {
         public TermModel term;
         public SiteModel site;
 

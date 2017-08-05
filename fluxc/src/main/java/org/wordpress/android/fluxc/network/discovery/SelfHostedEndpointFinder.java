@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.BuildConfig;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.store.Store.OnChangedError;
 import org.wordpress.android.fluxc.utils.WPUrlUtils;
 import org.wordpress.android.util.AppLog;
@@ -50,7 +51,7 @@ public class SelfHostedEndpointFinder {
         }
     }
 
-    public static class DiscoveryResultPayload extends Payload {
+    public static class DiscoveryResultPayload extends Payload<BaseNetworkError> {
         public String xmlRpcEndpoint;
         public String wpRestEndpoint;
         public DiscoveryError discoveryError;
