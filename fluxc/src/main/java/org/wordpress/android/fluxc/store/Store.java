@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.FluxCError;
 import org.wordpress.android.fluxc.annotations.action.Action;
 
 public abstract class Store {
@@ -11,7 +12,7 @@ public abstract class Store {
         mDispatcher.register(this);
     }
 
-    public interface OnChangedError {}
+    public interface OnChangedError extends FluxCError {}
 
     public static class OnChanged<T extends OnChangedError> {
         public T error = null;
