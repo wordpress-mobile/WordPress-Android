@@ -41,7 +41,7 @@ import javax.inject.Singleton;
 public class AccountRestClient extends BaseWPComRestClient {
     private final AppSecrets mAppSecrets;
 
-    public static class AccountRestPayload extends Payload {
+    public static class AccountRestPayload extends Payload<BaseNetworkError> {
         public AccountRestPayload(AccountModel account, BaseNetworkError error) {
             this.account = account;
             this.error = error;
@@ -49,24 +49,22 @@ public class AccountRestClient extends BaseWPComRestClient {
         public AccountModel account;
     }
 
-    public static class AccountPushSettingsResponsePayload extends Payload {
+    public static class AccountPushSettingsResponsePayload extends Payload<BaseNetworkError> {
         public AccountPushSettingsResponsePayload(BaseNetworkError error) {
             this.error = error;
         }
         public Map<String, Object> settings;
     }
 
-    public static class NewAccountResponsePayload extends Payload {
-        public NewUserError error;
+    public static class NewAccountResponsePayload extends Payload<NewUserError> {
         public boolean dryRun;
     }
 
-    public static class IsAvailableResponsePayload extends Payload {
+    public static class IsAvailableResponsePayload extends Payload<IsAvailableError> {
         public IsAvailable type;
         public String value;
         public boolean isAvailable;
         public List<String> suggestions;
-        public IsAvailableError error;
     }
 
     public enum IsAvailable {
