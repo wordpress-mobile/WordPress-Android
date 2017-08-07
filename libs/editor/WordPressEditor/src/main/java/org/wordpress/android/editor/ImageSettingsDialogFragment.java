@@ -37,7 +37,6 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.ToastUtils;
 
 import java.util.Arrays;
 
@@ -59,9 +58,6 @@ import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_MAX_WIDT
 
 /**
  * A full-screen DialogFragment with image settings.
- *
- * Modifies the action bar - host activity must call {@link ImageSettingsDialogFragment#dismissFragment()}
- * when the fragment is dismissed to restore it.
  */
 public class ImageSettingsDialogFragment extends DialogFragment {
     public static final int IMAGE_SETTINGS_DIALOG_REQUEST_CODE = 5;
@@ -113,40 +109,32 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         } else {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         }
+    }
 
-        // Show custom view with padded Save button
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(R.layout.image_settings_formatbar);
+    public void saveAndClose() {
+        mImageMeta = extractMetaDataFromFields(mImageMeta);
 
-        actionBar.getCustomView().findViewById(R.id.menu_save).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mImageMeta = extractMetaDataFromFields(mImageMeta);
+        String imageRemoteId = "";
+        try {
+            imageRemoteId = mImageMeta.getString(ATTR_ID_ATTACHMENT);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.EDITOR, "Unable to retrieve featured image id from meta data");
+        }
 
-                String imageRemoteId = "";
-                try {
-                    imageRemoteId = mImageMeta.getString(ATTR_ID_ATTACHMENT);
-                } catch (JSONException e) {
-                    AppLog.e(AppLog.T.EDITOR, "Unable to retrieve featured image id from meta data");
-                }
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_IMAGE_META, mImageMeta.toString());
 
-                Intent intent = new Intent();
-                intent.putExtra(EXTRA_IMAGE_META, mImageMeta.toString());
+        mIsFeatured = mFeaturedCheckBox.isChecked();
+        intent.putExtra(EXTRA_FEATURED, mIsFeatured);
 
-                mIsFeatured = mFeaturedCheckBox.isChecked();
-                intent.putExtra(EXTRA_FEATURED, mIsFeatured);
+        if (!imageRemoteId.isEmpty()) {
+            intent.putExtra(ATTR_ID_IMAGE_REMOTE, Integer.parseInt(imageRemoteId));
+        }
 
-                if (!imageRemoteId.isEmpty()) {
-                    intent.putExtra(ATTR_ID_IMAGE_REMOTE, Integer.parseInt(imageRemoteId));
-                }
+        getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), intent);
 
-                getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), intent);
-
-                restorePreviousActionBar();
-                getFragmentManager().popBackStack();
-                ToastUtils.showToast(getActivity(), R.string.image_settings_save_toast);
-            }
-        });
+        restorePreviousActionBar();
+        getFragmentManager().popBackStack();
     }
 
     @Override
@@ -263,38 +251,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         } else {
             return null;
         }
-    }
-
-    /**
-     * To be called when the fragment is being dismissed, either by ActionBar navigation or by pressing back in the
-     * navigation bar.
-     * Displays a confirmation dialog if there are unsaved changes, otherwise undoes the fragment's modifications to
-     * the ActionBar and restores the last visible fragment.
-     */
-    public void dismissFragment() {
-        try {
-            JSONObject newImageMeta = extractMetaDataFromFields(new JSONObject());
-
-            for (int i = 0; i < newImageMeta.names().length(); i++) {
-                String name = newImageMeta.names().getString(i);
-                if (!newImageMeta.getString(name).equals(mImageMeta.getString(name))) {
-                    showDiscardChangesDialog();
-                    return;
-                }
-            }
-
-            if (mFeaturedCheckBox.isChecked() != mIsFeatured) {
-                // Featured image status has changed
-                showDiscardChangesDialog();
-                return;
-            }
-        } catch (JSONException e) {
-            AppLog.d(AppLog.T.EDITOR, "Unable to update JSON array");
-        }
-
-        getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), null);
-        restorePreviousActionBar();
-        getFragmentManager().popBackStack();
     }
 
     public void setImageLoader(ImageLoader imageLoader) {

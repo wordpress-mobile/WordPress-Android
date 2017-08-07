@@ -754,7 +754,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (fragment != null && fragment.isVisible()) {
             if (fragment instanceof  ImageSettingsDialogFragment) {
                 ImageSettingsDialogFragment imFragment = (ImageSettingsDialogFragment) fragment;
-                imFragment.dismissFragment();
+                imFragment.saveAndClose();
             }
             return false;
         }
