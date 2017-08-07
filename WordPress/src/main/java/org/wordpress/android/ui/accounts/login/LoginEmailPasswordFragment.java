@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -134,7 +135,11 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PASSWORD_FORM_VIEWED);
 
-            mPasswordInput.setText(mPassword);
+            if (!TextUtils.isEmpty(mPassword)) {
+                mPasswordInput.setText(mPassword);
+            } else {
+                autoFillFromBuildConfig("DEBUG_DOTCOM_LOGIN_PASSWORD", mPasswordInput.getEditText());
+            }
         } else {
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         }
