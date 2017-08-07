@@ -374,7 +374,7 @@ public class MediaSqlUtils {
         }
 
         List<Integer> idList = new ArrayList<>();
-        for (MediaModel media: mediaList) {
+        for (MediaModel media : mediaList) {
             idList.add(media.getId());
         }
 
