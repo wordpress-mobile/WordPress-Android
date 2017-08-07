@@ -13,42 +13,6 @@
         android:orientation="vertical"
         android:padding="@dimen/image_settings_dialog_padding">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/image_settings_dialog_thumbnail_container_margin_bottom">
-
-            <LinearLayout
-                android:layout_width="@dimen/image_settings_dialog_thumbnail_size"
-                android:layout_height="@dimen/image_settings_dialog_thumbnail_size"
-                android:orientation="horizontal"
-                android:layout_marginLeft="@dimen/image_settings_dialog_thumbnail_left_margin"
-                android:layout_marginRight="@dimen/image_settings_dialog_thumbnail_right_margin"
-                android:gravity="center">
-                <ImageView
-                    android:id="@+id/image_thumbnail"
-                    android:contentDescription="@string/image_thumbnail"
-                    android:layout_width="@dimen/image_settings_dialog_thumbnail_size"
-                    android:layout_height="@dimen/image_settings_dialog_thumbnail_size" />
-
-                <ProgressBar
-                    android:id="@+id/progress"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="@dimen/image_settings_dialog_thumbnail_progress_size"
-                    android:layout_height="@dimen/image_settings_dialog_thumbnail_progress_size"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/image_filename"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/image_settings_dialog_filename_margin_left"
-                android:layout_gravity="center_vertical"/>
-        </LinearLayout>
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

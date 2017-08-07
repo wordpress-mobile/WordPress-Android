@@ -1407,7 +1407,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 }
                 mEditorFragmentListener.onTrackableEvent(TrackableEvent.IMAGE_EDITED);
                 ImageSettingsDialogFragment imageSettingsDialogFragment = new ImageSettingsDialogFragment();
-                imageSettingsDialogFragment.setImageLoader(mImageLoader);
                 imageSettingsDialogFragment.setTargetFragment(this,
                         ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE);
 
