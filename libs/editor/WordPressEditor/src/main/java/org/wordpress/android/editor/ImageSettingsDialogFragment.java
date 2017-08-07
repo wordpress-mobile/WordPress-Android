@@ -73,23 +73,21 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         setHasOptionsMenu(true);
 
         ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return;
-        }
+        if (actionBar != null) {
+            actionBar.show();
 
-        actionBar.show();
+            mPreviousActionBarTitle = actionBar.getTitle();
 
-        mPreviousActionBarTitle = actionBar.getTitle();
+            final int displayOptions = actionBar.getDisplayOptions();
+            mPreviousHomeAsUpEnabled = (displayOptions & ActionBar.DISPLAY_HOME_AS_UP) != 0;
 
-        final int displayOptions = actionBar.getDisplayOptions();
-        mPreviousHomeAsUpEnabled = (displayOptions & ActionBar.DISPLAY_HOME_AS_UP) != 0;
-
-        actionBar.setTitle(R.string.image_settings);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        if (getResources().getBoolean(R.bool.show_extra_side_padding)) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_padded);
-        } else {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            actionBar.setTitle(R.string.image_settings);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            if (getResources().getBoolean(R.bool.show_extra_side_padding)) {
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_close_padded);
+            } else {
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            }
         }
     }
 

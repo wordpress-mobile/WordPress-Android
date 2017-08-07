@@ -6,7 +6,9 @@
     <color name="format_bar_divider">@color/wp_grey_lighten_10</color>
     <color name="format_bar_ripple_animation">@color/wp_grey_lighten_10</color>
 
-    <color name="image_options_label">@color/wp_grey</color>
+    <color name="image_options_label">@color/wp_blue_medium</color>
+    <color name="image_options_text">#ffffff</color>
+    <color name="image_options_background">#C0000000</color>
 
     <color name="legacy_format_bar_background">#eeeeee</color>
     <color name="legacy_format_bar_button_selected">#00aadc</color>

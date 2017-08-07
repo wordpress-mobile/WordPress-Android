@@ -1,98 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/image_options_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/image_settings_dialog_extra_margin"
         android:layout_marginLeft="@dimen/image_settings_dialog_extra_margin"
+        android:layout_marginRight="@dimen/image_settings_dialog_extra_margin"
         android:orientation="vertical"
         android:padding="@dimen/image_settings_dialog_padding">
 
         <TextView
+            style="@style/ImageOptionsDialogLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/title"
-            style="@style/ImageOptionsDialogLabel"/>
+            android:text="@string/title"/>
 
         <EditText
             android:id="@+id/image_title"
+            style="@style/ImageOptionsDialogInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"
-            android:singleLine="true"
-            style="@style/ImageOptionsDialogInput"/>
+            android:singleLine="true"/>
 
         <TextView
             android:id="@+id/image_caption_label"
+            style="@style/ImageOptionsDialogLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/image_caption"
-            style="@style/ImageOptionsDialogLabel"/>
+            android:text="@string/image_caption"/>
 
         <EditText
             android:id="@+id/image_caption"
+            style="@style/ImageOptionsDialogInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"
-            android:singleLine="true"
-            style="@style/ImageOptionsDialogInput"/>
+            android:singleLine="true"/>
 
         <TextView
+            style="@style/ImageOptionsDialogLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/image_alt_text"
-            style="@style/ImageOptionsDialogLabel"/>
+            android:text="@string/image_alt_text"/>
 
         <EditText
             android:id="@+id/image_alt_text"
+            style="@style/ImageOptionsDialogInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"
-            android:singleLine="true"
-            style="@style/ImageOptionsDialogInput"/>
+            android:singleLine="true"/>
 
         <TextView
             android:id="@+id/alignment_spinner_label"
+            style="@style/ImageOptionsDialogLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/image_alignment"
-            style="@style/ImageOptionsDialogLabel"/>
+            android:text="@string/image_alignment"/>
 
         <Spinner
             android:id="@+id/alignment_spinner"
+            style="@style/ImageOptionsDialogInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/alignment_array"
-            android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
             android:layout_marginLeft="@dimen/image_settings_dialog_input_field_start_margin"
-            android:prompt="@string/image_alignment"
-            style="@style/ImageOptionsDialogInput"/>
+            android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
+            android:entries="@array/alignment_array"
+            android:prompt="@string/image_alignment"/>
 
         <TextView
             android:id="@+id/image_link_to_label"
+            style="@style/ImageOptionsDialogLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/image_link_to"
-            style="@style/ImageOptionsDialogLabel"/>
+            android:text="@string/image_link_to"/>
 
         <EditText
             android:id="@+id/image_link_to"
+            style="@style/ImageOptionsDialogInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textNoSuggestions"
-            android:singleLine="true"
-            style="@style/ImageOptionsDialogInput"/>
+            android:singleLine="true"/>
 
         <TextView
+            style="@style/ImageOptionsDialogLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/image_width"
-            style="@style/ImageOptionsDialogLabel"/>
+            android:text="@string/image_width"/>
 
 
         <RelativeLayout
@@ -115,21 +116,21 @@
 
         <EditText
             android:id="@+id/image_width_text"
+            style="@style/ImageOptionsDialogInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""
             android:imeOptions="actionDone"
-            android:singleLine="true"
             android:inputType="number"
-            style="@style/ImageOptionsDialogInput"/>
+            android:singleLine="true"
+            android:text=""/>
 
         <CheckBox
             android:id="@+id/featuredImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/featured"
-            android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
             android:layout_marginLeft="@dimen/image_settings_dialog_input_field_start_margin"
+            android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
+            android:text="@string/featured"
             android:visibility="gone"/>
     </LinearLayout>
 </ScrollView>

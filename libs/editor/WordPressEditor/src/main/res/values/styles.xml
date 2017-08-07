@@ -48,6 +48,7 @@
 
     <style name="ImageOptionsDialogInput">
         <item name="android:layout_marginBottom">@dimen/image_settings_dialog_input_margin_bottom</item>
+        <item name="android:textColor">@color/image_options_text</item>
     </style>
 
     <style name="EditorTitleBeta">
