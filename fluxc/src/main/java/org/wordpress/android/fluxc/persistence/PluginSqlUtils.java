@@ -19,12 +19,12 @@ public class PluginSqlUtils {
     }
 
     public static void insertOrReplacePlugins(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
-        // Remove previous post formats for this site
+        // Remove previous plugins for this site
         WellSql.delete(PluginModel.class)
                 .where()
                 .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().execute();
-        // Insert new post formats for this site
+        // Insert new plugins for this site
         for (PluginModel pluginModel : plugins) {
             pluginModel.setLocalSiteId(site.getId());
         }
