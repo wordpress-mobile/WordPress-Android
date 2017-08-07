@@ -40,7 +40,7 @@
     </style>
 
     <style name="ImageOptionsDialogLabel">
-        <item name="android:textColor">@color/image_options_label</item>
+        <item name="android:textColor">@color/image_settings_label</item>
         <item name="android:textStyle">bold</item>
         <item name="android:paddingLeft">@dimen/image_settings_dialog_label_indent</item>
         <item name="android:layout_marginBottom">@dimen/image_settings_dialog_label_margin_bottom</item>
@@ -48,7 +48,7 @@
 
     <style name="ImageOptionsDialogInput">
         <item name="android:layout_marginBottom">@dimen/image_settings_dialog_input_margin_bottom</item>
-        <item name="android:textColor">@color/image_options_text</item>
+        <item name="android:textColor">@color/image_settings_text</item>
     </style>
 
     <style name="EditorTitleBeta">
