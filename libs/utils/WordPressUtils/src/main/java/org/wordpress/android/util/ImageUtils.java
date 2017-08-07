@@ -407,7 +407,7 @@ public class ImageUtils {
     private static boolean resizeImageAndWriteToStream(Context context,
                                                     Uri imageUri,
                                                     String fileExtension,
-                                                    int maxWidth,
+                                                    int maxDimension,
                                                     int orientation,
                                                     int quality,
                                                     OutputStream outStream) throws OutOfMemoryError, IOException {
@@ -502,11 +502,11 @@ public class ImageUtils {
      * Given the path to an image, compress and resize it.
      * @param context the passed context
      * @param path the path to the original image
-     * @param maxImageWidth the maximum allowed width
+     * @param maxImageDimension the maximum allowed width
      * @param quality the encoder quality
      * @return the path to the optimized image
      */
-    public static String optimizeImage(Context context, String path, int maxImageWidth, int quality) {
+    public static String optimizeImage(Context context, String path, int maxImageDimension, int quality) {
         if (context == null || TextUtils.isEmpty(path)) {
             return path;
         }
@@ -530,19 +530,19 @@ public class ImageUtils {
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
         String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
 
-        int selectedWidth = getImageSize(srcImageUri, context)[0];
-        if (selectedWidth == 0) {
+        int selectedMaxDimension = getImageSize(srcImageUri, context)[0];
+        if (selectedMaxDimension == 0) {
             // Can't read the src dimensions.
             return path;
         }
 
         // do not optimize if original-size and 100% quality are set.
-        if (maxImageWidth == Integer.MAX_VALUE && quality == 100) {
+        if (maxImageDimension == Integer.MAX_VALUE && quality == 100) {
             return path;
         }
 
-        if (selectedWidth > maxImageWidth) {
-            selectedWidth = maxImageWidth;
+        if (selectedMaxDimension > maxImageDimension) {
+            selectedMaxDimension = maxImageDimension;
         }
 
         int orientation = getImageOrientation(context, path);
@@ -562,7 +562,7 @@ public class ImageUtils {
         }
 
         try {
-            boolean res = resizeImageAndWriteToStream(context, srcImageUri, fileExtension, selectedWidth, orientation, quality, out);
+            boolean res = resizeImageAndWriteToStream(context, srcImageUri, fileExtension, selectedMaxDimension, orientation, quality, out);
             if (!res) {
                 AppLog.w(AppLog.T.MEDIA, "Failed to compress the optimized image. Use the original picture instead.");
                 return path;

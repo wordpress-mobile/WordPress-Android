@@ -48,14 +48,14 @@ public class WPMediaUtils {
         if (isVideo) {
             return null;
         }
-        int resizeWidth = AppPrefs.getImageOptimizeWidth() > 1 ? AppPrefs.getImageOptimizeWidth() : Integer.MAX_VALUE;
+        int resizeDimension = AppPrefs.getImageOptimizeMaxDimension() > 1 ? AppPrefs.getImageOptimizeMaxDimension() : Integer.MAX_VALUE;
         int quality = AppPrefs.getImageOptimizeQuality();
         // do not optimize if original-size and 100% quality are set.
-        if (resizeWidth == Integer.MAX_VALUE && quality == 100) {
+        if (resizeDimension == Integer.MAX_VALUE && quality == 100) {
             return null;
         }
 
-        String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeWidth, quality);
+        String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeDimension, quality);
         if (optimizedPath == null) {
             AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);

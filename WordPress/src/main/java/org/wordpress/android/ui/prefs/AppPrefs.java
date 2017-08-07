@@ -592,11 +592,11 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.IMAGE_OPTIMIZE_ENABLED, optimize);
     }
 
-    public static void setImageOptimizeWidth(int width) {
+    public static void setImageOptimizeMaxDimension(int width) {
         setInt(DeletablePrefKey.IMAGE_OPTIMIZE_WIDTH, width);
     }
 
-    public static int getImageOptimizeWidth() {
+    public static int getImageOptimizeMaxDimension() {
         int resizeWidth = getInt(DeletablePrefKey.IMAGE_OPTIMIZE_WIDTH, 0);
         return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_IMAGE_MAX_WIDTH : resizeWidth;
     }

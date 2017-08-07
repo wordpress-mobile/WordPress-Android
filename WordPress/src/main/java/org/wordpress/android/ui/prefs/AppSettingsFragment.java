@@ -46,7 +46,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
-    private DetailListPreference mImageWidthPref;
+    private DetailListPreference mImageMaxDimensionPref;
     private DetailListPreference mImageQualityPref;
     private WPSwitchPreference mOptimizedVideo;
     private DetailListPreference mVideoWidthPref;
@@ -79,7 +79,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         mOptimizedImage =
                 (WPSwitchPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
-        mImageWidthPref = (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_image_width, this);
+        mImageMaxDimensionPref = (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_image_width, this);
         mImageQualityPref =
                 (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_image_quality, this);
         mOptimizedVideo =
@@ -91,9 +91,9 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
-        setDetailListPreferenceValue(mImageWidthPref,
-                String.valueOf(AppPrefs.getImageOptimizeWidth()),
-                getLabelForImageMaxWidthValue(AppPrefs.getImageOptimizeWidth()));
+        setDetailListPreferenceValue(mImageMaxDimensionPref,
+                String.valueOf(AppPrefs.getImageOptimizeMaxDimension()),
+                getLabelForImageMaxDimensionValue(AppPrefs.getImageOptimizeMaxDimension()));
         setDetailListPreferenceValue(mImageQualityPref,
                 String.valueOf(AppPrefs.getImageOptimizeQuality()),
                 getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
@@ -149,16 +149,16 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
             return false;
         } else if (preference == mOptimizedImage) {
             AppPrefs.setImageOptimize((Boolean) newValue);
-            mImageWidthPref.setEnabled((Boolean) newValue);
+            mImageMaxDimensionPref.setEnabled((Boolean) newValue);
             Map<String, Object> properties = new HashMap<>();
             properties.put("enabled", newValue);
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED, properties);
-        } else if (preference == mImageWidthPref) {
+        } else if (preference == mImageMaxDimensionPref) {
             int newWidth = Integer.parseInt(newValue.toString());
-            AppPrefs.setImageOptimizeWidth(newWidth);
-            setDetailListPreferenceValue(mImageWidthPref,
+            AppPrefs.setImageOptimizeMaxDimension(newWidth);
+            setDetailListPreferenceValue(mImageMaxDimensionPref,
                     newValue.toString(),
-                    getLabelForImageMaxWidthValue(AppPrefs.getImageOptimizeWidth()));
+                    getLabelForImageMaxDimensionValue(AppPrefs.getImageOptimizeMaxDimension()));
         } else if (preference == mImageQualityPref) {
             AppPrefs.setImageOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mImageQualityPref,
@@ -336,9 +336,9 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         return true;
     }
 
-    private String getLabelForImageMaxWidthValue(int newValue) {
-        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_width_values);
-        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_width_entries);
+    private String getLabelForImageMaxDimensionValue(int newValue) {
+        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_max_dimension_values);
+        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_max_dimension_entries);
         for (int i = 0; i < values.length ; i++) {
             if (values[i].equals(String.valueOf(newValue))) {
                 return entries[i];
