@@ -11,7 +11,7 @@
         android:layout_alignBaseline="@+id/input_layout"
         android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_marginEnd="@dimen/margin_extra_large"
-        android:contentDescription="@string/login_email_image"
+        android:importantForAccessibility="no"
         android:tint="@color/grey_lighten_10"
         app:srcCompat="@drawable/ic_user_grey_24dp"/>
 

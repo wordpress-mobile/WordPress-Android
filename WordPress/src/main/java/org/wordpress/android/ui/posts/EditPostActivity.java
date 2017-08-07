@@ -87,7 +87,6 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
@@ -96,7 +95,7 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
+import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -109,6 +108,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -176,6 +176,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
+    private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
 
     private Handler mHandler;
     private boolean mShowAztecEditor;
@@ -465,6 +466,16 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onResume();
         mHandler = new Handler();
         mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
+
+        if (mEditorMediaUploadListener != null) {
+            List<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
+            for (MediaModel media : uploadingMediaInPost) {
+                if (media != null) {
+                    mEditorMediaUploadListener.onMediaUploadReattached(String.valueOf(media.getId()),
+                            UploadService.getUploadProgressForMedia(media));
+                }
+            }
+        }
     }
 
     @Override
@@ -507,11 +518,17 @@ public class EditPostActivity extends AppCompatActivity implements
         if (orientation != mPhotoPickerOrientation) {
             resizePhotoPicker();
         }
+
+        // If we're showing the Async promo dialog, we need to notify it to take the new orientation into account
+        PromoDialog fragment = (PromoDialog) getSupportFragmentManager().findFragmentByTag(ASYNC_PROMO_DIALOG_TAG);
+        if (fragment != null) {
+            fragment.redrawForOrientationChange();
+        }
     }
 
     @Override
     public void onBetaClicked() {
-        startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+        ActivityLauncher.showAztecEditorReleaseNotes(this);
         AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LABEL);
     }
 
@@ -644,7 +661,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onPhotoPickerMediaChosen(@NonNull final List<Uri> uriList) {
         hidePhotoPicker();
 
-        if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
+        if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
             boolean hasSelectedPicture = false;
             for (Uri uri : uriList) {
                 if (!MediaUtils.isVideo(uri.toString())) {
@@ -653,7 +670,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
             if (hasSelectedPicture) {
-                WPMediaUtils.advertiseImageOptimization(this, mSite,
+                WPMediaUtils.advertiseImageOptimization(this,
                         new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
                             @Override
                             public void done() {
@@ -801,7 +818,11 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (itemId == R.id.menu_save_post) {
-            publishPost();
+            if (!AppPrefs.isAsyncPromoRequired()) {
+                publishPost();
+            } else {
+                showAsyncPromoDialog();
+            }
         } else {
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
@@ -885,17 +906,17 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void launchPictureLibrary() {
-        WordPressMediaUtils.launchPictureLibrary(this);
+        WPMediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoLibrary() {
-        WordPressMediaUtils.launchVideoLibrary(this);
+        WPMediaUtils.launchVideoLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoCamera() {
-        WordPressMediaUtils.launchVideoCamera(this);
+        WPMediaUtils.launchVideoCamera(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
@@ -1524,8 +1545,8 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void launchCamera() {
-        WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
-                new WordPressMediaUtils.LaunchCameraCallback() {
+        WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
+                new WPMediaUtils.LaunchCameraCallback() {
                     @Override
                     public void onMediaCapturePathReady(String mediaCapturePath) {
                         mMediaCapturePath = mediaCapturePath;
@@ -1794,7 +1815,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Video optimization -> API18 or higher
-        if (isVideo && WPMediaUtils.isVideoOptimizationEnabled(this, mSite)) {
+        if (isVideo && WPMediaUtils.isVideoOptimizationEnabled()) {
             // Setting up the lister that's called when the video optimization finishes
             EditPostActivityVideoHelper.IVideoOptimizationListener listener = new EditPostActivityVideoHelper.IVideoOptimizationListener() {
                 @Override
@@ -1814,7 +1835,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 return true;
             }
         }
-        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, path, isVideo);
+        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, path, isVideo);
         if (optimizedMedia != null) {
             uri = optimizedMedia;
             path = MediaUtils.getRealPathFromURI(this, uri);
@@ -1882,8 +1903,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     final Uri imageUri = data.getData();
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
-                        WPMediaUtils.advertiseImageOptimization(this, mSite,
+                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
+                        WPMediaUtils.advertiseImageOptimization(this,
                                 new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
                                     @Override
                                     public void done() {
@@ -1897,8 +1918,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case RequestCodes.TAKE_PHOTO:
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
-                        WPMediaUtils.advertiseImageOptimization(this, mSite,
+                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
+                        WPMediaUtils.advertiseImageOptimization(this,
                                 new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
                                     @Override
                                     public void done() {
@@ -1932,7 +1953,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void addLastTakenPicture() {
         try {
-            WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
+            WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
             File f = new File(mMediaCapturePath);
             Uri capturedImageUri = Uri.fromFile(f);
             if (!addMedia(capturedImageUri)) {
@@ -2091,7 +2112,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 for (String videoId : mPendingVideoPressInfoRequests) {
                     String videoUrl = mMediaStore.
                             getUrlForSiteVideoWithVideoPressGuid(mSite, videoId);
-                    String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
+                    String posterUrl = WPMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
 
                     mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
                 }
@@ -2240,7 +2261,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onAddMediaClicked() {
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
-        } else if (WordPressMediaUtils.currentUserCanUploadMedia(mSite)) {
+        } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             showPhotoPicker();
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
@@ -2340,7 +2361,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
 
-        String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
+        String posterUrl = WPMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
 
         mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
     }
@@ -2513,7 +2534,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+                                ActivityLauncher.showAztecEditorReleaseNotes(EditPostActivity.this);
                                 AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LINK);
                             }
                         }
@@ -2541,6 +2562,27 @@ public class EditPostActivity extends AppCompatActivity implements
                     )
                     .show();
         }
+    }
+
+    private void showAsyncPromoDialog() {
+        PromoDialogAdvanced asyncPromoDialog = new PromoDialogAdvanced.Builder(
+                R.drawable.img_promo_async,
+                R.string.async_promo_title,
+                R.string.async_promo_description,
+                android.R.string.ok)
+                // TODO: Re-enable once a release notes page exists for Async
+//                .setLinkText(R.string.async_promo_link)
+                .build();
+
+        asyncPromoDialog.setPositiveButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                publishPost();
+            }
+        });
+
+        asyncPromoDialog.show(getSupportFragmentManager(), ASYNC_PROMO_DIALOG_TAG);
+        AppPrefs.setAsyncPromoRequired(false);
     }
 
     // EditPostActivityHook methods

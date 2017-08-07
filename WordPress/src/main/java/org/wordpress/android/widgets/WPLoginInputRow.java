@@ -73,10 +73,6 @@ public class WPLoginInputRow extends RelativeLayout {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.wpLoginInputRow, 0, 0);
 
             try {
-                if (a.hasValue(R.styleable.wpLoginInputRow_wpIconContentDescription)) {
-                    mIcon.setContentDescription(a.getString(R.styleable.wpLoginInputRow_wpIconContentDescription));
-                }
-
                 if (a.hasValue(R.styleable.wpLoginInputRow_wpIconDrawable)) {
                     mIcon.setImageResource(a.getResourceId(R.styleable.wpLoginInputRow_wpIconDrawable, 0));
                     mIcon.setVisibility(View.VISIBLE);
