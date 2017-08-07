@@ -90,11 +90,11 @@
             android:singleLine="true"/>
 
         <TextView
+            android:id="@+id/image_width_caption"
             style="@style/ImageOptionsDialogLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/image_width"/>
-
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -115,16 +115,6 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/image_icon"/>
         </RelativeLayout>
-
-        <EditText
-            android:id="@+id/image_width_text"
-            style="@style/ImageOptionsDialogInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:singleLine="true"
-            android:text=""/>
 
         <CheckBox
             android:id="@+id/featuredImage"

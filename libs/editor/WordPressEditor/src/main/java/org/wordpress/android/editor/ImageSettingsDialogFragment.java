@@ -1,20 +1,17 @@
 package org.wordpress.android.editor;
 
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -56,10 +53,11 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     private EditText mTitleText;
     private EditText mCaptionText;
     private EditText mAltText;
+    private SeekBar mWidthSeekBar;
+    private TextView mWidthLabel;
     private Spinner mAlignmentSpinner;
     private String[] mAlignmentKeyArray;
     private EditText mLinkTo;
-    private EditText mWidthText;
     private CheckBox mFeaturedCheckBox;
 
     private boolean mIsFeatured;
@@ -126,9 +124,9 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         mAltText = (EditText) view.findViewById(R.id.image_alt_text);
         mAlignmentSpinner = (Spinner) view.findViewById(R.id.alignment_spinner);
         mLinkTo = (EditText) view.findViewById(R.id.image_link_to);
-        SeekBar widthSeekBar = (SeekBar) view.findViewById(R.id.image_width_seekbar);
-        mWidthText = (EditText) view.findViewById(R.id.image_width_text);
+        mWidthSeekBar = (SeekBar) view.findViewById(R.id.image_width_seekbar);
         mFeaturedCheckBox = (CheckBox) view.findViewById(R.id.featuredImage);
+        mWidthLabel = (TextView) view.findViewById(R.id.image_width_caption);
 
         // Populate the dialog with existing values
         Bundle bundle = getArguments();
@@ -150,7 +148,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 mMaxImageWidth = MediaUtils.getMaximumImageWidth(mImageMeta.getInt("naturalWidth"),
                         bundle.getString(EXTRA_MAX_WIDTH));
 
-                setupWidthSeekBar(widthSeekBar, mWidthText, mImageMeta.getInt(ATTR_DIMEN_WIDTH));
+                setupWidthSeekBar(mImageMeta.getInt(ATTR_DIMEN_WIDTH));
 
                 boolean featuredImageSupported = bundle.getBoolean(EXTRA_IMAGE_FEATURED);
                 if (featuredImageSupported) {
@@ -243,7 +241,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             }
             metaData.put(ATTR_URL_LINK, mLinkTo.getText().toString());
 
-            int newWidth = getEditTextIntegerClamped(mWidthText, 1, Integer.MAX_VALUE);
+            int newWidth = mWidthSeekBar.getProgress() * 10;
             metaData.put(ATTR_DIMEN_WIDTH, newWidth);
             metaData.put(ATTR_DIMEN_HEIGHT, getRelativeHeightFromWidth(newWidth));
         } catch (JSONException e) {
@@ -253,78 +251,37 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         return metaData;
     }
 
+    private void showWidthText(int imageWidth) {
+        String label = getString(R.string.image_width) + " - " + Integer.toString(imageWidth) + "px";
+        mWidthLabel.setText(label);
+    }
+
     /**
      * Initialize the image width SeekBar and accompanying EditText
      */
-    private void setupWidthSeekBar(final SeekBar widthSeekBar, final EditText widthText, int imageWidth) {
-        widthSeekBar.setMax(mMaxImageWidth / 10);
+    private void setupWidthSeekBar(int imageWidth) {
+        mWidthSeekBar.setMax(mMaxImageWidth / 10);
 
         if (imageWidth != 0) {
-            widthSeekBar.setProgress(imageWidth / 10);
-            widthText.setText(String.valueOf(imageWidth) + "px");
+            mWidthSeekBar.setProgress(imageWidth / 10);
+            showWidthText(imageWidth);
         }
 
-        widthSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mWidthSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
-
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (progress == 0) {
                     progress = 1;
                 }
-                widthText.setText(progress * 10 + "px");
+                showWidthText(progress * 10);
             }
         });
-
-        widthText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    widthText.setText("");
-                }
-            }
-        });
-
-        widthText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                int width = getEditTextIntegerClamped(widthText, 10, mMaxImageWidth);
-                widthSeekBar.setProgress(width / 10);
-                widthText.setSelection((String.valueOf(width).length()));
-
-                InputMethodManager imm = (InputMethodManager) getActivity()
-                        .getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(widthText.getWindowToken(),
-                        InputMethodManager.RESULT_UNCHANGED_SHOWN);
-
-                return true;
-            }
-        });
-    }
-
-    /**
-     * Return the integer value of the width EditText, adjusted to be within the given min and max, and stripped of the
-     * 'px' units
-     */
-    private int getEditTextIntegerClamped(EditText editText, int minWidth, int maxWidth) {
-        int width = 10;
-
-        try {
-            if (editText.getText() != null)
-                width = Integer.parseInt(editText.getText().toString().replace("px", ""));
-        } catch (NumberFormatException e) {
-            AppLog.e(AppLog.T.EDITOR, e);
-        }
-
-        width = Math.min(maxWidth, Math.max(width, minWidth));
-
-        return width;
     }
 
     /**
