@@ -105,12 +105,14 @@
                 android:id="@+id/image_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_centerVertical="true"
                 app:srcCompat="@drawable/media_icon_32dp"/>
 
             <SeekBar
                 android:id="@+id/image_width_seekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/image_icon"/>
         </RelativeLayout>
 
