@@ -2,12 +2,10 @@ package org.wordpress.android.editor;
 
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -188,7 +186,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             }
         }
 
-
         mTitleText.requestFocus();
 
         return view;
@@ -212,9 +209,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -235,30 +230,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             actionBar.setHomeAsUpIndicator(null);
             actionBar.setDisplayHomeAsUpEnabled(mPreviousHomeAsUpEnabled);
         }
-    }
-
-    /**
-     * Displays a dialog asking the user to confirm that they want to exit, discarding unsaved changes.
-     */
-    private void showDiscardChangesDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getString(R.string.image_settings_dismiss_dialog_title));
-        builder.setPositiveButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), null);
-                restorePreviousActionBar();
-                getFragmentManager().popBackStack();
-            }
-        });
-
-        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     /**
