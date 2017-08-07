@@ -428,8 +428,12 @@ public class ImageUtils {
         // determine correct scale value (should be power of 2)
         // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
         int scale = 1;
-        if (maxWidth > 0 && optBounds.outWidth > maxWidth) {
-            double d = Math.pow(2, (int) Math.round(Math.log(maxWidth / (double) optBounds.outWidth) / Math.log(0.5)));
+        boolean isPortrait = optBounds.outWidth < optBounds.outHeight;
+        int optBountsMaxDimension = Math.max(optBounds.outWidth, optBounds.outHeight);
+        if (maxDimension > 0 && optBountsMaxDimension > maxDimension) {
+            double largestDimensionOfOutBounds = isPortrait ? optBounds.outHeight : optBounds.outWidth;
+            double d = Math.pow(2, (int) Math.round(Math.log(optBountsMaxDimension / largestDimensionOfOutBounds) / Math.log(0.5)));
+
             scale = (int) d;
         }
 
