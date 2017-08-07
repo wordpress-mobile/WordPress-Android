@@ -19,6 +19,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,15 +32,18 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class MediaUploadHandler implements UploadHandler<MediaModel> {
+public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptimizer.VideoOptimizationListener {
     private static final List<MediaModel> sPendingUploads = new ArrayList<>();
     private static final List<MediaModel> sInProgressUploads = new ArrayList<>();
 
     // TODO This should be moved to FluxC, perhaps in a new UploadMediaTable
-    private static final ConcurrentHashMap<Integer, Float> sProgressByMediaId = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Float> sUploadProgressByMediaId = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Float> sOptimizationProgressByMediaId = new ConcurrentHashMap<>();
 
-    @Inject Dispatcher mDispatcher;
-    @Inject SiteStore mSiteStore;
+    @Inject
+    Dispatcher mDispatcher;
+    @Inject
+    SiteStore mSiteStore;
 
     MediaUploadHandler() {
         ((WordPress) WordPress.getContext()).component().inject(this);
@@ -49,7 +53,8 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
     }
 
     void unregister() {
-        sProgressByMediaId.clear();
+        sUploadProgressByMediaId.clear();
+        sOptimizationProgressByMediaId.clear();
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
     }
@@ -138,11 +143,22 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
 
     /**
      * Returns the last recorded progress value for the given {@param media}. If there is no record for that media,
-     * it's assumed to be a completed upload (returned progress is 1).
+     * it's assumed to be a completed upload.
      */
     static float getProgressForMedia(MediaModel media) {
-        Float progress = sProgressByMediaId.get(media.getId());
-        return progress == null ? 0 : progress;
+        Float progress = sUploadProgressByMediaId.get(media.getId());
+        float uploadProgress = progress == null ? 0 : progress;
+
+        // if this is a video and video optimization is enabled, include the optimization progress in the outcome
+        if (media.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
+            if (sOptimizationProgressByMediaId.containsKey(media.getId())) {
+                float optimizationProgress = sOptimizationProgressByMediaId.get(media.getId());
+                return optimizationProgress * 0.5F;
+            }
+            return 0.5F + (uploadProgress * 0.5F);
+        }
+
+        return uploadProgress;
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
@@ -161,9 +177,9 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
             uploadNextInQueue();
         } else {
             AppLog.i(T.MEDIA, "MediaUploadHandler > " + event.media.getId() + " - progress: " + event.progress);
-            Float previousProgress = sProgressByMediaId.get(event.media.getId());
+            Float previousProgress = sUploadProgressByMediaId.get(event.media.getId());
             if (previousProgress == null || previousProgress < event.progress) {
-                sProgressByMediaId.put(event.media.getId(), event.progress);
+                sUploadProgressByMediaId.put(event.media.getId(), event.progress);
             }
         }
     }
@@ -192,23 +208,14 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
             return;
         }
 
-        SiteModel site = mSiteStore.getSiteByLocalId(next.getLocalSiteId());
-
-        // somehow lost our reference to the site, complete this action
-        if (site == null) {
-            AppLog.w(T.MEDIA, "MediaUploadHandler > Unexpected state, site is null. Skipping this request.");
-            notifyServiceIfUploadsComplete();
-            return;
-        }
-
-        dispatchUploadAction(next, site);
+        prepareForUpload(next);
     }
 
     private synchronized void completeUploadWithId(int id) {
         MediaModel media = getMediaFromInProgressQueueById(id);
         if (media != null) {
             sInProgressUploads.remove(media);
-            sProgressByMediaId.put(media.getId(), 1F);
+            sUploadProgressByMediaId.put(media.getId(), 1F);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
         }
     }
@@ -239,6 +246,17 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
         }
     }
 
+    private void addUniqueMediaToInProgressUploads(@NonNull MediaModel mediaToAdd) {
+        synchronized (sInProgressUploads) {
+            for (MediaModel media : sInProgressUploads) {
+                if (media.getId() == mediaToAdd.getId()) {
+                    return;
+                }
+            }
+            sInProgressUploads.add(mediaToAdd);
+        }
+    }
+
     private void cancelUpload(MediaModel oneUpload, boolean delete) {
         if (oneUpload != null) {
             SiteModel site = mSiteStore.getSiteByLocalId(oneUpload.getLocalSiteId());
@@ -251,12 +269,30 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
         }
     }
 
-    private void dispatchUploadAction(@NonNull final MediaModel media, @NonNull final SiteModel site) {
+    private void prepareForUpload(@NonNull MediaModel media) {
+        if (media.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
+            addUniqueMediaToInProgressUploads(media);
+            new VideoOptimizer(media, this).start();
+        } else {
+            dispatchUploadAction(media);
+        }
+    }
+
+    private void dispatchUploadAction(@NonNull final MediaModel media) {
+        SiteModel site = mSiteStore.getSiteByLocalId(media.getLocalSiteId());
+
+        // somehow lost our reference to the site, complete this action
+        if (site == null) {
+            AppLog.w(T.MEDIA, "MediaUploadHandler > Unexpected state, site is null. Skipping this request.");
+            notifyServiceIfUploadsComplete();
+            return;
+        }
+
         AppLog.i(T.MEDIA, "MediaUploadHandler > Dispatching upload action for media with local id: "
                 + media.getId() + " and path: " + media.getFilePath());
-        sInProgressUploads.add(media);
-        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+        addUniqueMediaToInProgressUploads(media);
 
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         MediaPayload payload = new MediaPayload(site, media);
         mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
     }
@@ -361,5 +397,24 @@ public class MediaUploadHandler implements UploadHandler<MediaModel> {
     private boolean compareBySiteAndFilePath(MediaModel media1, MediaModel media2) {
         return (media1.getLocalSiteId() == media2.getLocalSiteId() &&
                 StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
+    }
+
+    @Override
+    public void onVideoOptimizationProgress(@NonNull MediaModel media, float progress) {
+        sOptimizationProgressByMediaId.put(media.getId(), progress);
+        // fire an event so EditPostActivity and PostsListFragment can show progress
+        VideoOptimizer.ProgressEvent event = new VideoOptimizer.ProgressEvent(media, progress);
+        EventBus.getDefault().post(event);
+    }
+
+    @Override
+    public void onVideoOptimizationCompleted(@NonNull MediaModel media) {
+        sOptimizationProgressByMediaId.remove(media.getId());
+        // make sure this media should still be uploaded (may have been cancelled during optimization)
+        if (sInProgressUploads.contains(media)) {
+            dispatchUploadAction(media);
+        } else {
+            AppLog.d(T.MEDIA, "MediaUploadHandler > skipping upload of optimized media");
+        }
     }
 }
