@@ -23,6 +23,7 @@
         <EditText
             android:id="@+id/image_title"
             style="@style/ImageOptionsDialogInput"
+            android:hint="@string/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"
@@ -40,6 +41,7 @@
             style="@style/ImageOptionsDialogInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/image_caption"
             android:inputType="textCapSentences"
             android:singleLine="true"/>
 
@@ -55,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"
+            android:hint="@string/image_alt_text"
             android:singleLine="true"/>
 
         <TextView
@@ -87,6 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textNoSuggestions"
+            android:hint="@string/image_link_to"
             android:singleLine="true"/>
 
         <TextView
