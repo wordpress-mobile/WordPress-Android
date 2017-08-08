@@ -489,7 +489,7 @@
     <string name="site_settings_default_format_title">Default Format</string>
     <string name="site_settings_image_original_size">Original Size</string>
     <string name="site_settings_optimize_images">Optimize Images</string>
-    <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_width</string>
+    <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_size</string>
     <string name="site_settings_default_image_quality_title" translatable="false">@string/image_quality</string>
     <string name="site_settings_optimize_videos">Optimize Videos</string>
     <string name="site_settings_default_video_width_title" translatable="false">@string/max_video_px_width</string>

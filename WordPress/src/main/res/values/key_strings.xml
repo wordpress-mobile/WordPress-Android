@@ -258,7 +258,7 @@
     <string name="wordpresscom_sample_post" translatable="false">https://en.blog.wordpress.com/2016/09/26/the-best-of-wordpress-september-2016/</string>
 
     <!-- Preference Entries -->
-    <string-array name="site_settings_image_max_dimension_entries" translatable="false">
+    <string-array name="site_settings_image_max_size_entries" translatable="false">
         <item>1000 px</item>
         <item>2000 px</item>
         <item>2500 px</item>
@@ -266,7 +266,7 @@
         <item>@string/site_settings_image_original_size</item>
     </string-array>
 
-    <string-array name="site_settings_image_max_dimension_values" translatable="false">
+    <string-array name="site_settings_image_max_size_values" translatable="false">
         <item>1000</item>
         <item>2000</item>
         <item>2500</item>

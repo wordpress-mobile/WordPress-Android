@@ -39,7 +39,7 @@ public class WPMediaUtils {
     }
 
     // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
-    public static final int OPTIMIZE_IMAGE_MAX_WIDTH = 3000;
+    public static final int OPTIMIZE_IMAGE_MAX_SIZE = 3000;
     public static final int OPTIMIZE_IMAGE_ENCODER_QUALITY = 85;
     public static final int OPTIMIZE_VIDEO_MAX_WIDTH = 1280;
     public static final int OPTIMIZE_VIDEO_ENCODER_BITRATE_KB = 3000;
@@ -48,7 +48,7 @@ public class WPMediaUtils {
         if (isVideo) {
             return null;
         }
-        int resizeDimension = AppPrefs.getImageOptimizeMaxDimension() > 1 ? AppPrefs.getImageOptimizeMaxDimension() : Integer.MAX_VALUE;
+        int resizeDimension = AppPrefs.getImageOptimizeMaxSize() > 1 ? AppPrefs.getImageOptimizeMaxSize() : Integer.MAX_VALUE;
         int quality = AppPrefs.getImageOptimizeQuality();
         // do not optimize if original-size and 100% quality are set.
         if (resizeDimension == Integer.MAX_VALUE && quality == 100) {
