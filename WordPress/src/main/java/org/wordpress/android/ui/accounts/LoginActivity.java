@@ -237,7 +237,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void loggedInViaSigUp(ArrayList<Integer> oldSitesIds) {
+    public void loggedInViaSignup(ArrayList<Integer> oldSitesIds) {
         loggedInAndFinish(oldSitesIds);
     }
 
