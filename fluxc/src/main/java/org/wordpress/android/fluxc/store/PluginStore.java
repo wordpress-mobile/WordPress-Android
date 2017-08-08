@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PluginAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginInfoClient;
@@ -37,6 +38,19 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class FetchedPluginInfoPayload extends Payload {
+        public PluginInfoModel pluginInfo;
+        public FetchPluginInfoError error;
+
+        public FetchedPluginInfoPayload(FetchPluginInfoError error) {
+            this.error = error;
+        }
+
+        public FetchedPluginInfoPayload(PluginInfoModel pluginInfo) {
+            this.pluginInfo = pluginInfo;
+        }
+    }
+
     public static class FetchPluginsError implements OnChangedError {
         public FetchPluginsErrorType type;
         public String message;
@@ -50,10 +64,22 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class FetchPluginInfoError implements OnChangedError {
+        public FetchPluginInfoErrorType type;
+
+        public FetchPluginInfoError(FetchPluginInfoErrorType type) {
+            this.type = type;
+        }
+    }
+
     public enum FetchPluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
         NOT_AVAILABLE // Return for non-jetpack sites
+    }
+
+    public enum FetchPluginInfoErrorType {
+        GENERIC_ERROR
     }
 
     public static class OnPluginsChanged extends OnChanged<FetchPluginsError> {
@@ -61,6 +87,10 @@ public class PluginStore extends Store {
         public OnPluginsChanged(SiteModel site) {
             this.site = site;
         }
+    }
+
+    public static class OnPluginInfoChanged extends OnChanged<FetchPluginInfoError> {
+        public PluginInfoModel pluginInfo;
     }
 
     private final PluginRestClient mPluginRestClient;
@@ -95,6 +125,9 @@ public class PluginStore extends Store {
             case FETCHED_PLUGINS:
                 fetchedPlugins((FetchedPluginsPayload) action.getPayload());
                 break;
+            case FETCHED_PLUGIN_INFO:
+                fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
+                break;
         }
     }
 
@@ -122,6 +155,17 @@ public class PluginStore extends Store {
             event.error = payload.error;
         } else {
             PluginSqlUtils.insertOrReplacePlugins(payload.site, payload.plugins);
+        }
+        emitChange(event);
+    }
+
+    private void fetchedPluginInfo(FetchedPluginInfoPayload payload) {
+        OnPluginInfoChanged event = new OnPluginInfoChanged();
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            event.pluginInfo = payload.pluginInfo;
+            PluginSqlUtils.insertOrUpdatePluginInfo(payload.pluginInfo);
         }
         emitChange(event);
     }
