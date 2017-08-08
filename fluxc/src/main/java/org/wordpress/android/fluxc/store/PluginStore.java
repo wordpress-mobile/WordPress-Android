@@ -89,6 +89,9 @@ public class PluginStore extends Store {
             case FETCH_PLUGINS:
                 fetchPlugins((SiteModel) action.getPayload());
                 break;
+            case FETCH_PLUGIN_INFO:
+                fetchPluginInfo((String) action.getPayload());
+                break;
             case FETCHED_PLUGINS:
                 fetchedPlugins((FetchedPluginsPayload) action.getPayload());
                 break;
@@ -107,6 +110,10 @@ public class PluginStore extends Store {
             FetchedPluginsPayload payload = new FetchedPluginsPayload(error);
             fetchedPlugins(payload);
         }
+    }
+
+    private void fetchPluginInfo(String plugin) {
+        mPluginInfoClient.fetchPluginInfo(plugin);
     }
 
     private void fetchedPlugins(FetchedPluginsPayload payload) {

@@ -12,6 +12,8 @@ public enum PluginAction implements IAction {
     // Remote actions
     @Action(payloadType = SiteModel.class)
     FETCH_PLUGINS,
+    @Action(payloadType = String.class)
+    FETCH_PLUGIN_INFO,
 
     // Remote responses
     @Action(payloadType = FetchedPluginsPayload.class)
