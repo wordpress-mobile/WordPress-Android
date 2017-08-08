@@ -39,15 +39,13 @@
         <item name="android:layout_marginRight">@dimen/format_bar_button_group_tablet</item>
     </style>
 
-    <style name="ImageOptionsDialogLabel">
-        <item name="android:textColor">@color/image_settings_label</item>
-        <item name="android:paddingLeft">@dimen/image_settings_dialog_label_indent</item>
-    </style>
-
-    <style name="ImageOptionsDialogInput">
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:textColor">@color/image_settings_text</item>
+    <style name="ImageSettingsInputText" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/image_settings_hint</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/image_settings_label</item>
+        <item name="colorControlNormal">@color/image_settings_label</item>
+        <item name="colorControlActivated">@color/image_settings_label</item>
     </style>
 
     <style name="EditorTitleBeta">
