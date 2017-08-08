@@ -14,20 +14,23 @@
         android:orientation="vertical"
         android:padding="@dimen/image_settings_dialog_padding">
 
-        <TextView
-            style="@style/ImageOptionsDialogLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/title"/>
 
-        <EditText
-            android:id="@+id/image_title"
-            style="@style/ImageOptionsDialogInput"
-            android:hint="@string/title"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapSentences"
-            android:singleLine="true"/>
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/image_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title"
+                android:inputType="textCapSentences"
+                android:singleLine="true"
+                android:textColor="@color/image_settings_text"
+                android:textColorHint="@color/image_options_label"
+                tools:text="media_edit_title_text"/>
+
+        </android.support.design.widget.TextInputLayout>
 
         <TextView
             android:id="@+id/image_caption_label"
@@ -56,8 +59,8 @@
             style="@style/ImageOptionsDialogInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapSentences"
             android:hint="@string/image_alt_text"
+            android:inputType="textCapSentences"
             android:singleLine="true"/>
 
         <TextView
@@ -89,8 +92,8 @@
             style="@style/ImageOptionsDialogInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textNoSuggestions"
             android:hint="@string/image_link_to"
+            android:inputType="textNoSuggestions"
             android:singleLine="true"/>
 
         <TextView

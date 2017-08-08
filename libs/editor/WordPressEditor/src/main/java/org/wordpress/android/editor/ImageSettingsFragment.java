@@ -1,6 +1,6 @@
 package org.wordpress.android.editor;
 
-import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -41,10 +41,7 @@ import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_IMAGE_FE
 import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_IMAGE_META;
 import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_MAX_WIDTH;
 
-/**
- * A full-screen DialogFragment with image settings.
- */
-public class ImageSettingsDialogFragment extends DialogFragment {
+public class ImageSettingsFragment extends Fragment {
     public static final int IMAGE_SETTINGS_DIALOG_REQUEST_CODE = 5;
     public static final String IMAGE_SETTINGS_DIALOG_TAG = "image-settings";
 
@@ -118,7 +115,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_image_options, container, false);
+        View view = inflater.inflate(R.layout.fragment_image_settings, container, false);
 
         mTitleText = (EditText) view.findViewById(R.id.image_title);
         mCaptionText = (EditText) view.findViewById(R.id.image_caption);

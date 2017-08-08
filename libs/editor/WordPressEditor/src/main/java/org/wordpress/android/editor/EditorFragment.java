@@ -864,7 +864,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.execJavaScriptFromString(jsMethod + "('" + Utils.escapeHtml(linkUrl) + "', '" +
                         Utils.escapeHtml(linkText) + "');");
             }
-        } else if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
+        } else if (requestCode == ImageSettingsFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
             if (data == null) {
                 mWebView.execJavaScriptFromString("ZSSEditor.clearCurrentEditingImage();");
                 return;
@@ -1402,13 +1402,13 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // Only show image options fragment for image taps
                 FragmentManager fragmentManager = getFragmentManager();
 
-                if (fragmentManager.findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG) != null) {
+                if (fragmentManager.findFragmentByTag(ImageSettingsFragment.IMAGE_SETTINGS_DIALOG_TAG) != null) {
                     return;
                 }
                 mEditorFragmentListener.onTrackableEvent(TrackableEvent.IMAGE_EDITED);
-                ImageSettingsDialogFragment imageSettingsDialogFragment = new ImageSettingsDialogFragment();
-                imageSettingsDialogFragment.setTargetFragment(this,
-                        ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE);
+                ImageSettingsFragment imageSettingsFragment = new ImageSettingsFragment();
+                imageSettingsFragment.setTargetFragment(this,
+                        ImageSettingsFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE);
 
                 Bundle dialogBundle = new Bundle();
 
@@ -1434,13 +1434,13 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     dialogBundle.putBoolean(EXTRA_FEATURED, mFeaturedImageId == Integer.parseInt(imageId));
                 }
 
-                imageSettingsDialogFragment.setArguments(dialogBundle);
+                imageSettingsFragment.setArguments(dialogBundle);
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
-                fragmentTransaction.add(android.R.id.content, imageSettingsDialogFragment,
-                        ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG)
+                fragmentTransaction.add(android.R.id.content, imageSettingsFragment,
+                        ImageSettingsFragment.IMAGE_SETTINGS_DIALOG_TAG)
                         .addToBackStack(null)
                         .commit();
 

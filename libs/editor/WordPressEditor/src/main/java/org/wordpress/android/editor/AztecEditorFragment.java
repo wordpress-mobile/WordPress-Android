@@ -1264,13 +1264,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // Only show image options fragment for image taps
                 FragmentManager fragmentManager = getFragmentManager();
 
-                if (fragmentManager.findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG) != null) {
+                if (fragmentManager.findFragmentByTag(ImageSettingsFragment.IMAGE_SETTINGS_DIALOG_TAG) != null) {
                     return;
                 }
                 mEditorFragmentListener.onTrackableEvent(TrackableEvent.IMAGE_EDITED);
-                ImageSettingsDialogFragment imageSettingsDialogFragment = new ImageSettingsDialogFragment();
-                imageSettingsDialogFragment.setTargetFragment(this,
-                        ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE);
+                ImageSettingsFragment imageSettingsFragment = new ImageSettingsFragment();
+                imageSettingsFragment.setTargetFragment(this,
+                        ImageSettingsFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE);
 
                 Bundle dialogBundle = new Bundle();
 
@@ -1297,13 +1297,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     dialogBundle.putBoolean(EXTRA_FEATURED, mFeaturedImageId == Integer.parseInt(imageId));
                 }
 
-                imageSettingsDialogFragment.setArguments(dialogBundle);
+                imageSettingsFragment.setArguments(dialogBundle);
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
-                fragmentTransaction.add(android.R.id.content, imageSettingsDialogFragment,
-                        ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG)
+                fragmentTransaction.add(android.R.id.content, imageSettingsFragment,
+                        ImageSettingsFragment.IMAGE_SETTINGS_DIALOG_TAG)
                         .addToBackStack(null)
                         .commit();
                 break;
@@ -1314,7 +1314,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
+        if (requestCode == ImageSettingsFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
             if (mTappedMediaPredicate != null) {
                 AztecAttributes attributes = content.getElementAttributes(mTappedMediaPredicate);
                 attributes.removeAttribute(TEMP_IMAGE_ID);
