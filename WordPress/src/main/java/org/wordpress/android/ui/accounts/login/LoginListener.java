@@ -11,7 +11,7 @@ public interface LoginListener {
     // Login Prologue callbacks
     void showEmailLoginScreen();
     void doStartSignup();
-    void loggedInViaSigUp(ArrayList<Integer> oldSitesIds);
+    void loggedInViaSignup(ArrayList<Integer> oldSitesIds);
     void newUserCreatedButErrored(String email, String password);
 
     // Login Email input callbacks
