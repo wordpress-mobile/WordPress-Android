@@ -13,6 +13,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginInfoClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
@@ -28,7 +29,8 @@ import static org.wordpress.android.fluxc.plugin.PluginUtils.generatePlugins;
 
 @RunWith(RobolectricTestRunner.class)
 public class PluginStoreUnitTest {
-    private PluginStore mPluginStore = new PluginStore(new Dispatcher(), Mockito.mock(PluginRestClient.class));
+    private PluginStore mPluginStore = new PluginStore(new Dispatcher(),
+            Mockito.mock(PluginRestClient.class), Mockito.mock(PluginInfoClient.class));
 
     @Before
     public void setUp() {

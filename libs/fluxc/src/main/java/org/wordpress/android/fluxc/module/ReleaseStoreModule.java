@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginInfoClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
@@ -76,7 +77,8 @@ public class ReleaseStoreModule {
 
     @Provides
     @Singleton
-    public PluginStore providePluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient) {
-        return new PluginStore(dispatcher, pluginRestClient);
+    public PluginStore providePluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient,
+                                          PluginInfoClient pluginInfoClient) {
+        return new PluginStore(dispatcher, pluginRestClient, pluginInfoClient);
     }
 }
