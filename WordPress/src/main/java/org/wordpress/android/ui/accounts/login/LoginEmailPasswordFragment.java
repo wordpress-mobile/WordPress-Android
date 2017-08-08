@@ -104,7 +104,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
-                    mLoginListener.forgotPassword();
+                    mLoginListener.forgotPassword("");
                 }
             }
         });

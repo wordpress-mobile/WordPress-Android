@@ -23,7 +23,7 @@ public interface LoginListener {
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
     void usePasswordInstead(String email);
-    void forgotPassword();
+    void forgotPassword(String url);
     void helpMagicLinkRequest(String email);
 
     // Login Magic Link Sent callbacks
