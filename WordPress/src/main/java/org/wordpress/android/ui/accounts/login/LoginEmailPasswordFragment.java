@@ -40,6 +40,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
 
+    private static final String FORGOT_PASSWORD_URL_WPCOM = "https://wordpress.com/";
+
     public static final String TAG = "login_email_password_fragment_tag";
 
     private WPLoginInputRow mPasswordInput;
@@ -104,7 +106,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
-                    mLoginListener.forgotPassword();
+                    mLoginListener.forgotPassword(FORGOT_PASSWORD_URL_WPCOM);
                 }
             }
         });
