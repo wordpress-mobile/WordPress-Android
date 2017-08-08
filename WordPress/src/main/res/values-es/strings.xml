@@ -95,7 +95,7 @@ Language: es
 	<string name="draft_uploaded">Borrador subido</string>
 	<string name="report_bug">Informar de fallo</string>
 	<string name="video_quality">Calidad del vídeo</string>
-	<string name="max_video_px_width">Ancho por defecto del vídeo</string>
+	<string name="max_video_resolution">Ancho por defecto del vídeo</string>
 	<string name="permission_location">Ubicación</string>
 	<string name="permission_camera">Cámara</string>
 	<string name="permission_storage">Almacenamiento</string>

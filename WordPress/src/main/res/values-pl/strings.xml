@@ -95,7 +95,7 @@ Language: pl
 	<string name="draft_uploaded">Szkic wczytany</string>
 	<string name="report_bug">Raportuj błąd</string>
 	<string name="video_quality">Jakość filmu</string>
-	<string name="max_video_px_width">Domyślna szerokość filmu</string>
+	<string name="max_video_resolution">Domyślna szerokość filmu</string>
 	<string name="permission_location">Lokalizacja</string>
 	<string name="permission_camera">Aparat</string>
 	<string name="permission_storage">Pamięć</string>

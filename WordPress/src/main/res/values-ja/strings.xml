@@ -37,7 +37,7 @@ Language: ja_JP
 	<string name="draft_uploaded">下書きをアップロードしました</string>
 	<string name="report_bug">バグを報告</string>
 	<string name="video_quality">動画の画質</string>
-	<string name="max_video_px_width">ビデオのデフォルト幅</string>
+	<string name="max_video_resolution">ビデオのデフォルト幅</string>
 	<string name="permission_location">位置</string>
 	<string name="permission_camera">カメラ</string>
 	<string name="permission_storage">容量</string>
