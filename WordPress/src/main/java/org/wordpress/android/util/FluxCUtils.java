@@ -57,6 +57,8 @@ public class FluxCUtils {
         mediaFile.setUploadState(media.getUploadState());
         mediaFile.setVideo(org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(media.getMimeType()));
         mediaFile.setVideoPressShortCode(ShortcodeUtils.getVideoPressShortcodeFromId(media.getVideoPressGuid()));
+        mediaFile.setHeight(media.getHeight());
+        mediaFile.setWidth(media.getWidth());
         return mediaFile;
     }
 }

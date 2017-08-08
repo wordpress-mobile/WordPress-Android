@@ -3,7 +3,6 @@ package org.wordpress.android;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
@@ -22,7 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 57;
+    private static final int DATABASE_VERSION = 58;
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
@@ -172,28 +171,27 @@ public class WordPressDB {
                 // fix #5373 - no op
                 currentVersion++;
             case 51:
-                SiteSettingsTable.addOptimizedImageToSiteSettingsTable(db);
+                // no op - was SiteSettingsTable.addOptimizedImageToSiteSettingsTable(db);
                 currentVersion++;
             case 52:
-                // fix #5373 for users who already upgraded to 52 but missed the first migration
-                try {
-                    SiteSettingsTable.addOptimizedImageToSiteSettingsTable(db);
-                } catch(SQLiteException e) {
-                    // ignore "duplicate column" exception
-                }
+                // no op - was used for old image optimization settings
                 currentVersion++;
             case 53:
                 // Clean up empty cache files caused by #5417
                 clearEmptyCacheFiles(ctx);
                 currentVersion++;
             case 54:
-                SiteSettingsTable.addImageResizeWidthAndQualityToSiteSettingsTable(db);
+                // no op - was used for old image optimization settings
                 currentVersion++;
             case 55:
                 SiteSettingsTable.addSharingColumnsToSiteSettingsTable(db);
                 currentVersion++;
             case 56:
-                SiteSettingsTable.addVideoResizeWidthAndQualityToSiteSettingsTable(db);
+                // no op - was used for old video optimization settings
+                currentVersion++;
+            case 57:
+                // Migrate media optimization settings
+                SiteSettingsTable.migrateMediaOptimizeSettings(db);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
