@@ -325,6 +325,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
                 siteAddress, siteAddress, siteName, siteIconUrl, null, null, true);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
+        mSelfHostedSiteAddress = null;
     }
 
     @Override
