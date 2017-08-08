@@ -95,8 +95,6 @@
             android:id="@+id/alignment_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/image_settings_dialog_input_field_start_margin"
-            android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
             android:entries="@array/alignment_array"
             android:prompt="@string/image_alignment"/>
 
@@ -131,8 +129,6 @@
             android:id="@+id/featuredImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/image_settings_dialog_input_field_start_margin"
-            android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
             android:text="@string/featured"
             android:textColor="@color/image_settings_text"
             android:visibility="gone"/>
