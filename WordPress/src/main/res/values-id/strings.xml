@@ -1111,7 +1111,7 @@ Language: id
 	<string name="app_title">WordPress untuk Android</string>
 	<string name="tos">Syarat Layanan</string>
 	<string name="version">Versi</string>
-	<string name="max_thumbnail_px_width">Lebar Gambar Baku</string>
+	<string name="max_thumbnail_px_size">Lebar Gambar Baku</string>
 	<string name="image_alignment">Penjajaran</string>
 	<string name="refresh">Segarkan</string>
 	<string name="untitled">Tanpa judul</string>

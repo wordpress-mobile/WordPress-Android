@@ -1066,7 +1066,7 @@ Language: ko_KR
 	<string name="app_title">WordPress for Android</string>
 	<string name="tos">이용 약관</string>
 	<string name="version">버전</string>
-	<string name="max_thumbnail_px_width">기본 이미지 너비</string>
+	<string name="max_thumbnail_px_size">기본 이미지 너비</string>
 	<string name="image_alignment">배치</string>
 	<string name="refresh">다시 로드</string>
 	<string name="untitled">제목 미설정</string>

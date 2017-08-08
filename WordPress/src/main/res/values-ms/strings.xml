@@ -1055,7 +1055,7 @@ Language: ms
 	<string name="app_title">WordPress untuk Android</string>
 	<string name="tos">Terma Perkhidmatan</string>
 	<string name="version">Versi</string>
-	<string name="max_thumbnail_px_width">Lebar Lalai Imej</string>
+	<string name="max_thumbnail_px_size">Lebar Lalai Imej</string>
 	<string name="image_alignment">Penjajaran</string>
 	<string name="refresh">Segar semula</string>
 	<string name="untitled">Tiada tajuk</string>

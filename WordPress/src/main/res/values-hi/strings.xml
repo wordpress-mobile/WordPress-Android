@@ -528,7 +528,7 @@ Language: hi_IN
 	<string name="app_title">एंड्राइड के लिए वर्डप्रेस</string>
 	<string name="tos">सेवा की शर्तें</string>
 	<string name="version">संस्करण</string>
-	<string name="max_thumbnail_px_width">मूलभूत छवि की चौड़ाई</string>
+	<string name="max_thumbnail_px_size">मूलभूत छवि की चौड़ाई</string>
 	<string name="image_alignment">संरेखण</string>
 	<string name="refresh">रिफ्रेश</string>
 	<string name="untitled">बिना शीर्षक का</string>

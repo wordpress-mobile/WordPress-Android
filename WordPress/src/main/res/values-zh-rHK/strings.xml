@@ -1158,7 +1158,7 @@ Language: zh_TW
 	<string name="app_title">WordPress for Android</string>
 	<string name="tos">服務條款</string>
 	<string name="version">版本</string>
-	<string name="max_thumbnail_px_width">預設圖片寬度</string>
+	<string name="max_thumbnail_px_size">預設圖片寬度</string>
 	<string name="image_alignment">對齊</string>
 	<string name="refresh">更新</string>
 	<string name="untitled">無標題</string>

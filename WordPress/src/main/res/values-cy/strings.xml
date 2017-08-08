@@ -1095,7 +1095,7 @@ Language: cy_GB
 	<string name="app_title">WordPress ar gyfer Android</string>
 	<string name="tos">Amodau Gwasanaeth</string>
 	<string name="version">Fersiwn</string>
-	<string name="max_thumbnail_px_width">Lled Rhagosodedig y Ddelwedd</string>
+	<string name="max_thumbnail_px_size">Lled Rhagosodedig y Ddelwedd</string>
 	<string name="image_alignment">Alinio</string>
 	<string name="refresh">Adnewyddu</string>
 	<string name="untitled">Dideitl</string>

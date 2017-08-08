@@ -1255,7 +1255,7 @@ Language: ja_JP
 	<string name="app_title">WordPress for Android</string>
 	<string name="tos">利用規約</string>
 	<string name="version">バージョン</string>
-	<string name="max_thumbnail_px_width">標準の画像幅</string>
+	<string name="max_thumbnail_px_size">標準の画像幅</string>
 	<string name="image_alignment">配置</string>
 	<string name="refresh">再読み込み</string>
 	<string name="untitled">名称未設定</string>

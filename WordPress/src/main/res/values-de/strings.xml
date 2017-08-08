@@ -1143,7 +1143,7 @@ Language: de
 	<string name="app_title">WordPress für Android</string>
 	<string name="tos">Nutzungsbedingungen</string>
 	<string name="version">Version</string>
-	<string name="max_thumbnail_px_width">Standardbreite für Bilder</string>
+	<string name="max_thumbnail_px_size">Standardbreite für Bilder</string>
 	<string name="image_alignment">Ausrichtung</string>
 	<string name="refresh">Aktualisieren</string>
 	<string name="untitled">Unbenannt</string>

@@ -1049,7 +1049,7 @@ Language: gl_ES
 	<string name="app_title">WordPress para Android</string>
 	<string name="tos">Termos de servizo</string>
 	<string name="version">Versión</string>
-	<string name="max_thumbnail_px_width">Largo predeterminado da imaxe</string>
+	<string name="max_thumbnail_px_size">Largo predeterminado da imaxe</string>
 	<string name="image_alignment">Aliñación</string>
 	<string name="refresh">Actualizar</string>
 	<string name="untitled">Sen título</string>

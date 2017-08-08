@@ -743,7 +743,7 @@ Language: th
 	<string name="app_title">เวิร์ดเพรสสำหรับแอนดรอยด์</string>
 	<string name="tos">เงื่อนไขบริการ</string>
 	<string name="version">รุ่น</string>
-	<string name="max_thumbnail_px_width">ความกว้างรูปค่าเริ่มต้น</string>
+	<string name="max_thumbnail_px_size">ความกว้างรูปค่าเริ่มต้น</string>
 	<string name="image_alignment">จัดหน้า</string>
 	<string name="refresh">รีเฟรช</string>
 	<string name="untitled">ไม่มีหัวข้อ</string>

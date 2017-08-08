@@ -1092,7 +1092,7 @@ Language: cs_CZ
 	<string name="app_title">WordPress pro Android</string>
 	<string name="tos">Podmínky služby</string>
 	<string name="version">Verze</string>
-	<string name="max_thumbnail_px_width">Výchozí šířka obrázku</string>
+	<string name="max_thumbnail_px_size">Výchozí šířka obrázku</string>
 	<string name="image_alignment">Zarovnání</string>
 	<string name="refresh">Obnovit</string>
 	<string name="untitled">Bez názvu</string>

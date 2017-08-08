@@ -1049,7 +1049,7 @@ Language: bg
 	<string name="app_title">WordPress за Android</string>
 	<string name="tos">Условия за ползване</string>
 	<string name="version">Версия</string>
-	<string name="max_thumbnail_px_width">Широчина на изображение по подразбиране</string>
+	<string name="max_thumbnail_px_size">Широчина на изображение по подразбиране</string>
 	<string name="image_alignment">Подравняване</string>
 	<string name="refresh">Презареждане</string>
 	<string name="untitled">Неозаглавен</string>

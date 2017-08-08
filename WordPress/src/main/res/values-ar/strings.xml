@@ -1077,7 +1077,7 @@ Language: ar
 	<string name="version">النسخة</string>
 	<string name="tos">بنود الخدمة</string>
 	<string name="app_title">ووردبريس للآندرويد</string>
-	<string name="max_thumbnail_px_width">عرض الصورة الافتراضي</string>
+	<string name="max_thumbnail_px_size">عرض الصورة الافتراضي</string>
 	<string name="image_alignment">المحاذاة</string>
 	<string name="refresh">تجديد</string>
 	<string name="untitled">بدون عنوان</string>
