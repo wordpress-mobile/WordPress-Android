@@ -33,7 +33,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
@@ -43,14 +42,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private static final String KEY_SMARTLOCK_COMPLETED = "KEY_SMARTLOCK_COMPLETED";
 
     private static final String FORGOT_PASSWORD_URL = "https://wordpress.com/wp-login.php?action=lostpassword";
-    private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
 
     private SmartLockHelper mSmartLockHelper;
     private boolean mSmartLockCompleted;
 
     private LoginMode mLoginMode;
-
-    private String mSelfHostedSiteAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -295,13 +291,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void forgotPassword() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FORGOT_PASSWORD_CLICKED);
-
-        // Use self-hosted site address if applicable
-        if ((mLoginMode == LoginMode.FULL || mLoginMode == LoginMode.SELFHOSTED_ONLY) && mSelfHostedSiteAddress != null) {
-            ActivityLauncher.openUrlExternal(this, mSelfHostedSiteAddress + FORGOT_PASSWORD_URL_SUFFIX);
-        } else {
-            ActivityLauncher.openUrlExternal(this, FORGOT_PASSWORD_URL);
-        }
+        ActivityLauncher.openUrlExternal(this, FORGOT_PASSWORD_URL);
     }
 
     @Override
@@ -325,7 +315,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
                 siteAddress, siteAddress, siteName, siteIconUrl, null, null, true);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
-        mSelfHostedSiteAddress = null;
     }
 
     @Override
@@ -333,7 +322,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
                 inputSiteAddress, endpointAddress, null, null, null, null, false);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
-        mSelfHostedSiteAddress = UrlUtils.removeXmlrpcSuffix(endpointAddress);
     }
 
     private void launchHelpshift(String url, String username, boolean isWpcom, Tag origin) {
