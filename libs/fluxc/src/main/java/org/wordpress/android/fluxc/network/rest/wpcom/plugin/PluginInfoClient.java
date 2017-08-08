@@ -1,18 +1,60 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.plugin;
 
+import android.support.annotation.NonNull;
+
+import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response.Listener;
 
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.PluginActionBuilder;
+import org.wordpress.android.fluxc.model.PluginInfoModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient;
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class PluginInfoClient extends BaseWPAPIRestClient {
+    private final Dispatcher mDispatcher;
+
     @Inject
     public PluginInfoClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent) {
         super(dispatcher, requestQueue, userAgent);
+        mDispatcher = dispatcher;
+    }
+
+    public void fetchPluginInfo(String plugin) {
+        String url = "https://api.wordpress.org/plugins/info/1.0/" + plugin + ".json";
+        final WPAPIGsonRequest<FetchPluginInfoResponse> request =
+                new WPAPIGsonRequest<>(Method.GET, url, null, null, FetchPluginInfoResponse.class,
+                        new Listener<FetchPluginInfoResponse>() {
+                            @Override
+                            public void onResponse(FetchPluginInfoResponse response) {
+                                mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginInfoAction(
+                                        pluginInfoModelFromResponse(response)));
+                            }
+                        },
+                        new BaseErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                                // TODO
+                            }
+                        }
+                );
+        add(request);
+    }
+
+    private PluginInfoModel pluginInfoModelFromResponse(FetchPluginInfoResponse response) {
+        PluginInfoModel pluginInfo = new PluginInfoModel();
+        pluginInfo.setName(response.name);
+        pluginInfo.setRating(response.rating);
+        pluginInfo.setSlug(response.slug);
+        pluginInfo.setVersion(response.version);
+        return pluginInfo;
     }
 }
