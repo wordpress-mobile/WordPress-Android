@@ -4,4 +4,5 @@ public class FetchPluginInfoResponse {
     public String name;
     public String slug;
     public String version;
+    public String rating;
 }
