@@ -4,8 +4,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -15,7 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -73,10 +71,9 @@ public class ImageSettingsFragment extends Fragment {
         if (actionBar != null) {
             actionBar.show();
 
-            mPreviousActionBarTitle = actionBar.getTitle();
-
             final int displayOptions = actionBar.getDisplayOptions();
             mPreviousHomeAsUpEnabled = (displayOptions & ActionBar.DISPLAY_HOME_AS_UP) != 0;
+            mPreviousActionBarTitle = actionBar.getTitle();
 
             actionBar.setTitle(R.string.image_settings);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -101,21 +98,11 @@ public class ImageSettingsFragment extends Fragment {
         mFeaturedCheckBox = (CheckBox) view.findViewById(R.id.featuredImage);
         mWidthLabel = (TextView) view.findViewById(R.id.image_width_caption);
 
-        mAlignmentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                View child = parentView.getChildAt(0);
-                if (child instanceof TextView) {
-                    @ColorRes int colorId = position == 0 ? R.color.image_options_label : R.color.image_settings_text;
-                    @ColorInt int color = child.getContext().getColor(colorId);
-                    ((TextView) child).setTextColor(color);
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // noop
-            }
-        });
+        mAlignmentKeyArray = getResources().getStringArray(R.array.alignment_key_array);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.alignment_array, R.layout.image_settings_spinner_item);
+        adapter.setDropDownViewResource(R.layout.image_settings_spinner_dropdown_item);
+        mAlignmentSpinner.setAdapter(adapter);
 
         // Populate the dialog with existing values
         Bundle bundle = getArguments();
@@ -128,7 +115,6 @@ public class ImageSettingsFragment extends Fragment {
                 mAltText.setText(mImageMeta.getString(ATTR_ALT));
 
                 String alignment = mImageMeta.getString(ATTR_ALIGN);
-                mAlignmentKeyArray = getResources().getStringArray(R.array.alignment_key_array);
                 int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
                 mAlignmentSpinner.setSelection(alignmentIndex == -1 ? 0 : alignmentIndex);
 
@@ -152,22 +138,13 @@ public class ImageSettingsFragment extends Fragment {
             // TODO: Unsupported in Aztec - remove once caption, alignment & link support added
             if (bundle.getBoolean(EXTRA_ENABLED_AZTEC)) {
                 mCaptionText.setVisibility(View.GONE);
-                View label = view.findViewById(R.id.image_caption_label);
-                if (label != null) {
-                    label.setVisibility(View.GONE);
-                }
+                view.findViewById(R.id.image_caption_label).setVisibility(View.GONE);
 
                 mLinkTo.setVisibility(View.GONE);
-                label = view.findViewById(R.id.image_link_to_label);
-                if (label != null) {
-                    label.setVisibility(View.GONE);
-                }
+                view.findViewById(R.id.image_link_to_label).setVisibility(View.GONE);
 
                 mAlignmentSpinner.setVisibility(View.GONE);
-                label = view.findViewById(R.id.alignment_spinner_label);
-                if (label != null) {
-                    label.setVisibility(View.GONE);
-                }
+                view.findViewById(R.id.alignment_spinner_label).setVisibility(View.GONE);
             }
         }
 

@@ -39,6 +39,7 @@
     <dimen name="image_settings_dialog_extra_margin">0dp</dimen>
     <dimen name="image_settings_dialog_extra_margin_tablet">84dp</dimen>
     <dimen name="image_settings_margin">8dp</dimen>
+    <dimen name="image_settings_text_size">14sp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
 
