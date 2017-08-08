@@ -39,8 +39,6 @@
     <dimen name="image_settings_dialog_extra_margin">0dp</dimen>
     <dimen name="image_settings_dialog_extra_margin_tablet">84dp</dimen>
     <dimen name="image_settings_dialog_label_indent">4dp</dimen>
-    <dimen name="image_settings_dialog_label_margin_bottom">2dp</dimen>
-    <dimen name="image_settings_dialog_input_margin_bottom">12dp</dimen>
     <dimen name="image_settings_dialog_input_field_start_margin">-4dp</dimen>
     <dimen name="image_settings_dialog_top_separator_margin_top">16dp</dimen>
     <dimen name="image_settings_dialog_thumbnail_container_margin_bottom">8dp</dimen>

@@ -8,6 +8,7 @@
 
     <color name="image_settings_label">@color/wp_blue_medium</color>
     <color name="image_settings_text">#ffffff</color>
+    <color name="image_settings_hint">@color/wp_grey_darken_10</color>
     <color name="image_settings_background">#C0000000</color>
 
     <color name="legacy_format_bar_background">#eeeeee</color>
