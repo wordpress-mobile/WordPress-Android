@@ -39,6 +39,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -1388,7 +1390,7 @@ public class EditPostActivity extends AppCompatActivity implements
             MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
             trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
             String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
-            mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
+            appendMediaFileAndSavePost(mediaFile, urlToUse, mImageLoader);
         }
     }
 
@@ -1811,10 +1813,19 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
         if (media != null) {
-            mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
+            appendMediaFileAndSavePost(mediaFile, path, mImageLoader);
         }
 
         return true;
+    }
+
+    private void appendMediaFileAndSavePost(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader) {
+        mEditorFragment.appendMediaFile(mediaFile, imageUrl, mImageLoader);
+        // after asking the Editor to append the Media File, save the Post object to the DB
+        // as we need to keep the new modifications made to the Post's body (that is, the inserted media)
+        if (updatePostObject()) {
+            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
+        }
     }
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
@@ -1830,7 +1841,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
 
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
-        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
+        appendMediaFileAndSavePost(mediaFile, mediaFile.getFilePath(), mImageLoader);
         return true;
     }
 
