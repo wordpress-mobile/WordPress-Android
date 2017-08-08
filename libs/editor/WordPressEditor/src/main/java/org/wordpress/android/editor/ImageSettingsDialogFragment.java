@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -127,6 +128,21 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         mWidthSeekBar = (SeekBar) view.findViewById(R.id.image_width_seekbar);
         mFeaturedCheckBox = (CheckBox) view.findViewById(R.id.featuredImage);
         mWidthLabel = (TextView) view.findViewById(R.id.image_width_caption);
+
+        mAlignmentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                View child = parentView.getChildAt(0);
+                if (child instanceof TextView) {
+                    int color = child.getContext().getColor(R.color.image_settings_text);
+                    ((TextView) child).setTextColor(color);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // noop
+            }
+        });
 
         // Populate the dialog with existing values
         Bundle bundle = getArguments();
