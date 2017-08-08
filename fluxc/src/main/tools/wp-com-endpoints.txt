@@ -19,9 +19,9 @@
 /sites/
 /sites/$site/delete
 /sites/$site/exports/start
+/sites/$site/plugins
 /sites/$site/post-formats/
 /sites/$site/roles
-/sites/$site/plugins
 /sites/new/
 
 /sites/$site/comments/
