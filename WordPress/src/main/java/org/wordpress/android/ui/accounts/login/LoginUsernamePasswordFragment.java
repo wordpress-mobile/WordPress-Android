@@ -53,6 +53,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     private static final String ARG_INPUT_PASSWORD = "ARG_INPUT_PASSWORD";
     private static final String ARG_IS_WPCOM = "ARG_IS_WPCOM";
 
+    private static final String FORGOT_PASSWORD_URL_WPCOM = "https://wordpress.com/";
+
     public static final String TAG = "login_username_password_fragment_tag";
 
     private ScrollView mScrollView;
@@ -67,6 +69,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     ArrayList<Integer> mOldSitesIDs;
 
     private String mInputSiteAddress;
+    private String mInputSiteAddressWithoutSuffix;
     private String mEndpointAddress;
     private String mSiteName;
     private String mSiteIconUrl;
@@ -125,6 +128,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         siteAddressView.setText(UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(mInputSiteAddress)));
         siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
+        mInputSiteAddressWithoutSuffix = UrlUtils.removeXmlrpcSuffix(mEndpointAddress);
+
         mUsernameInput = (WPLoginInputRow) rootView.findViewById(R.id.login_username_row);
         mUsernameInput.setText(mInputUsername);
         mUsernameInput.addTextChangedListener(this);
@@ -150,7 +155,11 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
-                    mLoginListener.forgotPassword("");
+                    if (mIsWpcom) {
+                        mLoginListener.forgotPassword(FORGOT_PASSWORD_URL_WPCOM);
+                    } else {
+                        mLoginListener.forgotPassword(mInputSiteAddressWithoutSuffix);
+                    }
                 }
             }
         });
