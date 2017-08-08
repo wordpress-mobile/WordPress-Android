@@ -95,7 +95,7 @@ Language: en_AU
 	<string name="draft_uploaded">Draft uploaded</string>
 	<string name="report_bug">Report bug</string>
 	<string name="video_quality">Video Quality</string>
-	<string name="max_video_px_width">Default Video Width</string>
+	<string name="max_video_resolution">Default Video Width</string>
 	<string name="permission_location">Location</string>
 	<string name="permission_camera">Camera</string>
 	<string name="permission_storage">Storage</string>

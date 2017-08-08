@@ -37,7 +37,7 @@ Language: nl
 	<string name="draft_uploaded">Concept toegevoegd</string>
 	<string name="report_bug">Bug rapporteren</string>
 	<string name="video_quality">Videokwaliteit</string>
-	<string name="max_video_px_width">Standaard videobreedte</string>
+	<string name="max_video_resolution">Standaard videobreedte</string>
 	<string name="permission_location">Locatie</string>
 	<string name="permission_camera">Camera</string>
 	<string name="permission_storage">Opslag</string>

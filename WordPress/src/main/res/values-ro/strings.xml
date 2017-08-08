@@ -95,7 +95,7 @@ Language: ro
 	<string name="draft_uploaded">Ciornă încărcată</string>
 	<string name="report_bug">Raportează o eroare</string>
 	<string name="video_quality">Calitate video</string>
-	<string name="max_video_px_width">Lățime implicită video</string>
+	<string name="max_video_resolution">Lățime implicită video</string>
 	<string name="permission_location">Locație</string>
 	<string name="permission_camera">Aparat foto</string>
 	<string name="permission_storage">Stocare</string>

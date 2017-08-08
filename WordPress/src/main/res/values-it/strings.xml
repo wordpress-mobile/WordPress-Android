@@ -37,7 +37,7 @@ Language: it
 	<string name="draft_uploaded">Bozza caricata</string>
 	<string name="report_bug">Segnala un bug</string>
 	<string name="video_quality">Qualità del video</string>
-	<string name="max_video_px_width">Larghezza predefinita del video</string>
+	<string name="max_video_resolution">Larghezza predefinita del video</string>
 	<string name="permission_location">Posizione</string>
 	<string name="permission_camera">Fotocamera</string>
 	<string name="permission_storage">Archiviazione</string>

@@ -37,7 +37,7 @@ Language: fr
 	<string name="draft_uploaded">Brouillon envoyé</string>
 	<string name="report_bug">Rapport de bug</string>
 	<string name="video_quality">Qualité vidéo</string>
-	<string name="max_video_px_width">Largeur par défaut de vidéo</string>
+	<string name="max_video_resolution">Largeur par défaut de vidéo</string>
 	<string name="permission_location">Emplacement</string>
 	<string name="permission_camera">Appareil photo</string>
 	<string name="permission_storage">Stockage</string>

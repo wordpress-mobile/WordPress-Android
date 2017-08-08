@@ -95,7 +95,7 @@ Language: sv_SE
 	<string name="draft_uploaded">Utkastet uppladdat</string>
 	<string name="report_bug">Rapportera ett fel</string>
 	<string name="video_quality">Videokvalitet</string>
-	<string name="max_video_px_width">Standardbredd för video</string>
+	<string name="max_video_resolution">Standardbredd för video</string>
 	<string name="permission_location">Din plats</string>
 	<string name="permission_camera">Kamera</string>
 	<string name="permission_storage">Lagring</string>

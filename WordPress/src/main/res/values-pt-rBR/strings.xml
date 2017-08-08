@@ -95,7 +95,7 @@ Language: pt_BR
 	<string name="draft_uploaded">Upload do rascunho concluído</string>
 	<string name="report_bug">Comunicar erro</string>
 	<string name="video_quality">Qualidade do vídeo</string>
-	<string name="max_video_px_width">Largura padrão do vídeo</string>
+	<string name="max_video_resolution">Largura padrão do vídeo</string>
 	<string name="permission_location">Localização</string>
 	<string name="permission_camera">Câmera</string>
 	<string name="permission_storage">Armazenamento</string>
