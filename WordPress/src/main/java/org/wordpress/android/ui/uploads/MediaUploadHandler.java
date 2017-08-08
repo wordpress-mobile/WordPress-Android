@@ -204,7 +204,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
         if (next == null) {
             AppLog.w(T.MEDIA, "MediaUploadHandler > No more media items to upload. Skipping this request.");
-            notifyServiceIfUploadsComplete();
+            checkIfUploadsComplete();
             return;
         }
 
@@ -284,7 +284,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         // somehow lost our reference to the site, complete this action
         if (site == null) {
             AppLog.w(T.MEDIA, "MediaUploadHandler > Unexpected state, site is null. Skipping this request.");
-            notifyServiceIfUploadsComplete();
+            checkIfUploadsComplete();
             return;
         }
 
@@ -304,10 +304,12 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 
-    private void notifyServiceIfUploadsComplete() {
+    private boolean checkIfUploadsComplete() {
         if (sPendingUploads.isEmpty() && sInProgressUploads.isEmpty()) {
             AppLog.i(T.MEDIA, "MediaUploadHandler > Completed");
+            return true;
         }
+        return false;
     }
 
     // App events
