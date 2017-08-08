@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginInfoClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.util.AppLog;
@@ -63,11 +64,13 @@ public class PluginStore extends Store {
     }
 
     private final PluginRestClient mPluginRestClient;
+    private final PluginInfoClient mPluginInfoClient;
 
     @Inject
-    public PluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient) {
+    public PluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient, PluginInfoClient pluginInfoClient) {
         super(dispatcher);
         mPluginRestClient = pluginRestClient;
+        mPluginInfoClient = pluginInfoClient;
     }
 
     @Override
