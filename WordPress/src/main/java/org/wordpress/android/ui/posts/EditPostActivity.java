@@ -95,6 +95,7 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -2525,9 +2526,18 @@ public class EditPostActivity extends AppCompatActivity implements
                 R.string.async_promo_title,
                 R.string.async_promo_description,
                 android.R.string.ok)
-                // TODO: Re-enable once a release notes page exists for Async
-//                .setLinkText(R.string.async_promo_link)
+                .setLinkText(R.string.async_promo_link)
                 .build();
+
+        asyncPromoDialog.setLinkOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EditPostActivity.this, ReleaseNotesActivity.class);
+                intent.putExtra(ReleaseNotesActivity.KEY_TARGET_URL,
+                        "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/");
+                startActivity(intent);
+            }
+        });
 
         asyncPromoDialog.setPositiveButtonOnClickListener(new View.OnClickListener() {
             @Override
