@@ -824,6 +824,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 AttributesWithClass attributesWithClass = new AttributesWithClass(
                         content.getElementAttributes(predicate));
                 attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+                if (mediaFile.isVideo()) {
+                    attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
+                }
 
                 // add then new src property with the remoteUrl
                 AztecAttributes attrs = attributesWithClass.getAttributes();
@@ -1455,6 +1458,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             // clear overlay
             content.clearOverlays(predicate);
             content.updateElementAttributes(predicate, attrs);
+            content.resetAttributedMediaSpan(predicate);
             content.refreshText();
 
             // re-set the post content
@@ -1484,6 +1488,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             attributesWithClass.addClass(ATTR_STATUS_FAILED);
 
             content.updateElementAttributes(predicate, attributesWithClass.getAttributes());
+            content.resetAttributedMediaSpan(predicate);
             content.refreshText();
 
             // re-set the post content
