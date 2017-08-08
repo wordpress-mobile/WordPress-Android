@@ -4,8 +4,11 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,8 +61,6 @@ public class ImageSettingsFragment extends Fragment {
     private EditText mLinkTo;
     private CheckBox mFeaturedCheckBox;
 
-    private boolean mIsFeatured;
-
     private CharSequence mPreviousActionBarTitle;
     private boolean mPreviousHomeAsUpEnabled;
 
@@ -87,32 +88,6 @@ public class ImageSettingsFragment extends Fragment {
         }
     }
 
-    public void saveAndClose() {
-        mImageMeta = extractMetaDataFromFields(mImageMeta);
-
-        String imageRemoteId = "";
-        try {
-            imageRemoteId = mImageMeta.getString(ATTR_ID_ATTACHMENT);
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.EDITOR, "Unable to retrieve featured image id from meta data");
-        }
-
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_IMAGE_META, mImageMeta.toString());
-
-        mIsFeatured = mFeaturedCheckBox.isChecked();
-        intent.putExtra(EXTRA_FEATURED, mIsFeatured);
-
-        if (!imageRemoteId.isEmpty()) {
-            intent.putExtra(ATTR_ID_IMAGE_REMOTE, Integer.parseInt(imageRemoteId));
-        }
-
-        getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), intent);
-
-        restorePreviousActionBar();
-        getFragmentManager().popBackStack();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image_settings, container, false);
@@ -131,7 +106,8 @@ public class ImageSettingsFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 View child = parentView.getChildAt(0);
                 if (child instanceof TextView) {
-                    int color = child.getContext().getColor(R.color.image_settings_text);
+                    @ColorRes int colorId = position == 0 ? R.color.image_options_label : R.color.image_settings_text;
+                    @ColorInt int color = child.getContext().getColor(colorId);
                     ((TextView) child).setTextColor(color);
                 }
             }
@@ -166,8 +142,8 @@ public class ImageSettingsFragment extends Fragment {
                 boolean featuredImageSupported = bundle.getBoolean(EXTRA_IMAGE_FEATURED);
                 if (featuredImageSupported) {
                     mFeaturedCheckBox.setVisibility(View.VISIBLE);
-                    mIsFeatured = bundle.getBoolean(EXTRA_FEATURED, false);
-                    mFeaturedCheckBox.setChecked(mIsFeatured);
+                    boolean isFeatured = bundle.getBoolean(EXTRA_FEATURED, false);
+                    mFeaturedCheckBox.setChecked(isFeatured);
                 }
             } catch (JSONException e1) {
                 AppLog.d(AppLog.T.EDITOR, "Missing JSON properties");
@@ -198,6 +174,26 @@ public class ImageSettingsFragment extends Fragment {
         mTitleText.requestFocus();
 
         return view;
+    }
+
+    public void saveAndClose() {
+        mImageMeta = extractMetaDataFromFields(mImageMeta);
+
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_IMAGE_META, mImageMeta.toString());
+
+        boolean isFeatured = mFeaturedCheckBox.isChecked();
+        intent.putExtra(EXTRA_FEATURED, isFeatured);
+
+        String imageRemoteId = mImageMeta.optString(ATTR_ID_ATTACHMENT);
+        if (!TextUtils.isEmpty(imageRemoteId)) {
+            intent.putExtra(ATTR_ID_IMAGE_REMOTE, Integer.parseInt(imageRemoteId));
+        }
+
+        getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), intent);
+
+        restorePreviousActionBar();
+        getFragmentManager().popBackStack();
     }
 
     @Override
@@ -265,7 +261,7 @@ public class ImageSettingsFragment extends Fragment {
     }
 
     private void showWidthText(int imageWidth) {
-        String label = getString(R.string.image_width) + " - " + Integer.toString(imageWidth) + "px";
+        String label = getString(R.string.image_width) + " = " + Integer.toString(imageWidth) + "px";
         mWidthLabel.setText(label);
     }
 

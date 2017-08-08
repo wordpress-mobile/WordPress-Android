@@ -40,6 +40,7 @@
     </style>
 
     <style name="ImageSettingsInputText" parent="TextAppearance.AppCompat">
+        <item name="android:layout_marginBottom">@dimen/image_settings_margin</item>
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/image_settings_hint</item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->

@@ -88,6 +88,7 @@
             android:id="@+id/alignment_spinner_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/image_settings_margin"
             android:text="@string/image_alignment"
             android:textColor="@color/image_settings_label"/>
 
@@ -95,6 +96,8 @@
             android:id="@+id/alignment_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/image_settings_margin"
+            android:layout_marginLeft="-8dp"
             android:entries="@array/alignment_array"
             android:prompt="@string/image_alignment"/>
 
@@ -102,13 +105,15 @@
             android:id="@+id/image_width_caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/image_settings_margin"
+            android:layout_marginTop="@dimen/image_settings_margin"
             android:text="@string/image_width"
             android:textColor="@color/image_settings_label"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginBottom="@dimen/image_settings_margin">
 
             <ImageView
                 android:id="@+id/image_icon"
