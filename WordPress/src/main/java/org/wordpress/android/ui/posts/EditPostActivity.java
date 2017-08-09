@@ -1823,9 +1823,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorFragment.appendMediaFile(mediaFile, imageUrl, mImageLoader);
         // after asking the Editor to append the Media File, save the Post object to the DB
         // as we need to keep the new modifications made to the Post's body (that is, the inserted media)
-        if (updatePostObject()) {
-            savePostToDb();
-        }
+        savePostAsync(null);
     }
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
