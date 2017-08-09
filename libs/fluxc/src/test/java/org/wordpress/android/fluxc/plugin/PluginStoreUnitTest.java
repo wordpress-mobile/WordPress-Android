@@ -24,7 +24,7 @@ import org.wordpress.android.fluxc.store.PluginStore;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.wordpress.android.fluxc.plugin.PluginUtils.generatePlugins;
+import static org.wordpress.android.fluxc.plugin.PluginTestUtils.generatePlugins;
 
 @RunWith(RobolectricTestRunner.class)
 public class PluginStoreUnitTest {
