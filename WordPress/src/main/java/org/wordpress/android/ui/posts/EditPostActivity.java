@@ -409,34 +409,36 @@ public class EditPostActivity extends AppCompatActivity implements
     // this method aims at recovering the current state of media items if they're inconsistent within the PostModel.
     private void resetUploadingMediaToFailedIfNotInProgressOrQueued() {
         boolean useAztec = AppPrefs.isAztecEditorEnabled();
-        if (useAztec) {
+        if (!useAztec || UploadService.hasPendingOrInProgressMediaUploadsForPost(mPost)) {
+            return;
+        }
 
-            String oldContent = mPost.getContent();
-            if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(mPost) &&
-                    ( AztecEditorFragment.hasMediaItemsMarkedUploading(this, oldContent)
-                            || AztecEditorFragment.hasMediaItemsMarkedFailed(this, oldContent))) {
+        String oldContent = mPost.getContent();
+        if (!AztecEditorFragment.hasMediaItemsMarkedUploading(this, oldContent)
+                // we need to make sure items marked failed are still failed or not as well
+                        && !AztecEditorFragment.hasMediaItemsMarkedFailed(this, oldContent)) {
+            return;
+        }
 
-                String newContent = AztecEditorFragment.resetUploadingMediaToFailed(this, oldContent);
+        String newContent = AztecEditorFragment.resetUploadingMediaToFailed(this, oldContent);
 
-                // now check if the newcontent still has items marked as failed. If it does,
-                // then hook this post up to our error list, so it can be queried by the Posts List later
-                // and be shown properly to the user
-                if (AztecEditorFragment.hasMediaItemsMarkedFailed(this, newContent)) {
-                    UploadService.markPostAsError(mPost);
-                } else {
-                    UploadService.removeUploadErrorForPost(mPost);
-                }
+        // now check if the newcontent still has items marked as failed. If it does,
+        // then hook this post up to our error list, so it can be queried by the Posts List later
+        // and be shown properly to the user
+        if (AztecEditorFragment.hasMediaItemsMarkedFailed(this, newContent)) {
+            UploadService.markPostAsError(mPost);
+        } else {
+            UploadService.removeUploadErrorForPost(mPost);
+        }
 
-                if (!TextUtils.isEmpty(oldContent) && newContent != null && oldContent.compareTo(newContent) != 0) {
-                    mPost.setContent(newContent);
+        if (!TextUtils.isEmpty(oldContent) && newContent != null && oldContent.compareTo(newContent) != 0) {
+            mPost.setContent(newContent);
 
-                    // we changed the post, so let’s mark this down
-                    if (!mPost.isLocalDraft()) {
-                        mPost.setIsLocallyChanged(true);
-                    }
-                    mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
-                }
+            // we changed the post, so let’s mark this down
+            if (!mPost.isLocalDraft()) {
+                mPost.setIsLocallyChanged(true);
             }
+            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
     }
 
