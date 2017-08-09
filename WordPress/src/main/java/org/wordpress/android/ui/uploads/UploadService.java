@@ -68,7 +68,7 @@ public class UploadService extends Service {
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
 
-    public class UploadError {
+    public static class UploadError {
         public PostStore.PostError postError;
         public MediaStore.MediaError mediaError;
 
@@ -379,6 +379,13 @@ public class UploadService extends Service {
         return post;
     }
 
+    public static void markPostAsError(PostModel post) {
+        // now keep track of the error reason so it can be queried
+        MediaStore.MediaError error = new MediaStore.MediaError(MediaStore.MediaErrorType.GENERIC_ERROR);
+        UploadError reason = new UploadError(error);
+        addUploadErrorToFailedPosts(post, reason);
+    }
+
     public static boolean hasInProgressMediaUploadsForPost(PostModel postModel) {
         return postModel != null && MediaUploadHandler.hasInProgressMediaUploadsForPost(postModel);
     }
@@ -442,7 +449,7 @@ public class UploadService extends Service {
 
     // this keeps a map for all failed media for each post, so we can process the post easily
     // in one go later
-    private void addMediaToPostFailedMediaListMap(MediaModel media) {
+    private static void addMediaToPostFailedMediaListMap(MediaModel media) {
         synchronized (sFailedMediaByPost) {
             List<MediaModel> mediaListForPost = sFailedMediaByPost.get(media.getLocalPostId());
             if (mediaListForPost == null) {
@@ -564,7 +571,7 @@ public class UploadService extends Service {
         return null;
     }
 
-    private void addUploadErrorToFailedPosts(PostModel post, UploadError reason) {
+    private static void addUploadErrorToFailedPosts(PostModel post, UploadError reason) {
         sFailedUploadPosts.put(post.getId(), reason);
     }
 
