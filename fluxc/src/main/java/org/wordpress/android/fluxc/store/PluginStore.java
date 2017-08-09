@@ -135,6 +135,10 @@ public class PluginStore extends Store {
         return PluginSqlUtils.getPlugins(site);
     }
 
+    public PluginInfoModel getPluginInfoBySlug(String slug) {
+        return PluginSqlUtils.getPluginInfoBySlug(slug);
+    }
+
     private void fetchPlugins(SiteModel site) {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             mPluginRestClient.fetchPlugins(site);
