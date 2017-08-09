@@ -1520,7 +1520,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText content = new AztecText(context);
         content.fromHtml(postContent);
 
-        // get all items with "uploading" class
+        // get all items with the class in the "tag" param
         AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(tag);
 
         List<AztecAttributes> attrs = content.getAllElementAttributes(uploadingPredicate);
