@@ -20,14 +20,18 @@ public class PluginSqlUtils {
 
     public static void insertOrReplacePlugins(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
         // Remove previous plugins for this site
-        WellSql.delete(PluginModel.class)
-                .where()
-                .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere().execute();
+        removePlugins(site);
         // Insert new plugins for this site
         for (PluginModel pluginModel : plugins) {
             pluginModel.setLocalSiteId(site.getId());
         }
         WellSql.insert(plugins).execute();
+    }
+
+    private static void removePlugins(@NonNull SiteModel site) {
+        WellSql.delete(PluginModel.class)
+                .where()
+                .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
+                .endWhere().execute();
     }
 }
