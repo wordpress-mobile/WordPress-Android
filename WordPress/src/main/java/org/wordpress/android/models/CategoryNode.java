@@ -18,6 +18,14 @@ public class CategoryNode {
     private SortedMap<String, CategoryNode> children = new TreeMap<>(new Comparator<String>() {
         @Override
         public int compare(String s, String s2) {
+            if (s == null) {
+                if (s2 == null) {
+                    return 0;
+                }
+                return 1;
+            } else if (s2 == null) {
+                return -1;
+            }
             return s.compareToIgnoreCase(s2);
         }
     });
