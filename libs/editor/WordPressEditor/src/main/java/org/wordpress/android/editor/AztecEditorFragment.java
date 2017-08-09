@@ -1458,7 +1458,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             // clear overlay
             content.clearOverlays(predicate);
             content.updateElementAttributes(predicate, attrs);
-            content.resetAttributedMediaSpan(predicate);
             content.refreshText();
 
             // re-set the post content
@@ -1488,7 +1487,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             attributesWithClass.addClass(ATTR_STATUS_FAILED);
 
             content.updateElementAttributes(predicate, attributesWithClass.getAttributes());
-            content.resetAttributedMediaSpan(predicate);
             content.refreshText();
 
             // re-set the post content
