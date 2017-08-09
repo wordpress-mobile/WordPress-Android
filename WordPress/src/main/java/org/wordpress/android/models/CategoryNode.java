@@ -86,14 +86,17 @@ public class CategoryNode {
         }
 
         // Second pass associate nodes to form a tree
-        for(int i = 0; i < categoryMap.size(); i++){
+        for (int i = 0; i < categoryMap.size(); i++){
             CategoryNode category = categoryMap.valueAt(i);
             if (category.getParentId() == 0) { // root node
                 currentRootNode = rootCategory;
             } else {
                 currentRootNode = categoryMap.get(category.getParentId(), rootCategory);
             }
-            currentRootNode.children.put(category.getName(), categoryMap.get(category.getCategoryId()));
+            CategoryNode childNode = categoryMap.get(category.getCategoryId());
+            if (childNode != null) {
+                currentRootNode.children.put(category.getName(), childNode);
+            }
         }
         return rootCategory;
     }
