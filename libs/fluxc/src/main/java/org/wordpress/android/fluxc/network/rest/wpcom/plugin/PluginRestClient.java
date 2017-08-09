@@ -50,8 +50,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 plugins.add(pluginModelFromResponse(site, pluginResponse));
                             }
                         }
-                        mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginsAction(new
-                                FetchedPluginsPayload(site, plugins)));
+                        mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginsAction(
+                                new FetchedPluginsPayload(site, plugins)));
                     }
                 },
                 new BaseErrorListener() {

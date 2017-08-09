@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.model.PluginModel;
 import java.util.ArrayList;
 import java.util.List;
 
-class PluginUtils {
+class PluginTestUtils {
     static List<PluginModel> generatePlugins(String... names) {
         List<PluginModel> res = new ArrayList<>();
         for (String name : names) {
