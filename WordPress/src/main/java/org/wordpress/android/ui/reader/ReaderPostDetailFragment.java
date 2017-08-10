@@ -1032,8 +1032,9 @@ public class ReaderPostDetailFragment extends Fragment
 
             // if we're showing just the excerpt, also show a footer which links to the full post
             if (mPost.showShowExcerpt()) {
-                TextView txtExcerptFooter = (TextView) getView().findViewById(R.id.text_excerpt_footer);
-                txtExcerptFooter.setVisibility(View.VISIBLE);
+                ViewGroup excerptFooter = (ViewGroup) getView().findViewById(R.id.excerpt_footer);
+                excerptFooter.setVisibility(View.VISIBLE);
+                TextView txtExcerptFooter = (TextView) excerptFooter.findViewById(R.id.text_excerpt_footer);
                 String blogName = "<font color='" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color
                         .reader_hyperlink) + "'>" + mPost.getBlogName() + "</font>";
                 String linkText = String.format(WordPress.getContext().
