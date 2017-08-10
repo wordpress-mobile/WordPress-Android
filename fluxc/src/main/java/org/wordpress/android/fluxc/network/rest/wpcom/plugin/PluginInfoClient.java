@@ -18,6 +18,9 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchPluginInfoError;
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginInfoErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginInfoPayload;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -33,8 +36,10 @@ public class PluginInfoClient extends BaseWPAPIRestClient {
 
     public void fetchPluginInfo(String plugin) {
         String url = "https://api.wordpress.org/plugins/info/1.0/" + plugin + ".json";
+        Map<String, String> params = new HashMap<>();
+        params.put("fields", "icons");
         final WPAPIGsonRequest<FetchPluginInfoResponse> request =
-                new WPAPIGsonRequest<>(Method.GET, url, null, null, FetchPluginInfoResponse.class,
+                new WPAPIGsonRequest<>(Method.GET, url, params, null, FetchPluginInfoResponse.class,
                         new Listener<FetchPluginInfoResponse>() {
                             @Override
                             public void onResponse(FetchPluginInfoResponse response) {
