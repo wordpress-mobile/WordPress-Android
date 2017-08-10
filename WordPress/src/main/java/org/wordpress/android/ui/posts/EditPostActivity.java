@@ -62,7 +62,7 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.editor.EditorWebViewCompatibility;
 import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
-import org.wordpress.android.editor.ImageSettingsDialogFragment;
+import org.wordpress.android.editor.ImageSettingsFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
@@ -794,11 +794,11 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean handleBackPressed() {
         Fragment fragment = getFragmentManager().findFragmentByTag(
-                ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
+                ImageSettingsFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
-            if (fragment instanceof  ImageSettingsDialogFragment) {
-                ImageSettingsDialogFragment imFragment = (ImageSettingsDialogFragment) fragment;
-                imFragment.dismissFragment();
+            if (fragment instanceof ImageSettingsFragment) {
+                ImageSettingsFragment imFragment = (ImageSettingsFragment) fragment;
+                imFragment.saveAndClose();
             }
             return false;
         }

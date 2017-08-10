@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/image_settings_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/image_settings_dialog_extra_margin"
+        android:layout_marginRight="@dimen/image_settings_dialog_extra_margin"
+        android:orientation="vertical"
+        android:padding="@dimen/image_settings_dialog_padding">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ImageSettingsInputText">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/image_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title"
+                android:inputType="textCapSentences"
+                android:singleLine="true"
+                android:textColor="@color/image_settings_text"
+                tools:text="image_title"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/image_caption_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ImageSettingsInputText">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/image_caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/image_caption"
+                android:inputType="textCapSentences"
+                android:singleLine="true"
+                android:textColor="@color/image_settings_text"
+                tools:text="image_caption"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ImageSettingsInputText">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/image_alt_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/image_alt_text"
+                android:inputType="textCapSentences"
+                android:singleLine="true"
+                android:textColor="@color/image_settings_text"
+                tools:text="image_alt_text"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/image_link_to_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ImageSettingsInputText">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/image_link_to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/image_link_to"
+                android:inputType="textUri"
+                android:textColor="@color/image_settings_text"
+                tools:text="image_link_to"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/alignment_spinner_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/image_alignment"
+            android:textColor="@color/image_settings_label"
+            android:textSize="@dimen/image_settings_text_size"/>
+
+        <Spinner
+            android:id="@+id/alignment_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/image_settings_margin"
+            android:prompt="@string/image_alignment"/>
+
+        <TextView
+            android:id="@+id/image_width_caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/image_settings_margin"
+            android:text="@string/image_width"
+            android:textColor="@color/image_settings_label"
+            android:textSize="@dimen/image_settings_text_size"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/image_settings_margin">
+
+            <ImageView
+                android:id="@+id/image_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                app:srcCompat="@drawable/media_icon_32dp"/>
+
+            <SeekBar
+                android:id="@+id/image_width_seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/image_icon"/>
+        </RelativeLayout>
+
+        <CheckBox
+            android:id="@+id/featuredImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/featured"
+            android:textColor="@color/image_settings_text"
+            android:textSize="@dimen/image_settings_text_size"
+            android:visibility="gone"/>
+    </LinearLayout>
+</ScrollView>
