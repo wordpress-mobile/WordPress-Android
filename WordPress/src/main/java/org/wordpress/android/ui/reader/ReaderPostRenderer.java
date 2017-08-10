@@ -250,19 +250,11 @@ class ReaderPostRenderer {
             && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage());
     }
 
-    private String getExcerptFooterHtml() {
-        String linkText = String.format(WordPress.getContext().
-                getString(R.string.reader_excerpt_link), mPost.getBlogName());
-        return "<div class='excerpt-footer'>"
-                + String.format("<a href='%s'>", mPost.getUrl())
-                + String.format(linkText, mPost.getBlogName())
-                + "</a></div>";
-    }
-
     /*
      * returns the basic content of the post tweaked for use here
      */
     private String getPostContent() {
+        // Jetpack posts that have an excerpt should show the excerpt with a footer that links to the full post
         String content;
         if (mPost.isJetpack && mPost.hasExcerpt()) {
             content = mPost.getExcerpt() + getExcerptFooterHtml();
@@ -316,6 +308,19 @@ class ReaderPostRenderer {
 
         return "<img class='size-full' src='" + imageUrl + "'/>";
     }
+
+    /*
+     * returns the HTML to use for the footer beneath excerpts that links to the full post
+     */
+    private String getExcerptFooterHtml() {
+        String linkText = String.format(WordPress.getContext().
+                getString(R.string.reader_excerpt_link), mPost.getBlogName());
+        return "<div class='excerpt-footer'>"
+                + String.format("<a href='%s'>", mPost.getUrl())
+                + String.format(linkText, mPost.getBlogName())
+                + "</a></div>";
+    }
+
 
     /*
      * replace the passed iframe tag with one that's correctly sized for the device
