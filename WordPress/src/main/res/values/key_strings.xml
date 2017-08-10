@@ -47,7 +47,7 @@
     <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
     <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
-    <string name="pref_key_site_this_device" translatable="false">wp_pref_site_default_this_device</string>
+    <string name="pref_key_optimize_media" translatable="false">wp_pref_optimize_media</string>
     <string name="pref_key_optimize_image" translatable="false">wp_pref_key_optimize_image</string>
     <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
     <string name="pref_key_site_image_quality" translatable="false">wp_pref_site_default_image_quality</string>

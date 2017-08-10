@@ -17,10 +17,14 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
+import org.wordpress.android.ui.accounts.LoginActivity;
+import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
+import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -30,9 +34,11 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
+import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
@@ -50,7 +56,17 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
+import java.util.ArrayList;
+
 public class ActivityLauncher {
+
+    public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds) {
+        Intent intent = new Intent(activity, WPMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(WPMainActivity.ARG_SHOW_LOGIN_EPILOGUE, true);
+        intent.putIntegerArrayListExtra(WPMainActivity.ARG_OLD_SITES_IDS, oldSitesIds);
+        activity.startActivity(intent);
+    }
 
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
@@ -162,7 +178,7 @@ public class ActivityLauncher {
         if (post == null) return;
 
         Intent intent = new Intent(activity, PostPreviewActivity.class);
-        intent.putExtra(PostPreviewActivity.EXTRA_POST, post);
+        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
         intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
@@ -255,8 +271,25 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        Intent intent = new Intent(activity, SignInActivity.class);
+        Class<?> loginClass = AppPrefs.isLoginWizardStyleActivated() ? LoginActivity.class : SignInActivity.class;
+
+        Intent intent = new Intent(activity, loginClass);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    public static void showLoginEpilogue(Activity activity, boolean doLoginUpdate, ArrayList<Integer> oldSitesIds) {
+        Intent intent = new Intent(activity, LoginEpilogueActivity.class);
+        intent.putExtra(LoginEpilogueActivity.EXTRA_DO_LOGIN_UPDATE, doLoginUpdate);
+        intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
+        activity.startActivity(intent);
+    }
+
+    public static void showLoginEpilogueForResult(Activity activity, boolean showAndReturn,
+            ArrayList<Integer> oldSitesIds) {
+        Intent intent = new Intent(activity, LoginEpilogueActivity.class);
+        intent.putExtra(LoginEpilogueActivity.EXTRA_SHOW_AND_RETURN, showAndReturn);
+        intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
+        activity.startActivityForResult(intent, RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN);
     }
 
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
@@ -283,21 +316,58 @@ public class ActivityLauncher {
     public static void viewMediaPickerForResult(Activity activity, @NonNull SiteModel site) {
         Intent intent = new Intent(activity, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.MULTI_SELECT_PICKER);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER);
         activity.startActivityForResult(intent, RequestCodes.MULTI_SELECT_MEDIA_PICKER);
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {
-        Intent intent = new Intent(activity, SignInActivity.class);
-        intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
+        Intent intent;
+
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            intent = new Intent(activity, LoginActivity.class);
+            LoginMode.SELFHOSTED_ONLY.putInto(intent);
+        } else {
+            intent = new Intent(activity, SignInActivity.class);
+            intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
+        }
+
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
+    public static void loginForDeeplink(Activity activity) {
+        Intent intent;
+
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            intent = new Intent(activity, LoginActivity.class);
+            LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
+        } else {
+            intent = new Intent(activity, SignInActivity.class);
+        }
+
+        activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+    }
+
     public static void loginWithoutMagicLink(Activity activity) {
-        Intent signInIntent = new Intent(activity, SignInActivity.class);
-        signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
-        activity.startActivityForResult(signInIntent, RequestCodes.DO_LOGIN);
+        Intent intent;
+
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            intent = new Intent(activity, LoginActivity.class);
+            LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
+        } else {
+            intent = new Intent(activity, SignInActivity.class);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
+        }
+
+        activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+    }
+
+    public static void showAztecEditorReleaseNotes(Activity activity) {
+        Intent intent = new Intent(activity, ReleaseNotesActivity.class);
+        intent.putExtra(ReleaseNotesActivity.KEY_TARGET_URL,
+                "https://make.wordpress.org/mobile/whats-new-in-beta-android-editor/");
+        intent.putExtra(ReleaseNotesActivity.KEY_HELPSHIFT_TAG, HelpshiftHelper.Tag.ORIGIN_FEEDBACK_AZTEC);
+        activity.startActivity(intent);
     }
 
     /*

@@ -14,16 +14,18 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.models.Role;
+import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -37,6 +39,8 @@ public class PersonDetailFragment extends Fragment {
     private long mPersonId;
     private int mLocalTableBlogId;
     private Person.PersonType mPersonType;
+
+    private List<RoleModel> mUserRoles;
 
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
@@ -65,6 +69,30 @@ public class PersonDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+
+        if (savedInstanceState == null) {
+            mCurrentUserId = getArguments().getLong(ARG_CURRENT_USER_ID);
+            mPersonId = getArguments().getLong(ARG_PERSON_ID);
+            mLocalTableBlogId = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+            mPersonType = (Person.PersonType) getArguments().getSerializable(ARG_PERSON_TYPE);
+        } else {
+            mCurrentUserId = savedInstanceState.getLong(ARG_CURRENT_USER_ID);
+            mPersonId = savedInstanceState.getLong(ARG_PERSON_ID);
+            mLocalTableBlogId = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
+            mPersonType = (Person.PersonType) savedInstanceState.getSerializable(ARG_PERSON_TYPE);
+        }
+
+        SiteModel siteModel = mSiteStore.getSiteByLocalId(mLocalTableBlogId);
+        mUserRoles = mSiteStore.getUserRoles(siteModel);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(ARG_CURRENT_USER_ID, mCurrentUserId);
+        outState.putLong(ARG_PERSON_ID, mPersonId);
+        outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalTableBlogId);
+        outState.putSerializable(ARG_PERSON_TYPE, mPersonType);
     }
 
     @Override
@@ -76,11 +104,6 @@ public class PersonDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.person_detail_fragment, container, false);
-
-        mCurrentUserId = getArguments().getLong(ARG_CURRENT_USER_ID);
-        mPersonId = getArguments().getLong(ARG_PERSON_ID);
-        mLocalTableBlogId = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-        mPersonType = (Person.PersonType) getArguments().getSerializable(ARG_PERSON_TYPE);
 
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.person_avatar);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.person_display_name);
@@ -118,7 +141,7 @@ public class PersonDetailFragment extends Fragment {
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             mDisplayNameTextView.setText(StringUtils.unescapeHTML(person.getDisplayName()));
             if (person.getRole() != null) {
-                mRoleTextView.setText(StringUtils.capitalize(person.getRole().toDisplayString()));
+                mRoleTextView.setText(RoleUtils.getDisplayName(person.getRole(), mUserRoles));
             }
 
             if (!TextUtils.isEmpty(person.getUsername())) {
@@ -176,7 +199,7 @@ public class PersonDetailFragment extends Fragment {
             });
         } else {
             // Remove the selectableItemBackground if the user can't be edited
-            clearRoleContainerBackground();
+            mRoleContainer.setBackground(null);
             // Change transparency to give a visual cue to the user that it's disabled
             mRoleContainer.setAlpha(0.5f);
         }
@@ -194,17 +217,8 @@ public class PersonDetailFragment extends Fragment {
     }
 
     // used to optimistically update the role
-    public void changeRole(Role newRole) {
-        mRoleTextView.setText(newRole.toDisplayString());
-    }
-
-    @SuppressWarnings("deprecation")
-    private void clearRoleContainerBackground() {
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            mRoleContainer.setBackgroundDrawable(null);
-        } else {
-            mRoleContainer.setBackground(null);
-        }
+    public void changeRole(String newRole) {
+        mRoleTextView.setText(RoleUtils.getDisplayName(newRole, mUserRoles));
     }
 
     private void changeDisplayNameTopPadding(int newPadding) {

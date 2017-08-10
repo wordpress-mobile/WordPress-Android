@@ -15,6 +15,9 @@ public class RequestCodes {
     public static final int SITE_SETTINGS = 1000;
     public static final int DO_LOGIN = 1100;
     public static final int PHOTO_PICKER = 1200;
+    public static final int SHOW_LOGIN_EPILOGUE_AND_RETURN = 1300;
+    public static final int SMART_LOCK_SAVE = 1400;
+    public static final int SMART_LOCK_READ = 1500;
 
     // Media
     public static final int PICTURE_LIBRARY = 2000;

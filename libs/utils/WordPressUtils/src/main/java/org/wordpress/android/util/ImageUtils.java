@@ -15,6 +15,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -37,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 
 public class ImageUtils {
     public static int[] getImageSize(Uri uri, Context context){
@@ -109,7 +112,7 @@ public class ImageUtils {
     }
 
 
-    public static int getExifOrientation(String path) {
+    private static int getExifOrientation(String path) {
         if (TextUtils.isEmpty(path)) {
             AppLog.w(AppLog.T.UTILS, "Can't read EXIF orientation. Passed path is empty.");
             return 0;
@@ -281,7 +284,6 @@ public class ImageUtils {
         }
     }
 
-
     public static String getTitleForWPImageSpan(Context ctx, String filePath) {
         if (filePath == null)
             return null;
@@ -381,7 +383,7 @@ public class ImageUtils {
      Resize a bitmap to the targetSize on its longest side.
      */
     public static Bitmap getScaledBitmapAtLongestSide(Bitmap bitmap, int targetSize) {
-        if (bitmap.getWidth() <= targetSize && bitmap.getHeight() <= targetSize) {
+        if (bitmap == null || bitmap.getWidth() <= targetSize && bitmap.getHeight() <= targetSize) {
             // Do not resize.
             return bitmap;
         }
@@ -589,6 +591,48 @@ public class ImageUtils {
         }
 
         return path;
+    }
+
+    /**
+     * Generate a thumbnail from a video url.
+     * Note that this method could take time if network url.
+     *
+     * @param videoPath The path to the video on internet
+     * @return the path to the picture on disk
+     */
+    public static Bitmap getVideoFrameFromVideo(String videoPath, int maxWidth) {
+        if (TextUtils.isEmpty(videoPath) || maxWidth <= 0) {
+            return null;
+        }
+
+        if (new File(videoPath).exists()) {
+            // Local file
+            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
+            return ImageUtils.getScaledBitmapAtLongestSide(thumb, maxWidth);
+        }
+
+        // Not a local file. 
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        Bitmap bitmap = null;
+        try {
+            mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
+            bitmap = mediaMetadataRetriever.getFrameAtTime();
+        } catch (IllegalArgumentException e) {
+            AppLog.e(AppLog.T.MEDIA, "The passed video path is invalid: " + videoPath);
+        } catch (java.lang.RuntimeException e) {
+            // I've see this kind of error on one of my testing device
+            AppLog.e(AppLog.T.MEDIA, "The passed video path is invalid: " + videoPath);
+        }
+        finally {
+            mediaMetadataRetriever.release();
+        }
+
+        if (bitmap == null) {
+            AppLog.w(AppLog.T.MEDIA, "Failed to retrieve frame from the passed video path: " + videoPath);
+            return null;
+        }
+
+        return getScaledBitmapAtLongestSide(bitmap, maxWidth);
     }
 
     /**

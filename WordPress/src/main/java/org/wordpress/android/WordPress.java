@@ -13,6 +13,7 @@ import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
@@ -22,8 +23,10 @@ import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.wordpress.rest.RestClient;
@@ -112,6 +115,8 @@ public class WordPress extends MultiDexApplication {
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
+
+    private static GoogleApiClient mCredentialsClient;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -264,6 +269,16 @@ public class WordPress extends MultiDexApplication {
         // https://developer.android.com/reference/android/support/v7/app/AppCompatDelegate.html#setCompatVectorFromResourcesEnabled(boolean)
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+        // setup the Credentials Client so we can clean it up on wpcom logout
+        mCredentialsClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override public void onConnected(@Nullable Bundle bundle) {}
+                    @Override public void onConnectionSuspended(int i) {}
+                })
+                .addApi(Auth.CREDENTIALS_API)
+                .build();
+        mCredentialsClient.connect();
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -407,6 +422,10 @@ public class WordPress extends MultiDexApplication {
         AnalyticsTracker.track(Stat.ACCOUNT_LOGOUT);
 
         removeWpComUserRelatedData(getApplicationContext());
+
+        if (mCredentialsClient != null && mCredentialsClient.isConnected()) {
+            Auth.CredentialsApi.disableAutoSignIn(mCredentialsClient);
+        }
     }
 
     @SuppressWarnings("unused")

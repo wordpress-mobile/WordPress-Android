@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-04 23:00:28+0000
+Translation-Revision-Date: 2017-07-24 18:00:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_CA
 -->
 <resources>
+	<string name="image_optimization_promo_desc">Image optimization shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
+	<string name="image_optimization_promo_title">Turn on image optimization?</string>
+	<string name="leave_off">Leave off</string>
+	<string name="turn_on">Turn on</string>
+	<string name="me_profile_photo">Profile Photo</string>
+	<string name="error_media_parse_error">Unexpected response from server</string>
+	<string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
+	<string name="post_title">Title</string>
+	<string name="menu_redo">Redo</string>
+	<string name="menu_undo">Undo</string>
+	<string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
+	<string name="error_media_small">Media too small to show</string>
+	<string name="editor_dropped_unsupported_files">Warning: not all dropped items are supported!</string>
+	<string name="editor_dropped_title_images_not_allowed">Dropping images in the Title is not allowed</string>
+	<string name="editor_dropped_text_error">Error occurred while dropping text</string>
+	<string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
+	<string name="editor_content_hint">Share your story here…</string>
+	<string name="post_status_trashed">Trashed</string>
+	<string name="post_status_scheduled">Scheduled</string>
+	<string name="post_status_post_private">Private</string>
+	<string name="post_status_draft">Draft</string>
+	<string name="post_status_pending_review">Pending review</string>
+	<string name="post_status_publish_post">Publish</string>
+	<string name="change_location">Change Location</string>
+	<string name="remove_location">Remove Location</string>
+	<string name="post_settings_error_placepicker_missing_play_services">Can\'t open the Location Picker, Google Play Services is not available</string>
+	<string name="post_settings_location">Location</string>
+	<string name="now">Now</string>
+	<string name="post_settings_password_dialog_hint">Only those with this password can view this post</string>
+	<string name="post_settings_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
+	<string name="post_settings_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
+	<string name="post_settings_post_format">Post Format</string>
+	<string name="post_settings_tags">Tags</string>
+	<string name="post_settings_slug">Slug</string>
+	<string name="post_settings_excerpt">Excerpt</string>
+	<string name="post_settings_not_set">Not Set</string>
+	<string name="post_settings_more_options">More Options</string>
+	<string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
+	<string name="post_settings_status">Status</string>
+	<string name="notifications_tab_title_unread">Unread</string>
+	<string name="notifications_tab_title_all">All</string>
+	<string name="top_level_category_name">Top level</string>
+	<string name="category_parent">Parent category (optional):</string>
+	<string name="toast_err_post_media_uploading">Unable to delete a post while it\'s uploading</string>
+	<string name="media_empty_audio_list">You don\'t have any audio</string>
+	<string name="media_empty_documents_list">You don\'t have any documents</string>
+	<string name="media_empty_videos_list">You don\'t have any videos</string>
+	<string name="media_empty_image_list">You don\'t have any images</string>
+	<string name="media_error_timeout">Server took too long to respond</string>
+	<string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
+	<string name="media_error_exceeds_php_filesize">File exceeds the maximum upload size for this site</string>
+	<string name="media_error_http_too_large_video_upload">Video too large to upload</string>
+	<string name="media_error_http_too_large_photo_upload">Image too large to upload. Try changing Optimize Images in your site\'s settings</string>
+	<string name="media_audio">Audio</string>
+	<string name="media_videos">Videos</string>
+	<string name="media_documents">Documents</string>
+	<string name="media_images">Images</string>
+	<string name="media_all">All</string>
 	<string name="video_optimization_generic_error_message">An error occurred while compressing your video. Using the original file.</string>
 	<string name="video_optimization_in_progress">Optimizing your video…</string>
 	<string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
@@ -37,7 +95,7 @@ Language: en_CA
 	<string name="draft_uploaded">Draft uploaded</string>
 	<string name="report_bug">Report bug</string>
 	<string name="video_quality">Video Quality</string>
-	<string name="max_video_px_width">Default Video Width</string>
+	<string name="max_video_resolution">Default Video Width</string>
 	<string name="permission_location">Location</string>
 	<string name="permission_camera">Camera</string>
 	<string name="permission_storage">Storage</string>
@@ -96,9 +154,7 @@ Language: en_CA
 	<string name="fab_content_description_write">Write</string>
 	<string name="my_site_btn_sharing">Sharing</string>
 	<string name="button_not_now">Not now</string>
-	<string name="media_error_timeout">Server response timed out, you may have a poor connection or server error</string>
-	<string name="media_error_internal_server_error">Upload error. Try enabling Optimize Images in Site->Settings</string>
-	<string name="media_error_http_too_large_upload">File too large to upload. Try enabling Optimize Images in Site->Settings</string>
+	<string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your site\'s settings</string>
 	<string name="media_downloading">Saving media to this device</string>
 	<string name="error_media_save">Unable to save media</string>
 	<string name="editor_scheduled_post_saved_online">Post scheduled</string>
@@ -159,8 +215,6 @@ Language: en_CA
 	<string name="error_unknown_post_type">Unknown post format</string>
 	<string name="error_unknown_post">Unknown post, local copy of this post may be out of sync with the server</string>
 	<string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
-	<string name="error_media_request_too_large">Media too large, can\'t be uploaded</string>
-	<string name="error_media_parse_error">Could not parse response after media upload</string>
 	<string name="error_upload_params">Error while uploading the %1$s: %2$s</string>
 	<string name="submit_for_review">Submit</string>
 	<string name="role_subscriber">Subscriber</string>
@@ -179,7 +233,7 @@ Language: en_CA
 	<string name="error_media_refresh_no_connection">Connection required to refresh library</string>
 	<string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
 	<string name="error_media_not_found">Media could not be found</string>
-	<string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
+	<string name="error_media_insufficient_fs_permissions">Read permission denied on device media</string>
 	<string name="site_settings_optimize_images">Optimize Images</string>
 	<string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this\n        address. Check the site address (URL) you entered.</string>
 	<string name="media_generic_error">Media error occurred</string>
@@ -472,8 +526,8 @@ Language: en_CA
 	<string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
 	<string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
 	<string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
-	<string name="editor_post_settings_set_featured_image">Set Featured Image</string>
-	<string name="editor_post_settings_featured_image">Featured Image</string>
+	<string name="post_settings_set_featured_image">Set Featured Image</string>
+	<string name="post_settings_featured_image">Featured Image</string>
 	<string name="visual_editor_enabled">Visual Editor enabled</string>
 	<string name="editor_content_placeholder">Share your story here…</string>
 	<string name="editor_page_title_placeholder">Page Title</string>
@@ -522,7 +576,6 @@ Language: en_CA
 	<string name="cd_related_post_preview_image">Related post preview image</string>
 	<string name="error_post_remote_site_settings">Couldn\'t save site info</string>
 	<string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
-	<string name="error_media_upload_connection">A connection error occurred while uploading media</string>
 	<string name="site_settings_disconnected_toast">Logged out, editing disabled.</string>
 	<string name="site_settings_unsupported_version_error">Unsupported WordPress version</string>
 	<string name="site_settings_multiple_links_dialog_description">Require approval for comments that include more than this number of links.</string>
@@ -663,7 +716,6 @@ Language: en_CA
 	<string name="reader_label_gap_marker">Load more posts</string>
 	<string name="notifications_no_search_results">No sites matched \'%s\'</string>
 	<string name="search_sites">Search sites</string>
-	<string name="unread">Unread</string>
 	<string name="notifications_empty_view_reader">View Reader</string>
 	<string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
 	<string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow.</string>
@@ -682,7 +734,7 @@ Language: en_CA
 	<string name="stats_widget_loading_data">Loading data…</string>
 	<string name="stats_widget_name_for_blog">Today\'s Stats for %1$s</string>
 	<string name="stats_widget_name">WordPress Today\'s Stats</string>
-	<string name="add_location_permission_required">Permission required in order to add location</string>
+	<string name="post_settings_add_location_permission_required">Permission required in order to add location</string>
 	<string name="add_media_permission_required">Permissions required in order to add media</string>
 	<string name="access_media_permission_required">Permissions required in order to access media</string>
 	<string name="stats_enable_rest_api_in_jetpack">To view your stats, enable the JSON API module in Jetpack.</string>
@@ -735,7 +787,6 @@ Language: en_CA
 	<string name="button_stats">Stats</string>
 	<string name="page_deleted">Page deleted</string>
 	<string name="button_back">Back</string>
-	<string name="trashed">Trashed</string>
 	<string name="stats_no_activity_this_period">No activity this period</string>
 	<string name="post_trashed">Post sent to trash</string>
 	<string name="post_deleted">Post deleted</string>
@@ -943,11 +994,6 @@ Language: en_CA
 	<string name="hs__new_conversation_header">Support chat</string>
 	<string name="hs__conversation_detail_error">Describe the problem you\'re seeing</string>
 	<string name="contact_us">Contact us</string>
-	<string name="current_location">Current location</string>
-	<string name="add_location">Add location</string>
-	<string name="search_current_location">Locate</string>
-	<string name="edit_location">Edit</string>
-	<string name="search_location">Search</string>
 	<string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
 	<string name="preference_send_usage_stats">Send statistics</string>
 	<string name="schedule_verb">Schedule</string>
@@ -1049,6 +1095,7 @@ Language: en_CA
 	<string name="jetpack_message_not_admin">The Jetpack plugin is required. Contact the site administrator.</string>
 	<string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
 	<string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
+	<string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
 	<string name="wordpress_blog">WordPress blog</string>
 	<string name="add_account_blog_url">Blog address</string>
 	<string name="image_settings">Image settings</string>
@@ -1058,18 +1105,13 @@ Language: en_CA
 	<string name="new_media">New media</string>
 	<string name="new_post">New post</string>
 	<string name="notifications_empty_all">No notifications…yet.</string>
-	<string name="post_format">Post format</string>
 	<string name="http_authorization_required">Authorization required</string>
 	<string name="http_credentials">HTTP credentials (optional)</string>
-	<string name="pending_review">Pending review</string>
 	<string name="invalid_site_url_message">Check that the site URL entered is valid</string>
 	<string name="open_source_licenses">Open source licenses</string>
-	<string name="location_not_found">Unknown location</string>
 	<string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
 	<string name="share_action_media">Media library</string>
 	<string name="share_action_post">New post</string>
-	<string name="category_parent">Category parent (optional):</string>
-	<string name="category_desc">Category description (optional)</string>
 	<string name="category_name">Category name</string>
 	<string name="add_new_category">Add new category</string>
 	<string name="view_in_browser">View in browser</string>
@@ -1139,7 +1181,6 @@ Language: en_CA
 	<string name="deleting_page">Deleting page</string>
 	<string name="creating_your_site">Creating your site</string>
 	<string name="creating_your_account">Creating your account</string>
-	<string name="error_refresh_media">Something went wrong while refreshing the media library. Try again later.</string>
 	<string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
 	<string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
 	<string name="comment_spammed">Comment marked as spam</string>
@@ -1220,7 +1261,6 @@ Language: en_CA
 	<string name="stats">Stats</string>
 	<string name="share_action">Share</string>
 	<string name="share_action_title">Add to</string>
-	<string name="post_excerpt">Excerpt</string>
 	<string name="theme_auth_error_title">Failed to fetch themes</string>
 	<string name="theme_set_success">Successfully set theme!</string>
 	<string name="theme_activating_button">Activating</string>
@@ -1240,9 +1280,6 @@ Language: en_CA
 	<string name="media_gallery_type_tiled">Tiled</string>
 	<string name="media_gallery_type_squares">Squares</string>
 	<string name="media_gallery_type">Type</string>
-	<string name="unattached">Unattached</string>
-	<string name="images">Images</string>
-	<string name="all">All</string>
 	<string name="themes">Themes</string>
 	<string name="discard">Discard</string>
 	<string name="manage">Manage</string>
@@ -1277,7 +1314,6 @@ Language: en_CA
 	<string name="blogusername">blogusername</string>
 	<string name="scaled_image">Scaled image width</string>
 	<string name="upload_scaled_image">Upload and link to scaled image</string>
-	<string name="scheduled">Scheduled</string>
 	<string name="link_enter_url">URL</string>
 	<string name="uploading">Uploading…</string>
 	<string name="app_title">WordPress for Android</string>
@@ -1291,27 +1327,21 @@ Language: en_CA
 	<string name="page_id">Page</string>
 	<string name="post_id">Post</string>
 	<string name="immediately">Immediately</string>
-	<string name="post_password">Password (optional)</string>
 	<string name="quickpress_add_alert_title">Set shortcut name</string>
 	<string name="settings">Settings</string>
 	<string name="today">Today</string>
 	<string name="share_url">Share URL</string>
 	<string name="quickpress_add_error">Shortcut name can\'t be empty</string>
 	<string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
-	<string name="post_private">Private</string>
-	<string name="draft">Draft</string>
-	<string name="publish_post">Publish</string>
 	<string name="upload_full_size_image">Upload and link to full image</string>
 	<string name="categories">Categories</string>
-	<string name="tags_separate_with_commas">Tags (separate tags with commas)</string>
+	<string name="tags_separate_with_commas">Separate tags with commas</string>
 	<string name="title">Title</string>
 	<string name="dlg_deleting_comments">Deleting comments</string>
 	<string name="notification_vibrate">Vibrate</string>
 	<string name="notification_sound">Notification sound</string>
 	<string name="notification_blink">Blink notification light</string>
-	<string name="status">Status</string>
 	<string name="sdcard_title">SD Card Required</string>
-	<string name="location">Location</string>
 	<string name="media">Media</string>
 	<string name="approve">Approve</string>
 	<string name="delete">Delete</string>

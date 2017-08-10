@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-04 21:01:45+0000
+Translation-Revision-Date: 2017-07-24 14:43:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="image_optimization_promo_desc">Bildoptimering minskar storleken på blder för snabbare uppladdning.\n\nDu kan när som helst ändra detta i webbplatsinställningarna.</string>
+	<string name="image_optimization_promo_title">Aktivera bildoptimering?</string>
+	<string name="leave_off">Behåll avstängt</string>
+	<string name="turn_on">Slå på</string>
+	<string name="me_profile_photo">Profilfoto</string>
+	<string name="error_media_parse_error">Oväntat svar från servern</string>
+	<string name="upload_finished_toast">Det går inte att stoppa uppladdningen eftersom den redan är klar</string>
+	<string name="post_title">Rubrik</string>
+	<string name="menu_redo">Upprepa</string>
+	<string name="menu_undo">Ångra</string>
+	<string name="media_insert_unimplemented">Tyvärr har denna funktion inte utvecklats färdigt än :(</string>
+	<string name="error_media_small">Mediafilen är för liten för att kunna visas</string>
+	<string name="editor_dropped_unsupported_files">Varning: det finns inte stöd för alla objekt som lagts in!</string>
+	<string name="editor_dropped_title_images_not_allowed">Det är inte tillåtet att dra in bilder i rubriken</string>
+	<string name="editor_dropped_text_error">Ett fel inträffade när text skulle dras in</string>
+	<string name="editor_dropped_html_images_not_allowed">Det är inte tillåtet att dra in bilder när du befinner dig i HTML-läge</string>
+	<string name="editor_content_hint">Berätta din historia här …</string>
+	<string name="post_status_trashed">Ligger i papperskorgen</string>
+	<string name="post_status_scheduled">Schemalagt</string>
+	<string name="post_status_post_private">Privat</string>
+	<string name="post_status_draft">Utkast</string>
+	<string name="post_status_pending_review">Väntar på granskning</string>
+	<string name="post_status_publish_post">Publicera</string>
+	<string name="change_location">Ändra plats</string>
+	<string name="remove_location">Ta bort plats</string>
+	<string name="post_settings_error_placepicker_missing_play_services">Det går inte att öppna platsväljaren, Tjänsten Google Play är inte tillgänglig</string>
+	<string name="post_settings_location">Plats</string>
+	<string name="now">Nu</string>
+	<string name="post_settings_password_dialog_hint">Man behöver lösenord för att se detta inlägg</string>
+	<string name="post_settings_excerpt_dialog_hint">Utdrag är valfria handskrivna sammanfattningar av ditt innehåll.</string>
+	<string name="post_settings_slug_dialog_hint">Permalänken är en URL-anpassad version av inläggsrubriken.</string>
+	<string name="post_settings_post_format">Inläggsformat</string>
+	<string name="post_settings_tags">Etiketter</string>
+	<string name="post_settings_slug">Permalänk</string>
+	<string name="post_settings_excerpt">Utdrag</string>
+	<string name="post_settings_not_set">Inte angiven</string>
+	<string name="post_settings_more_options">Ytterligare alternativ</string>
+	<string name="post_settings_categories_and_tags">Kategorier och etiketter</string>
+	<string name="post_settings_status">Status</string>
+	<string name="notifications_tab_title_unread">Oläst</string>
+	<string name="notifications_tab_title_all">Allt</string>
+	<string name="top_level_category_name">Högsta nivån</string>
+	<string name="category_parent">Överordnad kategori (valfritt)</string>
+	<string name="toast_err_post_media_uploading">Kan inte radera ett inlägg medan det laddas upp</string>
+	<string name="media_empty_audio_list">Du har inga ljudfiler</string>
+	<string name="media_empty_documents_list">Du har inga dokument</string>
+	<string name="media_empty_videos_list">Du har inga videofiler</string>
+	<string name="media_empty_image_list">Du har inga bilder</string>
+	<string name="media_error_timeout">Servern tog för lång tid på sig att svara</string>
+	<string name="media_error_exceeds_memory_limit">Filen är för stor för att laddas upp på denna webbplats</string>
+	<string name="media_error_exceeds_php_filesize">Filen är större än största filuppladdningsstorleken för denna webbplats</string>
+	<string name="media_error_http_too_large_video_upload">Videofilen är för stor för att ladda upp</string>
+	<string name="media_error_http_too_large_photo_upload">Bildfilen är för stor för att ladda upp. Du kan försöka ändra inställningarna för bildoptimering i webbplatsinställningarna</string>
+	<string name="media_audio">Ljudfiler</string>
+	<string name="media_videos">Videofiler</string>
+	<string name="media_documents">Dokument</string>
+	<string name="media_images">Bilder</string>
+	<string name="media_all">Allt</string>
 	<string name="video_optimization_generic_error_message">Ett fel uppstod när din video komprimerades. Originalfilen används.</string>
 	<string name="video_optimization_in_progress">Videoklippet optimeras…</string>
 	<string name="photo_picker_soft_ask_permissions_denied">%1$s nekades åtkomst till dina bilder. Korrigera genom att redigera dina rättigheter och aktivera %2$s.</string>
@@ -37,7 +95,7 @@ Language: sv_SE
 	<string name="draft_uploaded">Utkastet uppladdat</string>
 	<string name="report_bug">Rapportera ett fel</string>
 	<string name="video_quality">Videokvalitet</string>
-	<string name="max_video_px_width">Standardbredd för video</string>
+	<string name="max_video_resolution">Standardbredd för video</string>
 	<string name="permission_location">Din plats</string>
 	<string name="permission_camera">Kamera</string>
 	<string name="permission_storage">Lagring</string>
@@ -96,9 +154,7 @@ Language: sv_SE
 	<string name="fab_content_description_write">Skriva</string>
 	<string name="my_site_btn_sharing">Delning</string>
 	<string name="button_not_now">Inte just nu.</string>
-	<string name="media_error_timeout">Servern tog för lång tid på sig att svara. Det kan vara en dålig förbindelse eller ett serverfel</string>
-	<string name="media_error_internal_server_error">Fel vid uppladdning. Prova att aktivera ”Optimera bilder” under Webbplats->Inställningar</string>
-	<string name="media_error_http_too_large_upload">Filen är för stor för att kunna laddas upp. Prova att aktivera ”Optimera bilder” under Webbplats->Inställningar</string>
+	<string name="media_error_internal_server_error">Fel vid uppladdning. Prova att aktivera ”Optimera bilder” under inställningarna för din webbplats</string>
 	<string name="media_downloading">Mediafilerna sparas i denna enhet</string>
 	<string name="error_media_save">Kan inte spara media</string>
 	<string name="editor_scheduled_post_saved_online">Inlägget schemalagt</string>
@@ -159,8 +215,6 @@ Language: sv_SE
 	<string name="error_unknown_post_type">Okänt inläggsformat</string>
 	<string name="error_unknown_post">Okänt inlägg, Den lokala kopian av detta inlägg skiljer sig eventuellt från versionen på servern</string>
 	<string name="error_fetch_site_after_creation">Webbplatsen har skapats, du kan behöva uppdatera din webbplatslista i listan för val av webbplats.</string>
-	<string name="error_media_request_too_large">Mediafilen för stor, går inte att ladda upp</string>
-	<string name="error_media_parse_error">Det gick inte att tolka svaret efter uppladdning av media</string>
 	<string name="error_upload_params">Fel vid uppladdning av %1$s: %2$s</string>
 	<string name="submit_for_review">Skicka</string>
 	<string name="role_subscriber">Prenumerant</string>
@@ -179,7 +233,7 @@ Language: sv_SE
 	<string name="error_media_refresh_no_connection">Anslutning krävs för uppdatering av biblioteket</string>
 	<string name="error_media_unauthorized">Du saknar behörighet att se eller redigera aktuellt media</string>
 	<string name="error_media_not_found">Media-filen hittades inte</string>
-	<string name="error_media_insufficient_fs_permissions">Det krävs läsrättigheter för mediafilen</string>
+	<string name="error_media_insufficient_fs_permissions">Tillstånd saknas för läsning av enhetens mediafiler</string>
 	<string name="site_settings_optimize_images">Optimera bilder</string>
 	<string name="no_site_error">Det gick inte att ansluta till WordPress-webbplatsen. På den angivna adressen finns det ingen giltig WordPress-webbplats. Kontrollera adressen (URL) du matat in.</string>
 	<string name="media_generic_error">Ett mediefel har inträffat</string>
@@ -472,8 +526,8 @@ Language: sv_SE
 	<string name="pending_email_change_snackbar">Klicka på verifieringslänken i e-postmeddelandet som skickades till %1$s för att bekräfta din nya adress</string>
 	<string name="editor_toast_uploading_please_wait">Mediefiler laddas upp för tillfället. Vänta tills de är färdiguppladdade.</string>
 	<string name="error_refresh_comments_showing_older">Kommentarer kan inte uppdateras just nu – visar äldre kommentarer</string>
-	<string name="editor_post_settings_set_featured_image">Ange utvald bild</string>
-	<string name="editor_post_settings_featured_image">Utvald bild</string>
+	<string name="post_settings_set_featured_image">Ange utvald bild</string>
+	<string name="post_settings_featured_image">Utvald bild</string>
 	<string name="visual_editor_enabled">Visuell redigerare aktiverad</string>
 	<string name="editor_content_placeholder">Berätta din historia här...</string>
 	<string name="editor_page_title_placeholder">Sidans rubrik</string>
@@ -522,7 +576,6 @@ Language: sv_SE
 	<string name="cd_related_post_preview_image">Relaterat inlägg förhandsgranskningsbild</string>
 	<string name="error_post_remote_site_settings">Kunde inte spara webbplatsinfo</string>
 	<string name="error_fetch_remote_site_settings">Kunde inte hämta webbplatsinfo</string>
-	<string name="error_media_upload_connection">Ett anslutningsfel uppstod vid uppladdning av media</string>
 	<string name="site_settings_disconnected_toast">Utloggad, redigering inaktiverad.</string>
 	<string name="site_settings_unsupported_version_error">WordPress-versionen stöds ej</string>
 	<string name="site_settings_multiple_links_dialog_description">Kräv godkännande för kommentarer som innehåller fler än detta antal länkar.</string>
@@ -663,7 +716,6 @@ Language: sv_SE
 	<string name="reader_label_gap_marker">Ladda fler inlägg</string>
 	<string name="notifications_no_search_results">Inga webbplatser matchade "%s"</string>
 	<string name="search_sites">Sök webbplatser</string>
-	<string name="unread">Olästa</string>
 	<string name="notifications_empty_view_reader">Visa Läsare</string>
 	<string name="notifications_empty_action_followers_likes">Se till att synas: kommentera inlägg som du läst.</string>
 	<string name="notifications_empty_action_comments">Gå med i en diskussion: kommentera inlägg från bloggar som du följer.</string>
@@ -682,7 +734,7 @@ Language: sv_SE
 	<string name="stats_widget_loading_data">Laddar data…</string>
 	<string name="stats_widget_name_for_blog">Dagens statistik för %1$s</string>
 	<string name="stats_widget_name">WordPress dagens status</string>
-	<string name="add_location_permission_required">Behörighet krävs för att lägga till plats</string>
+	<string name="post_settings_add_location_permission_required">Tillstånd krävs för att lägga till plats</string>
 	<string name="add_media_permission_required">Behörighet krävs för att lägga till media</string>
 	<string name="access_media_permission_required">Behörighet krävs för åtkomst till media</string>
 	<string name="stats_enable_rest_api_in_jetpack">Aktivera JSON API-modulen i Jetpack för att visa din statistik.</string>
@@ -735,7 +787,6 @@ Language: sv_SE
 	<string name="button_stats">Statistik</string>
 	<string name="page_deleted">Sidan borttagen</string>
 	<string name="button_back">Tillbaka</string>
-	<string name="trashed">Borttagen</string>
 	<string name="stats_no_activity_this_period">Ingen aktivitet denna period</string>
 	<string name="post_trashed">Inlägget placerat i papperskorgen</string>
 	<string name="post_deleted">Inlägg raderat</string>
@@ -943,11 +994,6 @@ Language: sv_SE
 	<string name="hs__new_conversation_header">Supportchatt</string>
 	<string name="hs__conversation_detail_error">Beskriv problemet du upplever</string>
 	<string name="contact_us">Kontakta oss</string>
-	<string name="current_location">Nuvarande plats</string>
-	<string name="add_location">Lägg till plats</string>
-	<string name="search_current_location">Hitta</string>
-	<string name="edit_location">Redigera</string>
-	<string name="search_location">Sök</string>
 	<string name="preference_send_usage_stats_summary">Skicka automatiskt användarstatistik för att hjälpa oss förbättra WordPress för Android</string>
 	<string name="preference_send_usage_stats">Skicka statistik</string>
 	<string name="schedule_verb">Tidinställ</string>
@@ -1049,6 +1095,7 @@ Language: sv_SE
 	<string name="jetpack_message_not_admin">Tillägget Jetpack krävs. Kontakta webbplatsens administratör.</string>
 	<string name="fatal_db_error">Ett fel uppstod vid skapandet av app-databasen. Försök återinstallera appen.</string>
 	<string name="error_blog_hidden">Den här bloggen är dold och kunde inte laddas. Aktivera den igen i inställningarna och försök igen.</string>
+	<string name="error_refresh_media">Det gick inte att förnya medialistan just nu</string>
 	<string name="wordpress_blog">WordPress-blogg</string>
 	<string name="add_account_blog_url">Bloggadress</string>
 	<string name="image_settings">Bildinställningar</string>
@@ -1058,18 +1105,13 @@ Language: sv_SE
 	<string name="new_media">Ny media</string>
 	<string name="new_post">Nytt inlägg</string>
 	<string name="notifications_empty_all">Inga notiser … ännu.</string>
-	<string name="post_format">Inläggsformat</string>
 	<string name="http_authorization_required">Autentisering krävs</string>
 	<string name="http_credentials">HTTP-autentiseringsuppgifter (valfritt)</string>
-	<string name="pending_review">Avvaktar granskning</string>
 	<string name="invalid_site_url_message">Kontrollera att webbplatsens URL är giltig</string>
 	<string name="open_source_licenses">Öppen källkodslicens</string>
-	<string name="location_not_found">Okänd plats</string>
 	<string name="file_error_create">Kunde inte skapa temporär mediafil för uppladdning. Se till att det finns tillräckligt med utrymme på din enhet.</string>
 	<string name="share_action_media">Mediabibliotek</string>
 	<string name="share_action_post">Nytt inlägg</string>
-	<string name="category_parent">Kategorins förälder (valfritt):</string>
-	<string name="category_desc">Kategoribeskrivning (valfri)</string>
 	<string name="category_name">Kategorinamn</string>
 	<string name="add_new_category">Lägg till ny kategori</string>
 	<string name="view_in_browser">Visa i webbläsare</string>
@@ -1139,7 +1181,6 @@ Language: sv_SE
 	<string name="deleting_page">Tar bort sida</string>
 	<string name="creating_your_site">Skapar din webbplats</string>
 	<string name="creating_your_account">Skapar ditt konto</string>
-	<string name="error_refresh_media">Ett fel uppstod när mediabiblioteket skulle uppdateras. Försök igen senare.</string>
 	<string name="reader_empty_posts_in_tag_updating">Hämtar inlägg...</string>
 	<string name="cant_share_no_visible_blog">Du kan inte dela på WordPress utan att ha en synlig blogg</string>
 	<string name="comment_spammed">Kommentar markerad som skräppost</string>
@@ -1220,7 +1261,6 @@ Language: sv_SE
 	<string name="stats">Statistik</string>
 	<string name="share_action">Dela</string>
 	<string name="share_action_title">Lägg till</string>
-	<string name="post_excerpt">Utdrag</string>
 	<string name="theme_auth_error_title">Kunde inte hämta teman</string>
 	<string name="theme_set_success">Temat aktiverat!</string>
 	<string name="theme_activating_button">Aktiverar</string>
@@ -1240,9 +1280,6 @@ Language: sv_SE
 	<string name="media_gallery_type_tiled">Mosaik</string>
 	<string name="media_gallery_type_squares">Kvadrater</string>
 	<string name="media_gallery_type">Stil</string>
-	<string name="unattached">Obundna</string>
-	<string name="images">Bilder</string>
-	<string name="all">Alla</string>
 	<string name="themes">Teman</string>
 	<string name="discard">Kasta bort</string>
 	<string name="manage">Hantera</string>
@@ -1277,7 +1314,6 @@ Language: sv_SE
 	<string name="blogusername">användarnamn</string>
 	<string name="scaled_image">Välj bredd för bild</string>
 	<string name="upload_scaled_image">Ladda upp och länka till skalad bild</string>
-	<string name="scheduled">Tidsinställt</string>
 	<string name="link_enter_url">URL</string>
 	<string name="uploading">Laddar upp...</string>
 	<string name="app_title">WordPress for Android</string>
@@ -1291,27 +1327,21 @@ Language: sv_SE
 	<string name="page_id">Sida</string>
 	<string name="post_id">Inlägg</string>
 	<string name="immediately">Omedelbart</string>
-	<string name="post_password">Lösenord (valfritt)</string>
 	<string name="quickpress_add_alert_title">Ange genvägsnamn</string>
 	<string name="settings">Inställningar</string>
 	<string name="today">Idag</string>
 	<string name="share_url">Dela URL</string>
 	<string name="quickpress_add_error">Genvägsnamn kan inte vara tomt</string>
 	<string name="quickpress_window_title">Välj blogg för QuickPress-genväg</string>
-	<string name="post_private">Privat</string>
-	<string name="draft">Utkast</string>
-	<string name="publish_post">Publicera</string>
 	<string name="upload_full_size_image">Ladda upp och länka till originalbild</string>
 	<string name="categories">Kategorier</string>
-	<string name="tags_separate_with_commas">Etiketter (separera etiketter med kommatecken)</string>
+	<string name="tags_separate_with_commas">Separera etiketter med kommatecken</string>
 	<string name="title">Titel</string>
 	<string name="dlg_deleting_comments">Raderar kommentarer</string>
 	<string name="notification_vibrate">Vibrera</string>
 	<string name="notification_sound">Notifieringsljud</string>
 	<string name="notification_blink">Blinka notifieringslampa</string>
-	<string name="status">Status</string>
 	<string name="sdcard_title">SD-kort krävs</string>
-	<string name="location">Plats</string>
 	<string name="media">Media</string>
 	<string name="approve">Godkänn</string>
 	<string name="delete">Radera</string>

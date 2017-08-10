@@ -10,9 +10,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.main.WPMainTabLayout;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -29,8 +26,6 @@ import javax.inject.Inject;
  * Redirects users to the reader activity along with IDs passed in the intent
  */
 public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
-    private static final int INTENT_WELCOME = 0;
-
     private String mInterceptedUri;
     private String mBlogId;
     private String mPostId;
@@ -58,9 +53,9 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
             // and then show the post once the user has signed in
             if (mAccountStore.hasAccessToken()) {
                 showPost();
+                finish();
             } else {
-                Intent intent = new Intent(this, SignInActivity.class);
-                startActivityForResult(intent, INTENT_WELCOME);
+                ActivityLauncher.loginForDeeplink(this);
             }
         } else {
             finish();
@@ -71,8 +66,11 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // show the post if user is returning from successful login
-        if (requestCode == INTENT_WELCOME && resultCode == RESULT_OK)
+        if (requestCode == RequestCodes.DO_LOGIN && resultCode == RESULT_OK) {
             showPost();
+        }
+
+        finish();
     }
 
     private void showPost() {
@@ -92,8 +90,6 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         } else {
             ToastUtils.showToast(this, R.string.error_generic);
         }
-
-        finish();
     }
 
     @Override

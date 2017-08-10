@@ -24,7 +24,7 @@
     <string name="post_content">Content (tap to add text and media)</string>
     <string name="max_thumbnail_px_width">Default Image Width</string>
     <string name="image_quality">Image Quality</string>
-    <string name="max_video_px_width">Default Video Width</string>
+    <string name="max_video_resolution">Maximum Resolution</string>
     <string name="video_quality">Video Quality</string>
     <string name="password">Password</string>
     <string name="blogs">Blogs</string>
@@ -67,6 +67,7 @@
     <string name="edit_post">Edit post</string>
     <string name="add_comment">Add comment</string>
     <string name="connection_error">Connection error</string>
+    <string name="connection_to_server_lost">The connection to the server was lost</string>
     <string name="category_refresh_error">Category refresh error</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="cancel_edit">Cancel edit</string>
@@ -84,7 +85,7 @@
     <string name="sign_in_wpcom">Log in to WordPress.com</string>
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
-    <string name="posting_post">Posting \"%s\"</string>
+    <string name="uploading_post">Uploading \"%s\"</string>
     <string name="language">Language</string>
     <string name="interface_language">Interface Language</string>
     <string name="signout">Log out</string>
@@ -140,11 +141,11 @@
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_error_no_permission_upload">You don\'t have permission to upload media to the site</string>
-    <string name="media_error_http_too_large_photo_upload">Image too large to upload. Try changing Optimize Images in your site\'s settings</string>
+    <string name="media_error_http_too_large_photo_upload">Image too large to upload. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_error_http_too_large_video_upload">Video too large to upload</string>
     <string name="media_error_exceeds_php_filesize">File exceeds the maximum upload size for this site</string>
     <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
-    <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your site\'s settings</string>
+    <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_error_timeout">Server took too long to respond</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
@@ -236,7 +237,8 @@
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
     <string name="local_draft">Local draft</string>
-    <string name="post_uploading">Uploading</string>
+    <string name="post_uploading">Uploading post</string>
+    <string name="post_queued">Queued post</string>
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="empty_list_default">This list is empty</string>
 
@@ -252,6 +254,7 @@
     <string name="button_more" translatable="false">@string/more</string>
     <string name="button_back">Back</string>
     <string name="button_revert">Revert</string>
+    <string name="button_retry">Retry</string>
 
     <!-- dropdown filter above post cards -->
     <string name="filter_published_posts">Published</string>
@@ -265,12 +268,20 @@
         <item>@string/filter_trashed_posts</item>
     </string-array>
 
+    <!-- post uploads -->
+    <string name="post_published_param">\"%s\" has been published!</string>
+    <string name="post_updated_param">\"%s\" has been updated!</string>
+    <string name="post_scheduled_param">\"%s\" has been scheduled!</string>
+    <string name="post_draft_param">\"%s\" has been saved as a draft!</string>
+
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
     <string name="draft_uploaded">Draft uploaded</string>
     <string name="post_published">Post published</string>
     <string name="page_published">Page published</string>
+    <string name="post_scheduled">Post scheduled</string>
+    <string name="page_scheduled">Page scheduled</string>
     <string name="post_updated">Post updated</string>
     <string name="page_updated">Page updated</string>
     <string name="caption">Caption (optional)</string>
@@ -287,7 +298,7 @@
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
-    <string name="toast_err_post_media_uploading">Unable to delete a post while it\'s uploading</string>
+    <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -398,8 +409,9 @@
     <string name="view_in_browser">View in browser</string>
     <string name="preview">Preview</string>
     <string name="update_verb">Update</string>
-    <string name="sending_content">Uploading %s content</string>
+    <string name="sending_content">Uploading %s content…</string>
     <string name="uploading_total">Uploading %1$d of %2$d</string>
+    <string name="uploading_post_media">Uploading media…</string>
 
     <!-- new account view -->
     <string name="signing_in">Logging in…</string>
@@ -463,7 +475,6 @@
     <string name="site_settings_discussion_header" translatable="false">@string/discussion</string>
     <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
     <string name="site_settings_comments_header" translatable="false">@string/comments</string>
-    <string name="site_settings_this_device_header">This device</string>
     <string name="site_settings_advanced_header">Advanced</string>
 
     <!-- Preference Titles -->
@@ -481,7 +492,7 @@
     <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_width</string>
     <string name="site_settings_default_image_quality_title" translatable="false">@string/image_quality</string>
     <string name="site_settings_optimize_videos">Optimize Videos</string>
-    <string name="site_settings_default_video_width_title" translatable="false">@string/max_video_px_width</string>
+    <string name="site_settings_default_video_width_title" translatable="false">@string/max_video_resolution</string>
     <string name="site_settings_default_video_quality_title" translatable="false">@string/video_quality</string>
     <string name="site_settings_upload_and_link_image_title" translatable="false">@string/upload_full_size_image</string>
     <string name="site_settings_related_posts_title" translatable="false">@string/related_posts</string>
@@ -950,7 +961,8 @@
     <string name="editor_draft_saved_online">Draft saved online</string>
     <string name="editor_draft_saved_locally">Draft saved on device</string>
     <string name="editor_scheduled_post_saved_online">Post scheduled</string>
-    <string name="editor_post_saved_locally_unfinished_media">The post has unfinished media uploads and has been saved locally</string>
+    <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
+    <string name="editor_uploading_post">Your post is uploading</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
@@ -969,6 +981,10 @@
     <string name="new_editor_promo_title_beta">Beta</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
+
+    <string name="async_promo_title">Publish with Confidence</string>
+    <string name="async_promo_description">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
+    <string name="async_promo_link">How does it work?</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
@@ -1138,7 +1154,8 @@
     <string name="error_edit_comment">An error occurred while editing the comment</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
-    <string name="error_upload_params">Error while uploading the %1$s: %2$s</string>
+    <string name="error_upload_post_params">There was an error uploading this %1$s: %2$s.</string>
+    <string name="error_upload_post_media_params">There was an error uploading the media in this %1$s: %2$s.</string>
     <string name="error_media_insufficient_fs_permissions">Read permission denied on device media</string>
     <string name="error_media_not_found">Media could not be found</string>
     <string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
@@ -1147,6 +1164,9 @@
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_save">Unable to save media</string>
+    <string name="error_media_canceled">Uploading media were canceled</string>
+    <string name="error_media_recover">We were unable to upload this post\'s media. Please edit the post to try again.</string>
+    <string name="error_post_does_not_exist">This post no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
@@ -1167,7 +1187,7 @@
     <string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
 
     <!-- Post Error -->
-    <string name="error_unknown_post">Unknown post, local copy of this post may be out of sync with the server</string>
+    <string name="error_unknown_post">Could not find the post on the server</string>
     <string name="error_unknown_post_type">Unknown post format</string>
 
     <!-- Image Descriptions for Accessibility -->
@@ -1175,6 +1195,7 @@
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="cd_related_post_preview_image">Related post preview image</string>
+    <string name="login_site_address_help_image">Site address positioning image</string>
 
     <!-- Passcode lock -->
     <string name="passcode_manage">Manage PIN lock</string>
@@ -1382,6 +1403,7 @@
     <string name="username_contains_invalid_characters">Username may not contain the character “_”</string>
     <string name="username_must_include_letters">Username must have a least 1 letter (a-z)</string>
     <string name="email_invalid">Enter a valid email address</string>
+    <string name="email_not_found">We didn\'t find a WordPress.com user with that email address</string>
     <string name="email_not_allowed">That email address isn\'t allowed</string>
     <string name="username_exists">That username already exists</string>
     <string name="email_exists">That email address is already being used</string>
@@ -1656,13 +1678,8 @@
     <string name="title_follower">Follower</string>
     <string name="title_email_follower">Email Follower</string>
 
-    <string name="role_admin">Administrator</string>
-    <string name="role_editor">Editor</string>
-    <string name="role_author">Author</string>
-    <string name="role_contributor">Contributor</string>
     <string name="role_follower">Follower</string>
     <string name="role_viewer">Viewer</string>
-    <string name="role_subscriber">Subscriber</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
@@ -1830,10 +1847,54 @@
     <string name="video_optimization_in_progress">Optimizing your video&#8230;</string>
     <string name="video_optimization_generic_error_message">An error occurred while compressing your video. Using the original file.</string>
 
-
     <!-- Image Optimization promo -->
     <string name="turn_on">Turn on</string>
     <string name="leave_off">Leave off</string>
     <string name="image_optimization_promo_title">Turn on image optimization?</string>
     <string name="image_optimization_promo_desc">Image optimization shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
+
+    <!-- Login -->
+    <string name="log_in">Log In</string>
+    <string name="create_wordpress_site">Create a WordPress site</string>
+    <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
+    <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
+    <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
+    <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
+    <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
+    <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="next">Next</string>
+    <string name="open_mail">Open mail</string>
+    <string name="enter_site_address_instead">Log in to your site by entering your site address instead.</string>
+    <string name="enter_username_instead">Log in with username instead.</string>
+    <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
+    <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
+    <string name="login_text_otp">Text me a code instead.</string>
+    <string name="requesting_otp">Requesting a verification code via SMS.</string>
+    <string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
+    <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
+    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
+    <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
+    <string name="login_magic_links_sent_description">Magic link sent illustration</string>
+    <string name="login_magic_link_email_requesting">Requesting log-in email</string>
+    <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
+    <string name="connect_more">Connect Another Site</string>
+    <string name="login_continue">Continue</string>
+    <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
+    <string name="login_username_at">\@%s</string>
+    <string name="enter_site_address">Enter the address of your WordPress site you\'d like to connect.</string>
+    <string name="login_site_address">Site address</string>
+    <string name="login_site_address_help">Need help finding your site address?</string>
+    <string name="login_site_address_help_title">What\'s my site address?</string>
+    <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
+    <string name="login_site_address_more_help">Need more help?</string>
+    <string name="login_checking_site_address">Checking site address</string>
+    <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
+    <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
+    <string name="login_empty_site_url">Please enter a site address</string>
+    <string name="login_empty_username">Please enter a username</string>
+    <string name="login_empty_2fa">Please enter a verification code</string>
+    <string name="login_email_client_not_found">Can\'t detect your email client app</string>
+    <string name="login_logged_in_as">Logged in as</string>
+    <string name="login_epilogue_mysites_one">My site</string>
+    <string name="login_epilogue_mysites_other">My sites</string>
 </resources>

@@ -44,6 +44,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -212,7 +213,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mRecycler.setAdapter(getAdapter());
 
         // disable thumbnail loading during a fling to conserve memory
-        final int minDistance = WordPressMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
+        final int minDistance = WPMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
         mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
             @Override
             public boolean onFling(int velocityX, int velocityY) {
@@ -266,8 +267,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private MediaGridAdapter getAdapter() {
         if (!hasAdapter()) {
-            boolean canMultiSelect = mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER
-                    && WordPressMediaUtils.currentUserCanDeleteMedia(mSite);
+            boolean canMultiSelect = mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
+                    && WPMediaUtils.currentUserCanDeleteMedia(mSite);
             mGridAdapter = new MediaGridAdapter(getActivity(), mSite);
             mGridAdapter.setCallback(this);
             mGridAdapter.setAllowMultiselect(canMultiSelect);
@@ -309,6 +310,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (!TextUtils.isEmpty(mSearchTerm)) {
             return mMediaStore.searchSiteMedia(mSite, mSearchTerm);
         }
+
+        if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER) {
+            List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
+            List<MediaModel> imagesAndVideos = new ArrayList<>();
+            for (MediaModel media: allMedia) {
+                String mime = media.getMimeType();
+                if (mime != null && (mime.startsWith("image") || mime.startsWith("video"))) {
+                    imagesAndVideos.add(media);
+                }
+            }
+            return imagesAndVideos;
+        } else if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+            return mMediaStore.getSiteImages(mSite);
+        }
+
 
         switch (mFilter) {
             case FILTER_IMAGES:
@@ -377,7 +393,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_PICKER) {
+        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
             return;
         }
 
