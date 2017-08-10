@@ -659,7 +659,10 @@ public class WPMainActivity extends AppCompatActivity {
                 String siteId = uri.getQueryParameter("blogId");
                 Long siteIdLong = StringUtils.stringToLong(siteId);
                 SiteModel siteForStat = mSiteStore.getSiteBySiteId(siteIdLong);
-                ActivityLauncher.viewBlogStats(this, siteForStat);
+                if (siteForStat != null) {
+                    ActivityLauncher.viewBlogStats(this, siteForStat);
+                }
+                break;
             case VIEW_READER:
                 setReaderTabActive();
                 break;
