@@ -150,6 +150,7 @@ public class PluginListActivity extends AppCompatActivity {
                 PluginViewHolder pluginHolder = (PluginViewHolder) holder;
                 pluginHolder.name.setText(pluginModel.getDisplayName());
                 pluginHolder.status.setText(getPluginStatusText(pluginModel));
+                pluginHolder.icon.setImageDrawable(getResources().getDrawable(R.drawable.plugin_placeholder));
             }
         }
 
