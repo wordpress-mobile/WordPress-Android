@@ -1028,6 +1028,10 @@ public class ReaderPostDetailFragment extends Fragment
             mRenderer = new ReaderPostRenderer(mReaderWebView, mPost);
             mRenderer.beginRender();
 
+            if (mRenderer.shouldShowExcerptFooter()) {
+
+            }
+
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());

@@ -250,6 +250,10 @@ class ReaderPostRenderer {
             && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage());
     }
 
+    public boolean shouldShowExcerptFooter() {
+        return mPost.isJetpack && mPost.hasExcerpt();
+    }
+
     /*
      * returns the basic content of the post tweaked for use here
      */
