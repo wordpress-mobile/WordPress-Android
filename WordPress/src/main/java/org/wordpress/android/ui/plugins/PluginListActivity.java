@@ -2,6 +2,7 @@ package org.wordpress.android.ui.plugins;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginsChanged;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
@@ -147,16 +149,29 @@ public class PluginListActivity extends AppCompatActivity {
             if (pluginModel != null) {
                 PluginViewHolder pluginHolder = (PluginViewHolder) holder;
                 pluginHolder.name.setText(pluginModel.getDisplayName());
+                pluginHolder.status.setText(getPluginStatusText(pluginModel));
             }
         }
 
         private class PluginViewHolder extends RecyclerView.ViewHolder {
             TextView name;
+            TextView status;
+            WPNetworkImageView icon;
 
             PluginViewHolder(View view) {
                 super(view);
                 name = (TextView) view.findViewById(R.id.plugin_name);
+                status = (TextView) view.findViewById(R.id.plugin_status);
+                icon = (WPNetworkImageView) view.findViewById(R.id.plugin_icon);
             }
         }
+    }
+
+    private String getPluginStatusText(@NonNull PluginModel plugin) {
+        String activeStatus = plugin.isActive() ? getString(R.string.plugin_active)
+                : getString(R.string.plugin_inactive);
+        String autoUpdateStatus = plugin.isAutoUpdateEnabled() ? getString(R.string.plugin_autoupdates_on)
+                : getString(R.string.plugin_autoupdates_off);
+        return activeStatus + ", " + autoUpdateStatus;
     }
 }

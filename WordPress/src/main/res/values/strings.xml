@@ -1684,6 +1684,10 @@
 
     <!--Plugins-->
     <string name="plugins">Plugins</string>
+    <string name="plugin_active">Active</string>
+    <string name="plugin_inactive">Inactive</string>
+    <string name="plugin_autoupdates_on">Autoupdates on</string>
+    <string name="plugin_autoupdates_off">Autoupdates off</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
