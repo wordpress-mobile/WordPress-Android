@@ -648,6 +648,11 @@ public class WPMainActivity extends AppCompatActivity {
                 ActivityLauncher.addNewPostOrPageForResult(this, null, false, false);
                 break;
             case VIEW_NOTIFICATIONS_HOST:
+                String noteId = uri.getQueryParameter("notificationId");
+                if (noteId != null) {
+                    getIntent().putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+                }
+
                 launchWithNoteId();
                 break;
             case VIEW_STATS_HOST:
