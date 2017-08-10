@@ -152,7 +152,7 @@ public abstract class SiteSettingsInterface {
      * Gets the default category value stored in {@link SharedPreferences}, 0 by default.
      */
     public static int getDefaultCategory(Context context) {
-        return siteSettingsPreferences(context).getInt(DEF_CATEGORY_PREF_KEY, 0);
+        return siteSettingsPreferences(context).getInt(DEF_CATEGORY_PREF_KEY, 1);
     }
 
     /**
