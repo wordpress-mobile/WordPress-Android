@@ -20,15 +20,29 @@ public class FetchPluginInfoResponse {
 
 class PluginInfoDeserializer implements JsonDeserializer<FetchPluginInfoResponse> {
     @Override
-    public FetchPluginInfoResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public FetchPluginInfoResponse deserialize(JsonElement json, Type typeOfT,
+                                               JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         FetchPluginInfoResponse response = new FetchPluginInfoResponse();
-        response.name = jsonObject.get("name").getAsString();
-        response.slug = jsonObject.get("slug").getAsString();
-        response.version = jsonObject.get("version").getAsString();
-        response.rating = jsonObject.get("rating").getAsString();
-        JsonObject icons = jsonObject.get("icons").getAsJsonObject();
-        response.icon = (icons.has("2x") ? icons.get("2x") : icons.get("1x")).getAsString();
+        response.name = getStringFromJsonIfAvailable(jsonObject, "name");
+        response.slug = getStringFromJsonIfAvailable(jsonObject, "slug");
+        response.version = getStringFromJsonIfAvailable(jsonObject, "version");
+        response.rating = getStringFromJsonIfAvailable(jsonObject, "rating");
+        if (jsonObject.has("icons")) {
+            JsonObject icons = jsonObject.get("icons").getAsJsonObject();
+            if (icons.has("2x")) {
+                response.icon = icons.get("2x").getAsString();
+            } else if (icons.has("1x")) {
+                response.icon = icons.get("1x").getAsString();
+            }
+        }
         return response;
+    }
+
+    private String getStringFromJsonIfAvailable(JsonObject jsonObject, String property) {
+        if (jsonObject.has(property)) {
+            return jsonObject.get(property).getAsString();
+        }
+        return null;
     }
 }
