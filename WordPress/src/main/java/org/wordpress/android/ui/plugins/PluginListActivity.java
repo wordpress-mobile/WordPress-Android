@@ -1,12 +1,18 @@
 package org.wordpress.android.ui.plugins;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -14,10 +20,13 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
+import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginsChanged;
 import org.wordpress.android.util.ToastUtils;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -98,5 +107,56 @@ public class PluginListActivity extends AppCompatActivity {
             return;
         }
         refreshPluginList();
+    }
+
+    private class PluginListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private List<PluginModel> mPlugins;
+
+        private final LayoutInflater mLayoutInflater;
+
+        PluginListAdapter(Context context) {
+            mLayoutInflater = LayoutInflater.from(context);
+        }
+
+        public void setPlugins(List<PluginModel> plugins) {
+            mPlugins = plugins;
+            notifyDataSetChanged();
+        }
+
+        private PluginModel getItem(int position) {
+            if (mPlugins != null && position < mPlugins.size()) {
+                return mPlugins.get(position);
+            }
+            return null;
+        }
+
+        @Override
+        public int getItemCount() {
+            return mPlugins != null ? mPlugins.size() : 0;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = mLayoutInflater.inflate(R.layout.plugin_list_row, parent, false);
+            return new PluginViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            PluginModel pluginModel = getItem(position);
+            if (pluginModel != null) {
+                PluginViewHolder pluginHolder = (PluginViewHolder) holder;
+                pluginHolder.name.setText(pluginModel.getDisplayName());
+            }
+        }
+
+        private class PluginViewHolder extends RecyclerView.ViewHolder {
+            TextView name;
+
+            PluginViewHolder(View view) {
+                super(view);
+                name = (TextView) view.findViewById(R.id.plugin_name);
+            }
+        }
     }
 }
