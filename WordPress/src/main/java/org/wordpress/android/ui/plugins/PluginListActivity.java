@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -26,6 +27,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginsChanged;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
@@ -90,7 +92,11 @@ public class PluginListActivity extends AppCompatActivity {
 
     private void setupViews() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.plugins_recycler_view);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                DividerItemDecoration.VERTICAL_LIST);
+        recyclerView.addItemDecoration(dividerItemDecoration);
         mAdapter = new PluginListAdapter(this);
         recyclerView.setAdapter(mAdapter);
 
