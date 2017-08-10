@@ -23,10 +23,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
-import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -83,6 +81,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnImeBackListener,
         AztecText.OnImageTappedListener,
         AztecText.OnVideoTappedListener,
+        AztecText.OnMediaDeletedListener,
         EditorMediaUploadListener,
         IAztecToolbarClickListener,
         IHistoryListener {
@@ -217,51 +216,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .setHistoryListener(this)
                 .setOnImageTappedListener(this)
                 .setOnVideoTappedListener(this)
+                .setOnMediaDeletedListener(this)
                 .addPlugin(new WordPressCommentsPlugin(content))
                 .addPlugin(new MoreToolbarButton(content));
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
-        content.addTextChangedListener(new TextWatcher() {
-            private boolean deletedMediaItem = false;
-
-            @Override
-            public void beforeTextChanged(CharSequence text, int start, int count, int after) {
-                deletedMediaItem = count > 0 && text.charAt(start + count - 1) == '\uFFFC';
-            }
-
-            @Override
-            public void onTextChanged(CharSequence text, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                // here check if media item was deleted, which one it was, and cancel upload
-                if (deletedMediaItem) {
-                    deletedMediaItem = false;
-                    // identify which image has just been deleted
-                    // one way is to get all image predicates and check against the UploadService queue.
-                    // the one that is in the queue but is not in the Post is the one to be cancelled.
-                    List<String> remainingMediaIdsInPost = getAllUploadingMediaIds();
-                    mEditorFragmentListener.onMediaUploadingDeleted(remainingMediaIdsInPost);
-                }
-            }
-        });
-
         return view;
-    }
-
-    private List<String> getAllUploadingMediaIds() {
-        // get all items with "uploading" class
-        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(ATTR_STATUS_UPLOADING);
-        List<String> remainingIdsInPost = new ArrayList<>();
-        for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
-            String itemId = attrs.getValue(ATTR_ID_WP);
-            if (!TextUtils.isEmpty(itemId)) {
-                remainingIdsInPost.add(itemId);
-            }
-        }
-        return remainingIdsInPost;
     }
 
     public void setEditorBetaClickListener(EditorBetaClickListener listener) {
@@ -893,6 +854,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 mUploadingMediaProgressMax.remove(localMediaId);
             }
+        }
+    }
+
+    @Override
+    public void onMediaDeleted(AztecAttributes aztecAttributes) {
+        String localMediaId = aztecAttributes.getValue(ATTR_ID_WP);
+        if (!TextUtils.isEmpty(localMediaId)) {
+            mEditorFragmentListener.onMediaDeleted(localMediaId);
         }
     }
 

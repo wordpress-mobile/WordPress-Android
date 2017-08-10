@@ -66,8 +66,30 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
     @Override
     public void cancelInProgressUploads() {
-        for (MediaModel oneUpload : sInProgressUploads) {
-            cancelUpload(oneUpload, false);
+        synchronized (sInProgressUploads) {
+            for (MediaModel oneUpload : sInProgressUploads) {
+                cancelUpload(oneUpload, false);
+            }
+        }
+    }
+
+    public void cancelDeletedInProgressUpload(@NonNull MediaModel mediaToCancel) {
+        synchronized (sInProgressUploads) {
+            for (MediaModel oneUpload : sInProgressUploads) {
+                if (oneUpload.getId() == mediaToCancel.getId()) {
+                    cancelUpload(oneUpload, false);
+                    return;
+                }
+            }
+        }
+
+        synchronized (sPendingUploads) {
+            for (MediaModel oneUpload : sPendingUploads) {
+                if (oneUpload.getId() == mediaToCancel.getId()) {
+                    sPendingUploads.remove(oneUpload);
+                    return;
+                }
+            }
         }
     }
 

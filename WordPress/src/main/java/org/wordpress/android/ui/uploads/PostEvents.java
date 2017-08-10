@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.uploads;
 
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.util.StringUtils;
 
@@ -44,4 +45,15 @@ public class PostEvents {
             this.post = post;
         }
     }
+
+    public static class PostMediaDeleted {
+        public PostModel post;
+        public MediaModel media;
+
+        public PostMediaDeleted(PostModel post, MediaModel media) {
+            this.post = post;
+            this.media = media;
+        }
+    }
+
 }

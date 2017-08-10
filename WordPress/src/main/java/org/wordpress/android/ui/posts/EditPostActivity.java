@@ -1012,26 +1012,18 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    public void findMissingMediaAndCancelUpload(List<String> mediaIdsInPost) {
-        List<MediaModel> mediaItemsProcessingList =
-                UploadService.getAllInProgressOrQueuedMediaItemsForPost(mPost);
-
-        if (mediaIdsInPost != null && mediaItemsProcessingList != null) {
-            for (MediaModel media : mediaItemsProcessingList) {
-                if (!mediaIdsInPost.contains(String.valueOf(media.getId()))) {
-                    // found it, cancel it
-                    cancelMediaUpload(media.getId());
-                    return;
-                }
-            }
-        }
-    }
-
     private void cancelMediaUpload(int localMediaId) {
         MediaModel mediaModel = mMediaStore.getMediaWithLocalId(localMediaId);
         if (mediaModel != null) {
             CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel);
             mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+        }
+    }
+
+    private void deleteMediaUpload(int localMediaId) {
+        MediaModel mediaModel = mMediaStore.getMediaWithLocalId(localMediaId);
+        if (mediaModel != null) {
+            EventBus.getDefault().post(new PostEvents.PostMediaDeleted(mPost, mediaModel));
         }
     }
 
@@ -2347,8 +2339,12 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMediaUploadingDeleted(List<String> mediaIdsInPost) {
-        findMissingMediaAndCancelUpload(mediaIdsInPost);
+    public void onMediaDeleted(String localMediaId) {
+        if (!TextUtils.isEmpty(localMediaId)) {
+            deleteMediaUpload(Integer.valueOf(localMediaId));
+        } else {
+            AppLog.w(AppLog.T.MEDIA, "onMediaDeleted event carries null localMediaId, not recognized");
+        }
     }
 
     @Override
