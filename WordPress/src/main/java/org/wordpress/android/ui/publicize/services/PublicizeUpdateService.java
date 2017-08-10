@@ -14,7 +14,6 @@ import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeServiceList;
-import org.wordpress.android.ui.publicize.PublicizeConstants;
 import org.wordpress.android.ui.publicize.PublicizeEvents;
 import org.wordpress.android.util.AppLog;
 

@@ -24,6 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LanguageUtils;
@@ -305,7 +306,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     }
 
     private boolean handleEditorFooterPreferenceClick() {
-        startActivity(new Intent(getActivity(), EditorReleaseNotesActivity.class));
+        ActivityLauncher.showAztecEditorReleaseNotes(getActivity());
         return true;
     }
 

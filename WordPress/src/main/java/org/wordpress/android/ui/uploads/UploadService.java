@@ -27,6 +27,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -67,7 +68,7 @@ public class UploadService extends Service {
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
 
-    public class UploadError {
+    public static class UploadError {
         public PostStore.PostError postError;
         public MediaStore.MediaError mediaError;
 
@@ -378,6 +379,13 @@ public class UploadService extends Service {
         return post;
     }
 
+    public static void markPostAsError(PostModel post) {
+        // now keep track of the error reason so it can be queried
+        MediaStore.MediaError error = new MediaStore.MediaError(MediaStore.MediaErrorType.GENERIC_ERROR);
+        UploadError reason = new UploadError(error);
+        addUploadErrorToFailedPosts(post, reason);
+    }
+
     public static boolean hasInProgressMediaUploadsForPost(PostModel postModel) {
         return postModel != null && MediaUploadHandler.hasInProgressMediaUploadsForPost(postModel);
     }
@@ -413,6 +421,19 @@ public class UploadService extends Service {
         return 1;
     }
 
+    public static float getUploadProgressForMedia(MediaModel mediaModel) {
+        return MediaUploadHandler.getProgressForMedia(mediaModel);
+    }
+
+    public static @NonNull List<MediaModel> getPendingMediaForPost(PostModel postModel) {
+        for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
+            if (uploadingPost.postModel.getId() == postModel.getId()) {
+                return uploadingPost.pendingMedia;
+            }
+        }
+        return Collections.emptyList();
+    }
+
     private void showNotificationForPostWithPendingMedia(PostModel post) {
         mPostUploadNotifier.showForegroundNotificationForPost(post, getString(R.string.uploading_post_media));
     }
@@ -432,7 +453,7 @@ public class UploadService extends Service {
 
     // this keeps a map for all failed media for each post, so we can process the post easily
     // in one go later
-    private void addMediaToPostFailedMediaListMap(MediaModel media) {
+    private static void addMediaToPostFailedMediaListMap(MediaModel media) {
         synchronized (sFailedMediaByPost) {
             List<MediaModel> mediaListForPost = sFailedMediaByPost.get(media.getLocalPostId());
             if (mediaListForPost == null) {
@@ -554,7 +575,7 @@ public class UploadService extends Service {
         return null;
     }
 
-    private void addUploadErrorToFailedPosts(PostModel post, UploadError reason) {
+    private static void addUploadErrorToFailedPosts(PostModel post, UploadError reason) {
         sFailedUploadPosts.put(post.getId(), reason);
     }
 

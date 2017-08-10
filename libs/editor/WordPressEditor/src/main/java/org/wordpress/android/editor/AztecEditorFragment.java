@@ -66,6 +66,7 @@ import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
 import org.wordpress.aztec.source.SourceViewEditText;
+import org.wordpress.aztec.spans.AztecMediaSpan;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 import org.xml.sax.Attributes;
@@ -96,6 +97,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String TEMP_VIDEO_UPLOADING_CLASS = "data-temp-aztec-video";
 
     private static final int MIN_BITMAP_DIMENSION_DP = 48;
+    public static final int DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP = 196;
 
     private static final int MAX_ACTION_TIME_MS = 2000;
 
@@ -543,13 +545,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void updateUploadingMediaList() {
-        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass("uploading");
+        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(ATTR_STATUS_UPLOADING);
 
         mUploadingMediaProgressMax.clear();
 
         // update all items with upload progress of zero
         for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
-            String localMediaId = attrs.getValue("data-wpid");
+            String localMediaId = attrs.getValue(ATTR_ID_WP);
             if (!TextUtils.isEmpty(localMediaId)) {
                 mUploadingMediaProgressMax.put(localMediaId, 0f);
             }
@@ -562,7 +564,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    private AztecText.AttributePredicate getPredicateWithClass(final String classToUse) {
+    static private AztecText.AttributePredicate getPredicateWithClass(final String classToUse) {
         AztecText.AttributePredicate predicate = new AztecText.AttributePredicate() {
             @Override
             public boolean matches(@NonNull Attributes attrs) {
@@ -662,29 +664,69 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         final int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
+            // We're download the image/video from the network. Show the placeholder immediately since it could require time.
+            final Drawable placeholder;
+            if(mediaFile.isVideo()) {
+                placeholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
+            } else {
+                placeholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
+            }
+            placeholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+
+            AztecAttributes attributes = new AztecAttributes();
+            attributes.setValue(ATTR_SRC, mediaUrl);
+            setAttributeValuesIfNotDefault(attributes, mediaFile);
+            if(mediaFile.isVideo()) {
+                addVideoUploadingClassIfMissing(attributes);
+                content.insertVideo(placeholder, attributes);
+                overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
+            } else {
+                content.insertImage(placeholder, attributes);
+            }
+
             final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
             imageLoader.get(posterURL, new ImageLoader.ImageListener() {
+
+                private void replaceDrawable(Drawable newDrawable){
+                    AztecMediaSpan[] imageOrVideoSpans = content.getText().getSpans(0, content.getText().length(), AztecMediaSpan.class);
+                    for (AztecMediaSpan currentClass: imageOrVideoSpans) {
+                        if (currentClass.getAttributes().hasAttribute(ATTR_SRC) &&
+                                mediaUrl.equals(currentClass.getAttributes().getValue(ATTR_SRC))) {
+                            currentClass.setDrawable(newDrawable);
+                        }
+                    }
+                    content.refreshText();
+                }
+
+                private void showErrorPlaceholder() {
+                    // Show failed placeholder.
+                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
+                    replaceDrawable(drawable);
+                }
+
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     if (!isAdded()) {
                         // the fragment is detached
                         return;
                     }
-
-                    // Show failed placeholder.
-                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                    Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
-                    AztecAttributes attributes = new AztecAttributes();
-                    attributes.setValue(ATTR_SRC, mediaUrl);
-                    setAttributeValuesIfNotDefault(attributes, mediaFile);
-                    content.insertImage(drawable, attributes);
+                    showErrorPlaceholder();
                 }
 
                 @Override
                 public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
+                    if (!isAdded()) {
+                        // the fragment is detached
+                        return;
+                    }
                     Bitmap downloadedBitmap = container.getBitmap();
-                    if (downloadedBitmap == null || !isAdded()) {
-                        // No bitmap downloaded from server or the fragment is detached
+                    if (downloadedBitmap == null) {
+                        if (isImmediate) {
+                            // Bitmap is null but isImmediate is true (as soon as the request starts).
+                            return;
+                        }
+                        showErrorPlaceholder();
                         return;
                     }
 
@@ -698,22 +740,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         // Bitmap is too small.  Show image placeholder.
                         ToastUtils.showToast(getActivity(), R.string.error_media_small);
                         Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
-                        content.insertImage(drawable, attributes);
+                        replaceDrawable(drawable);
                         return;
                     }
 
-                    // This call is not needed, since we're already asking the container to resize the picture after downloading.
-                    // It's here just for security.
                     Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
-                    if(mediaFile.isVideo()) {
-                        addVideoUploadingClassIfMissing(attributes);
-                        content.insertVideo(new BitmapDrawable(getResources(), resizedBitmap), attributes);
-                        overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
-                    } else {
-                        content.insertImage(new BitmapDrawable(getResources(), resizedBitmap), attributes);
-                    }
+                    replaceDrawable(new BitmapDrawable(getResources(), resizedBitmap));
                 }
-            }, maxWidth, maxWidth);
+            }, maxWidth, 0);
 
             mActionStartedAt = System.currentTimeMillis();
         } else {
@@ -807,6 +841,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public void onMediaUploadReattached(String localId, float currentProgress) {
+        mUploadingMediaProgressMax.put(localId, currentProgress);
+    }
+
+    @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
         if(!isAdded() || content == null || !mAztecReady) {
             return;
@@ -826,6 +865,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 AttributesWithClass attributesWithClass = new AttributesWithClass(
                         content.getElementAttributes(predicate));
                 attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+                if (mediaFile.isVideo()) {
+                    attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
+                }
 
                 // add then new src property with the remoteUrl
                 AztecAttributes attrs = attributesWithClass.getAttributes();
@@ -860,6 +902,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         static MediaPredicate getLocalMediaIdPredicate(String id) {
             return new MediaPredicate(id, ATTR_ID_WP);
+        }
+
+        static MediaPredicate getTempMediaIdPredicate(String id) {
+            return new MediaPredicate(id, TEMP_IMAGE_ID);
         }
 
         MediaPredicate(String id, String attributeName) {
@@ -1136,6 +1182,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         onMediaTapped(attrs, 0, 0, MediaType.VIDEO);
     }
 
+
     private void onMediaTapped(@NotNull AztecAttributes attrs, int naturalWidth, int naturalHeight, final MediaType mediaType) {
         if (mediaType == null || !isAdded()) {
             return;
@@ -1213,7 +1260,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     case VIDEO:
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
                                 content.getElementAttributes(mTappedMediaPredicate));
-                        attributesWithClass.removeClass(ATTR_STATUS_FAILED);
+
+                        // remove the failed class
+                        attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
+
+                        if (!attributesWithClass.hasClass(ATTR_STATUS_FAILED)) {
+                            // just save the item and leave
+                            content.clearOverlays(mTappedMediaPredicate);
+                            content.resetAttributedMediaSpan(mTappedMediaPredicate);
+                            return;
+                        }
+
                         attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
                         if (mediaType.equals(MediaType.VIDEO)) {
                             attributesWithClass.addClass(TEMP_VIDEO_UPLOADING_CLASS);
@@ -1492,5 +1549,90 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             postContent = content.toHtml(false);
         }
         return postContent;
+    }
+
+    public static boolean hasMediaItemsMarkedUploading(Context context, @NonNull String postContent) {
+        return hasMediaItemsMarkedWithTag(context, postContent, ATTR_STATUS_UPLOADING);
+    }
+
+    public static boolean hasMediaItemsMarkedFailed(Context context, @NonNull String postContent) {
+        return hasMediaItemsMarkedWithTag(context, postContent, ATTR_STATUS_FAILED);
+    }
+
+    private static boolean hasMediaItemsMarkedWithTag(Context context, @NonNull String postContent, String tag) {
+        // fill in Aztec with the post's content
+        AztecText content = new AztecText(context);
+        content.fromHtml(postContent);
+
+        // get all items with the class in the "tag" param
+        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(tag);
+
+        List<AztecAttributes> attrs = content.getAllElementAttributes(uploadingPredicate);
+
+        return (attrs != null && !attrs.isEmpty());
+    }
+
+    public static String resetUploadingMediaToFailed(Context context, @NonNull String postContent) {
+        // fill in Aztec with the post's content
+        AztecText content = new AztecText(context);
+        content.fromHtml(postContent);
+
+        // get all items with "failed" class, and make sure they are still failed
+        // i.e. if they have a local src, then they are failed.
+        resetMediaWithStatus(content, ATTR_STATUS_FAILED);
+        // get all items with "uploading" class, and make sure they are either already uploaded
+        // (that is, they have a remote src), and mark them "failed" if not.
+        resetMediaWithStatus(content, ATTR_STATUS_UPLOADING);
+
+        // re-set the post content
+        postContent = content.toHtml(false);
+        return postContent;
+    }
+
+    private static void resetMediaWithStatus(AztecText content, String status) {
+        // get all items with "uploading" class
+        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(status);
+
+        // update all items to failed, unless they already have a remote URL, in which case
+        // it means the upload completed, but the item remained inconsistently marked as uploading
+        // (for example after an app crash)
+        for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
+            String itemId = attrs.getValue(ATTR_ID_WP);
+            AztecText.AttributePredicate predicate;
+
+            if (!TextUtils.isEmpty(itemId)) {
+                predicate = MediaPredicate.getLocalMediaIdPredicate(itemId);
+            } else {
+                // if ATTR_ID_WP is missing, try with TEMP_IMAGE_ID
+                itemId = attrs.getValue(TEMP_IMAGE_ID);
+                predicate = MediaPredicate.getTempMediaIdPredicate(itemId);
+            }
+
+            if (!TextUtils.isEmpty(itemId)) {
+                // remove the uploading class
+                AttributesWithClass attributesWithClass = new AttributesWithClass(
+                        content.getElementAttributes(predicate));
+                attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+
+                attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
+
+                content.updateElementAttributes(predicate, attributesWithClass.getAttributes());
+                content.refreshText();
+            }
+        }
+    }
+
+    private static AttributesWithClass addFailedStatusToMediaIfLocalSrcPresent(AttributesWithClass attributesWithClass) {
+        // check if "src" value is remote or local, it only makes sense to mark failed local files
+        AztecAttributes attrsOneItem = attributesWithClass.getAttributes();
+        String mediaPath = attrsOneItem.getValue("src");
+        if (!TextUtils.isEmpty(mediaPath) && mediaPath.startsWith("http")) {
+            // it's already been uploaded! we have an http remoteUrl in the src attribute
+            attributesWithClass.removeClass(ATTR_STATUS_FAILED);
+        } else {
+            attributesWithClass.addClass(ATTR_STATUS_FAILED);
+        }
+
+        return attributesWithClass;
     }
 }
