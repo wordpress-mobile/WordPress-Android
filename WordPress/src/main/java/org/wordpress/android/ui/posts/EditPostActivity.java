@@ -359,7 +359,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mIsNewPost) {
             trackEditorCreatedPost(action, getIntent());
         } else {
-            resetUploadingMediaToFailedIfNotInProgressOrQueued();
+            resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued();
         }
 
         setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
@@ -409,8 +409,9 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     // this method aims at recovering the current state of media items if they're inconsistent within the PostModel.
-    private void resetUploadingMediaToFailedIfNotInProgressOrQueued() {
+    private void resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued() {
         boolean useAztec = AppPrefs.isAztecEditorEnabled();
+
         if (!useAztec || UploadService.hasPendingOrInProgressMediaUploadsForPost(mPost)) {
             return;
         }
@@ -2345,6 +2346,36 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             AppLog.w(AppLog.T.MEDIA, "onMediaDeleted event carries null localMediaId, not recognized");
         }
+    }
+
+    @Override
+    public void onUndoMediaCheck(final String undoedContent) {
+        // here we check which elements tagged UPLOADING are there in previousContent,
+        // and check for the ones that ARE NOT being uploaded or queued in the UploadService.
+        // These are the CANCELED ONES, so mark them FAILED now to retry.
+
+        List <MediaModel> currentlyUploadingMedia = UploadService.getAllInProgressOrQueuedMediaItemsForPost(mPost);
+        List<String> mediaMarkedUploading  = AztecEditorFragment.getMediaMarkedUploadingInPost(EditPostActivity.this, undoedContent);
+
+        // go through the list of items marked UPLOADING within the Post content, and look in the UploadService
+        // to see whether they're really being uploaded or not. If an item is not really being uploaded, mark that item failed
+        for (String mediaId : mediaMarkedUploading) {
+            boolean found = false;
+            for (MediaModel media : currentlyUploadingMedia) {
+                if (Integer.valueOf(mediaId) == media.getId()) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                // 2- Run through loop and set each media to failed
+                if (mEditorFragment instanceof AztecEditorFragment) {
+                    ((AztecEditorFragment)mEditorFragment).setMediaToFailed(mediaId);
+                }
+            }
+        }
+
     }
 
     @Override

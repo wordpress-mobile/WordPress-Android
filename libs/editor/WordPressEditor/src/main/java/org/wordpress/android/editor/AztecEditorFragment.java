@@ -304,6 +304,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (item.getItemId() == R.id.undo) {
             if (content.getVisibility() == View.VISIBLE) {
                 content.undo();
+                mEditorFragmentListener.onUndoMediaCheck(content.toHtml(false));
             } else {
                 source.undo();
             }
@@ -1558,6 +1559,30 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return postContent;
     }
 
+    public static List<String> getMediaMarkedUploadingInPost(Context context, @NonNull String postContent) {
+        ArrayList<String> mediaMarkedUploading = new ArrayList<>();
+        // fill in Aztec with the post's content
+        AztecText content = new AztecText(context);
+        content.fromHtml(postContent);
+        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(ATTR_STATUS_UPLOADING);
+        for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
+            String itemId = attrs.getValue(ATTR_ID_WP);
+            if (!TextUtils.isEmpty(itemId)) {
+                mediaMarkedUploading.add(itemId);
+            }
+        }
+        return mediaMarkedUploading;
+    }
+
+    public void setMediaToFailed(@NonNull String mediaId) {
+        AztecText.AttributePredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(mediaId);
+        clearMediaUploadingAndSetToFailedIfLocal(content, localMediaIdPredicate);
+        content.clearOverlays(localMediaIdPredicate);
+        overlayFailedMedia(mediaId, content.getElementAttributes(localMediaIdPredicate));
+        safeAddMediaIdToSet(mFailedMediaIds, mediaId);
+        content.resetAttributedMediaSpan(localMediaIdPredicate);
+    }
+
     private static void resetMediaWithStatus(AztecText content, String status) {
         // get all items with "uploading" class
         AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(status);
@@ -1566,36 +1591,42 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         // it means the upload completed, but the item remained inconsistently marked as uploading
         // (for example after an app crash)
         for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
-            String itemId = attrs.getValue(ATTR_ID_WP);
-            AztecText.AttributePredicate predicate;
-
-            if (!TextUtils.isEmpty(itemId)) {
-                predicate = MediaPredicate.getLocalMediaIdPredicate(itemId);
-            } else {
-                // if ATTR_ID_WP is missing, try with TEMP_IMAGE_ID
-                itemId = attrs.getValue(TEMP_IMAGE_ID);
-                predicate = MediaPredicate.getTempMediaIdPredicate(itemId);
-            }
-
-            if (!TextUtils.isEmpty(itemId)) {
-                // remove the uploading class
-                AttributesWithClass attributesWithClass = new AttributesWithClass(
-                        content.getElementAttributes(predicate));
-                attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
-
-                attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
-
-                content.updateElementAttributes(predicate, attributesWithClass.getAttributes());
-                content.refreshText();
-            }
+            clearMediaUploadingAndSetToFailedIfLocal(content, getPredicateForMedia(attrs));
         }
     }
+
+    private static AztecText.AttributePredicate getPredicateForMedia(Attributes attrs) {
+        String itemId = attrs.getValue(ATTR_ID_WP);
+        AztecText.AttributePredicate predicate;
+
+        if (!TextUtils.isEmpty(itemId)) {
+            predicate = MediaPredicate.getLocalMediaIdPredicate(itemId);
+        } else {
+            // if ATTR_ID_WP is missing, try with TEMP_IMAGE_ID
+            itemId = attrs.getValue(TEMP_IMAGE_ID);
+            predicate = MediaPredicate.getTempMediaIdPredicate(itemId);
+        }
+        return predicate;
+    }
+
+    private static void clearMediaUploadingAndSetToFailedIfLocal(AztecText content, AztecText.AttributePredicate predicate) {
+        // remove the uploading class
+        AttributesWithClass attributesWithClass = new AttributesWithClass(
+                content.getElementAttributes(predicate));
+        attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+
+        attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
+
+        content.updateElementAttributes(predicate, attributesWithClass.getAttributes());
+        content.refreshText();
+    }
+
 
     private static AttributesWithClass addFailedStatusToMediaIfLocalSrcPresent(AttributesWithClass attributesWithClass) {
         // check if "src" value is remote or local, it only makes sense to mark failed local files
         AztecAttributes attrsOneItem = attributesWithClass.getAttributes();
         String mediaPath = attrsOneItem.getValue("src");
-        if (!TextUtils.isEmpty(mediaPath) && mediaPath.startsWith("http")) {
+        if (!TextUtils.isEmpty(mediaPath) && URLUtil.isNetworkUrl(mediaPath)) {
             // it's already been uploaded! we have an http remoteUrl in the src attribute
             attributesWithClass.removeClass(ATTR_STATUS_FAILED);
         } else {
