@@ -250,12 +250,28 @@ class ReaderPostRenderer {
             && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage());
     }
 
+    private String getExcerptFooterHtml() {
+        String linkText = String.format(WordPress.getContext().
+                getString(R.string.reader_excerpt_link), mPost.getBlogName());
+        return "<div class='excerpt-footer'>"
+                + String.format("<a href='%s'>", mPost.getUrl())
+                + String.format(linkText, mPost.getBlogName())
+                + "</a></div>";
+    }
+
     /*
      * returns the basic content of the post tweaked for use here
      */
     private String getPostContent() {
+        String content;
+        if (mPost.isJetpack && mPost.hasExcerpt()) {
+            content = mPost.getExcerpt() + getExcerptFooterHtml();
+        } else {
+            content = mPost.getText();
+        }
+
         // some content (such as Vimeo embeds) don't have "http:" before links
-        String content = mPost.getText().replace("src=\"//", "src=\"http://");
+        content = content.replace("src=\"//", "src=\"http://");
 
         // add the featured image (if any)
         if (shouldAddFeaturedImage()) {
@@ -395,7 +411,14 @@ class ReaderPostRenderer {
         .append("  img { max-width: 100%; width: auto; height: auto; }")
         .append("  img.size-none { max-width: 100% !important; height: auto !important; }")
 
-        // center large/medium images, provide a small bottom margin, and add a background color
+        // formatting for excerpt footer
+        .append("  div.excerpt-footer { margin-top: ").append(mResourceVars.marginMediumPx).append("px; ")
+        .append("       margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; ")
+        .append("       padding: ").append(mResourceVars.marginMediumPx).append("px; ")
+        .append("       background-color: ").append(mResourceVars.greyLightStr).append("; ")
+        .append("       text-align: center; }")
+
+                // center large/medium images, provide a small bottom margin, and add a background color
         // so the user sees something while they're loading
         .append("  img.size-full, img.size-large, img.size-medium {")
         .append("     display: block; margin-left: auto; margin-right: auto;")
