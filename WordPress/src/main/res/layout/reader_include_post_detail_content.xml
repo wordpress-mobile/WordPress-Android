@@ -9,7 +9,8 @@
               android:layout_width="wrap_content"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:paddingTop="@dimen/margin_medium">
+              android:paddingTop="@dimen/margin_medium"
+              tools:layout_width="match_parent">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_title"
@@ -49,6 +50,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:scrollbars="none"/>
+
+    <TextView
+        android:id="@+id/text_excerpt_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@color/grey_light"
+        android:drawablePadding="@dimen/margin_medium"
+        android:drawableRight="@drawable/reader_visit"
+        android:padding="@dimen/margin_extra_large"
+        android:textColor="@color/grey_darken_20"
+        android:visibility="gone"
+        tools:text="text_excerpt_footer"
+        tools:visibility="visible"/>
 
     <View
         android:id="@+id/layout_liking_users_divider"

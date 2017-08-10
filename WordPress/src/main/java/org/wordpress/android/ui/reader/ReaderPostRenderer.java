@@ -250,21 +250,11 @@ class ReaderPostRenderer {
             && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage());
     }
 
-    public boolean shouldShowExcerptFooter() {
-        return mPost.isJetpack && mPost.hasExcerpt();
-    }
-
     /*
      * returns the basic content of the post tweaked for use here
      */
     private String getPostContent() {
-        // Jetpack posts that have an excerpt should show the excerpt with a footer that links to the full post
-        String content;
-        if (mPost.isJetpack && mPost.hasExcerpt()) {
-            content = mPost.getExcerpt() + getExcerptFooterHtml();
-        } else {
-            content = mPost.getText();
-        }
+        String content = mPost.showShowExcerpt() ? mPost.getExcerpt() : mPost.getText();
 
         // some content (such as Vimeo embeds) don't have "http:" before links
         content = content.replace("src=\"//", "src=\"http://");
@@ -312,19 +302,6 @@ class ReaderPostRenderer {
 
         return "<img class='size-full' src='" + imageUrl + "'/>";
     }
-
-    /*
-     * returns the HTML to use for the footer beneath excerpts that links to the full post
-     */
-    private String getExcerptFooterHtml() {
-        String linkText = String.format(WordPress.getContext().
-                getString(R.string.reader_excerpt_link), mPost.getBlogName());
-        return "<div class='excerpt-footer'>"
-                + String.format("<a href='%s'>", mPost.getUrl())
-                + String.format(linkText, mPost.getBlogName())
-                + "</a></div>";
-    }
-
 
     /*
      * replace the passed iframe tag with one that's correctly sized for the device
@@ -420,14 +397,7 @@ class ReaderPostRenderer {
         .append("  img { max-width: 100%; width: auto; height: auto; }")
         .append("  img.size-none { max-width: 100% !important; height: auto !important; }")
 
-        // formatting for excerpt footer
-        .append("  div.excerpt-footer { margin-top: ").append(mResourceVars.marginMediumPx).append("px; ")
-        .append("       margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; ")
-        .append("       padding: ").append(mResourceVars.marginMediumPx).append("px; ")
-        .append("       background-color: ").append(mResourceVars.greyLightStr).append("; ")
-        .append("       text-align: center; }")
-
-                // center large/medium images, provide a small bottom margin, and add a background color
+        // center large/medium images, provide a small bottom margin, and add a background color
         // so the user sees something while they're loading
         .append("  img.size-full, img.size-large, img.size-medium {")
         .append("     display: block; margin-left: auto; margin-right: auto;")

@@ -581,6 +581,13 @@ public class ReaderPost {
     }
 
     /*
+     * we should show the excerpt rather than full content for Jetpack posts that have one
+     */
+    public boolean showShowExcerpt() {
+        return isJetpack && hasExcerpt();
+    }
+
+    /*
      * returns true if this post is from a WordPress blog
      */
     public boolean isWP() {
