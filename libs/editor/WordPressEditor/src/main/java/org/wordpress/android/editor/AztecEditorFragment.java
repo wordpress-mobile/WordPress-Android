@@ -1559,7 +1559,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return postContent;
     }
 
-    public static List<String> getMediaMarkedUploadingInPost(Context context, @NonNull String postContent) {
+    public static List<String> getMediaMarkedUploadingInPostContent(Context context, @NonNull String postContent) {
         ArrayList<String> mediaMarkedUploading = new ArrayList<>();
         // fill in Aztec with the post's content
         AztecText content = new AztecText(context);
