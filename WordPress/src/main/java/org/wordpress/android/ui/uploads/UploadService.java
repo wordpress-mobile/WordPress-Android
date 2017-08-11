@@ -717,6 +717,10 @@ public class UploadService extends Service {
         }
     }
 
+    /*
+        this method makes sure to update the content of each Post in sPostsWithPendingMedia with
+         the current state of both completed and failed media items related to each.
+     */
     private void cleanUp() {
         synchronized (sPostsWithPendingMedia) {
             Iterator<UploadingPost> iterator = sPostsWithPendingMedia.iterator();
