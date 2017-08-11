@@ -98,6 +98,7 @@ public class UploadService extends Service {
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(T.MAIN, "UploadService > Created");
         mDispatcher.register(this);
+        EventBus.getDefault().register(this);
         // TODO: Recover any posts/media uploads that were interrupted by the service being stopped
     }
 
@@ -117,6 +118,7 @@ public class UploadService extends Service {
         updatePostModelWithCompletedAndFailedUploads();
 
         mDispatcher.unregister(this);
+        EventBus.getDefault().unregister(this);
         AppLog.i(T.MAIN, "UploadService > Destroyed");
         super.onDestroy();
     }
@@ -328,6 +330,10 @@ public class UploadService extends Service {
         }
     }
 
+    public static void cancelUploadForDeletedMedia(PostModel post, MediaModel media) {
+        EventBus.getDefault().post(new PostEvents.PostMediaDeleted(post, media));
+    }
+
     public static void cancelQueuedPostUpload(PostModel post) {
         if (post != null) {
             synchronized (sPostsWithPendingMedia) {
@@ -401,6 +407,10 @@ public class UploadService extends Service {
     public static boolean hasMediaErrorForPost(PostModel post) {
         UploadError error  = getUploadErrorForPost(post);
         return error != null && error.mediaError != null;
+    }
+
+    public static List<MediaModel> getAllInProgressOrQueuedMediaItemsForPost(PostModel post){
+        return MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
     }
 
     public static float getMediaUploadProgressForPost(PostModel postModel) {
@@ -597,6 +607,55 @@ public class UploadService extends Service {
         return overallProgress;
     }
 
+    // App events
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostMediaDeleted event) {
+        if (event.post == null) {
+            return;
+        }
+        cancelMediaUploadForPost(event.post, event.media);
+    }
+
+    /*
+        cleans upload tracking and cancel media upload for a media item that is not in a given Post anymore
+     */
+    private void cancelMediaUploadForPost(@NonNull PostModel post, @NonNull MediaModel media) {
+        // clean sPostsWithPendingMedia and issue cancel dispatch for uploading media ()
+        for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
+            if (uploadingPost.postModel.getId() == post.getId()) {
+                for (MediaModel uploadingMedia : uploadingPost.pendingMedia) {
+                    if (uploadingMedia.getId() == media.getId()) {
+                        // found it, cancel it
+                        mMediaUploadHandler.cancelDeletedInProgressUpload(media);
+                        cleanUp();
+                        stopServiceIfUploadsComplete();
+                        return;
+                    }
+                }
+                break;
+            }
+        }
+
+        // clean sFailedMediaByPost
+        List<MediaModel> failedMediaForPost = sFailedMediaByPost.get(post.getId());
+        if (failedMediaForPost != null) {
+            for (MediaModel failedMedia : failedMediaForPost) {
+                if (failedMedia.getId() == media.getId()) {
+                    sFailedMediaByPost.remove(failedMedia.getId());
+                    break;
+                }
+            }
+        }
+
+        mMediaUploadHandler.cancelDeletedInProgressUpload(media);
+        cleanUp();
+        stopServiceIfUploadsComplete();
+
+        // TODO clean sFailedUploadPosts (check their UploadError) - we'll be
+        // able to handle this better when uploadstate is all in FluxC
+    }
+
     /**
      * Has lower priority than the UploadHandlers, which ensures that the handlers have already received and
      * processed this OnMediaUploaded event. This means we can safely rely on their internal state being up to date.
@@ -652,38 +711,47 @@ public class UploadService extends Service {
                 addMediaToPostCompletedMediaListMap(event.media);
 
                 // If this was the last media upload a pending post was waiting for, send it to the PostUploadManager
-                synchronized (sPostsWithPendingMedia) {
-                    Iterator<UploadingPost> iterator = sPostsWithPendingMedia.iterator();
-                    while (iterator.hasNext()) {
-                        UploadingPost uploadingPost = iterator.next();
-                        if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(uploadingPost.postModel)) {
-                            if (uploadingPost.isCancelled) {
-                                // Finished all media uploads for a post upload that was cancelled (probably because
-                                // it was re-opened in the editor) - we can just remove it from the list now
-                                iterator.remove();
-                            } else {
-                                // Fetch latest version of the post, in case it has been modified elsewhere
-                                PostModel latestPost = mPostStore.getPostByLocalPostId(uploadingPost.postModel.getId());
-
-                                // Replace local with remote media in the post content
-                                PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(latestPost);
-                                // also do the same now with failed uploads
-                                updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
-                                // finally, save the PostModel
-                                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
-
-                                // TODO Should do some extra validation here
-                                // e.g. what if the post has local media URLs but no pending media uploads?
-                                iterator.remove();
-                                mPostUploadHandler.upload(updatedPost);
-                            }
-                        }
-                    }
-                }
+                cleanUp();
             }
             stopServiceIfUploadsComplete();
         }
     }
+
+    /*
+        this method makes sure to update the content of each Post in sPostsWithPendingMedia with
+         the current state of both completed and failed media items related to each.
+     */
+    private void cleanUp() {
+        synchronized (sPostsWithPendingMedia) {
+            Iterator<UploadingPost> iterator = sPostsWithPendingMedia.iterator();
+            while (iterator.hasNext()) {
+                UploadingPost uploadingPost = iterator.next();
+                if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(uploadingPost.postModel)) {
+                    if (uploadingPost.isCancelled) {
+                        // Finished all media uploads for a post upload that was cancelled (probably because
+                        // it was re-opened in the editor) - we can just remove it from the list now
+                        iterator.remove();
+                    } else {
+                        // Fetch latest version of the post, in case it has been modified elsewhere
+                        PostModel latestPost = mPostStore.getPostByLocalPostId(uploadingPost.postModel.getId());
+
+                        // Replace local with remote media in the post content
+                        PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(latestPost);
+                        // also do the same now with failed uploads
+                        updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
+                        // finally, save the PostModel
+                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+
+                        // TODO Should do some extra validation here
+                        // e.g. what if the post has local media URLs but no pending media uploads?
+                        iterator.remove();
+                        mPostUploadHandler.upload(updatedPost);
+                    }
+                }
+            }
+        }
+    }
+
 
     /**
      * Has lower priority than the PostUploadHandler, which ensures that the handler has already received and
