@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.yarolegovich.wellsql.WellSql;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,8 +19,15 @@ import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.post.PostTestUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class UploadSqlUtilsTest {
@@ -40,18 +45,18 @@ public class UploadSqlUtilsTest {
     // Attempts to insert null then verifies there is no media
     @Test
     public void testInsertNullMedia() {
-        Assert.assertEquals(0, UploadSqlUtils.insertOrUpdateMedia(null));
-        Assert.assertEquals(0, WellSql.select(MediaUploadModel.class).getAsCursor().getCount());
+        assertEquals(0, UploadSqlUtils.insertOrUpdateMedia(null));
+        assertEquals(0, WellSql.select(MediaUploadModel.class).getAsCursor().getCount());
     }
 
     @Test
     public void testInsertMedia() {
         long testId = Math.abs(mRandom.nextLong());
         MediaModel testMedia = UploadTestUtils.getTestMedia(testId);
-        Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testMedia));
+        assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testMedia));
         List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(UploadTestUtils.getTestSite(), testId);
-        Assert.assertEquals(1, media.size());
-        Assert.assertNotNull(media.get(0));
+        assertEquals(1, media.size());
+        assertNotNull(media.get(0));
 
         // Store a MediaUploadModel corresponding to this MediaModel
         testMedia = media.get(0);
@@ -60,9 +65,9 @@ public class UploadSqlUtilsTest {
         UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
 
         mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(testMedia.getId());
-        Assert.assertNotNull(mediaUploadModel);
-        Assert.assertEquals(testMedia.getId(), mediaUploadModel.getId());
-        Assert.assertEquals(MediaUploadModel.UPLOADING, mediaUploadModel.getUploadState());
+        assertNotNull(mediaUploadModel);
+        assertEquals(testMedia.getId(), mediaUploadModel.getId());
+        assertEquals(MediaUploadModel.UPLOADING, mediaUploadModel.getUploadState());
 
         // Update the stored MediaUploadModel, marking it as completed
         mediaUploadModel.setUploadState(MediaUploadModel.COMPLETED);
@@ -70,34 +75,75 @@ public class UploadSqlUtilsTest {
         UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
 
         mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(testMedia.getId());
-        Assert.assertNotNull(mediaUploadModel);
-        Assert.assertEquals(testMedia.getId(), mediaUploadModel.getId());
-        Assert.assertEquals(MediaUploadModel.COMPLETED, mediaUploadModel.getUploadState());
+        assertNotNull(mediaUploadModel);
+        assertEquals(testMedia.getId(), mediaUploadModel.getId());
+        assertEquals(MediaUploadModel.COMPLETED, mediaUploadModel.getUploadState());
 
         // Deleting the MediaModel should cause the corresponding MediaUploadModel to be deleted also
         MediaSqlUtils.deleteMedia(testMedia);
 
         media = MediaSqlUtils.getSiteMediaWithId(UploadTestUtils.getTestSite(), testId);
-        Assert.assertTrue(media.isEmpty());
+        assertTrue(media.isEmpty());
 
         mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(testMedia.getId());
-        Assert.assertNull(mediaUploadModel);
+        assertNull(mediaUploadModel);
+    }
+
+    @Test
+    public void testDeleteMediaUploadModel() {
+        MediaModel testMedia1 = UploadTestUtils.getTestMedia(65);
+        MediaModel testMedia2 = UploadTestUtils.getTestMedia(35);
+
+        assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testMedia1));
+        assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testMedia2));
+        List<MediaModel> mediaModels = MediaSqlUtils.getAllSiteMedia(UploadTestUtils.getTestSite());
+        assertEquals(2, mediaModels.size());
+
+        // Store MediaUploadModels corresponding to the MediaModels
+        testMedia1 = mediaModels.get(0);
+        MediaUploadModel mediaUploadModel1 = new MediaUploadModel(testMedia1.getId());
+        mediaUploadModel1.setProgress(0.65F);
+        UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel1);
+
+        testMedia2 = mediaModels.get(1);
+        MediaUploadModel mediaUploadModel2 = new MediaUploadModel(testMedia2.getId());
+        mediaUploadModel2.setProgress(0.35F);
+        UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel2);
+
+        // Delete one of the MediaUploadModels
+        assertEquals(1, UploadSqlUtils.deleteMediaUploadModelWithLocalId(testMedia2.getId()));
+
+        List<MediaUploadModel> mediaUploadModels = WellSql.select(MediaUploadModel.class).getAsModel();
+        assertEquals(1, mediaUploadModels.size());
+        assertEquals(testMedia1.getId(), mediaUploadModels.get(0).getId());
+
+        // Delete the other MediaUploadModel
+        Set<Integer> mediaIdSet = new HashSet<>();
+        mediaIdSet.add(testMedia1.getId());
+        assertEquals(1, UploadSqlUtils.deleteMediaUploadModelsWithLocalIds(mediaIdSet));
+
+        mediaUploadModels = WellSql.select(MediaUploadModel.class).getAsModel();
+        assertEquals(0, mediaUploadModels.size());
+
+        // The corresponding MediaModels should be untouched
+        mediaModels = MediaSqlUtils.getAllSiteMedia(UploadTestUtils.getTestSite());
+        assertEquals(2, mediaModels.size());
     }
 
     // Attempts to insert null then verifies there is no post
     @Test
     public void testInsertNullPost() {
-        Assert.assertEquals(0, UploadSqlUtils.insertOrUpdatePost(null));
-        Assert.assertEquals(0, WellSql.select(PostUploadModel.class).getAsCursor().getCount());
+        assertEquals(0, UploadSqlUtils.insertOrUpdatePost(null));
+        assertEquals(0, WellSql.select(PostUploadModel.class).getAsCursor().getCount());
     }
 
     @Test
     public void testInsertPost() {
         PostModel testPost = UploadTestUtils.getTestPost();
-        Assert.assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost));
+        assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost));
         List<PostModel> postList = PostTestUtils.getPosts();
-        Assert.assertEquals(1, postList.size());
-        Assert.assertNotNull(postList.get(0));
+        assertEquals(1, postList.size());
+        assertNotNull(postList.get(0));
 
         // Store a PostUploadModel corresponding to this PostModel
         testPost = postList.get(0);
@@ -105,17 +151,57 @@ public class UploadSqlUtilsTest {
         UploadSqlUtils.insertOrUpdatePost(postUploadModel);
 
         postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(testPost.getId());
-        Assert.assertNotNull(postUploadModel);
-        Assert.assertEquals(testPost.getId(), postUploadModel.getId());
-        Assert.assertEquals(PostUploadModel.PENDING, postUploadModel.getUploadState());
+        assertNotNull(postUploadModel);
+        assertEquals(testPost.getId(), postUploadModel.getId());
+        assertEquals(PostUploadModel.PENDING, postUploadModel.getUploadState());
 
         // Deleting the PostModel should cause the corresponding PostUploadModel to be deleted also
         PostSqlUtils.deletePost(testPost);
 
         postList = PostTestUtils.getPosts();
-        Assert.assertTrue(postList.isEmpty());
+        assertTrue(postList.isEmpty());
 
         postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(testPost.getId());
-        Assert.assertNull(postUploadModel);
+        assertNull(postUploadModel);
+    }
+
+    @Test
+    public void testDeletePostUploadModel() {
+        PostModel testPost1 = UploadTestUtils.getTestPost();
+        testPost1.setIsLocalDraft(true);
+        PostModel testPost2 = UploadTestUtils.getTestPost();
+        testPost2.setIsLocalDraft(true);
+        assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost1));
+        assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost2));
+        List<PostModel> postModels = PostTestUtils.getPosts();
+        assertEquals(2, postModels.size());
+
+        // Store PostUploadModels corresponding to the PostModels
+        testPost1 = postModels.get(0);
+        PostUploadModel postUploadModel1 = new PostUploadModel(testPost1.getId());
+        UploadSqlUtils.insertOrUpdatePost(postUploadModel1);
+
+        testPost2 = postModels.get(1);
+        PostUploadModel postUploadModel2 = new PostUploadModel(testPost2.getId());
+        UploadSqlUtils.insertOrUpdatePost(postUploadModel2);
+
+        // Delete one of the PostUploadModels
+        assertEquals(1, UploadSqlUtils.deletePostUploadModelWithLocalId(testPost2.getId()));
+
+        List<PostUploadModel> postUploadModels = WellSql.select(PostUploadModel.class).getAsModel();
+        assertEquals(1, postUploadModels.size());
+        assertEquals(testPost1.getId(), postUploadModels.get(0).getId());
+
+        // Delete the other PostUploadModel
+        Set<Integer> postIdSet = new HashSet<>();
+        postIdSet.add(testPost1.getId());
+        assertEquals(1, UploadSqlUtils.deletePostUploadModelsWithLocalIds(postIdSet));
+
+        postUploadModels = WellSql.select(PostUploadModel.class).getAsModel();
+        assertEquals(0, postUploadModels.size());
+
+        // The corresponding PostModels should be untouched
+        postModels = PostTestUtils.getPosts();
+        assertEquals(2, postModels.size());
     }
 }

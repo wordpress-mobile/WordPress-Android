@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
 
 import java.util.List;
+import java.util.Set;
 
 public class UploadSqlUtils {
     public static int insertOrUpdateMedia(MediaUploadModel media) {
@@ -76,5 +77,43 @@ public class UploadSqlUtils {
         } else {
             return result.get(0);
         }
+    }
+
+    public static int deleteMediaUploadModelWithLocalId(int localMediaId) {
+        return WellSql.delete(MediaUploadModel.class)
+                .where()
+                .equals(MediaUploadModelTable.ID, localMediaId)
+                .endWhere()
+                .execute();
+    }
+
+    public static int deleteMediaUploadModelsWithLocalIds(Set<Integer> localMediaIds) {
+        if (localMediaIds.size() > 0) {
+            return WellSql.delete(MediaUploadModel.class)
+                    .where()
+                    .isIn(MediaUploadModelTable.ID, localMediaIds)
+                    .endWhere()
+                    .execute();
+        }
+        return 0;
+    }
+
+    public static int deletePostUploadModelWithLocalId(int localPostId) {
+        return WellSql.delete(PostUploadModel.class)
+                .where()
+                .equals(PostUploadModelTable.ID, localPostId)
+                .endWhere()
+                .execute();
+    }
+
+    public static int deletePostUploadModelsWithLocalIds(Set<Integer> localPostIds) {
+        if (localPostIds.size() > 0) {
+            return WellSql.delete(PostUploadModel.class)
+                    .where()
+                    .isIn(PostUploadModelTable.ID, localPostIds)
+                    .endWhere()
+                    .execute();
+        }
+        return 0;
     }
 }
