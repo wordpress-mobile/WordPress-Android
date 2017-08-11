@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
+import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
@@ -27,6 +28,7 @@ import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -153,6 +155,18 @@ public class UploadStore extends Store {
         return UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId());
     }
 
+    public @NonNull Set<MediaModel> getUploadingMediaForPost(PostModel post) {
+        return getMediaForPostWithState(post, MediaUploadModel.UPLOADING);
+    }
+
+    public @NonNull Set<MediaModel> getCompletedMediaForPost(PostModel post) {
+        return getMediaForPostWithState(post, MediaUploadModel.COMPLETED);
+    }
+
+    public @NonNull Set<MediaModel> getFailedMediaForPost(PostModel post) {
+        return getMediaForPostWithState(post, MediaUploadModel.FAILED);
+    }
+
     private void handleUploadMedia(MediaPayload payload) {
         MediaUploadModel mediaUploadModel = new MediaUploadModel(payload.media.getId());
         String errorMessage = MediaUtils.getMediaValidationError(payload.media);
@@ -257,5 +271,21 @@ public class UploadStore extends Store {
         UploadSqlUtils.deleteMediaUploadModelsWithLocalIds(localMediaIds);
 
         emitChange(new OnUploadChanged(UploadAction.CLEAR_MEDIA));
+    }
+
+    private @NonNull Set<MediaModel> getMediaForPostWithState(PostModel post, @MediaUploadModel.UploadState int state) {
+        PostUploadModel postUploadModel = getPostUploadModelForPostModel(post);
+        if (postUploadModel == null) {
+            return Collections.emptySet();
+        }
+
+        Set<MediaModel> mediaModels = new HashSet<>();
+        for (int localMediaId : postUploadModel.getAssociatedMediaIdSet()) {
+            MediaUploadModel mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(localMediaId);
+            if (mediaUploadModel != null && mediaUploadModel.getUploadState() == state) {
+                mediaModels.add(MediaSqlUtils.getMediaWithLocalId(localMediaId));
+            }
+        }
+        return mediaModels;
     }
 }
