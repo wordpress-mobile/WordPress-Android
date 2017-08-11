@@ -27,7 +27,10 @@ import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.fluxc.store.PluginStore.OnPluginInfoChanged;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginsChanged;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -120,6 +123,18 @@ public class PluginListActivity extends AppCompatActivity {
         refreshPluginList();
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPluginInfoChanged(OnPluginInfoChanged event) {
+        if (event.isError()) {
+            AppLog.e(T.API, "An error occurred while fetching the plugin info with type: " + event.error.type);
+            return;
+        }
+        if (event.pluginInfo != null && !TextUtils.isEmpty(event.pluginInfo.getSlug())) {
+            mAdapter.refreshPluginWithSlug(event.pluginInfo.getSlug());
+        }
+    }
+
     private class PluginListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private List<PluginModel> mPlugins;
 
@@ -163,6 +178,22 @@ public class PluginListActivity extends AppCompatActivity {
                 String iconUrl = pluginInfo != null ? pluginInfo.getIcon() : "";
                 pluginHolder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
             }
+        }
+
+        private void refreshPluginWithSlug(@NonNull String slug) {
+            int index = indexOfPluginWithSlug(slug);
+            if (index != -1) {
+                notifyItemChanged(index);
+            }
+        }
+
+        private int indexOfPluginWithSlug(@NonNull String slug) {
+            for (int i = 0 ; i < mPlugins.size(); i++) {
+                if (slug.equalsIgnoreCase(mPlugins.get(i).getSlug())) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         private class PluginViewHolder extends RecyclerView.ViewHolder {
