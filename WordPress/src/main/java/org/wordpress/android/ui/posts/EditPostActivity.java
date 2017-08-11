@@ -1021,7 +1021,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void deleteMediaUpload(int localMediaId) {
+    private void notifyMediaDeleted(int localMediaId) {
         MediaModel mediaModel = mMediaStore.getMediaWithLocalId(localMediaId);
         if (mediaModel != null) {
             EventBus.getDefault().post(new PostEvents.PostMediaDeleted(mPost, mediaModel));
@@ -2342,7 +2342,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            deleteMediaUpload(Integer.valueOf(localMediaId));
+            notifyMediaDeleted(Integer.valueOf(localMediaId));
         } else {
             AppLog.w(AppLog.T.MEDIA, "onMediaDeleted event carries null localMediaId, not recognized");
         }
