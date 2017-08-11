@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -306,6 +307,36 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
+    /*
+        given a list of media, it rechecks its state against the UploadingService to see
+        if it's uploading or queued and change it accordingly, to recover from an inconsistent state
+     */
+    private List<MediaModel> getSanitizedMedia(List<MediaModel> uncuredList) {
+        List<MediaModel> curedList = uncuredList;
+        Handler handler = new Handler();
+        for (final MediaModel media : uncuredList) {
+            if (MediaUploadState.QUEUED.toString().equals(media.getUploadState()) ||
+                    MediaUploadState.UPLOADING.toString().equals(media.getUploadState())) {
+                if (!UploadService.isPendingOrInProgressMediaUpload(media)) {
+                    // in order to avoid marking a genuine QUEUED item as FAILED as we hit this comparison
+                    // right in between the item being QUEUED and actually added to the queue, wait just a bit
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!UploadService.isPendingOrInProgressMediaUpload(media)) {
+                                // it is NOT being uploaded or queued in the actual UploadService, mark it failed
+                                media.setUploadState(MediaUploadState.FAILED);
+                                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+                            }
+                        }
+                    }, 300);
+                }
+            }
+        }
+        // return the same list, as the referred objects are already sanitized
+        return curedList;
+    }
+
     private List<MediaModel> getFilteredMedia() {
         if (!TextUtils.isEmpty(mSearchTerm)) {
             return mMediaStore.searchSiteMedia(mSite, mSearchTerm);
@@ -349,7 +380,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         // temporarily disable animation - otherwise the user will see items animate
         // when they change the filter
         mRecycler.setItemAnimator(null);
-        getAdapter().setMediaList(getFilteredMedia());
+        getAdapter().setMediaList(getSanitizedMedia(getFilteredMedia()));
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -409,7 +440,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaListFetched(OnMediaListFetched event) {
-        if (event.isError()) {
+            if (event.isError()) {
             handleFetchAllMediaError(event);
             return;
         }
@@ -422,7 +453,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
      */
     void reload() {
         if (isAdded()) {
-            getAdapter().setMediaList(getFilteredMedia());
+            getAdapter().setMediaList(getSanitizedMedia(getFilteredMedia()));
         }
     }
 
@@ -449,7 +480,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
         List<MediaModel> mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);
-        mGridAdapter.setMediaList(mediaList);
+        mGridAdapter.setMediaList(getSanitizedMedia(mediaList));
     }
 
     public void clearSelection() {
@@ -629,7 +660,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
         }
 
-        getAdapter().setMediaList(getFilteredMedia());
+        getAdapter().setMediaList(getSanitizedMedia(getFilteredMedia()));
 
         boolean hasRetrievedAll = !event.canLoadMore;
         getAdapter().setHasRetrievedAll(hasRetrievedAll);
