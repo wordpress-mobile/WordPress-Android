@@ -1033,7 +1033,7 @@ public class ReaderPostDetailFragment extends Fragment
             mRenderer.beginRender();
 
             // if we're showing just the excerpt, also show a footer which links to the full post
-            if (mPost.showShowExcerpt()) {
+            if (mPost.shouldShowExcerpt()) {
                 ViewGroup excerptFooter = (ViewGroup) getView().findViewById(R.id.excerpt_footer);
                 excerptFooter.setVisibility(View.VISIBLE);
 

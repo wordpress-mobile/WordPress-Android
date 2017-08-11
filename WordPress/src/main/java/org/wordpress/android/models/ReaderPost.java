@@ -583,7 +583,7 @@ public class ReaderPost {
     /*
      * we should show the excerpt rather than full content for Jetpack posts that have one
      */
-    public boolean showShowExcerpt() {
+    public boolean shouldShowExcerpt() {
         return isJetpack && hasExcerpt();
     }
 

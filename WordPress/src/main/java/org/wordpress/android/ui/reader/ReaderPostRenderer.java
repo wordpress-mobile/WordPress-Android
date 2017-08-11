@@ -254,7 +254,7 @@ class ReaderPostRenderer {
      * returns the basic content of the post tweaked for use here
      */
     private String getPostContent() {
-        String content = mPost.showShowExcerpt() ? mPost.getExcerpt() : mPost.getText();
+        String content = mPost.shouldShowExcerpt() ? mPost.getExcerpt() : mPost.getText();
 
         // some content (such as Vimeo embeds) don't have "http:" before links
         content = content.replace("src=\"//", "src=\"http://");
