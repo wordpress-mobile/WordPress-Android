@@ -617,6 +617,9 @@ public class UploadService extends Service {
         cancelMediaUploadForPost(event.post, event.media);
     }
 
+    /*
+        cleans upload tracking and cancel media upload for a media item that is not in a given Post anymore
+     */
     private void cancelMediaUploadForPost(@NonNull PostModel post, @NonNull MediaModel media) {
         // clean sPostsWithPendingMedia and issue cancel dispatch for uploading media ()
         for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
@@ -640,8 +643,6 @@ public class UploadService extends Service {
             for (MediaModel failedMedia : failedMediaForPost) {
                 if (failedMedia.getId() == media.getId()) {
                     sFailedMediaByPost.remove(failedMedia.getId());
-                    cleanUp();
-                    stopServiceIfUploadsComplete();
                     break;
                 }
             }
@@ -651,7 +652,8 @@ public class UploadService extends Service {
         cleanUp();
         stopServiceIfUploadsComplete();
 
-        // TODO clean sFailedUploadPosts (check their UploadError)
+        // TODO clean sFailedUploadPosts (check their UploadError) - we'll be
+        // able to handle this better when uploadstate is all in FluxC
     }
 
     /**
