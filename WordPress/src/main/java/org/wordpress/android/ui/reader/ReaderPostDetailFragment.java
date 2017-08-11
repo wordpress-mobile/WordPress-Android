@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -1040,10 +1042,15 @@ public class ReaderPostDetailFragment extends Fragment
                 String linkText = String.format(WordPress.getContext().
                         getString(R.string.reader_excerpt_link), blogName);
                 txtExcerptFooter.setText(Html.fromHtml(linkText));
+
+                // we can't set the vector drawable in the layout because it will crash pre-API21
+                Drawable drawableRight = AppCompatDrawableManager.get().getDrawable(getActivity(), R.drawable.reader_visit);
+                txtExcerptFooter.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+
                 txtExcerptFooter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ReaderActivityLauncher.openUrl(v.getContext(), mPost.getUrl());
+
                     }
                 });
             }

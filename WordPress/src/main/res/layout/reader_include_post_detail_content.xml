@@ -68,7 +68,6 @@
             android:layout_gravity="center_vertical"
             android:background="?android:selectableItemBackground"
             android:drawablePadding="@dimen/margin_medium"
-            android:drawableRight="@drawable/reader_visit"
             android:padding="@dimen/margin_extra_large"
             android:textColor="@color/grey_darken_20"
             tools:text="text_excerpt_footer"/>
