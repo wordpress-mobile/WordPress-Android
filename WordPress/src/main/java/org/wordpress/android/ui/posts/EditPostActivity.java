@@ -2316,7 +2316,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaUploadCancelClicked(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            cancelMediaUpload(StringUtils.stringToInt(localMediaId));
+            cancelMediaUpload(StringUtils.stringToInt(localMediaId), true);
         } else {
             // Passed mediaId is incorrect: cancel all uploads for this post
             ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
@@ -2327,14 +2327,15 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            cancelMediaUpload(StringUtils.stringToInt(localMediaId));
+            // passing false here as we need to keep the media item in case the user wants to undo
+            cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
         }
     }
 
-    private void cancelMediaUpload(int localMediaId) {
+    private void cancelMediaUpload(int localMediaId, boolean delete) {
         MediaModel mediaModel = mMediaStore.getMediaWithLocalId(Integer.valueOf(localMediaId));
         if (mediaModel != null) {
-            CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel);
+            CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel, delete);
             mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
         }
     }
@@ -2346,7 +2347,8 @@ public class EditPostActivity extends AppCompatActivity implements
         // These are the CANCELED ONES, so mark them FAILED now to retry.
 
         List <MediaModel> currentlyUploadingMedia = UploadService.getAllInProgressOrQueuedMediaItemsForPost(mPost);
-        List<String> mediaMarkedUploading  = AztecEditorFragment.getMediaMarkedUploadingInPostContent(EditPostActivity.this, undoedContent);
+        List<String> mediaMarkedUploading  =
+                AztecEditorFragment.getMediaMarkedUploadingInPostContent(EditPostActivity.this, undoedContent);
 
         // go through the list of items marked UPLOADING within the Post content, and look in the UploadService
         // to see whether they're really being uploaded or not. If an item is not really being uploaded, mark that item failed
