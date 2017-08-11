@@ -67,6 +67,7 @@ public class PluginInfoClient extends BaseWPAPIRestClient {
         pluginInfo.setRating(response.rating);
         pluginInfo.setSlug(response.slug);
         pluginInfo.setVersion(response.version);
+        pluginInfo.setIcon(response.icon);
         return pluginInfo;
     }
 }

@@ -14,6 +14,7 @@ public class PluginInfoModel implements Identifiable, Serializable {
     @Column private String mSlug;
     @Column private String mVersion;
     @Column private String mRating;
+    @Column private String mIcon;
 
     @Override
     public void setId(int id) {
@@ -55,5 +56,13 @@ public class PluginInfoModel implements Identifiable, Serializable {
 
     public void setRating(String rating) {
         mRating = rating;
+    }
+
+    public String getIcon() {
+        return mIcon;
+    }
+
+    public void setIcon(String icon) {
+        mIcon = icon;
     }
 }
