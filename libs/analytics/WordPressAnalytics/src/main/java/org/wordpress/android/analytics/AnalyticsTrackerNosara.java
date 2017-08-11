@@ -164,6 +164,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_AZTEC_PROMO_POSITIVE:
                 predefinedEventProperties.put("source", "promo_positive");
                 break;
+            case LOGIN_GOOGLE_TAPPED:
+                predefinedEventProperties.put("source", "android");
+                break;
             case OPENED_POSTS:
                 predefinedEventProperties.put("menu_item", "posts");
                 break;
@@ -686,6 +689,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_prologue_viewed";
             case LOGIN_EMAIL_FORM_VIEWED:
                 return "login_email_form_viewed";
+            case LOGIN_GOOGLE_TAPPED:
+                return "login_google_tapped";
             case LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED:
                 return "login_magic_link_open_email_client_viewed";
             case LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED:
