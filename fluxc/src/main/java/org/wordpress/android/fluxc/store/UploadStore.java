@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -47,19 +48,10 @@ public class UploadStore extends Store {
     @Override
     public void onAction(Action action) {
         IAction actionType = action.getType();
-        if (actionType instanceof PostAction) {
-            onPostAction((PostAction) actionType, action.getPayload());
-        }
         if (actionType instanceof MediaAction) {
             onMediaAction((MediaAction) actionType, action.getPayload());
-        }
-    }
-
-    private void onPostAction(PostAction actionType, Object payload) {
-        switch (actionType) {
-            case PUSHED_POST:
-                // TODO
-                break;
+        } else if (actionType instanceof PostAction) {
+            onPostAction((PostAction) actionType, action.getPayload());
         }
     }
 
@@ -73,6 +65,14 @@ public class UploadStore extends Store {
                 break;
             case CANCEL_MEDIA_UPLOAD:
                 handleCancelMedia((CancelMediaPayload) payload);
+                break;
+        }
+    }
+
+    private void onPostAction(PostAction actionType, Object payload) {
+        switch (actionType) {
+            case PUSHED_POST:
+                handlePostUploaded((RemotePostPayload) payload);
                 break;
         }
     }
@@ -159,5 +159,31 @@ public class UploadStore extends Store {
         // TODO Find waiting posts and mark them as cancelled
         mediaUploadModel.setUploadState(MediaUploadModel.FAILED);
         UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+    }
+
+    private void handlePostUploaded(@NonNull RemotePostPayload payload) {
+        if (payload.post == null) {
+            return;
+        }
+
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(payload.post.getId());
+
+        if (payload.isError()) {
+            if (postUploadModel == null) {
+                postUploadModel = new PostUploadModel(payload.post.getId());
+            }
+            postUploadModel.setUploadState(PostUploadModel.FAILED);
+            postUploadModel.setPostError(payload.error);
+            UploadSqlUtils.insertOrUpdatePost(postUploadModel);
+            return;
+        }
+
+        if (postUploadModel != null) {
+            // Delete all MediaUploadModels associated with this post since we're finished with it
+            UploadSqlUtils.deleteMediaUploadModelsWithLocalIds(postUploadModel.getAssociatedMediaIdSet());
+
+            // Delete the PostUploadModel itself
+            UploadSqlUtils.deletePostUploadModelWithLocalId(payload.post.getId());
+        }
     }
 }
