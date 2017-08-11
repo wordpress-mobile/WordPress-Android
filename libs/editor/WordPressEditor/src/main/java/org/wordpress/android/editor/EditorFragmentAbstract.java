@@ -175,6 +175,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddMediaClicked();
         void onMediaRetryClicked(String mediaId);
         void onMediaUploadCancelClicked(String mediaId);
+        void onMediaDeleted(String mediaId);
         void onFeaturedImageChanged(long mediaId);
         void onVideoPressInfoRequested(String videoId);
         String onAuthHeaderRequested(String url);

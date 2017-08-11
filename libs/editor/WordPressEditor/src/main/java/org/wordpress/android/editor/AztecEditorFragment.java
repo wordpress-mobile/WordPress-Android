@@ -81,6 +81,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnImeBackListener,
         AztecText.OnImageTappedListener,
         AztecText.OnVideoTappedListener,
+        AztecText.OnMediaDeletedListener,
         EditorMediaUploadListener,
         IAztecToolbarClickListener,
         IHistoryListener {
@@ -215,6 +216,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .setHistoryListener(this)
                 .setOnImageTappedListener(this)
                 .setOnVideoTappedListener(this)
+                .setOnMediaDeletedListener(this)
                 .addPlugin(new WordPressCommentsPlugin(content))
                 .addPlugin(new MoreToolbarButton(content));
 
@@ -852,6 +854,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 mUploadingMediaProgressMax.remove(localMediaId);
             }
+        }
+    }
+
+    @Override
+    public void onMediaDeleted(AztecAttributes aztecAttributes) {
+        String localMediaId = aztecAttributes.getValue(ATTR_ID_WP);
+        if (!TextUtils.isEmpty(localMediaId)) {
+            mEditorFragmentListener.onMediaDeleted(localMediaId);
         }
     }
 

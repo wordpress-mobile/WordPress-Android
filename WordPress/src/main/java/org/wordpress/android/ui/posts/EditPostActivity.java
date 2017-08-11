@@ -2315,15 +2315,26 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaUploadCancelClicked(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(Integer.valueOf(localMediaId));
-            if (mediaModel != null) {
-                CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel);
-                mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
-            }
+            cancelMediaUpload(StringUtils.stringToInt(localMediaId));
         } else {
             // Passed mediaId is incorrect: cancel all uploads for this post
             ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
             EventBus.getDefault().post(new PostEvents.PostMediaCanceled(mPost));
+        }
+    }
+
+    @Override
+    public void onMediaDeleted(String localMediaId) {
+        if (!TextUtils.isEmpty(localMediaId)) {
+            cancelMediaUpload(StringUtils.stringToInt(localMediaId));
+        }
+    }
+
+    private void cancelMediaUpload(int localMediaId) {
+        MediaModel mediaModel = mMediaStore.getMediaWithLocalId(Integer.valueOf(localMediaId));
+        if (mediaModel != null) {
+            CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel);
+            mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
         }
     }
 
