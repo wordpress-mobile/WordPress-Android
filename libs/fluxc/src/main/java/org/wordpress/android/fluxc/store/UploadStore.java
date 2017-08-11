@@ -188,12 +188,12 @@ public class UploadStore extends Store {
         }
 
         if (payload.isError() || payload.canceled) {
-            // TODO Find waiting posts and mark them as cancelled
             mediaUploadModel.setUploadState(MediaUploadModel.FAILED);
             if (payload.isError()) {
                 mediaUploadModel.setMediaError(payload.error);
             }
             UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+            cancelPostWithAssociatedMedia(payload.media);
             return;
         }
 
@@ -218,9 +218,10 @@ public class UploadStore extends Store {
             mediaUploadModel = new MediaUploadModel(payload.media.getId());
         }
 
-        // TODO Find waiting posts and mark them as cancelled
         mediaUploadModel.setUploadState(MediaUploadModel.FAILED);
         UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+
+        cancelPostWithAssociatedMedia(payload.media);
     }
 
     private void handlePostUploaded(@NonNull RemotePostPayload payload) {
@@ -287,5 +288,15 @@ public class UploadStore extends Store {
             }
         }
         return mediaModels;
+    }
+
+    private void cancelPostWithAssociatedMedia(@NonNull MediaModel mediaModel) {
+        if (mediaModel.getLocalPostId() > 0) {
+            PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(mediaModel.getLocalPostId());
+            if (postUploadModel != null) {
+                postUploadModel.setUploadState(PostUploadModel.CANCELLED);
+                UploadSqlUtils.insertOrUpdatePost(postUploadModel);
+            }
+        }
     }
 }
