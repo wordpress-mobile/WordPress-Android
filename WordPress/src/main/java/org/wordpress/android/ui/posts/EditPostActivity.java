@@ -2331,7 +2331,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaUploadCancelClicked(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            cancelMediaUpload(Integer.valueOf(localMediaId));
+            cancelMediaUpload(StringUtils.stringToInt(localMediaId));
         } else {
             // Passed mediaId is incorrect: cancel all uploads for this post
             ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
@@ -2342,7 +2342,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            notifyMediaDeleted(Integer.valueOf(localMediaId));
+            notifyMediaDeleted(StringUtils.stringToInt(localMediaId));
         } else {
             AppLog.w(AppLog.T.MEDIA, "onMediaDeleted event carries null localMediaId, not recognized");
         }
