@@ -5,8 +5,10 @@ import android.support.annotation.NonNull;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.action.PostAction;
+import org.wordpress.android.fluxc.action.UploadAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -19,6 +21,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
+import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
@@ -33,6 +36,41 @@ import javax.inject.Singleton;
 
 @Singleton
 public class UploadStore extends Store {
+    public static class ClearMediaPayload extends Payload {
+        public PostModel post;
+        public Set<MediaModel> media;
+        public ClearMediaPayload(PostModel post, Set<MediaModel> media) {
+            this.post = post;
+            this.media = media;
+        }
+    }
+
+    public static class OnUploadChanged extends OnChanged<UploadError> {
+        public UploadAction cause;
+
+        public OnUploadChanged(UploadAction cause) {
+            this(cause, null);
+        }
+
+        public OnUploadChanged(UploadAction cause, UploadError error) {
+            this.cause = cause;
+            this.error = error;
+        }
+    }
+
+    public static class UploadError implements OnChangedError {
+        public PostError postError;
+        public MediaError mediaError;
+
+        public UploadError(PostError postError) {
+            this.postError = postError;
+        }
+
+        public UploadError(MediaError mediaError) {
+            this.mediaError = mediaError;
+        }
+    }
+
     @Inject
     public UploadStore(Dispatcher dispatcher) {
         super(dispatcher);
@@ -52,6 +90,8 @@ public class UploadStore extends Store {
             onMediaAction((MediaAction) actionType, action.getPayload());
         } else if (actionType instanceof PostAction) {
             onPostAction((PostAction) actionType, action.getPayload());
+        } else if (actionType instanceof UploadAction) {
+            onUploadAction((UploadAction) actionType, action.getPayload());
         }
     }
 
@@ -73,6 +113,14 @@ public class UploadStore extends Store {
         switch (actionType) {
             case PUSHED_POST:
                 handlePostUploaded((RemotePostPayload) payload);
+                break;
+        }
+    }
+
+    private void onUploadAction(UploadAction actionType, Object payload) {
+        switch (actionType) {
+            case CLEAR_MEDIA:
+                handleClearMediaAction((ClearMediaPayload) payload);
                 break;
         }
     }
@@ -185,5 +233,29 @@ public class UploadStore extends Store {
             // Delete the PostUploadModel itself
             UploadSqlUtils.deletePostUploadModelWithLocalId(payload.post.getId());
         }
+    }
+
+    private void handleClearMediaAction(ClearMediaPayload payload) {
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(payload.post.getId());
+        if (postUploadModel == null) {
+            return;
+        }
+
+        // Remove media from the list of associated media for the post
+        Set<Integer> associatedMediaIdList = postUploadModel.getAssociatedMediaIdSet();
+        for (MediaModel mediaModel : payload.media) {
+            associatedMediaIdList.remove(mediaModel.getId());
+        }
+        postUploadModel.setAssociatedMediaIdSet(associatedMediaIdList);
+        UploadSqlUtils.insertOrUpdatePost(postUploadModel);
+
+        // Clear the MediaUploadModels
+        Set<Integer> localMediaIds = new HashSet<>();
+        for (MediaModel mediaModel : payload.media) {
+            localMediaIds.add(mediaModel.getId());
+        }
+        UploadSqlUtils.deleteMediaUploadModelsWithLocalIds(localMediaIds);
+
+        emitChange(new OnUploadChanged(UploadAction.CLEAR_MEDIA));
     }
 }
