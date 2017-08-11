@@ -2346,7 +2346,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // These are the CANCELED ONES, so mark them FAILED now to retry.
 
         List <MediaModel> currentlyUploadingMedia = UploadService.getAllInProgressOrQueuedMediaItemsForPost(mPost);
-        List<String> mediaMarkedUploading  = AztecEditorFragment.getMediaMarkedUploadingInPost(EditPostActivity.this, undoedContent);
+        List<String> mediaMarkedUploading  = AztecEditorFragment.getMediaMarkedUploadingInPostContent(EditPostActivity.this, undoedContent);
 
         // go through the list of items marked UPLOADING within the Post content, and look in the UploadService
         // to see whether they're really being uploaded or not. If an item is not really being uploaded, mark that item failed
