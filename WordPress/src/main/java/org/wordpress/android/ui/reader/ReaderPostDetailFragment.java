@@ -9,9 +9,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -1036,21 +1036,23 @@ public class ReaderPostDetailFragment extends Fragment
             if (mPost.showShowExcerpt()) {
                 ViewGroup excerptFooter = (ViewGroup) getView().findViewById(R.id.excerpt_footer);
                 excerptFooter.setVisibility(View.VISIBLE);
-                TextView txtExcerptFooter = (TextView) excerptFooter.findViewById(R.id.text_excerpt_footer);
+
                 String blogName = "<font color='" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color
                         .reader_hyperlink) + "'>" + mPost.getBlogName() + "</font>";
                 String linkText = String.format(WordPress.getContext().
                         getString(R.string.reader_excerpt_link), blogName);
+
+                TextView txtExcerptFooter = (TextView) excerptFooter.findViewById(R.id.text_excerpt_footer);
                 txtExcerptFooter.setText(Html.fromHtml(linkText));
 
                 // we can't set the vector drawable in the layout because it will crash pre-API21
-                Drawable drawableRight = AppCompatDrawableManager.get().getDrawable(getActivity(), R.drawable.reader_visit);
+                Drawable drawableRight = VectorDrawableCompat.create(txtExcerptFooter.getResources(), R.drawable.reader_visit, null);
                 txtExcerptFooter.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
 
                 txtExcerptFooter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        ReaderActivityLauncher.openUrl(v.getContext(), mPost.getUrl());
                     }
                 });
             }
