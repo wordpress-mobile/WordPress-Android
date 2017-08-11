@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
+import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
@@ -29,6 +31,7 @@ import org.wordpress.android.fluxc.store.PluginStore.OnPluginsChanged;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 import java.util.List;
 
@@ -156,7 +159,9 @@ public class PluginListActivity extends AppCompatActivity {
                 PluginViewHolder pluginHolder = (PluginViewHolder) holder;
                 pluginHolder.name.setText(pluginModel.getDisplayName());
                 pluginHolder.status.setText(getPluginStatusText(pluginModel));
-                pluginHolder.icon.setImageDrawable(getResources().getDrawable(R.drawable.plugin_placeholder));
+                PluginInfoModel pluginInfo = getOrFetchPluginInfo(pluginModel);
+                String iconUrl = pluginInfo != null ? pluginInfo.getIcon() : "";
+                pluginHolder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
             }
         }
 
@@ -180,5 +185,17 @@ public class PluginListActivity extends AppCompatActivity {
         String autoUpdateStatus = plugin.isAutoUpdateEnabled() ? getString(R.string.plugin_autoupdates_on)
                 : getString(R.string.plugin_autoupdates_off);
         return activeStatus + ", " + autoUpdateStatus;
+    }
+
+    private PluginInfoModel getOrFetchPluginInfo(@NonNull PluginModel plugin) {
+        String slug = plugin.getSlug();
+        if (TextUtils.isEmpty(slug)) {
+            return null;
+        }
+        PluginInfoModel pluginInfo = mPluginStore.getPluginInfoBySlug(slug);
+        if (pluginInfo == null) {
+            mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(slug));
+        }
+        return pluginInfo;
     }
 }
