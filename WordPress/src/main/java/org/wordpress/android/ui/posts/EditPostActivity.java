@@ -2350,7 +2350,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onUndoMediaCheck(final String undoedContent) {
-        // here we check which elements tagged UPLOADING are there in previousContent,
+        // here we check which elements tagged UPLOADING are there in undoedContent,
         // and check for the ones that ARE NOT being uploaded or queued in the UploadService.
         // These are the CANCELED ONES, so mark them FAILED now to retry.
 
