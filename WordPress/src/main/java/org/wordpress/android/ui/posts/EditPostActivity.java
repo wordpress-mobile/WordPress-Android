@@ -2355,7 +2355,7 @@ public class EditPostActivity extends AppCompatActivity implements
         for (String mediaId : mediaMarkedUploading) {
             boolean found = false;
             for (MediaModel media : currentlyUploadingMedia) {
-                if (Integer.valueOf(mediaId) == media.getId()) {
+                if (StringUtils.stringToInt(mediaId) == media.getId()) {
                     found = true;
                     break;
                 }
