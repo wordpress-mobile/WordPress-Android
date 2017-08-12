@@ -51,8 +51,6 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.wordpress:utils:1.16.0'
-//    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:ce388e4c55e345bb10156329486edd378eb223bb')
-//    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:ce388e4c55e345bb10156329486edd378eb223bb')
     compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:9c5481e04e20cd23b906d5bd766fce1c3f05a21d')
     compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:9c5481e04e20cd23b906d5bd766fce1c3f05a21d')
         {
