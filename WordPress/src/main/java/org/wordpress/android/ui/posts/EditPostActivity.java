@@ -304,7 +304,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
                 String postFormat = "";
-                if (mSite.isWPCom() || mSite.isJetpackConnected()) {
+                if (mSite.isUsingWpComRestApi()) {
                     // TODO: replace SiteSettingsInterface.getX by calls to mSite.getDefaultCategory
                     // and mSite.getDefaultFormat. We can get these from /me/sites endpoint for .com/jetpack sites.
                     // There might be a way to get that information from a XMLRPC request as well.
