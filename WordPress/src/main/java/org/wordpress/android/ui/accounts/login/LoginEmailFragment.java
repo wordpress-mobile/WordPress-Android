@@ -11,10 +11,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -75,6 +77,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         autoFillFromBuildConfig("DEBUG_DOTCOM_LOGIN_EMAIL", mEmailInput.getEditText());
         mEmailInput.addTextChangedListener(this);
         mEmailInput.setOnEditorCommitListener(this);
+
+        LinearLayout loginGoogle = (LinearLayout) rootView.findViewById(R.id.login_google);
+        loginGoogle.setVisibility(BuildConfig.LOGIN_GOOGLE_ENABLED ? View.VISIBLE : View.GONE);
     }
 
     @Override
