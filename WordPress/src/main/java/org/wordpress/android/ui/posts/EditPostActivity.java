@@ -2362,7 +2362,6 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             if (!found) {
-                // 2- Run through loop and set each media to failed
                 if (mEditorFragment instanceof AztecEditorFragment) {
                     ((AztecEditorFragment)mEditorFragment).setMediaToFailed(mediaId);
                 }
