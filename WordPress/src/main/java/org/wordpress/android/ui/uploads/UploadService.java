@@ -403,7 +403,7 @@ public class UploadService extends Service {
         return error != null && error.mediaError != null;
     }
 
-    public static List<MediaModel> getAllInProgressOrQueuedMediaItemsForPost(PostModel post){
+    public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel post){
         return MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
     }
 
