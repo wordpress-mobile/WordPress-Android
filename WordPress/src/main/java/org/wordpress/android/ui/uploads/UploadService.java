@@ -434,6 +434,10 @@ public class UploadService extends Service {
         return Collections.emptyList();
     }
 
+    public static boolean isPendingOrInProgressMediaUpload(MediaModel media) {
+        return MediaUploadHandler.isPendingOrInProgressMediaUpload(media);
+    }
+
     private void showNotificationForPostWithPendingMedia(PostModel post) {
         mPostUploadNotifier.showForegroundNotificationForPost(post, getString(R.string.uploading_post_media));
     }

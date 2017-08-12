@@ -141,6 +141,25 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return mediaList;
     }
 
+    static boolean isPendingOrInProgressMediaUpload(MediaModel media) {
+        synchronized (sInProgressUploads) {
+            for (MediaModel uploadingMedia : sInProgressUploads) {
+                if (uploadingMedia.getId() == media.getId()) {
+                    return true;
+                }
+            }
+        }
+
+        synchronized (sPendingUploads) {
+            for (MediaModel queuedMedia : sPendingUploads) {
+                if (queuedMedia.getId() == media.getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Returns the last recorded progress value for the given {@param media}. If there is no record for that media,
      * it's assumed to be a completed upload.
