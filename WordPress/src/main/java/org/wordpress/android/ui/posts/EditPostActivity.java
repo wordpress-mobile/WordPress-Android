@@ -304,7 +304,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
                 String postFormat = "";
-                if (mSite.isWPCom() || mSite.isJetpackConnected()) {
+                if (mSite.isUsingWpComRestApi()) {
                     // TODO: replace SiteSettingsInterface.getX by calls to mSite.getDefaultCategory
                     // and mSite.getDefaultFormat. We can get these from /me/sites endpoint for .com/jetpack sites.
                     // There might be a way to get that information from a XMLRPC request as well.
@@ -359,7 +359,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mIsNewPost) {
             trackEditorCreatedPost(action, getIntent());
         } else {
-            resetUploadingMediaToFailedIfNotInProgressOrQueued();
+            resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued();
         }
 
         setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
@@ -409,8 +409,9 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     // this method aims at recovering the current state of media items if they're inconsistent within the PostModel.
-    private void resetUploadingMediaToFailedIfNotInProgressOrQueued() {
+    private void resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued() {
         boolean useAztec = AppPrefs.isAztecEditorEnabled();
+
         if (!useAztec || UploadService.hasPendingOrInProgressMediaUploadsForPost(mPost)) {
             return;
         }
@@ -2315,16 +2316,58 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaUploadCancelClicked(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(Integer.valueOf(localMediaId));
-            if (mediaModel != null) {
-                CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel);
-                mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
-            }
+            cancelMediaUpload(StringUtils.stringToInt(localMediaId), true);
         } else {
             // Passed mediaId is incorrect: cancel all uploads for this post
             ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
             EventBus.getDefault().post(new PostEvents.PostMediaCanceled(mPost));
         }
+    }
+
+    @Override
+    public void onMediaDeleted(String localMediaId) {
+        if (!TextUtils.isEmpty(localMediaId)) {
+            // passing false here as we need to keep the media item in case the user wants to undo
+            cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
+        }
+    }
+
+    private void cancelMediaUpload(int localMediaId, boolean delete) {
+        MediaModel mediaModel = mMediaStore.getMediaWithLocalId(Integer.valueOf(localMediaId));
+        if (mediaModel != null) {
+            CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel, delete);
+            mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+        }
+    }
+
+    @Override
+    public void onUndoMediaCheck(final String undoedContent) {
+        // here we check which elements tagged UPLOADING are there in undoedContent,
+        // and check for the ones that ARE NOT being uploaded or queued in the UploadService.
+        // These are the CANCELED ONES, so mark them FAILED now to retry.
+
+        List <MediaModel> currentlyUploadingMedia = UploadService.getPendingOrInProgressMediaUploadsForPost(mPost);
+        List<String> mediaMarkedUploading  =
+                AztecEditorFragment.getMediaMarkedUploadingInPostContent(EditPostActivity.this, undoedContent);
+
+        // go through the list of items marked UPLOADING within the Post content, and look in the UploadService
+        // to see whether they're really being uploaded or not. If an item is not really being uploaded, mark that item failed
+        for (String mediaId : mediaMarkedUploading) {
+            boolean found = false;
+            for (MediaModel media : currentlyUploadingMedia) {
+                if (StringUtils.stringToInt(mediaId) == media.getId()) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                if (mEditorFragment instanceof AztecEditorFragment) {
+                    ((AztecEditorFragment)mEditorFragment).setMediaToFailed(mediaId);
+                }
+            }
+        }
+
     }
 
     @Override

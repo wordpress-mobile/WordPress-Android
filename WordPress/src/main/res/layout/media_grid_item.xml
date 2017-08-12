@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/margin_extra_small">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_extra_small">
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/media_grid_item_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
 
     <RelativeLayout
         android:id="@+id/media_grid_item_file_container"
@@ -34,7 +34,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
                 android:tint="@color/grey_dark"
-                tools:src="@drawable/ic_gridicons_page" />
+                tools:src="@drawable/ic_gridicons_page"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_filetype"
@@ -46,7 +46,7 @@
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_small"
                 android:textStyle="bold"
-                tools:text="PDF" />
+                tools:text="PDF"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_name"
@@ -58,7 +58,7 @@
                 android:singleLine="true"
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_extra_small"
-                tools:text="filename" />
+                tools:text="filename"/>
         </LinearLayout>
 
     </RelativeLayout>
@@ -71,35 +71,29 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <LinearLayout
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/media_grid_item_upload_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:orientation="vertical">
+            android:shadowColor="@color/grey_dark"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
+            tools:text="@string/upload_failed"/>
 
-            <ProgressBar
-                android:id="@+id/media_grid_item_upload_progress"
-                android:layout_width="@dimen/media_grid_progress_height"
-                android:layout_height="@dimen/media_grid_progress_height"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/margin_small" />
+        <ProgressBar
+            android:id="@+id/media_grid_item_upload_progress"
+            android:layout_width="@dimen/media_grid_progress_height"
+            android:layout_height="@dimen/media_grid_progress_height"
+            android:layout_below="@+id/media_grid_item_upload_state"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_small"/>
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/media_grid_item_upload_state"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:shadowColor="@color/grey_dark"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="2"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_large"
-                android:textStyle="bold"
-                tools:text="@string/upload_failed" />
-        </LinearLayout>
     </RelativeLayout>
 
     <org.wordpress.android.widgets.WPTextView
@@ -113,7 +107,7 @@
         android:textSize="@dimen/text_sz_large"
         android:visibility="gone"
         tools:text="5"
-        tools:visibility="visible" />
+        tools:visibility="visible"/>
 
     <FrameLayout
         android:id="@+id/frame_preview"
@@ -129,7 +123,7 @@
             android:layout_height="@dimen/photo_picker_preview_icon"
             android:background="@drawable/preview_icon_background"
             android:padding="@dimen/margin_small"
-            app:srcCompat="@drawable/ic_fullscreen_white_24dp" />
+            app:srcCompat="@drawable/ic_fullscreen_white_24dp"/>
     </FrameLayout>
 
     <FrameLayout
@@ -145,7 +139,7 @@
             android:layout_width="@dimen/photo_picker_preview_icon"
             android:layout_height="@dimen/photo_picker_preview_icon"
             android:padding="@dimen/margin_extra_small"
-            android:src="@drawable/reader_video_overlay" />
+            android:src="@drawable/reader_video_overlay"/>
 
     </FrameLayout>
 

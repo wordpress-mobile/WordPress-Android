@@ -403,6 +403,10 @@ public class UploadService extends Service {
         return error != null && error.mediaError != null;
     }
 
+    public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel post){
+        return MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
+    }
+
     public static float getMediaUploadProgressForPost(PostModel postModel) {
         if (postModel == null) {
             return 0;
