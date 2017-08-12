@@ -34,7 +34,6 @@
     </org.wordpress.android.widgets.WPLoginInputRow>
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/login_google"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_extra_large"
