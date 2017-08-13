@@ -78,8 +78,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         mEmailInput.addTextChangedListener(this);
         mEmailInput.setOnEditorCommitListener(this);
 
-        LinearLayout loginGoogle = (LinearLayout) rootView.findViewById(R.id.login_google);
-        loginGoogle.setVisibility(BuildConfig.LOGIN_GOOGLE_ENABLED ? View.VISIBLE : View.GONE);
+        LinearLayout googleLoginLayout = (LinearLayout) rootView.findViewById(R.id.login_google_layout);
+        googleLoginLayout.setVisibility(BuildConfig.LOGIN_GOOGLE_ENABLED ? View.VISIBLE : View.GONE);
     }
 
     @Override
