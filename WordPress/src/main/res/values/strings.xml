@@ -1899,5 +1899,8 @@
     <string name="login_epilogue_mysites_other">My sites</string>
     <string name="login_google_button_prefix">Or you can</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
+    <string name="login_third_party_button">Try again</string>
+    <string name="login_third_party_description">Checking page illustration</string>
+    <string name="login_third_party_label">Waiting for Google login to complete&#8230;</string>
 
 </resources>
