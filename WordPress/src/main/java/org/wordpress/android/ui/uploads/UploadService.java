@@ -439,10 +439,11 @@ public class UploadService extends Service {
         return MediaUploadHandler.isPendingOrInProgressMediaUpload(media);
     }
 
-    /*
-        rechecks all media in the MediaStore marked UPLOADING/QUEUED against the UploadingService to see
-        if it's actually uploading or queued and change it accordingly, to recover from an inconsistent state
-    */
+
+    /**
+     * Rechecks all media in the MediaStore marked UPLOADING/QUEUED against the UploadingService to see
+     * if it's actually uploading or queued and change it accordingly, to recover from an inconsistent state
+     */
     public static void sanitizeMediaUploadStateForSite(@NonNull MediaStore mediaStore, @NonNull Dispatcher dispatcher,
                                                        @NonNull SiteModel site) {
         List<MediaModel> uploadingMedia =
