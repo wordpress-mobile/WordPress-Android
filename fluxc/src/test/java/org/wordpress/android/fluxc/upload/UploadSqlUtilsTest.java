@@ -26,6 +26,7 @@ import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
@@ -163,6 +164,55 @@ public class UploadSqlUtilsTest {
 
         postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(testPost.getId());
         assertNull(postUploadModel);
+    }
+
+    @Test
+    public void testGetPostModelsByState() {
+        PostModel testPost1 = UploadTestUtils.getTestPost();
+        testPost1.setIsLocalDraft(true);
+        assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost1));
+        PostModel testPost2 = UploadTestUtils.getTestPost();
+        testPost2.setIsLocalDraft(true);
+        assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost2));
+        List<PostModel> postList = PostTestUtils.getPosts();
+        assertEquals(2, postList.size());
+
+        // Store PostUploadModels corresponding to the PostModels
+        testPost1 = postList.get(0);
+        PostUploadModel postUploadModel1 = new PostUploadModel(testPost1.getId());
+        UploadSqlUtils.insertOrUpdatePost(postUploadModel1);
+        testPost2 = postList.get(1);
+        PostUploadModel postUploadModel2 = new PostUploadModel(testPost2.getId());
+        UploadSqlUtils.insertOrUpdatePost(postUploadModel2);
+
+        // Both PostUploadModels should be PENDING
+        List<PostUploadModel> pendingPostUploadModels =
+                UploadSqlUtils.getPostUploadModelsWithState(PostUploadModel.PENDING);
+        assertEquals(2, pendingPostUploadModels.size());
+        assertEquals(0, UploadSqlUtils.getPostUploadModelsWithState(PostUploadModel.FAILED).size());
+        assertEquals(0, UploadSqlUtils.getPostUploadModelsWithState(PostUploadModel.CANCELLED).size());
+
+        // Fetch the corresponding PostModels
+        List<PostModel> pendingPostModels = UploadSqlUtils.getPostModelsForPostUploadModels(pendingPostUploadModels);
+        assertEquals(2, pendingPostModels.size());
+        assertNotSame(pendingPostModels.get(0), pendingPostModels.get(1));
+
+        // Set one PostUploadModel to CANCELLED
+        postUploadModel1.setUploadState(PostUploadModel.CANCELLED);
+        UploadSqlUtils.insertOrUpdatePost(postUploadModel1);
+
+        pendingPostUploadModels = UploadSqlUtils.getPostUploadModelsWithState(PostUploadModel.PENDING);
+        List<PostUploadModel> cancelledPostUploadModels =
+                UploadSqlUtils.getPostUploadModelsWithState(PostUploadModel.CANCELLED);
+
+        assertEquals(1, pendingPostUploadModels.size());
+        assertEquals(1, cancelledPostUploadModels.size());
+        assertEquals(0, UploadSqlUtils.getPostUploadModelsWithState(PostUploadModel.FAILED).size());
+
+        // Fetch the corresponding PostModels
+        pendingPostModels = UploadSqlUtils.getPostModelsForPostUploadModels(pendingPostUploadModels);
+        assertEquals(1, pendingPostModels.size());
+        assertEquals(postUploadModel2.getId(), pendingPostModels.get(0).getId());
     }
 
     @Test

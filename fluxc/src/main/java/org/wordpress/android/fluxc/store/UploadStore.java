@@ -167,6 +167,24 @@ public class UploadStore extends Store {
         return getMediaForPostWithState(post, MediaUploadModel.FAILED);
     }
 
+    public @NonNull List<PostModel> getPendingPosts() {
+        List<PostUploadModel> uploadingPostUploadModels = UploadSqlUtils.getPostUploadModelsWithState(
+                PostUploadModel.PENDING);
+        return UploadSqlUtils.getPostModelsForPostUploadModels(uploadingPostUploadModels);
+    }
+
+    public @NonNull List<PostModel> getFailedPosts() {
+        List<PostUploadModel> uploadingPostUploadModels = UploadSqlUtils.getPostUploadModelsWithState(
+                PostUploadModel.FAILED);
+        return UploadSqlUtils.getPostModelsForPostUploadModels(uploadingPostUploadModels);
+    }
+
+    public @NonNull List<PostModel> getCancelledPosts() {
+        List<PostUploadModel> uploadingPostUploadModels = UploadSqlUtils.getPostUploadModelsWithState(
+                PostUploadModel.CANCELLED);
+        return UploadSqlUtils.getPostModelsForPostUploadModels(uploadingPostUploadModels);
+    }
+
     private void handleUploadMedia(MediaPayload payload) {
         MediaUploadModel mediaUploadModel = new MediaUploadModel(payload.media.getId());
         String errorMessage = MediaUtils.getMediaValidationError(payload.media);
