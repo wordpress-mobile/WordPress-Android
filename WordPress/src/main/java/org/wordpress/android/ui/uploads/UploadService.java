@@ -435,7 +435,7 @@ public class UploadService extends Service {
         return Collections.emptyList();
     }
 
-    public static boolean isPendingOrInProgressMediaUpload(MediaModel media) {
+    public static boolean isPendingOrInProgressMediaUpload(@NonNull MediaModel media) {
         return MediaUploadHandler.isPendingOrInProgressMediaUpload(media);
     }
 

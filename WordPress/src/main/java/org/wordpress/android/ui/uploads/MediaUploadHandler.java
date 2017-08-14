@@ -141,7 +141,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return mediaList;
     }
 
-    static boolean isPendingOrInProgressMediaUpload(MediaModel media) {
+    static boolean isPendingOrInProgressMediaUpload(@NonNull MediaModel media) {
         synchronized (sInProgressUploads) {
             for (MediaModel uploadingMedia : sInProgressUploads) {
                 if (uploadingMedia.getId() == media.getId()) {
