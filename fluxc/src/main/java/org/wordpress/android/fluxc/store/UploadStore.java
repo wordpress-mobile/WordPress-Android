@@ -121,8 +121,11 @@ public class UploadStore extends Store {
 
     private void onUploadAction(UploadAction actionType, Object payload) {
         switch (actionType) {
+            case CANCEL_POST:
+                handleCancelPost((PostModel) payload);
+                break;
             case CLEAR_MEDIA:
-                handleClearMediaAction((ClearMediaPayload) payload);
+                handleClearMedia((ClearMediaPayload) payload);
                 break;
         }
     }
@@ -211,7 +214,9 @@ public class UploadStore extends Store {
                 mediaUploadModel.setMediaError(payload.error);
             }
             UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
-            cancelPostWithAssociatedMedia(payload.media);
+            if (payload.media.getLocalPostId() > 0) {
+                cancelPost(payload.media.getLocalPostId());
+            }
             return;
         }
 
@@ -239,7 +244,9 @@ public class UploadStore extends Store {
         mediaUploadModel.setUploadState(MediaUploadModel.FAILED);
         UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
 
-        cancelPostWithAssociatedMedia(payload.media);
+        if (payload.media.getLocalPostId() > 0) {
+            cancelPost(payload.media.getLocalPostId());
+        }
     }
 
     private void handlePostUploaded(@NonNull RemotePostPayload payload) {
@@ -268,7 +275,14 @@ public class UploadStore extends Store {
         }
     }
 
-    private void handleClearMediaAction(ClearMediaPayload payload) {
+    private void handleCancelPost(PostModel payload) {
+        if (payload != null) {
+            cancelPost(payload.getId());
+        }
+        emitChange(new OnUploadChanged(UploadAction.CANCEL_POST));
+    }
+
+    private void handleClearMedia(ClearMediaPayload payload) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(payload.post.getId());
         if (postUploadModel == null) {
             return;
@@ -308,13 +322,11 @@ public class UploadStore extends Store {
         return mediaModels;
     }
 
-    private void cancelPostWithAssociatedMedia(@NonNull MediaModel mediaModel) {
-        if (mediaModel.getLocalPostId() > 0) {
-            PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(mediaModel.getLocalPostId());
-            if (postUploadModel != null) {
-                postUploadModel.setUploadState(PostUploadModel.CANCELLED);
-                UploadSqlUtils.insertOrUpdatePost(postUploadModel);
-            }
+    private void cancelPost(int localPostId) {
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(localPostId);
+        if (postUploadModel != null) {
+            postUploadModel.setUploadState(PostUploadModel.CANCELLED);
+            UploadSqlUtils.insertOrUpdatePost(postUploadModel);
         }
     }
 }
