@@ -578,6 +578,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onRetryUpload(int localMediaId) {
         MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
         if (media == null) {
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
             return;
         }
         addMediaToUploadService(media);
@@ -900,7 +901,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         // Start the upload service if it's not started and fill the media queue
         if (!NetworkUtils.isNetworkAvailable(this)) {
             AppLog.v(AppLog.T.MEDIA, "Unable to start UploadService, internet connection required.");
-            return;
+            ToastUtils.showToast(this, R.string.no_network_message, ToastUtils.Duration.SHORT);
         }
 
         ArrayList<MediaModel> mediaList = new ArrayList<>();
