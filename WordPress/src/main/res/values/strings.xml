@@ -24,7 +24,7 @@
     <string name="post_content">Content (tap to add text and media)</string>
     <string name="max_thumbnail_px_width">Default Image Width</string>
     <string name="image_quality">Image Quality</string>
-    <string name="max_video_px_width">Default Video Width</string>
+    <string name="max_video_resolution">Maximum Resolution</string>
     <string name="video_quality">Video Quality</string>
     <string name="password">Password</string>
     <string name="blogs">Blogs</string>
@@ -492,7 +492,7 @@
     <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_width</string>
     <string name="site_settings_default_image_quality_title" translatable="false">@string/image_quality</string>
     <string name="site_settings_optimize_videos">Optimize Videos</string>
-    <string name="site_settings_default_video_width_title" translatable="false">@string/max_video_px_width</string>
+    <string name="site_settings_default_video_width_title" translatable="false">@string/max_video_resolution</string>
     <string name="site_settings_default_video_quality_title" translatable="false">@string/video_quality</string>
     <string name="site_settings_upload_and_link_image_title" translatable="false">@string/upload_full_size_image</string>
     <string name="site_settings_related_posts_title" translatable="false">@string/related_posts</string>
@@ -1880,7 +1880,6 @@
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
     <string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
-    <string name="login_error_while_checking_email">An error occurred while checking the email address!</string>
     <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
     <string name="login_magic_links_sent_description">Magic link sent illustration</string>
