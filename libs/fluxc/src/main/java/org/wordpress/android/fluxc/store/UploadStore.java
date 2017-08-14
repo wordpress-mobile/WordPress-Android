@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -186,6 +187,25 @@ public class UploadStore extends Store {
         List<PostUploadModel> uploadingPostUploadModels = UploadSqlUtils.getPostUploadModelsWithState(
                 PostUploadModel.CANCELLED);
         return UploadSqlUtils.getPostModelsForPostUploadModels(uploadingPostUploadModels);
+    }
+
+    public @Nullable UploadError getUploadErrorForPost(PostModel postModel) {
+        if (postModel == null) return null;
+
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId());
+        if (postUploadModel == null) return null;
+
+        if (postUploadModel.getPostError() != null) {
+            return new UploadError(postUploadModel.getPostError());
+        } else {
+            for (int localMediaId : postUploadModel.getAssociatedMediaIdSet()) {
+                MediaUploadModel mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(localMediaId);
+                if (mediaUploadModel != null && mediaUploadModel.getMediaError() != null) {
+                    return new UploadError(mediaUploadModel.getMediaError());
+                }
+            }
+        }
+        return null;
     }
 
     private void handleUploadMedia(MediaPayload payload) {
