@@ -329,7 +329,9 @@
     <dimen name="textinputlayout_correction_padding">4.3dp</dimen>
     <dimen name="textinputlayout_correction_margin_right">-8.6dp</dimen>
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
-    <dimen name="third_party_authentication_illustration_height">250dp</dimen>
-    <dimen name="third_party_authentication_illustration_width">400dp</dimen>
+    <dimen name="third_party_authentication_illustration_height_landscape">150dp</dimen>
+    <dimen name="third_party_authentication_illustration_height_portrait">250dp</dimen>
+    <dimen name="third_party_authentication_illustration_width_landscape">240dp</dimen>
+    <dimen name="third_party_authentication_illustration_width_portrait">400dp</dimen>
 
 </resources>
