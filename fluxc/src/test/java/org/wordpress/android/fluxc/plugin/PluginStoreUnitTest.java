@@ -11,8 +11,10 @@ import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginInfoClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
@@ -24,11 +26,13 @@ import org.wordpress.android.fluxc.store.PluginStore;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.wordpress.android.fluxc.plugin.PluginTestUtils.generatePluginInfo;
 import static org.wordpress.android.fluxc.plugin.PluginTestUtils.generatePlugins;
 
 @RunWith(RobolectricTestRunner.class)
 public class PluginStoreUnitTest {
-    private PluginStore mPluginStore = new PluginStore(new Dispatcher(), Mockito.mock(PluginRestClient.class));
+    private PluginStore mPluginStore = new PluginStore(new Dispatcher(),
+            Mockito.mock(PluginRestClient.class), Mockito.mock(PluginInfoClient.class));
 
     @Before
     public void setUp() {
@@ -53,5 +57,13 @@ public class PluginStoreUnitTest {
         PluginSqlUtils.insertOrReplacePlugins(site, generatePlugins("jetpack"));
         plugins = mPluginStore.getPlugins(site);
         assertEquals("jetpack", plugins.get(0).getName());
+    }
+
+    @Test
+    public void testGetPluginInfo() {
+        String slug = "akismet";
+        PluginSqlUtils.insertOrUpdatePluginInfo(generatePluginInfo(slug));
+        PluginInfoModel pluginInfo = mPluginStore.getPluginInfoBySlug(slug);
+        assertEquals(slug, pluginInfo.getSlug());
     }
 }
