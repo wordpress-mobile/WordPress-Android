@@ -64,7 +64,7 @@
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"
                 android:layout_width="24dp"
-                android:src="@drawable/ic_google_60dp" >
+                app:srcCompat="@drawable/ic_google_60dp" >
             </ImageView>
 
             <TextView
