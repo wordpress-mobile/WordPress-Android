@@ -47,6 +47,7 @@ import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
@@ -64,6 +65,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
@@ -121,6 +123,8 @@ public class WordPress extends MultiDexApplication {
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject MediaStore mMediaStore;
+
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -664,6 +668,14 @@ public class WordPress extends MultiDexApplication {
             }
         }
 
+        private void sanitizeMediaUploadStateForSite() {
+            int siteLocalId = AppPrefs.getSelectedSite();
+            SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+            if (selectedSite != null) {
+                UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
+            }
+        }
+
         /**
          * The two methods below (startActivityTransitionTimer and stopActivityTransitionTimer)
          * are used to track when the app goes to background.
@@ -759,6 +771,9 @@ public class WordPress extends MultiDexApplication {
                         NotificationsUpdateService.startService(getContext());
                     }
                 }
+
+                // verify media is sanitized
+                sanitizeMediaUploadStateForSite();
 
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
