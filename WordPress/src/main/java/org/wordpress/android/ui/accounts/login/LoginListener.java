@@ -17,6 +17,7 @@ public interface LoginListener {
     // Login Email input callbacks
     void gotWpcomEmail(String email);
     void loginViaSiteAddress();
+    void loginViaThirdParty();
     void loginViaWpcomUsernameInstead();
     void helpEmailScreen(String email);
 
