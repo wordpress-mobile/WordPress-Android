@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -86,7 +85,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         googleLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Google login not implemented", Toast.LENGTH_SHORT).show();
+                mLoginListener.loginViaThirdParty();
             }
         });
     }
