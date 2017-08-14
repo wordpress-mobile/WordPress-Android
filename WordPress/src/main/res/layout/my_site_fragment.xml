@@ -299,7 +299,9 @@
                 <ImageView
                     android:id="@+id/my_site_plugins_icon"
                     style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_user_grey_24dp" />
+                    android:contentDescription="@string/plugins"
+                    android:tint="@color/grey"
+                    app:srcCompat="@drawable/ic_gridicons_plugin" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_plugins_text_view"
