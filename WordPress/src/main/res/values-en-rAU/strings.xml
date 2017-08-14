@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-25 10:02:29+0000
+Translation-Revision-Date: 2017-08-02 07:09:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+	<string name="login_epilogue_mysites_other">My sites</string>
+	<string name="login_epilogue_mysites_one">My site</string>
+	<string name="login_logged_in_as">Logged in as</string>
+	<string name="login_email_client_not_found">Can\'t detect your email client app</string>
+	<string name="login_empty_2fa">Please enter a verification code</string>
+	<string name="login_empty_username">Please enter a username</string>
+	<string name="login_empty_site_url">Please enter a site address</string>
+	<string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
+	<string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
+	<string name="login_checking_site_address">Checking site address</string>
+	<string name="login_site_address_more_help">Need more help?</string>
+	<string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
+	<string name="login_site_address_help_title">What\'s my site address?</string>
+	<string name="login_site_address_help">Need help finding your site address?</string>
+	<string name="login_site_address">Site address</string>
+	<string name="enter_site_address">Enter the address of your WordPress site you\'d like to connect.</string>
+	<string name="login_username_at">\@%s</string>
+	<string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
+	<string name="login_continue">Continue</string>
+	<string name="connect_more">Connect Another Site</string>
+	<string name="enter_wpcom_password">Enter your WordPress.com password.</string>
+	<string name="login_magic_link_email_requesting">Requesting log-in email</string>
+	<string name="login_magic_links_sent_description">Magic link sent illustration</string>
+	<string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
+	<string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
+	<string name="login_error_while_checking_email">An error occurred while checking the email address!</string>
+	<string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
+	<string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
+	<string name="requesting_otp">Requesting a verification code via SMS.</string>
+	<string name="login_text_otp">Text me a code instead.</string>
+	<string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
+	<string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
+	<string name="enter_username_instead">Log in with username instead.</string>
+	<string name="enter_site_address_instead">Log in to your site by entering your site address instead.</string>
+	<string name="open_mail">Open mail</string>
+	<string name="next">Next</string>
+	<string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+	<string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
+	<string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
+	<string name="login_promo_text_anytime">Catch up with your favourite sites and join the conversation anywhere, any time.</string>
+	<string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
+	<string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
+	<string name="create_wordpress_site">Create a WordPress site</string>
+	<string name="email_not_found">We didn\'t find a WordPress.com user with that email address</string>
+	<string name="login_password_image">Login password icon</string>
+	<string name="login_username_image">Login username icon</string>
+	<string name="login_site_address_help_image">Site address positioning image</string>
+	<string name="login_globe_icon">Site address globe icon</string>
+	<string name="login_email_image">Login email icon</string>
 	<string name="image_optimization_promo_desc">Image optimisation shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
 	<string name="image_optimization_promo_title">Turn on image optimisation?</string>
 	<string name="leave_off">Leave off</string>
@@ -217,14 +266,11 @@ Language: en_AU
 	<string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
 	<string name="error_upload_params">Error while uploading the %1$s: %2$s</string>
 	<string name="submit_for_review">Submit</string>
-	<string name="role_subscriber">Subscriber</string>
 	<string name="tell_me_more">Tell me more</string>
 	<string name="duplicate_site_detected">A duplicate site has been detected.</string>
 	<string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
 	<string name="already_logged_in_wpcom_same_username">You\'re already logged in your WordPress.com account. Your site should appear in the site picker, make sure it\'s not hidden.</string>
 	<string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
-	<string name="migration_error_not_connected">Migration process failed: try launching the app when you have a\n        network connection.</string>
-	<string name="migration_message">Updating the WordPress app…</string>
 	<string name="checking_username">Checking username</string>
 	<string name="jetpack_different_com_account">Jetpack sites belonging to different WordPress.com accounts are not supported</string>
 	<string name="jetpack_use_com_account">To add your Jetpack site, log in to the WordPress.com account you used to connect Jetpack.</string>
@@ -303,10 +349,6 @@ Language: en_AU
 	<string name="timespan_now">now</string>
 	<string name="role_viewer">Viewer</string>
 	<string name="role_follower">Follower</string>
-	<string name="role_contributor">Contributor</string>
-	<string name="role_author">Author</string>
-	<string name="role_editor">Editor</string>
-	<string name="role_admin">Administrator</string>
 	<string name="error_post_my_profile_no_connection">No connection, couldn\'t save your profile</string>
 	<string name="alignment_right">Right</string>
 	<string name="alignment_left">Left</string>
@@ -1298,6 +1340,7 @@ Language: en_AU
 	<string name="publish_date">Publish</string>
 	<string name="post_content">Content (tap to add text and media)</string>
 	<string name="incorrect_credentials">Incorrect username or password.</string>
+	<string name="log_in">Log In</string>
 	<string name="username">Username</string>
 	<string name="password">Password</string>
 	<string name="reader">Reader</string>

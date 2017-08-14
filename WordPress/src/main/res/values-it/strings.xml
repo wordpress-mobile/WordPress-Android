@@ -158,14 +158,11 @@ Language: it
 	<string name="error_fetch_site_after_creation">Il sito è stato creato. Potresti aver bisogno di aggiornare i tuoi siti nel relativo selezionatore.</string>
 	<string name="error_upload_params">Errore durante il caricamento di %1$s: %2$s</string>
 	<string name="submit_for_review">Invia</string>
-	<string name="role_subscriber">Sottoscrittore </string>
 	<string name="tell_me_more">Dimmi di più</string>
 	<string name="duplicate_site_detected">È stato rilevato un sito duplicato.</string>
 	<string name="cannot_add_duplicate_site">Il sito esiste già nell\'app, non lo puoi aggiungere.</string>
 	<string name="already_logged_in_wpcom_same_username">Sei già connesso al tuo account WordPress.com. Il tuo sito dovrebbe apparire nel menu dei siti, assicurati che non sia nascosto.</string>
 	<string name="already_logged_in_wpcom">Sei già connesso a un account WordPress.com, non puoi aggiungere un sito WordPress.com legato a un altro account.</string>
-	<string name="migration_error_not_connected">Il processo di migrazione non è andato a buon fine: assicurati di essere connesso a una rete prima di provare a lanciare l\'app.</string>
-	<string name="migration_message">Aggiornamento dell\'app di WordPress in corso...</string>
 	<string name="checking_username">Controllo del nome utente in corso</string>
 	<string name="jetpack_different_com_account">I siti Jetpack che appartengono a diversi account WordPress.com non sono supportati</string>
 	<string name="jetpack_use_com_account">Per aggiungere il tuo sito Jetpack, accedi all\'account WordPress.com che hai usato per connettere Jetpack.</string>
@@ -243,10 +240,6 @@ Language: it
 	<string name="timespan_now">adesso</string>
 	<string name="role_viewer">Visitatore</string>
 	<string name="role_follower">Follower</string>
-	<string name="role_contributor">Collaboratore</string>
-	<string name="role_author">Autore</string>
-	<string name="role_editor">Editore</string>
-	<string name="role_admin">Amministratore</string>
 	<string name="error_post_my_profile_no_connection">Nessuna connessione, non è stato possibile salvare il tuo profilo</string>
 	<string name="alignment_right">A destra</string>
 	<string name="alignment_left">A sinistra</string>
@@ -1234,6 +1227,7 @@ Language: it
 	<string name="publish_date">Pubblica</string>
 	<string name="post_content">Contenuto (tocca per aggiungere testo e file multimediali)</string>
 	<string name="incorrect_credentials">Nome utente o password errati</string>
+	<string name="log_in">Accedi</string>
 	<string name="username">Nome utente</string>
 	<string name="password">Password</string>
 	<string name="reader">Lettore</string>
