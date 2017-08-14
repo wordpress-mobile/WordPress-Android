@@ -9,8 +9,10 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PluginAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginInfoClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.util.AppLog;
@@ -36,6 +38,19 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class FetchedPluginInfoPayload extends Payload {
+        public PluginInfoModel pluginInfo;
+        public FetchPluginInfoError error;
+
+        public FetchedPluginInfoPayload(FetchPluginInfoError error) {
+            this.error = error;
+        }
+
+        public FetchedPluginInfoPayload(PluginInfoModel pluginInfo) {
+            this.pluginInfo = pluginInfo;
+        }
+    }
+
     public static class FetchPluginsError implements OnChangedError {
         public FetchPluginsErrorType type;
         public String message;
@@ -49,10 +64,22 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class FetchPluginInfoError implements OnChangedError {
+        public FetchPluginInfoErrorType type;
+
+        public FetchPluginInfoError(FetchPluginInfoErrorType type) {
+            this.type = type;
+        }
+    }
+
     public enum FetchPluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
         NOT_AVAILABLE // Return for non-jetpack sites
+    }
+
+    public enum FetchPluginInfoErrorType {
+        GENERIC_ERROR
     }
 
     public static class OnPluginsChanged extends OnChanged<FetchPluginsError> {
@@ -62,12 +89,18 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class OnPluginInfoChanged extends OnChanged<FetchPluginInfoError> {
+        public PluginInfoModel pluginInfo;
+    }
+
     private final PluginRestClient mPluginRestClient;
+    private final PluginInfoClient mPluginInfoClient;
 
     @Inject
-    public PluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient) {
+    public PluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient, PluginInfoClient pluginInfoClient) {
         super(dispatcher);
         mPluginRestClient = pluginRestClient;
+        mPluginInfoClient = pluginInfoClient;
     }
 
     @Override
@@ -86,14 +119,24 @@ public class PluginStore extends Store {
             case FETCH_PLUGINS:
                 fetchPlugins((SiteModel) action.getPayload());
                 break;
+            case FETCH_PLUGIN_INFO:
+                fetchPluginInfo((String) action.getPayload());
+                break;
             case FETCHED_PLUGINS:
                 fetchedPlugins((FetchedPluginsPayload) action.getPayload());
+                break;
+            case FETCHED_PLUGIN_INFO:
+                fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
                 break;
         }
     }
 
     public List<PluginModel> getPlugins(SiteModel site) {
         return PluginSqlUtils.getPlugins(site);
+    }
+
+    public PluginInfoModel getPluginInfoBySlug(String slug) {
+        return PluginSqlUtils.getPluginInfoBySlug(slug);
     }
 
     private void fetchPlugins(SiteModel site) {
@@ -106,12 +149,27 @@ public class PluginStore extends Store {
         }
     }
 
+    private void fetchPluginInfo(String plugin) {
+        mPluginInfoClient.fetchPluginInfo(plugin);
+    }
+
     private void fetchedPlugins(FetchedPluginsPayload payload) {
         OnPluginsChanged event = new OnPluginsChanged(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
             PluginSqlUtils.insertOrReplacePlugins(payload.site, payload.plugins);
+        }
+        emitChange(event);
+    }
+
+    private void fetchedPluginInfo(FetchedPluginInfoPayload payload) {
+        OnPluginInfoChanged event = new OnPluginInfoChanged();
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            event.pluginInfo = payload.pluginInfo;
+            PluginSqlUtils.insertOrUpdatePluginInfo(payload.pluginInfo);
         }
         emitChange(event);
     }
