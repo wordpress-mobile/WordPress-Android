@@ -430,11 +430,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
      * update just the passed media item - if it doesn't exist it may be because
      * it was just added, so reload the adapter
      */
-    void updateMediaItem(@NonNull MediaModel media) {
+    void updateMediaItem(@NonNull MediaModel media, boolean forceUpdate) {
         if (!isAdded() || !hasAdapter()) return;
 
         if (getAdapter().mediaExists(media)) {
-            getAdapter().updateMediaItem(media);
+            getAdapter().updateMediaItem(media, forceUpdate);
         } else {
             reload();
         }

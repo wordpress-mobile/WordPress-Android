@@ -578,9 +578,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return "";
     }
 
-    void updateMediaItem(@NonNull MediaModel media) {
+    void updateMediaItem(@NonNull MediaModel media, boolean forceUpdate) {
         int index = indexOfMedia(media);
-        if (index > -1 && !media.equals(mMediaList.get(index))) {
+        if (index > -1 && (forceUpdate || !media.equals(mMediaList.get(index)))) {
             mMediaList.set(index, media);
             notifyItemChanged(index);
         }

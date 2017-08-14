@@ -619,7 +619,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         if (event.mediaList != null && event.mediaList.size() == 1) {
-            updateMediaGridItem(event.mediaList.get(0));
+            updateMediaGridItem(event.mediaList.get(0), true);
         } else {
             reloadMediaGrid();
         }
@@ -646,7 +646,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         if (event.media != null) {
-            updateMediaGridItem(event.media);
+            updateMediaGridItem(event.media, event.isError());
         } else {
             reloadMediaGrid();
         }
@@ -953,7 +953,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         addMediaToUploadService(media);
 
-        updateMediaGridItem(media);
+        updateMediaGridItem(media, false);
     }
 
     private void handleSharedMedia() {
@@ -1000,10 +1000,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void updateMediaGridItem(@NonNull MediaModel media) {
+    private void updateMediaGridItem(@NonNull MediaModel media, boolean forceUpdate) {
         if (mMediaGridFragment != null) {
             if (mMediaStore.getMediaWithLocalId(media.getId()) != null) {
-                mMediaGridFragment.updateMediaItem(media);
+                mMediaGridFragment.updateMediaItem(media, forceUpdate);
             } else {
                 mMediaGridFragment.removeMediaItem(media);
             }
