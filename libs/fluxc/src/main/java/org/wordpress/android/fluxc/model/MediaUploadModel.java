@@ -1,6 +1,8 @@
 package org.wordpress.android.fluxc.model;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
@@ -87,11 +89,20 @@ public class MediaUploadModel extends Payload implements Identifiable, Serializa
         mErrorMessage = errorMessage;
     }
 
-    public MediaError getMediaError() {
+    public @Nullable MediaError getMediaError() {
+        if (TextUtils.isEmpty(getErrorType())) {
+            return null;
+        }
         return new MediaError(MediaErrorType.fromString(getErrorType()), getErrorMessage());
     }
 
-    public void setMediaError(MediaError mediaError) {
+    public void setMediaError(@Nullable MediaError mediaError) {
+        if (mediaError == null) {
+            setErrorType(null);
+            setErrorMessage(null);
+            return;
+        }
+
         setErrorType(mediaError.type.toString());
         setErrorMessage(mediaError.message);
     }
