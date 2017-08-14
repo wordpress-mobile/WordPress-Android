@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -43,6 +44,7 @@ import javax.inject.Inject;
 public class PluginListActivity extends AppCompatActivity {
     private SiteModel mSite;
     private PluginListAdapter mAdapter;
+    private ProgressBar mProgressBar;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -79,6 +81,9 @@ public class PluginListActivity extends AppCompatActivity {
         mDispatcher.dispatch(PluginActionBuilder.newFetchPluginsAction(mSite));
 
         setupViews();
+        if (mPluginStore.getPlugins(mSite).size() == 0) {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -106,6 +111,8 @@ public class PluginListActivity extends AppCompatActivity {
         mAdapter = new PluginListAdapter(this);
         recyclerView.setAdapter(mAdapter);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.plugin_progress_bar);
+
         refreshPluginList();
     }
 
@@ -116,6 +123,7 @@ public class PluginListActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginsChanged(OnPluginsChanged event) {
+        mProgressBar.setVisibility(View.GONE);
         if (event.isError()) {
             ToastUtils.showToast(this, "An error occurred while fetching the plugins: " + event.error.message);
             return;
