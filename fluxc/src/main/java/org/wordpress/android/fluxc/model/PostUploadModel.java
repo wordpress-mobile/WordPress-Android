@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.model;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.yarolegovich.wellsql.core.Identifiable;
@@ -104,11 +105,20 @@ public class PostUploadModel extends Payload implements Identifiable, Serializab
         mErrorMessage = errorMessage;
     }
 
-    public PostError getPostError() {
+    public @Nullable PostError getPostError() {
+        if (TextUtils.isEmpty(getErrorType())) {
+            return null;
+        }
         return new PostError(PostErrorType.fromString(getErrorType()), getErrorMessage());
     }
 
-    public void setPostError(PostError postError) {
+    public void setPostError(@Nullable PostError postError) {
+        if (postError == null) {
+            setErrorType(null);
+            setErrorMessage(null);
+            return;
+        }
+
         setErrorType(postError.type.toString());
         setErrorMessage(postError.message);
     }
