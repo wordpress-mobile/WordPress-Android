@@ -28,6 +28,7 @@ import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
+import org.wordpress.android.ui.accounts.login.LoginThirdPartyAuthenticationFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -262,6 +263,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void loginViaThirdParty() {
+        LoginThirdPartyAuthenticationFragment loginloginThirdPartyAuthenticationFragment = new LoginThirdPartyAuthenticationFragment();
+        slideInFragment(loginloginThirdPartyAuthenticationFragment, true, LoginThirdPartyAuthenticationFragment.TAG);
     }
 
     @Override
