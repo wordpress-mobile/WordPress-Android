@@ -22,13 +22,6 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment {
 
     public static final String TAG = "login_third_party_authentication_fragment_tag";
 
-    public static LoginThirdPartyAuthenticationFragment newInstance(String email) {
-        LoginThirdPartyAuthenticationFragment fragment = new LoginThirdPartyAuthenticationFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
