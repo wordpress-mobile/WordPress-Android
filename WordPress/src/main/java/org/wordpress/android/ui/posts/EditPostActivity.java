@@ -444,12 +444,13 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void updateUploadServiceErrorForPost(String postContent) {
         if (AztecEditorFragment.hasMediaItemsMarkedFailed(this, postContent)) {
+            // TODO This should be unnecessary if we correctly mirror media errors in the UploadStore
+            // If the error came through a OnMediaUploaded event, the UploadStore should be updated already
+            // If we manually flagged the media as errored (e.g. on app restart), we should reflect that new state
+            // in the background in FluxC
             UploadService.markPostAsError(mPost);
-        } else {
-            UploadService.removeUploadErrorForPost(mPost);
         }
     }
-
 
     private Runnable mAutoSave = new Runnable() {
         @Override

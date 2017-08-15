@@ -38,6 +38,8 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.UploadStore;
+import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -107,6 +109,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Inject Dispatcher mDispatcher;
     @Inject protected PostStore mPostStore;
     @Inject protected MediaStore mMediaStore;
+    @Inject protected UploadStore mUploadStore;
 
     public PostsListAdapter(Context context, @NonNull SiteModel site, boolean isPage) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -205,7 +208,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         // TODO remove the hasMediaErrorForPost(post) check when we get a proper retry mechanism in place,
         // that retried to upload any failed media along with the post
         return post != null && !UploadService.isPostUploadingOrQueued(post) &&
-                !UploadService.hasMediaErrorForPost(post) &&
+                !UploadService.hasMediaErrorForPost(post, mUploadStore) &&
                 (post.isLocallyChanged() || post.isLocalDraft() || PostStatus.fromPost(post) == PostStatus.DRAFT);
     }
 
@@ -438,7 +441,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             int statusColorResId = R.color.grey_darken_10;
             String errorMessage = null;
 
-            UploadService.UploadError reason = UploadService.getUploadErrorForPost(post);
+            UploadError reason = UploadService.getUploadErrorForPost(post, mUploadStore);
             if (reason != null) {
                 if (reason.mediaError != null) {
                     errorMessage = context.getString(post.isPage() ? R.string.error_media_recover_page
@@ -524,7 +527,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
 
-        if (UploadService.getUploadErrorForPost(post) != null) {
+        if (UploadService.getUploadErrorForPost(post, mUploadStore) != null) {
             holder.btnPublish.setButtonType(PostListButton.BUTTON_RETRY);
         } else {
             if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {

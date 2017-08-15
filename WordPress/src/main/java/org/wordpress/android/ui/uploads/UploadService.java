@@ -19,12 +19,15 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaError;
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
+import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -37,7 +40,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
@@ -57,28 +59,11 @@ public class UploadService extends Service {
     // Posts that we're withholding from the PostUploadManager until their pending media uploads are completed
     private static final List<UploadingPost> sPostsWithPendingMedia = new ArrayList<>();
 
-    // TODO This should be moved to FluxC, perhaps in a new UploadMediaTable
-    // This will hold a map of postID and the corresponding last error if any error occurred while uploading
-    private static final ConcurrentHashMap<Integer, UploadError> sFailedUploadPosts = new ConcurrentHashMap<>();
-
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
     @Inject UploadStore mUploadStore;
-
-    public static class UploadError {
-        public PostStore.PostError postError;
-        public MediaStore.MediaError mediaError;
-
-        UploadError(PostStore.PostError postError) {
-            this.postError = postError;
-        }
-
-        UploadError(MediaStore.MediaError mediaError) {
-            this.mediaError = mediaError;
-        }
-    }
 
     private class UploadingPost {
         PostModel postModel;
@@ -204,11 +189,7 @@ public class UploadService extends Service {
                 mPostUploadHandler.registerPostForAnalyticsTracking(post);
             }
 
-            // as user wants to upload this post, remove any failed reasons as it goes to the queue
-            if (removeUploadErrorForPost(post)) {
-                // also delete any error notifications still there
-                mPostUploadNotifier.cancelErrorNotification(post);
-            }
+            mPostUploadNotifier.cancelErrorNotification(post);
 
             if (!hasPendingOrInProgressMediaUploadsForPost(post)) {
                 mPostUploadHandler.upload(post);
@@ -374,9 +355,9 @@ public class UploadService extends Service {
 
     public static void markPostAsError(PostModel post) {
         // now keep track of the error reason so it can be queried
-        MediaStore.MediaError error = new MediaStore.MediaError(MediaStore.MediaErrorType.GENERIC_ERROR);
-        UploadError reason = new UploadError(error);
-        addUploadErrorToFailedPosts(post, reason);
+        UploadError reason = new UploadError(new MediaError(MediaErrorType.GENERIC_ERROR));
+        // TODO
+//        addUploadErrorToFailedPosts(post, reason);
     }
 
     public static boolean hasInProgressMediaUploadsForPost(PostModel postModel) {
@@ -391,9 +372,13 @@ public class UploadService extends Service {
         return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel);
     }
 
-    public static boolean hasMediaErrorForPost(PostModel post) {
-        UploadError error  = getUploadErrorForPost(post);
+    public static boolean hasMediaErrorForPost(PostModel post, UploadStore uploadStore) {
+        UploadError error  = getUploadErrorForPost(post, uploadStore);
         return error != null && error.mediaError != null;
+    }
+
+    public static UploadError getUploadErrorForPost(PostModel post, UploadStore uploadStore) {
+        return uploadStore.getUploadErrorForPost(post);
     }
 
     public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel post){
@@ -589,18 +574,6 @@ public class UploadService extends Service {
         return null;
     }
 
-    private static void addUploadErrorToFailedPosts(PostModel post, UploadError reason) {
-        sFailedUploadPosts.put(post.getId(), reason);
-    }
-
-    public static boolean removeUploadErrorForPost(PostModel post) {
-        return (sFailedUploadPosts.remove(post.getId()) != null);
-    }
-
-    public static UploadError getUploadErrorForPost(PostModel post) {
-        return sFailedUploadPosts.get(post.getId());
-    }
-
     /**
      * Has lower priority than the UploadHandlers, which ensures that the handlers have already received and
      * processed this OnMediaUploaded event. This means we can safely rely on their internal state being up to date.
@@ -618,13 +591,6 @@ public class UploadService extends Service {
                         + event.error.type + ": " + event.error.message);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
                 cancelPostUploadMatchingMedia(event.media, errorMessage, true);
-
-                // now keep track of the error reason so it can be queried
-                UploadError reason = new UploadError(event.error);
-                PostModel failedPost = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
-                if (failedPost != null) {
-                    addUploadErrorToFailedPosts(failedPost, reason);
-                }
             }
             stopServiceIfUploadsComplete();
             return;
@@ -698,12 +664,6 @@ public class UploadService extends Service {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostUploaded(OnPostUploaded event) {
-        if (event.isError()) {
-            UploadError reason = new UploadError(event.error);
-            addUploadErrorToFailedPosts(event.post, reason);
-        } else {
-            removeUploadErrorForPost(event.post);
-        }
         stopServiceIfUploadsComplete();
     }
 }
