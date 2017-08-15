@@ -350,6 +350,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
+    public void helpThirdParty(String email) {
+        launchHelpshift(null, email, false, Tag.ORIGIN_LOGIN_THIRD_PARTY);
+    }
+
+    @Override
     public void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds) {
         loggedInAndFinish(oldSitesIds);
     }
