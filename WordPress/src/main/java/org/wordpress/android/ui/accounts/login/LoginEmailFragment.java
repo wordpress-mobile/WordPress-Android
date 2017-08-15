@@ -27,6 +27,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
@@ -85,6 +86,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         googleLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                WPActivityUtils.hideKeyboard(getActivity().getCurrentFocus());
                 mLoginListener.loginViaThirdParty();
             }
         });
