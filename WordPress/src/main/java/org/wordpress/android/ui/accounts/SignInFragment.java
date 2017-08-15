@@ -104,9 +104,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final Pattern TWO_STEP_AUTH_CODE = Pattern.compile("^[0-9]{6}");
     private static final Pattern WPCOM_DOMAIN = Pattern.compile("[a-z0-9]+\\.wordpress\\.com");
 
-    public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
-    public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
-
     private static final String XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION = "10";
     private static final String XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID = "102";
 
@@ -494,8 +491,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HelpActivity.class);
                 // Used to pass data to an eventual support service
-                intent.putExtra(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
-                intent.putExtra(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+                intent.putExtra(HelpshiftHelper.ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
+                intent.putExtra(HelpshiftHelper.ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
                 intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
                         (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
                 startActivity(intent);
@@ -1105,8 +1102,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // Put entered url and entered username args, that could help our support team
         Bundle bundle = nuxAlert.getArguments();
         bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
-        bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
-        bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+        bundle.putString(HelpshiftHelper.ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
+        bundle.putString(HelpshiftHelper.ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
         bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
                 (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
         nuxAlert.setArguments(bundle);

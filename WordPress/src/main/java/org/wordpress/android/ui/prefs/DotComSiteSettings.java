@@ -160,23 +160,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
                             // Local settings
                             boolean location = mSettings.location;
-                            boolean optimizedImage = mSettings.optimizedImage;
-                            int maxImageWidth = mSettings.maxImageWidth;
-                            int imageQualitySetting = mSettings.imageQualitySetting;
-                            boolean optimizedVideo = mSettings.optimizedVideo;
-                            int maxVideoWidth = mSettings.maxVideoWidth;
-                            int videoEncoderBitrate = mSettings.videoEncoderBitrate;
-
                             mSettings.copyFrom(mRemoteSettings);
-
                             mSettings.postFormats = currentPostFormats;
                             mSettings.location = location;
-                            mSettings.optimizedImage = optimizedImage;
-                            mSettings.maxImageWidth = maxImageWidth;
-                            mSettings.imageQualitySetting = imageQualitySetting;
-                            mSettings.optimizedVideo = optimizedVideo;
-                            mSettings.maxVideoWidth = maxVideoWidth;
-                            mSettings.videoEncoderBitrate = videoEncoderBitrate;
                             mJpSettings.jetpackProtectWhitelist.clear();
                             mJpSettings.jetpackProtectWhitelist.addAll(mRemoteJpSettings.jetpackProtectWhitelist);
 

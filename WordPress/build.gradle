@@ -35,16 +35,16 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-66"
-        versionCode 436
+        versionName "alpha-71"
+        versionCode 450
         minSdkVersion 16
         targetSdkVersion 25
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
-        buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "false"
         buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "false"
+        buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
     }
 
     productFlavors {
@@ -53,14 +53,12 @@ android {
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
-            buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "true"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
-            buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "true"
         }
     }
 
@@ -114,6 +112,8 @@ dependencies {
     compile 'org.wordpress:emailchecker2:1.1.0'
     compile 'com.squareup.okio:okio:1.13.0'
 
+    compile 'com.airbnb.android:lottie:2.0.0-rc2'
+
     compile ('com.yalantis:ucrop:2.2.0') {
         exclude group: 'com.squareup.okhttp3'
     }
@@ -137,7 +137,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3dc5db03892ad5cebd2f98911d8f99a00813b210') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:156b375bd13409f7fca092c39c7e35a9272022ff') {
         exclude group: "com.android.volley";
     }
 

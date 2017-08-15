@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_login" />
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/bottom_buttons">
+
+        <ViewStub
+            android:id="@+id/login_form_content_stub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:layout_marginBottom="@dimen/margin_extra_large"/>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/login_background_color"
+        android:paddingLeft="@dimen/margin_small_medium"
+        android:paddingStart="@dimen/margin_small_medium"
+        android:paddingRight="@dimen/margin_medium_large"
+        android:paddingEnd="@dimen/margin_medium_large"
+        android:paddingTop="@dimen/margin_medium_large"
+        android:paddingBottom="@dimen/margin_medium_large"
+        android:layout_alignParentBottom="true"
+        android:clipToPadding="false">
+
+        <android.support.v7.widget.AppCompatButton
+            style="@style/WordPress.Button.Secondary"
+            android:id="@+id/secondary_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/primary_button"
+            android:layout_toStartOf="@+id/primary_button"
+            android:paddingLeft="@dimen/margin_medium_large"
+            android:paddingStart="@dimen/margin_medium_large"
+            android:paddingRight="@dimen/margin_medium_large"
+            android:paddingEnd="@dimen/margin_medium_large"
+            android:layout_marginRight="@dimen/margin_extra_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:gravity="start|center_vertical"
+            tools:text="Secondary action"/>
+
+        <android.support.v7.widget.AppCompatButton
+            style="@style/WordPress.Button.Primary"
+            android:id="@+id/primary_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/next" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -60,7 +60,7 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
     }
 
     @Override
-    public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
+    public void onMediaUploadCancelClicked(String mediaId) {
 
     }
 

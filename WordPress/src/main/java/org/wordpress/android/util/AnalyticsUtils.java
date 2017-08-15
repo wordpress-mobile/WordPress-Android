@@ -360,4 +360,14 @@ public class AnalyticsUtils {
 
         return  properties;
     }
+
+    public static void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin) {
+        AnalyticsUtils.refreshMetadata(accountStore, siteStore);
+        Map<String, Boolean> properties = new HashMap<>();
+        properties.put("dotcom_user", isWpcomLogin);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
+        if (!isWpcomLogin) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
+        }
+    }
 }

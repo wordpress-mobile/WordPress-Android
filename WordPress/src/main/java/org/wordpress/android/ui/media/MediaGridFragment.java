@@ -44,6 +44,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -212,7 +213,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mRecycler.setAdapter(getAdapter());
 
         // disable thumbnail loading during a fling to conserve memory
-        final int minDistance = WordPressMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
+        final int minDistance = WPMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
         mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
             @Override
             public boolean onFling(int velocityX, int velocityY) {
@@ -267,7 +268,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private MediaGridAdapter getAdapter() {
         if (!hasAdapter()) {
             boolean canMultiSelect = mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
-                    && WordPressMediaUtils.currentUserCanDeleteMedia(mSite);
+                    && WPMediaUtils.currentUserCanDeleteMedia(mSite);
             mGridAdapter = new MediaGridAdapter(getActivity(), mSite);
             mGridAdapter.setCallback(this);
             mGridAdapter.setAllowMultiselect(canMultiSelect);
