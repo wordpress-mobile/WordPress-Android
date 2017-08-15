@@ -902,6 +902,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (!NetworkUtils.isNetworkAvailable(this)) {
             AppLog.v(AppLog.T.MEDIA, "Unable to start UploadService, internet connection required.");
             ToastUtils.showToast(this, R.string.no_network_message, ToastUtils.Duration.SHORT);
+            return;
         }
 
         ArrayList<MediaModel> mediaList = new ArrayList<>();
