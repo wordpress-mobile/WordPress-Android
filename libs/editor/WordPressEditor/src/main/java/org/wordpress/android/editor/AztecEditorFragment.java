@@ -60,6 +60,10 @@ import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.Html;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.ITextFormat;
+import org.wordpress.aztec.plugins.shortcodes.AudioShortcodePlugin;
+import org.wordpress.aztec.plugins.shortcodes.CaptionShortcodePlugin;
+import org.wordpress.aztec.plugins.shortcodes.VideoShortcodePlugin;
+import org.wordpress.aztec.plugins.shortcodes.handlers.CaptionHandler;
 import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
@@ -67,6 +71,7 @@ import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.spans.AztecMediaSpan;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
+import org.wordpress.aztec.watchers.BlockElementWatcher;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -218,7 +223,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .setOnVideoTappedListener(this)
                 .setOnMediaDeletedListener(this)
                 .addPlugin(new WordPressCommentsPlugin(content))
-                .addPlugin(new MoreToolbarButton(content));
+                .addPlugin(new MoreToolbarButton(content))
+                .addPlugin(new CaptionShortcodePlugin())
+                .addPlugin(new VideoShortcodePlugin())
+                .addPlugin(new AudioShortcodePlugin());
+
+        new BlockElementWatcher(content)
+                .add(new CaptionHandler())
+                .install(content);
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
