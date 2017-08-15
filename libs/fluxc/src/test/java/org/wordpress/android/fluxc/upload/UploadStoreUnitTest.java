@@ -99,6 +99,7 @@ public class UploadStoreUnitTest {
         assertTrue(postUploadModel.getAssociatedMediaIdSet().contains(5));
         assertTrue(postUploadModel.getAssociatedMediaIdSet().contains(6));
         assertEquals(PostUploadModel.PENDING, postUploadModel.getUploadState());
+        assertTrue(mUploadStore.isPendingPost(postModel));
 
         // Register the same post again with media changes
         MediaModel media3 = UploadTestUtils.getLocalTestMedia();
@@ -117,6 +118,7 @@ public class UploadStoreUnitTest {
         assertTrue(postUploadModel.getAssociatedMediaIdSet().contains(6));
         assertTrue(postUploadModel.getAssociatedMediaIdSet().contains(8));
         assertEquals(PostUploadModel.PENDING, postUploadModel.getUploadState());
+        assertTrue(mUploadStore.isPendingPost(postModel));
     }
 
     @Test
