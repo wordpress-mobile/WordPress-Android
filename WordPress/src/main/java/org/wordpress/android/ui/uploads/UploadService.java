@@ -14,6 +14,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -23,6 +24,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
+import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -55,18 +57,9 @@ public class UploadService extends Service {
     // Posts that we're withholding from the PostUploadManager until their pending media uploads are completed
     private static final List<UploadingPost> sPostsWithPendingMedia = new ArrayList<>();
 
-    // To avoid conflicts by editing the post each time a single upload completes, this map tracks completed media by
-    // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
-    private static final ConcurrentHashMap<Integer, List<MediaModel>> sCompletedMediaByPost = new ConcurrentHashMap<>();
-
     // TODO This should be moved to FluxC, perhaps in a new UploadMediaTable
     // This will hold a map of postID and the corresponding last error if any error occurred while uploading
     private static final ConcurrentHashMap<Integer, UploadError> sFailedUploadPosts = new ConcurrentHashMap<>();
-
-    // TODO this should be moved to FluxC, see comment above
-    // similar to the above map, this one tracks media failed for a post
-    private static final ConcurrentHashMap<Integer, List<MediaModel>> sFailedMediaByPost = new ConcurrentHashMap<>();
-
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -350,39 +343,31 @@ public class UploadService extends Service {
     }
 
     public static PostModel updatePostWithCurrentlyCompletedUploads(PostModel post) {
-        // now get the list of completed media for this post, so we can make post content
-        // updates in one go and save only once
-        if (post != null) {
-            synchronized (sCompletedMediaByPost) {
-                List<MediaModel> mediaList = sCompletedMediaByPost.get(post.getId());
-                if (mediaList != null && !mediaList.isEmpty()) {
-                    MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
-                    for (MediaModel media : mediaList) {
-                        post = updatePostWithMediaUrl(post, media, processor);
-                    }
-                    // finally remove all completed uploads for this post, as they've been taken care of
-                    sCompletedMediaByPost.remove(post.getId());
-                }
+        if (post != null && sInstance != null) {
+            // now get the list of completed media for this post, so we can make post content
+            // updates in one go and save only once
+            MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
+            Set<MediaModel> completedMedia = sInstance.mUploadStore.getCompletedMediaForPost(post);
+            for (MediaModel media : completedMedia) {
+                post = updatePostWithMediaUrl(post, media, processor);
             }
+            // finally remove all completed uploads for this post, as they've been taken care of
+            ClearMediaPayload clearMediaPayload = new ClearMediaPayload(post, completedMedia);
+            sInstance.mDispatcher.dispatch(UploadActionBuilder.newClearMediaAction(clearMediaPayload));
         }
         return post;
     }
 
     public static PostModel updatePostWithCurrentlyFailedUploads(PostModel post) {
-        // now get the list of failed media for this post, so we can make post content
-        // updates in one go and save only once
-        if (post != null) {
-            synchronized (sFailedMediaByPost) {
-                List<MediaModel> mediaList = sFailedMediaByPost.get(post.getId());
-                if (mediaList != null && !mediaList.isEmpty()) {
-                    MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
-                    for (MediaModel media : mediaList) {
-                        post = updatePostWithFailedMedia(post, media, processor);
-                    }
-                    // finally remove all failed uploads for this post, as they've been taken care of
-                    sFailedMediaByPost.remove(post.getId());
-                }
+        if (post != null && sInstance != null) {
+            // now get the list of failed media for this post, so we can make post content
+            // updates in one go and save only once
+            MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
+            Set<MediaModel> failedMedia = sInstance.mUploadStore.getFailedMediaForPost(post);
+            for (MediaModel media : failedMedia) {
+                post = updatePostWithFailedMedia(post, media, processor);
             }
+            // Unlike completed media, we won't remove the failed media references, so we can look up their errors later
         }
         return post;
     }
@@ -496,32 +481,6 @@ public class UploadService extends Service {
         mPostUploadNotifier.showForegroundNotificationForPost(post, getString(R.string.uploading_post_media));
     }
 
-    // this keeps a map for all completed media for each post, so we can process the post easily
-    // in one go later
-    private void addMediaToPostCompletedMediaListMap(MediaModel media) {
-        synchronized (sCompletedMediaByPost) {
-            List<MediaModel> mediaListForPost = sCompletedMediaByPost.get(media.getLocalPostId());
-            if (mediaListForPost == null) {
-                mediaListForPost = new ArrayList<>();
-            }
-            mediaListForPost.add(media);
-            sCompletedMediaByPost.put(media.getLocalPostId(), mediaListForPost);
-        }
-    }
-
-    // this keeps a map for all failed media for each post, so we can process the post easily
-    // in one go later
-    private static void addMediaToPostFailedMediaListMap(MediaModel media) {
-        synchronized (sFailedMediaByPost) {
-            List<MediaModel> mediaListForPost = sFailedMediaByPost.get(media.getLocalPostId());
-            if (mediaListForPost == null) {
-                mediaListForPost = new ArrayList<>();
-            }
-            mediaListForPost.add(media);
-            sFailedMediaByPost.put(media.getLocalPostId(), mediaListForPost);
-        }
-    }
-
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
                                                                  MediaUploadReadyListener processor) {
         if (media != null && post != null && processor != null) {
@@ -582,25 +541,17 @@ public class UploadService extends Service {
     }
 
     private void updatePostModelWithCompletedAndFailedUploads(){
-        if (!sCompletedMediaByPost.isEmpty() || !sFailedMediaByPost.isEmpty()) {
-            List<Integer> postIdList = new ArrayList<>();
-            postIdList.addAll(sCompletedMediaByPost.keySet());
-            postIdList.addAll(sFailedMediaByPost.keySet());
-
-            for (Integer postId : postIdList) {
-                // For each post with completed media uploads, update the content with the new remote URLs
-                // This is done in a batch when all media is complete to prevent conflicts by updating separate images
-                // at a time simultaneously for the same post
-                PostModel post  = mPostStore.getPostByLocalPostId(postId);
-                if (post != null) {
-                    PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(post);
-                    // also do the same now with failed uploads
-                    updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
-                    // finally, save the PostModel
-                    if (updatedPost != null) {
-                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
-                    }
-                }
+        List<PostModel> uploadingPosts = mUploadStore.getPendingPosts();
+        for (PostModel postModel : uploadingPosts) {
+            // For each post with completed media uploads, update the content with the new remote URLs
+            // This is done in a batch when all media is complete to prevent conflicts by updating separate images
+            // at a time simultaneously for the same post
+            PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(postModel);
+            // also do the same now with failed uploads
+            updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
+            // finally, save the PostModel
+            if (updatedPost != null) {
+                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
             }
         }
     }
@@ -665,7 +616,6 @@ public class UploadService extends Service {
             if (event.media.getLocalPostId() > 0) {
                 AppLog.w(T.MAIN, "UploadService > Media upload failed for post " + event.media.getLocalPostId() + " : "
                         + event.error.type + ": " + event.error.message);
-                addMediaToPostFailedMediaListMap(event.media);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
                 cancelPostUploadMatchingMedia(event.media, errorMessage, true);
 
@@ -704,8 +654,6 @@ public class UploadService extends Service {
             if (event.media.getLocalPostId() != 0) {
                 AppLog.i(T.MAIN, "UploadService > Processing completed media with id " + event.media.getId()
                         + " and local post id " + event.media.getLocalPostId());
-                addMediaToPostCompletedMediaListMap(event.media);
-
                 // If this was the last media upload a pending post was waiting for, send it to the PostUploadManager
                 synchronized (sPostsWithPendingMedia) {
                     Iterator<UploadingPost> iterator = sPostsWithPendingMedia.iterator();
