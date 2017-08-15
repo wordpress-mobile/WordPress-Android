@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -71,6 +72,7 @@ public class MySiteFragment extends Fragment
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private RelativeLayout mPeopleView;
+    private RelativeLayout mPluginsView;
     private RelativeLayout mPageView;
     private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
@@ -153,6 +155,7 @@ public class MySiteFragment extends Fragment
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
         mPeopleView = (RelativeLayout) rootView.findViewById(R.id.row_people);
+        mPluginsView = (RelativeLayout) rootView.findViewById(R.id.row_plugins);
         mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
@@ -256,6 +259,13 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogPeople(getActivity(), getSelectedSite());
+            }
+        });
+
+        mPluginsView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityLauncher.viewCurrentBlogPlugins(getActivity(), getSelectedSite());
             }
         });
 
@@ -412,6 +422,8 @@ public class MySiteFragment extends Fragment
         boolean isAdminOrSelfHosted = site.getHasCapabilityManageOptions() || !SiteUtils.isAccessedViaWPComRest(site);
         mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
         mPeopleView.setVisibility(site.getHasCapabilityListUsers() ? View.VISIBLE : View.GONE);
+
+        mPluginsView.setVisibility(site.isUsingWpComRestApi() && site.isJetpackConnected() ? View.VISIBLE : View.GONE);
 
         // if either people or settings is visible, configuration header should be visible
         int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
