@@ -9,43 +9,57 @@
         layout="@layout/toolbar_login" >
     </include>
 
-    <ImageView
-        android:id="@+id/image"
-        android:contentDescription="@string/login_third_party_description"
+    <ScrollView
         android:layout_below="@+id/toolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_height="@dimen/third_party_authentication_illustration_height_portrait"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginLeft="@dimen/margin_extra_large"
-        android:layout_marginRight="@dimen/margin_extra_large"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_width="@dimen/third_party_authentication_illustration_width_portrait"
-        android:scaleType="fitEnd"
-        app:srcCompat="@drawable/img_illustration_check_page_400dp" >
-    </ImageView>
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" >
 
-    <TextView
-        android:id="@+id/label"
-        android:gravity="center"
-        android:layout_below="@+id/image"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:padding="@dimen/margin_extra_large"
-        android:text="@string/login_third_party_label"
-        style="@style/Base.TextAppearance.AppCompat.Body1" >
-    </TextView>
+        <RelativeLayout
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" >
 
-    <Button
-        android:id="@+id/login_google_try_again"
-        android:layout_below="@+id/label"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_width="wrap_content"
-        android:text="@string/login_third_party_button"
-        android:theme="@style/LoginTheme.Button"
-        style="@style/Widget.AppCompat.Button.Colored" >
-    </Button>
+            <ImageView
+                android:id="@+id/image"
+                android:contentDescription="@string/login_third_party_description"
+                android:layout_centerHorizontal="true"
+                android:layout_height="@dimen/third_party_authentication_illustration_height"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginRight="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_width="@dimen/third_party_authentication_illustration_width"
+                android:scaleType="fitEnd"
+                app:srcCompat="@drawable/img_illustration_check_page_400dp" >
+            </ImageView>
+
+            <TextView
+                android:id="@+id/label"
+                android:gravity="center"
+                android:layout_below="@+id/image"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:padding="@dimen/margin_extra_large"
+                android:text="@string/login_third_party_label"
+                style="@style/LoginTheme.Subhead" >
+            </TextView>
+
+            <Button
+                android:id="@+id/login_google_try_again"
+                android:layout_below="@+id/label"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_width="wrap_content"
+                android:text="@string/login_third_party_button"
+                android:theme="@style/LoginTheme.Button"
+                style="@style/LoginTheme.Button" >
+            </Button>
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>
