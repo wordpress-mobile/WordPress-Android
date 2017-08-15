@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -36,14 +37,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     private static final List<MediaModel> sPendingUploads = new ArrayList<>();
     private static final List<MediaModel> sInProgressUploads = new ArrayList<>();
 
-    // TODO This should be moved to FluxC, perhaps in a new UploadMediaTable
-    private static final ConcurrentHashMap<Integer, Float> sUploadProgressByMediaId = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<Integer, Float> sOptimizationProgressByMediaId = new ConcurrentHashMap<>();
 
-    @Inject
-    Dispatcher mDispatcher;
-    @Inject
-    SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
+    @Inject SiteStore mSiteStore;
 
     MediaUploadHandler() {
         ((WordPress) WordPress.getContext()).component().inject(this);
@@ -53,7 +50,6 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     }
 
     void unregister() {
-        sUploadProgressByMediaId.clear();
         sOptimizationProgressByMediaId.clear();
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
@@ -160,13 +156,14 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return false;
     }
 
+    // TODO Update to avoid the UploadStore dependency, either passing in the raw progress or moving this logic to
+    // the UploadService and only returning the optimizationProgress from here
     /**
      * Returns the last recorded progress value for the given {@param media}. If there is no record for that media,
      * it's assumed to be a completed upload.
      */
-    static float getProgressForMedia(MediaModel media) {
-        Float progress = sUploadProgressByMediaId.get(media.getId());
-        float uploadProgress = progress == null ? 0 : progress;
+    static float getProgressForMedia(MediaModel media, UploadStore uploadStore) {
+        float uploadProgress = uploadStore.getUploadProgressForMedia(media);
 
         // if this is a video and video optimization is enabled, include the optimization progress in the outcome
         if (media.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
@@ -196,10 +193,6 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
             uploadNextInQueue();
         } else {
             AppLog.i(T.MEDIA, "MediaUploadHandler > " + event.media.getId() + " - progress: " + event.progress);
-            Float previousProgress = sUploadProgressByMediaId.get(event.media.getId());
-            if (previousProgress == null || previousProgress < event.progress) {
-                sUploadProgressByMediaId.put(event.media.getId(), event.progress);
-            }
         }
     }
 
@@ -234,7 +227,6 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         MediaModel media = getMediaFromInProgressQueueById(id);
         if (media != null) {
             sInProgressUploads.remove(media);
-            sUploadProgressByMediaId.put(media.getId(), 1F);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
         }
     }

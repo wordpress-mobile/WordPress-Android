@@ -416,21 +416,33 @@ public class UploadService extends Service {
     }
 
     public static float getMediaUploadProgressForPost(PostModel postModel) {
-        if (postModel == null) {
+        if (postModel == null || sInstance == null) {
+            // If the UploadService isn't running, there's no progress for this post
             return 0;
         }
 
-        for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
-            if (uploadingPost.postModel.getId() == postModel.getId()) {
-                return getOverallProgressForMediaList(uploadingPost.pendingMedia);
-            }
+        Set<MediaModel> pendingMediaList = sInstance.mUploadStore.getUploadingMediaForPost(postModel);
+
+        if (pendingMediaList.size() == 0) {
+            return 1;
         }
 
-        return 1;
+        float overallProgress = 0;
+        for (MediaModel pendingMedia : pendingMediaList) {
+            overallProgress += getUploadProgressForMedia(pendingMedia);
+        }
+        overallProgress /= pendingMediaList.size();
+
+        return overallProgress;
     }
 
     public static float getUploadProgressForMedia(MediaModel mediaModel) {
-        return MediaUploadHandler.getProgressForMedia(mediaModel);
+        if (mediaModel == null || sInstance == null) {
+            // If the UploadService isn't running, there's no progress for this media
+            return 0;
+        }
+
+        return MediaUploadHandler.getProgressForMedia(mediaModel, sInstance.mUploadStore);
     }
 
     public static @NonNull List<MediaModel> getPendingMediaForPost(PostModel postModel) {
@@ -636,20 +648,6 @@ public class UploadService extends Service {
 
     public static UploadError getUploadErrorForPost(PostModel post) {
         return sFailedUploadPosts.get(post.getId());
-    }
-
-    private static float getOverallProgressForMediaList(List<MediaModel> pendingMediaList) {
-        if (pendingMediaList.size() == 0) {
-            return 1;
-        }
-
-        float overallProgress = 0;
-        for (MediaModel pendingMedia : pendingMediaList) {
-            overallProgress += MediaUploadHandler.getProgressForMedia(pendingMedia);
-        }
-        overallProgress /= pendingMediaList.size();
-
-        return overallProgress;
     }
 
     /**
