@@ -208,6 +208,14 @@ public class UploadStore extends Store {
         return null;
     }
 
+    public float getUploadProgressForMedia(MediaModel mediaModel) {
+        MediaUploadModel mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(mediaModel.getId());
+        if (mediaUploadModel != null) {
+            return mediaUploadModel.getProgress();
+        }
+        return 0;
+    }
+
     private void handleUploadMedia(MediaPayload payload) {
         MediaUploadModel mediaUploadModel = new MediaUploadModel(payload.media.getId());
         String errorMessage = MediaUtils.getMediaValidationError(payload.media);
