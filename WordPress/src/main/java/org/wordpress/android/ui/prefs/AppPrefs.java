@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCrite
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,6 +92,14 @@ public class AppPrefs {
 
         // list of last time a notification has been created for a draft
         PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES,
+
+        // Optimize Image and Video settings
+        IMAGE_OPTIMIZE_ENABLED,
+        IMAGE_OPTIMIZE_WIDTH,
+        IMAGE_OPTIMIZE_QUALITY,
+        VIDEO_OPTIMIZE_ENABLED,
+        VIDEO_OPTIMIZE_WIDTH,
+        VIDEO_OPTIMIZE_QUALITY, // Encoder max bitrate
     }
 
     /**
@@ -111,6 +121,9 @@ public class AppPrefs {
 
         // When we need to show the new editor promo dialog
         AZTEC_EDITOR_PROMO_REQUIRED,
+
+        // When we need to show the async promo dialog
+        ASYNC_PROMO_REQUIRED,
 
         // When we need to show the new image optimize promo dialog
         IMAGE_OPTIMIZE_PROMO_REQUIRED,
@@ -143,7 +156,10 @@ public class AppPrefs {
         ASKED_PERMISSION_STORAGE_READ,
         ASKED_PERMISSION_CAMERA,
         ASKED_PERMISSION_LOCATION_COURSE,
-        ASKED_PERMISSION_LOCATION_FINE
+        ASKED_PERMISSION_LOCATION_FINE,
+
+        // wizard style login flow active
+        LOGIN_WIZARD_STYLE_ACTIVE
     }
 
     private static SharedPreferences prefs() {
@@ -395,6 +411,18 @@ public class AppPrefs {
         }
     }
 
+    // Wizard-style login flow
+    public static void setLoginWizardStyleActive(boolean loginWizardActive) {
+        setBoolean(UndeletablePrefKey.LOGIN_WIZARD_STYLE_ACTIVE, loginWizardActive);
+        if (loginWizardActive) {
+            AnalyticsTracker.track(Stat.LOGIN_WIZARD_STYLE_ACTIVATED);
+        }
+    }
+
+    public static boolean isLoginWizardStyleActivated() {
+        return BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE || getBoolean(UndeletablePrefKey.LOGIN_WIZARD_STYLE_ACTIVE, false);
+    }
+
     // Aztec Editor
     public static void setAztecEditorEnabled(boolean isEnabled) {
         setBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
@@ -442,6 +470,10 @@ public class AppPrefs {
        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, true);
    }
 
+    public static boolean isAsyncPromoRequired() {
+        return getBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, true);
+    }
+
     public static void setNewEditorBetaRequired(boolean required) {
         setBoolean(UndeletablePrefKey.AZTEC_EDITOR_BETA_REQUIRED, required);
     }
@@ -449,6 +481,10 @@ public class AppPrefs {
     public static void setNewEditorPromoRequired(boolean required) {
        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, required);
    }
+
+    public static void setAsyncPromoRequired(boolean required) {
+        setBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, required);
+    }
 
     public static boolean isImageOptimizePromoRequired() {
         return getBoolean(UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED, true);
@@ -546,6 +582,58 @@ public class AppPrefs {
         SharedPreferences.Editor editor = prefs().edit();
         editor.putLong(key, timestamp);
         editor.apply();
+    }
+
+    public static boolean isImageOptimize() {
+        return getBoolean(DeletablePrefKey.IMAGE_OPTIMIZE_ENABLED, false);
+    }
+
+    public static void setImageOptimize(boolean optimize) {
+        setBoolean(DeletablePrefKey.IMAGE_OPTIMIZE_ENABLED, optimize);
+    }
+
+    public static void setImageOptimizeWidth(int width) {
+        setInt(DeletablePrefKey.IMAGE_OPTIMIZE_WIDTH, width);
+    }
+
+    public static int getImageOptimizeWidth() {
+        int resizeWidth = getInt(DeletablePrefKey.IMAGE_OPTIMIZE_WIDTH, 0);
+        return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_IMAGE_MAX_WIDTH : resizeWidth;
+    }
+
+    public static void setImageOptimizeQuality(int quality) {
+        setInt(DeletablePrefKey.IMAGE_OPTIMIZE_QUALITY, quality);
+    }
+
+    public static int getImageOptimizeQuality() {
+        int quality = getInt(DeletablePrefKey.IMAGE_OPTIMIZE_QUALITY, 0);
+        return quality > 1 ? quality : WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY;
+    }
+
+    public static boolean isVideoOptimize() {
+        return getBoolean(DeletablePrefKey.VIDEO_OPTIMIZE_ENABLED, false);
+    }
+
+    public static void setVideoOptimize(boolean optimize) {
+        setBoolean(DeletablePrefKey.VIDEO_OPTIMIZE_ENABLED, optimize);
+    }
+
+    public static void setVideoOptimizeWidth(int width) {
+        setInt(DeletablePrefKey.VIDEO_OPTIMIZE_WIDTH, width);
+    }
+
+    public static int getVideoOptimizeWidth() {
+        int resizeWidth =getInt(DeletablePrefKey.VIDEO_OPTIMIZE_WIDTH, 0);
+        return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_VIDEO_MAX_WIDTH : resizeWidth;
+    }
+
+    public static void setVideoOptimizeQuality(int quality) {
+        setInt(DeletablePrefKey.VIDEO_OPTIMIZE_QUALITY, quality);
+    }
+
+    public static int getVideoOptimizeQuality() {
+        int quality =  getInt(DeletablePrefKey.VIDEO_OPTIMIZE_QUALITY, 0);
+        return quality > 1 ? quality : WPMediaUtils.OPTIMIZE_VIDEO_ENCODER_BITRATE_KB;
     }
 
     /*

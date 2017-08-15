@@ -8,9 +8,6 @@ Language: da_DK
 <resources>
 	<string name="signout">Log ud</string>
 	<string name="reader_label_image_count_one">1 billede</string>
-	<string name="role_contributor">Bidragsyder</string>
-	<string name="role_editor">Redaktør</string>
-	<string name="role_admin">Administrator</string>
 	<string name="alignment_left">Venstre</string>
 	<string name="error_fetch_users_list">Kunne ikke hente sidens brugere</string>
 	<string name="people_dropdown_item_team">Gruppe</string>
@@ -228,11 +225,6 @@ Language: da_DK
 	<string name="hs__invalid_email_error">Indtast en gyldig e-mailadresse</string>
 	<string name="hs__username_blank_error">Indtast et gyldigt navn</string>
 	<string name="contact_us">Kontakt os</string>
-	<string name="current_location">Nuværende placering</string>
-	<string name="add_location">Tilføj placering</string>
-	<string name="search_current_location">Lokaliser</string>
-	<string name="search_location">Søg</string>
-	<string name="edit_location">Rediger</string>
 	<string name="preference_send_usage_stats_summary">Send automatisk brugsstatistik for at hjælpe os med at forbedre WordPress til Android</string>
 	<string name="preference_send_usage_stats">Indsend statistikker</string>
 	<string name="schedule_verb">Planlæg</string>
@@ -319,9 +311,6 @@ Language: da_DK
 	<string name="http_credentials">HTTP-oplysninger (valgfri)</string>
 	<string name="post_not_published">Indlægsstatus er ikke udgivet</string>
 	<string name="page_not_published">Sidestatus er ikke udgivet</string>
-	<string name="category_desc">Kategoribeskrivelse (valgfri)</string>
-	<string name="category_parent">Kategoriforælder (valgfri)</string>
-	<string name="pending_review">Afventer gennemlæsning</string>
 	<string name="http_authorization_required">Godkendelse påkrævet</string>
 	<string name="sure_to_cancel_edit_comment">Annuller redigering af denne kommentar?</string>
 	<string name="blog_name_must_include_letters">Webstedsadresse skal mindst indeholde 1 bogstav (a-z)</string>
@@ -336,7 +325,6 @@ Language: da_DK
 	<string name="cancel_edit">Fortryd redigering</string>
 	<string name="theme_premium_theme">Premium tema</string>
 	<string name="open_source_licenses">Open source-licenser</string>
-	<string name="location_not_found">Ukendt placering</string>
 	<string name="share_action_media">Mediebibliotek</string>
 	<string name="share_action_post">Nyt indlæg</string>
 	<string name="local_draft">Lokal kladde</string>
@@ -351,7 +339,6 @@ Language: da_DK
 	<string name="new_media">Nyt medie</string>
 	<string name="view_site">Vis websted</string>
 	<string name="new_post">Nyt indlæg</string>
-	<string name="post_format">Indlægsformat</string>
 	<string name="category_name">Kategorinavn</string>
 	<string name="add_new_category">Tilføj ny kategori</string>
 	<string name="view_in_browser">Vis i browser</string>
@@ -407,7 +394,6 @@ Language: da_DK
 	<string name="share_link">Del link</string>
 	<string name="creating_your_account">Opretter din konto</string>
 	<string name="creating_your_site">Opretter dit websted</string>
-	<string name="error_refresh_media">Noget gik galt under opdateringen af mediebiblioteket. Prøv igen senere.</string>
 	<string name="reader_empty_posts_in_tag_updating">Henter indlæg...</string>
 	<string name="reader_toast_err_get_comment">Kunne ikke hente denne kommentar</string>
 	<string name="reader_likes_multi">%,d personer synes godt om dette</string>
@@ -461,7 +447,6 @@ Language: da_DK
 	<string name="theme_set_success">Tema indstillet!</string>
 	<string name="media_edit_description_hint">Indtast en beskrivelse her</string>
 	<string name="media_edit_title_hint">Indtast en titel her</string>
-	<string name="unattached">Frigjort</string>
 	<string name="passcode_re_enter_passcode">Genindtast PIN-kode</string>
 	<string name="passcode_enter_passcode">Indtast PIN-kode</string>
 	<string name="passcode_enter_old_passcode">Indtast gammel PIN-kode</string>
@@ -474,8 +459,6 @@ Language: da_DK
 	<string name="media_gallery_type_squares">Firkanter</string>
 	<string name="media_gallery_type">Type</string>
 	<string name="themes">Temaer</string>
-	<string name="images">Billeder</string>
-	<string name="all">Alle</string>
 	<string name="stats_totals_clicks">Klik</string>
 	<string name="stats_totals_views">Visninger</string>
 	<string name="stats_entry_authors">Forfatter</string>
@@ -498,7 +481,6 @@ Language: da_DK
 	<string name="themes_features_label">Funktioner</string>
 	<string name="theme_activate_button">Aktiver</string>
 	<string name="theme_activating_button">Aktiverer</string>
-	<string name="post_excerpt">Uddrag</string>
 	<string name="stats_totals_plays">Afspilninger</string>
 	<string name="passcode_change_passcode">Ændr PIN</string>
 	<string name="passcode_set">PIN ændret</string>
@@ -534,7 +516,6 @@ Language: da_DK
 	<string name="blogusername">blogusername</string>
 	<string name="upload_scaled_image">Upload og link til skalerede billede</string>
 	<string name="scaled_image">Bredde på skalerede billede</string>
-	<string name="scheduled">Planlagt</string>
 	<string name="link_enter_url">URL</string>
 	<string name="version">Version</string>
 	<string name="app_title">WordPress til Android</string>
@@ -546,7 +527,6 @@ Language: da_DK
 	<string name="edit">Rediger</string>
 	<string name="post_id">Indlæg</string>
 	<string name="page_id">Side</string>
-	<string name="post_password">Kodeord (valgfrit)</string>
 	<string name="immediately">Øjeblikkeligt</string>
 	<string name="quickpress_add_alert_title">Vælg navn på genvej.</string>
 	<string name="settings">Indstillinger</string>
@@ -554,19 +534,13 @@ Language: da_DK
 	<string name="share_url">Del URL</string>
 	<string name="quickpress_window_title">Vælg blog til QuickPress genvej</string>
 	<string name="quickpress_add_error">Genvejsnavn kan ikke være tomt</string>
-	<string name="publish_post">Udgiv</string>
-	<string name="draft">Kladde</string>
-	<string name="post_private">Privat</string>
 	<string name="upload_full_size_image">Upload og link til hele billedet</string>
 	<string name="title">Titel</string>
 	<string name="categories">Kategorier</string>
-	<string name="tags_separate_with_commas">Tags (adskil tags med komma)</string>
 	<string name="dlg_deleting_comments">Sletter kommentarer</string>
 	<string name="notification_vibrate">Vibrer</string>
 	<string name="notification_blink">Blink beskedlys</string>
-	<string name="status">Status</string>
 	<string name="sdcard_title">SD-kort påkrævet</string>
-	<string name="location">Placering</string>
 	<string name="media">Medier</string>
 	<string name="delete">Slet</string>
 	<string name="approve">Godkend</string>

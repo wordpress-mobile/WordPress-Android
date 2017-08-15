@@ -2,6 +2,7 @@ package org.wordpress.android.widgets;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -68,13 +69,28 @@ public class WPNetworkImageView extends AppCompatImageView {
     private static final HashSet<String> mUrlSkipList = new HashSet<>();
 
     public WPNetworkImageView(Context context) {
-        super(context);
+        this(context, null);
     }
     public WPNetworkImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
     public WPNetworkImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        if (attrs != null) {
+            TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.wpNetworkImageView, 0, 0);
+
+            try {
+                if (a.hasValue(R.styleable.wpNetworkImageView_wpDefaultImageDrawable)) {
+                    mDefaultImageResId = a.getResourceId(R.styleable.wpNetworkImageView_wpDefaultImageDrawable, 0);
+                }
+                if (a.hasValue(R.styleable.wpNetworkImageView_wpErrorImageDrawable)) {
+                    mErrorImageResId = a.getResourceId(R.styleable.wpNetworkImageView_wpErrorImageDrawable, 0);
+                }
+            } finally {
+                a.recycle();
+            }
+        }
     }
 
     public void setImageUrl(String url, ImageType imageType) {
@@ -208,6 +224,9 @@ public class WPNetworkImageView extends AppCompatImageView {
         if (mUrlSkipList.contains(mUrl)) {
             AppLog.d(AppLog.T.UTILS, "skipping image request " + mUrl);
             showErrorImage();
+            if (imageLoadListener != null) {
+                imageLoadListener.onError();
+            }
             return;
         }
 

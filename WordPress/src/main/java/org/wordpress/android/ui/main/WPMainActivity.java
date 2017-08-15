@@ -83,6 +83,8 @@ import de.greenrobot.event.EventBus;
  */
 public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
+    public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
+    public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -213,6 +215,8 @@ public class WPMainActivity extends AppCompatActivity {
         });
 
 
+        String authTokenToSet = null;
+
         if (savedInstanceState == null) {
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 // open note detail if activity called from a push, otherwise return to the tab
@@ -232,10 +236,24 @@ public class WPMainActivity extends AppCompatActivity {
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
                         mViewPager.setCurrentItem(position);
                     }
-                    checkMagicLinkSignIn();
+
+                    if (!AppPrefs.isLoginWizardStyleActivated()) {
+                        checkMagicLinkSignIn();
+                    } else if (hasMagicLinkLoginIntent()) {
+                        if (mAccountStore.hasAccessToken()) {
+                            ToastUtils.showToast(this, R.string.login_already_logged_in_wpcom);
+                        } else {
+                            authTokenToSet = getAuthToken();
+                        }
+                    }
                 }
             } else {
-                ActivityLauncher.showSignInForResult(this);
+                if (hasMagicLinkLoginIntent()) {
+                    authTokenToSet = getAuthToken();
+                } else {
+                    ActivityLauncher.showSignInForResult(this);
+                    finish();
+                }
             }
         }
 
@@ -248,6 +266,26 @@ public class WPMainActivity extends AppCompatActivity {
         // We need to register the dispatcher here otherwise it won't trigger if for example Site Picker is present
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
+
+        if (authTokenToSet != null) {
+            // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
+            AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(authTokenToSet);
+            mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
+        } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
+            ActivityLauncher.showLoginEpilogue(this, false, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+        }
+    }
+
+    private boolean hasMagicLinkLoginIntent() {
+        String action = getIntent().getAction();
+        Uri uri = getIntent().getData();
+        String host = (uri != null && uri.getHost() != null) ? uri.getHost() : "";
+        return Intent.ACTION_VIEW.equals(action) && host.contains(SignInActivity.MAGIC_LOGIN);
+    }
+
+    private @Nullable String getAuthToken() {
+        Uri uri = getIntent().getData();
+        return uri != null ? uri.getQueryParameter(SignInActivity.TOKEN_PARAMETER) : null;
     }
 
     private void setTabLayoutElevation(float newElevation){
@@ -265,15 +303,15 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void showNewEditorPromoDialogIfNeeded() {
         if (AppPrefs.isNewEditorPromoRequired()) {
-            AppCompatDialogFragment newFragment = PromoDialogEditor.newInstance(
+            AppCompatDialogFragment newFragment = new PromoDialogEditor.Builder(
                     R.drawable.img_promo_editor,
                     R.string.new_editor_promo_title,
-                    R.string.new_editor_promo_title_beta,
                     R.string.new_editor_promo_description,
-                    R.string.new_editor_promo_link,
-                    R.string.new_editor_promo_button_negative,
-                    R.string.new_editor_promo_button_positive
-            );
+                    R.string.new_editor_promo_button_positive)
+                    .setLinkText(R.string.new_editor_promo_link)
+                    .setNegativeButtonText(R.string.new_editor_promo_button_negative)
+                    .setTitleBetaText(R.string.new_editor_promo_title_beta)
+                    .build();
             newFragment.show(getSupportFragmentManager(), "new-editor-promo");
             AppPrefs.setNewEditorPromoRequired(false);
         }
@@ -556,9 +594,7 @@ public class WPMainActivity extends AppCompatActivity {
                 }
                 break;
             case RequestCodes.REAUTHENTICATE:
-                if (resultCode == RESULT_CANCELED) {
-                    ActivityLauncher.showSignInForResult(this);
-                } else {
+                if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
                     startService(new Intent(this, GCMRegistrationIntentService.class));
                 }
@@ -638,9 +674,17 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        if (event.isError() && mSelectedSite != null
-                && event.error.type == AuthenticationErrorType.INVALID_TOKEN) {
-            AuthenticationDialogUtils.showAuthErrorView(this, mSelectedSite);
+        if (event.isError()) {
+            if (mSelectedSite != null && event.error.type == AuthenticationErrorType.INVALID_TOKEN) {
+                AuthenticationDialogUtils.showAuthErrorView(this, mSiteStore, mSelectedSite);
+            }
+
+            return;
+        }
+
+        if (mAccountStore.hasAccessToken() && hasMagicLinkLoginIntent()) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
+            ActivityLauncher.showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         }
     }
 

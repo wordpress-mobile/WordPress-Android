@@ -3,6 +3,10 @@ package org.wordpress.android.util;
 import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SiteUtils {
     public static String getSiteNameOrHomeURL(SiteModel site) {
@@ -43,5 +47,15 @@ public class SiteUtils {
         } else {
             return GravatarUtils.blavatarFromUrl(site.getUrl(), size);
         }
+    }
+
+    public static ArrayList<Integer> getCurrentSiteIds(SiteStore siteStore, boolean selfhostedOnly) {
+        ArrayList<Integer> siteIDs = new ArrayList<>();
+        List<SiteModel> sites = selfhostedOnly ? siteStore.getSitesAccessedViaXMLRPC() : siteStore.getSites();
+        for (SiteModel site : sites) {
+            siteIDs.add(site.getId());
+        }
+
+        return siteIDs;
     }
 }

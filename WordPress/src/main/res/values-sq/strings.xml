@@ -56,18 +56,13 @@ Language: sq_AL
 	<string name="error_unknown_post_type">Format i panjohur postimesh</string>
 	<string name="error_unknown_post">Postim i panjohur, kopja vendore e këtij postimi mund të jetë e panjëkohësuar me atë të shërbyesit</string>
 	<string name="error_fetch_site_after_creation">Sajti është krijuar, mund t’ju duhet të rifreskoni sajtet tuaj te zgjedhësi i sajteve.</string>
-	<string name="error_media_request_too_large">Media shumë e madhe, s’mund të ngarkohet</string>
-	<string name="error_media_parse_error">S’mund të përtypet përgjigja pas ngarkimit të medias</string>
 	<string name="error_upload_params">Gabim teksa ngarkohej %1$s: %2$s</string>
 	<string name="submit_for_review">Parashtroje</string>
-	<string name="role_subscriber">Pajtimtar</string>
 	<string name="tell_me_more">Tregomëni më tepër</string>
 	<string name="duplicate_site_detected">U pikas një sajt i përsëdytur.</string>
 	<string name="cannot_add_duplicate_site">Ky sajt ekziston tashmë në aplikacion, s’mund ta shtoni.</string>
 	<string name="already_logged_in_wpcom_same_username">Jeni tashmë i futur në llogarinë tuaj WordPress.com. Sajti juaj duhet të shfaqet te zgjedhësi i sajteve, shihni se mos është i fshehur.</string>
 	<string name="already_logged_in_wpcom">Jeni tashmë i futur në një llogari WordPress.com, s’mund të shtoni një sajt WordPress.com të lidhur pas një llogarie tjetër.</string>
-	<string name="migration_error_not_connected">Procesi i migrimit dështoi: provoni ta nisni aplikacionin kur të keni\n        lidhje në rrjet.</string>
-	<string name="migration_message">Po përditësohet aplikacioni Wordpress…</string>
 	<string name="checking_username">Po kontrollohet emri i përdoruesit</string>
 	<string name="jetpack_different_com_account">Nuk mbulohet sajtet me Jetpack që përkasin llogarive të ndryshme WordPress.com</string>
 	<string name="jetpack_use_com_account">Që të shtoni sajt Jetpack, bëni hyrjen te llogaria WordPress.com që përdorët për të lidhur Jetpack-un.</string>
@@ -76,7 +71,6 @@ Language: sq_AL
 	<string name="error_media_refresh_no_connection">Lypset lidhje që të rifreskohet mediateka</string>
 	<string name="error_media_unauthorized">S’keni leje të shihni ose përpunoni media</string>
 	<string name="error_media_not_found">S’u gjet dot media</string>
-	<string name="error_media_insufficient_fs_permissions">Lypset leje leximi mbi kartelë media</string>
 	<string name="site_settings_optimize_images">Optimizo Figurat</string>
 	<string name="no_site_error">S’u lidh dot te sajt WordPress. S’ka sajt WordPress të vlefshëm në këtë\n        adresë. Kontrolloni adresën (URL) të sajtit që dhatë.</string>
 	<string name="media_generic_error">Ndodhi një gabim mediash</string>
@@ -144,10 +138,6 @@ Language: sq_AL
 	<string name="like">Pëlqejeni</string>
 	<string name="reader_label_image_count_one">1 figurë</string>
 	<string name="timespan_now">tani</string>
-	<string name="role_admin">Përgjegjës</string>
-	<string name="role_editor">Redaktor</string>
-	<string name="role_author">Autor</string>
-	<string name="role_contributor">Kontribues</string>
 	<string name="role_follower">Ndjekës</string>
 	<string name="role_viewer">Shikues</string>
 	<string name="error_post_my_profile_no_connection">S&amp;#8217;ka lidhje, s&amp;#8217;u ruajt dot profili juaj</string>
@@ -364,8 +354,6 @@ Language: sq_AL
 	<string name="web_address">Adresë Web</string>
 	<string name="editor_toast_uploading_please_wait">Po ngarkoni media. Ju lutemi, pritni deri sa kjo të plotësohet.</string>
 	<string name="error_refresh_comments_showing_older">Komentet s&amp;#8217;u freskuan dot këtë herë - po shfaqen komente më të vjetër</string>
-	<string name="editor_post_settings_set_featured_image">Vëre Si Figurë të Zgjedhur</string>
-	<string name="editor_post_settings_featured_image">Figurë e Zgjedhur</string>
 	<string name="visual_editor_enabled">Përpunuesi Pamor u aktivizua</string>
 	<string name="editor_content_placeholder">Ndajeni shembullin tuaj me ta…</string>
 	<string name="editor_page_title_placeholder">Titull Faqeje</string>
@@ -414,7 +402,6 @@ Language: sq_AL
 	<string name="cd_related_post_preview_image">Figurë paraparje postimi të afërt</string>
 	<string name="error_post_remote_site_settings">S&amp;#8217;u ruajtën dot të dhëna sajti</string>
 	<string name="error_fetch_remote_site_settings">S&amp;#8217;u morën dot të dhëna sajti</string>
-	<string name="error_media_upload_connection">Ndodhi një gabim ndërlidhjeje gjatë ngarkimit të medias</string>
 	<string name="site_settings_disconnected_toast">I dalë, përpunimet janë të çaktivizuara.</string>
 	<string name="site_settings_unsupported_version_error">Version WordPress i pambuluar</string>
 	<string name="site_settings_multiple_links_dialog_description">Kërko miratim për komente që përmbajnë më tepër lidhje se sa kaq.</string>
@@ -555,7 +542,6 @@ Language: sq_AL
 	<string name="reader_label_gap_marker">Ngarko më tepër postime</string>
 	<string name="notifications_no_search_results">S&amp;#8217;ka sajte me përputhje për \'%s\'</string>
 	<string name="search_sites">Kërkoni në sajte</string>
-	<string name="unread">Të palexuara</string>
 	<string name="notifications_empty_view_reader">Shihni Lexuesin</string>
 	<string name="notifications_empty_action_followers_likes">Dilni në pah: komentoni në postime që keni lexuar.</string>
 	<string name="notifications_empty_action_comments">Hyni në një bisedë: komentoni postime prej blogjesh që ndiqni.</string>
@@ -574,7 +560,6 @@ Language: sq_AL
 	<string name="stats_widget_loading_data">Po ngarkohen të dhëna…</string>
 	<string name="stats_widget_name_for_blog">Statistikat e Sotme për %1$s</string>
 	<string name="stats_widget_name">Statistikat e Sotme për WordPress-in</string>
-	<string name="add_location_permission_required">Që të shtoni vend, lypset leje</string>
 	<string name="add_media_permission_required">Që të shtoni media, lypset leje</string>
 	<string name="access_media_permission_required">Që të hyni në media, lypset leje</string>
 	<string name="stats_enable_rest_api_in_jetpack">Që të shihni statistika tuaja, aktivizoni modulin API JSON te Jetpack-u.</string>
@@ -622,7 +607,6 @@ Language: sq_AL
 	<string name="page_trashed">Faqja u kalua te hedhurinat</string>
 	<string name="post_deleted">Postimi u fshi</string>
 	<string name="post_trashed">Postimi u kalua te hedhurinat</string>
-	<string name="trashed">Të hedhur te hedhurinat</string>
 	<string name="button_back">Mbrapsht</string>
 	<string name="page_deleted">Faqja u fshi</string>
 	<string name="button_stats">Statistika</string>
@@ -835,11 +819,6 @@ Language: sq_AL
 	<string name="hs__conversation_header">Asistencë me bisedë</string>
 	<string name="hs__invalid_email_error">Jepni një adresë email të vlefshme</string>
 	<string name="hs__username_blank_error">Jepni një emër të vlefshëm</string>
-	<string name="add_location">Shtoni vend</string>
-	<string name="current_location">Vendi i tanishëm</string>
-	<string name="search_location">Kërko</string>
-	<string name="edit_location">Përpunoni</string>
-	<string name="search_current_location">Lokalizoje</string>
 	<string name="preference_send_usage_stats">Dërgo statistika</string>
 	<string name="preference_send_usage_stats_summary">Dërgo vetvetiu statistika përdorimi për të na ndihmuar ta përmirësojmë WordPress-in për Android</string>
 	<string name="update_verb">Përditësoje</string>
@@ -980,13 +959,9 @@ Language: sq_AL
 	<string name="view_in_browser">Shiheni në shfletues</string>
 	<string name="add_new_category">Shtoni kategori të re</string>
 	<string name="category_name">Emër kategorie</string>
-	<string name="category_desc">Përshkrim kategorie (opsional)</string>
 	<string name="share_action_post">Postim i ri</string>
 	<string name="share_action_media">Bibliotekë media</string>
-	<string name="location_not_found">Vendndodhje e panjohur</string>
 	<string name="open_source_licenses">Licenca burimi të hapur</string>
-	<string name="pending_review">Në pritje të shqyrtimit</string>
-	<string name="post_format">Format postimesh</string>
 	<string name="new_post">Postim i ri</string>
 	<string name="new_media">Media e re</string>
 	<string name="view_site">Shiheni sajtin</string>
@@ -1015,7 +990,6 @@ Language: sq_AL
 	<string name="toast_comment_unedited">Komenti s&amp;#8217;ndryshoi</string>
 	<string name="post_not_published">Postimi s&amp;#8217;është i botuar</string>
 	<string name="page_not_published">Faqja s&amp;#8217;është e botuar</string>
-	<string name="category_parent">Prind kategorie (opsional):</string>
 	<string name="file_error_create">S&amp;#8217;u krijua dot kartelë e përkohshme për ngarkim medie. Sigurohuni që në pajisjen tuaj ka hapësirë të lirë të mjaftueshme.</string>
 	<string name="http_credentials">Kredenciale HTTP (opsional)</string>
 	<string name="http_authorization_required">Lypset autorizim</string>
@@ -1032,7 +1006,6 @@ Language: sq_AL
 	<string name="creating_your_account">Po krijohet llogaria juaj</string>
 	<string name="creating_your_site">Po krijohet sajti juaj</string>
 	<string name="reader_empty_posts_in_tag_updating">Po sillen postime…</string>
-	<string name="error_refresh_media">Diç shkoi ters teksa rifreskohej mediateka. Riprovoni më vonë.</string>
 	<string name="reader_likes_multi">Kjo u pëlqen %,d personave</string>
 	<string name="reader_toast_err_get_comment">I pazoti ta marrë këtë koment</string>
 	<string name="reader_label_reply">Përgjigjjuni</string>
@@ -1084,9 +1057,6 @@ Language: sq_AL
 	<string name="reader_empty_followed_tags">S&amp;#8217;ndiqni ndonjë etiketë</string>
 	<string name="limit_reached">U mbërrit në kufi. Mund të riprovoni pas 1 minute. Riprovimi para kësaj vetëm sa do të shtojë kohën që ju duhet të prisni para se të hiqet përzënia. Nëse mendoni se bëhet fjalë për një gabim, lidhuni me asistencën.</string>
 	<string name="themes">Tema</string>
-	<string name="all">Krejt</string>
-	<string name="images">Figura</string>
-	<string name="unattached">Të pabashkëngjitura</string>
 	<string name="media_gallery_type">Lloj</string>
 	<string name="media_gallery_type_squares">Katrorë</string>
 	<string name="media_gallery_type_tiled">Tjegullëzuar</string>
@@ -1105,7 +1075,6 @@ Language: sq_AL
 	<string name="theme_activating_button">Po aktivizohet</string>
 	<string name="theme_set_success">Tema u caktua me sukses!</string>
 	<string name="theme_auth_error_title">Dështoi sjellja e temës</string>
-	<string name="post_excerpt">Copëz</string>
 	<string name="share_action">Ndajeni me të tjerët</string>
 	<string name="stats">Statistika</string>
 	<string name="stats_view_visitors_and_views">Vizitorë dhe Parje</string>
@@ -1168,7 +1137,6 @@ Language: sq_AL
 	<string name="blogusername">emërpërdoruesiblogu</string>
 	<string name="upload_scaled_image">Ngarkoje dhe lidhe te figura e ripërmasuar</string>
 	<string name="scaled_image">Gjerësi figure të ripërmasuar</string>
-	<string name="scheduled">E planifikuar</string>
 	<string name="link_enter_url">URL</string>
 	<string name="uploading">Po ngarkohet…</string>
 	<string name="version">Version</string>
@@ -1181,7 +1149,6 @@ Language: sq_AL
 	<string name="edit">Përpunojeni</string>
 	<string name="post_id">Postim</string>
 	<string name="page_id">Faqe</string>
-	<string name="post_password">Fjalëkalim (opsional)</string>
 	<string name="immediately">Menjëherë</string>
 	<string name="quickpress_add_alert_title">Caktoni emër shkurtoreje</string>
 	<string name="today">Sot</string>
@@ -1189,19 +1156,13 @@ Language: sq_AL
 	<string name="share_url">Ndani URL-në me të tjerët</string>
 	<string name="quickpress_window_title">Përzgjidhni blog për shkurtore QuickPress</string>
 	<string name="quickpress_add_error">Emri i shkurtores s&amp;#8217;mund të jetë i zbrazët</string>
-	<string name="publish_post">Botoje</string>
-	<string name="draft">Skicë</string>
-	<string name="post_private">Private</string>
 	<string name="upload_full_size_image">Ngarkoje dhe lidhe te figura e plotë</string>
 	<string name="title">Titull</string>
-	<string name="tags_separate_with_commas">Etiketa (etiketat ndajini me presje)</string>
 	<string name="categories">Kategori</string>
 	<string name="dlg_deleting_comments">Po fshihen komente</string>
 	<string name="notification_blink">Xixëllo dritëzë njoftimesh</string>
 	<string name="notification_vibrate">Dridhu</string>
 	<string name="notification_sound">Tingull njoftimesh</string>
-	<string name="status">Gjendje</string>
-	<string name="location">Vendndodhje</string>
 	<string name="sdcard_title">Lypset Kartë SD</string>
 	<string name="media">Media</string>
 	<string name="delete">Fshije</string>

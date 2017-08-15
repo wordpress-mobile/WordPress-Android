@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-15 13:51:20+0000
+Translation-Revision-Date: 2017-08-01 23:18:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+	<string name="format_bar_description_link">קישור</string>
+	<string name="format_bar_description_list">רשימה</string>
+	<string name="format_bar_description_heading">כותרת</string>
+	<string name="format_bar_description_media">מדיה</string>
+	<string name="reader_view_comments">הצגת התגובות</string>
+	<string name="new_editor_promo_link">מה חדש?</string>
+	<string name="new_editor_promo_confirmation_action">הגדרות</string>
+	<string name="new_editor_promo_button_negative">לא עכשיו</string>
+	<string name="permission_location">מיקום</string>
+	<string name="permission_camera">מצלמה</string>
+	<string name="permission_storage">אחסון</string>
 	<string name="smart_toast_comments_long_press">יש להקיש ולהחזיק כדי לבחור מספר תגובות</string>
 	<string name="smart_toast_photo_long_press">יש להקיש ולהחזיק כדי לבחור מספר תמונות</string>
 	<string name="photo_picker_choose_video">בחירת וידאו מהמכשיר</string>
 	<string name="photo_picker_choose_photo">בחירת תמונה מהמכשיר</string>
+	<string name="new_editor_promo_description">אפליקציית וורדפרס כוללת כעת עורך חדש ויפה. ניתן להתנסות בו על ידי יצירת פוסט חדש!</string>
 	<string name="wp_media_title">מדיה של WordPress</string>
 	<string name="media_insert_as_gallery">הוספה כגלריה</string>
 	<string name="media_insert_individually">הוספה של כל פריט בנפרד</string>
@@ -52,22 +64,18 @@ Language: he_IL
 	<string name="media_upload_state_queued">בתור</string>
 	<string name="update_draft">עדכון טיוטה</string>
 	<string name="keep_editing">המשך עריכה</string>
+	<string name="image_quality">איכות תמונה</string>
 	<string name="error_all_media_upload_canceled">כל ההעלאות של פריטי המדיה בוטלו עקב שגיאה לא מזוהה. יש לנסות לבצע את ההעלאה שוב</string>
 	<string name="error_unknown_post_type">סוג פוסט לא מזוהה</string>
 	<string name="error_unknown_post">פוסט לא מזוהה, ייתכן שהעותק המקומי של הפוסט לא מסונכרן עם השרת</string>
 	<string name="error_fetch_site_after_creation">האתר כבר נוצר, ייתכן שיידרש ריענון של האתרים שלך בתפריט בחירת האתרים.</string>
-	<string name="error_media_request_too_large">פריט המדיה גדול מדי, לא ניתן לבצע העלאה</string>
-	<string name="error_media_parse_error">לא היה ניתן להעביר תגובה לאחר העלאת פריט המדיה</string>
 	<string name="error_upload_params">אירעה שגיאה בעת העלאת של %1$s: %2$s</string>
 	<string name="submit_for_review">שלח</string>
-	<string name="role_subscriber">מנוי רשום לעדכונים</string>
 	<string name="tell_me_more">אני רוצה לראות מידע נוסף</string>
 	<string name="duplicate_site_detected">נמצא אתר כפול.</string>
 	<string name="cannot_add_duplicate_site">אתר זה כבר קיים באפליקציה, אין אפשרות להוסיף אותו.</string>
 	<string name="already_logged_in_wpcom_same_username">כבר התחברת לחשבון שלך ב-WordPress.com. האתר שלך אמור להופיע בתפריט בחירת האתרים. יש לוודא שהוא אינו מוגדר כ\'מוסתר\'.</string>
 	<string name="already_logged_in_wpcom">כבר התחברת לחשבון שלך ב-WordPress.com. אין באפשרותך להוסיף אתר WordPress.com שקשור לחשבון אחר.</string>
-	<string name="migration_error_not_connected">תהליך ההעברה נכשל: מומלץ להפעיל מחדש את האפליקציה כאשר יש ברשותך\n חיבור פעיל לרשת.</string>
-	<string name="migration_message">עדכון אפליקציית WordPress...</string>
 	<string name="checking_username">בדיקת שמות משתמש</string>
 	<string name="jetpack_different_com_account">אין תמיכה באתרי Jetpack ששייכים לחשבונות WordPress.com שונים</string>
 	<string name="jetpack_use_com_account">כדי להוסיף אתר Jetpack שברשותך, יש להתחבר לחשבון WordPress.com שבאמצעותו בוצע החיבור ל-Jetpack.</string>
@@ -76,7 +84,6 @@ Language: he_IL
 	<string name="error_media_refresh_no_connection">נדרש חיבור כדי לרענן את הספרייה</string>
 	<string name="error_media_unauthorized">אין לך הרשאה לערוך או לצפות בפריטי מדיה</string>
 	<string name="error_media_not_found">לא ניתן למצוא פריטי מדיה</string>
-	<string name="error_media_insufficient_fs_permissions">הצגת המידע אודות ההרשאות שדרושות בקובץ מדיה</string>
 	<string name="site_settings_optimize_images">מיטוב תמונות</string>
 	<string name="no_site_error">לא ניתן היה להתחבר לאתר WordPress. אין אתר WordPress תקף ב-\n כתובת זו. בדוק את כתובת האתר (URL) שהזנת.</string>
 	<string name="media_generic_error">אירעה שגיאה בפריטי המדיה</string>
@@ -146,10 +153,6 @@ Language: he_IL
 	<string name="timespan_now">עכשיו</string>
 	<string name="role_viewer">צופה</string>
 	<string name="role_follower">עוקב</string>
-	<string name="role_contributor">תורם</string>
-	<string name="role_author">מאת</string>
-	<string name="role_editor">עורך</string>
-	<string name="role_admin">מנהל המערכת</string>
 	<string name="error_post_my_profile_no_connection">אין חיבור, הפרופיל לא נשמר</string>
 	<string name="alignment_right">ימין</string>
 	<string name="alignment_left">שמאל</string>
@@ -181,6 +184,10 @@ Language: he_IL
 	<string name="editor_failed_uploads_switch_html">מספר העלאות מדיה נכשלו. לא ניתן לעבור למצב HTML\n במצב זה. להסיר את כל ההעלאות שנכשלו ולהמשיך?</string>
 	<string name="image_thumbnail">תמונה ממוזערת של תמונה</string>
 	<string name="visual_editor">עורך ויזואלי</string>
+	<string name="format_bar_description_html">HTML</string>
+	<string name="format_bar_description_ol">רשימה מסודרת</string>
+	<string name="format_bar_description_ul">רשימה לא מסודרת</string>
+	<string name="format_bar_description_quote">ציטוט</string>
 	<string name="format_bar_description_strike">קו חוצה</string>
 	<string name="format_bar_description_underline">קו תחתון</string>
 	<string name="format_bar_description_italic">נטוי</string>
@@ -364,8 +371,6 @@ Language: he_IL
 	<string name="pending_email_change_snackbar">יש ללחוץ על הקישור לאימות באימייל שנשלח לכתובת %1$s כדי לאשר את כתובתך החדשה</string>
 	<string name="editor_toast_uploading_please_wait">מתבצעת כרגע העלאת מדיה על-ידך. יש להמתין להשלמת הפעולה.</string>
 	<string name="error_refresh_comments_showing_older">לא ניתן לרענן תגובות כרגע - מציג תגובות ישנות</string>
-	<string name="editor_post_settings_set_featured_image">קביעת תמונה מרכזית</string>
-	<string name="editor_post_settings_featured_image">תמונה מרכזית</string>
 	<string name="visual_editor_enabled">עורך ויזואלי מופעל</string>
 	<string name="editor_content_placeholder">מומלץ לשתף את הסיפור שלך כאן…</string>
 	<string name="editor_page_title_placeholder">כותרת עמוד</string>
@@ -414,7 +419,6 @@ Language: he_IL
 	<string name="cd_related_post_preview_image">תמונת תצוגה מקדימה של פוסט קשור</string>
 	<string name="error_post_remote_site_settings">לא הצלחנו לשמור את פרטי האתר</string>
 	<string name="error_fetch_remote_site_settings">לא הצלחנו לאחזר את פרטי האתר</string>
-	<string name="error_media_upload_connection">ארעה שגיאת חיבור במהלך העלאת המדיה</string>
 	<string name="site_settings_disconnected_toast">מנותק, עריכה מושבתת.</string>
 	<string name="site_settings_unsupported_version_error">גרסת WordPress לא נתמכת</string>
 	<string name="site_settings_multiple_links_dialog_description">דרוש אישור לתגובות שכוללות כמות קישורים גבוהה מזו.</string>
@@ -555,7 +559,6 @@ Language: he_IL
 	<string name="reader_label_gap_marker">פוסטים נוספים</string>
 	<string name="notifications_no_search_results">אף אתר אינו תואם \'%s\'</string>
 	<string name="search_sites">חיפוש אתרים</string>
-	<string name="unread">לא נקרא</string>
 	<string name="notifications_empty_view_reader">הצד קורא</string>
 	<string name="notifications_empty_action_followers_likes">קבל תשומת לב: תגובה לפוסטים שכבר קראת.</string>
 	<string name="notifications_empty_action_comments">הצטרף לדיון: תגובות לפוסטים באתרים אחריהם אתה עוקב.</string>
@@ -574,7 +577,7 @@ Language: he_IL
 	<string name="stats_widget_loading_data">טוען נתונים...</string>
 	<string name="stats_widget_name_for_blog">סטטיסטיקות יומיות עבור %1$s</string>
 	<string name="stats_widget_name">סטטיסטיקות וורדפרס יומיות</string>
-	<string name="add_location_permission_required">נדרשות הרשאות מתאימות כדי להוסיף מיקומים</string>
+	<string name="post_settings_add_location_permission_required">נדרשות הרשאות מתאימות כדי להוסיף מיקומים</string>
 	<string name="add_media_permission_required">ההרשאות הדרושות כדי להוסיף מדיה</string>
 	<string name="access_media_permission_required">ההרשאות הדרושות כדי לגשת למדיה</string>
 	<string name="stats_enable_rest_api_in_jetpack">להצגת סטטיסטיקות, הפעילו מודול JSON API בג\'טפאק.</string>
@@ -627,7 +630,6 @@ Language: he_IL
 	<string name="button_stats">נתונים סטטיסטיים</string>
 	<string name="page_deleted">העמוד נמחק</string>
 	<string name="button_back">חזרה</string>
-	<string name="trashed">הועבר לפח</string>
 	<string name="stats_no_activity_this_period">אין פעילות בפרק זמן זה</string>
 	<string name="post_trashed">הפוסט הועבר לפח</string>
 	<string name="post_deleted">הפוסט נמחק</string>
@@ -835,11 +837,6 @@ Language: he_IL
 	<string name="hs__new_conversation_header">צ׳אט תמיכה</string>
 	<string name="hs__conversation_detail_error">תאר/י את הבעיה בה נתקלת</string>
 	<string name="contact_us">ליצור קשר</string>
-	<string name="current_location">מיקום נוכחי</string>
-	<string name="add_location">הוספת מיקום</string>
-	<string name="search_current_location">אתר</string>
-	<string name="edit_location">עריכה</string>
-	<string name="search_location">חיפוש</string>
 	<string name="preference_send_usage_stats_summary">שליחת נתוני שימוש סטטיסטיים שיאפשרו לנו לשפר את WordPress לאנדרויד</string>
 	<string name="preference_send_usage_stats">שליחת סטטיסטיקות</string>
 	<string name="schedule_verb">תזמן</string>
@@ -950,18 +947,13 @@ Language: he_IL
 	<string name="new_media">מדיה חדשה</string>
 	<string name="new_post">רשומה חדשה</string>
 	<string name="notifications_empty_all">אין התראות... עדיין.</string>
-	<string name="post_format">סוג רשומה</string>
 	<string name="http_authorization_required">דרושה הרשאה</string>
 	<string name="http_credentials">אישורי HTTP (אופציונאלי)</string>
-	<string name="pending_review">בהמתנה לבדיקה</string>
 	<string name="invalid_site_url_message">יש לוודא שכתובת ה-URL של האתר שהוזנה תקפה</string>
 	<string name="open_source_licenses">רישיונות קוד פתוח</string>
-	<string name="location_not_found">מיקום לא ידוע</string>
 	<string name="file_error_create">יצירת קובץ temp להעלאת קבצים לא הצליחה. וודא שיש מספיק מקום פנוי במכשיר.</string>
 	<string name="share_action_media">ספריית מדיה</string>
 	<string name="share_action_post">רשומה חדשה</string>
-	<string name="category_parent">קטגוריית-אב (אופציונאלי):</string>
-	<string name="category_desc">תיאור קטגוריה (אופציונאלי)</string>
 	<string name="category_name">שם קטגוריה</string>
 	<string name="add_new_category">הוסף קטגוריה חדשה</string>
 	<string name="view_in_browser">הצג בדפדפן</string>
@@ -1031,7 +1023,6 @@ Language: he_IL
 	<string name="deleting_page">מוחק דף</string>
 	<string name="creating_your_site">יוצר את האתר שלך</string>
 	<string name="creating_your_account">יוצר את החשבון שלך</string>
-	<string name="error_refresh_media">משהו השתבש בזמן הרענון של ספריית המדיה. נסה שנית מאוחר יותר.</string>
 	<string name="reader_empty_posts_in_tag_updating">מביא רשומות...</string>
 	<string name="cant_share_no_visible_blog">אינך יכול לשתף ב-WordPress ללא אתר גלוי</string>
 	<string name="comment_spammed">התגובה סומנה כתגובת זבל</string>
@@ -1112,7 +1103,6 @@ Language: he_IL
 	<string name="stats">נתונים סטטיסטיים</string>
 	<string name="share_action">שתף</string>
 	<string name="share_action_title">הוסף ל...</string>
-	<string name="post_excerpt">תקציר</string>
 	<string name="theme_auth_error_title">הבאת ערכות העיצוב נכשלה</string>
 	<string name="theme_set_success">ערכת העיצוב הוגדרה בהצלחה!</string>
 	<string name="theme_activating_button">מפעיל</string>
@@ -1132,9 +1122,6 @@ Language: he_IL
 	<string name="media_gallery_type_tiled">אריחים</string>
 	<string name="media_gallery_type_squares">ריבועים</string>
 	<string name="media_gallery_type">סוג</string>
-	<string name="unattached">מנותק</string>
-	<string name="images">תמונות</string>
-	<string name="all">הכל</string>
 	<string name="themes">ערכות עיצוב</string>
 	<string name="discard">הסתר</string>
 	<string name="manage">ניהול</string>
@@ -1153,6 +1140,7 @@ Language: he_IL
 	<string name="publish_date">פרסם</string>
 	<string name="post_content">תוכן (הקליקו להוספת טקסט או קבצי מדיה)</string>
 	<string name="incorrect_credentials">שם משתמש או סיסמה לא נכונים.</string>
+	<string name="log_in">התחבר</string>
 	<string name="username">שם משתמש</string>
 	<string name="password">סיסמה</string>
 	<string name="reader">קורא</string>
@@ -1169,7 +1157,6 @@ Language: he_IL
 	<string name="blogusername">שם משתמש</string>
 	<string name="scaled_image">רוחב תמונה</string>
 	<string name="upload_scaled_image">העלאה וקישור לתמונה</string>
-	<string name="scheduled">תוזמן</string>
 	<string name="link_enter_url">URL</string>
 	<string name="uploading">מעלה...</string>
 	<string name="app_title">וורדפרס עבור אנדרואיד</string>
@@ -1183,27 +1170,21 @@ Language: he_IL
 	<string name="page_id">עמוד</string>
 	<string name="post_id">פוסט</string>
 	<string name="immediately">מיד</string>
-	<string name="post_password">ססמה (לא חובה)</string>
 	<string name="quickpress_add_alert_title">קבע שם מקוצר</string>
 	<string name="settings">הגדרות</string>
 	<string name="today">היום</string>
 	<string name="share_url">שתף כתובת קבועה</string>
 	<string name="quickpress_add_error">שם קיצור הדרך אינו יכול להיות ריק</string>
 	<string name="quickpress_window_title">בחר אתר לקיצור דרך  קוויקפרס</string>
-	<string name="post_private">פרטי</string>
-	<string name="draft">טיוטה</string>
-	<string name="publish_post">פרסם</string>
 	<string name="upload_full_size_image">העלה וקשה לתמונה בגודל מלא</string>
 	<string name="categories">קטגוריות</string>
-	<string name="tags_separate_with_commas">תגים (יש להפריד בפסיקים)</string>
+	<string name="tags_separate_with_commas">יש להפריד תגיות בפסיקים</string>
 	<string name="title">כותרת</string>
 	<string name="dlg_deleting_comments">מוחק תגובות</string>
 	<string name="notification_vibrate">רטט</string>
 	<string name="notification_sound">צליל התראה</string>
 	<string name="notification_blink">האר נורית הודעה</string>
-	<string name="status">סטטוס</string>
 	<string name="sdcard_title">דרוש כרטיס SD</string>
-	<string name="location">מיקום</string>
 	<string name="media">מדיה</string>
 	<string name="approve">אשר</string>
 	<string name="delete">מחק</string>

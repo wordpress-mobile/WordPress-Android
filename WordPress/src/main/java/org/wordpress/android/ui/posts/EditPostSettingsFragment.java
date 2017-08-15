@@ -62,7 +62,6 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
-import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -75,6 +74,7 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.lang.reflect.Field;
@@ -174,7 +174,8 @@ public class EditPostSettingsFragment extends Fragment {
                 new SiteSettingsListener() {
                     @Override
                     public void onSettingsUpdated(Exception error) {
-                        if (error == null) {
+                        // mEditPostActivityHook will be null if the fragment is detached
+                        if (error == null && mEditPostActivityHook != null) {
                             updatePostFormat(mSiteSettings.getDefaultPostFormat());
                         }
                     }
@@ -888,7 +889,7 @@ public class EditPostSettingsFragment extends Fragment {
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }
 
-        WordPressMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView);
+        WPMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView);
     }
 
     private void launchFeaturedMediaPicker() {
