@@ -54,6 +54,26 @@ public class UploadStoreUnitTest {
     }
 
     @Test
+    public void testMediaUploadProgress() {
+        // Create a MediaModel and add it to both the MediaModelTable and the MediaUploadTable
+        // (simulating an upload action)
+        MediaModel testMedia = UploadTestUtils.getLocalTestMedia();
+        testMedia.setId(5);
+        MediaSqlUtils.insertMediaForResult(testMedia);
+
+        MediaUploadModel mediaUploadModel = new MediaUploadModel(testMedia.getId());
+        mediaUploadModel.setProgress(0.65F);
+        UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+
+        // Check that the stored MediaUploadModel has the right state
+        mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(testMedia.getId());
+        assertNotNull(mediaUploadModel);
+        assertEquals(testMedia.getId(), mediaUploadModel.getId());
+        assertEquals(MediaUploadModel.UPLOADING, mediaUploadModel.getUploadState());
+        assertEquals(0.65F, mUploadStore.getUploadProgressForMedia(testMedia), 0.1F);
+    }
+
+    @Test
     public void testPostModelRegistration() {
         // Create a PostModel and add it to the PostStore
         PostModel postModel = UploadTestUtils.getTestPost();
