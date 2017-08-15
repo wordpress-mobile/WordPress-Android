@@ -365,8 +365,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         MediaModel media = mMediaList.get(position);
                         MediaUploadState state = MediaUploadState.fromString(media.getUploadState());
                         if (state == MediaUploadState.FAILED) {
-                            stateTextView.setText(R.string.media_upload_state_queued);
-                            stateTextView.setCompoundDrawables(null, null, null, null);
                             if (mCallback != null) {
                                 mCallback.onAdapterRetryUpload(media.getId());
                             }
