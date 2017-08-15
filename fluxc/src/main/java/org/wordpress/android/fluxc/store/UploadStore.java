@@ -8,10 +8,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.MediaAction;
-import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.action.UploadAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -89,12 +90,29 @@ public class UploadStore extends Store {
     @Override
     public void onAction(Action action) {
         IAction actionType = action.getType();
-        if (actionType instanceof MediaAction) {
-            onMediaAction((MediaAction) actionType, action.getPayload());
-        } else if (actionType instanceof PostAction) {
-            onPostAction((PostAction) actionType, action.getPayload());
-        } else if (actionType instanceof UploadAction) {
+        if (actionType instanceof UploadAction) {
             onUploadAction((UploadAction) actionType, action.getPayload());
+        } else if (actionType instanceof MediaAction) {
+            onMediaAction((MediaAction) actionType, action.getPayload());
+        }
+    }
+
+    private void onUploadAction(UploadAction actionType, Object payload) {
+        switch (actionType) {
+            case UPLOADED_MEDIA:
+                handleMediaUploaded((ProgressPayload) payload);
+                mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction((ProgressPayload) payload));
+                break;
+            case PUSHED_POST:
+                handlePostUploaded((RemotePostPayload) payload);
+                mDispatcher.dispatch(PostActionBuilder.newPushedPostAction((RemotePostPayload) payload));
+                break;
+            case CANCEL_POST:
+                handleCancelPost((PostModel) payload);
+                break;
+            case CLEAR_MEDIA:
+                handleClearMedia((ClearMediaPayload) payload);
+                break;
         }
     }
 
@@ -103,30 +121,8 @@ public class UploadStore extends Store {
             case UPLOAD_MEDIA:
                 handleUploadMedia((MediaPayload) payload);
                 break;
-            case UPLOADED_MEDIA:
-                handleMediaUploaded((ProgressPayload) payload);
-                break;
             case CANCEL_MEDIA_UPLOAD:
                 handleCancelMedia((CancelMediaPayload) payload);
-                break;
-        }
-    }
-
-    private void onPostAction(PostAction actionType, Object payload) {
-        switch (actionType) {
-            case PUSHED_POST:
-                handlePostUploaded((RemotePostPayload) payload);
-                break;
-        }
-    }
-
-    private void onUploadAction(UploadAction actionType, Object payload) {
-        switch (actionType) {
-            case CANCEL_POST:
-                handleCancelPost((PostModel) payload);
-                break;
-            case CLEAR_MEDIA:
-                handleClearMedia((ClearMediaPayload) payload);
                 break;
         }
     }
