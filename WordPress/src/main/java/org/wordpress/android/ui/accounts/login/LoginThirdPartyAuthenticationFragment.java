@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -16,6 +18,8 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 
 public class LoginThirdPartyAuthenticationFragment extends Fragment {
+    private LoginListener mLoginListener;
+
     public static final String TAG = "login_third_party_authentication_fragment_tag";
 
     public static LoginThirdPartyAuthenticationFragment newInstance(String email) {
@@ -23,6 +27,17 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof LoginListener) {
+            mLoginListener = (LoginListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement LoginListener");
+        }
     }
 
     @Override
@@ -48,6 +63,27 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment {
         });
 
         return layout;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mLoginListener = null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.help:
+                if (mLoginListener != null) {
+                    // TODO: Pass email from Google login to help method.
+                    mLoginListener.helpThirdParty("");
+                }
+
+                return true;
+        }
+
+        return false;
     }
 
     @Override
