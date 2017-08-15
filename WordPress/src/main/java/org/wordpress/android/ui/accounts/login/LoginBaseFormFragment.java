@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,7 +28,9 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -283,6 +286,20 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
             smartLockHelper.saveCredentialsInSmartLock(username, password,
                     HtmlUtils.fastUnescapeHtml(mAccountStore.getAccount().getDisplayName()),
                     Uri.parse(mAccountStore.getAccount().getAvatarUrl()));
+        }
+    }
+
+    /*
+     * auto-fill the username and password from BuildConfig/gradle.properties (developer feature,
+     * only enabled for DEBUG releases)
+     */
+    protected void autoFillFromBuildConfig(String configValueName, TextView textView) {
+        if (!BuildConfig.DEBUG) return;
+
+        String value = (String) WordPress.getBuildConfigValue(getActivity().getApplication(), configValueName);
+        if (!TextUtils.isEmpty(value)) {
+            textView.setText(value);
+            AppLog.d(AppLog.T.NUX, "Auto-filled from build config: " + configValueName);
         }
     }
 

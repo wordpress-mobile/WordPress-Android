@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-28 04:56:41+0000
+Translation-Revision-Date: 2017-08-10 15:21:42+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="login_epilogue_mysites_other">Moje witryny</string>
+	<string name="login_epilogue_mysites_one">Moja witryna</string>
+	<string name="login_logged_in_as">Zalogowany jako</string>
+	<string name="login_email_client_not_found">Nie można rozpoznać twojej aplikacji do email</string>
+	<string name="login_empty_2fa">Wprowadź kod weryfkacyjny</string>
+	<string name="login_empty_username">Proszę wprowadzić nazwę użytkownika</string>
+	<string name="login_empty_site_url">Proszę wprowadzić adres witryny</string>
+	<string name="login_log_in_for_deeplink">Zaloguj się do WordPress.com aby uzyskać dostęp do wpisu.</string>
+	<string name="login_error_while_adding_site">Błąd podczas dodawania witryny. Kod błędu: %s</string>
+	<string name="login_checking_site_address">Sprawdzanie adresu witryny</string>
+	<string name="login_site_address_more_help">Potrzebujesz pomocy?</string>
+	<string name="login_site_address_help_content">Adres twojej witryny pojawia się w belce na górze ekrany kiedy przechodzisz na stronę witryny w przeglądarce Chrome.</string>
+	<string name="login_site_address_help_title">Jaki jest adres mojej witryny?</string>
+	<string name="login_site_address_help">Potrzebujesz pomocy w odnalezieniu adresu witryny?</string>
+	<string name="login_site_address">Adres witryny</string>
+	<string name="enter_site_address">Wprowadź adres swojej witryny Wordpress, którą chciałbyś połączyć.</string>
+	<string name="login_username_at">\@%s</string>
+	<string name="login_already_logged_in_wpcom">Jesteś już zalogowany na WordPress.com</string>
+	<string name="login_continue">Kontynuuj</string>
+	<string name="connect_more">Połącz kolejną witrynę</string>
+	<string name="enter_wpcom_password">Wprowadź swoje hasło WordPress.com</string>
+	<string name="login_magic_link_email_requesting">Wymagany adres email do logowania</string>
+	<string name="login_magic_links_sent_description">Odnośnik wysłał ilustrację</string>
+	<string name="login_magic_links_sent_label">Twój odnośnik jest już w drodze! Sprawdź swoje konto email na tym urządzeniu, stuknij  na odnośnik w emailu, którego otrzymałeś od WordPress.com</string>
+	<string name="login_magic_links_label">Wyślemy tobie odnośnik, który zaloguje cie automatycznie, żadne hasło nie będzie wymagane.Oszczędzisz sobie pisania jednym palcem!</string>
+	<string name="login_error_while_checking_email">Wystąpił błąd podczas sprawdzania adresu email!</string>
+	<string name="password_incorrect">Wygląda na to, że hasło jest nieprawidłowe. Proszę sprawdzić te dane i spróbować ponownie.</string>
+	<string name="email_not_registered_wpcom">Ten adres email nie jest zarejestrowany na WordPress.com</string>
+	<string name="requesting_otp">Żądanie kodu weryfikacyjnego przez SMS</string>
+	<string name="login_text_otp">Wyślij mi zamiast tego kod przez SMS.</string>
+	<string name="enter_verification_code">Już prawie! Proszę wprowadzić kod weryfikacyjny z aplikacji do Uwierzytelnienia.</string>
+	<string name="enter_the_address_of_your_wordpress_site">Wprowadź adres swojej witryny WordPress</string>
+	<string name="enter_username_instead">Zaloguj się zamiast tego ze swoją nazwą użytkownika.</string>
+	<string name="enter_site_address_instead">Zaloguj się do swojej witryny wprowadzając zamiast tego adres swojej witryny.</string>
+	<string name="open_mail">Otwórz pocztę</string>
+	<string name="next">Następny</string>
+	<string name="enter_email_wordpress_com">Zaloguj się do WordPress.com używając adresu email aby zarządzać wszystkimi swoimi witrynami WordPress.</string>
+	<string name="login_promo_text_jetpack">Zarządzaj swoją witryną Jetpack w locie - masz WordPressa w swojej kieszeni.</string>
+	<string name="login_promo_text_notifications">Twoje powiadomienia podróżują razem z tobą - sprawdź komentarze i polubienia jak tylko się pojawią.</string>
+	<string name="login_promo_text_anytime">Nadrób zaległości przy swoich ulubionych witrynach i dołącz do konwersacji gdziekolwiek jesteś, w dowolnym czasie.</string>
+	<string name="login_promo_text_realtime">Obserwuj jak czytający z całego świata czytają i wchodzą w interakcję z twoją witryną - w czasie rzeczywistym.</string>
+	<string name="login_promo_text_onthego">Publikuj z parku. Bloguj z autobusu. Komentuj z kawiarni. Wordpress idzie tam gdzie ty.</string>
+	<string name="create_wordpress_site">Stwórz witrynę WordPress</string>
+	<string name="email_not_found">Nie odnaleźliśmy użytkownika WordPress.com z tym adresem email</string>
+	<string name="login_password_image">Ikona hasła logowania</string>
+	<string name="login_username_image">Ikona użytkownika logowania</string>
+	<string name="login_site_address_help_image">Obrazek pozycjonujący adres witryny</string>
+	<string name="login_globe_icon">Ikonkę globu adresu witryny</string>
+	<string name="login_email_image">Ikona adresu email logowania</string>
 	<string name="image_optimization_promo_desc">Optymalizacja obrazów zmniejsza ich rozmiar w celu szybszego przesyłania.\n\nMożesz zmienić to ustawienie później w ustawieniach witryny.</string>
 	<string name="image_optimization_promo_title">Włączyć optymalizację obrazków?</string>
 	<string name="leave_off">Zostaw na później</string>
@@ -95,7 +144,7 @@ Language: pl
 	<string name="draft_uploaded">Szkic wczytany</string>
 	<string name="report_bug">Raportuj błąd</string>
 	<string name="video_quality">Jakość filmu</string>
-	<string name="max_video_px_width">Domyślna szerokość filmu</string>
+	<string name="max_video_resolution">Domyślna szerokość filmu</string>
 	<string name="permission_location">Lokalizacja</string>
 	<string name="permission_camera">Aparat</string>
 	<string name="permission_storage">Pamięć</string>
@@ -217,14 +266,11 @@ Language: pl
 	<string name="error_fetch_site_after_creation">Witryna została utworzona, może wystąpić konieczność odświeżenia listy witryn.</string>
 	<string name="error_upload_params">Błąd podczas przesyłania %1$s: %2$s </string>
 	<string name="submit_for_review">Prześlij</string>
-	<string name="role_subscriber">Subskrybent</string>
 	<string name="tell_me_more">Powiedz mi więcej</string>
 	<string name="duplicate_site_detected">Wykryto duplikat witryny</string>
 	<string name="cannot_add_duplicate_site">Ta witryna już istnieje w aplikacji, nie możesz jej dodać.</string>
 	<string name="already_logged_in_wpcom_same_username">Jesteś już zalogowany na swoje konto WordPress.com. Twoja witryna powinna się pojawić w selektorze witryn. Upewnij się że nie jest ustawiona jako ukryta.</string>
 	<string name="already_logged_in_wpcom">Jesteś już zalogowany na swoje konto WordPress.com, nie można dodać konta WordPress.com połączonego z innym kontem.</string>
-	<string name="migration_error_not_connected">Proces migracji nie powiódł się: uruchom aplikację z aktywnym \npołączeniem sieciowym.</string>
-	<string name="migration_message">Aktualizacja aplikacji WordPress.. </string>
 	<string name="checking_username">Sprawdzanie nazwy użytkownika</string>
 	<string name="jetpack_different_com_account">Witryny Jetpack należące do różnych kont WordPress.com nie są wspierane</string>
 	<string name="jetpack_use_com_account">Aby dodać witrynę Jetpack, zaloguj się na swoje konto WordPress.com, które użyłeś do połączenia Jetpacka.</string>
@@ -303,10 +349,6 @@ Language: pl
 	<string name="timespan_now">teraz</string>
 	<string name="role_viewer">Oglądający</string>
 	<string name="role_follower">Subskrybent</string>
-	<string name="role_contributor">Współpracownik</string>
-	<string name="role_author">Autor</string>
-	<string name="role_editor">Redaktor</string>
-	<string name="role_admin">Administrator</string>
 	<string name="error_post_my_profile_no_connection">Brak połączenia, nie można zapisać twojego profilu</string>
 	<string name="alignment_right">Wyrównaj do prawej</string>
 	<string name="alignment_left">Wyrównaj do lewej</string>
@@ -1298,6 +1340,7 @@ Language: pl
 	<string name="publish_date">Opublikuj</string>
 	<string name="post_content">Treść (dotknij, aby dodać tekst i multimedia)</string>
 	<string name="incorrect_credentials">Nieprawidłowa nazwa użytkownika lub hasło.</string>
+	<string name="log_in">Zaloguj się</string>
 	<string name="username">Nazwa użytkownika</string>
 	<string name="password">Hasło</string>
 	<string name="reader">Czytnik</string>

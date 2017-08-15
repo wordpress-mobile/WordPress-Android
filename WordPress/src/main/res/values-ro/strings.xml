@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-24 19:37:19+0000
+Translation-Revision-Date: 2017-08-02 16:16:21+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="login_epilogue_mysites_other">Siturile mele</string>
+	<string name="login_epilogue_mysites_one">Situl meu</string>
+	<string name="login_logged_in_as">Autentificat ca</string>
+	<string name="login_email_client_not_found">Nu pot detecta aplicația ta client de email</string>
+	<string name="login_empty_2fa">Te rog introdu un cod de verificare</string>
+	<string name="login_empty_username">Te rog introdu un nume de utilizator</string>
+	<string name="login_empty_site_url">Te rog introdu o adresă de sit</string>
+	<string name="login_log_in_for_deeplink">Autentifică-te în WordPress.com pentru a accesa articolul.</string>
+	<string name="login_error_while_adding_site">Eroare în timpul adăugării sitului. Cod eroare: %s</string>
+	<string name="login_checking_site_address">Verific adresa sitului</string>
+	<string name="login_site_address_more_help">Ai nevoie de mai mult ajutor?</string>
+	<string name="login_site_address_help_content">Adresa sitului tău apare în bara din partea de sus a ecranului când îți vizitezi situl în Chrome.</string>
+	<string name="login_site_address_help_title">Care este adresa sitului meu?</string>
+	<string name="login_site_address_help">Ai nevoie de ajutor pentru a-ți găsi adresa sitului?</string>
+	<string name="login_site_address">Adresă sit</string>
+	<string name="enter_site_address">Introdu adresa sitului tău WordPress pe care vrei să-l conectezi.</string>
+	<string name="login_username_at">\@%s</string>
+	<string name="login_already_logged_in_wpcom">Autentificat deja în WordPress.com</string>
+	<string name="login_continue">Continuă</string>
+	<string name="connect_more">Conectează alt sit</string>
+	<string name="enter_wpcom_password">Introdu parola ta WordPress.com.</string>
+	<string name="login_magic_link_email_requesting">Cer emailul de autentificare</string>
+	<string name="login_magic_links_sent_description">Ilustrare legătură magică trimisă</string>
+	<string name="login_magic_links_sent_label">Legătura ta magică este pe drum! Verifică-ți emailul pe acest dispozitiv și atinge legătura din emailul pe care l-ai primit de la WordPress.com.</string>
+	<string name="login_magic_links_label">Îți vom trimite prin email o legătură magică care te va autentifica instantaneu, fără nicio parolă. Nu mai trebuie să scrii nimic!</string>
+	<string name="login_error_while_checking_email">A apărut o eroare în timpul verificării adresei de email!</string>
+	<string name="password_incorrect">Se pare că această parolă este incorectă. Te rog verifică-ți din nou informațiile și încearcă din nou.</string>
+	<string name="email_not_registered_wpcom">Acest email nu este înregistrat pe WordPress.com</string>
+	<string name="requesting_otp">Cer un cod de verificare prin SMS.</string>
+	<string name="login_text_otp">În schimb, trimite-mi un mesaj text cu un cod.</string>
+	<string name="enter_verification_code">Aproape gata! Te rog codul de verificare din aplicația ta Authenticator.</string>
+	<string name="enter_the_address_of_your_wordpress_site">Introdu adresa sitului tău WordPress</string>
+	<string name="enter_username_instead">Autentifică-te în schimb cu numele tău de utilizator.</string>
+	<string name="enter_site_address_instead">Autentifică-te în situl tău introducând în schimb adresa sitului tău.</string>
+	<string name="open_mail">Deschide corespondența</string>
+	<string name="next">Următor</string>
+	<string name="enter_email_wordpress_com">Autentifică-te în WordPress.com folosind o adresă de email pentru a-ți administra toate siturile WordPress.</string>
+	<string name="login_promo_text_jetpack">Administrează-ți situl propulsat de Jetpack din mișcare — ai WordPress-ul în buzunar.</string>
+	<string name="login_promo_text_notifications">Notificările tale călătoresc împreună cu tine — vezi comentariile și aprecierile imediat ce apar.</string>
+	<string name="login_promo_text_anytime">Ești la curent cu siturile preferate și te alături conversației oriunde, oricând.</string>
+	<string name="login_promo_text_realtime">Urmărești cititorii din întreaga lume care îți citesc situl și interacționează cu el — în timp real.</string>
+	<string name="login_promo_text_onthego">Publici din parc. Scrii pe blog în autobuz. Comentezi dintr-o cafenea. WordPress merge oriunde ești.</string>
+	<string name="create_wordpress_site">Creează un sit WordPress</string>
+	<string name="email_not_found">Nu am găsit un utilizator WordPress.com cu acea adresă de email</string>
+	<string name="login_password_image">Icon parolă de autentificare</string>
+	<string name="login_username_image">Icon nume utilizator de autentificare</string>
+	<string name="login_site_address_help_image">Imagine de poziționare adresă sit</string>
+	<string name="login_globe_icon">Icon global adresă sit</string>
+	<string name="login_email_image">Icon email de autentiifcare</string>
 	<string name="image_optimization_promo_desc">Optimizarea imaginilor micșorează imaginile pentru a le încărca mai rapid.\n\nPoți modifica asta oricând în setările sitului.</string>
 	<string name="image_optimization_promo_title">Pornești optimizarea imaginilor?</string>
 	<string name="leave_off">Las-o oprită</string>
@@ -95,7 +144,7 @@ Language: ro
 	<string name="draft_uploaded">Ciornă încărcată</string>
 	<string name="report_bug">Raportează o eroare</string>
 	<string name="video_quality">Calitate video</string>
-	<string name="max_video_px_width">Lățime implicită video</string>
+	<string name="max_video_resolution">Lățime implicită video</string>
 	<string name="permission_location">Locație</string>
 	<string name="permission_camera">Aparat foto</string>
 	<string name="permission_storage">Stocare</string>
@@ -217,14 +266,11 @@ Language: ro
 	<string name="error_fetch_site_after_creation">Situl a fost creat, ar trebui să-ți reîmprospătezi siturile în selectorul de sit.</string>
 	<string name="error_upload_params">Eroare în timpul încărcării %1$s: %2$s</string>
 	<string name="submit_for_review">Trimite</string>
-	<string name="role_subscriber">Abonat</string>
 	<string name="tell_me_more">Spune-mi mai mult</string>
 	<string name="duplicate_site_detected">A fost detectat un sit duplicat.</string>
 	<string name="cannot_add_duplicate_site">Acest sit există deja în aplicație, nu-l poți adăuga.</string>
 	<string name="already_logged_in_wpcom_same_username">Ești deja autentificat în contul tău WordPress.com. Situl tău ar trebui să apară în selectorul de sit, asigură-te că nu este ascuns.</string>
 	<string name="already_logged_in_wpcom">Ești deja autentificat în contul tău WordPress.com, nu poți adăuga un sit WordPress.com legat la un alt cont.</string>
-	<string name="migration_error_not_connected">Procesul de migrație a eșuat: încearcă să lansezi aplicația când ai o\n        conexiune la rețea.</string>
-	<string name="migration_message">Actualizez aplicația WordPress...</string>
 	<string name="checking_username">Verific numele de utilizator</string>
 	<string name="jetpack_different_com_account">Siturile Jetpack aparținând altor conturi WordPress.com nu sunt suportate.</string>
 	<string name="jetpack_use_com_account">Pentru a-ți adăuga situl Jetpack, autentifică-te în contul WordPress.com pe care l-ai folosit pentru a te conecta la Jetpack.</string>
@@ -303,10 +349,6 @@ Language: ro
 	<string name="timespan_now">acum</string>
 	<string name="role_viewer">Vizitator</string>
 	<string name="role_follower">Urmăritor</string>
-	<string name="role_contributor">Contributor</string>
-	<string name="role_author">Autor</string>
-	<string name="role_editor">Editor</string>
-	<string name="role_admin">Administrator</string>
 	<string name="error_post_my_profile_no_connection">Nicio conexiune, nu-ți pot salva profilul</string>
 	<string name="alignment_right">Dreapta</string>
 	<string name="alignment_left">Stânga</string>
@@ -1298,6 +1340,7 @@ Language: ro
 	<string name="publish_date">Publicare</string>
 	<string name="post_content">Conținut (atinge pentru a adăuga text și media)</string>
 	<string name="incorrect_credentials">Nume de utilizator sau parolă incorecte.</string>
+	<string name="log_in">Autentificare</string>
 	<string name="username">Nume utilizator</string>
 	<string name="password">Parolă</string>
 	<string name="reader">Cititor</string>

@@ -49,10 +49,6 @@ Language: zh_CN
 	<string name="submit_for_review">提交</string>
 	<string name="role_viewer">查看者</string>
 	<string name="role_follower">粉丝</string>
-	<string name="role_contributor">贡献者</string>
-	<string name="role_author">作者</string>
-	<string name="role_editor">编辑者</string>
-	<string name="role_admin">管理员</string>
 	<string name="error_post_my_profile_no_connection">网络未连接，无法保存您的个人资料</string>
 	<string name="alignment_right">右</string>
 	<string name="alignment_left">左</string>
@@ -1003,6 +999,7 @@ Language: zh_CN
 	<string name="publish_date">发布</string>
 	<string name="post_content">内容 (轻按可添加文字与媒体)</string>
 	<string name="incorrect_credentials">用户名或密码不正确。</string>
+	<string name="log_in">登录</string>
 	<string name="username">用户名</string>
 	<string name="password">密码</string>
 	<string name="reader">阅读器</string>

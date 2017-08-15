@@ -615,9 +615,12 @@ public class StatsActivity extends AppCompatActivity
         // Should we display the widget promo?
         int counter = AppPrefs.getAnalyticsForStatsWidgetPromo();
         if (counter == 3 || counter == 1000 || counter == 10000) {
-            AppCompatDialogFragment newFragment = PromoDialog.newInstance(R.drawable.stats_widget_promo_header,
-                    R.string.stats_widget_promo_title, R.string.stats_widget_promo_desc,
-                    R.string.stats_widget_promo_ok_btn_label);
+            AppCompatDialogFragment newFragment = new PromoDialog.Builder(
+                    R.drawable.stats_widget_promo_header,
+                    R.string.stats_widget_promo_title,
+                    R.string.stats_widget_promo_desc,
+                    R.string.stats_widget_promo_ok_btn_label)
+                    .build();
             newFragment.show(getSupportFragmentManager(), "promote_widget_dialog");
         }
     }

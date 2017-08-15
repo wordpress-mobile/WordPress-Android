@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,6 +40,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
+
+    private static final String FORGOT_PASSWORD_URL_WPCOM = "https://wordpress.com/";
 
     public static final String TAG = "login_email_password_fragment_tag";
 
@@ -104,7 +107,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
-                    mLoginListener.forgotPassword();
+                    mLoginListener.forgotPassword(FORGOT_PASSWORD_URL_WPCOM);
                 }
             }
         });
@@ -134,7 +137,11 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PASSWORD_FORM_VIEWED);
 
-            mPasswordInput.setText(mPassword);
+            if (!TextUtils.isEmpty(mPassword)) {
+                mPasswordInput.setText(mPassword);
+            } else {
+                autoFillFromBuildConfig("DEBUG_DOTCOM_LOGIN_PASSWORD", mPasswordInput.getEditText());
+            }
         } else {
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         }

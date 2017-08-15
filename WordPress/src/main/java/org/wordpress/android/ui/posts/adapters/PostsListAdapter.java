@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -20,6 +21,8 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -37,9 +40,11 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
-import org.wordpress.android.ui.posts.services.PostUploadService;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -62,6 +67,7 @@ import javax.inject.Inject;
  */
 public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final long ROW_ANIM_DURATION = 150;
+    private static final int MAX_DISPLAYED_UPLOAD_PROGRESS = 90;
 
     private static final int VIEW_TYPE_POST_OR_PAGE = 0;
     private static final int VIEW_TYPE_ENDLIST_INDICATOR = 1;
@@ -95,6 +101,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final List<PostModel> mHiddenPosts = new ArrayList<>();
     private final Map<Integer, String> mFeaturedImageUrls = new HashMap<>();
 
+    private RecyclerView mRecyclerView;
     private final LayoutInflater mLayoutInflater;
 
     @Inject Dispatcher mDispatcher;
@@ -150,6 +157,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
+    }
+
+    @Override
     public int getItemViewType(int position) {
         if (position == mPosts.size()) {
             return VIEW_TYPE_ENDLIST_INDICATOR;
@@ -189,7 +202,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private boolean canPublishPost(PostModel post) {
-        return post != null && !PostUploadService.isPostUploading(post) &&
+        // TODO remove the hasMediaErrorForPost(post) check when we get a proper retry mechanism in place,
+        // that retried to upload any failed media along with the post
+        return post != null && !UploadService.isPostUploadingOrQueued(post) &&
+                !UploadService.hasMediaErrorForPost(post) &&
                 (post.isLocallyChanged() || post.isLocalDraft() || PostStatus.fromPost(post) == PostStatus.DRAFT);
     }
 
@@ -239,13 +255,19 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 postHolder.btnTrash.setButtonType(PostListButton.BUTTON_TRASH);
             }
 
-            if (PostUploadService.isPostUploading(post)) {
+            if (UploadService.isPostUploading(post)) {
+                postHolder.disabledOverlay.setVisibility(View.VISIBLE);
+                postHolder.progressBar.setIndeterminate(true);
+            } else if (!AppPrefs.isAztecEditorEnabled() && UploadService.isPostUploadingOrQueued(post)) {
+                // Editing posts with uploading media is only supported in Aztec
                 postHolder.disabledOverlay.setVisibility(View.VISIBLE);
             } else {
+                postHolder.progressBar.setIndeterminate(false);
                 postHolder.disabledOverlay.setVisibility(View.GONE);
             }
 
-            updateStatusText(postHolder.txtStatus, post);
+            updateStatusTextAndImage(postHolder.txtStatus, postHolder.imgStatus, post);
+            updatePostUploadProgressBar(postHolder.progressBar, post);
             configurePostButtons(postHolder, post);
         } else if (holder instanceof PageViewHolder) {
             PageViewHolder pageHolder = (PageViewHolder) holder;
@@ -258,7 +280,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             String dateStr = getPageDateHeaderText(context, post);
             pageHolder.txtDate.setText(dateStr);
 
-            updateStatusText(pageHolder.txtStatus, post);
+            updateStatusTextAndImage(pageHolder.txtStatus, pageHolder.imgStatus, post);
+            updatePostUploadProgressBar(pageHolder.progressBar, post);
 
             // don't show date header if same as previous
             boolean showDate;
@@ -271,7 +294,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             pageHolder.dateHeader.setVisibility(showDate ? View.VISIBLE : View.GONE);
 
             // no "..." more button when uploading
-            pageHolder.btnMore.setVisibility(PostUploadService.isPostUploading(post) ? View.GONE : View.VISIBLE);
+            pageHolder.btnMore.setVisibility(UploadService.isPostUploadingOrQueued(post) ? View.GONE :
+                    View.VISIBLE);
             pageHolder.btnMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -282,10 +306,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // only show the top divider for the first item
             pageHolder.dividerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
 
-            if (PostUploadService.isPostUploading(post)) {
+            if (UploadService.isPostUploading(post)) {
+                pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
+                pageHolder.progressBar.setIndeterminate(true);
+            } else if (!AppPrefs.isAztecEditorEnabled() && UploadService.isPostUploadingOrQueued(post)) {
+                // Editing posts with uploading media is only supported in Aztec
                 pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
             } else {
                 pageHolder.disabledOverlay.setVisibility(View.GONE);
+                pageHolder.progressBar.setIndeterminate(false);
             }
         }
 
@@ -384,30 +413,61 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         listPopup.show();
     }
 
-    private void updateStatusText(TextView txtStatus, PostModel post) {
+    private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
+        if (UploadService.isPostUploadingOrQueued(post)) {
+            view.setVisibility(View.VISIBLE);
+            int overallProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100);
+            // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
+            // Cap the progress bar at MAX_DISPLAYED_UPLOAD_PROGRESS (until we move past the 'uploading media' phase)
+            view.setProgress(Math.min(MAX_DISPLAYED_UPLOAD_PROGRESS, overallProgress));
+        } else {
+            view.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateStatusTextAndImage(TextView txtStatus, ImageView imgStatus, PostModel post) {
         if ((PostStatus.fromPost(post) == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.isLocallyChanged()) {
             txtStatus.setVisibility(View.GONE);
+            imgStatus.setVisibility(View.GONE);
         } else {
             int statusTextResId = 0;
             int statusIconResId = 0;
             int statusColorResId = R.color.grey_darken_10;
+            String errorMessage = null;
 
-            if (PostUploadService.isPostUploading(post)) {
+            UploadService.UploadError reason = UploadService.getUploadErrorForPost(post);
+            if (reason != null) {
+                if (reason.mediaError != null) {
+                    errorMessage = txtStatus.getContext().getString(R.string.error_media_recover);
+                } else if (reason.postError != null) {
+                    errorMessage = UploadUtils.getErrorMessageFromPostError(
+                            txtStatus.getContext(), post, reason.postError);
+                }
+                statusIconResId = R.drawable.ic_notice_48dp;
+                statusColorResId = R.color.alert_red;
+            } else if (UploadService.isPostUploading(post)) {
                 statusTextResId = R.string.post_uploading;
-                statusColorResId = R.color.alert_yellow;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
+            } else if (UploadService.hasInProgressMediaUploadsForPost(post)) {
+                statusTextResId = R.string.uploading_post_media;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
+            } else if(UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
+                // the Post (or its related media if such a thing exist) *is strictly* queued
+                statusTextResId = R.string.post_queued;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if (post.isLocalDraft()) {
                 statusTextResId = R.string.local_draft;
-                statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
+                statusIconResId = R.drawable.ic_gridicons_page;
                 statusColorResId = R.color.alert_yellow;
             } else if (post.isLocallyChanged()) {
                 statusTextResId = R.string.local_changes;
-                statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
+                statusIconResId = R.drawable.ic_gridicons_page;
                 statusColorResId = R.color.alert_yellow;
             } else {
                 switch (PostStatus.fromPost(post)) {
                     case DRAFT:
                         statusTextResId = R.string.post_status_draft;
-                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
+                        statusIconResId = R.drawable.ic_gridicons_page;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case PRIVATE:
@@ -415,17 +475,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         break;
                     case PENDING:
                         statusTextResId = R.string.post_status_pending_review;
-                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
+                        statusIconResId = R.drawable.ic_gridicons_page;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case SCHEDULED:
                         statusTextResId = R.string.post_status_scheduled;
-                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
-                        statusColorResId = R.color.alert_yellow;
+                        statusIconResId = R.drawable.ic_gridicons_calendar;
+                        statusColorResId = R.color.blue_medium;
                         break;
                     case TRASHED:
                         statusTextResId = R.string.post_status_trashed;
-                        statusIconResId = R.drawable.ic_pages_alert_red_16dp;
+                        statusIconResId = R.drawable.ic_gridicons_page;
                         statusColorResId = R.color.alert_red;
                         break;
                 }
@@ -433,10 +493,22 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             Resources resources = txtStatus.getContext().getResources();
             txtStatus.setTextColor(resources.getColor(statusColorResId));
-            txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
-            Drawable drawable = (statusIconResId != 0 ? resources.getDrawable(statusIconResId) : null);
-            txtStatus.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+            if (!TextUtils.isEmpty(errorMessage)) {
+                txtStatus.setText(errorMessage);
+            } else {
+                txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
+            }
             txtStatus.setVisibility(View.VISIBLE);
+
+            Drawable drawable = (statusIconResId != 0 ? resources.getDrawable(statusIconResId) : null);
+            if (drawable != null) {
+                drawable = DrawableCompat.wrap(drawable);
+                DrawableCompat.setTint(drawable, resources.getColor(statusColorResId));
+                imgStatus.setImageDrawable(drawable);
+                imgStatus.setVisibility(View.VISIBLE);
+            } else {
+                imgStatus.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -449,10 +521,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
 
-        if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
-            holder.btnPublish.setButtonType(PostListButton.BUTTON_SYNC);
+        if (UploadService.getUploadErrorForPost(post) != null) {
+            holder.btnPublish.setButtonType(PostListButton.BUTTON_RETRY);
         } else {
-            holder.btnPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
+            if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
+                holder.btnPublish.setButtonType(PostListButton.BUTTON_SYNC);
+            } else {
+                holder.btnPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
+            }
         }
 
         boolean canShowStatsButton = canShowStatsForPost(post);
@@ -556,11 +632,29 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         animOut.start();
     }
 
+    public int getPositionForPost(PostModel post) {
+        return PostUtils.indexOfPostInList(post, mPosts);
+    }
+
     public void loadPosts(LoadMode mode) {
         if (mIsLoadingPosts) {
             AppLog.d(AppLog.T.POSTS, "post adapter > already loading posts");
         } else {
             new LoadPostsTask(mode).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    public void updateProgressForPost(@NonNull PostModel post) {
+        if (mRecyclerView != null) {
+            int position = getPositionForPost(post);
+            if (position > -1) {
+                RecyclerView.ViewHolder viewHolder = mRecyclerView.findViewHolderForAdapterPosition(position);
+                if (viewHolder instanceof PostViewHolder) {
+                    updatePostUploadProgressBar(((PostViewHolder) viewHolder).progressBar, post);
+                } else if (viewHolder instanceof PageViewHolder) {
+                    updatePostUploadProgressBar(((PageViewHolder) viewHolder).progressBar, post);
+                }
+            }
         }
     }
 
@@ -571,7 +665,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void hidePost(PostModel post) {
         mHiddenPosts.add(post);
 
-        int position = PostUtils.indexOfPostInList(post, mPosts);
+        int position = getPositionForPost(post);
         if (position > -1) {
             mPosts.remove(position);
             if (mPosts.size() > 0) {
@@ -613,6 +707,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final TextView txtExcerpt;
         private final TextView txtDate;
         private final TextView txtStatus;
+        private final ImageView imgStatus;
 
         private final PostListButton btnEdit;
         private final PostListButton btnView;
@@ -628,6 +723,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private final View disabledOverlay;
 
+        private final ProgressBar progressBar;
+
         PostViewHolder(View view) {
             super(view);
 
@@ -635,6 +732,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             txtExcerpt = (TextView) view.findViewById(R.id.text_excerpt);
             txtDate = (TextView) view.findViewById(R.id.text_date);
             txtStatus = (TextView) view.findViewById(R.id.text_status);
+            imgStatus = (ImageView) view.findViewById(R.id.image_status);
 
             btnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
             btnView = (PostListButton) view.findViewById(R.id.btn_view);
@@ -649,6 +747,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             layoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
 
             disabledOverlay = view.findViewById(R.id.disabled_overlay);
+
+            progressBar = (ProgressBar) view.findViewById(R.id.post_upload_progress);
         }
     }
 
@@ -656,20 +756,24 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final TextView txtTitle;
         private final TextView txtDate;
         private final TextView txtStatus;
+        private final ImageView imgStatus;
         private final ViewGroup dateHeader;
         private final View btnMore;
         private final View dividerTop;
         private final View disabledOverlay;
+        private final ProgressBar progressBar;
 
         PageViewHolder(View view) {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtStatus = (TextView) view.findViewById(R.id.text_status);
+            imgStatus = (ImageView) view.findViewById(R.id.image_status);
             btnMore = view.findViewById(R.id.btn_more);
             dividerTop = view.findViewById(R.id.divider_top);
             dateHeader = (ViewGroup) view.findViewById(R.id.header_date);
             txtDate = (TextView) dateHeader.findViewById(R.id.text_date);
             disabledOverlay = view.findViewById(R.id.disabled_overlay);
+            progressBar = (ProgressBar) view.findViewById(R.id.post_upload_progress);
         }
     }
 
@@ -739,7 +843,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 // Always update the list if there are uploading posts
                 boolean postsAreUploading = false;
                 for (PostModel post : tmpPosts) {
-                    if (PostUploadService.isPostUploading(post)) {
+                    if (UploadService.isPostUploadingOrQueued(post)) {
                         postsAreUploading = true;
                         break;
                     }

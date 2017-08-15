@@ -421,7 +421,7 @@ public class NewUserFragment extends AbstractFragment {
         if (mUnderLoginWizard) {
             if (mLoginListener != null) {
                 ArrayList<Integer> oldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
-                mLoginListener.loggedInViaSigUp(oldSitesIDs);
+                mLoginListener.loggedInViaSignup(oldSitesIDs);
             }
         } else {
             getActivity().setResult(Activity.RESULT_OK);

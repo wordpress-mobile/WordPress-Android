@@ -33,7 +33,8 @@ function extract_release_notes() {
     code=$(echo $line|cut -d "," -f1|tr -d " ")
     code_play_store=$(echo $line|cut -d "," -f3|tr -d " ")
     if [ -z "$(grep \"$comment\" $TMPDIR/strings-$code.xml | cleanup)" ]; then
-      continue
+      # Force the current language to english
+      code=en-gb
     fi
     echo \<$code_play_store\> >> $OUTFILE
     grep \"$comment\" $TMPDIR/strings-$code.xml | cleanup >> $OUTFILE

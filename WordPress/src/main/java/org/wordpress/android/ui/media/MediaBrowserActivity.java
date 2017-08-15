@@ -63,7 +63,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
-import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -95,7 +95,7 @@ import javax.inject.Inject;
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         OnQueryTextListener, OnActionExpandListener,
-        WordPressMediaUtils.LaunchCameraCallback {
+        WPMediaUtils.LaunchCameraCallback {
 
     public enum MediaBrowserType {
         BROWSER,                              // browse & manage media
@@ -377,7 +377,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 break;
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
+                    WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
                     Uri uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
                     mMediaCapturePath = null;
                     queueFileForUpload(uri, getContentResolver().getType(uri));
@@ -447,7 +447,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         // hide "add media" if this is used as a media picker or the user doesn't have upload permission
-        if (mBrowserType.isPicker() || !WordPressMediaUtils.currentUserCanUploadMedia(mSite)) {
+        if (mBrowserType.isPicker() || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
         }
 
@@ -675,7 +675,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 continue;
             }
 
-            if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
+            if (WPMediaUtils.canDeleteMedia(mediaModel)) {
                 if (mediaModel.getUploadState() != null &&
                         MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
                     mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
@@ -835,16 +835,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
             switch (position) {
                 case ITEM_CAPTURE_PHOTO:
-                    WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
+                    WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
                     break;
                 case ITEM_CAPTURE_VIDEO:
-                    WordPressMediaUtils.launchVideoCamera(this);
+                    WPMediaUtils.launchVideoCamera(this);
                     break;
                 case ITEM_CHOOSE_PHOTO:
-                    WordPressMediaUtils.launchPictureLibrary(this);
+                    WPMediaUtils.launchPictureLibrary(this);
                     break;
                 case ITEM_CHOOSE_VIDEO:
-                    WordPressMediaUtils.launchVideoLibrary(this);
+                    WPMediaUtils.launchVideoLibrary(this);
                     break;
             }
         }
@@ -878,7 +878,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (TextUtils.isEmpty(filePath)) {
             return originalUri;
         }
-        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, filePath, false);
+        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, filePath, false);
         if (optimizedMedia != null) {
             return optimizedMedia;
         } else {
@@ -899,13 +899,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void addMediaToUploadService(@NonNull MediaModel media) {
         // Start the upload service if it's not started and fill the media queue
         if (!NetworkUtils.isNetworkAvailable(this)) {
-            AppLog.v(AppLog.T.MEDIA, "Unable to start MediaUploadService, internet connection required.");
+            AppLog.v(AppLog.T.MEDIA, "Unable to start UploadService, internet connection required.");
             return;
         }
 
         ArrayList<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(media);
-        MediaUploadService.startService(this, mSite, mediaList);
+        UploadService.uploadMedia(this, mediaList);
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {

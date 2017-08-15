@@ -115,7 +115,7 @@ public class PostUtils {
                     properties.put("post_id", post.getRemotePostId());
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
-                    // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadService
+                    // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadHandler
                 }
                 break;
             case SCHEDULED:
@@ -304,7 +304,7 @@ public class PostUtils {
         return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
     }
 
-    static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
+    public static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
         if (shouldPublishImmediately(postModel)) {
             postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
         }

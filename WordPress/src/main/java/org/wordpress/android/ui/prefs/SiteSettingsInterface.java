@@ -25,7 +25,6 @@ import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.ArrayList;
@@ -46,7 +45,6 @@ import javax.inject.Inject;
  * - Language
  * - Username (.org only)
  * - Password (.org only)
- * - Optimized Image (local device setting, not saved remotely)
  * - Default Category
  * - Default Format
  * - Related Posts
@@ -152,7 +150,7 @@ public abstract class SiteSettingsInterface {
      * Gets the default category value stored in {@link SharedPreferences}, 0 by default.
      */
     public static int getDefaultCategory(Context context) {
-        return siteSettingsPreferences(context).getInt(DEF_CATEGORY_PREF_KEY, 0);
+        return siteSettingsPreferences(context).getInt(DEF_CATEGORY_PREF_KEY, 1);
     }
 
     /**
@@ -276,33 +274,6 @@ public abstract class SiteSettingsInterface {
 
     public @NonNull String getPassword() {
         return mSettings.password == null ? "" : mSettings.password;
-    }
-
-
-    public boolean getOptimizedImage() {
-        return mSettings.optimizedImage;
-    }
-
-    public int getMaxImageWidth() {
-        int resizeWidth = mSettings.maxImageWidth;
-        return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_IMAGE_MAX_WIDTH : resizeWidth;
-    }
-
-    public int getImageQuality() {
-        return mSettings.imageQualitySetting > 1 ? mSettings.imageQualitySetting : WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY;
-    }
-
-    public boolean getOptimizedVideo() {
-        return mSettings.optimizedVideo;
-    }
-
-    public int getMaxVideoWidth() {
-        int resizeWidth = mSettings.maxVideoWidth;
-        return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_VIDEO_MAX_WIDTH : resizeWidth;
-    }
-
-    public int getVideoEncoderBitrate() {
-        return mSettings.videoEncoderBitrate > 1 ? mSettings.videoEncoderBitrate : WPMediaUtils.OPTIMIZE_VIDEO_ENCODER_BITRATE_KB;
     }
 
     public @NonNull Map<String, String> getFormats() {
@@ -624,30 +595,6 @@ public abstract class SiteSettingsInterface {
         mSettings.password = password;
     }
 
-    public void setOptimizedImage(boolean optimizeImage) {
-        mSettings.optimizedImage = optimizeImage;
-    }
-
-    public void setImageResizeWidth(int width) {
-        mSettings.maxImageWidth = width;
-    }
-
-    public void setImageQuality(int quality) {
-        mSettings.imageQualitySetting = quality;
-    }
-
-    public void setOptimizedVideo(boolean optimizedVideo) {
-        mSettings.optimizedVideo = optimizedVideo;
-    }
-
-    public void setVideoResizeWidth(int width) {
-        mSettings.maxVideoWidth = width;
-    }
-
-    public void setVideoEncoderBitrate(int bitrate) {
-        mSettings.videoEncoderBitrate = bitrate;
-    }
-
     public void setAllowComments(boolean allowComments) {
         mSettings.allowComments = allowComments;
     }
@@ -891,12 +838,6 @@ public abstract class SiteSettingsInterface {
             }
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
-            mRemoteSettings.optimizedImage = mSettings.optimizedImage;
-            mRemoteSettings.maxImageWidth = mSettings.maxImageWidth;
-            mRemoteSettings.imageQualitySetting = mSettings.imageQualitySetting;
-            mRemoteSettings.optimizedVideo = mSettings.optimizedVideo;
-            mRemoteSettings.maxVideoWidth = mSettings.maxVideoWidth;
-            mRemoteSettings.videoEncoderBitrate = mSettings.videoEncoderBitrate;
             notifyUpdatedOnUiThread(null);
         } else {
             mSettings.isInLocalTable = false;

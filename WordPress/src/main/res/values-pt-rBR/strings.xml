@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-28 20:04:02+0000
+Translation-Revision-Date: 2017-08-03 17:43:31+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+	<string name="login_epilogue_mysites_other">Meus sites</string>
+	<string name="login_epilogue_mysites_one">Meu site</string>
+	<string name="login_logged_in_as">Logado como</string>
+	<string name="login_email_client_not_found">Não é possível detectar seu aplicativo cliente de e-mail</string>
+	<string name="login_empty_2fa">Digite um código de verificação</string>
+	<string name="login_empty_username">Digite um nome de usuário</string>
+	<string name="login_empty_site_url">Digite o endereço de um site</string>
+	<string name="login_log_in_for_deeplink">Faça o login no WordPress.com para acessar a publicação.</string>
+	<string name="login_error_while_adding_site">Erro ao adicionar o site. Código de erro: %s</string>
+	<string name="login_checking_site_address">Verificando o endereço do site</string>
+	<string name="login_site_address_more_help">Precisa de mais ajuda?</string>
+	<string name="login_site_address_help_content">O endereço do seu site aparece na barra na parte superior da tela quando você visita seu site no Chrome.</string>
+	<string name="login_site_address_help_title">Qual é o endereço do meu site?</string>
+	<string name="login_site_address_help">Precisa de ajuda para encontrar o endereço do seu site?</string>
+	<string name="login_site_address">Endereço do site</string>
+	<string name="enter_site_address">Digite o endereço do seu site WordPress que deseja conectar.</string>
+	<string name="login_username_at">\@%s</string>
+	<string name="login_already_logged_in_wpcom">Já conectado no WordPress.com</string>
+	<string name="login_continue">Continuar</string>
+	<string name="connect_more">Conectar outro site</string>
+	<string name="enter_wpcom_password">Digite sua senha do WordPress.com.</string>
+	<string name="login_magic_link_email_requesting">Solicitando o e-mail de login</string>
+	<string name="login_magic_links_sent_description">Ilustração do link mágico enviado</string>
+	<string name="login_magic_links_sent_label">Seu link mágico está a caminho! Verifique seu e-mail neste dispositivo e toque no link que você recebeu do WordPress.com.</string>
+	<string name="login_magic_links_label">Enviaremos um e-mail pra você com um link mágico que fará você se conectar instantaneamente, sem precisar de senha. Chega de catar milho no teclado!</string>
+	<string name="login_error_while_checking_email">Ocorreu um erro ao verificar o endereço de e-mail!</string>
+	<string name="password_incorrect">Parece que esta senha está errada. Verifique seus dados e tente novamente.</string>
+	<string name="email_not_registered_wpcom">Este e-mail não está registrado no WordPress.com</string>
+	<string name="requesting_otp">Solicitando um código de verificação via SMS.</string>
+	<string name="login_text_otp">Envie-me uma mensagem de texto com o código em vez disso.</string>
+	<string name="enter_verification_code">Quase lá! Digite o código de verificação do seu aplicativo de autenticação.</string>
+	<string name="enter_the_address_of_your_wordpress_site">Digite o endereço do seu site WordPress</string>
+	<string name="enter_username_instead">Fazer login com nome de usuário.</string>
+	<string name="enter_site_address_instead">Fazer login informando o endereço do seu site.</string>
+	<string name="open_mail">Abrir e-mail</string>
+	<string name="next">Próximo</string>
+	<string name="enter_email_wordpress_com">Fazer login no WordPress.com usando um endereço de e-mail para gerenciar todos os seus sites WordPress.</string>
+	<string name="login_promo_text_jetpack">Gerencie seus sites com Jetpack de qualquer lugar, você está com o WordPress no seu bolso!</string>
+	<string name="login_promo_text_notifications">Suas notificações viajam com você, veja comentários e curtidas assim que enviados.</string>
+	<string name="login_promo_text_anytime">Acompanhe seus sites favoritos e participe da conversa de qualquer lugar, a qualquer hora.</string>
+	<string name="login_promo_text_realtime">Veja leitores de todo o mundo lendo e interagindo com o seu site — em tempo real.</string>
+	<string name="login_promo_text_onthego">Publique do parque. Escreva do ônibus. Comente de um café. O WordPress te acompanha para onde você for.</string>
+	<string name="create_wordpress_site">Criar um site WordPress</string>
+	<string name="email_not_found">Não encontramos um usuário do WordPress.com com este endereço de e-mail</string>
+	<string name="login_password_image">Ícone de senha do login</string>
+	<string name="login_username_image">Ícone de nome do usuário</string>
+	<string name="login_site_address_help_image">Imagem de posicionamento de endereço do site</string>
+	<string name="login_globe_icon">Ícone do globo do endereço do site</string>
+	<string name="login_email_image">Ícone de e-mail do login</string>
 	<string name="image_optimization_promo_desc">A otimização de imagens as deixa mais leves, tornando seu upload mais rápido.\n\nVocê pode alterar essa funcionalidade a qualquer momento nas configurações do site.</string>
 	<string name="image_optimization_promo_title">Habilitar  otimização de imagens?</string>
 	<string name="leave_off">Permanecer desligado</string>
@@ -95,7 +144,7 @@ Language: pt_BR
 	<string name="draft_uploaded">Upload do rascunho concluído</string>
 	<string name="report_bug">Comunicar erro</string>
 	<string name="video_quality">Qualidade do vídeo</string>
-	<string name="max_video_px_width">Largura padrão do vídeo</string>
+	<string name="max_video_resolution">Largura padrão do vídeo</string>
 	<string name="permission_location">Localização</string>
 	<string name="permission_camera">Câmera</string>
 	<string name="permission_storage">Armazenamento</string>
@@ -217,14 +266,11 @@ Language: pt_BR
 	<string name="error_fetch_site_after_creation">O site foi criado, talvez seja necessário atualizar seus sites no seletor de sites.</string>
 	<string name="error_upload_params">Erro ao fazer upload de %1$s: %2$s</string>
 	<string name="submit_for_review">Enviar</string>
-	<string name="role_subscriber">Assinante</string>
 	<string name="tell_me_more">Conte-me mais</string>
 	<string name="duplicate_site_detected">Um site duplicado foi detectado.</string>
 	<string name="cannot_add_duplicate_site">Esse site já existe no aplicativo, você não pode adicioná-lo.</string>
 	<string name="already_logged_in_wpcom_same_username">Você já está conectado com a sua conta do WordPress.com. Seu site deve aparecer no seletor de sites, verifique se ele não está oculto.</string>
 	<string name="already_logged_in_wpcom">Você não pode adicionar um site do WordPress.com que não esteja vinculado a sua conta atual.</string>
-	<string name="migration_error_not_connected">O processo de migração falhou: tente iniciar o aplicativo quando você tiver \n      uma conexão de rede.</string>
-	<string name="migration_message">Atualizando o aplicativo do WordPress…</string>
 	<string name="checking_username">Verificando nome de usuário</string>
 	<string name="jetpack_different_com_account">Sites Jetpack pertencentes a diferentes contas do WordPress.com não são suportados</string>
 	<string name="jetpack_use_com_account">Para adicionar seu site Jetpack, faça login na conta WordPress.com que você utiliza para conectar com o Jetpack.</string>
@@ -303,10 +349,6 @@ Language: pt_BR
 	<string name="timespan_now">agora</string>
 	<string name="role_viewer">Leitor</string>
 	<string name="role_follower">Seguidor</string>
-	<string name="role_contributor">Colaborador</string>
-	<string name="role_author">Autor</string>
-	<string name="role_editor">Editor</string>
-	<string name="role_admin">Administrador</string>
 	<string name="error_post_my_profile_no_connection">Sem conexão, não foi possível salvar seu perfil</string>
 	<string name="alignment_right">Direita</string>
 	<string name="alignment_left">Esquerda</string>
@@ -1243,7 +1285,7 @@ Language: pt_BR
 	<string name="passcode_manage">Gerenciar seu código PIN.</string>
 	<string name="stats_totals_plays">Tocados</string>
 	<string name="stats_totals_clicks">Cliques</string>
-	<string name="stats_totals_views">Vistas</string>
+	<string name="stats_totals_views">Visualizações</string>
 	<string name="stats_entry_referrers">Referências</string>
 	<string name="stats_entry_authors">Autor</string>
 	<string name="stats_entry_tags_and_categories">Tópico</string>
@@ -1298,6 +1340,7 @@ Language: pt_BR
 	<string name="publish_date">Publicar</string>
 	<string name="post_content">Conteúdo (Toque para adicionar texto e mídia)</string>
 	<string name="incorrect_credentials">Usuário ou senha incorreta.</string>
+	<string name="log_in">Fazer login</string>
 	<string name="username">Usuário</string>
 	<string name="password">Senha</string>
 	<string name="reader">Leitor</string>
