@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -44,6 +45,8 @@ public class UploadService extends Service {
     private static final String KEY_MEDIA_LIST = "mediaList";
     private static final String KEY_LOCAL_POST_ID = "localPostId";
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
+
+    private static @Nullable UploadService sInstance;
 
     private MediaUploadHandler mMediaUploadHandler;
     private PostUploadHandler mPostUploadHandler;
@@ -101,6 +104,7 @@ public class UploadService extends Service {
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(T.MAIN, "UploadService > Created");
         mDispatcher.register(this);
+        sInstance = this;
         // TODO: Recover any posts/media uploads that were interrupted by the service being stopped
     }
 
@@ -120,6 +124,7 @@ public class UploadService extends Service {
         updatePostModelWithCompletedAndFailedUploads();
 
         mDispatcher.unregister(this);
+        sInstance = null;
         AppLog.i(T.MAIN, "UploadService > Destroyed");
         super.onDestroy();
     }
