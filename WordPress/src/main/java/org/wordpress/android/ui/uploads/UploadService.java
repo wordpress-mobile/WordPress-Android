@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -68,6 +69,7 @@ public class UploadService extends Service {
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
+    @Inject UploadStore mUploadStore;
 
     public static class UploadError {
         public PostStore.PostError postError;
