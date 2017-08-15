@@ -189,6 +189,21 @@ public class UploadStore extends Store {
         return UploadSqlUtils.getPostModelsForPostUploadModels(uploadingPostUploadModels);
     }
 
+    public boolean isPendingPost(PostModel post) {
+        PostUploadModel postUploadModel = getPostUploadModelForPostModel(post);
+        return postUploadModel != null && postUploadModel.getUploadState() == PostUploadModel.PENDING;
+    }
+
+    public boolean isFailedPost(PostModel post) {
+        PostUploadModel postUploadModel = getPostUploadModelForPostModel(post);
+        return postUploadModel != null && postUploadModel.getUploadState() == PostUploadModel.FAILED;
+    }
+
+    public boolean isCancelledPost(PostModel post) {
+        PostUploadModel postUploadModel = getPostUploadModelForPostModel(post);
+        return postUploadModel != null && postUploadModel.getUploadState() == PostUploadModel.CANCELLED;
+    }
+
     public @Nullable UploadError getUploadErrorForPost(PostModel postModel) {
         if (postModel == null) return null;
 
