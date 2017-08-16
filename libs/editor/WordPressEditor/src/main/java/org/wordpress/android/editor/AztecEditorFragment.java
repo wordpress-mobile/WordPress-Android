@@ -1474,7 +1474,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
             // fill in Aztec with the post's content
-            AztecText content = new AztecText(context);
+            AztecText content = getAztecTextWithPlugins(context);
             content.fromHtml(postContent);
 
             MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
@@ -1508,7 +1508,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                                  String localMediaId, MediaFile mediaFile) {
         if (mediaFile != null) {
             // fill in Aztec with the post's content
-            AztecText content = new AztecText(context);
+            AztecText content = getAztecTextWithPlugins(context);
             content.fromHtml(postContent);
 
             MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
@@ -1543,7 +1543,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static boolean hasMediaItemsMarkedWithTag(Context context, @NonNull String postContent, String tag) {
         // fill in Aztec with the post's content
-        AztecText content = new AztecText(context);
+        AztecText content = getAztecTextWithPlugins(context);
         content.fromHtml(postContent);
 
         // get all items with the class in the "tag" param
@@ -1556,7 +1556,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public static String resetUploadingMediaToFailed(Context context, @NonNull String postContent) {
         // fill in Aztec with the post's content
-        AztecText content = new AztecText(context);
+        AztecText content = getAztecTextWithPlugins(context);
         content.fromHtml(postContent);
 
         // get all items with "failed" class, and make sure they are still failed
@@ -1574,7 +1574,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public static List<String> getMediaMarkedUploadingInPostContent(Context context, @NonNull String postContent) {
         ArrayList<String> mediaMarkedUploading = new ArrayList<>();
         // fill in Aztec with the post's content
-        AztecText content = new AztecText(context);
+        AztecText content = getAztecTextWithPlugins(context);
         content.fromHtml(postContent);
         AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(ATTR_STATUS_UPLOADING);
         for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
@@ -1646,5 +1646,61 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         return attributesWithClass;
+    }
+
+    private static AztecText getAztecTextWithPlugins(Context context) {
+        AztecText content = new AztecText(context);
+        SourceViewEditText mockSource = new SourceViewEditText(context);
+        AztecToolbar mockFormattingToolbar = new AztecToolbar(context);
+
+        IAztecToolbarClickListener mockListener = new IAztecToolbarClickListener() {
+            @Override
+            public void onToolbarCollapseButtonClicked() {
+                // no op
+            }
+
+            @Override
+            public void onToolbarExpandButtonClicked() {
+                // no op
+            }
+
+            @Override
+            public void onToolbarFormatButtonClicked(ITextFormat iTextFormat, boolean b) {
+                // no op
+            }
+
+            @Override
+            public void onToolbarHeadingButtonClicked() {
+                // no op
+            }
+
+            @Override
+            public void onToolbarHtmlButtonClicked() {
+                // no op
+            }
+
+            @Override
+            public void onToolbarListButtonClicked() {
+                // no op
+            }
+
+            @Override
+            public void onToolbarMediaButtonClicked() {
+                // no op
+            }
+        };
+
+        Aztec.Factory.with(content, mockSource, mockFormattingToolbar, mockListener)
+                .addPlugin(new WordPressCommentsPlugin(content))
+                .addPlugin(new MoreToolbarButton(content))
+                .addPlugin(new CaptionShortcodePlugin())
+                .addPlugin(new VideoShortcodePlugin())
+                .addPlugin(new AudioShortcodePlugin());
+
+        new BlockElementWatcher(content)
+                .add(new CaptionHandler())
+                .install(content);
+
+        return content;
     }
 }
