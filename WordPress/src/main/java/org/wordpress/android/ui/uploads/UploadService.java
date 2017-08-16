@@ -562,11 +562,16 @@ public class UploadService extends Service {
                 // For each post with completed media uploads, update the content with the new remote URLs
                 // This is done in a batch when all media is complete to prevent conflicts by updating separate images
                 // at a time simultaneously for the same post
-                PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
-                // also do the same now with failed uploads
-                updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
-                // finally, save the PostModel
-                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+                PostModel post  = mPostStore.getPostByLocalPostId(postId);
+                if (post != null) {
+                    PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(post);
+                    // also do the same now with failed uploads
+                    updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
+                    // finally, save the PostModel
+                    if (updatedPost != null) {
+                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+                    }
+                }
             }
         }
     }
@@ -700,17 +705,20 @@ public class UploadService extends Service {
                                 // Fetch latest version of the post, in case it has been modified elsewhere
                                 PostModel latestPost = mPostStore.getPostByLocalPostId(uploadingPost.postModel.getId());
 
-                                // Replace local with remote media in the post content
-                                PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(latestPost);
-                                // also do the same now with failed uploads
-                                updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
-                                // finally, save the PostModel
-                                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
-
-                                // TODO Should do some extra validation here
-                                // e.g. what if the post has local media URLs but no pending media uploads?
+                                if (latestPost != null) {
+                                    // Replace local with remote media in the post content
+                                    PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(latestPost);
+                                    // also do the same now with failed uploads
+                                    updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
+                                    // finally, save the PostModel
+                                    if (updatedPost != null) {
+                                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+                                        // TODO Should do some extra validation here
+                                        // e.g. what if the post has local media URLs but no pending media uploads?
+                                        mPostUploadHandler.upload(updatedPost);
+                                    }
+                                }
                                 iterator.remove();
-                                mPostUploadHandler.upload(updatedPost);
                             }
                         }
                     }
