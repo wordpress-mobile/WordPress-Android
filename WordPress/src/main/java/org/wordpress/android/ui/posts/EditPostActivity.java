@@ -681,24 +681,14 @@ public class EditPostActivity extends AppCompatActivity implements
                         new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
                             @Override
                             public void done() {
-                                for (Uri uri: uriList) {
-                                    if (addMedia(uri)) {
-                                        boolean isVideo = MediaUtils.isVideo(uri.toString());
-                                        trackAddMediaFromDeviceEvents(false, isVideo, uri);
-                                    }
-                                }
+                                addMedia(uriList);
                             }
                         });
                 return;
             }
         }
 
-        for (Uri uri: uriList) {
-            if (addMedia(uri)) {
-                boolean isVideo = MediaUtils.isVideo(uri.toString());
-                trackAddMediaFromDeviceEvents(false, isVideo, uri);
-            }
-        }
+        addMedia(uriList);
     }
 
     /*
@@ -1803,7 +1793,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     public boolean addMedia(@NonNull List<Uri> uriList) {
         boolean didAllSucceed = true;
-        for (Uri mediaUri: uriList) {
+        for (Uri mediaUri : uriList) {
             if (mediaUri != null
                     && !MediaUtils.isInMediaStore(mediaUri)
                     && !mediaUri.toString().startsWith("/")
@@ -1825,10 +1815,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
 
-        // after asking the Editor to append the Media File, save the Post object to the DB
-        // as we need to keep the new modifications made to the Post's body (that is, the inserted media)
         savePostAsync(null);
-
         return didAllSucceed;
     }
 
