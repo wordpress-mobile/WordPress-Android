@@ -12,8 +12,8 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginInfoClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
+import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.util.AppLog;
 
@@ -94,13 +94,13 @@ public class PluginStore extends Store {
     }
 
     private final PluginRestClient mPluginRestClient;
-    private final PluginInfoClient mPluginInfoClient;
+    private final PluginWPOrgClient mPluginWPOrgClient;
 
     @Inject
-    public PluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient, PluginInfoClient pluginInfoClient) {
+    public PluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient, PluginWPOrgClient pluginWPOrgClient) {
         super(dispatcher);
         mPluginRestClient = pluginRestClient;
-        mPluginInfoClient = pluginInfoClient;
+        mPluginWPOrgClient = pluginWPOrgClient;
     }
 
     @Override
@@ -150,7 +150,7 @@ public class PluginStore extends Store {
     }
 
     private void fetchPluginInfo(String plugin) {
-        mPluginInfoClient.fetchPluginInfo(plugin);
+        mPluginWPOrgClient.fetchPluginInfo(plugin);
     }
 
     private void fetchedPlugins(FetchedPluginsPayload payload) {

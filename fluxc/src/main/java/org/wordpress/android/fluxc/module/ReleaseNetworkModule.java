@@ -20,11 +20,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginInfoClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
+import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
@@ -207,10 +207,10 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public PluginInfoClient providePluginInfoClient(Dispatcher dispatcher,
-                                                    @Named("regular") RequestQueue requestQueue,
-                                                    UserAgent userAgent) {
-        return new PluginInfoClient(dispatcher, requestQueue, userAgent);
+    public PluginWPOrgClient providePluginInfoClient(Dispatcher dispatcher,
+                                                     @Named("regular") RequestQueue requestQueue,
+                                                     UserAgent userAgent) {
+        return new PluginWPOrgClient(dispatcher, requestQueue, userAgent);
     }
 
     @Singleton
