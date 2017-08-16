@@ -39,8 +39,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 
-import com.android.volley.toolbox.ImageLoader;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -1429,7 +1427,8 @@ public class EditPostActivity extends AppCompatActivity implements
             MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
             trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
             String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
-            appendMediaFileAndSavePost(mediaFile, urlToUse, mImageLoader);
+            mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
+            savePostAsync(null);
         }
     }
 
@@ -1796,23 +1795,41 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    public boolean addMedia(Uri mediaUri) {
-        if (mediaUri != null && !MediaUtils.isInMediaStore(mediaUri) && !mediaUri.toString().startsWith("/")
-                && !mediaUri.toString().startsWith("file://") ) {
-            mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
+    public boolean addMedia(@NonNull Uri mediaUri) {
+        List<Uri> uriList = new ArrayList<>();
+        uriList.add(mediaUri);
+        return addMedia(uriList);
+    }
+
+    public boolean addMedia(@NonNull List<Uri> uriList) {
+        boolean didAllSucceed = true;
+        for (Uri mediaUri: uriList) {
+            if (mediaUri != null
+                    && !MediaUtils.isInMediaStore(mediaUri)
+                    && !mediaUri.toString().startsWith("/")
+                    && !mediaUri.toString().startsWith("file://")) {
+                mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
+            }
+
+            if (mediaUri != null) {
+                boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
+                boolean success;
+                if (mShowNewEditor || mShowAztecEditor) {
+                    success = addMediaVisualEditor(mediaUri, isVideo);
+                } else {
+                    success = addMediaLegacyEditor(mediaUri, isVideo);
+                }
+                if (!success) {
+                    didAllSucceed = false;
+                }
+            }
         }
 
-        if (mediaUri == null) {
-            return false;
-        }
+        // after asking the Editor to append the Media File, save the Post object to the DB
+        // as we need to keep the new modifications made to the Post's body (that is, the inserted media)
+        savePostAsync(null);
 
-        boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
-
-        if (mShowNewEditor || mShowAztecEditor) {
-            return addMediaVisualEditor(mediaUri, isVideo);
-        } else {
-            return addMediaLegacyEditor(mediaUri, isVideo);
-        }
+        return didAllSucceed;
     }
 
     private boolean addMediaVisualEditor(Uri uri, boolean isVideo) {
@@ -1852,17 +1869,10 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
         if (media != null) {
-            appendMediaFileAndSavePost(mediaFile, path, mImageLoader);
+            mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
         }
 
         return true;
-    }
-
-    private void appendMediaFileAndSavePost(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader) {
-        mEditorFragment.appendMediaFile(mediaFile, imageUrl, mImageLoader);
-        // after asking the Editor to append the Media File, save the Post object to the DB
-        // as we need to keep the new modifications made to the Post's body (that is, the inserted media)
-        savePostAsync(null);
     }
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
@@ -1878,7 +1888,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
 
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
-        appendMediaFileAndSavePost(mediaFile, mediaFile.getFilePath(), mImageLoader);
+        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
         return true;
     }
 
