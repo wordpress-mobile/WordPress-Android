@@ -11,13 +11,10 @@ Language: el_GR
 	<string name="error_fetch_site_after_creation">Ο ιστότοπος έχει δημιουργηθεί, μπορεί να χρειάζεται ανανέωση των ιστοτόπων σας στον επιλογέα ιστοτόπων.</string>
 	<string name="error_upload_params">Σφάλμα κατά τη μεταφόρτωση του %1$s: %2$s</string>
 	<string name="submit_for_review">Υποβολή</string>
-	<string name="role_subscriber">Συνδρομητής</string>
 	<string name="tell_me_more">Πείτε μου περισσότερα</string>
 	<string name="duplicate_site_detected">Ανιχνεύθηκε πανομοιότυπος ιστότοπος.</string>
 	<string name="already_logged_in_wpcom_same_username">Έχετε ήδη συνδεθεί στον λογαριασμό σας στο WordPress.com. Ο ιστότοπός σας θα πρέπει να εμφανίζεται στην επιλογή ιστοτόπων, βεβαιωθείτε πως δεν είναι κρυφός.</string>
 	<string name="already_logged_in_wpcom">Είστε ήδη συνδεδεμένος σε ένα λογαριασμό στο WordPress.com, δεν μπορείτε να προσθέσετε έναν ιστότοπο του WordPress.com που είναι συνδεδεμένος με άλλο λογαριασμό.</string>
-	<string name="migration_error_not_connected">Η διαδικασία μεταφοράς απέτυχε: δοκιμάστε να εκκινήσετε την εφαρμογή όταν θα έχετε\nσύνδεση δικτύου.</string>
-	<string name="migration_message">Ενημέρωση της εφαρμογής του WordPress...</string>
 	<string name="checking_username">Έλεγχος ονόματος χρήστη</string>
 	<string name="jetpack_different_com_account">Ιστότοποι του Jetpack που ανήκουν σε διαφορετικούς λογαριασμούς του WordPress.com δεν υποστηρίζονται</string>
 	<string name="jetpack_use_com_account">Για να προσθέσετε τον ιστότοπό σας του Jetpack, συνδεθείτε στον λογαριασμό του WordPress.com που χρησιμοποιήσατε για να συνδεθείτε στο Jetpack.</string>
@@ -89,10 +86,6 @@ Language: el_GR
 	<string name="timespan_now">τώρα</string>
 	<string name="role_viewer">Αναγνώστης</string>
 	<string name="role_follower">Ακόλουθος</string>
-	<string name="role_contributor">Συνεργάτης</string>
-	<string name="role_author">Συντάκτης</string>
-	<string name="role_editor">Αρχισυντάκτης</string>
-	<string name="role_admin">Διαχειριστής</string>
 	<string name="error_post_my_profile_no_connection">Χωρίς σύνδεση, αδυναμία αποθήκευσης προφίλ</string>
 	<string name="alignment_right">Δεξιά</string>
 	<string name="alignment_left">Αριστερά</string>

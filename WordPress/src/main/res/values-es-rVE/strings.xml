@@ -46,10 +46,6 @@ Language: es_VE
 	<string name="timespan_now">ahora</string>
 	<string name="role_follower">Seguidor</string>
 	<string name="role_viewer">Espectador</string>
-	<string name="role_editor">Editor</string>
-	<string name="role_contributor">Colaborador</string>
-	<string name="role_author">Autor</string>
-	<string name="role_admin">Administrador</string>
 	<string name="error_post_my_profile_no_connection">Sin conexión, no se pudo guardar tu perfil</string>
 	<string name="alignment_none">Ninguna</string>
 	<string name="alignment_left">Izquierda</string>

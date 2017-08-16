@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-15 13:51:20+0000
+Translation-Revision-Date: 2017-08-01 23:18:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+	<string name="format_bar_description_link">קישור</string>
+	<string name="format_bar_description_list">רשימה</string>
+	<string name="format_bar_description_heading">כותרת</string>
+	<string name="format_bar_description_media">מדיה</string>
+	<string name="reader_view_comments">הצגת התגובות</string>
+	<string name="new_editor_promo_link">מה חדש?</string>
+	<string name="new_editor_promo_confirmation_action">הגדרות</string>
+	<string name="new_editor_promo_button_negative">לא עכשיו</string>
+	<string name="permission_location">מיקום</string>
+	<string name="permission_camera">מצלמה</string>
+	<string name="permission_storage">אחסון</string>
 	<string name="smart_toast_comments_long_press">יש להקיש ולהחזיק כדי לבחור מספר תגובות</string>
 	<string name="smart_toast_photo_long_press">יש להקיש ולהחזיק כדי לבחור מספר תמונות</string>
 	<string name="photo_picker_choose_video">בחירת וידאו מהמכשיר</string>
 	<string name="photo_picker_choose_photo">בחירת תמונה מהמכשיר</string>
+	<string name="new_editor_promo_description">אפליקציית וורדפרס כוללת כעת עורך חדש ויפה. ניתן להתנסות בו על ידי יצירת פוסט חדש!</string>
 	<string name="wp_media_title">מדיה של WordPress</string>
 	<string name="media_insert_as_gallery">הוספה כגלריה</string>
 	<string name="media_insert_individually">הוספה של כל פריט בנפרד</string>
@@ -52,20 +64,18 @@ Language: he_IL
 	<string name="media_upload_state_queued">בתור</string>
 	<string name="update_draft">עדכון טיוטה</string>
 	<string name="keep_editing">המשך עריכה</string>
+	<string name="image_quality">איכות תמונה</string>
 	<string name="error_all_media_upload_canceled">כל ההעלאות של פריטי המדיה בוטלו עקב שגיאה לא מזוהה. יש לנסות לבצע את ההעלאה שוב</string>
 	<string name="error_unknown_post_type">סוג פוסט לא מזוהה</string>
 	<string name="error_unknown_post">פוסט לא מזוהה, ייתכן שהעותק המקומי של הפוסט לא מסונכרן עם השרת</string>
 	<string name="error_fetch_site_after_creation">האתר כבר נוצר, ייתכן שיידרש ריענון של האתרים שלך בתפריט בחירת האתרים.</string>
 	<string name="error_upload_params">אירעה שגיאה בעת העלאת של %1$s: %2$s</string>
 	<string name="submit_for_review">שלח</string>
-	<string name="role_subscriber">מנוי רשום לעדכונים</string>
 	<string name="tell_me_more">אני רוצה לראות מידע נוסף</string>
 	<string name="duplicate_site_detected">נמצא אתר כפול.</string>
 	<string name="cannot_add_duplicate_site">אתר זה כבר קיים באפליקציה, אין אפשרות להוסיף אותו.</string>
 	<string name="already_logged_in_wpcom_same_username">כבר התחברת לחשבון שלך ב-WordPress.com. האתר שלך אמור להופיע בתפריט בחירת האתרים. יש לוודא שהוא אינו מוגדר כ\'מוסתר\'.</string>
 	<string name="already_logged_in_wpcom">כבר התחברת לחשבון שלך ב-WordPress.com. אין באפשרותך להוסיף אתר WordPress.com שקשור לחשבון אחר.</string>
-	<string name="migration_error_not_connected">תהליך ההעברה נכשל: מומלץ להפעיל מחדש את האפליקציה כאשר יש ברשותך\n חיבור פעיל לרשת.</string>
-	<string name="migration_message">עדכון אפליקציית WordPress...</string>
 	<string name="checking_username">בדיקת שמות משתמש</string>
 	<string name="jetpack_different_com_account">אין תמיכה באתרי Jetpack ששייכים לחשבונות WordPress.com שונים</string>
 	<string name="jetpack_use_com_account">כדי להוסיף אתר Jetpack שברשותך, יש להתחבר לחשבון WordPress.com שבאמצעותו בוצע החיבור ל-Jetpack.</string>
@@ -143,10 +153,6 @@ Language: he_IL
 	<string name="timespan_now">עכשיו</string>
 	<string name="role_viewer">צופה</string>
 	<string name="role_follower">עוקב</string>
-	<string name="role_contributor">תורם</string>
-	<string name="role_author">מאת</string>
-	<string name="role_editor">עורך</string>
-	<string name="role_admin">מנהל המערכת</string>
 	<string name="error_post_my_profile_no_connection">אין חיבור, הפרופיל לא נשמר</string>
 	<string name="alignment_right">ימין</string>
 	<string name="alignment_left">שמאל</string>
@@ -178,6 +184,10 @@ Language: he_IL
 	<string name="editor_failed_uploads_switch_html">מספר העלאות מדיה נכשלו. לא ניתן לעבור למצב HTML\n במצב זה. להסיר את כל ההעלאות שנכשלו ולהמשיך?</string>
 	<string name="image_thumbnail">תמונה ממוזערת של תמונה</string>
 	<string name="visual_editor">עורך ויזואלי</string>
+	<string name="format_bar_description_html">HTML</string>
+	<string name="format_bar_description_ol">רשימה מסודרת</string>
+	<string name="format_bar_description_ul">רשימה לא מסודרת</string>
+	<string name="format_bar_description_quote">ציטוט</string>
 	<string name="format_bar_description_strike">קו חוצה</string>
 	<string name="format_bar_description_underline">קו תחתון</string>
 	<string name="format_bar_description_italic">נטוי</string>
@@ -567,6 +577,7 @@ Language: he_IL
 	<string name="stats_widget_loading_data">טוען נתונים...</string>
 	<string name="stats_widget_name_for_blog">סטטיסטיקות יומיות עבור %1$s</string>
 	<string name="stats_widget_name">סטטיסטיקות וורדפרס יומיות</string>
+	<string name="post_settings_add_location_permission_required">נדרשות הרשאות מתאימות כדי להוסיף מיקומים</string>
 	<string name="add_media_permission_required">ההרשאות הדרושות כדי להוסיף מדיה</string>
 	<string name="access_media_permission_required">ההרשאות הדרושות כדי לגשת למדיה</string>
 	<string name="stats_enable_rest_api_in_jetpack">להצגת סטטיסטיקות, הפעילו מודול JSON API בג\'טפאק.</string>
@@ -1129,6 +1140,7 @@ Language: he_IL
 	<string name="publish_date">פרסם</string>
 	<string name="post_content">תוכן (הקליקו להוספת טקסט או קבצי מדיה)</string>
 	<string name="incorrect_credentials">שם משתמש או סיסמה לא נכונים.</string>
+	<string name="log_in">התחבר</string>
 	<string name="username">שם משתמש</string>
 	<string name="password">סיסמה</string>
 	<string name="reader">קורא</string>
@@ -1166,6 +1178,7 @@ Language: he_IL
 	<string name="quickpress_window_title">בחר אתר לקיצור דרך  קוויקפרס</string>
 	<string name="upload_full_size_image">העלה וקשה לתמונה בגודל מלא</string>
 	<string name="categories">קטגוריות</string>
+	<string name="tags_separate_with_commas">יש להפריד תגיות בפסיקים</string>
 	<string name="title">כותרת</string>
 	<string name="dlg_deleting_comments">מוחק תגובות</string>
 	<string name="notification_vibrate">רטט</string>

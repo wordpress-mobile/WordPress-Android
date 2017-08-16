@@ -141,6 +141,25 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return mediaList;
     }
 
+    static boolean isPendingOrInProgressMediaUpload(@NonNull MediaModel media) {
+        synchronized (sInProgressUploads) {
+            for (MediaModel uploadingMedia : sInProgressUploads) {
+                if (uploadingMedia.getId() == media.getId()) {
+                    return true;
+                }
+            }
+        }
+
+        synchronized (sPendingUploads) {
+            for (MediaModel queuedMedia : sPendingUploads) {
+                if (queuedMedia.getId() == media.getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Returns the last recorded progress value for the given {@param media}. If there is no record for that media,
      * it's assumed to be a completed upload.
@@ -204,7 +223,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
         if (next == null) {
             AppLog.w(T.MEDIA, "MediaUploadHandler > No more media items to upload. Skipping this request.");
-            notifyServiceIfUploadsComplete();
+            checkIfUploadsComplete();
             return;
         }
 
@@ -284,7 +303,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         // somehow lost our reference to the site, complete this action
         if (site == null) {
             AppLog.w(T.MEDIA, "MediaUploadHandler > Unexpected state, site is null. Skipping this request.");
-            notifyServiceIfUploadsComplete();
+            checkIfUploadsComplete();
             return;
         }
 
@@ -304,10 +323,12 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 
-    private void notifyServiceIfUploadsComplete() {
+    private boolean checkIfUploadsComplete() {
         if (sPendingUploads.isEmpty() && sInProgressUploads.isEmpty()) {
             AppLog.i(T.MEDIA, "MediaUploadHandler > Completed");
+            return true;
         }
+        return false;
     }
 
     // App events

@@ -47,14 +47,11 @@ Language: is
 	<string name="error_fetch_site_after_creation">Vefur hefur verið stofnaður, þú gætir þurft að endurfríska vefina þína í vefvali.</string>
 	<string name="error_upload_params">Villa við að hlaða upp %1$s: %2$s</string>
 	<string name="submit_for_review">Áfram</string>
-	<string name="role_subscriber">Áskrifandi</string>
 	<string name="tell_me_more">Segðu mér meira</string>
 	<string name="duplicate_site_detected">Fleiri en eitt eintak af vef fannst.</string>
 	<string name="cannot_add_duplicate_site">Þessi vefur er nú þegar til í forritinu, þú getur ekki bætt honum við.</string>
 	<string name="already_logged_in_wpcom_same_username">Þú ert nú þegar innskráð(ur) í WordPress.com aðganginn þinn. Vefurinn þinn ætti að birtast í vali, gakktu úr skugga um að hann sé ekki falinn.</string>
 	<string name="already_logged_in_wpcom">Þú ert nú þegar innskráð(ur) í WordPress.com aðganginn þinn, þú getur ekki bætt við WordPress.com vef sem er tengdur öðrum aðgang.</string>
-	<string name="migration_error_not_connected">Flutningsferli mistókst: reyndu að kveikja á forritinu þegar þú ert með\n        netsamband.</string>
-	<string name="migration_message">Uppfæri WordPress forritið...</string>
 	<string name="checking_username">Athuga notandanafn</string>
 	<string name="jetpack_different_com_account">Jetpack vefir sem tilheyra öðrum WordPress.com aðgöngum eru ekki studdir</string>
 	<string name="jetpack_use_com_account">Til þess að bæta Jetpack vefnum þínum við, skráðu þig inn í WordPress.com aðganginn sem þú notaðir til þess að tengja Jetpack.</string>
@@ -132,10 +129,6 @@ Language: is
 	<string name="timespan_now">núna</string>
 	<string name="role_viewer">Skoðari</string>
 	<string name="role_follower">Fylgjandi</string>
-	<string name="role_contributor">Þátttakandi</string>
-	<string name="role_author">Höfundur</string>
-	<string name="role_editor">Ritstjóri</string>
-	<string name="role_admin">Kerfisstjóri</string>
 	<string name="error_post_my_profile_no_connection">Ekkert samband, gat ekki vistað prófílinn þinn</string>
 	<string name="alignment_right">Hægri</string>
 	<string name="alignment_left">Vinstri</string>

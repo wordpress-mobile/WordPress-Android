@@ -58,14 +58,11 @@ Language: sq_AL
 	<string name="error_fetch_site_after_creation">Sajti është krijuar, mund t’ju duhet të rifreskoni sajtet tuaj te zgjedhësi i sajteve.</string>
 	<string name="error_upload_params">Gabim teksa ngarkohej %1$s: %2$s</string>
 	<string name="submit_for_review">Parashtroje</string>
-	<string name="role_subscriber">Pajtimtar</string>
 	<string name="tell_me_more">Tregomëni më tepër</string>
 	<string name="duplicate_site_detected">U pikas një sajt i përsëdytur.</string>
 	<string name="cannot_add_duplicate_site">Ky sajt ekziston tashmë në aplikacion, s’mund ta shtoni.</string>
 	<string name="already_logged_in_wpcom_same_username">Jeni tashmë i futur në llogarinë tuaj WordPress.com. Sajti juaj duhet të shfaqet te zgjedhësi i sajteve, shihni se mos është i fshehur.</string>
 	<string name="already_logged_in_wpcom">Jeni tashmë i futur në një llogari WordPress.com, s’mund të shtoni një sajt WordPress.com të lidhur pas një llogarie tjetër.</string>
-	<string name="migration_error_not_connected">Procesi i migrimit dështoi: provoni ta nisni aplikacionin kur të keni\n        lidhje në rrjet.</string>
-	<string name="migration_message">Po përditësohet aplikacioni Wordpress…</string>
 	<string name="checking_username">Po kontrollohet emri i përdoruesit</string>
 	<string name="jetpack_different_com_account">Nuk mbulohet sajtet me Jetpack që përkasin llogarive të ndryshme WordPress.com</string>
 	<string name="jetpack_use_com_account">Që të shtoni sajt Jetpack, bëni hyrjen te llogaria WordPress.com që përdorët për të lidhur Jetpack-un.</string>
@@ -141,10 +138,6 @@ Language: sq_AL
 	<string name="like">Pëlqejeni</string>
 	<string name="reader_label_image_count_one">1 figurë</string>
 	<string name="timespan_now">tani</string>
-	<string name="role_admin">Përgjegjës</string>
-	<string name="role_editor">Redaktor</string>
-	<string name="role_author">Autor</string>
-	<string name="role_contributor">Kontribues</string>
 	<string name="role_follower">Ndjekës</string>
 	<string name="role_viewer">Shikues</string>
 	<string name="error_post_my_profile_no_connection">S&amp;#8217;ka lidhje, s&amp;#8217;u ruajt dot profili juaj</string>

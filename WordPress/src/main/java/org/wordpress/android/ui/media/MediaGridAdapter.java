@@ -365,8 +365,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         MediaModel media = mMediaList.get(position);
                         MediaUploadState state = MediaUploadState.fromString(media.getUploadState());
                         if (state == MediaUploadState.FAILED) {
-                            stateTextView.setText(R.string.media_upload_state_queued);
-                            stateTextView.setCompoundDrawables(null, null, null, null);
                             if (mCallback != null) {
                                 mCallback.onAdapterRetryUpload(media.getId());
                             }
@@ -578,9 +576,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return "";
     }
 
-    void updateMediaItem(@NonNull MediaModel media) {
+    void updateMediaItem(@NonNull MediaModel media, boolean forceUpdate) {
         int index = indexOfMedia(media);
-        if (index > -1 && !media.equals(mMediaList.get(index))) {
+        if (index > -1 && (forceUpdate || !media.equals(mMediaList.get(index)))) {
             mMediaList.set(index, media);
             notifyItemChanged(index);
         }
