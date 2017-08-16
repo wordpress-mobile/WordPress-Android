@@ -652,7 +652,9 @@ public class UploadService extends Service {
                 // now keep track of the error reason so it can be queried
                 UploadError reason = new UploadError(event.error);
                 PostModel failedPost = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
-                addUploadErrorToFailedPosts(failedPost, reason);
+                if (failedPost != null) {
+                    addUploadErrorToFailedPosts(failedPost, reason);
+                }
             }
             stopServiceIfUploadsComplete();
             return;
