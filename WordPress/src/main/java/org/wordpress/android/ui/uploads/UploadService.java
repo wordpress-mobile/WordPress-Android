@@ -713,13 +713,11 @@ public class UploadService extends Service {
                                     // finally, save the PostModel
                                     if (updatedPost != null) {
                                         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+                                        // TODO Should do some extra validation here
+                                        // e.g. what if the post has local media URLs but no pending media uploads?
                                         mPostUploadHandler.upload(updatedPost);
                                     }
                                 }
-
-
-                                // TODO Should do some extra validation here
-                                // e.g. what if the post has local media URLs but no pending media uploads?
                                 iterator.remove();
                             }
                         }
