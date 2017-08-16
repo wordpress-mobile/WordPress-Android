@@ -1650,49 +1650,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static AztecText getAztecTextWithPlugins(Context context) {
         AztecText content = new AztecText(context);
-        SourceViewEditText mockSource = new SourceViewEditText(context);
-        AztecToolbar mockFormattingToolbar = new AztecToolbar(context);
-
-        IAztecToolbarClickListener mockListener = new IAztecToolbarClickListener() {
-            @Override
-            public void onToolbarCollapseButtonClicked() {
-                // no op
-            }
-
-            @Override
-            public void onToolbarExpandButtonClicked() {
-                // no op
-            }
-
-            @Override
-            public void onToolbarFormatButtonClicked(ITextFormat iTextFormat, boolean b) {
-                // no op
-            }
-
-            @Override
-            public void onToolbarHeadingButtonClicked() {
-                // no op
-            }
-
-            @Override
-            public void onToolbarHtmlButtonClicked() {
-                // no op
-            }
-
-            @Override
-            public void onToolbarListButtonClicked() {
-                // no op
-            }
-
-            @Override
-            public void onToolbarMediaButtonClicked() {
-                // no op
-            }
-        };
-
-        Aztec.Factory.with(content, mockSource, mockFormattingToolbar, mockListener)
+        Aztec.Factory.with(content)
                 .addPlugin(new WordPressCommentsPlugin(content))
-                .addPlugin(new MoreToolbarButton(content))
                 .addPlugin(new CaptionShortcodePlugin())
                 .addPlugin(new VideoShortcodePlugin())
                 .addPlugin(new AudioShortcodePlugin());
