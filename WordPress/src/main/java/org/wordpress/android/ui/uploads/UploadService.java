@@ -705,17 +705,22 @@ public class UploadService extends Service {
                                 // Fetch latest version of the post, in case it has been modified elsewhere
                                 PostModel latestPost = mPostStore.getPostByLocalPostId(uploadingPost.postModel.getId());
 
-                                // Replace local with remote media in the post content
-                                PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(latestPost);
-                                // also do the same now with failed uploads
-                                updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
-                                // finally, save the PostModel
-                                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+                                if (latestPost != null) {
+                                    // Replace local with remote media in the post content
+                                    PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(latestPost);
+                                    // also do the same now with failed uploads
+                                    updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
+                                    // finally, save the PostModel
+                                    if (updatedPost != null) {
+                                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+                                        mPostUploadHandler.upload(updatedPost);
+                                    }
+                                }
+
 
                                 // TODO Should do some extra validation here
                                 // e.g. what if the post has local media URLs but no pending media uploads?
                                 iterator.remove();
-                                mPostUploadHandler.upload(updatedPost);
                             }
                         }
                     }
