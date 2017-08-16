@@ -14,8 +14,8 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginInfoClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
+import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
@@ -32,7 +32,7 @@ import static org.wordpress.android.fluxc.plugin.PluginTestUtils.generatePlugins
 @RunWith(RobolectricTestRunner.class)
 public class PluginStoreUnitTest {
     private PluginStore mPluginStore = new PluginStore(new Dispatcher(),
-            Mockito.mock(PluginRestClient.class), Mockito.mock(PluginInfoClient.class));
+            Mockito.mock(PluginRestClient.class), Mockito.mock(PluginWPOrgClient.class));
 
     @Before
     public void setUp() {
