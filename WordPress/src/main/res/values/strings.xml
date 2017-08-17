@@ -1295,6 +1295,8 @@
     <string name="reader_photo_by">Photo by %s</string>
     <string name="reader_view_comments">View comments</string>
 
+    <string name="reader_excerpt_link">Visit %s for more</string>
+
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
     <string name="reader_likes_one">One person likes this</string>
