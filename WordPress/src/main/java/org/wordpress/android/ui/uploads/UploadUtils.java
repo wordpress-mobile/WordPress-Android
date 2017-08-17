@@ -223,4 +223,9 @@ public class UploadUtils {
             }
         }
     }
+
+    public static void onMediaUploadSnackbarHandler(View snackbarAttachView, boolean justStarted) {
+        int messageResId = justStarted ? R.string.media_uploading : R.string.media_finished_uploading;
+        UploadUtils.showSnackbar(snackbarAttachView, messageResId);
+    }
 }
