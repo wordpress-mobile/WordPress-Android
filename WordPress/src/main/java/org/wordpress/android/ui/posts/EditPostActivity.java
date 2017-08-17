@@ -238,9 +238,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (mDroppedMediaUris != null) {
                 final List<Uri> mediaUris = mDroppedMediaUris;
                 mDroppedMediaUris = null;
-                if (!addMediaList(mediaUris)) {
-                    ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
-                }
+                addMediaList(mediaUris);
             }
         }
     };
@@ -1787,77 +1785,106 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    public boolean addMedia(@NonNull Uri mediaUri) {
+    public void addMedia(@NonNull Uri mediaUri) {
         List<Uri> uriList = new ArrayList<>();
         uriList.add(mediaUri);
-        return addMediaList(uriList);
+        addMediaList(uriList);
     }
 
-    public boolean addMediaList(@NonNull List<Uri> uriList) {
-        boolean didAllSucceed = true;
-        int progress = 1;
-        for (Uri mediaUri : uriList) {
-            if (mediaUri == null) {
-                didAllSucceed = false;
-                continue;
+    public void addMediaList(@NonNull List<Uri> uriList) {
+        new AddMediaListThread(uriList).start();
+    }
+
+    private class AddMediaListThread extends Thread {
+        private final List<Uri> uriList = new ArrayList<>();
+        private final Handler handler = new Handler();
+        private boolean didAnyFail;
+
+        AddMediaListThread(@NonNull List<Uri> uriList) {
+            this.uriList.addAll(uriList);
+        }
+
+        @Override
+        public void run() {
+            for (Uri mediaUri: uriList) {
+                if (!processMedia(mediaUri)) {
+                    didAnyFail = true;
+                }
             }
 
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    savePostAsync(null);
+                    if (didAnyFail) {
+                        ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
+                    }
+                }
+            });
+        }
+
+        private boolean processMedia(Uri mediaUri) {
+            if (mediaUri == null) {
+                return false;
+            }
+
+            Activity context = EditPostActivity.this;
             if (!MediaUtils.isInMediaStore(mediaUri)
                     && !mediaUri.toString().startsWith("/")
                     && !mediaUri.toString().startsWith("file://")) {
-                mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
+                mediaUri = MediaUtils.downloadExternalMedia(context, mediaUri);
             }
 
-            boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
-            boolean success;
-            if (mShowNewEditor || mShowAztecEditor) {
-                success = addMediaVisualEditor(mediaUri, isVideo);
-            } else {
-                success = addMediaLegacyEditor(mediaUri, isVideo);
+            String path = MediaUtils.getRealPathFromURI(context, mediaUri);
+            if (path == null) {
+                return false;
             }
-            if (!success) {
-                didAllSucceed = false;
-            }
-        }
 
-        savePostAsync(null);
-        return didAllSucceed;
-    }
-
-    private boolean addMediaVisualEditor(Uri uri, boolean isVideo) {
-        String path = MediaUtils.getRealPathFromURI(this, uri);
-
-        if (path == null) {
-            ToastUtils.showToast(this, R.string.file_not_found, Duration.SHORT);
-            return false;
-        }
-
-        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, path, isVideo);
-        if (optimizedMedia != null) {
-            uri = optimizedMedia;
-            path = MediaUtils.getRealPathFromURI(this, uri);
-        } else {
-            // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
-            if (!mSite.isWPCom()) {
-                // If it's not wpcom we must rotate the picture locally
-                Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
-                if (rotatedMedia != null) {
-                    uri = rotatedMedia;
-                    path = MediaUtils.getRealPathFromURI(this, uri);
-                }
-            } else {
-                // It's a wpcom site. Just create a version of the picture rotated for the old visual editor
-                // All the other editors read EXIF data
-                if (mShowNewEditor) {
-                    Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
+            final boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
+            Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(context, path, isVideo);
+            if (optimizedMedia != null) {
+                mediaUri = optimizedMedia;
+            } else if (mShowNewEditor || mShowAztecEditor) {
+                // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
+                if (!mSite.isWPCom()) {
+                    // If it's not wpcom we must rotate the picture locally
+                    Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(context, path, isVideo);
                     if (rotatedMedia != null) {
-                        // The uri variable should remain the same since wpcom rotates the picture server side
-                        path = MediaUtils.getRealPathFromURI(this, rotatedMedia);
+                        mediaUri = rotatedMedia;
+                    }
+                } else {
+                    // It's a wpcom site. Just create a version of the picture rotated for the old visual editor
+                    // All the other editors read EXIF data
+                    if (mShowNewEditor) {
+                        Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(context, path, isVideo);
+                        if (rotatedMedia != null) {
+                            // The uri variable should remain the same since wpcom rotates the picture server side
+                            path = MediaUtils.getRealPathFromURI(context, rotatedMedia);
+                        }
                     }
                 }
             }
+
+            postProcessMedia(mediaUri, path, isVideo);
+
+            return true;
         }
 
+        private void postProcessMedia(final Uri mediaUri, final String path, final boolean isVideo) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mShowNewEditor || mShowAztecEditor) {
+                        addMediaVisualEditor(mediaUri, path, isVideo);
+                    } else {
+                        addMediaLegacyEditor(mediaUri, isVideo);
+                    }
+                }
+            });
+        }
+    }
+
+    private boolean addMediaVisualEditor(Uri uri, String path, boolean isVideo) {
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
         if (media != null) {
@@ -1933,18 +1960,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     for (Uri mediaUri : mediaUris) {
                         trackAddMediaFromDeviceEvents(false, true, mediaUri);
                     }
-                    if (!addMediaList(mediaUris)) {
-                        ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
-                    }
+                    addMediaList(mediaUris);
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
-                    if (!addMedia(capturedVideoUri)) {
-                        ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
-                    } else {
-                        AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW);
-                        trackAddMediaFromDeviceEvents(true, true, capturedVideoUri);
-                    }
+                    addMedia(capturedVideoUri);
+                    AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW);
+                    trackAddMediaFromDeviceEvents(true, true, capturedVideoUri);
                     break;
             }
         }
@@ -1955,11 +1977,8 @@ public class EditPostActivity extends AppCompatActivity implements
             WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
             File f = new File(mMediaCapturePath);
             Uri capturedImageUri = Uri.fromFile(f);
-            if (!addMedia(capturedImageUri)) {
-                ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
-            } else {
-                trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
-            }
+            addMedia(capturedImageUri);
+            trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
             this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                     + Environment.getExternalStorageDirectory())));
         } catch (RuntimeException e) {
