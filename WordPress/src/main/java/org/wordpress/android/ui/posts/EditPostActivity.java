@@ -140,6 +140,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -487,7 +488,7 @@ public class EditPostActivity extends AppCompatActivity implements
             // for the media within this Post is needed as soon as the app comes back to foreground,
             // so we get the list of progressing media for this Post from the MediaUploadHandler
             List<MediaModel> allUploadingMediaInPost = new ArrayList<>();
-            List<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
+            Set<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
             allUploadingMediaInPost.addAll(uploadingMediaInPost);
             // add them to the array only if they are not in there yet
             for (MediaModel media1 : MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(mPost)) {

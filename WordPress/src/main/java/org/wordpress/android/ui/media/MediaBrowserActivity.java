@@ -54,7 +54,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
-import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
@@ -83,10 +82,8 @@ import org.wordpress.android.util.WPPermissionUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -682,14 +679,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             if (UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
                 MediaStore.CancelMediaPayload payload = new MediaStore.CancelMediaPayload(mSite, mediaModel, false);
                 mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
-
-                // check if media item was inserted into a Post - if that is the case, then
-                // mark it in the error list so it can be shown properly in the  Posts list, and
-                // also can be accessible from the Error Notification that will be shown.
-                PostModel post = UploadService.isMediaBeingUploadedForAPost(mediaModel);
-                if (post != null) {
-                    UploadService.markPostAsError(post);
-                }
             }
 
             if (mediaModel.getUploadState() != null &&
