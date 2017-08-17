@@ -179,7 +179,9 @@ public class UploadUtils {
 
         // If the post is empty, don't publish
         if (!PostUtils.isPublishable(post)) {
-            ToastUtils.showToast(activity, R.string.error_publish_empty_post, ToastUtils.Duration.SHORT);
+            String postType = activity.getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
+            String message = activity.getString(R.string.error_publish_empty_post_param, postType);
+            ToastUtils.showToast(activity, message, ToastUtils.Duration.SHORT);
             return;
         }
 

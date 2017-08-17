@@ -1152,7 +1152,7 @@
     <string name="error_generic">An error occurred</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
-    <string name="error_publish_empty_post">Can\'t publish an empty post</string>
+    <string name="error_publish_empty_post_param">Can\'t publish an empty %s</string>
     <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
     <string name="error_upload_post_params">There was an error uploading this %1$s: %2$s.</string>
     <string name="error_upload_post_media_params">There was an error uploading the media in this %1$s: %2$s.</string>
