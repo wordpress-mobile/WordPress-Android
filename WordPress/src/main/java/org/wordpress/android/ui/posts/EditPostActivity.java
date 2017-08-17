@@ -681,14 +681,14 @@ public class EditPostActivity extends AppCompatActivity implements
                         new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
                             @Override
                             public void done() {
-                                addMediaList(uriList, true);
+                                addMediaList(uriList, false);
                             }
                         });
                 return;
             }
         }
 
-        addMediaList(uriList, true);
+        addMediaList(uriList, false);
     }
 
     /*
