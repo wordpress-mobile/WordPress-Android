@@ -238,7 +238,9 @@ public class EditPostActivity extends AppCompatActivity implements
             if (mDroppedMediaUris != null) {
                 final List<Uri> mediaUris = mDroppedMediaUris;
                 mDroppedMediaUris = null;
-                EditPostActivity.this.addAllMedia(mediaUris);
+                if (!addMedia(mediaUris)) {
+                    ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
+                }
             }
         }
     };
@@ -1794,24 +1796,26 @@ public class EditPostActivity extends AppCompatActivity implements
     public boolean addMedia(@NonNull List<Uri> uriList) {
         boolean didAllSucceed = true;
         for (Uri mediaUri : uriList) {
-            if (mediaUri != null
-                    && !MediaUtils.isInMediaStore(mediaUri)
+            if (mediaUri == null) {
+                didAllSucceed = false;
+                continue;
+            }
+
+            if (!MediaUtils.isInMediaStore(mediaUri)
                     && !mediaUri.toString().startsWith("/")
                     && !mediaUri.toString().startsWith("file://")) {
                 mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
             }
 
-            if (mediaUri != null) {
-                boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
-                boolean success;
-                if (mShowNewEditor || mShowAztecEditor) {
-                    success = addMediaVisualEditor(mediaUri, isVideo);
-                } else {
-                    success = addMediaLegacyEditor(mediaUri, isVideo);
-                }
-                if (!success) {
-                    didAllSucceed = false;
-                }
+            boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
+            boolean success;
+            if (mShowNewEditor || mShowAztecEditor) {
+                success = addMediaVisualEditor(mediaUri, isVideo);
+            } else {
+                success = addMediaLegacyEditor(mediaUri, isVideo);
+            }
+            if (!success) {
+                didAllSucceed = false;
             }
         }
 
@@ -1928,7 +1932,9 @@ public class EditPostActivity extends AppCompatActivity implements
                     for (Uri mediaUri : mediaUris) {
                         trackAddMediaFromDeviceEvents(false, true, mediaUri);
                     }
-                    addAllMedia(mediaUris);
+                    if (!addMedia(mediaUris)) {
+                        ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
+                    }
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
@@ -1984,21 +1990,6 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         } else {
             addMedia(mediaUri);
-        }
-    }
-
-    /**
-     * Media
-     */
-    private void addAllMedia(List<Uri> mediaUris) {
-        boolean isErrorAddingMedia = false;
-        for (Uri mediaUri : mediaUris) {
-            if (mediaUri == null || !addMedia(mediaUri)) {
-                isErrorAddingMedia = true;
-            }
-        }
-        if (isErrorAddingMedia) {
-            ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
         }
     }
 
