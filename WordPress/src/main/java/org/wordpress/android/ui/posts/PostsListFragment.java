@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -207,7 +208,7 @@ public class PostsListFragment extends Fragment
     }
 
     public void handleEditPostResult(int resultCode, Intent data) {
-        if (!isAdded()) {
+        if (resultCode != Activity.RESULT_OK || data == null || !isAdded()) {
             return;
         }
 
