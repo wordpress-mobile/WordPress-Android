@@ -1472,22 +1472,30 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         attributes.setValue(ATTR_CLASS, attrs.getAttributes().getValue(ATTR_CLASS));
     }
 
-    private static Attributes getElementAttributes(Spanned content, AztecText.AttributePredicate predicate) {
-        IAztecAttributedSpan[] spans = content.getSpans(0, content.length(), IAztecAttributedSpan.class);
-         for (IAztecAttributedSpan span : spans) {
-            if (predicate.matches(span.getAttributes())) {
-                return span.getAttributes();
-            }
-         }
-         return null;
+    private static Attributes getFirstElementAttributes(Spanned content, AztecText.AttributePredicate predicate) {
+        List<Attributes> firstAttrs = getElementAttributes(content, predicate, true);
+        if (firstAttrs.size() == 1) {
+            return firstAttrs.get(0);
+        }
+        else {
+            return null;
+        }
     }
 
-    private static List<Attributes> getAllElementAttributes(Spanned content, AztecText.AttributePredicate predicate) {
+    private static @NonNull List<Attributes> getAllElementAttributes(Spanned content,
+                                                                  AztecText.AttributePredicate predicate) {
+        return getElementAttributes(content, predicate, false);
+    }
+
+    private static @NonNull List<Attributes> getElementAttributes(Spanned content,
+                                                                  AztecText.AttributePredicate predicate,
+                                                                  boolean returnFirstFoundOnly) {
         IAztecAttributedSpan[] spans = content.getSpans(0, content.length(), IAztecAttributedSpan.class);
         List<Attributes> allAttrs = new ArrayList<>();
         for (IAztecAttributedSpan span : spans) {
             if (predicate.matches(span.getAttributes())) {
                 allAttrs.add(span.getAttributes());
+                if (returnFirstFoundOnly) return allAttrs;
             }
         }
         return allAttrs;
@@ -1517,7 +1525,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             // remove the uploading class
             AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    getElementAttributes(content, predicate));
+                    getFirstElementAttributes(content, predicate));
             attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
             if (mediaFile.isVideo()) {
                 attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
@@ -1550,7 +1558,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             // remove the uploading class
             AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    getElementAttributes(content, predicate));
+                    getFirstElementAttributes(content, predicate));
             attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
             if (mediaFile.isVideo()) {
                 attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
@@ -1584,7 +1592,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(tag);
 
 
-        return getElementAttributes(content, uploadingPredicate) != null;
+        return getFirstElementAttributes(content, uploadingPredicate) != null;
     }
 
     public static String resetUploadingMediaToFailed(Context context, @NonNull String postContent) {
@@ -1657,7 +1665,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static void clearMediaUploadingAndSetToFailedIfLocal(Spanned content, AztecText.AttributePredicate predicate) {
         // remove the uploading class
         AttributesWithClass attributesWithClass = new AttributesWithClass(
-                getElementAttributes(content,predicate));
+                getFirstElementAttributes(content,predicate));
         attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
 
         attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
