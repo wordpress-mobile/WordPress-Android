@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -1795,55 +1794,34 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     public boolean addMediaList(@NonNull List<Uri> uriList) {
-        // processing multiple images may take a few seconds so show a progress dialog
-        ProgressDialog dialog = null;
-        if (uriList.size() > 3) {
-            dialog = new ProgressDialog(this);
-            dialog.setMessage(getString(R.string.adding_media_dialog_message));
-            dialog.setCancelable(false);
-            dialog.setIndeterminate(false);
-            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            dialog.setMax(uriList.size());
-            dialog.show();
-        }
-
-        try {
-            boolean didAllSucceed = true;
-            for (Uri mediaUri: uriList) {
-                if (mediaUri == null) {
-                    didAllSucceed = false;
-                    continue;
-                }
-
-                if (!MediaUtils.isInMediaStore(mediaUri)
-                        && !mediaUri.toString().startsWith("/")
-                        && !mediaUri.toString().startsWith("file://")) {
-                    mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
-                }
-
-                boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
-                boolean success;
-                if (mShowNewEditor || mShowAztecEditor) {
-                    success = addMediaVisualEditor(mediaUri, isVideo);
-                } else {
-                    success = addMediaLegacyEditor(mediaUri, isVideo);
-                }
-                if (!success) {
-                    didAllSucceed = false;
-                }
-
-                if (dialog != null) {
-                    dialog.incrementProgressBy(1);
-                }
+        boolean didAllSucceed = true;
+        int progress = 1;
+        for (Uri mediaUri : uriList) {
+            if (mediaUri == null) {
+                didAllSucceed = false;
+                continue;
             }
 
-            savePostAsync(null);
-            return didAllSucceed;
-        } finally {
-            if (dialog != null) {
-                dialog.dismiss();
+            if (!MediaUtils.isInMediaStore(mediaUri)
+                    && !mediaUri.toString().startsWith("/")
+                    && !mediaUri.toString().startsWith("file://")) {
+                mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
+            }
+
+            boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
+            boolean success;
+            if (mShowNewEditor || mShowAztecEditor) {
+                success = addMediaVisualEditor(mediaUri, isVideo);
+            } else {
+                success = addMediaLegacyEditor(mediaUri, isVideo);
+            }
+            if (!success) {
+                didAllSucceed = false;
             }
         }
+
+        savePostAsync(null);
+        return didAllSucceed;
     }
 
     private boolean addMediaVisualEditor(Uri uri, boolean isVideo) {
