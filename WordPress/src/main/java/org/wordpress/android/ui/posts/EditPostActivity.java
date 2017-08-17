@@ -610,6 +610,18 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     /*
+     * shows/hides the overlay which appears atop the editor, which effectively disables it
+     */
+    private void showOverlay(boolean show) {
+        View overlay = findViewById(R.id.view_overlay);
+        if (show && overlay.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
+        } else if (!show && overlay.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(overlay, AniUtils.Duration.MEDIUM);
+        }
+    }
+
+    /*
      * user has requested to show the photo picker
      */
     private void showPhotoPicker() {
@@ -632,12 +644,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mPhotoPickerFragment.setPhotoPickerListener(this);
         }
 
-        // fade in the overlay atop the editor, which effectively disables the editor
-        // until the picker is closed
-        View overlay = findViewById(R.id.view_overlay);
-        if (overlay.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
-        }
+        showOverlay(true);
 
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment)mEditorFragment).enableMediaMode(true);
@@ -651,10 +658,7 @@ public class EditPostActivity extends AppCompatActivity implements
             AniUtils.animateBottomBar(mPhotoPickerContainer, false);
         }
 
-        View overlay = findViewById(R.id.view_overlay);
-        if (overlay.getVisibility() == View.VISIBLE) {
-            AniUtils.fadeOut(overlay, AniUtils.Duration.MEDIUM);
-        }
+        showOverlay(false);
 
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment)mEditorFragment).enableMediaMode(false);
@@ -1811,6 +1815,7 @@ public class EditPostActivity extends AppCompatActivity implements
         AddMediaListThread(@NonNull List<Uri> uriList, boolean isNew) {
             this.uriList.addAll(uriList);
             this.isNew = isNew;
+            showOverlay(true);
         }
 
         @Override
@@ -1828,6 +1833,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (didAnyFail) {
                         ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
                     }
+                    showOverlay(false);
                 }
             });
         }
@@ -2147,7 +2153,6 @@ public class EditPostActivity extends AppCompatActivity implements
             if (!mediaList.isEmpty()) {
                 // before starting the service, we need to update the posts' contents so we are sure the service
                 // can retrieve it from there on
-                hidePhotoPicker();
                 savePostAsync(new AfterSavePostListener() {
                     @Override
                     public void onPostSave() {
