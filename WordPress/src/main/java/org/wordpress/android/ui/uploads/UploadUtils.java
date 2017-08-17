@@ -42,7 +42,8 @@ public class UploadUtils {
     public static @NonNull String getErrorMessageFromPostError(Context context, PostModel post, PostError error) {
         switch (error.type) {
             case UNKNOWN_POST:
-                return context.getString(R.string.error_unknown_post);
+                String postType = context.getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
+                return context.getString(R.string.error_unknown_post_param, postType);
             case UNKNOWN_POST_TYPE:
                 return context.getString(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
