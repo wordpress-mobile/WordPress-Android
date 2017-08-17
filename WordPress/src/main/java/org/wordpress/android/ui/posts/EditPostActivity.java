@@ -1592,7 +1592,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             if (sharedUris != null) {
-                addMediaList(sharedUris);
+                addMediaList(sharedUris, false);
             }
         }
     }
@@ -2010,13 +2010,13 @@ public class EditPostActivity extends AppCompatActivity implements
                         " See issue #5823");
             }
             if (downloadedUri != null) {
-                addMedia(downloadedUri);
+                addMedia(downloadedUri, false);
             } else {
                 ToastUtils.showToast(EditPostActivity.this, R.string.error_downloading_image,
                         ToastUtils.Duration.SHORT);
             }
         } else {
-            addMedia(mediaUri);
+            addMedia(mediaUri, false);
         }
     }
 
