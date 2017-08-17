@@ -1783,7 +1783,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    public boolean addMedia(Uri mediaUri) {
+    private boolean addMedia(Uri mediaUri) {
         if (mediaUri == null) {
             return false;
         }
@@ -1794,7 +1794,7 @@ public class EditPostActivity extends AppCompatActivity implements
         return true;
     }
 
-    public void addMediaList(@NonNull List<Uri> uriList) {
+    private void addMediaList(@NonNull List<Uri> uriList) {
         new AddMediaListThread(uriList).start();
     }
 
@@ -1883,7 +1883,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 @Override
                 public void run() {
                     if (mShowNewEditor || mShowAztecEditor) {
-                        addMediaVisualEditor(mediaUri, path, isVideo);
+                        addMediaVisualEditor(mediaUri, path);
                     } else {
                         addMediaLegacyEditor(mediaUri, isVideo);
                     }
@@ -1892,17 +1892,15 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private boolean addMediaVisualEditor(Uri uri, String path, boolean isVideo) {
+    private void addMediaVisualEditor(Uri uri, String path) {
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
         if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
         }
-
-        return true;
     }
 
-    private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
+    private void addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
         MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri),
                 MediaUploadState.QUEUED);
         if (isVideo) {
@@ -1916,7 +1914,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
         mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
-        return true;
     }
 
     @Override
