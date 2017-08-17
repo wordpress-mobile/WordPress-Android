@@ -273,6 +273,7 @@
     <string name="post_updated_param">\"%s\" has been updated!</string>
     <string name="post_scheduled_param">\"%s\" has been scheduled!</string>
     <string name="post_draft_param">\"%s\" has been saved as a draft!</string>
+    <string name="upload_failed_param">Upload failed for \"%s\"</string>
 
     <!-- post view -->
     <string name="post_id">Post</string>
