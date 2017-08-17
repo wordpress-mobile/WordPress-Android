@@ -347,6 +347,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             Bitmap bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(
                     imgFeatured.getContext(), imageUrl, mPhotonWidth);
             if (bmp != null) {
+                imgFeatured.setImageUrl(null, WPNetworkImageView.ImageType.NONE);
                 imgFeatured.setVisibility(View.VISIBLE);
                 imgFeatured.setImageBitmap(bmp);
             } else {
