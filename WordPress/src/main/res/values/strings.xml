@@ -1897,4 +1897,7 @@
     <string name="login_logged_in_as">Logged in as</string>
     <string name="login_epilogue_mysites_one">My site</string>
     <string name="login_epilogue_mysites_other">My sites</string>
+    <string name="login_google_button_prefix">Or you can</string>
+    <string name="login_google_button_suffix">Log in with Google.</string>
+
 </resources>

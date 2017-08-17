@@ -11,10 +11,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -75,6 +78,17 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         autoFillFromBuildConfig("DEBUG_DOTCOM_LOGIN_EMAIL", mEmailInput.getEditText());
         mEmailInput.addTextChangedListener(this);
         mEmailInput.setOnEditorCommitListener(this);
+
+        LinearLayout googleLoginLayout = (LinearLayout) rootView.findViewById(R.id.login_google_layout);
+        googleLoginLayout.setVisibility(BuildConfig.LOGIN_GOOGLE_ENABLED ? View.VISIBLE : View.GONE);
+
+        LinearLayout googleLoginButton = (LinearLayout) rootView.findViewById(R.id.login_google_button);
+        googleLoginButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "Google login not implemented", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
