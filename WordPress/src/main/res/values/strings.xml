@@ -134,6 +134,8 @@
     <string name="media_insert_individually">Add individually</string>
     <string name="media_insert_as_gallery">Add as gallery</string>
     <string name="media_downloading">Saving media to this device</string>
+    <string name="media_uploading">Uploading media...</string>
+    <string name="media_finished_uploading">Upload finished!</string>
     <string name="wp_media_title">WordPress media</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>

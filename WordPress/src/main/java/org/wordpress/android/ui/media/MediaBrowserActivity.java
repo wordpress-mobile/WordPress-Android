@@ -64,6 +64,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -639,6 +640,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 showMediaToastError(R.string.media_upload_error, event.error.message);
             }
         } else if (event.completed) {
+            UploadUtils.onMediaUploadSnackbarHandler(findViewById(android.R.id.content), false);
             String title = "";
             if (event.media != null) {
                 title = event.media.getTitle();
@@ -956,6 +958,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         addMediaToUploadService(media);
 
         updateMediaGridItem(media, false);
+
+        UploadUtils.onMediaUploadSnackbarHandler(findViewById(android.R.id.content), true);
     }
 
     private void handleSharedMedia() {
