@@ -238,7 +238,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (mDroppedMediaUris != null) {
                 final List<Uri> mediaUris = mDroppedMediaUris;
                 mDroppedMediaUris = null;
-                if (!addMedia(mediaUris)) {
+                if (!addMediaList(mediaUris)) {
                     ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
                 }
             }
@@ -683,14 +683,14 @@ public class EditPostActivity extends AppCompatActivity implements
                         new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
                             @Override
                             public void done() {
-                                addMedia(uriList);
+                                addMediaList(uriList);
                             }
                         });
                 return;
             }
         }
 
-        addMedia(uriList);
+        addMediaList(uriList);
     }
 
     /*
@@ -1790,10 +1790,10 @@ public class EditPostActivity extends AppCompatActivity implements
     public boolean addMedia(@NonNull Uri mediaUri) {
         List<Uri> uriList = new ArrayList<>();
         uriList.add(mediaUri);
-        return addMedia(uriList);
+        return addMediaList(uriList);
     }
 
-    public boolean addMedia(@NonNull List<Uri> uriList) {
+    public boolean addMediaList(@NonNull List<Uri> uriList) {
         boolean didAllSucceed = true;
         for (Uri mediaUri : uriList) {
             if (mediaUri == null) {
@@ -1932,7 +1932,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     for (Uri mediaUri : mediaUris) {
                         trackAddMediaFromDeviceEvents(false, true, mediaUri);
                     }
-                    if (!addMedia(mediaUris)) {
+                    if (!addMediaList(mediaUris)) {
                         ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
                     }
                     break;
