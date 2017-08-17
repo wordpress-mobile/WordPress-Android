@@ -427,6 +427,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void updateStatusTextAndImage(TextView txtStatus, ImageView imgStatus, PostModel post) {
+        Context context = txtStatus.getContext();
+
         if ((PostStatus.fromPost(post) == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.isLocallyChanged()) {
             txtStatus.setVisibility(View.GONE);
             imgStatus.setVisibility(View.GONE);
@@ -439,10 +441,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             UploadService.UploadError reason = UploadService.getUploadErrorForPost(post);
             if (reason != null) {
                 if (reason.mediaError != null) {
-                    errorMessage = txtStatus.getContext().getString(R.string.error_media_recover);
+                    String postType = context.getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
+                    errorMessage = context.getString(R.string.error_media_recover_params, postType);
                 } else if (reason.postError != null) {
-                    errorMessage = UploadUtils.getErrorMessageFromPostError(
-                            txtStatus.getContext(), post, reason.postError);
+                    errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError);
                 }
                 statusIconResId = R.drawable.ic_notice_48dp;
                 statusColorResId = R.color.alert_red;
@@ -492,7 +494,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             }
 
-            Resources resources = txtStatus.getContext().getResources();
+            Resources resources = context.getResources();
             txtStatus.setTextColor(resources.getColor(statusColorResId));
             if (!TextUtils.isEmpty(errorMessage)) {
                 txtStatus.setText(errorMessage);
