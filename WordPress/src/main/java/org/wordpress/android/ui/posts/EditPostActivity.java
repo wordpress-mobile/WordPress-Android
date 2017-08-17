@@ -238,7 +238,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (mDroppedMediaUris != null) {
                 final List<Uri> mediaUris = mDroppedMediaUris;
                 mDroppedMediaUris = null;
-                addMediaList(mediaUris);
+                addMediaList(mediaUris, false);
             }
         }
     };
@@ -681,14 +681,14 @@ public class EditPostActivity extends AppCompatActivity implements
                         new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
                             @Override
                             public void done() {
-                                addMediaList(uriList);
+                                addMediaList(uriList, true);
                             }
                         });
                 return;
             }
         }
 
-        addMediaList(uriList);
+        addMediaList(uriList, true);
     }
 
     /*
@@ -1783,19 +1783,19 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private boolean addMedia(Uri mediaUri) {
+    private boolean addMedia(Uri mediaUri, boolean isNew) {
         if (mediaUri == null) {
             return false;
         }
 
         List<Uri> uriList = new ArrayList<>();
         uriList.add(mediaUri);
-        addMediaList(uriList);
+        addMediaList(uriList, isNew);
         return true;
     }
 
-    private void addMediaList(@NonNull List<Uri> uriList) {
-        new AddMediaListThread(uriList).start();
+    private void addMediaList(@NonNull List<Uri> uriList, boolean isNew) {
+        new AddMediaListThread(uriList, isNew).start();
     }
 
     /*
@@ -1805,10 +1805,12 @@ public class EditPostActivity extends AppCompatActivity implements
     private class AddMediaListThread extends Thread {
         private final List<Uri> uriList = new ArrayList<>();
         private final Handler handler = new Handler();
+        private final boolean isNew;
         private boolean didAnyFail;
 
-        AddMediaListThread(@NonNull List<Uri> uriList) {
+        AddMediaListThread(@NonNull List<Uri> uriList, boolean isNew) {
             this.uriList.addAll(uriList);
+            this.isNew = isNew;
         }
 
         @Override
@@ -1873,6 +1875,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
 
+            trackAddMediaFromDeviceEvents(isNew, isVideo, mediaUri);
             postProcessMedia(mediaUri, path, isVideo);
 
             return true;
@@ -1938,12 +1941,10 @@ public class EditPostActivity extends AppCompatActivity implements
                                     @Override
                                     public void done() {
                                         fetchMedia(imageUri);
-                                        trackAddMediaFromDeviceEvents(false, false, imageUri);
                                     }
                                 });
                     } else {
                         fetchMedia(imageUri);
-                        trackAddMediaFromDeviceEvents(false, false, imageUri);
                     }
                     break;
                 case RequestCodes.TAKE_PHOTO:
@@ -1962,16 +1963,12 @@ public class EditPostActivity extends AppCompatActivity implements
                 case RequestCodes.VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
                     List<Uri> mediaUris = Arrays.asList(videoUri);
-                    for (Uri mediaUri : mediaUris) {
-                        trackAddMediaFromDeviceEvents(false, true, mediaUri);
-                    }
-                    addMediaList(mediaUris);
+                    addMediaList(mediaUris, false);
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
-                    if (addMedia(capturedVideoUri)) {
+                    if (addMedia(capturedVideoUri, true)) {
                         AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW);
-                        trackAddMediaFromDeviceEvents(true, true, capturedVideoUri);
                     } else {
                         ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                     }
@@ -1985,8 +1982,7 @@ public class EditPostActivity extends AppCompatActivity implements
             WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
             File f = new File(mMediaCapturePath);
             Uri capturedImageUri = Uri.fromFile(f);
-            if (addMedia(capturedImageUri)) {
-                trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
+            if (addMedia(capturedImageUri, true)) {
                 this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                         + Environment.getExternalStorageDirectory())));
             } else {
