@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -28,6 +27,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
@@ -86,7 +86,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         googleLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Google login not implemented", Toast.LENGTH_SHORT).show();
+                WPActivityUtils.hideKeyboard(getActivity().getCurrentFocus());
+                mLoginListener.loginViaThirdParty();
             }
         });
     }

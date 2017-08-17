@@ -20,6 +20,10 @@ public interface LoginListener {
     void loginViaWpcomUsernameInstead();
     void helpEmailScreen(String email);
 
+    // Login Third-Party Authentication callbacks
+    void helpThirdParty(String email);
+    void loginViaThirdParty();
+
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
     void usePasswordInstead(String email);
