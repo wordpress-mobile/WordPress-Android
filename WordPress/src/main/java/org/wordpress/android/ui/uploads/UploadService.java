@@ -243,12 +243,8 @@ public class UploadService extends Service {
     }
 
     public static boolean isPostQueued(PostModel post) {
-        if (post == null) {
-            return false;
-        }
-
         // Check for posts queued inside the PostUploadManager
-        return PostUploadHandler.isPostQueued(post);
+        return sInstance != null && post != null && PostUploadHandler.isPostQueued(post);
     }
 
     /**
@@ -257,7 +253,7 @@ public class UploadService extends Service {
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
     public static boolean isPostUploading(PostModel post) {
-        return post != null && PostUploadHandler.isPostUploading(post);
+        return sInstance != null && post != null && PostUploadHandler.isPostUploading(post);
     }
 
     public static void cancelQueuedPostUploadAndRelatedMedia(PostModel post) {
