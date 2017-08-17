@@ -1592,9 +1592,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             if (sharedUris != null) {
-                for (Uri uri : sharedUris) {
-                    addMedia(uri);
-                }
+                addMediaList(sharedUris);
             }
         }
     }
@@ -1785,16 +1783,25 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    public void addMedia(@NonNull Uri mediaUri) {
+    public boolean addMedia(Uri mediaUri) {
+        if (mediaUri == null) {
+            return false;
+        }
+
         List<Uri> uriList = new ArrayList<>();
         uriList.add(mediaUri);
         addMediaList(uriList);
+        return true;
     }
 
     public void addMediaList(@NonNull List<Uri> uriList) {
         new AddMediaListThread(uriList).start();
     }
 
+    /*
+     * processes a list of media in the background (optimizing, resizing, etc.) and adds them to
+     * the editor one at a time
+     */
     private class AddMediaListThread extends Thread {
         private final List<Uri> uriList = new ArrayList<>();
         private final Handler handler = new Handler();
@@ -1828,27 +1835,28 @@ public class EditPostActivity extends AppCompatActivity implements
                 return false;
             }
 
-            Activity context = EditPostActivity.this;
+            Activity activity = EditPostActivity.this;
+
             if (!MediaUtils.isInMediaStore(mediaUri)
                     && !mediaUri.toString().startsWith("/")
                     && !mediaUri.toString().startsWith("file://")) {
-                mediaUri = MediaUtils.downloadExternalMedia(context, mediaUri);
+                mediaUri = MediaUtils.downloadExternalMedia(activity, mediaUri);
             }
 
-            String path = MediaUtils.getRealPathFromURI(context, mediaUri);
+            String path = MediaUtils.getRealPathFromURI(activity, mediaUri);
             if (path == null) {
                 return false;
             }
 
             final boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
-            Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(context, path, isVideo);
+            Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(activity, path, isVideo);
             if (optimizedMedia != null) {
                 mediaUri = optimizedMedia;
             } else if (mShowNewEditor || mShowAztecEditor) {
                 // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
                 if (!mSite.isWPCom()) {
                     // If it's not wpcom we must rotate the picture locally
-                    Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(context, path, isVideo);
+                    Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(activity, path, isVideo);
                     if (rotatedMedia != null) {
                         mediaUri = rotatedMedia;
                     }
@@ -1856,10 +1864,10 @@ public class EditPostActivity extends AppCompatActivity implements
                     // It's a wpcom site. Just create a version of the picture rotated for the old visual editor
                     // All the other editors read EXIF data
                     if (mShowNewEditor) {
-                        Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(context, path, isVideo);
+                        Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(activity, path, isVideo);
                         if (rotatedMedia != null) {
                             // The uri variable should remain the same since wpcom rotates the picture server side
-                            path = MediaUtils.getRealPathFromURI(context, rotatedMedia);
+                            path = MediaUtils.getRealPathFromURI(activity, rotatedMedia);
                         }
                     }
                 }
@@ -1964,9 +1972,12 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
-                    addMedia(capturedVideoUri);
-                    AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW);
-                    trackAddMediaFromDeviceEvents(true, true, capturedVideoUri);
+                    if (addMedia(capturedVideoUri)) {
+                        AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW);
+                        trackAddMediaFromDeviceEvents(true, true, capturedVideoUri);
+                    } else {
+                        ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
+                    }
                     break;
             }
         }
@@ -1977,10 +1988,13 @@ public class EditPostActivity extends AppCompatActivity implements
             WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
             File f = new File(mMediaCapturePath);
             Uri capturedImageUri = Uri.fromFile(f);
-            addMedia(capturedImageUri);
-            trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
-            this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                    + Environment.getExternalStorageDirectory())));
+            if (addMedia(capturedImageUri)) {
+                trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
+                this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                        + Environment.getExternalStorageDirectory())));
+            } else {
+                ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
+            }
         } catch (RuntimeException e) {
             AppLog.e(T.POSTS, e);
         } catch (OutOfMemoryError e) {
