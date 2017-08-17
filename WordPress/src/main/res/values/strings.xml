@@ -1766,6 +1766,7 @@
     <string name="tap_to_try_again">Tap to try again!</string>
     <string name="uploading">Uploading…</string>
     <string name="uploading_gallery_placeholder">Uploading gallery…</string>
+    <string name="adding_media_dialog_message">Adding media</string>
 
     <string name="alert_insert_image_html_mode">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
     <string name="alert_action_while_uploading">You are currently uploading media. Please wait until this completes.</string>
