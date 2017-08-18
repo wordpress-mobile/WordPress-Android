@@ -55,11 +55,13 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.Aztec;
 import org.wordpress.aztec.AztecAttributes;
+import org.wordpress.aztec.AztecParser;
 import org.wordpress.aztec.AztecText;
 import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.Html;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.ITextFormat;
+import org.wordpress.aztec.plugins.IAztecPlugin;
 import org.wordpress.aztec.plugins.shortcodes.AudioShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.CaptionShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.VideoShortcodePlugin;
@@ -69,6 +71,7 @@ import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.spans.AztecMediaSpan;
+import org.wordpress.aztec.spans.IAztecAttributedSpan;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 import org.wordpress.aztec.watchers.BlockElementWatcher;
@@ -1469,19 +1472,60 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         attributes.setValue(ATTR_CLASS, attrs.getAttributes().getValue(ATTR_CLASS));
     }
 
+    private static Attributes getFirstElementAttributes(Spanned content, AztecText.AttributePredicate predicate) {
+        List<Attributes> firstAttrs = getElementAttributes(content, predicate, true);
+        if (firstAttrs.size() == 1) {
+            return firstAttrs.get(0);
+        }
+        else {
+            return null;
+        }
+    }
+
+    private static @NonNull List<Attributes> getAllElementAttributes(Spanned content,
+                                                                  AztecText.AttributePredicate predicate) {
+        return getElementAttributes(content, predicate, false);
+    }
+
+    private static @NonNull List<Attributes> getElementAttributes(Spanned content,
+                                                                  AztecText.AttributePredicate predicate,
+                                                                  boolean returnFirstFoundOnly) {
+        IAztecAttributedSpan[] spans = content.getSpans(0, content.length(), IAztecAttributedSpan.class);
+        List<Attributes> allAttrs = new ArrayList<>();
+        for (IAztecAttributedSpan span : spans) {
+            if (predicate.matches(span.getAttributes())) {
+                allAttrs.add(span.getAttributes());
+                if (returnFirstFoundOnly) return allAttrs;
+            }
+        }
+        return allAttrs;
+    }
+
+    private static void updateElementAttributes(Spanned content,
+                                                AztecText.AttributePredicate predicate,
+                                                AztecAttributes attrs) {
+        IAztecAttributedSpan[] spans = content.getSpans(0, content.length(), IAztecAttributedSpan.class);
+        for (IAztecAttributedSpan span : spans) {
+            if (predicate.matches(span.getAttributes())) {
+                span.setAttributes(attrs);
+                return;
+            }
+        }
+    }
+
     public static String replaceMediaFileWithUrl(Context context, @NonNull String postContent,
                                                  String localMediaId, MediaFile mediaFile) {
         if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
             // fill in Aztec with the post's content
-            AztecText content = new AztecText(context);
-            content.fromHtml(postContent);
+            AztecParser parser = getAztecParserWithPlugins();
+            Spanned content = parser.fromHtml(postContent, context);
 
             MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
             // remove the uploading class
             AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    content.getElementAttributes(predicate));
+                    getFirstElementAttributes(content, predicate));
             attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
             if (mediaFile.isVideo()) {
                 attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
@@ -1493,13 +1537,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             addDefaultSizeClassIfMissing(attrs);
 
-            // clear overlay
-            content.clearOverlays(predicate);
-            content.updateElementAttributes(predicate, attrs);
-            content.refreshText();
+            updateElementAttributes(content, predicate, attrs);
 
             // re-set the post content
-            postContent = content.toHtml(false);
+            postContent = parser.toHtml(content, false);
         }
         return postContent;
     }
@@ -1508,14 +1549,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                                  String localMediaId, MediaFile mediaFile) {
         if (mediaFile != null) {
             // fill in Aztec with the post's content
-            AztecText content = new AztecText(context);
-            content.fromHtml(postContent);
+            AztecParser parser = getAztecParserWithPlugins();
+            Spanned content = parser.fromHtml(postContent, context);
 
             MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
             // remove the uploading class
             AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    content.getElementAttributes(predicate));
+                    getFirstElementAttributes(content, predicate));
             attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
             if (mediaFile.isVideo()) {
                 attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
@@ -1524,11 +1565,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             // mark failed
             attributesWithClass.addClass(ATTR_STATUS_FAILED);
 
-            content.updateElementAttributes(predicate, attributesWithClass.getAttributes());
-            content.refreshText();
+            updateElementAttributes(content, predicate, attributesWithClass.getAttributes());
 
             // re-set the post content
-            postContent = content.toHtml(false);
+            postContent = parser.toHtml(content, false);
         }
         return postContent;
     }
@@ -1543,21 +1583,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static boolean hasMediaItemsMarkedWithTag(Context context, @NonNull String postContent, String tag) {
         // fill in Aztec with the post's content
-        AztecText content = new AztecText(context);
-        content.fromHtml(postContent);
+        AztecParser parser = getAztecParserWithPlugins();
+        Spanned content = parser.fromHtml(postContent, context);
 
         // get all items with the class in the "tag" param
         AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(tag);
 
-        List<AztecAttributes> attrs = content.getAllElementAttributes(uploadingPredicate);
 
-        return (attrs != null && !attrs.isEmpty());
+        return getFirstElementAttributes(content, uploadingPredicate) != null;
     }
 
     public static String resetUploadingMediaToFailed(Context context, @NonNull String postContent) {
         // fill in Aztec with the post's content
-        AztecText content = new AztecText(context);
-        content.fromHtml(postContent);
+        AztecParser parser = getAztecParserWithPlugins();
+        Spanned content = parser.fromHtml(postContent, context);
 
         // get all items with "failed" class, and make sure they are still failed
         // i.e. if they have a local src, then they are failed.
@@ -1567,17 +1606,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         resetMediaWithStatus(content, ATTR_STATUS_UPLOADING);
 
         // re-set the post content
-        postContent = content.toHtml(false);
+        postContent = parser.toHtml(content, false);
         return postContent;
     }
 
     public static List<String> getMediaMarkedUploadingInPostContent(Context context, @NonNull String postContent) {
         ArrayList<String> mediaMarkedUploading = new ArrayList<>();
         // fill in Aztec with the post's content
-        AztecText content = new AztecText(context);
-        content.fromHtml(postContent);
+        AztecParser parser = getAztecParserWithPlugins();
+        Spanned content = parser.fromHtml(postContent, context);
         AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(ATTR_STATUS_UPLOADING);
-        for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
+        for (Attributes attrs : getAllElementAttributes(content, uploadingPredicate)) {
             String itemId = attrs.getValue(ATTR_ID_WP);
             if (!TextUtils.isEmpty(itemId)) {
                 mediaMarkedUploading.add(itemId);
@@ -1588,21 +1627,21 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void setMediaToFailed(@NonNull String mediaId) {
         AztecText.AttributePredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(mediaId);
-        clearMediaUploadingAndSetToFailedIfLocal(content, localMediaIdPredicate);
+        clearMediaUploadingAndSetToFailedIfLocal(content.getText(), localMediaIdPredicate);
         content.clearOverlays(localMediaIdPredicate);
         overlayFailedMedia(mediaId, content.getElementAttributes(localMediaIdPredicate));
         safeAddMediaIdToSet(mFailedMediaIds, mediaId);
         content.resetAttributedMediaSpan(localMediaIdPredicate);
     }
 
-    private static void resetMediaWithStatus(AztecText content, String status) {
+    private static void resetMediaWithStatus(Spanned content, String status) {
         // get all items with "uploading" class
         AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(status);
 
         // update all items to failed, unless they already have a remote URL, in which case
         // it means the upload completed, but the item remained inconsistently marked as uploading
         // (for example after an app crash)
-        for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
+        for (Attributes attrs : getAllElementAttributes(content, uploadingPredicate)) {
             clearMediaUploadingAndSetToFailedIfLocal(content, getPredicateForMedia(attrs));
         }
     }
@@ -1621,16 +1660,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return predicate;
     }
 
-    private static void clearMediaUploadingAndSetToFailedIfLocal(AztecText content, AztecText.AttributePredicate predicate) {
+    private static void clearMediaUploadingAndSetToFailedIfLocal(Spanned content, AztecText.AttributePredicate predicate) {
         // remove the uploading class
         AttributesWithClass attributesWithClass = new AttributesWithClass(
-                content.getElementAttributes(predicate));
+                getFirstElementAttributes(content,predicate));
         attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
 
         attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
 
-        content.updateElementAttributes(predicate, attributesWithClass.getAttributes());
-        content.refreshText();
+        updateElementAttributes(content, predicate, attributesWithClass.getAttributes());
     }
 
 
@@ -1646,5 +1684,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         return attributesWithClass;
+    }
+
+    private static AztecParser getAztecParserWithPlugins() {
+        List<IAztecPlugin> plugins = new ArrayList<>();
+        plugins.add(new CaptionShortcodePlugin());
+        plugins.add(new VideoShortcodePlugin());
+        plugins.add(new AudioShortcodePlugin());
+        return new AztecParser(plugins);
     }
 }
