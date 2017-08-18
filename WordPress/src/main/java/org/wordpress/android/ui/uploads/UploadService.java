@@ -85,6 +85,10 @@ public class UploadService extends Service {
         // Update posts with any completed AND failed uploads in our post->media map
         updatePostModelWithCompletedAndFailedUploads();
 
+        for (PostModel pendingPost : mUploadStore.getPendingPosts()) {
+            cancelQueuedPostUpload(pendingPost);
+        }
+
         mDispatcher.unregister(this);
         sInstance = null;
         AppLog.i(T.MAIN, "UploadService > Destroyed");
