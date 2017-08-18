@@ -29,9 +29,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AppLog;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -83,7 +85,8 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
                             String token = account.getIdToken();
                             // TODO: Validate token with server.
                         } catch (NullPointerException exception) {
-                            Log.e(LoginThirdPartyAuthenticationFragment.class.getSimpleName(), exception.getMessage());
+                            AppLog.e(AppLog.T.NUX, "Cannot get ID token from Google sign-in account.", exception);
+                            // TODO: Show error screen.
                         }
                     }
                 }
@@ -129,6 +132,7 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
                 }
             } else {
                 isResolvingError = false;
+                AppLog.e(AppLog.T.NUX, GoogleApiAvailability.getInstance().getErrorString(connectionResult.getErrorCode()));
                 // TODO: Show error screen.
             }
         }
