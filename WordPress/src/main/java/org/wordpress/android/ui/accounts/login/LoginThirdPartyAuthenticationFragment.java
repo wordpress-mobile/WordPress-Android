@@ -25,7 +25,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -41,12 +43,13 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
     private GoogleApiClient mGoogleApiClient;
     private LoginListener mLoginListener;
     private boolean isResolvingError;
-    private boolean shouldResolveError;
     private boolean isShowingDialog;
+    private boolean shouldResolveError;
 
     private static final String STATE_RESOLVING_ERROR = "STATE_RESOLVING_ERROR";
     private static final String STATE_SHOWING_DIALOG = "STATE_SHOWING_DIALOG";
     private static final int REQUEST_CONNECT = 1000;
+    private static final int REQUEST_LOGIN = 1001;
     private static final int REQUEST_PERMISSIONS_GET_ACCOUNTS = 9000;
 
     public static final String TAG = "login_third_party_authentication_fragment_tag";
@@ -63,9 +66,28 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
 
                 if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
                     mGoogleApiClient.connect();
+                } else {
+                    showAccountDialog();
                 }
 
                 isResolvingError = false;
+                break;
+            case REQUEST_LOGIN:
+                if (result == RESULT_OK) {
+                    isShowingDialog = false;
+                    GoogleSignInResult signInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+
+                    if (signInResult.isSuccess()) {
+                        try {
+                            GoogleSignInAccount account = signInResult.getSignInAccount();
+                            String token = account.getIdToken();
+                            // TODO: Validate token with server.
+                        } catch (NullPointerException exception) {
+                            Log.e(LoginThirdPartyAuthenticationFragment.class.getSimpleName(), exception.getMessage());
+                        }
+                    }
+                }
+
                 break;
         }
     }
@@ -87,6 +109,7 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
         // connection to Google Play services has been established.
         if (shouldResolveError) {
             shouldResolveError = false;
+            showAccountDialog();
         }
     }
 
@@ -236,6 +259,8 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
         if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
             shouldResolveError = true;
             mGoogleApiClient.connect();
+        } else {
+            showAccountDialog();
         }
     }
 
@@ -275,5 +300,11 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
         } else {
             connectGoogleClient();
         }
+    }
+
+    private void showAccountDialog() {
+        isShowingDialog = true;
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, REQUEST_LOGIN);
     }
 }
