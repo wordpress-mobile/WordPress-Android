@@ -660,8 +660,8 @@ public class PostsListFragment extends Fragment
                 break;
             case DELETE_POST:
                 if (event.isError()) {
-                    String message = String.format(getText(R.string.error_delete_post).toString(),
-                            mIsPage ? "page" : "post");
+                    String postType = getString(mIsPage ? R.string.page : R.string.post).toLowerCase();
+                    String message = getString(R.string.error_delete_post, postType);
                     ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
                     loadPosts(LoadMode.IF_CHANGED);
                 }
