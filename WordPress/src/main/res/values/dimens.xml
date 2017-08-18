@@ -330,5 +330,6 @@
     <dimen name="textinputlayout_correction_margin_right">-8.6dp</dimen>
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
     <dimen name="google_button_icon_sz">24dp</dimen>
+    <dimen name="login_error_footer_icon_width">64dp</dimen>
 
 </resources>
