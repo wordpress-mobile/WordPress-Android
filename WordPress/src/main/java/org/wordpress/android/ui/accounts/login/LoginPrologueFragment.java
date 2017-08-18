@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +41,25 @@ public class LoginPrologueFragment extends Fragment {
             }
         });
 
+        ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        };
+
         WPViewPager pager = (WPViewPager) view.findViewById(R.id.intros_pager);
         LoginProloguePagerAdapter adapter = new LoginProloguePagerAdapter(getChildFragmentManager());
         pager.setAdapter(adapter);
+        pager.addOnPageChangeListener(listener);
 
         // Using a TabLayout for simulating a page indicator strip
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout_indicator);
