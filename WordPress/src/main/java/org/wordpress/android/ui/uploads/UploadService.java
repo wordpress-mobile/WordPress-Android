@@ -19,8 +19,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaError;
-import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
@@ -302,13 +300,6 @@ public class UploadService extends Service {
             // Unlike completed media, we won't remove the failed media references, so we can look up their errors later
         }
         return post;
-    }
-
-    public static void markPostAsError(PostModel post) {
-        // now keep track of the error reason so it can be queried
-        UploadError reason = new UploadError(new MediaError(MediaErrorType.GENERIC_ERROR));
-        // TODO
-//        addUploadErrorToFailedPosts(post, reason);
     }
 
     public static boolean hasInProgressMediaUploadsForPost(PostModel postModel) {
