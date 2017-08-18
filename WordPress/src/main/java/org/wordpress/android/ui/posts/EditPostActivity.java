@@ -1817,7 +1817,6 @@ public class EditPostActivity extends AppCompatActivity implements
         AddMediaListThread(@NonNull List<Uri> uriList, boolean isNew) {
             this.uriList.addAll(uriList);
             this.isNew = isNew;
-            showOverlay(true);
         }
 
         @Override
@@ -1835,7 +1834,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (didAnyFail) {
                         ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
                     }
-                    showOverlay(false);
                 }
             });
         }
