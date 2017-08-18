@@ -496,6 +496,7 @@ public class EditPostActivity extends AppCompatActivity implements
     protected void onDestroy() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
+        cancelAddMediaListThread();
         super.onDestroy();
     }
 
@@ -1805,10 +1806,23 @@ public class EditPostActivity extends AppCompatActivity implements
         return true;
     }
 
+    private AddMediaListThread mAddMediaListThread;
+
     private void addMediaList(@NonNull List<Uri> uriList, boolean isNew) {
         // fetch any shared media first - must be done on the main thread
         List<Uri> fetchedUriList = fetchMediaList(uriList);
-        new AddMediaListThread(fetchedUriList, isNew).start();
+        mAddMediaListThread = new AddMediaListThread(fetchedUriList, isNew);
+        mAddMediaListThread.start();
+    }
+
+    private void cancelAddMediaListThread() {
+        if (mAddMediaListThread != null && !mAddMediaListThread.isInterrupted()) {
+            try {
+                mAddMediaListThread.interrupt();
+            } catch (SecurityException e) {
+                AppLog.e(T.MEDIA, e);
+            }
+        }
     }
 
     /*
@@ -1817,7 +1831,6 @@ public class EditPostActivity extends AppCompatActivity implements
      */
     private class AddMediaListThread extends Thread {
         private final List<Uri> uriList = new ArrayList<>();
-        private final Handler handler = new Handler();
         private final boolean isNew;
         private boolean didAnyFail;
 
@@ -1829,19 +1842,24 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         public void run() {
-            for (Uri mediaUri: uriList) {
+            for (Uri mediaUri : uriList) {
+                if (isInterrupted()) {
+                    return;
+                }
                 if (!processMedia(mediaUri)) {
                     didAnyFail = true;
                 }
             }
 
-            handler.post(new Runnable() {
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    savePostAsync(null);
-                    hideOverlay();
-                    if (didAnyFail) {
-                        ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
+                    if (!isInterrupted()) {
+                        savePostAsync(null);
+                        hideOverlay();
+                        if (didAnyFail) {
+                            ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
+                        }
                     }
                 }
             });
@@ -1884,6 +1902,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
 
+            if (isInterrupted()) {
+                return false;
+            }
+
             trackAddMediaFromDeviceEvents(isNew, isVideo, mediaUri);
             postProcessMedia(mediaUri, path, isVideo);
 
@@ -1891,7 +1913,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         private void postProcessMedia(final Uri mediaUri, final String path, final boolean isVideo) {
-            handler.post(new Runnable() {
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if (mShowNewEditor || mShowAztecEditor) {
