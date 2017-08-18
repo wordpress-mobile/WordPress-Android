@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
@@ -123,6 +124,9 @@ public class UploadStore extends Store {
                 break;
             case CANCEL_MEDIA_UPLOAD:
                 handleCancelMedia((CancelMediaPayload) payload);
+                break;
+            case UPDATE_MEDIA:
+                handleUpdateMedia((MediaModel) payload);
                 break;
         }
     }
@@ -297,6 +301,39 @@ public class UploadStore extends Store {
 
         if (payload.media.getLocalPostId() > 0) {
             cancelPost(payload.media.getLocalPostId());
+        }
+    }
+
+    private void handleUpdateMedia(@NonNull MediaModel payload) {
+        MediaUploadModel mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(payload.getId());
+        if (mediaUploadModel == null) {
+            return;
+        }
+
+        // If the new MediaModel state is different from ours, update the MediaUploadModel to reflect it
+        MediaUploadState newUploadState = MediaUploadState.fromString(payload.getUploadState());
+        switch (mediaUploadModel.getUploadState()) {
+            case MediaUploadModel.UPLOADING:
+                if (newUploadState == MediaUploadState.FAILED) {
+                    mediaUploadModel.setUploadState(MediaUploadModel.FAILED);
+                    mediaUploadModel.setMediaError(new MediaError(MediaErrorType.GENERIC_ERROR));
+                    mediaUploadModel.setProgress(0);
+                    UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+                    // Also cancel the associated post
+                    if (payload.getLocalPostId() > 0) {
+                        cancelPost(payload.getLocalPostId());
+                    }
+                }
+                break;
+            case MediaUploadModel.COMPLETED:
+                // We never care about changes to MediaModels that are already COMPLETED
+                break;
+            case MediaUploadModel.FAILED:
+                if (newUploadState == MediaUploadState.UPLOADING || newUploadState == MediaUploadState.QUEUED) {
+                    mediaUploadModel.setUploadState(MediaUploadModel.UPLOADING);
+                    UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+                }
+                break;
         }
     }
 
