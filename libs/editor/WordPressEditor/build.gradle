@@ -52,13 +52,12 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.wordpress:utils:1.16.0'
 
-    compile ('com.github.wordpress-mobile.AztecEditor-Android:aztec:feature~gradle-upgrade-SNAPSHOT')
-    compile ('com.github.wordpress-mobile.AztecEditor-Android:wordpress-comments:feature~gradle-upgrade-SNAPSHOT')
-    compile ('com.github.wordpress-mobile.AztecEditor-Android:wordpress-shortcodes:feature~gradle-upgrade-SNAPSHOT')
+    compile 'com.github.wordpress-mobile.AztecEditor-Android:aztec:feature~gradle-upgrade-SNAPSHOT'
+    compile 'com.github.wordpress-mobile.AztecEditor-Android:wordpress-comments:feature~gradle-upgrade-SNAPSHOT'
+    compile 'com.github.wordpress-mobile.AztecEditor-Android:wordpress-shortcodes:feature~gradle-upgrade-SNAPSHOT'
 
     // Aztec dependencies
     compile "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
-    compile "org.ccil.cowan.tagsoup:tagsoup:1.2.1"
     compile "org.jsoup:jsoup:1.10.3"
 }
 
