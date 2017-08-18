@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.accounts.login;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -9,7 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -38,8 +42,10 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
     private LoginListener mLoginListener;
     private boolean isResolvingError;
     private boolean shouldResolveError;
+    private boolean isShowingDialog;
 
     private static final String STATE_RESOLVING_ERROR = "STATE_RESOLVING_ERROR";
+    private static final String STATE_SHOWING_DIALOG = "STATE_SHOWING_DIALOG";
     private static final int REQUEST_CONNECT = 1000;
     private static final int REQUEST_PERMISSIONS_GET_ACCOUNTS = 9000;
 
@@ -118,8 +124,11 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        // Restore state of error resolving.
-        isResolvingError = savedInstanceState != null && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+        // Restore state of error resolving and account choosing.
+        if (savedInstanceState != null) {
+            isResolvingError = savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+            isShowingDialog = savedInstanceState.getBoolean(STATE_SHOWING_DIALOG, false);
+        }
 
         // Configure sign-in to request user's ID, basic profile, email address, and ID token.
         // ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -135,7 +144,10 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        // TODO: Start login process.
+        // Request account permission and start login process.
+        if (!isShowingDialog) {
+            requestAccountsPermission();
+        }
     }
 
     @Override
@@ -152,7 +164,7 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
             @Override
             public void onClick(View view) {
                 if (!isResolvingError) {
-                    // TODO: Start login process.
+                    requestAccountsPermission();
                 }
             }
         });
@@ -188,6 +200,8 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
 
         switch (request) {
             case REQUEST_PERMISSIONS_GET_ACCOUNTS:
+                isShowingDialog = false;
+
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     connectGoogleClient();
                 }
@@ -200,6 +214,7 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_RESOLVING_ERROR, isResolvingError);
+        outState.putBoolean(STATE_SHOWING_DIALOG, isShowingDialog);
     }
 
     @Override
@@ -228,6 +243,37 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
         if (mGoogleApiClient.isConnected()) {
             Auth.GoogleSignInApi.signOut(mGoogleApiClient);
             mGoogleApiClient.disconnect();
+        }
+    }
+
+    private void requestAccountsPermission() {
+        // Request accounts permission to get emails for Google login.
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+            // Show explanation for permission then permission request dialog.
+            if (shouldShowRequestPermissionRationale(Manifest.permission.GET_ACCOUNTS)) {
+                // Show permission request dialog.
+                DialogInterface.OnDismissListener dialogDismissListener = new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, REQUEST_PERMISSIONS_GET_ACCOUNTS);
+                    }
+                };
+
+                // Show explanation for permission.
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getResources().getString(R.string.dialog_permissions_accounts_title))
+                        .setMessage(getResources().getString(R.string.dialog_permissions_accounts_message))
+                        .setPositiveButton(R.string.dialog_permissions_accounts_positive, null)
+                        .setOnDismissListener(dialogDismissListener)
+                        .show();
+            // Show permission request dialog.
+            } else {
+                isShowingDialog = true;
+                requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, REQUEST_PERMISSIONS_GET_ACCOUNTS);
+            }
+        // Connect Google API client.
+        } else {
+            connectGoogleClient();
         }
     }
 }
