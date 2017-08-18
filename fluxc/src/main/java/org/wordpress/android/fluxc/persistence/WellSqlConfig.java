@@ -52,7 +52,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 12;
+        return 13;
     }
 
     @Override
@@ -121,7 +121,14 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("CREATE TABLE RoleModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,SITE_ID INTEGER,"
                         + "NAME TEXT,DISPLAY_NAME TEXT)");
                 oldVersion++;
-            // TODO migration for upload models
+            case 12:
+                db.execSQL("CREATE TABLE MediaUploadModel (_id INTEGER PRIMARY KEY,UPLOAD_STATE INTEGER,"
+                        + "PROGRESS REAL,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,FOREIGN KEY(_id) REFERENCES "
+                        + "MediaModel(_id) ON DELETE CASCADE)");
+                db.execSQL("CREATE TABLE PostUploadModel (_id INTEGER PRIMARY KEY,UPLOAD_STATE INTEGER,"
+                        + "ASSOCIATED_MEDIA_IDS TEXT,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,FOREIGN KEY(_id) REFERENCES "
+                        + "PostModel(_id) ON DELETE CASCADE)");
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
