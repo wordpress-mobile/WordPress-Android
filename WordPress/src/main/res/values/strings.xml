@@ -1152,7 +1152,7 @@
     <string name="error_generic">An error occurred</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
-    <string name="error_publish_empty_post">Can\'t publish an empty post</string>
+    <string name="error_publish_empty_post_param">Can\'t publish an empty %s</string>
     <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
     <string name="error_upload_post_params">There was an error uploading this %1$s: %2$s.</string>
     <string name="error_upload_post_media_params">There was an error uploading the media in this %1$s: %2$s.</string>
@@ -1165,8 +1165,8 @@
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
-    <string name="error_media_recover">We were unable to upload this post\'s media. Please edit the post to try again.</string>
-    <string name="error_post_does_not_exist">This post no longer exists</string>
+    <string name="error_media_recover_params">We were unable to upload this %1$s\'s media. Please edit the %1$s to try again.</string>
+    <string name="error_post_does_not_exist_param">This %s no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
@@ -1187,7 +1187,7 @@
     <string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
 
     <!-- Post Error -->
-    <string name="error_unknown_post">Could not find the post on the server</string>
+    <string name="error_unknown_post_param">Could not find the %s on the server</string>
     <string name="error_unknown_post_type">Unknown post format</string>
 
     <!-- Image Descriptions for Accessibility -->
