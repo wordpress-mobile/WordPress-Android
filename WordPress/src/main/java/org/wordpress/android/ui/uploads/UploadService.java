@@ -475,15 +475,16 @@ public class UploadService extends Service {
         }
     }
 
-    private void cancelPostUploadMatchingMedia(MediaModel media, String mediaErrorMessage,
-                                               boolean showErrorNotification) {
+    private void cancelPostUploadMatchingMedia(@NonNull MediaModel media, String errorMessage) {
         PostModel postToCancel = mPostStore.getPostByLocalPostId(media.getLocalPostId());
         if (postToCancel == null) return;
 
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
         mPostUploadNotifier.cancelNotification(postToCancel);
-        if (showErrorNotification) {
-            String message = UploadUtils.getErrorMessage(this, postToCancel, mediaErrorMessage, true);
+
+        if (mUploadStore.isPendingPost(postToCancel) || mUploadStore.isCancelledPost(postToCancel)) {
+            // Only show the media upload error notification if the post is registered in the UploadStore
+            String message = UploadUtils.getErrorMessage(this, postToCancel, errorMessage, true);
             mPostUploadNotifier.updateNotificationError(postToCancel, site, message);
         }
 
@@ -507,7 +508,7 @@ public class UploadService extends Service {
                 AppLog.w(T.MAIN, "UploadService > Media upload failed for post " + event.media.getLocalPostId() + " : "
                         + event.error.type + ": " + event.error.message);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
-                cancelPostUploadMatchingMedia(event.media, errorMessage, true);
+                cancelPostUploadMatchingMedia(event.media, errorMessage);
             }
             stopServiceIfUploadsComplete();
             return;
@@ -517,16 +518,7 @@ public class UploadService extends Service {
             if (event.media.getLocalPostId() > 0) {
                 AppLog.i(T.MAIN, "UploadService > Upload cancelled for post with id " + event.media.getLocalPostId()
                         + " - a media upload for this post has been cancelled, id: " + event.media.getId());
-
-                // Only show the media upload error notification if the post is registered in the UploadStore
-                boolean showMediaErrorNotification = false;
-                PostModel latestPost = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
-                if (mUploadStore.isPendingPost(latestPost) || mUploadStore.isCancelledPost(latestPost)) {
-                    showMediaErrorNotification = true;
-                }
-
-                cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled),
-                        showMediaErrorNotification);
+                cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
             }
             stopServiceIfUploadsComplete();
             return;
