@@ -1537,8 +1537,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             addDefaultSizeClassIfMissing(attrs);
 
-            // clear overlay
-            // content.clearOverlays(predicate);
             updateElementAttributes(content, predicate, attrs);
 
             // re-set the post content
