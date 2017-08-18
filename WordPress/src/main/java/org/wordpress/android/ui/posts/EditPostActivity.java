@@ -1799,7 +1799,9 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void addMediaList(@NonNull List<Uri> uriList, boolean isNew) {
-        new AddMediaListThread(uriList, isNew).start();
+        // fetch any shared media first - must be done on the main thread
+        List<Uri> fetchedUriList = fetchMediaList(uriList);
+        new AddMediaListThread(fetchedUriList, isNew).start();
     }
 
     /*
@@ -1844,12 +1846,6 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             Activity activity = EditPostActivity.this;
-
-            if (!MediaUtils.isInMediaStore(mediaUri)
-                    && !mediaUri.toString().startsWith("/")
-                    && !mediaUri.toString().startsWith("file://")) {
-                mediaUri = MediaUtils.downloadExternalMedia(activity, mediaUri);
-            }
 
             String path = MediaUtils.getRealPathFromURI(activity, mediaUri);
             if (path == null) {
@@ -1946,11 +1942,11 @@ public class EditPostActivity extends AppCompatActivity implements
                                 new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
                                     @Override
                                     public void done() {
-                                        fetchMedia(imageUri);
+                                        addMedia(imageUri, false);
                                     }
                                 });
                     } else {
-                        fetchMedia(imageUri);
+                        addMedia(imageUri, false);
                     }
                     break;
                 case RequestCodes.TAKE_PHOTO:
@@ -1968,8 +1964,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
-                    List<Uri> mediaUris = Arrays.asList(videoUri);
-                    addMediaList(mediaUris, false);
+                    addMedia(videoUri, false);
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
@@ -2003,27 +1998,44 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
 
-    private void fetchMedia(Uri mediaUri) {
-        if (!MediaUtils.isInMediaStore(mediaUri)) {
-            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
-            Uri downloadedUri = null;
-            try {
-                downloadedUri = MediaUtils.downloadExternalMedia(EditPostActivity.this, mediaUri);
-            } catch (IllegalStateException e) {
-                // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
-                AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
-                CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString() +
-                        " See issue #5823");
+    /*
+     * called before we add media to make sure we have access to any media shared from another app (Google Photos, etc.)
+     */
+    private List<Uri> fetchMediaList(@NonNull List<Uri> uriList) {
+        boolean didAnyFail = false;
+        List<Uri> fetchedUriList = new ArrayList<>();
+        for (int i = 0; i < uriList.size(); i++) {
+            Uri mediaUri = uriList.get(i);
+            if (mediaUri == null) {
+                continue;
             }
-            if (downloadedUri != null) {
-                addMedia(downloadedUri, false);
+            if (!MediaUtils.isInMediaStore(mediaUri)) {
+                // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+                Uri fetchedUri = null;
+                try {
+                    fetchedUri = MediaUtils.downloadExternalMedia(EditPostActivity.this, mediaUri);
+                } catch (IllegalStateException e) {
+                    // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
+                    AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
+                    CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString() +
+                            " See issue #5823");
+                    didAnyFail = true;
+                }
+                if (fetchedUri != null) {
+                    fetchedUriList.add(fetchedUri);
+                } else {
+                    didAnyFail = true;
+                }
             } else {
-                ToastUtils.showToast(EditPostActivity.this, R.string.error_downloading_image,
-                        ToastUtils.Duration.SHORT);
+                fetchedUriList.add(mediaUri);
             }
-        } else {
-            addMedia(mediaUri, false);
         }
+
+        if (didAnyFail) {
+            ToastUtils.showToast(EditPostActivity.this, R.string.error_downloading_image, ToastUtils.Duration.SHORT);
+        }
+
+        return fetchedUriList;
     }
 
     private void handleMediaPickerResult(Intent data) {
