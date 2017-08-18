@@ -133,7 +133,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -612,13 +611,18 @@ public class EditPostActivity extends AppCompatActivity implements
     /*
      * shows/hides the overlay which appears atop the editor, which effectively disables it
      */
-    private void showOverlay(boolean show) {
+    private void showOverlay(boolean animate) {
         View overlay = findViewById(R.id.view_overlay);
-        if (show && overlay.getVisibility() != View.VISIBLE) {
+        if (animate) {
             AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
-        } else if (!show && overlay.getVisibility() == View.VISIBLE) {
-            AniUtils.fadeOut(overlay, AniUtils.Duration.MEDIUM);
+        } else {
+            overlay.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void hideOverlay() {
+        View overlay = findViewById(R.id.view_overlay);
+        overlay.setVisibility(View.GONE);
     }
 
     /*
@@ -644,6 +648,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mPhotoPickerFragment.setPhotoPickerListener(this);
         }
 
+        // animate in the editor overlay
         showOverlay(true);
 
         if (mEditorFragment instanceof AztecEditorFragment) {
@@ -658,7 +663,7 @@ public class EditPostActivity extends AppCompatActivity implements
             AniUtils.animateBottomBar(mPhotoPickerContainer, false);
         }
 
-        showOverlay(false);
+        hideOverlay();
 
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment)mEditorFragment).enableMediaMode(false);
@@ -1819,6 +1824,7 @@ public class EditPostActivity extends AppCompatActivity implements
         AddMediaListThread(@NonNull List<Uri> uriList, boolean isNew) {
             this.uriList.addAll(uriList);
             this.isNew = isNew;
+            showOverlay(false);
         }
 
         @Override
@@ -1833,6 +1839,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 @Override
                 public void run() {
                     savePostAsync(null);
+                    hideOverlay();
                     if (didAnyFail) {
                         ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error, ToastUtils.Duration.SHORT);
                     }
