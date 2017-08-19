@@ -1965,6 +1965,8 @@
     <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="login_error_button">Close</string>
     <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
+    <string name="login_error_header_generic_description">Not found illustration</string>
+    <string name="login_error_header_generic_message">There was some trouble connecting with the Google account.</string>
 
     <!-- shared element names -->
     <string name="shared_element_media" translatable="false">media</string>
