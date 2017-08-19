@@ -45,14 +45,14 @@
             android:paddingLeft="@dimen/margin_extra_large"
             android:paddingRight="@dimen/margin_extra_large" >
 
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:contentDescription="@string/description_google_logo"
                 android:layout_height="@dimen/avatar_sz_login_epilogue"
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_extra_medium_large"
                 android:layout_width="@dimen/avatar_sz_login_epilogue"
                 app:srcCompat="@drawable/ic_google_60dp" >
-            </ImageView>
+            </android.support.v7.widget.AppCompatImageView>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/email"
