@@ -1,123 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:layout_width="match_parent" >
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_details"
+    <RelativeLayout
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:layout_marginEnd="@dimen/margin_large"
-        android:layout_marginLeft="@dimen/margin_large"
-        android:layout_marginRight="@dimen/margin_large"
-        android:layout_marginStart="@dimen/margin_large"
-        android:layout_width="match_parent"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="@dimen/cardview_default_radius"
-        app:cardElevation="@dimen/card_elevation"
-        app:cardUseCompatPadding="true" >
+        android:layout_width="match_parent" >
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/header"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent" >
+        </FrameLayout>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/footer"
+            android:layout_below="@+id/header"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginStart="@dimen/margin_large"
             android:layout_width="match_parent"
-            android:orientation="vertical" >
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/cardview_default_radius"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardUseCompatPadding="true" >
 
             <LinearLayout
-                android:id="@+id/footer_another_email"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:gravity="center_vertical"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:minHeight="?attr/listPreferredItemHeight" >
+                android:orientation="vertical" >
 
-                <ImageView
-                    android:importantForAccessibility="no"
+                <LinearLayout
+                    android:id="@+id/footer_another_email"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
                     android:layout_height="wrap_content"
-                    android:layout_width="@dimen/login_error_footer_icon_width"
-                    app:srcCompat="@drawable/ic_undo_grey_24dp" >
-                </ImageView>
+                    android:layout_width="match_parent"
+                    android:minHeight="?attr/listPreferredItemHeight" >
 
-                <TextView
+                    <ImageView
+                        android:importantForAccessibility="no"
+                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/login_error_footer_icon_width"
+                        app:srcCompat="@drawable/ic_undo_grey_24dp" >
+                    </ImageView>
+
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="@string/login_error_footer_another_email"
+                        style="@style/LoginTheme.TextLabel.Footer" >
+                    </TextView>
+
+                </LinearLayout>
+
+                <View
+                    android:background="@color/light_gray"
+                    android:layout_height="1dp"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/login_error_footer_icon_width"
+                    android:layout_marginStart="@dimen/login_error_footer_icon_width" >
+                </View>
+
+                <LinearLayout
+                    android:id="@+id/footer_site_address"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="@string/login_error_footer_another_email"
-                    style="@style/LoginTheme.TextLabel.Footer" >
-                </TextView>
+                    android:layout_width="match_parent"
+                    android:minHeight="?attr/listPreferredItemHeight" >
+
+                    <ImageView
+                        android:importantForAccessibility="no"
+                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/login_error_footer_icon_width"
+                        app:srcCompat="@drawable/ic_domains_grey_24dp" >
+                    </ImageView>
+
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="@string/login_error_footer_site_address"
+                        style="@style/LoginTheme.TextLabel.Footer" >
+                    </TextView>
+
+                </LinearLayout>
+
+                <View
+                    android:background="@color/light_gray"
+                    android:layout_height="1dp"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/login_error_footer_icon_width"
+                    android:layout_marginStart="@dimen/login_error_footer_icon_width" >
+                </View>
+
+                <LinearLayout
+                    android:id="@+id/footer_sign_up"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:minHeight="?attr/listPreferredItemHeight" >
+
+                    <ImageView
+                        android:importantForAccessibility="no"
+                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/login_error_footer_icon_width"
+                        app:srcCompat="@drawable/ic_my_sites_grey_24dp" >
+                    </ImageView>
+
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="@string/login_error_footer_sign_up"
+                        style="@style/LoginTheme.TextLabel.Footer" >
+                    </TextView>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <View
-                android:background="@color/light_gray"
-                android:layout_height="1dp"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/login_error_footer_icon_width"
-                android:layout_marginStart="@dimen/login_error_footer_icon_width" >
-            </View>
+        </android.support.v7.widget.CardView>
 
-            <LinearLayout
-                android:id="@+id/footer_site_address"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:minHeight="?attr/listPreferredItemHeight" >
+    </RelativeLayout>
 
-                <ImageView
-                    android:importantForAccessibility="no"
-                    android:layout_height="wrap_content"
-                    android:layout_width="@dimen/login_error_footer_icon_width"
-                    app:srcCompat="@drawable/ic_domains_grey_24dp" >
-                </ImageView>
-
-                <TextView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="@string/login_error_footer_site_address"
-                    style="@style/LoginTheme.TextLabel.Footer" >
-                </TextView>
-
-            </LinearLayout>
-
-            <View
-                android:background="@color/light_gray"
-                android:layout_height="1dp"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/login_error_footer_icon_width"
-                android:layout_marginStart="@dimen/login_error_footer_icon_width" >
-            </View>
-
-            <LinearLayout
-                android:id="@+id/footer_sign_up"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:minHeight="?attr/listPreferredItemHeight" >
-
-                <ImageView
-                    android:importantForAccessibility="no"
-                    android:layout_height="wrap_content"
-                    android:layout_width="@dimen/login_error_footer_icon_width"
-                    app:srcCompat="@drawable/ic_my_sites_grey_24dp" >
-                </ImageView>
-
-                <TextView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="@string/login_error_footer_sign_up"
-                    style="@style/LoginTheme.TextLabel.Footer" >
-                </TextView>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-</RelativeLayout>
+</ScrollView>
