@@ -331,5 +331,6 @@
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
     <dimen name="third_party_authentication_illustration_height">150dp</dimen>
     <dimen name="third_party_authentication_illustration_width">240dp</dimen>
+    <dimen name="google_button_icon_sz">24dp</dimen>
 
 </resources>
