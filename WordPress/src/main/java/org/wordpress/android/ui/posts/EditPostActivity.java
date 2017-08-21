@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -1832,6 +1833,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private class AddMediaListThread extends Thread {
         private final List<Uri> uriList = new ArrayList<>();
         private final boolean isNew;
+        private ProgressDialog progressDialog;
         private boolean didAnyFail;
 
         AddMediaListThread(@NonNull List<Uri> uriList, boolean isNew) {
@@ -1840,20 +1842,56 @@ public class EditPostActivity extends AppCompatActivity implements
             showOverlay(false);
         }
 
+        private void showProgressDialog(final boolean show) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (show) {
+                            progressDialog = new ProgressDialog(EditPostActivity.this);
+                            progressDialog.setCancelable(false);
+                            progressDialog.setIndeterminate(true);
+                            progressDialog.setMessage(getString(R.string.add_media_progress));
+                            progressDialog.show();
+                        } else if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                    } catch (IllegalArgumentException e) {
+                        AppLog.e(T.MEDIA, e);
+                    }
+                }
+            });
+        }
+
         @Override
         public void run() {
-            for (Uri mediaUri : uriList) {
-                if (isInterrupted()) {
-                    return;
+            // adding multiple media items at once can take several seconds on slower devices, so we show a blocking
+            // progress dialog in this situation - otherwise the user could accidentally back out of the process
+            // before all items were added
+            boolean shouldShowProgress = uriList.size() > 2;
+            if (shouldShowProgress) {
+                showProgressDialog(true);
+            }
+            try {
+                for (Uri mediaUri : uriList) {
+                    if (isInterrupted()) {
+                        return;
+                    }
+                    if (!processMedia(mediaUri)) {
+                        didAnyFail = true;
+                    }
                 }
-                if (!processMedia(mediaUri)) {
-                    didAnyFail = true;
+            } finally {
+                if (shouldShowProgress) {
+                    showProgressDialog(false);
                 }
             }
+
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+
                     if (!isInterrupted()) {
                         savePostAsync(null);
                         hideOverlay();
