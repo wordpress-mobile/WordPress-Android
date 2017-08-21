@@ -295,6 +295,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private void pushJetpackProtectAndSsoSettings() {
         final Map<String, Object> params = serializeJetpackProtectAndSsoParams();
         if (params.isEmpty()) {
+            AppLog.v(AppLog.T.API, "No Jetpack settings changes detected. Skipping network POST call.");
             return;
         }
         WordPress.getRestClientUtilsV1_1().setJetpackSettings(mSite.getSiteId(), params,
