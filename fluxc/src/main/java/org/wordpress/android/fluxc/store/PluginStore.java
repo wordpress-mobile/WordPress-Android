@@ -23,6 +23,16 @@ import javax.inject.Inject;
 
 public class PluginStore extends Store {
     // Payloads
+    public static class UpdatePluginPayload extends Payload {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public UpdatePluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+    }
+
     public static class FetchedPluginsPayload extends Payload {
         public SiteModel site;
         public List<PluginModel> plugins;
@@ -122,6 +132,9 @@ public class PluginStore extends Store {
             case FETCH_PLUGIN_INFO:
                 fetchPluginInfo((String) action.getPayload());
                 break;
+            case UPDATE_PLUGIN:
+                updatePlugin((UpdatePluginPayload) action.getPayload());
+                break;
             case FETCHED_PLUGINS:
                 fetchedPlugins((FetchedPluginsPayload) action.getPayload());
                 break;
@@ -151,6 +164,12 @@ public class PluginStore extends Store {
 
     private void fetchPluginInfo(String plugin) {
         mPluginWPOrgClient.fetchPluginInfo(plugin);
+    }
+
+    private void updatePlugin(UpdatePluginPayload payload) {
+        if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
+            mPluginRestClient.updatePlugin(payload.site, payload.plugin);
+        }
     }
 
     private void fetchedPlugins(FetchedPluginsPayload payload) {
