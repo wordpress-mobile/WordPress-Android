@@ -61,6 +61,21 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class UpdatedPluginPayload extends Payload {
+        public SiteModel site;
+        public PluginModel plugin;
+        public UpdatePluginError error;
+
+        public UpdatedPluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+
+        public UpdatedPluginPayload(UpdatePluginError error) {
+            this.error = error;
+        }
+    }
+
     public static class FetchPluginsError implements OnChangedError {
         public FetchPluginsErrorType type;
         public String message;
@@ -82,6 +97,14 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class UpdatePluginError implements OnChangedError {
+        public UpdatePluginErrorType type;
+
+        public UpdatePluginError(UpdatePluginErrorType type) {
+            this.type = type;
+        }
+    }
+
     public enum FetchPluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
@@ -90,6 +113,11 @@ public class PluginStore extends Store {
 
     public enum FetchPluginInfoErrorType {
         GENERIC_ERROR
+    }
+
+    public enum UpdatePluginErrorType {
+        GENERIC_ERROR,
+        NOT_AVAILABLE // Return for non-jetpack sites
     }
 
     public static class OnPluginsChanged extends OnChanged<FetchPluginsError> {
@@ -169,6 +197,10 @@ public class PluginStore extends Store {
     private void updatePlugin(UpdatePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.updatePlugin(payload.site, payload.plugin);
+        } else {
+            UpdatePluginError error = new UpdatePluginError(UpdatePluginErrorType.GENERIC_ERROR);
+            UpdatedPluginPayload errorPayload = new UpdatedPluginPayload(error);
+            updatedPlugin(errorPayload);
         }
     }
 
@@ -191,5 +223,9 @@ public class PluginStore extends Store {
             PluginSqlUtils.insertOrUpdatePluginInfo(payload.pluginInfo);
         }
         emitChange(event);
+    }
+
+    private void updatedPlugin(UpdatedPluginPayload payload) {
+
     }
 }
