@@ -30,13 +30,17 @@ import org.wordpress.android.util.ToastUtils;
 
 public class LearnMorePreference extends Preference
         implements PreferenceHint, View.OnClickListener {
-    private static final String SUPPORT_MOBILE_ID = "mobile-only-usage";
     private static final String SUPPORT_CONTENT_JS = "javascript:(function(){" +
-            "var mobileSupport = document.getElementById('" + SUPPORT_MOBILE_ID + "');" +
+            "var mobileSupport = document.getElementById('mobile-only-usage');" +
             "mobileSupport.style.display = 'inline';" +
             "var newHtml = '<' + mobileSupport.tagName + '>' + mobileSupport.innerHTML + '</' + mobileSupport.tagName + '>';" +
             "document.body.innerHTML = newHtml;" +
             "document.body.setAttribute('style', 'padding:24px 24px 0px 24px !important');" +
+            "})();";
+    private static final String CONTENT_PADDING_JS = "javascript:(function(){" +
+            "document.body.setAttribute('style', 'padding:24px 24px 0px 24px !important');" +
+            "document.getElementById('mobilenav-toggle').style.display = 'none';" +
+            "document.getElementById('actionbar').style.display = 'none';" +
             "})();";
 
     private String mHint;
@@ -170,7 +174,8 @@ public class LearnMorePreference extends Preference
     private class LearnMoreClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView webView, String url) {
-            return !WP_SUPPORT_URL.equals(url) && !SUPPORT_CONTENT_JS.equals(url);
+            // prevent loading clicked links
+            return !mUrl.equals(url) && !SUPPORT_CONTENT_JS.equals(url) && !CONTENT_PADDING_JS.equals(url);
         }
 
         @Override
