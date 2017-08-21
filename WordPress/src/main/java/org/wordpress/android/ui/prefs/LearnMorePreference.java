@@ -142,15 +142,23 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
     }
 
     private static class SavedState extends BaseSavedState {
-        public SavedState(Parcel source) { super(source); }
+        SavedState(Parcel source) {
+            super(source);
+        }
 
-        public SavedState(Parcelable superState) { super(superState); }
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
 
         public static final Parcelable.Creator<SavedState> CREATOR =
                 new Parcelable.Creator<SavedState>() {
-                    public SavedState createFromParcel(Parcel in) { return new SavedState(in); }
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
 
-                    public SavedState[] newArray(int size) { return new SavedState[size]; }
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
                 };
     }
 
