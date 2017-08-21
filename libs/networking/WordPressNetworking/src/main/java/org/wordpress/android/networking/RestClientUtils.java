@@ -9,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
 import com.wordpress.rest.JsonRestRequest;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
@@ -232,6 +233,11 @@ public class RestClientUtils {
             post(path, params, null, listener, errorListener);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.API, "Error updating Jetpack settings: " + e);
+            // make sure to invoke error listener, caller will be expecting it
+            if (errorListener != null) {
+                errorListener.onErrorResponse(
+                        new VolleyError("Error: Attempted to update Jetpack settings with malformed body data", e));
+            }
         }
     }
 
