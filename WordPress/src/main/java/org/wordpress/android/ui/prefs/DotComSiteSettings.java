@@ -130,8 +130,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             mSettings.location = location;
 
                             SiteSettingsTable.saveSettings(mSettings);
-                            notifyUpdatedOnUiThread(null);
                         }
+                        notifyUpdatedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -164,6 +164,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.d(AppLog.T.API, "Error fetching WP.com categories:" + error);
+                        notifyUpdatedOnUiThread(error);
                     }
                 });
     }
@@ -221,6 +222,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
             @Override
             public void onErrorResponse(VolleyError error) {
                 AppLog.w(AppLog.T.API, "Error fetching Jetpack settings: " + error);
+                notifyUpdatedOnUiThread(error);
             }
         });
     }
@@ -260,7 +262,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         @Override
                         public void onResponse(JSONObject response) {
                             AppLog.d(AppLog.T.API, "Site Settings saved remotely");
-                            notifySavedOnUiThread(null);
                             mRemoteSettings.copyFrom(mSettings);
 
                             if (response != null) {
@@ -278,6 +279,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                                 AnalyticsUtils.trackWithSiteDetails(
                                         AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
                             }
+                            notifySavedOnUiThread(null);
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
@@ -337,6 +339,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         // Update our remote data object with our local data (which was used to generate POST params)
                         mRemoteJpSettings.emailNotifications = mJpSettings.emailNotifications;
                         mRemoteJpSettings.wpNotifications = mJpSettings.wpNotifications;
+                        notifySavedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
