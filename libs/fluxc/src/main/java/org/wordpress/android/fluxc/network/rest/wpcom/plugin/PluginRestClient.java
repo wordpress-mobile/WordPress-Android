@@ -24,7 +24,9 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchPluginsErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginsPayload;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -75,6 +77,25 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void updatePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.slug(plugin.getSlug()).getUrlV1_1();
+        Map<String, String> params = paramsFromPluginModel(plugin);
+        final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                FetchPluginsResponse.class,
+                new Listener<PluginWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PluginWPComRestResponse response) {
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                    }
+                }
+        );
+        add(request);
+    }
+
     private PluginModel pluginModelFromResponse(SiteModel siteModel, PluginWPComRestResponse response) {
         PluginModel pluginModel = new PluginModel();
         pluginModel.setLocalSiteId(siteModel.getId());
@@ -89,5 +110,12 @@ public class PluginRestClient extends BaseWPComRestClient {
         pluginModel.setSlug(response.slug);
         pluginModel.setVersion(response.version);
         return pluginModel;
+    }
+
+    private Map<String, String> paramsFromPluginModel(PluginModel pluginModel) {
+        Map<String, String> params = new HashMap<>();
+        params.put("active", pluginModel.isActive() ? "1" : "0");
+        params.put("autoupdate", pluginModel.isAutoUpdateEnabled() ? "1" : "0");
+        return params;
     }
 }
