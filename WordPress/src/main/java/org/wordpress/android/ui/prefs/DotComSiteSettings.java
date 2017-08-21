@@ -303,6 +303,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack settings updated");
+                        // The response object doesn't contain any relevant info
+                        // Update our remote data object with our local data (which was used to generate POST params)
                         mRemoteJpSettings.monitorActive = mJpSettings.monitorActive;
                         mRemoteJpSettings.jetpackProtectEnabled = mJpSettings.jetpackProtectEnabled;
                         mRemoteJpSettings.jetpackProtectWhitelist.clear();
@@ -331,6 +333,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack Monitor module updated");
+                        // The response object doesn't contain any relevant info
+                        // Update our remote data object with our local data (which was used to generate POST params)
                         mRemoteJpSettings.emailNotifications = mJpSettings.emailNotifications;
                         mRemoteJpSettings.wpNotifications = mJpSettings.wpNotifications;
                     }
