@@ -1196,7 +1196,7 @@
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="cd_related_post_preview_image">Related post preview image</string>
-    <string name="login_site_address_help_image">Site address positioning image</string>
+    <string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
 
     <!-- Passcode lock -->
     <string name="passcode_manage">Manage PIN lock</string>
