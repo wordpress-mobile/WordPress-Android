@@ -128,8 +128,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             mSettings.copyFrom(mRemoteSettings);
                             mSettings.postFormats = currentPostFormats;
                             mSettings.location = location;
-                            mJpSettings.jetpackProtectWhitelist.clear();
-                            mJpSettings.jetpackProtectWhitelist.addAll(mRemoteJpSettings.jetpackProtectWhitelist);
 
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);
@@ -196,6 +194,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
                 JSONObject jetpackProtectWhitelist = data.optJSONObject("jetpack_protect_global_whitelist");
                 if (jetpackProtectWhitelist != null) {
+                    // clear existing whitelist entries before adding items from response
+                    mRemoteJpSettings.jetpackProtectWhitelist.clear();
+
                     JSONArray whitelistItems = jetpackProtectWhitelist.optJSONArray("local");
                     if (whitelistItems != null) {
                         for (int i = 0; i < whitelistItems.length(); ++i) {
