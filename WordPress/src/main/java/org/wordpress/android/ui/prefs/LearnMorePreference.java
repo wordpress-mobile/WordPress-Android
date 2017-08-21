@@ -92,8 +92,8 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
     }
 
     @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof SavedState)) {// per documentation, state is always non-null
+    public void onRestoreInstanceState(@NonNull Parcelable state) {
+        if (!(state instanceof SavedState)) {
             super.onRestoreInstanceState(state);
         } else {
             super.onRestoreInstanceState(((SavedState) state).getSuperState());
