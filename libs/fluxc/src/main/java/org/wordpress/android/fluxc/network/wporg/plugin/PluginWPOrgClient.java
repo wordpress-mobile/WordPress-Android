@@ -8,6 +8,7 @@ import com.android.volley.Response.Listener;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
+import org.wordpress.android.fluxc.generated.endpoint.WPORGAPI;
 import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -35,7 +36,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     }
 
     public void fetchPluginInfo(String plugin) {
-        String url = "https://api.wordpress.org/plugins/info/1.0/" + plugin + ".json";
+        String url = WPORGAPI.plugins.info.version("1.0").slug(plugin).getUrl();
         Map<String, String> params = new HashMap<>();
         params.put("fields", "icons");
         final WPOrgAPIGsonRequest<FetchPluginInfoResponse> request =
