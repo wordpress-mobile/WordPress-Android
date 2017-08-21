@@ -14,6 +14,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CategoryModel;
+import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 
@@ -300,20 +301,22 @@ class DotComSiteSettings extends SiteSettingsInterface {
             AppLog.v(AppLog.T.API, "No Jetpack settings changes detected. Skipping network POST call.");
             return;
         }
+
+        // The response object doesn't contain any relevant info so we have to create a copy of values
+        // being sent over the network in case mJpSettings is modified while awaiting response
+        final JetpackSettingsModel sentJpData = new JetpackSettingsModel(mJpSettings);
         WordPress.getRestClientUtilsV1_1().setJetpackSettings(mSite.getSiteId(), params,
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack settings updated");
-                        // The response object doesn't contain any relevant info
-                        // Update our remote data object with our local data (which was used to generate POST params)
-                        mRemoteJpSettings.monitorActive = mJpSettings.monitorActive;
-                        mRemoteJpSettings.jetpackProtectEnabled = mJpSettings.jetpackProtectEnabled;
+                        mRemoteJpSettings.monitorActive = sentJpData.monitorActive;
+                        mRemoteJpSettings.jetpackProtectEnabled = sentJpData.jetpackProtectEnabled;
                         mRemoteJpSettings.jetpackProtectWhitelist.clear();
-                        mRemoteJpSettings.jetpackProtectWhitelist.addAll(mJpSettings.jetpackProtectWhitelist);
-                        mRemoteJpSettings.ssoActive = mJpSettings.ssoActive;
-                        mRemoteJpSettings.ssoMatchEmail = mJpSettings.ssoMatchEmail;
-                        mRemoteJpSettings.ssoRequireTwoFactor = mJpSettings.ssoRequireTwoFactor;
+                        mRemoteJpSettings.jetpackProtectWhitelist.addAll(sentJpData.jetpackProtectWhitelist);
+                        mRemoteJpSettings.ssoActive = sentJpData.ssoActive;
+                        mRemoteJpSettings.ssoMatchEmail = sentJpData.ssoMatchEmail;
+                        mRemoteJpSettings.ssoRequireTwoFactor = sentJpData.ssoRequireTwoFactor;
                         notifySavedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
@@ -330,15 +333,17 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (params.isEmpty()) {
             return;
         }
+
+        // The response object doesn't contain any relevant info so we have to create a copy of values
+        // being sent over the network in case mJpSettings is modified while awaiting response
+        final JetpackSettingsModel sentJpData = new JetpackSettingsModel(mJpSettings);
         WordPress.getRestClientUtilsV1_1().setJetpackMonitorSettings(
                 mSite.getSiteId(), params, new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack Monitor module updated");
-                        // The response object doesn't contain any relevant info
-                        // Update our remote data object with our local data (which was used to generate POST params)
-                        mRemoteJpSettings.emailNotifications = mJpSettings.emailNotifications;
-                        mRemoteJpSettings.wpNotifications = mJpSettings.wpNotifications;
+                        mRemoteJpSettings.emailNotifications = sentJpData.emailNotifications;
+                        mRemoteJpSettings.wpNotifications = sentJpData.wpNotifications;
                         notifySavedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
