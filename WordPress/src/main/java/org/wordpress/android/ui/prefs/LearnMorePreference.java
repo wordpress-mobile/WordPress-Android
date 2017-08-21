@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.Preference;
@@ -20,6 +21,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -28,7 +30,6 @@ import org.wordpress.android.util.ToastUtils;
 
 public class LearnMorePreference extends Preference
         implements PreferenceHint, View.OnClickListener {
-    private static final String WP_SUPPORT_URL = "https://en.support.wordpress.com/settings/discussion-settings/#default-article-settings";
     private static final String SUPPORT_MOBILE_ID = "mobile-only-usage";
     private static final String SUPPORT_CONTENT_JS = "javascript:(function(){" +
             "var mobileSupport = document.getElementById('" + SUPPORT_MOBILE_ID + "');" +
@@ -40,17 +41,41 @@ public class LearnMorePreference extends Preference
 
     private String mHint;
     private Dialog mDialog;
+    private String mUrl;
+    private String mCaption;
+    private boolean mUseCustomJsFormatting;
 
     public LearnMorePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.LearnMorePreference);
+        for (int i = 0; i < array.getIndexCount(); ++i) {
+            int index = array.getIndex(i);
+            if (index == R.styleable.LearnMorePreference_url) {
+                mUrl = array.getString(index);
+            } else if (index == R.styleable.LearnMorePreference_useCustomJsFormatting) {
+                mUseCustomJsFormatting = array.getBoolean(index, false);
+            } else if (index == R.styleable.LearnMorePreference_caption) {
+                int id = array.getResourceId(index, -1);
+                if (id != -1) {
+                    mCaption = array.getResources().getString(id);
+                }
+            }
+        }
+        array.recycle();
     }
 
     @Override
     protected View onCreateView(@NonNull ViewGroup parent) {
         super.onCreateView(parent);
-
         View view = View.inflate(getContext(), R.layout.learn_more_pref, null);
         view.findViewById(R.id.learn_more_button).setOnClickListener(this);
+
+        if (!TextUtils.isEmpty(mCaption)) {
+            TextView captionView = (TextView) view.findViewById(R.id.learn_more_caption);
+            captionView.setText(mCaption);
+            captionView.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }
@@ -125,7 +150,7 @@ public class LearnMorePreference extends Preference
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setJavaScriptEnabled(true);
         webView.setWebViewClient(new LearnMoreClient());
-        webView.loadUrl(WP_SUPPORT_URL);
+        webView.loadUrl(mUrl);
         return webView;
     }
 
@@ -163,7 +188,11 @@ public class LearnMorePreference extends Preference
             super.onPageFinished(webView, url);
             if (mDialog != null) {
                 AnalyticsTracker.track(Stat.SITE_SETTINGS_LEARN_MORE_LOADED);
-                webView.loadUrl(SUPPORT_CONTENT_JS);
+                if (mUseCustomJsFormatting) {
+                    webView.loadUrl(SUPPORT_CONTENT_JS);
+                } else {
+                    webView.loadUrl(CONTENT_PADDING_JS);
+                }
                 mDialog.setContentView(webView);
                 webView.scrollTo(0, 0);
             }
