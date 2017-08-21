@@ -326,6 +326,11 @@
                     android:title="@string/jetpack_require_two_factor_title"
                     android:dependency="@string/pref_key_jetpack_allow_wpcom_sign_in" />
 
+                <org.wordpress.android.ui.prefs.LearnMorePreference
+                    android:id="@+id/pref_jetpack_learn_more"
+                    android:key="@string/pref_key_jetpack_learn_more"
+                    android:title="@string/site_settings_learn_more_header" />
+
             </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
