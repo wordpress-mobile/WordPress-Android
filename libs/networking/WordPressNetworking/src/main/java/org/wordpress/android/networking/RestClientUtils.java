@@ -17,6 +17,7 @@ import com.wordpress.rest.RestRequest.Listener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LanguageUtils;
 
 import java.util.HashMap;
@@ -230,7 +231,7 @@ public class RestClientUtils {
             params.put("body", body.toString());
             post(path, params, null, listener, errorListener);
         } catch (JSONException e) {
-            e.printStackTrace();
+            AppLog.e(AppLog.T.API, "Error updating Jetpack settings: " + e);
         }
     }
 
