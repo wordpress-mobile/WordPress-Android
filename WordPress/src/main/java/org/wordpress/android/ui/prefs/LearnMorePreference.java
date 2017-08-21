@@ -28,8 +28,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.util.ToastUtils;
 
-public class LearnMorePreference extends Preference
-        implements PreferenceHint, View.OnClickListener {
+public class LearnMorePreference extends Preference implements View.OnClickListener {
     private static final String SUPPORT_CONTENT_JS = "javascript:(function(){" +
             "var mobileSupport = document.getElementById('mobile-only-usage');" +
             "mobileSupport.style.display = 'inline';" +
@@ -43,7 +42,6 @@ public class LearnMorePreference extends Preference
             "document.getElementById('actionbar').style.display = 'none';" +
             "})();";
 
-    private String mHint;
     private Dialog mDialog;
     private String mUrl;
     private String mCaption;
@@ -108,21 +106,6 @@ public class LearnMorePreference extends Preference
         if (mDialog != null) return;
         AnalyticsTracker.track(Stat.SITE_SETTINGS_LEARN_MORE_CLICKED);
         showDialog();
-    }
-
-    @Override
-    public boolean hasHint() {
-        return !TextUtils.isEmpty(mHint);
-    }
-
-    @Override
-    public String getHint() {
-        return mHint;
-    }
-
-    @Override
-    public void setHint(String hint) {
-        mHint = hint;
     }
 
     private void showDialog() {
