@@ -103,6 +103,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
     protected void fetchRemoteData() {
         fetchCategories();
         fetchWpSettings();
+
+        if (mSite.isJetpackConnected()) {
+            fetchJetpackSettings();
+        }
     }
 
     private void fetchWpSettings() {
@@ -129,11 +133,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);
-                        }
-
-                        if (mSite.isJetpackConnected()) {
-                            fetchJetpackMonitorSettings();
-                            fetchJetpackProtectAndSsoSettings();
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -169,6 +168,11 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         AppLog.d(AppLog.T.API, "Error fetching WP.com categories:" + error);
                     }
                 });
+    }
+
+    private void fetchJetpackSettings() {
+        fetchJetpackMonitorSettings();
+        fetchJetpackProtectAndSsoSettings();
     }
 
     private void fetchJetpackProtectAndSsoSettings() {
