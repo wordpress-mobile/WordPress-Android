@@ -17,7 +17,13 @@ public class JetpackSettingsModel {
     public boolean ssoMatchEmail;
     public boolean ssoRequireTwoFactor;
 
+    public JetpackSettingsModel() {
+        super();
+    }
+
     public JetpackSettingsModel(final JetpackSettingsModel other) {
+        super();
+
         if (other == null) {
             return;
         }
