@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.plugin;
+package org.wordpress.android.fluxc.network.wporg.plugin;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
