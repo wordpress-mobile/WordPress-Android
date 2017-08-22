@@ -19,7 +19,7 @@ public class SmartToast {
 
     public enum SmartToastType {
         WP_MEDIA_LONG_PRESS,
-        MEDIA_PICKER_LONG_PRESS,
+        PHOTO_PICKER_LONG_PRESS,
         COMMENTS_LONG_PRESS
     }
 
@@ -52,17 +52,17 @@ public class SmartToast {
         }
 
         // if we're showing the toast explaining long press multiselect in the WP media library, disable showing the
-        // multiselect toast in the media picker (and vice versa) since explaining one should explain the other
+        // multiselect toast in the photo picker (and vice versa) since explaining one should explain the other
         if (type == SmartToastType.WP_MEDIA_LONG_PRESS) {
-            disableSmartToast(SmartToastType.MEDIA_PICKER_LONG_PRESS);
-        } else if (type == SmartToastType.MEDIA_PICKER_LONG_PRESS) {
+            disableSmartToast(SmartToastType.PHOTO_PICKER_LONG_PRESS);
+        } else if (type == SmartToastType.PHOTO_PICKER_LONG_PRESS) {
             disableSmartToast(SmartToastType.WP_MEDIA_LONG_PRESS);
         }
 
         int stringResId;
         switch (type) {
             case WP_MEDIA_LONG_PRESS:
-            case MEDIA_PICKER_LONG_PRESS:
+            case PHOTO_PICKER_LONG_PRESS:
                 stringResId = R.string.smart_toast_photo_long_press;
                 break;
             case COMMENTS_LONG_PRESS:
@@ -104,8 +104,8 @@ public class SmartToast {
         switch (type) {
             case WP_MEDIA_LONG_PRESS:
                 return UndeletablePrefKey.SMART_TOAST_WP_MEDIA_LONG_PRESS_USAGE_COUNTER;
-            case MEDIA_PICKER_LONG_PRESS:
-                return UndeletablePrefKey.SMART_TOAST_MEDIA_PICKER_LONG_PRESS_USAGE_COUNTER;
+            case PHOTO_PICKER_LONG_PRESS:
+                return UndeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_USAGE_COUNTER;
             case COMMENTS_LONG_PRESS:
                 return UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER;
             default:
@@ -121,8 +121,8 @@ public class SmartToast {
         switch (type) {
             case WP_MEDIA_LONG_PRESS:
                 return UndeletablePrefKey.SMART_TOAST_WP_MEDIA_LONG_PRESS_TOAST_COUNTER;
-            case MEDIA_PICKER_LONG_PRESS:
-                return UndeletablePrefKey.SMART_TOAST_MEDIA_PICKER_LONG_PRESS_TOAST_COUNTER;
+            case PHOTO_PICKER_LONG_PRESS:
+                return UndeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_TOAST_COUNTER;
             case COMMENTS_LONG_PRESS:
                 return UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER;
             default:
