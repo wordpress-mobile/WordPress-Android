@@ -23,7 +23,7 @@ public class SmartToast {
     }
 
     private static final int MIN_TIMES_TO_USE_FEATURE = 3;
-    private static final int MAX_TIMES_TO_SHOW_TOAST = 99; // TODO: reset to 2
+    private static final int MAX_TIMES_TO_SHOW_TOAST = 2;
 
     public static boolean show(@NonNull Context context, @NonNull SmartToastType type) {
         UndeletablePrefKey keyNumTimesUsed;
