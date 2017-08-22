@@ -345,7 +345,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
 
         // Post
         comment.setRemotePostId(XMLRPCUtils.safeGetMapValue(commentMap, "post_id", 0L));
-        comment.setPostTitle(StringEscapeUtils.unescapeHtml4(XMLRPCUtils.safeGetMapValue(commentMap, "post_title", "")));
+        comment.setPostTitle(StringEscapeUtils.unescapeHtml4(XMLRPCUtils.safeGetMapValue(commentMap,
+                "post_title", "")));
 
         return comment;
     }
