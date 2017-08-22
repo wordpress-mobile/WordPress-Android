@@ -545,12 +545,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.AttributePredicate predicate = new AztecText.AttributePredicate() {
             @Override
             public boolean matches(@NonNull Attributes attrs) {
-                AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
+                AttributesWithClass attributesWithClass = getAttributesWithClass(attrs);
                 return attributesWithClass.hasClass(classToUse);
             }
         };
 
         return predicate;
+    }
+
+    static private AttributesWithClass getAttributesWithClass(@NonNull Attributes attrs) {
+        return new AttributesWithClass(attrs);
     }
 
     private void updateFailedMediaList() {
@@ -570,7 +574,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             overlayProgressingMedia(predicate);
             // here check if this is a video uploading in progress or not; if it is, show the video play icon
             for (Attributes attrs : content.getAllElementAttributes(predicate)) {
-                AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
+                AttributesWithClass attributesWithClass = getAttributesWithClass(attrs);
                 if (attributesWithClass.hasClass(TEMP_VIDEO_UPLOADING_CLASS)) {
                     overlayVideoIcon(2, predicate);
                 }
@@ -798,7 +802,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content.removeMedia(new AztecText.AttributePredicate() {
             @Override
             public boolean matches(@NotNull Attributes attrs) {
-                return new AttributesWithClass(attrs).hasClass(ATTR_STATUS_FAILED);
+                return getAttributesWithClass(attrs).hasClass(ATTR_STATUS_FAILED);
             }
         });
         mFailedMediaIds.clear();
@@ -839,7 +843,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
                 // remove the uploading class
-                AttributesWithClass attributesWithClass = new AttributesWithClass(
+                AttributesWithClass attributesWithClass = getAttributesWithClass(
                         content.getElementAttributes(predicate));
                 attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
                 if (mediaFile.isVideo()) {
@@ -959,7 +963,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 case IMAGE:
                 case VIDEO:
                     MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-                    AttributesWithClass attributesWithClass = new AttributesWithClass(
+                    AttributesWithClass attributesWithClass = getAttributesWithClass(
                             content.getElementAttributes(localMediaIdPredicate));
 
                     attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
@@ -1177,7 +1181,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         Set<String> classes = MetadataUtils.getClassAttribute(attrs);
         String idName;
         String uploadStatus = "";
-        final JSONObject meta = MetadataUtils.getMetadata(new AttributesWithClass(attrs), naturalWidth, naturalHeight);
+        final JSONObject meta = MetadataUtils.getMetadata(getAttributesWithClass(attrs), naturalWidth, naturalHeight);
         if (classes.contains(ATTR_STATUS_UPLOADING)) {
             uploadStatus = ATTR_STATUS_UPLOADING;
             idName = ATTR_ID_WP;
@@ -1244,7 +1248,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 switch (mediaType) {
                     case IMAGE:
                     case VIDEO:
-                        AttributesWithClass attributesWithClass = new AttributesWithClass(
+                        AttributesWithClass attributesWithClass = getAttributesWithClass(
                                 content.getElementAttributes(mTappedMediaPredicate));
 
                         // remove the failed class
@@ -1393,7 +1397,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     attributes.setValue(ATTR_ALT, JSONUtils.getString(meta, ATTR_ALT));
                 }
 
-                AttributesWithClass attributesWithClass = new AttributesWithClass(attributes);
+                AttributesWithClass attributesWithClass = getAttributesWithClass(attributes);
 
                 // remove previously set class attributes to add updated values
                 attributesWithClass.removeClassStartingWith(ATTR_ALIGN_DASH);
@@ -1456,7 +1460,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private static void addDefaultSizeClassIfMissing(AztecAttributes attributes) {
-        AttributesWithClass attrs = new AttributesWithClass(attributes);
+        AttributesWithClass attrs = getAttributesWithClass(attributes);
         if (!attrs.hasClassStartingWith("size")) {
             attrs.addClass("size-full");
         }
@@ -1466,7 +1470,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     // this is used for reattachment: when the editor is opened again on a Post that has in-progress
     // video uploads, we need to show the progress bar and the video play icon to differentiate from images
     private static void addVideoUploadingClassIfMissing(AztecAttributes attributes) {
-        AttributesWithClass attrs = new AttributesWithClass(attributes);
+        AttributesWithClass attrs = getAttributesWithClass(attributes);
         if (!attrs.hasClass(TEMP_VIDEO_UPLOADING_CLASS)) {
             attrs.addClass(TEMP_VIDEO_UPLOADING_CLASS);
         }
@@ -1539,23 +1543,27 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
             // remove the uploading class
-            AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    getFirstElementAttributes(content, predicate));
-            attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
-            if (mediaFile.isVideo()) {
-                attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
+            Attributes firstElementAttributes = getFirstElementAttributes(content, predicate);
+            // let's make sure the element is still there within the content. Sometimes it may happen
+            // this method is called but the element doesn't exist in the post content anymore
+            if (firstElementAttributes != null) {
+                AttributesWithClass attributesWithClass = getAttributesWithClass(firstElementAttributes);
+                attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+                if (mediaFile.isVideo()) {
+                    attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
+                }
+
+                // add then new src property with the remoteUrl
+                AztecAttributes attrs = attributesWithClass.getAttributes();
+                attrs.setValue("src", remoteUrl);
+
+                addDefaultSizeClassIfMissing(attrs);
+
+                updateElementAttributes(content, predicate, attrs);
+
+                // re-set the post content
+                postContent = parser.toHtml(content, false);
             }
-
-            // add then new src property with the remoteUrl
-            AztecAttributes attrs = attributesWithClass.getAttributes();
-            attrs.setValue("src", remoteUrl);
-
-            addDefaultSizeClassIfMissing(attrs);
-
-            updateElementAttributes(content, predicate, attrs);
-
-            // re-set the post content
-            postContent = parser.toHtml(content, false);
         }
         return postContent;
     }
@@ -1570,20 +1578,25 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
             // remove the uploading class
-            AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    getFirstElementAttributes(content, predicate));
-            attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
-            if (mediaFile.isVideo()) {
-                attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
+            Attributes firstElementAttributes = getFirstElementAttributes(content, predicate);
+            // let's make sure the element is still there within the content. Sometimes it may happen
+            // this method is called but the element doesn't exist in the post content anymore
+            if (firstElementAttributes != null) {
+                AttributesWithClass attributesWithClass = getAttributesWithClass(
+                        firstElementAttributes);
+                attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+                if (mediaFile.isVideo()) {
+                    attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
+                }
+
+                // mark failed
+                attributesWithClass.addClass(ATTR_STATUS_FAILED);
+
+                updateElementAttributes(content, predicate, attributesWithClass.getAttributes());
+
+                // re-set the post content
+                postContent = parser.toHtml(content, false);
             }
-
-            // mark failed
-            attributesWithClass.addClass(ATTR_STATUS_FAILED);
-
-            updateElementAttributes(content, predicate, attributesWithClass.getAttributes());
-
-            // re-set the post content
-            postContent = parser.toHtml(content, false);
         }
         return postContent;
     }
@@ -1668,8 +1681,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static void clearMediaUploadingAndSetToFailedIfLocal(IAztecAttributedSpan span) {
         // remove the uploading class
-        AttributesWithClass attributesWithClass = new AttributesWithClass(
-                span.getAttributes());
+        AttributesWithClass attributesWithClass = getAttributesWithClass(span.getAttributes());
         attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
 
         attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
