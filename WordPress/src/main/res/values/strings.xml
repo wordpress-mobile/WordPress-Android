@@ -22,9 +22,9 @@
     <string name="select_categories">Select categories</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
     <string name="post_content">Content (tap to add text and media)</string>
-    <string name="max_thumbnail_px_size">Maximum Size</string>
+    <string name="max_thumbnail_px_size">Maximum Image Size</string>
     <string name="image_quality">Image Quality</string>
-    <string name="max_video_resolution">Maximum Resolution</string>
+    <string name="max_video_resolution">Maximum Video Size</string>
     <string name="video_quality">Video Quality</string>
     <string name="password">Password</string>
     <string name="blogs">Blogs</string>
