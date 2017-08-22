@@ -179,7 +179,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         handleSharedMedia();
 
         if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
-            SmartToast.show(this, SmartToast.SmartToastType.WP_MEDIA_BROWSER_LONG_PRESS);
+            SmartToast.show(this, SmartToast.SmartToastType.MEDIA_LONG_PRESS);
         }
 
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);

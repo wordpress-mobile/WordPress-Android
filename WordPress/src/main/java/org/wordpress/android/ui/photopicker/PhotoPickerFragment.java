@@ -187,7 +187,7 @@ public class PhotoPickerFragment extends Fragment {
         }
 
         if (savedInstanceState == null && mAllowMultiSelect && hasStoragePermission()) {
-            SmartToast.show(getActivity(), SmartToast.SmartToastType.PHOTO_PICKER_LONG_PRESS);
+            SmartToast.show(getActivity(), SmartToast.SmartToastType.MEDIA_LONG_PRESS);
         }
 
         return view;

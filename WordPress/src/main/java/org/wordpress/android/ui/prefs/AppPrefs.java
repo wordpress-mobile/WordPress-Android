@@ -147,8 +147,7 @@ public class AppPrefs {
         AZTEC_EDITOR_AVAILABLE,
 
         // smart toast counters
-        SMART_TOAST_PHOTO_PICKER_LONG_PRESS_COUNTER,
-        SMART_TOAST_WP_MEDIA_BROWSER_LONG_PRESS_COUNTER,
+        SMART_TOAST_MEDIA_LONG_PRESS_COUNTER,
         SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER,
 
         // permission keys - set once a specific permission has been asked, regardless of response

@@ -17,8 +17,7 @@ import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey;
 public class SmartToast {
 
     public enum SmartToastType {
-        PHOTO_PICKER_LONG_PRESS,
-        WP_MEDIA_BROWSER_LONG_PRESS,
+        MEDIA_LONG_PRESS,
         COMMENTS_LONG_PRESS
     }
 
@@ -28,12 +27,8 @@ public class SmartToast {
         UndeletablePrefKey keyCounter;
         int stringResId;
         switch (type) {
-            case PHOTO_PICKER_LONG_PRESS:
-                keyCounter = UndeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_COUNTER;
-                stringResId = R.string.smart_toast_photo_long_press;
-                break;
-            case WP_MEDIA_BROWSER_LONG_PRESS:
-                keyCounter = UndeletablePrefKey.SMART_TOAST_WP_MEDIA_BROWSER_LONG_PRESS_COUNTER;
+            case MEDIA_LONG_PRESS:
+                keyCounter = UndeletablePrefKey.SMART_TOAST_MEDIA_LONG_PRESS_COUNTER;
                 stringResId = R.string.smart_toast_photo_long_press;
                 break;
             case COMMENTS_LONG_PRESS:
