@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -31,7 +32,6 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -123,7 +123,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
         dialogBuilder.setTitle(R.string.quickpress_add_alert_title);
 
         final EditText quickPressShortcutName = new EditText(AddQuickPressShortcutActivity.this);
-        quickPressShortcutName.setText("QP " + StringUtils.unescapeHTML(accountNames.get(position)));
+        quickPressShortcutName.setText("QP " + StringEscapeUtils.unescapeHtml4(accountNames.get(position)));
         dialogBuilder.setView(quickPressShortcutName);
 
         dialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
@@ -208,9 +208,9 @@ public class AddQuickPressShortcutActivity extends ListActivity {
             NetworkImageView blavatar = (NetworkImageView)view.findViewById(R.id.blavatar);
 
             blogName.setText(
-                    StringUtils.unescapeHTML(blogNames[position]));
+                    StringEscapeUtils.unescapeHtml4(blogNames[position]));
             blogUsername.setText(
-                    StringUtils.unescapeHTML(username));
+                    StringEscapeUtils.unescapeHtml4(username));
             blavatar.setErrorImageResId(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
             blavatar.setImageUrl(blavatars[position], mImageLoader);
 

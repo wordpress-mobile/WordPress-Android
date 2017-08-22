@@ -28,7 +28,6 @@ import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -190,7 +189,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mPrimarySitePreference.setValue(String.valueOf(siteRemoteId));
         SiteModel site = mSiteStore.getSiteBySiteId(siteRemoteId);
         if (site != null) {
-            mPrimarySitePreference.setSummary(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(site)));
+            mPrimarySitePreference.setSummary(SiteUtils.getSiteNameOrHomeURL(site));
             mPrimarySitePreference.refreshAdapter();
         }
     }

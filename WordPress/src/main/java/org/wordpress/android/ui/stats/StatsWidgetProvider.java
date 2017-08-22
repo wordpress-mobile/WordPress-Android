@@ -13,7 +13,6 @@ import android.widget.RemoteViews;
 import com.android.volley.VolleyError;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,7 +60,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             String name;
             if (site != null) {
                 name = context.getString(R.string.stats_widget_name_for_blog);
-                name = String.format(name, StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(site)));
+                name = String.format(name, SiteUtils.getSiteNameOrHomeURL(site));
             } else {
                 name = context.getString(R.string.stats_widget_name);
             }
@@ -97,7 +96,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
         String name = context.getString(R.string.stats_widget_name_for_blog);
-        name = String.format(name, StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(site)));
+        name = String.format(name, SiteUtils.getSiteNameOrHomeURL(site));
 
         for (int widgetId : allWidgets) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.stats_widget_layout);

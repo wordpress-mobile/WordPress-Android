@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -120,7 +121,7 @@ public class PostPreviewFragment extends Fragment {
 
         String title = (TextUtils.isEmpty(post.getTitle())
                 ? "(" + getResources().getText(R.string.untitled) + ")"
-                : StringUtils.unescapeHTML(post.getTitle()));
+                : StringEscapeUtils.unescapeHtml4(post.getTitle()));
 
         String postContent = PostUtils.collapseShortcodes(post.getContent());
 
