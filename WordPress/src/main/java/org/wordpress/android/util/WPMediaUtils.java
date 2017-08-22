@@ -80,8 +80,7 @@ public class WPMediaUtils {
     }
 
     public static boolean isVideoOptimizationAvailable() {
-        return org.wordpress.android.BuildConfig.VIDEO_OPTIMIZATION_AVAILABLE
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 
     public static boolean isVideoOptimizationEnabled() {
