@@ -73,7 +73,9 @@ public class SmartToast {
     }
 
     /*
-     * prevent the passed smart toast type from being shown by setting it's counter to the max
+     * prevent the passed smart toast type from being shown by setting it's counter to the max - this should be
+     * used to disable long press toasts when the user long presses to multiselect since they alraady know
+     * they can long press
      */
     public static void disableSmartToas(@NonNull SmartToastType type) {
         try {
