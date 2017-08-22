@@ -8,6 +8,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
@@ -489,9 +490,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         MediaModel media = new MediaModel();
         media.setMediaId(MapUtils.getMapLong(response, "attachment_id"));
         media.setPostId(MapUtils.getMapLong(response, "parent"));
-        media.setTitle(MapUtils.getMapStr(response, "title"));
-        media.setCaption(MapUtils.getMapStr(response, "caption"));
-        media.setDescription(MapUtils.getMapStr(response, "description"));
+        media.setTitle(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(response, "title")));
+        media.setCaption(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(response, "caption")));
+        media.setDescription(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(response, "description")));
         media.setVideoPressGuid(MapUtils.getMapStr(response, "videopress_shortcode"));
         media.setThumbnailUrl(MapUtils.getMapStr(response, "thumbnail"));
         Date uploadDate = MapUtils.getMapDate(response, "date_created_gmt");
