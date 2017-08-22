@@ -472,7 +472,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * AsyncTask which loads sites from database and populates the adapter
      */
     private boolean mIsTaskRunning;
-    private class LoadSitesTask extends AsyncTask<Void, Void, Void> {
+    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList[]> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -490,7 +490,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected SiteList[] doInBackground(Void... params) {
             List<SiteModel> siteModels;
             if (mIsInSearchMode) {
                 siteModels = mSiteStore.getSites();
@@ -541,16 +541,22 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             if (mSites == null || !mSites.isSameList(sites)) {
-                mAllSites = (SiteList) sites.clone();
-                mSites = filteredSitesByTextIfInSearchMode(sites);
+                SiteList allSites = (SiteList) sites.clone();
+                SiteList filteredSites = filteredSitesByTextIfInSearchMode(sites);
+
+                return new SiteList[]{allSites, filteredSites};
             }
 
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void results) {
-            notifyDataSetChanged();
+        protected void onPostExecute(SiteList[] updatedSiteLists) {
+            if (updatedSiteLists != null) {
+                mAllSites = updatedSiteLists[0];
+                mSites = updatedSiteLists[1];
+                notifyDataSetChanged();
+            }
             mIsTaskRunning = false;
             if (mDataLoadedListener != null) {
                 mDataLoadedListener.onAfterLoad();
