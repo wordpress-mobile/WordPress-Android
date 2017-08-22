@@ -22,6 +22,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResp
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginsError;
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginsErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginsPayload;
+import org.wordpress.android.fluxc.store.PluginStore.UpdatePluginError;
+import org.wordpress.android.fluxc.store.PluginStore.UpdatePluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.UpdatedPluginPayload;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,17 +82,32 @@ public class PluginRestClient extends BaseWPComRestClient {
 
     public void updatePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
         String url = WPCOMREST.sites.site(site.getSiteId()).plugins.slug(plugin.getSlug()).getUrlV1_1();
-        Map<String, String> params = paramsFromPluginModel(plugin);
-        final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, params,
-                FetchPluginsResponse.class,
+        Map<String, Object> params = paramsFromPluginModel(plugin);
+        final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, params,
+                PluginWPComRestResponse.class,
                 new Listener<PluginWPComRestResponse>() {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
+                        PluginModel pluginModel = pluginModelFromResponse(site, response);
+                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedPluginAction(
+                                new UpdatedPluginPayload(site, pluginModel)));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                        UpdatePluginError updatePluginError
+                                = new UpdatePluginError(UpdatePluginErrorType.GENERIC_ERROR);
+                        if (networkError instanceof WPComGsonNetworkError) {
+                            switch (((WPComGsonNetworkError) networkError).apiError) {
+                                case "unauthorized":
+                                    updatePluginError.type = UpdatePluginErrorType.UNAUTHORIZED;
+                                    break;
+                            }
+                        }
+                        updatePluginError.message = networkError.message;
+                        UpdatedPluginPayload payload = new UpdatedPluginPayload(updatePluginError);
+                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedPluginAction(payload));
                     }
                 }
         );
@@ -112,10 +130,10 @@ public class PluginRestClient extends BaseWPComRestClient {
         return pluginModel;
     }
 
-    private Map<String, String> paramsFromPluginModel(PluginModel pluginModel) {
-        Map<String, String> params = new HashMap<>();
-        params.put("active", pluginModel.isActive() ? "1" : "0");
-        params.put("autoupdate", pluginModel.isAutoUpdateEnabled() ? "1" : "0");
+    private Map<String, Object> paramsFromPluginModel(PluginModel pluginModel) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("active", pluginModel.isActive());
+        params.put("autoupdate", pluginModel.isAutoUpdateEnabled());
         return params;
     }
 }
