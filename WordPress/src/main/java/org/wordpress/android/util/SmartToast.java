@@ -21,7 +21,7 @@ public class SmartToast {
         COMMENTS_LONG_PRESS
     }
 
-    private static final int MAX_TIMES_TO_SHOW = 3;
+    private static final int MAX_TIMES_TO_SHOW = 2;
 
     public static boolean show(@NonNull Context context, @NonNull SmartToastType type) {
         UndeletablePrefKey keyCounter;
