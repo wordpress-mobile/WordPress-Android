@@ -37,6 +37,28 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
+    public static int insertOrUpdatePlugin(PluginModel plugin) {
+        if (plugin == null) {
+            return 0;
+        }
+
+        List<PluginModel> result = WellSql.select(PluginModel.class)
+                .where().equals(PluginModelTable.SLUG, plugin.getSlug())
+                .equals(PluginModelTable.LOCAL_SITE_ID, plugin.getLocalSiteId())
+                .endWhere().getAsModel();
+        if (result.isEmpty()) {
+            WellSql.insert(plugin).execute();
+            return 1;
+        } else {
+            PluginModel oldPlugin = result.get(0);
+            plugin.setId(oldPlugin.getId());
+            return WellSql.update(PluginModel.class)
+                    .where().equals(PluginModelTable.SLUG, plugin.getSlug())
+                    .equals(PluginModelTable.LOCAL_SITE_ID, plugin.getLocalSiteId())
+                    .endWhere().put(plugin).execute();
+        }
+    }
+
     public static int insertOrUpdatePluginInfo(PluginInfoModel pluginInfo) {
         if (pluginInfo == null) {
             return 0;
