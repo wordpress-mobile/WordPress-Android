@@ -71,7 +71,7 @@ public class PluginStore extends Store {
             this.plugin = plugin;
         }
 
-        public UpdatedPluginPayload(UpdatePluginError error) {
+        public UpdatedPluginPayload(SiteModel site, UpdatePluginError error) {
             this.error = error;
         }
     }
@@ -203,8 +203,8 @@ public class PluginStore extends Store {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.updatePlugin(payload.site, payload.plugin);
         } else {
-            UpdatePluginError error = new UpdatePluginError(UpdatePluginErrorType.GENERIC_ERROR);
-            UpdatedPluginPayload errorPayload = new UpdatedPluginPayload(error);
+            UpdatePluginError error = new UpdatePluginError(UpdatePluginErrorType.NOT_AVAILABLE);
+            UpdatedPluginPayload errorPayload = new UpdatedPluginPayload(payload.site, error);
             updatedPlugin(errorPayload);
         }
     }
@@ -231,6 +231,5 @@ public class PluginStore extends Store {
     }
 
     private void updatedPlugin(UpdatedPluginPayload payload) {
-
     }
 }
