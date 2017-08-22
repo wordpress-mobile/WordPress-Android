@@ -104,6 +104,7 @@
     <string name="pref_key_jetpack_allow_wpcom_sign_in" translatable="false">wp_pref_jetpack_allow_wpcom_sign_in</string>
     <string name="pref_key_jetpack_match_via_email" translatable="false">wp_pref_jetpack_match_via_email</string>
     <string name="pref_key_jetpack_require_two_factor" translatable="false">wp_pref_jetpack_require_two_factor</string>
+    <string name="pref_key_jetpack_learn_more" translatable="false">wp_pref_jetpack_learn_more</string>
 
     <!-- Notifications -->
     <string-array name="notifications_blog_settings_values" translatable="false">
