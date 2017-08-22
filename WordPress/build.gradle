@@ -43,7 +43,6 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
-        buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "false"
         buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
     }
 
@@ -53,7 +52,6 @@ android {
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
-            buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
@@ -73,7 +71,6 @@ android {
         debug {
             minifyEnabled false
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
-            buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
             ext.enableCrashlytics = false
         }
     }
