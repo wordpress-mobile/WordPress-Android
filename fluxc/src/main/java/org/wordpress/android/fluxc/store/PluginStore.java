@@ -119,6 +119,8 @@ public class PluginStore extends Store {
     public enum UpdatePluginErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
+        ACTIVATION_ERROR, // plugin is already enabled
+        DEACTIVATION_ERROR, // plugin is already disabled
         NOT_AVAILABLE // Return for non-jetpack sites
     }
 
