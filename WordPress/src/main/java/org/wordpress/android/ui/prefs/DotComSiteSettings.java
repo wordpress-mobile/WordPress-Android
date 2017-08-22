@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -13,6 +14,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CategoryModel;
+import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 
@@ -79,9 +81,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String CATEGORIES_KEY = "categories";
     private static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
 
-    /**
-     * Only instantiated by {@link SiteSettingsInterface}.
-     */
+    /** Only instantiated by {@link SiteSettingsInterface}. */
     DotComSiteSettings(Activity host, SiteModel site, SiteSettingsListener listener) {
         super(host, site, listener);
     }
@@ -92,60 +92,26 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
         // save any Jetpack changes
         if (mSite.isJetpackConnected()) {
-            saveJetpackSettings();
-            updateJetpackProtectSettings();
+            pushJetpackMonitorSettings();
+            pushJetpackProtectAndSsoSettings();
         }
 
-        try {
-            final JSONObject jsonParams = serializeDotComParamsToJSONObject();
-            // skip network requests if there are no changes
-            if (jsonParams.length() <= 0) {
-                return;
-            }
-            WordPress.getRestClientUtils().setGeneralSiteSettings(
-                    mSite.getSiteId(), new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            AppLog.d(AppLog.T.API, "Site Settings saved remotely");
-                            notifySavedOnUiThread(null);
-                            mRemoteSettings.copyFrom(mSettings);
-
-                            if (response != null) {
-                                JSONObject updated = response.optJSONObject("updated");
-                                if (updated == null) return;
-                                HashMap<String, Object> properties = new HashMap<>();
-                                Iterator<String> keys = updated.keys();
-                                while (keys.hasNext()) {
-                                    String currentKey = keys.next();
-                                    Object currentValue = updated.opt(currentKey);
-                                    if (currentValue != null) {
-                                        properties.put(SAVED_ITEM_PREFIX + currentKey, currentValue);
-                                    }
-                                }
-                                AnalyticsUtils.trackWithSiteDetails(
-                                        AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
-                            }
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
-                            notifySavedOnUiThread(error);
-                        }
-                    }, jsonParams);
-        } catch (JSONException exception) {
-            AppLog.w(AppLog.T.API, "Error serializing settings changes: " + exception);
-            notifySavedOnUiThread(exception);
-        }
+        pushWpSettings();
     }
 
-    /**
-     * Request remote site data via the WordPress REST API.
-     */
+    /** Request remote site data via the WordPress REST API. */
     @Override
     protected void fetchRemoteData() {
         fetchCategories();
-        WordPress.getRestClientUtils().getGeneralSettings(
+        fetchWpSettings();
+
+        if (mSite.isJetpackConnected()) {
+            fetchJetpackSettings();
+        }
+    }
+
+    private void fetchWpSettings() {
+        WordPress.getRestClientUtilsV1_1().getGeneralSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -163,17 +129,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             mSettings.copyFrom(mRemoteSettings);
                             mSettings.postFormats = currentPostFormats;
                             mSettings.location = location;
-                            mJpSettings.jetpackProtectWhitelist.clear();
-                            mJpSettings.jetpackProtectWhitelist.addAll(mRemoteJpSettings.jetpackProtectWhitelist);
 
                             SiteSettingsTable.saveSettings(mSettings);
-                            notifyUpdatedOnUiThread(null);
                         }
-
-                        if (mSite.isJetpackConnected()) {
-                            fetchJetpackSettings();
-                            fetchJetpackProtectSettings();
-                        }
+                        notifyUpdatedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -184,13 +143,97 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 });
     }
 
+    /** Request a list of post categories for a site via the WordPress REST API. */
+    private void fetchCategories() {
+        // TODO: Replace with FluxC (GET_CATEGORIES + TaxonomyStore.getCategoriesForSite())
+        WordPress.getRestClientUtilsV1_1().getCategories(mSite.getSiteId(),
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received site Categories");
+                        credentialsVerified(true);
+
+                        CategoryModel[] models = deserializeCategoryRestResponse(response);
+                        if (models == null) return;
+
+                        SiteSettingsTable.saveCategories(models);
+                        mRemoteSettings.categories = models;
+                        mSettings.categories = models;
+                        notifyUpdatedOnUiThread(null);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.d(AppLog.T.API, "Error fetching WP.com categories:" + error);
+                        notifyUpdatedOnUiThread(error);
+                    }
+                });
+    }
+
     private void fetchJetpackSettings() {
         fetchJetpackMonitorSettings();
-        WordPress.getRestClientUtils().getJetpackSettings(
+        fetchJetpackProtectAndSsoSettings();
+    }
+
+    private void fetchJetpackProtectAndSsoSettings() {
+        WordPress.getRestClientUtilsV1_1().getJetpackSettings(mSite.getSiteId(), new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                final JSONObject data = response.optJSONObject("data");
+
+                if (data == null) {
+                    AppLog.w(AppLog.T.API, "Unexpected state: Received empty Jetpack settings response");
+                    return;
+                }
+
+                AppLog.v(AppLog.T.API, "Received Jetpack settings response");
+
+                mRemoteJpSettings.monitorActive = data.optBoolean("monitor", false);
+                mRemoteJpSettings.jetpackProtectEnabled = data.optBoolean("protect", false);
+                mRemoteJpSettings.ssoActive = data.optBoolean("sso", false);
+                mRemoteJpSettings.ssoMatchEmail = data.optBoolean("jetpack_sso_match_by_email", false);
+                mRemoteJpSettings.ssoRequireTwoFactor = data.optBoolean("jetpack_sso_require_two_step", false);
+
+                JSONObject jetpackProtectWhitelist = data.optJSONObject("jetpack_protect_global_whitelist");
+                if (jetpackProtectWhitelist != null) {
+                    // clear existing whitelist entries before adding items from response
+                    mRemoteJpSettings.jetpackProtectWhitelist.clear();
+
+                    JSONArray whitelistItems = jetpackProtectWhitelist.optJSONArray("local");
+                    if (whitelistItems != null) {
+                        for (int i = 0; i < whitelistItems.length(); ++i) {
+                            String item = whitelistItems.optString(i, "");
+                            if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectWhitelist.contains(item)) {
+                                mRemoteJpSettings.jetpackProtectWhitelist.add(item);
+                            }
+                        }
+                    }
+                }
+
+                mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
+                mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
+                mJpSettings.jetpackProtectWhitelist.clear();
+                mJpSettings.jetpackProtectWhitelist.addAll(mRemoteJpSettings.jetpackProtectWhitelist);
+                mJpSettings.ssoActive = mRemoteJpSettings.ssoActive;
+                mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
+                mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
+                notifyUpdatedOnUiThread(null);
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                AppLog.w(AppLog.T.API, "Error fetching Jetpack settings: " + error);
+                notifyUpdatedOnUiThread(error);
+            }
+        });
+    }
+
+    private void fetchJetpackMonitorSettings() {
+        WordPress.getRestClientUtilsV1_1().getJetpackMonitorSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        AppLog.v(AppLog.T.API, "Received response to Jetpack Settings REST request.");
+                        AppLog.v(AppLog.T.API, "Received Jetpack Monitor module options");
                         mRemoteJpSettings.localTableId = mSite.getId();
                         deserializeJetpackRestResponse(mSite, response);
                         mJpSettings.localTableId = mRemoteJpSettings.localTableId;
@@ -202,8 +245,112 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.e(AppLog.T.API, "Error response to Jetpack Settings REST request: " + error);
+                        AppLog.w(AppLog.T.API, "Error fetching Jetpack Monitor module options: " + error);
                         notifyUpdatedOnUiThread(error);
+                    }
+                });
+    }
+
+    private void pushWpSettings() {
+        try {
+            final JSONObject jsonParams = serializeDotComParamsToJSONObject();
+            // skip network requests if there are no changes
+            if (jsonParams.length() <= 0) {
+                return;
+            }
+            WordPress.getRestClientUtilsV1_1().setGeneralSiteSettings(
+                    mSite.getSiteId(), jsonParams, new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Site Settings saved remotely");
+                            mRemoteSettings.copyFrom(mSettings);
+
+                            if (response != null) {
+                                JSONObject updated = response.optJSONObject("updated");
+                                if (updated == null) return;
+                                HashMap<String, Object> properties = new HashMap<>();
+                                Iterator<String> keys = updated.keys();
+                                while (keys.hasNext()) {
+                                    String currentKey = keys.next();
+                                    Object currentValue = updated.opt(currentKey);
+                                    if (currentValue != null) {
+                                        properties.put(SAVED_ITEM_PREFIX + currentKey, currentValue);
+                                    }
+                                }
+                                AnalyticsUtils.trackWithSiteDetails(
+                                        AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
+                            }
+                            notifySavedOnUiThread(null);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
+                            notifySavedOnUiThread(error);
+                        }
+                    });
+        } catch (JSONException exception) {
+            AppLog.w(AppLog.T.API, "Error serializing settings changes: " + exception);
+            notifySavedOnUiThread(exception);
+        }
+    }
+
+    private void pushJetpackProtectAndSsoSettings() {
+        final Map<String, Object> params = serializeJetpackProtectAndSsoParams();
+        if (params.isEmpty()) {
+            AppLog.v(AppLog.T.API, "No Jetpack settings changes detected. Skipping network POST call.");
+            return;
+        }
+
+        // The response object doesn't contain any relevant info so we have to create a copy of values
+        // being sent over the network in case mJpSettings is modified while awaiting response
+        final JetpackSettingsModel sentJpData = new JetpackSettingsModel(mJpSettings);
+        WordPress.getRestClientUtilsV1_1().setJetpackSettings(mSite.getSiteId(), params,
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.d(AppLog.T.API, "Jetpack settings updated");
+                        mRemoteJpSettings.monitorActive = sentJpData.monitorActive;
+                        mRemoteJpSettings.jetpackProtectEnabled = sentJpData.jetpackProtectEnabled;
+                        mRemoteJpSettings.jetpackProtectWhitelist.clear();
+                        mRemoteJpSettings.jetpackProtectWhitelist.addAll(sentJpData.jetpackProtectWhitelist);
+                        mRemoteJpSettings.ssoActive = sentJpData.ssoActive;
+                        mRemoteJpSettings.ssoMatchEmail = sentJpData.ssoMatchEmail;
+                        mRemoteJpSettings.ssoRequireTwoFactor = sentJpData.ssoRequireTwoFactor;
+                        notifySavedOnUiThread(null);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error updating Jetpack settings: " + error);
+                        notifySavedOnUiThread(error);
+                    }
+                });
+    }
+
+    private void pushJetpackMonitorSettings() {
+        final Map<String, String> params = serializeJetpackMonitorParams();
+        if (params.isEmpty()) {
+            return;
+        }
+
+        // The response object doesn't contain any relevant info so we have to create a copy of values
+        // being sent over the network in case mJpSettings is modified while awaiting response
+        final JetpackSettingsModel sentJpData = new JetpackSettingsModel(mJpSettings);
+        WordPress.getRestClientUtilsV1_1().setJetpackMonitorSettings(
+                mSite.getSiteId(), params, new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.d(AppLog.T.API, "Jetpack Monitor module updated");
+                        mRemoteJpSettings.emailNotifications = sentJpData.emailNotifications;
+                        mRemoteJpSettings.wpNotifications = sentJpData.wpNotifications;
+                        notifySavedOnUiThread(null);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module: " + error);
+                        notifySavedOnUiThread(error);
                     }
                 });
     }
@@ -390,156 +537,26 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 params.put(BLACKLIST_KEYS_KEY, "");
             }
         }
-
         if (mSettings.sharingLabel != null && !mSettings.sharingLabel.equals(mRemoteSettings.sharingLabel)) {
             params.put(SHARING_LABEL_KEY, String.valueOf(mSettings.sharingLabel));
         }
-
         if (mSettings.sharingButtonStyle != null && !mSettings.sharingButtonStyle.equals(mRemoteSettings.sharingButtonStyle)) {
             params.put(SHARING_BUTTON_STYLE_KEY, mSettings.sharingButtonStyle);
         }
-
         if (mSettings.allowReblogButton != mRemoteSettings.allowReblogButton) {
             params.put(SHARING_REBLOGS_DISABLED_KEY, String.valueOf(!mSettings.allowReblogButton));
         }
-
         if (mSettings.allowLikeButton != mRemoteSettings.allowLikeButton) {
             params.put(SHARING_LIKES_DISABLED_KEY, String.valueOf(!mSettings.allowLikeButton));
         }
-
         if (mSettings.allowCommentLikes != mRemoteSettings.allowCommentLikes) {
             params.put(SHARING_COMMENT_LIKES_KEY, String.valueOf(mSettings.allowCommentLikes));
         }
-
         if (mSettings.twitterUsername != null && !mSettings.twitterUsername.equals(mRemoteSettings.twitterUsername)) {
             params.put(TWITTER_USERNAME_KEY, mSettings.twitterUsername);
         }
 
-        if (!mJpSettings.whitelistMatches(mRemoteJpSettings.jetpackProtectWhitelist)) {
-            JSONArray protectWhitelist = new JSONArray(mJpSettings.jetpackProtectWhitelist);
-            params.put(JP_PROTECT_WHITELIST_KEY, protectWhitelist);
-        }
-
         return params;
-    }
-
-    /**
-     * Request a list of post categories for a site via the WordPress REST API.
-     */
-    private void fetchCategories() {
-        // TODO: Replace with FluxC (GET_CATEGORIES + TaxonomyStore.getCategoriesForSite())
-        WordPress.getRestClientUtilsV1_1().getCategories(mSite.getSiteId(),
-                new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Received response to Categories REST request.");
-                        credentialsVerified(true);
-
-                        CategoryModel[] models = deserializeJsonRestResponse(response);
-                        if (models == null) return;
-
-                        SiteSettingsTable.saveCategories(models);
-                        mRemoteSettings.categories = models;
-                        mSettings.categories = models;
-                        notifyUpdatedOnUiThread(null);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.d(AppLog.T.API, "Error fetching WP.com categories:" + error);
-                    }
-                });
-    }
-
-    private void fetchJetpackProtectSettings() {
-        WordPress.getRestClientUtils().getJetpackProtect(
-                mSite.getSiteId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
-                        mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
-                        notifyUpdatedOnUiThread(null);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error getting Jetpack Protect settings: " + error);
-                    }
-                });
-    }
-
-    private void fetchJetpackMonitorSettings() {
-        WordPress.getRestClientUtils().getJetpackMonitor(
-                mSite.getSiteId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        mRemoteJpSettings.monitorActive = response.optBoolean("active");
-                        mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
-                        notifyUpdatedOnUiThread(null);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error getting Jetpack Monitor settings: " + error);
-                    }
-                });
-    }
-
-    private void updateJetpackProtectSettings() {
-        WordPress.getRestClientUtils().setJetpackProtect(
-                mSite.getSiteId(), mJpSettings.jetpackProtectEnabled, new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Jetpack Protect settings updated");
-                        mRemoteJpSettings.jetpackProtectEnabled = response.optBoolean("active");
-                        mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error updating Jetpack Protect settings: " + error);
-                    }
-                });
-    }
-
-    private void updateJetpackMonitorSettings() {
-        WordPress.getRestClientUtils().setJetpackMonitor(
-                mSite.getSiteId(), mJpSettings.monitorActive, new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        mRemoteJpSettings.monitorActive = response.optBoolean("active");
-                        mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
-                        notifySavedOnUiThread(null);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor settings: " + error);
-                    }
-                });
-    }
-
-    private void saveJetpackSettings() {
-        updateJetpackMonitorSettings();
-        final Map<String, String> params = serializeJetpackParams();
-        if (params == null || params.isEmpty()) return;
-
-        WordPress.getRestClientUtils().setJetpackSettings(
-                mSite.getSiteId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Jetpack Settings saved remotely");
-                        mRemoteJpSettings.emailNotifications = mJpSettings.emailNotifications;
-                        mRemoteJpSettings.wpNotifications = mJpSettings.wpNotifications;
-                        notifySavedOnUiThread(null);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error POSTing Jetpack site settings changes: " + error);
-                        notifySavedOnUiThread(error);
-                    }
-                }, params);
     }
 
     private void deserializeJetpackRestResponse(SiteModel site, JSONObject response) {
@@ -549,10 +566,38 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteJpSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
     }
 
-    private Map<String, String> serializeJetpackParams() {
+    private @NonNull Map<String, String> serializeJetpackMonitorParams() {
         Map<String, String> params = new HashMap<>();
-        params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mJpSettings.emailNotifications));
-        params.put(JP_MONITOR_WP_NOTES_KEY, String.valueOf(mJpSettings.wpNotifications));
+        if (mJpSettings.emailNotifications != mRemoteJpSettings.emailNotifications) {
+            params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mJpSettings.emailNotifications));
+        }
+        if (mJpSettings.wpNotifications != mRemoteJpSettings.wpNotifications) {
+            params.put(JP_MONITOR_WP_NOTES_KEY, String.valueOf(mJpSettings.wpNotifications));
+        }
+        return params;
+    }
+
+    private Map<String, Object> serializeJetpackProtectAndSsoParams() {
+        Map<String, Object> params = new HashMap<>();
+        if (mJpSettings.monitorActive != mRemoteJpSettings.monitorActive) {
+            params.put("monitor", mJpSettings.monitorActive);
+        }
+        if (mJpSettings.jetpackProtectEnabled != mRemoteJpSettings.jetpackProtectEnabled) {
+            params.put("protect", mJpSettings.jetpackProtectEnabled);
+        }
+        if (!mJpSettings.whitelistMatches(mRemoteJpSettings.jetpackProtectWhitelist)) {
+            JSONArray whitelistArray = new JSONArray(mJpSettings.jetpackProtectWhitelist);
+            params.put("jetpack_protect_global_whitelist", whitelistArray);
+        }
+        if (mJpSettings.ssoActive != mRemoteJpSettings.ssoActive) {
+            params.put("sso", mJpSettings.ssoActive);
+        }
+        if (mJpSettings.ssoMatchEmail != mRemoteJpSettings.ssoMatchEmail) {
+            params.put("jetpack_sso_match_by_email", mJpSettings.ssoMatchEmail);
+        }
+        if (mJpSettings.ssoRequireTwoFactor != mRemoteJpSettings.ssoRequireTwoFactor) {
+            params.put("jetpack_sso_require_two_step", mJpSettings.ssoRequireTwoFactor);
+        }
         return params;
     }
 
@@ -570,7 +615,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         return model;
     }
 
-    private CategoryModel[] deserializeJsonRestResponse(JSONObject response) {
+    private CategoryModel[] deserializeCategoryRestResponse(JSONObject response) {
         try {
             int num = response.getInt(CAT_NUM_POSTS_KEY);
             JSONArray categories = response.getJSONArray(CATEGORIES_KEY);
