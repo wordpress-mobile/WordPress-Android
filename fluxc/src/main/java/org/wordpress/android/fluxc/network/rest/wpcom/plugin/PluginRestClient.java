@@ -103,6 +103,12 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 case "unauthorized":
                                     updatePluginError.type = UpdatePluginErrorType.UNAUTHORIZED;
                                     break;
+                                case "activation_error":
+                                    updatePluginError.type = UpdatePluginErrorType.ACTIVATION_ERROR;
+                                    break;
+                                case "deactivation_error":
+                                    updatePluginError.type = UpdatePluginErrorType.DEACTIVATION_ERROR;
+                                    break;
                             }
                         }
                         updatePluginError.message = networkError.message;
