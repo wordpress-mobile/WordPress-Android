@@ -1655,13 +1655,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private static void resetMediaWithStatus(Spanned content, String status) {
-        // get all items with "uploading" class
-        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(status);
+        // get all items with class defined by the "status" variable
+        AztecText.AttributePredicate statusPredicate = getPredicateWithClass(status);
 
         // update all items to failed, unless they already have a remote URL, in which case
         // it means the upload completed, but the item remained inconsistently marked as uploading
         // (for example after an app crash)
-        for (IAztecAttributedSpan span : getSpansForPredicate(content, uploadingPredicate, false)) {
+        for (IAztecAttributedSpan span : getSpansForPredicate(content, statusPredicate, false)) {
             clearMediaUploadingAndSetToFailedIfLocal(span);
         }
     }
