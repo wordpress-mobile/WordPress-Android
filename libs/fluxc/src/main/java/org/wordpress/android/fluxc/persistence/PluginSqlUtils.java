@@ -37,20 +37,16 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
-    public static int insertOrUpdatePlugin(PluginModel plugin) {
+    public static int insertOrUpdatePlugin(SiteModel site, PluginModel plugin) {
         if (plugin == null) {
             return 0;
         }
 
-        List<PluginModel> result = WellSql.select(PluginModel.class)
-                .where().equals(PluginModelTable.SLUG, plugin.getSlug())
-                .equals(PluginModelTable.LOCAL_SITE_ID, plugin.getLocalSiteId())
-                .endWhere().getAsModel();
-        if (result.isEmpty()) {
+        PluginModel oldPlugin = getPlugin(site, plugin.getSlug());
+        if (oldPlugin == null) {
             WellSql.insert(plugin).execute();
             return 1;
         } else {
-            PluginModel oldPlugin = result.get(0);
             plugin.setId(oldPlugin.getId());
             return WellSql.update(PluginModel.class)
                     .where().equals(PluginModelTable.SLUG, plugin.getSlug())
@@ -73,6 +69,14 @@ public class PluginSqlUtils {
                     .where().equals(PluginInfoModelTable.SLUG, pluginInfo.getSlug()).endWhere()
                     .put(pluginInfo).execute();
         }
+    }
+
+    public static PluginModel getPlugin(SiteModel site, String slug) {
+        List<PluginModel> result = WellSql.select(PluginModel.class)
+                .where().equals(PluginModelTable.SLUG, slug)
+                .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
+                .endWhere().getAsModel();
+        return result.isEmpty() ? null : result.get(0);
     }
 
     public static PluginInfoModel getPluginInfoBySlug(String slug) {
