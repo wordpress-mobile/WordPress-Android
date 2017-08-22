@@ -407,7 +407,7 @@ public class ImageUtils {
     private static boolean resizeImageAndWriteToStream(Context context,
                                                     Uri imageUri,
                                                     String fileExtension,
-                                                    int maxDimension,
+                                                    int maxSize,
                                                     int orientation,
                                                     int quality,
                                                     OutputStream outStream) throws OutOfMemoryError, IOException {
@@ -429,10 +429,10 @@ public class ImageUtils {
         // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
         int scale = 1;
         boolean isPortrait = optBounds.outWidth < optBounds.outHeight;
-        int optBountsMaxDimension = Math.max(optBounds.outWidth, optBounds.outHeight);
-        if (maxDimension > 0 && optBountsMaxDimension > maxDimension) {
-            double largestDimensionOfOutBounds = isPortrait ? optBounds.outHeight : optBounds.outWidth;
-            double d = Math.pow(2, (int) Math.round(Math.log(optBountsMaxDimension / largestDimensionOfOutBounds) / Math.log(0.5)));
+        int optBoundsMaxSize = Math.max(optBounds.outWidth, optBounds.outHeight);
+        if (maxSize > 0 && optBoundsMaxSize > maxSize) {
+            double largestSizeOfOutBounds = isPortrait ? optBounds.outHeight : optBounds.outWidth;
+            double d = Math.pow(2, (int) Math.round(Math.log(optBoundsMaxSize / largestSizeOfOutBounds) / Math.log(0.5)));
 
             scale = (int) d;
         }
@@ -455,7 +455,7 @@ public class ImageUtils {
         }
 
         // Resize the bitmap to exact size: calculate exact scale in order to resize accurately
-        float scaleBy = getScaleImageBy(maxDimension, bmpResized, isPortrait);
+        float scaleBy = getScaleImageBy(maxSize, bmpResized, isPortrait);
 
         Matrix matrix = new Matrix();
         matrix.postScale(scaleBy, scaleBy);
@@ -499,11 +499,11 @@ public class ImageUtils {
      * Given the path to an image, compress and resize it.
      * @param context the passed context
      * @param path the path to the original image
-     * @param maxImageDimension the maximum allowed width
+     * @param maxImageSize the maximum allowed width
      * @param quality the encoder quality
      * @return the path to the optimized image
      */
-    public static String optimizeImage(Context context, String path, int maxImageDimension, int quality) {
+    public static String optimizeImage(Context context, String path, int maxImageSize, int quality) {
         if (context == null || TextUtils.isEmpty(path)) {
             return path;
         }
@@ -527,19 +527,19 @@ public class ImageUtils {
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
         String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
 
-        int selectedMaxDimension = getImageSize(srcImageUri, context)[0];
-        if (selectedMaxDimension == 0) {
+        int selectedMaxSize = getImageSize(srcImageUri, context)[0];
+        if (selectedMaxSize == 0) {
             // Can't read the src dimensions.
             return path;
         }
 
         // do not optimize if original-size and 100% quality are set.
-        if (maxImageDimension == Integer.MAX_VALUE && quality == 100) {
+        if (maxImageSize == Integer.MAX_VALUE && quality == 100) {
             return path;
         }
 
-        if (selectedMaxDimension > maxImageDimension) {
-            selectedMaxDimension = maxImageDimension;
+        if (selectedMaxSize > maxImageSize) {
+            selectedMaxSize = maxImageSize;
         }
 
         int orientation = getImageOrientation(context, path);
@@ -559,7 +559,7 @@ public class ImageUtils {
         }
 
         try {
-            boolean res = resizeImageAndWriteToStream(context, srcImageUri, fileExtension, selectedMaxDimension, orientation, quality, out);
+            boolean res = resizeImageAndWriteToStream(context, srcImageUri, fileExtension, selectedMaxSize, orientation, quality, out);
             if (!res) {
                 AppLog.w(AppLog.T.MEDIA, "Failed to compress the optimized image. Use the original picture instead.");
                 return path;
@@ -873,19 +873,19 @@ public class ImageUtils {
         return null;
     }
 
-    private static float getScaleImageBy(float maxDimension, Bitmap bmpResized, boolean isPortrait) {
+    private static float getScaleImageBy(float maxSize, Bitmap bmpResized, boolean isPortrait) {
         int divideBy;
         if (isPortrait) {
             divideBy = bmpResized.getHeight();
         } else {
             divideBy = bmpResized.getWidth();
         }
-        float percentage = maxDimension / divideBy;
+        float percentage = maxSize / divideBy;
 
         float proportionateHeight = bmpResized.getHeight() * percentage;
         int finalHeight = (int) Math.rint(proportionateHeight);
 
-        float scaleWidth = maxDimension / bmpResized.getWidth();
+        float scaleWidth = maxSize / bmpResized.getWidth();
         float scaleHeight = ((float) finalHeight) / bmpResized.getHeight();
 
         return Math.min(scaleWidth, scaleHeight);
