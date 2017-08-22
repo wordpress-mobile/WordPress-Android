@@ -181,8 +181,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.tagline = response.optString(GET_DESC_KEY, "");
         mRemoteSettings.languageId = settingsObject.optInt(LANGUAGE_ID_KEY, -1);
         mRemoteSettings.privacy = settingsObject.optInt(PRIVACY_KEY, -2);
-        mRemoteSettings.defaultCategory = settingsObject.optInt(DEF_CATEGORY_KEY, 0);
-        mRemoteSettings.defaultPostFormat = settingsObject.optString(DEF_POST_FORMAT_KEY, "0");
+        mRemoteSettings.defaultCategory = settingsObject.optInt(DEF_CATEGORY_KEY, 1);
+        mRemoteSettings.defaultPostFormat = settingsObject.optString(DEF_POST_FORMAT_KEY, STANDARD_POST_FORMAT_KEY);
         mRemoteSettings.language = languageIdToLanguageCode(Integer.toString(mRemoteSettings.languageId));
         mRemoteSettings.allowComments = settingsObject.optBoolean(ALLOW_COMMENTS_KEY, true);
         mRemoteSettings.sendPingbacks = settingsObject.optBoolean(SEND_PINGBACKS_KEY, false);
