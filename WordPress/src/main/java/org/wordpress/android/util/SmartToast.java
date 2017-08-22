@@ -21,26 +21,44 @@ public class SmartToast {
         COMMENTS_LONG_PRESS
     }
 
-    private static final int MAX_TIMES_TO_SHOW = 2;
+    private static final int MIN_TIMES_TO_USE_FEATURE = 3;
+    private static final int MAX_TIMES_TO_SHOW_TOAST = 99; // TODO: reset to 2
 
     public static boolean show(@NonNull Context context, @NonNull SmartToastType type) {
-        UndeletablePrefKey keyCounter;
+        UndeletablePrefKey keyNumTimesUsed;
+        UndeletablePrefKey keyNumTimesShown;
+        try {
+            keyNumTimesUsed = getNumTimesFeatureUsedKey(type);
+            keyNumTimesShown = getNumTimesToastShownKey(type);
+        } catch (IllegalArgumentException e) {
+            AppLog.e(AppLog.T.MEDIA, e);
+            return false;
+        }
+
+        // don't show the toast until the user has used this feature a few times
+        int numTypesFeatureUsed = AppPrefs.getInt(keyNumTimesUsed);
+        numTypesFeatureUsed++;
+        AppPrefs.setInt(keyNumTimesUsed, numTypesFeatureUsed);
+        if (numTypesFeatureUsed <= MIN_TIMES_TO_USE_FEATURE) {
+            return false;
+        }
+
+        // limit the number of times to show the toast
+        int numTimesShown = AppPrefs.getInt(keyNumTimesShown);
+        if (numTimesShown >= MAX_TIMES_TO_SHOW_TOAST) {
+            return false;
+        }
+
         int stringResId;
         switch (type) {
             case MEDIA_LONG_PRESS:
-                keyCounter = UndeletablePrefKey.SMART_TOAST_MEDIA_LONG_PRESS_COUNTER;
                 stringResId = R.string.smart_toast_photo_long_press;
                 break;
             case COMMENTS_LONG_PRESS:
-                keyCounter = UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER;
                 stringResId = R.string.smart_toast_comments_long_press;
                 break;
             default:
                 return false;
-        }
-        int numTimesShown = AppPrefs.getInt(keyCounter);
-        if (numTimesShown >= MAX_TIMES_TO_SHOW) {
-            return false;
         }
 
         int yOffset = context.getResources().getDimensionPixelOffset(R.dimen.smart_toast_offset_y);
@@ -49,7 +67,29 @@ public class SmartToast {
         toast.show();
 
         numTimesShown++;
-        AppPrefs.setInt(keyCounter, numTimesShown);
+        AppPrefs.setInt(keyNumTimesShown, numTimesShown);
         return true;
+    }
+
+    private static UndeletablePrefKey getNumTimesFeatureUsedKey(@NonNull SmartToastType type) {
+        switch (type) {
+            case MEDIA_LONG_PRESS:
+                return UndeletablePrefKey.SMART_TOAST_MEDIA_LONG_PRESS_USAGE_COUNTER;
+            case COMMENTS_LONG_PRESS:
+                return UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER;
+            default:
+                throw new IllegalArgumentException("Unknown smart toast type");
+        }
+    }
+
+    private static UndeletablePrefKey getNumTimesToastShownKey(@NonNull SmartToastType type) {
+        switch (type) {
+            case MEDIA_LONG_PRESS:
+                return UndeletablePrefKey.SMART_TOAST_MEDIA_LONG_PRESS_TOAST_COUNTER;
+            case COMMENTS_LONG_PRESS:
+                return UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER;
+            default:
+                throw new IllegalArgumentException("Unknown smart toast type");
+        }
     }
 }
