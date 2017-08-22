@@ -1291,7 +1291,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private boolean isValidIpOrRange(String entry) {
-        if (entry == null || entry.isEmpty()) {
+        if (TextUtils.isEmpty(entry)) {
             return false;
         }
 
