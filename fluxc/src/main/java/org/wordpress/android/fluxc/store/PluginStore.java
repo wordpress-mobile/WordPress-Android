@@ -181,6 +181,10 @@ public class PluginStore extends Store {
         return PluginSqlUtils.getPlugins(site);
     }
 
+    public PluginModel getPlugin(SiteModel site, String slug) {
+        return PluginSqlUtils.getPlugin(site, slug);
+    }
+
     public PluginInfoModel getPluginInfoBySlug(String slug) {
         return PluginSqlUtils.getPluginInfoBySlug(slug);
     }
