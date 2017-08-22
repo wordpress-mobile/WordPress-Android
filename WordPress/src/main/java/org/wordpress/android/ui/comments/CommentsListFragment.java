@@ -38,6 +38,7 @@ import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -582,6 +583,7 @@ public class CommentsListFragment extends Fragment {
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.menu_comments_cab, menu);
             mFilteredCommentsView.setSwipeToRefreshEnabled(false);
+            SmartToast.disableSmartToas(SmartToast.SmartToastType.COMMENTS_LONG_PRESS);
             return true;
         }
 

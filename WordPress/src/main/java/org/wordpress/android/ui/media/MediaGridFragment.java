@@ -43,6 +43,7 @@ import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -705,6 +706,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             setSwipeToRefreshEnabled(false);
             getAdapter().setInMultiSelect(true);
             updateActionModeTitle(selectCount);
+            SmartToast.disableSmartToas(SmartToast.SmartToastType.MEDIA_LONG_PRESS);
             return true;
         }
 

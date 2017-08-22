@@ -10,8 +10,9 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey;
 
 /**
- * Simple wrapper for limiting the number of times to show a toast message - originally designed
- * to let users know where they can long press to multi-select
+ * Simple class for limiting the number of times to show a toast message and only showing it after a
+ * feature has been used a few times - originally designed to let users know where they can long press
+ * to multi-select
  */
 
 public class SmartToast {
@@ -35,17 +36,17 @@ public class SmartToast {
             return false;
         }
 
+        // limit the number of times to show the toast
+        int numTimesShown = AppPrefs.getInt(keyNumTimesShown);
+        if (numTimesShown >= MAX_TIMES_TO_SHOW_TOAST) {
+            return false;
+        }
+
         // don't show the toast until the user has used this feature a few times
         int numTypesFeatureUsed = AppPrefs.getInt(keyNumTimesUsed);
         numTypesFeatureUsed++;
         AppPrefs.setInt(keyNumTimesUsed, numTypesFeatureUsed);
         if (numTypesFeatureUsed <= MIN_TIMES_TO_USE_FEATURE) {
-            return false;
-        }
-
-        // limit the number of times to show the toast
-        int numTimesShown = AppPrefs.getInt(keyNumTimesShown);
-        if (numTimesShown >= MAX_TIMES_TO_SHOW_TOAST) {
             return false;
         }
 
@@ -71,6 +72,22 @@ public class SmartToast {
         return true;
     }
 
+    /*
+     * prevent the passed smart toast type from being shown by setting it's counter to the max
+     */
+    public static void disableSmartToas(@NonNull SmartToastType type) {
+        try {
+            UndeletablePrefKey key = getNumTimesToastShownKey(type);
+            AppPrefs.setInt(key, MAX_TIMES_TO_SHOW_TOAST);
+        } catch (IllegalArgumentException e) {
+            AppLog.e(AppLog.T.MEDIA, e);
+        }
+    }
+
+    /*
+     * get the preference key which stores the number of times the feature associated with the smart toast type has
+     * been used
+     */
     private static UndeletablePrefKey getNumTimesFeatureUsedKey(@NonNull SmartToastType type) {
         switch (type) {
             case MEDIA_LONG_PRESS:
@@ -82,6 +99,10 @@ public class SmartToast {
         }
     }
 
+    /*
+     * get the preference key which stores the number of times the toast associated with the smart toast type has
+     * been shown
+     */
     private static UndeletablePrefKey getNumTimesToastShownKey(@NonNull SmartToastType type) {
         switch (type) {
             case MEDIA_LONG_PRESS:

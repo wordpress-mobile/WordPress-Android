@@ -414,6 +414,7 @@ public class PhotoPickerFragment extends Fragment {
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.photo_picker_action_mode, menu);
             hideBottomBar();
+            SmartToast.disableSmartToas(SmartToast.SmartToastType.MEDIA_LONG_PRESS);
             return true;
         }
 
