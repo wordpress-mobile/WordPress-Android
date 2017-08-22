@@ -179,6 +179,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
+
+        if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+            SmartToast.show(getActivity(), SmartToast.SmartToastType.MEDIA_LONG_PRESS);
+        }
     }
 
     @Override

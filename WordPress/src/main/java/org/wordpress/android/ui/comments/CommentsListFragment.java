@@ -107,6 +107,9 @@ public class CommentsListFragment extends Fragment {
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.register(this);
         updateSiteOrFinishActivity(savedInstanceState);
+        if (savedInstanceState == null) {
+            SmartToast.show(getActivity(), SmartToast.SmartToastType.COMMENTS_LONG_PRESS);
+        }
     }
 
     @Override
