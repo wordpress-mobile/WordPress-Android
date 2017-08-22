@@ -99,6 +99,7 @@ public class PluginStore extends Store {
 
     public static class UpdatePluginError implements OnChangedError {
         public UpdatePluginErrorType type;
+        public String message;
 
         public UpdatePluginError(UpdatePluginErrorType type) {
             this.type = type;
@@ -117,6 +118,7 @@ public class PluginStore extends Store {
 
     public enum UpdatePluginErrorType {
         GENERIC_ERROR,
+        UNAUTHORIZED,
         NOT_AVAILABLE // Return for non-jetpack sites
     }
 
@@ -168,6 +170,9 @@ public class PluginStore extends Store {
                 break;
             case FETCHED_PLUGIN_INFO:
                 fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
+                break;
+            case UPDATED_PLUGIN:
+                updatedPlugin((UpdatedPluginPayload) action.getPayload());
                 break;
         }
     }
