@@ -46,10 +46,6 @@ Language: es_VE
 	<string name="timespan_now">ahora</string>
 	<string name="role_follower">Seguidor</string>
 	<string name="role_viewer">Espectador</string>
-	<string name="role_editor">Editor</string>
-	<string name="role_contributor">Colaborador</string>
-	<string name="role_author">Autor</string>
-	<string name="role_admin">Administrador</string>
 	<string name="error_post_my_profile_no_connection">Sin conexión, no se pudo guardar tu perfil</string>
 	<string name="alignment_none">Ninguna</string>
 	<string name="alignment_left">Izquierda</string>
@@ -264,8 +260,6 @@ Language: es_VE
 	<string name="web_address">Dirección web</string>
 	<string name="editor_toast_uploading_please_wait">Actualmente estás subiendo archivos multimedia. Por favor, espera hasta que se complete.</string>
 	<string name="error_refresh_comments_showing_older">No se pudieron actualizar los comentarios ahora mismo - se muestran comentarios antiguos</string>
-	<string name="editor_post_settings_set_featured_image">Fijar la imagen destacada</string>
-	<string name="editor_post_settings_featured_image">Imagen destacada</string>
 	<string name="visual_editor_enabled">Editor visual activado</string>
 	<string name="editor_content_placeholder">Comparte tu historia aquí...</string>
 	<string name="editor_page_title_placeholder">Título página</string>
@@ -314,7 +308,6 @@ Language: es_VE
 	<string name="cd_related_post_preview_image">Imagen de vista previa de entradas relacionadas</string>
 	<string name="error_post_remote_site_settings">No pudo guardar la información del sitio</string>
 	<string name="error_fetch_remote_site_settings">No pudo recuperar la información del sitio</string>
-	<string name="error_media_upload_connection">Se ha producido un error de conexión mientras subía multimedia</string>
 	<string name="site_settings_disconnected_toast">Desconectado, la edición se ha desactivado.</string>
 	<string name="site_settings_unsupported_version_error">Versión de WordPress no soportada</string>
 	<string name="site_settings_multiple_links_dialog_description">Requiere aprobación para los comentarios que incluyen más de este número de enlaces.</string>
@@ -456,7 +449,6 @@ Language: es_VE
 	<string name="notifications_no_search_results">Ningún sitio coincide con "%s"</string>
 	<string name="search_sites">Buscar sitios</string>
 	<string name="notifications_empty_view_reader">Ver Lector</string>
-	<string name="unread">Sin leer</string>
 	<string name="notifications_empty_action_followers_likes">Recibir avisos: comentar en entradas que has leído.</string>
 	<string name="notifications_empty_action_comments">Unirse a una conversación: comentar en entradas de blogs que sigues.</string>
 	<string name="notifications_empty_action_unread">Reiniciar la conversación: escribir una entrada nueva.</string>
@@ -474,7 +466,6 @@ Language: es_VE
 	<string name="stats_widget_loading_data">Cargando datos...</string>
 	<string name="stats_widget_name_for_blog">Las estadísticas de hoy de %1$s</string>
 	<string name="stats_widget_name">Las estadísticas de hoy de WordPress</string>
-	<string name="add_location_permission_required">Permiso necesario para añadir la ubicación</string>
 	<string name="add_media_permission_required">Permisos necesarios para añadir archivos multimedia</string>
 	<string name="access_media_permission_required">Permisos necesarios para acceder a archivos multimedia</string>
 	<string name="stats_enable_rest_api_in_jetpack">Para ver tus estadísticas debes activar el módulo JSON API en Jetpack.</string>
@@ -529,7 +520,6 @@ Language: es_VE
 	<string name="button_stats">Estadísticas</string>
 	<string name="post_trashed">Entrada enviada a la papelera</string>
 	<string name="post_deleted">Entrada borrada</string>
-	<string name="trashed">En la papelera</string>
 	<string name="button_edit">Editar</string>
 	<string name="button_back">Atrás</string>
 	<string name="my_site_no_sites_view_subtitle">¿Quieres añadir uno?</string>
@@ -733,11 +723,6 @@ Language: es_VE
 	<string name="hs__conversation_header">Chat de soporte</string>
 	<string name="hs__username_blank_error">Escribe un nombre válido</string>
 	<string name="hs__invalid_email_error">Escribe una dirección de correo electrónico válida</string>
-	<string name="add_location">Añadir localización</string>
-	<string name="current_location">Localización actual</string>
-	<string name="search_location">Búsqueda</string>
-	<string name="edit_location">Editar</string>
-	<string name="search_current_location">Localizar</string>
 	<string name="preference_send_usage_stats">Enviar estadísticas</string>
 	<string name="preference_send_usage_stats_summary">Enviar automáticamente estadísticas de uso para ayudarnos a mejorar WordPress para Android</string>
 	<string name="update_verb">Actualizar</string>
@@ -885,17 +870,12 @@ Language: es_VE
 	<string name="view_in_browser">Ver en el navegador</string>
 	<string name="add_new_category">Añadir nueva categoría</string>
 	<string name="category_name">Nombre de la categoría</string>
-	<string name="category_desc">Descripción de la categoría (opcional)</string>
-	<string name="category_parent">Categoría padre (opcional):</string>
 	<string name="share_action_post">Nueva entrada</string>
 	<string name="share_action_media">Librería multimedia</string>
 	<string name="file_error_create">No se pudo crear un archivo temporal para subir el archivo multimedia. Asegúrate que haya suficiente espacio libre en tu dispositivo.</string>
-	<string name="location_not_found">Localización desconocida</string>
 	<string name="open_source_licenses">Licencias Open source</string>
-	<string name="pending_review">Pendiente de revisión</string>
 	<string name="http_credentials">Credenciales HTTP (opcional)</string>
 	<string name="http_authorization_required">Se necesita autorización</string>
-	<string name="post_format">Tipo de entrada</string>
 	<string name="new_post">Nueva entrada</string>
 	<string name="new_media">Nuevo elemento multimedia</string>
 	<string name="view_site">Ver sitio</string>
@@ -929,7 +909,6 @@ Language: es_VE
 	<string name="creating_your_account">Creando tu cuenta</string>
 	<string name="creating_your_site">Creando tu sitio</string>
 	<string name="reader_empty_posts_in_tag_updating">Recuperando entradas...</string>
-	<string name="error_refresh_media">Algo ha ido mal mientras actualizábamos la biblioteca multimedia. Inténtalo más tarde.</string>
 	<string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>
 	<string name="reader_likes_multi">A %,d personas les gusta esto</string>
 	<string name="reader_label_reply">Responder</string>
@@ -981,9 +960,6 @@ Language: es_VE
 	<string name="reader_hint_comment_on_comment">Contestar al comentario </string>
 	<string name="connecting_wpcom">Accediendo a WordPress.com</string>
 	<string name="themes">Temas</string>
-	<string name="all">Todas</string>
-	<string name="images">Imágenes</string>
-	<string name="unattached">Sin adjuntar</string>
 	<string name="media_gallery_type">Tipo</string>
 	<string name="media_gallery_type_squares">Cuadrados</string>
 	<string name="media_gallery_type_tiled">Mosaico</string>
@@ -1003,7 +979,6 @@ Language: es_VE
 	<string name="theme_activating_button">Activando</string>
 	<string name="theme_set_success">¡Tema aplicado con exito!</string>
 	<string name="theme_auth_error_title">Error al recibir temas</string>
-	<string name="post_excerpt">Extracto</string>
 	<string name="share_action">Compartir</string>
 	<string name="stats">Estadísticas</string>
 	<string name="stats_view_visitors_and_views">Visitantes y Vistas</string>
@@ -1065,7 +1040,6 @@ Language: es_VE
 	<string name="blogusername">Usuario del blog</string>
 	<string name="upload_scaled_image">Subir y enlazar a la imagen escalada</string>
 	<string name="scaled_image">Ancho de la imagen en escala</string>
-	<string name="scheduled">Programado</string>
 	<string name="link_enter_url">URL</string>
 	<string name="uploading">Subiendo…</string>
 	<string name="version">Versión</string>
@@ -1078,7 +1052,6 @@ Language: es_VE
 	<string name="edit">Editar</string>
 	<string name="post_id">Entrada</string>
 	<string name="page_id">Página</string>
-	<string name="post_password">Contraseña (opcional)</string>
 	<string name="immediately">Inmediatamente</string>
 	<string name="quickpress_add_alert_title">Nombre del Acceso Directo</string>
 	<string name="settings">Ajustes</string>
@@ -1086,19 +1059,13 @@ Language: es_VE
 	<string name="share_url">Compartir URL</string>
 	<string name="quickpress_window_title">Selecciona un blog para el acceso directo a la Publicación Rápida</string>
 	<string name="quickpress_add_error">El nombre del acceso directo no puede ser vacío.</string>
-	<string name="publish_post">Publicar</string>
-	<string name="draft">Borrador</string>
-	<string name="post_private">Privado</string>
 	<string name="upload_full_size_image">Subir y enlazar a la imagen completa.</string>
 	<string name="title">Título</string>
-	<string name="tags_separate_with_commas">Etiquetas (separa las etiquetas con comas)</string>
 	<string name="categories">Categorías</string>
 	<string name="dlg_deleting_comments">Eliminando comentarios</string>
 	<string name="notification_blink">Notificación luminosa</string>
 	<string name="notification_vibrate">Vibrar</string>
 	<string name="notification_sound">Sonido de aviso</string>
-	<string name="status">Estado</string>
-	<string name="location">Ubicación</string>
 	<string name="sdcard_title">Requiere tarjeta SD</string>
 	<string name="media">Multimedia</string>
 	<string name="delete">Eliminar</string>

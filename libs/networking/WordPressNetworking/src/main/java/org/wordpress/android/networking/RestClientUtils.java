@@ -9,13 +9,16 @@ import com.android.volley.Request;
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
 import com.wordpress.rest.JsonRestRequest;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 import com.wordpress.rest.RestRequest.ErrorListener;
 import com.wordpress.rest.RestRequest.Listener;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LanguageUtils;
 
 import java.util.HashMap;
@@ -196,79 +199,51 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
+    public void getJetpackSettings(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d/rest-api/?path=/jetpack/v4/settings", siteId);
+        get(path, listener, errorListener);
+    }
+
     public void getGeneralSettings(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/settings", siteId);
         get(path, listener, errorListener);
     }
 
-    public void setGeneralSiteSettings(long siteId, Listener listener, ErrorListener errorListener, JSONObject params) {
+    public void getJetpackMonitorSettings(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
+        get(path, listener, errorListener);
+    }
+
+    public void setGeneralSiteSettings(long siteId, JSONObject params, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/settings", siteId);
         post(path, params, null, listener, errorListener);
     }
 
-    public void getJetpackModule(long siteId, String module, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/jetpack/modules/%s", siteId, module);
-        get(path, listener, errorListener);
+    public void setJetpackSettings(long siteId, Map<String, Object> bodyData,
+                                  Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d/rest-api/", siteId);
+        JSONObject params = new JSONObject();
+        JSONObject body = new JSONObject();
+        try {
+            for (String key : bodyData.keySet()) {
+                body.putOpt(key, bodyData.get(key));
+            }
+            params.put("path", "/jetpack/v4/settings/");
+            params.put("body", body.toString());
+            post(path, params, null, listener, errorListener);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.API, "Error updating Jetpack settings: " + e);
+            // make sure to invoke error listener, caller will be expecting it
+            if (errorListener != null) {
+                errorListener.onErrorResponse(
+                        new VolleyError("Error: Attempted to update Jetpack settings with malformed body data", e));
+            }
+        }
     }
 
-    public void getJetpackSettings(long siteId, Listener listener, ErrorListener errorListener) {
+    public void setJetpackMonitorSettings(long siteId, Map<String, String> params,
+                                          Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
-        get(path, listener, errorListener);
-    }
-
-    public void getJetpackMonitor(long siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/jetpack/modules/monitor", siteId);
-        get(path, listener, errorListener);
-    }
-
-    public void getJetpackSsoMatchByEmailOption(long siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/options/backup?name=jetpack_sso_match_by_email", siteId);
-        get(path, listener, errorListener);
-    }
-
-    public void getJetpackSsoTwoStepOption(long siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/option/?option_name=jetpack_sso_require_two_step", siteId);
-        get(path, listener, errorListener);
-    }
-
-    public void setJetpackSsoTwoStepOption(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/option/?option_name=jetpack_sso_require_two_step", siteId);
-        Map<String, String> params = new HashMap<>();
-        params.put("option_value", String.valueOf(enabled));
-        post(path, params, null, listener, errorListener);
-    }
-
-    public void setJetpacSsoMatchEmailOption(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/options/backup?option_name=jetpack_sso_match_by_email", siteId);
-        Map<String, String> params = new HashMap<>();
-        params.put("option_value", String.valueOf(enabled));
-        post(path, params, null, listener, errorListener);
-    }
-
-    public void setJetpackSso(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/jetpack/modules/sso", siteId);
-        Map<String, String> params = new HashMap<>();
-        params.put("active", String.valueOf(enabled));
-        post(path, params, null, listener, errorListener);
-    }
-
-    public void setJetpackMonitor(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/jetpack/modules/monitor", siteId);
-        Map<String, String> params = new HashMap<>();
-        params.put("active", String.valueOf(enabled));
-        post(path, params, null, listener, errorListener);
-    }
-
-    public void setJetpackSettings(long siteId, Listener listener, ErrorListener errorListener,
-                                       Map<String, String> params) {
-        String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
-        post(path, params, null, listener, errorListener);
-    }
-
-    public void setJetpackProtect(long siteId, boolean enabled, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/jetpack/modules/protect", siteId);
-        Map<String, String> params = new HashMap<>();
-        params.put("active", String.valueOf(enabled));
         post(path, params, null, listener, errorListener);
     }
 

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
@@ -48,7 +49,9 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AlertUtils;
@@ -58,6 +61,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UserEmailUtils;
@@ -65,6 +69,7 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,6 +77,10 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 public class NewUserFragment extends AbstractFragment {
+    private static final String KEY_UNDER_LOGIN_WIZARD = "KEY_UNDER_LOGIN_WIZARD";
+
+    public static final String TAG = "new_user_fragment_tag";
+
     public static final int NEW_USER = 1;
     private AutoCompleteTextView mSiteUrlTextField;
     private ArrayAdapter<String> mSiteUrlSuggestionAdapter;
@@ -83,6 +92,10 @@ public class NewUserFragment extends AbstractFragment {
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
     private boolean mEmailAutoCorrected;
+
+    private boolean mUnderLoginWizard;
+
+    private LoginListener mLoginListener;
 
     protected @Inject SiteStore mSiteStore;
     protected @Inject AccountStore mAccountStore;
@@ -404,8 +417,17 @@ public class NewUserFragment extends AbstractFragment {
         if (!isAdded()) {
             return;
         }
-        getActivity().setResult(Activity.RESULT_OK);
-        getActivity().finish();
+
+        if (mUnderLoginWizard) {
+            if (mLoginListener != null) {
+                ArrayList<Integer> oldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
+                mLoginListener.loggedInViaSignup(oldSitesIDs);
+            }
+        } else {
+            getActivity().setResult(Activity.RESULT_OK);
+            getActivity().finish();
+        }
+
         PersistentEditTextHelper persistentEditTextHelper = new PersistentEditTextHelper(getActivity());
         persistentEditTextHelper.clearSavedText(mEmailTextField, null);
         persistentEditTextHelper.clearSavedText(mUsernameTextField, null);
@@ -422,19 +444,26 @@ public class NewUserFragment extends AbstractFragment {
         if (!isAdded()) {
             return;
         }
-        endProgress();
-        Intent intent = new Intent();
-        intent.putExtra("username", getUsername());
-        intent.putExtra("password", getPassword());
-        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
-        try {
-            getFragmentManager().popBackStack();
-        } catch (IllegalStateException e) {
-            // Catch the ISE exception, because we can't check for the fragment state here
-            // finishAndShowSignInScreen will be called in an Network onError callback so we can't guarantee, the
-            // fragment transaction will be executed. In that case the user already is back on the Log In screen.
-            AppLog.e(T.NUX, e);
+
+        if (mUnderLoginWizard) {
+            if (mLoginListener != null) {
+                mLoginListener.newUserCreatedButErrored(getEmail(), getPassword());
+            }
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("username", getUsername());
+            intent.putExtra("password", getPassword());
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+            try {
+                getFragmentManager().popBackStack();
+            } catch (IllegalStateException e) {
+                // Catch the ISE exception, because we can't check for the fragment state here
+                // finishAndShowSignInScreen will be called in an Network onError callback so we can't guarantee, the
+                // fragment transaction will be executed. In that case the user already is back on the Log In screen.
+                AppLog.e(T.NUX, e);
+            }
         }
+
         ToastUtils.showToast(getActivity(), R.string.signup_succeed_signin_failed, Duration.LONG);
     }
 
@@ -464,6 +493,23 @@ public class NewUserFragment extends AbstractFragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            if (context instanceof LoginListener) {
+                mUnderLoginWizard = true;
+                mLoginListener = (LoginListener) context;
+            }
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mLoginListener = null;
+    }
+
+    @Override
     public void onDestroy() {
         mDispatcher.unregister(this);
         super.onDestroy();
@@ -474,6 +520,10 @@ public class NewUserFragment extends AbstractFragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.register(this);
+
+        if (savedInstanceState != null) {
+            mUnderLoginWizard = savedInstanceState.getBoolean(KEY_UNDER_LOGIN_WIZARD);
+        }
     }
 
     @Override
@@ -575,6 +625,13 @@ public class NewUserFragment extends AbstractFragment {
         initPasswordVisibilityButton(rootView, mPasswordTextField);
         initInfoButton(rootView);
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(KEY_UNDER_LOGIN_WIZARD, mUnderLoginWizard);
     }
 
     private final TextWatcher mCheckFieldsFilledWatcher = new TextWatcher() {

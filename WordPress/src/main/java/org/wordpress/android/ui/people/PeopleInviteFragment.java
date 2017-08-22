@@ -22,8 +22,10 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.models.Role;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
@@ -42,6 +44,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFragment.OnRoleSelectListener,
         PeopleManagementActivity.InvitationSender {
     private static final String URL_USER_ROLES_DOCUMENTATION = "https://en.support.wordpress.com/user-roles/";
@@ -59,10 +63,13 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     private TextView mRoleTextView;
     private EditText mCustomMessageEditText;
 
-    private Role mRole;
+    private List<RoleModel> mInviteRoles;
+    private String mCurrentRole;
     private String mCustomMessage = "";
     private boolean mInviteOperationInProgress = false;
     private SiteModel mSite;
+
+    @Inject SiteStore mSiteStore;
 
     public static PeopleInviteFragment newInstance(SiteModel site) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
@@ -101,8 +108,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if (mRole != null) {
-            outState.putString(KEY_SELECTED_ROLE, mRole.toString());
+        if (mCurrentRole != null) {
+            outState.putString(KEY_SELECTED_ROLE, mCurrentRole);
         }
         outState.putStringArrayList(KEY_USERNAMES, new ArrayList<>(mUsernameButtons.keySet()));
     }
@@ -110,13 +117,12 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         updateSiteOrFinishActivity();
+        mInviteRoles = RoleUtils.getInviteRoles(mSiteStore, mSite, this);
 
         if (savedInstanceState != null) {
-            String roleValue = savedInstanceState.getString(KEY_SELECTED_ROLE);
-            if (!TextUtils.isEmpty(roleValue)) {
-                mRole = Role.fromString(roleValue);
-            }
+            mCurrentRole = savedInstanceState.getString(KEY_SELECTED_ROLE);
             ArrayList<String> retainedUsernames = savedInstanceState.getStringArrayList(KEY_USERNAMES);
             if (retainedUsernames != null) {
                 mUsernames.clear();
@@ -151,9 +157,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             }
         });
 
-        Role role = mRole;
-        if (role == null) {
-            role = getDefaultRole();
+        if (TextUtils.isEmpty(mCurrentRole)) {
+            mCurrentRole = getDefaultRole();
         }
 
         mUsernameEditText = (MultiUsernameEditText) view.findViewById(R.id.invite_usernames);
@@ -236,7 +241,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
 
         mRoleTextView = (TextView) view.findViewById(R.id.role);
-        setRole(role);
+        refreshRoleTextView();
         ImageView imgRoleInfo = (ImageView) view.findViewById(R.id.imgRoleInfo);
         imgRoleInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,7 +250,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             }
         });
 
-        if (Role.inviteRoles(mSite).length > 1) {
+        if (mInviteRoles.size() > 1) {
             view.findViewById(R.id.role_container).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -315,9 +320,11 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
     }
 
-    private Role getDefaultRole() {
-        Role[] inviteRoles = Role.inviteRoles(mSite);
-        return inviteRoles[0];
+    private String getDefaultRole() {
+        if (mInviteRoles.isEmpty()) {
+            return null;
+        }
+        return mInviteRoles.get(0).getName();
     }
 
     private void updateRemainingCharsView(TextView remainingCharsTextView, String currentString, int limit) {
@@ -414,8 +421,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     @Override
-    public void onRoleSelected(Role newRole) {
-        setRole(newRole);
+    public void onRoleSelected(RoleModel newRole) {
+        setRole(newRole.getName());
 
         if (!mUsernameButtons.keySet().isEmpty()) {
             // clear the username results list and let the 'validate' routine do the updates
@@ -425,9 +432,13 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
     }
 
-    private void setRole(Role newRole) {
-        mRole = newRole;
-        mRoleTextView.setText(newRole.toDisplayString());
+    private void setRole(String newRole) {
+        mCurrentRole = newRole;
+        refreshRoleTextView();
+    }
+
+    private void refreshRoleTextView() {
+        mRoleTextView.setText(RoleUtils.getDisplayName(mCurrentRole, mInviteRoles));
     }
 
     private void validateAndStyleUsername(Collection<String> usernames, final ValidationEndListener validationEndListener) {
@@ -448,7 +459,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         if (usernamesToCheck.size() > 0) {
             long dotComBlogId = mSite.getSiteId();
-            PeopleUtils.validateUsernames(usernamesToCheck, mRole, dotComBlogId,
+            PeopleUtils.validateUsernames(usernamesToCheck, mCurrentRole, dotComBlogId,
                     new PeopleUtils.ValidateUsernameCallback() {
                 @Override
                 public void onUsernameValidation(String username, ValidationResult validationResult) {
@@ -629,7 +640,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         enableSendButton(false);
 
         long dotComBlogId = mSite.getSiteId();
-        PeopleUtils.sendInvitations(new ArrayList<>(mUsernameButtons.keySet()), mRole, mCustomMessage, dotComBlogId,
+        PeopleUtils.sendInvitations(new ArrayList<>(mUsernameButtons.keySet()), mCurrentRole, mCustomMessage, dotComBlogId,
                 new PeopleUtils.InvitationsSendCallback() {
                     @Override
                     public void onSent(List<String> succeededUsernames, Map<String, String> failedUsernameErrors) {

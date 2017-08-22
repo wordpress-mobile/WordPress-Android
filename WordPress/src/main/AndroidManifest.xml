@@ -106,12 +106,31 @@
                 <data
                     android:host="signin"
                     android:scheme="wordpress" />
+            </intent-filter>
+        </activity>
 
+        <activity
+            android:name=".ui.accounts.LoginActivity"
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.accounts.LoginMagicLinkInterceptActivity"
+            android:theme="@style/NoDisplay">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:host="magic-login"
                     android:scheme="wordpress" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.accounts.LoginEpilogueActivity"
+            android:theme="@style/LoginTheme" />
 
         <activity
             android:name=".ui.accounts.NewBlogActivity"
@@ -134,7 +153,7 @@
             android:label="@string/settings"
             android:theme="@style/CalypsoTheme" />
         <activity
-            android:name=".ui.prefs.EditorReleaseNotesActivity"
+            android:name=".ui.prefs.ReleaseNotesActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.prefs.LicensesActivity"
@@ -457,14 +476,13 @@
 
         <!-- Services -->
         <service
-            android:name=".ui.posts.services.PostUploadService"
-            android:label="Post Upload Service" />
-        <service
-            android:name=".ui.media.services.MediaUploadService"
-            android:label="Media Upload Service" />
+            android:name=".ui.uploads.UploadService"
+            android:label="Upload Service" />
         <service
             android:name=".ui.media.services.MediaDeleteService"
-            android:label="Media Delete Service" />
+            android:label="Media Delete Service"
+            android:exported="false"
+            />
         <service
             android:name=".ui.stats.service.StatsService"
             android:exported="false"

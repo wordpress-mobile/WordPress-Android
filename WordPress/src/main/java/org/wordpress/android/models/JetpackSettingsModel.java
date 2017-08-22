@@ -17,6 +17,27 @@ public class JetpackSettingsModel {
     public boolean ssoMatchEmail;
     public boolean ssoRequireTwoFactor;
 
+    public JetpackSettingsModel() {
+        super();
+    }
+
+    public JetpackSettingsModel(final JetpackSettingsModel other) {
+        super();
+
+        if (other == null) {
+            return;
+        }
+
+        monitorActive = other.monitorActive;
+        emailNotifications = other.emailNotifications;
+        wpNotifications = other.wpNotifications;
+        jetpackProtectEnabled = other.jetpackProtectEnabled;
+        ssoActive = other.ssoActive;
+        ssoMatchEmail = other.ssoMatchEmail;
+        ssoRequireTwoFactor = other.ssoRequireTwoFactor;
+        jetpackProtectWhitelist.addAll(other.jetpackProtectWhitelist);
+    }
+
     @Override
     public boolean equals(Object other) {
         if (!(other instanceof JetpackSettingsModel)) return false;

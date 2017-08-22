@@ -10,7 +10,6 @@ Language: uz
 	<string name="creating_your_account">Akkauntingiz yaratilmoqda</string>
 	<string name="creating_your_site">Saytingiz yaratilmoqda</string>
 	<string name="reader_empty_posts_in_tag_updating">Postlar yuklanmoqda...</string>
-	<string name="error_refresh_media">Media kutubxonani yangilashda xatolik yuz berdi. Iltimos, keyinroq qayta harakat qilib ko‘ring.</string>
 	<string name="reader_likes_you_and_multi">Siz hamda %,d kishi buni yoqtiradi</string>
 	<string name="reader_likes_multi">%,d kishi buni yoqtiradi</string>
 	<string name="reader_toast_err_get_comment">Bu mulohazani yuklab bo‘lmadi</string>
@@ -48,9 +47,6 @@ Language: uz
 	<string name="create_account_wpcom">Wordpress.com da akkaunt oching</string>
 	<string name="username_invalid">Yaroqsiz foydalanuvchi nomi</string>
 	<string name="limit_reached">Chegaraga yetib keldik. Bir minutdan keyin harakat qilib ko‘rishingiz mumkin. Bu vaqtdan avval harakatga o‘tishingiz kutish vaqtining yanada uzayishiga olib keladi. Agar bu biror tushunmovchilik natijasi deb o‘ylasangiz, yordam xizmatiga murojaat qiling.</string>
-	<string name="all">Hammasi</string>
-	<string name="images">Rasmlar</string>
-	<string name="unattached">Biriktirilmagan</string>
 	<string name="media_gallery_type_circles">Doiralar</string>
 	<string name="themes">Shablonlar</string>
 	<string name="media_gallery_type">Tur</string>
@@ -67,7 +63,6 @@ Language: uz
 	<string name="theme_activating_button">Faollashtirilmoqda</string>
 	<string name="theme_set_success">Shablon muvaffaqiyatli faollashtirildi!</string>
 	<string name="theme_auth_error_title">Shablonlar yuklanmadi</string>
-	<string name="post_excerpt">Sitata</string>
 	<string name="share_action">Bo‘lish</string>
 	<string name="stats">Statistika</string>
 	<string name="stats_view_visitors_and_views">Kirivchular va ko‘rishlar</string>
@@ -131,7 +126,6 @@ Language: uz
 	<string name="blogusername">blogusername</string>
 	<string name="upload_scaled_image">Rasm yuklab, hajmi moslashtirilgan (kichiklashtirilgan) nusxasiga havola berish</string>
 	<string name="scaled_image">Yangi hajm uchun en qiymati</string>
-	<string name="scheduled">Jadvalga kiritildi</string>
 	<string name="link_enter_url">URL</string>
 	<string name="version">Versiya</string>
 	<string name="tos">Xizmat shartlari</string>
@@ -142,23 +136,16 @@ Language: uz
 	<string name="edit">Tahrir qil</string>
 	<string name="post_id">Post</string>
 	<string name="page_id">Sahifa</string>
-	<string name="post_password">Parol (ixtiyoriy)</string>
 	<string name="immediately">Darrov</string>
 	<string name="quickpress_add_alert_title">Tez o‘tish nomi</string>
 	<string name="settings">Moslamalar</string>
 	<string name="quickpress_add_error">Tez o‘tar nomi bo‘sh bo‘lishi mumkin emas</string>
 	<string name="quickpress_window_title">QuickPress tez o‘tari uchun blog tanlang</string>
-	<string name="post_private">Maxfiy</string>
-	<string name="publish_post">Chop qil</string>
-	<string name="draft">Qoralama</string>
 	<string name="upload_full_size_image">To‘liq hajmda rasm yuklash</string>
-	<string name="tags_separate_with_commas">Teglar (vergul bilan ajrating)</string>
 	<string name="title">Sarlavha</string>
 	<string name="categories">Bo‘limlar</string>
 	<string name="notification_vibrate">Vibratsiya</string>
 	<string name="notification_blink">Yonib-o‘chuvchi xabar</string>
-	<string name="status">Status</string>
-	<string name="location">Manzil</string>
 	<string name="sdcard_title">SD karta kerak</string>
 	<string name="media">Media</string>
 	<string name="delete">O‘chir</string>

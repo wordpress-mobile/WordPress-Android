@@ -534,7 +534,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsRefreshError error) {
         if (isAdded()) {
-            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_notifications));
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }

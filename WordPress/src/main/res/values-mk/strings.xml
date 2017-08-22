@@ -125,11 +125,6 @@ Language: mk
 	<string name="hs__username_blank_error">Воведи валидно име</string>
 	<string name="hs__invalid_email_error">Воведи валидна е-адреса</string>
 	<string name="contact_us">Контактирај нè</string>
-	<string name="add_location">Додади локација</string>
-	<string name="current_location">Моментална локација</string>
-	<string name="search_location">Пребарувај</string>
-	<string name="edit_location">Уреди</string>
-	<string name="search_current_location">Лоцирај</string>
 	<string name="preference_send_usage_stats">Испрати статистика</string>
 	<string name="preference_send_usage_stats_summary">Автоматски испраќај статистика од употребата да ни помогнеш да го подобриме WordPress за Андроид</string>
 	<string name="update_verb">Ажурирај</string>
@@ -215,7 +210,6 @@ Language: mk
 	<string name="add_comment">Додади коментар</string>
 	<string name="connection_error">Грешка во поврзувањето</string>
 	<string name="cancel_edit">Откажи промени</string>
-	<string name="location_not_found">Непозната локација</string>
 	<string name="post_not_found">Настана грешка при вчитување на написот. Освежи ги написите и обиди се повторно.</string>
 	<string name="learn_more">Научи повеќе</string>
 	<string name="theme_current_theme">Сегашна тема</string>
@@ -286,8 +280,6 @@ Language: mk
 	<string name="share_action_post">Нов напис</string>
 	<string name="new_media">Нова медиа</string>
 	<string name="view_site">Види страница</string>
-	<string name="category_desc">Опис на категорија (опционален)</string>
-	<string name="category_parent">Родител на категорија (опционален)</string>
 	<string name="comment_status_trash">Исфрлени</string>
 	<string name="comment_status_spam">Спам</string>
 	<string name="local_draft">Локални нацрти</string>
@@ -295,11 +287,9 @@ Language: mk
 	<string name="mnu_comment_unapprove">Не одобрувај</string>
 	<string name="dlg_unapproving_comments">Не се одобрува</string>
 	<string name="open_source_licenses">Отворен код лиценци</string>
-	<string name="pending_review">Чека за преглед</string>
 	<string name="share_action_media">Медиа библиотека</string>
 	<string name="file_error_create">Неможе да се созададе темп архива за медиа испраќање. Ве волиме да обезбедите доволоно простор на вашиот уред</string>
 	<string name="http_credentials">HTTP акредитиви (опционален)</string>
-	<string name="post_format">Напис формат</string>
 	<string name="new_post">Нов напис</string>
 	<string name="site_address">Ваша само хостирана адреса (URL)</string>
 	<string name="email_cant_be_used_to_signup">Неможете да ја користите оваа адреса за да се регистрирате. Овој провајдер за електронска пошта блокира некои од нашите пораки. Користете друг провајдер.</string>
@@ -311,7 +301,6 @@ Language: mk
 	<string name="creating_your_account">Креирање на вашата корисничка сметка</string>
 	<string name="creating_your_site">Креирање на вашата страница</string>
 	<string name="reader_empty_posts_in_tag_updating">Преземање написи...</string>
-	<string name="error_refresh_media">Настана проблем при освежувањето на медиа библиотеката. Обидете се подоцна.</string>
 	<string name="cant_share_no_visible_blog">Неможе да споделите WordPress блог без да е видлив</string>
 	<string name="reader_likes_you_and_multi">На тебе и на уште %,d други им се допаѓа ова</string>
 	<string name="reader_likes_multi">На %,d луѓе им се допаѓа ова</string>
@@ -388,12 +377,10 @@ Language: mk
 	<string name="theme_activating_button">Активирање</string>
 	<string name="theme_set_success">Темата е поставена успешно!</string>
 	<string name="theme_auth_error_title">Неуспешно преземање на теми</string>
-	<string name="post_excerpt">Извадок</string>
 	<string name="share_action">Сподели</string>
 	<string name="stats">Статистики</string>
 	<string name="stats_view_visitors_and_views">Посетители и прегледи</string>
 	<string name="stats_view_clicks">Кликнувања</string>
-	<string name="all">Сите</string>
 	<string name="media_edit_failure">Неуспешно качување</string>
 	<string name="themes_details_label">Детали</string>
 	<string name="themes_features_label">Особини</string>
@@ -403,10 +390,8 @@ Language: mk
 	<string name="stats_entry_country">Земја</string>
 	<string name="stats_entry_tags_and_categories">Тема</string>
 	<string name="stats_entry_authors">Автор</string>
-	<string name="images">Слики</string>
 	<string name="stats_view_referrers">Препорачувачи</string>
 	<string name="stats_entry_referrers">Препорачувач</string>
-	<string name="unattached">Неприкачени</string>
 	<string name="manage">Управувај</string>
 	<string name="upload">Качување</string>
 	<string name="notifications">Известувања</string>
@@ -437,7 +422,6 @@ Language: mk
 	<string name="blogusername">блогкорисник</string>
 	<string name="upload_scaled_image">Испрати и сврзи со намелана слика</string>
 	<string name="scaled_image">Ширина на прилагодена слика</string>
-	<string name="scheduled">Распоредени</string>
 	<string name="link_enter_url">URL</string>
 	<string name="tos">Услови за користење</string>
 	<string name="version">Верзија</string>
@@ -448,7 +432,6 @@ Language: mk
 	<string name="edit">Уреди</string>
 	<string name="post_id">Напис</string>
 	<string name="page_id">Страница</string>
-	<string name="post_password">Лозинка (опционално)</string>
 	<string name="immediately">Веднаш</string>
 	<string name="quickpress_add_alert_title">Постави име на кратенка</string>
 	<string name="today">Денес</string>
@@ -456,17 +439,11 @@ Language: mk
 	<string name="share_url">URL за споделување</string>
 	<string name="quickpress_add_error">Името на кратенката не смее да биде празно</string>
 	<string name="quickpress_window_title">Изберете блог за QuickPress кратенка</string>
-	<string name="publish_post">Објави</string>
-	<string name="draft">Нацрт</string>
-	<string name="post_private">Приватен</string>
 	<string name="upload_full_size_image">Качи на сервер и додај врска до оригиналната фотографија</string>
 	<string name="title">Наслов</string>
-	<string name="tags_separate_with_commas">Ознаки (одделете ги ознаките со запирки)</string>
 	<string name="categories">Категории</string>
 	<string name="notification_blink">Известување со трепкачко светло</string>
 	<string name="notification_vibrate">Вибрирај</string>
-	<string name="status">Статус</string>
-	<string name="location">Локација</string>
 	<string name="sdcard_title">Потребна е SD картичка</string>
 	<string name="media">Мултимедија</string>
 	<string name="delete">Бриши</string>

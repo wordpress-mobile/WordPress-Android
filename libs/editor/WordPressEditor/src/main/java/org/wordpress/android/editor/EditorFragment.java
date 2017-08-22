@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -64,6 +65,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, View.OnTouchListener,
         OnJsEditorStateChangedListener, OnImeBackListener, EditorWebViewAbstract.AuthHeaderRequestListener,
@@ -86,6 +89,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = Arrays.asList("image/jpeg", "image/png");
 
     public static final int MAX_ACTION_TIME_MS = 2000;
+
+    public static final String UPLOADED_IMAGE_TEMPLATE = "<a href=\"%s\"><img src=\"%s\" alt=\"\" class=\"wp-image-%s" +
+            " alignnone size-full\" width=\"%d\" height=\"%d\"></a>";
 
     private String mTitle = "";
     private String mContentHtml = "";
@@ -397,15 +403,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement EditorDragAndDropListener");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        // Soft cancel (delete flag off) all media uploads currently in progress
-        for (String mediaId : mUploadingMedia.keySet()) {
-            mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, false);
-        }
-        super.onDetach();
     }
 
     @Override
@@ -1109,6 +1106,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void onMediaUploadReattached(String localId, float currentProgress) {
+        // no op (no reattachment in Visual Editor)
+    }
+
+    @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
         if(!isAdded()) {
             return;
@@ -1144,21 +1146,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             return;
         }
 
-        final MediaType mediaType = mUploadingMedia.get(mediaId);
-        if (mediaType != null) {
-            mWebView.post(new Runnable() {
-                @Override
-                public void run() {
-                    String progressString = String.format(Locale.US, "%.1f", progress);
-                    mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnMedia(" + mediaId + ", " +
-                            progressString + ");");
-                }
-            });
-        }
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                String progressString = String.format(Locale.US, "%.1f", progress);
+                mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnMedia(" + mediaId + ", " +
+                        progressString + ");");
+            }
+        });
     }
 
     @Override
-    public void onMediaUploadFailed(final String mediaId, final String errorMessage) {
+    public void onMediaUploadFailed(final String mediaId, final EditorFragmentAbstract.MediaType
+            mediaType, final String errorMessage) {
         if(!isAdded()) {
             return;
         }
@@ -1341,7 +1341,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
+                        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId);
 
                         mWebView.post(new Runnable() {
                             @Override
@@ -1467,7 +1467,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     public void onMediaRemoved(String mediaId) {
         mUploadingMedia.remove(mediaId);
         mFailedMediaIds.remove(mediaId);
-        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
+        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId);
     }
 
     @Override
@@ -1679,5 +1679,37 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onActionFinished() {
         mActionStartedAt = -1;
+    }
+
+    public static String replaceMediaFileWithUrl(@NonNull String postContent, MediaFile mediaFile) {
+        if (mediaFile == null) {
+            return postContent;
+        }
+
+        if (!mediaFile.isVideo()) {
+            String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            String remoteMediaId = mediaFile.getMediaId();
+            String replacementHtml = String.format(Locale.US, UPLOADED_IMAGE_TEMPLATE, remoteUrl, remoteUrl,
+                    remoteMediaId, mediaFile.getWidth(), mediaFile.getHeight());
+
+            Pattern pattern = Pattern.compile("<span id=\"img_container_" + mediaFile.getId() + "\".*?<img.*?></span>");
+            Matcher matcher = pattern.matcher(postContent);
+            postContent = matcher.replaceAll(replacementHtml);
+        } else {
+            String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
+            String replacementShortcode;
+            if (TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
+                replacementShortcode = "[video src=\"" + remoteUrl + "\" poster=\"" + posterUrl + "\"][/video]";
+            } else {
+                replacementShortcode = mediaFile.getVideoPressShortCode();
+            }
+
+            Pattern pattern = Pattern.compile("<span id=\"video_container_" + mediaFile.getId() + "\".*?<img.*?></span>");
+            Matcher matcher = pattern.matcher(postContent);
+            postContent = matcher.replaceAll(replacementShortcode);
+        }
+
+        return postContent;
     }
 }
