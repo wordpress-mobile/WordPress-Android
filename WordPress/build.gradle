@@ -111,7 +111,7 @@ dependencies {
     compile 'org.wordpress:persistentedittext:1.0.2'
     compile 'org.wordpress:emailchecker2:1.1.0'
     compile 'com.squareup.okio:okio:1.13.0'
-
+    compile 'org.apache.commons:commons-text:1.1'
     compile 'com.airbnb.android:lottie:2.0.0-rc2'
 
     compile ('com.yalantis:ucrop:2.2.0') {
@@ -137,7 +137,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:156b375bd13409f7fca092c39c7e35a9272022ff') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:issue~unescape-strings-from-api-responses-SNAPSHOT') {
         exclude group: "com.android.volley";
     }
 
