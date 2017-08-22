@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
@@ -159,7 +160,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             Map<?, ?> siteMap = (Map<?, ?>) siteObject;
             SiteModel site = new SiteModel();
             site.setSelfHostedSiteId(MapUtils.getMapInt(siteMap, "blogid", 1));
-            site.setName(MapUtils.getMapStr(siteMap, "blogName"));
+            site.setName(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(siteMap, "blogName")));
             site.setUrl(MapUtils.getMapStr(siteMap, "url"));
             site.setXmlRpcUrl(MapUtils.getMapStr(siteMap, "xmlrpc"));
             site.setIsSelfHostedAdmin(MapUtils.getMapBool(siteMap, "isAdmin"));
@@ -232,7 +233,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         Map<?, ?> siteOptions = (Map<?, ?>) response;
         String siteTitle = XMLRPCUtils.safeGetNestedMapValue(siteOptions, "blog_title", "");
         if (!siteTitle.isEmpty()) {
-            oldModel.setName(siteTitle);
+            oldModel.setName(StringEscapeUtils.unescapeHtml4(siteTitle));
         }
 
         // TODO: set a canonical URL here
