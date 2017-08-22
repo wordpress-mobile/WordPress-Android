@@ -1501,6 +1501,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return allAttrs;
     }
 
+    private static @NonNull List<IAztecAttributedSpan> getSpansForPredicate(Spanned content,
+                                                                            AztecText.AttributePredicate predicate,
+                                                                            boolean returnFirstFoundOnly) {
+        IAztecAttributedSpan[] spans = content.getSpans(0, content.length(), IAztecAttributedSpan.class);
+        List<IAztecAttributedSpan> allMatchingSpans = new ArrayList<>();
+        for (IAztecAttributedSpan span : spans) {
+            if (predicate.matches(span.getAttributes())) {
+                allMatchingSpans.add(span);
+                if (returnFirstFoundOnly) return allMatchingSpans;
+            }
+        }
+        return allMatchingSpans;
+    }
+
     private static void updateElementAttributes(Spanned content,
                                                 AztecText.AttributePredicate predicate,
                                                 AztecAttributes attrs) {
@@ -1627,7 +1641,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void setMediaToFailed(@NonNull String mediaId) {
         AztecText.AttributePredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(mediaId);
-        clearMediaUploadingAndSetToFailedIfLocal(content.getText(), localMediaIdPredicate);
+        // we should be obtaining just one span for this media Id predicate, but just in case something
+        // weird happened we make sure we run through all obtained spans and mark them failed if a local src found
+        List<IAztecAttributedSpan> spans = getSpansForPredicate(content.getText(), localMediaIdPredicate, false);
+        for (IAztecAttributedSpan span : spans) {
+            clearMediaUploadingAndSetToFailedIfLocal(span);
+        }
         content.clearOverlays(localMediaIdPredicate);
         overlayFailedMedia(mediaId, content.getElementAttributes(localMediaIdPredicate));
         safeAddMediaIdToSet(mFailedMediaIds, mediaId);
@@ -1641,36 +1660,21 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         // update all items to failed, unless they already have a remote URL, in which case
         // it means the upload completed, but the item remained inconsistently marked as uploading
         // (for example after an app crash)
-        for (Attributes attrs : getAllElementAttributes(content, uploadingPredicate)) {
-            clearMediaUploadingAndSetToFailedIfLocal(content, getPredicateForMedia(attrs));
+        for (IAztecAttributedSpan span : getSpansForPredicate(content, uploadingPredicate, false)) {
+            clearMediaUploadingAndSetToFailedIfLocal(span);
         }
     }
 
-    private static AztecText.AttributePredicate getPredicateForMedia(Attributes attrs) {
-        String itemId = attrs.getValue(ATTR_ID_WP);
-        AztecText.AttributePredicate predicate;
-
-        if (!TextUtils.isEmpty(itemId)) {
-            predicate = MediaPredicate.getLocalMediaIdPredicate(itemId);
-        } else {
-            // if ATTR_ID_WP is missing, try with TEMP_IMAGE_ID
-            itemId = attrs.getValue(TEMP_IMAGE_ID);
-            predicate = MediaPredicate.getTempMediaIdPredicate(itemId);
-        }
-        return predicate;
-    }
-
-    private static void clearMediaUploadingAndSetToFailedIfLocal(Spanned content, AztecText.AttributePredicate predicate) {
+    private static void clearMediaUploadingAndSetToFailedIfLocal(IAztecAttributedSpan span) {
         // remove the uploading class
         AttributesWithClass attributesWithClass = new AttributesWithClass(
-                getFirstElementAttributes(content,predicate));
+                span.getAttributes());
         attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
 
         attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
 
-        updateElementAttributes(content, predicate, attributesWithClass.getAttributes());
+        span.setAttributes(attributesWithClass.getAttributes());
     }
-
 
     private static AttributesWithClass addFailedStatusToMediaIfLocalSrcPresent(AttributesWithClass attributesWithClass) {
         // check if "src" value is remote or local, it only makes sense to mark failed local files
