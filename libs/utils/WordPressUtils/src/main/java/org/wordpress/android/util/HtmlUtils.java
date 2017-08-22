@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.QuoteSpan;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.util.helpers.WPHtmlTagHandler;
 import org.wordpress.android.util.helpers.WPImageGetter;
 import org.wordpress.android.util.helpers.WPQuoteSpan;
@@ -51,7 +51,7 @@ public class HtmlUtils {
         }
 
         // use regex to strip tags, then convert entities in the result
-        return trimStart(fastUnescapeHtml(str.replaceAll("<(.|\n)*?>", "")));
+        return trimStart(StringEscapeUtils.escapeHtml4(str.replaceAll("<(.|\n)*?>", "")));
     }
 
     /*
@@ -68,18 +68,6 @@ public class HtmlUtils {
             start++;
         }
         return str.substring(start);
-    }
-
-    /**
-     * Convert html entities to actual Unicode characters - relies on commons apache lang
-     * @param text String to be decoded to Unicode
-     * @return String containing unicode characters
-     */
-    public static String fastUnescapeHtml(final String text) {
-        if (text == null || !text.contains("&")) {
-            return text;
-        }
-        return StringEscapeUtils.unescapeHtml4(text);
     }
 
     /**
