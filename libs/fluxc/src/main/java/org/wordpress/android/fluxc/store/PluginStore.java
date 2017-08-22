@@ -133,6 +133,14 @@ public class PluginStore extends Store {
         public PluginInfoModel pluginInfo;
     }
 
+    public static class OnPluginChanged extends OnChanged<UpdatePluginError> {
+        public SiteModel site;
+        public PluginModel plugin;
+        public OnPluginChanged(SiteModel site) {
+            this.site = site;
+        }
+    }
+
     private final PluginRestClient mPluginRestClient;
     private final PluginWPOrgClient mPluginWPOrgClient;
 
@@ -235,5 +243,14 @@ public class PluginStore extends Store {
     }
 
     private void updatedPlugin(UpdatedPluginPayload payload) {
+        OnPluginChanged event = new OnPluginChanged(payload.site);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            payload.plugin.setLocalSiteId(payload.site.getId());
+            event.plugin = payload.plugin;
+            PluginSqlUtils.insertOrUpdatePlugin(payload.site, payload.plugin);
+        }
+        emitChange(event);
     }
 }
