@@ -586,7 +586,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
             params.put("protect", mJpSettings.jetpackProtectEnabled);
         }
         if (!mJpSettings.whitelistMatches(mRemoteJpSettings.jetpackProtectWhitelist)) {
-            JSONArray whitelistArray = new JSONArray(mJpSettings.jetpackProtectWhitelist);
+            String whitelistArray = mJpSettings.jetpackProtectWhitelist.toString().replace("[", "").replace("]", "");
             params.put("jetpack_protect_global_whitelist", whitelistArray);
         }
         if (mJpSettings.ssoActive != mRemoteJpSettings.ssoActive) {
