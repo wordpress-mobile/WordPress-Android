@@ -18,7 +18,8 @@ import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey;
 public class SmartToast {
 
     public enum SmartToastType {
-        MEDIA_LONG_PRESS,
+        WP_MEDIA_LONG_PRESS,
+        MEDIA_PICKER_LONG_PRESS,
         COMMENTS_LONG_PRESS
     }
 
@@ -50,9 +51,18 @@ public class SmartToast {
             return false;
         }
 
+        // if we're showing the toast explaining long press multiselect in the WP media library, disable showing the
+        // multiselect toast in the media picker (and vice versa) since explaining one should explain the other
+        if (type == SmartToastType.WP_MEDIA_LONG_PRESS) {
+            disableSmartToast(SmartToastType.MEDIA_PICKER_LONG_PRESS);
+        } else if (type == SmartToastType.MEDIA_PICKER_LONG_PRESS) {
+            disableSmartToast(SmartToastType.WP_MEDIA_LONG_PRESS);
+        }
+
         int stringResId;
         switch (type) {
-            case MEDIA_LONG_PRESS:
+            case WP_MEDIA_LONG_PRESS:
+            case MEDIA_PICKER_LONG_PRESS:
                 stringResId = R.string.smart_toast_photo_long_press;
                 break;
             case COMMENTS_LONG_PRESS:
@@ -77,7 +87,7 @@ public class SmartToast {
      * used to disable long press toasts when the user long presses to multiselect since they alraady know
      * they can do it
      */
-    public static void disableSmartToas(@NonNull SmartToastType type) {
+    public static void disableSmartToast(@NonNull SmartToastType type) {
         try {
             UndeletablePrefKey key = getNumTimesToastShownKey(type);
             AppPrefs.setInt(key, MAX_TIMES_TO_SHOW_TOAST);
@@ -92,8 +102,10 @@ public class SmartToast {
      */
     private static UndeletablePrefKey getNumTimesFeatureUsedKey(@NonNull SmartToastType type) {
         switch (type) {
-            case MEDIA_LONG_PRESS:
-                return UndeletablePrefKey.SMART_TOAST_MEDIA_LONG_PRESS_USAGE_COUNTER;
+            case WP_MEDIA_LONG_PRESS:
+                return UndeletablePrefKey.SMART_TOAST_WP_MEDIA_LONG_PRESS_USAGE_COUNTER;
+            case MEDIA_PICKER_LONG_PRESS:
+                return UndeletablePrefKey.SMART_TOAST_MEDIA_PICKER_LONG_PRESS_USAGE_COUNTER;
             case COMMENTS_LONG_PRESS:
                 return UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER;
             default:
@@ -107,8 +119,10 @@ public class SmartToast {
      */
     private static UndeletablePrefKey getNumTimesToastShownKey(@NonNull SmartToastType type) {
         switch (type) {
-            case MEDIA_LONG_PRESS:
-                return UndeletablePrefKey.SMART_TOAST_MEDIA_LONG_PRESS_TOAST_COUNTER;
+            case WP_MEDIA_LONG_PRESS:
+                return UndeletablePrefKey.SMART_TOAST_WP_MEDIA_LONG_PRESS_TOAST_COUNTER;
+            case MEDIA_PICKER_LONG_PRESS:
+                return UndeletablePrefKey.SMART_TOAST_MEDIA_PICKER_LONG_PRESS_TOAST_COUNTER;
             case COMMENTS_LONG_PRESS:
                 return UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER;
             default:

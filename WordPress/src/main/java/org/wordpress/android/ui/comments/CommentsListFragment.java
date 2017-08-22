@@ -586,7 +586,7 @@ public class CommentsListFragment extends Fragment {
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.menu_comments_cab, menu);
             mFilteredCommentsView.setSwipeToRefreshEnabled(false);
-            SmartToast.disableSmartToas(SmartToast.SmartToastType.COMMENTS_LONG_PRESS);
+            SmartToast.disableSmartToast(SmartToast.SmartToastType.COMMENTS_LONG_PRESS);
             return true;
         }
 

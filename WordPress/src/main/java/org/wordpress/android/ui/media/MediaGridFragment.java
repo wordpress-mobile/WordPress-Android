@@ -181,7 +181,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
-            SmartToast.show(getActivity(), SmartToast.SmartToastType.MEDIA_LONG_PRESS);
+            SmartToast.show(getActivity(), SmartToast.SmartToastType.WP_MEDIA_LONG_PRESS);
         }
     }
 
@@ -710,7 +710,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             setSwipeToRefreshEnabled(false);
             getAdapter().setInMultiSelect(true);
             updateActionModeTitle(selectCount);
-            SmartToast.disableSmartToas(SmartToast.SmartToastType.MEDIA_LONG_PRESS);
+            SmartToast.disableSmartToast(SmartToast.SmartToastType.WP_MEDIA_LONG_PRESS);
             return true;
         }
 
