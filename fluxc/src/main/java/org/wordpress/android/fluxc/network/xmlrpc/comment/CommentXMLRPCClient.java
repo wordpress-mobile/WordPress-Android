@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
@@ -338,13 +339,13 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
 
         // Author
         comment.setAuthorUrl(XMLRPCUtils.safeGetMapValue(commentMap, "author_url", ""));
-        comment.setAuthorName(XMLRPCUtils.safeGetMapValue(commentMap, "author", ""));
+        comment.setAuthorName(StringEscapeUtils.unescapeHtml4(XMLRPCUtils.safeGetMapValue(commentMap, "author", "")));
         comment.setAuthorEmail(XMLRPCUtils.safeGetMapValue(commentMap, "author_email", ""));
         // TODO: comment.setAuthorProfileImageUrl(); - get the hash from the email address?
 
         // Post
         comment.setRemotePostId(XMLRPCUtils.safeGetMapValue(commentMap, "post_id", 0L));
-        comment.setPostTitle(XMLRPCUtils.safeGetMapValue(commentMap, "post_title", ""));
+        comment.setPostTitle(StringEscapeUtils.unescapeHtml4(XMLRPCUtils.safeGetMapValue(commentMap, "post_title", "")));
 
         return comment;
     }
