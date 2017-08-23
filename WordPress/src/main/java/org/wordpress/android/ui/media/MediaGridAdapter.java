@@ -180,10 +180,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.VISIBLE);
             if (isLocalFile) {
-                Bitmap thumb = ThumbnailUtils.createVideoThumbnail(media.getFilePath(),
-                        MediaStore.Images.Thumbnails.MINI_KIND);
-                holder.imageView.setImageUrl(null, WPNetworkImageView.ImageType.NONE);
-                holder.imageView.setImageBitmap(thumb);
+                loadLocalVideoThumbnail(media.getFilePath(), holder.imageView);
             } else {
                 holder.imageView.setImageUrl(media.getThumbnailUrl(), WPNetworkImageView.ImageType.VIDEO);
             }
@@ -454,6 +451,38 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 AppLog.e(AppLog.T.MEDIA, e);
             }
         }
+    }
+
+    private void loadLocalVideoThumbnail(final String filePath, final WPNetworkImageView imageView) {
+        Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
+            return;
+        }
+
+        imageView.setImageUrl(null, WPNetworkImageView.ImageType.NONE);
+        imageView.setTag(filePath);
+
+        new Thread() {
+            @Override
+            public void run() {
+                final Bitmap thumb = ThumbnailUtils.createVideoThumbnail(filePath,
+                        MediaStore.Images.Thumbnails.MINI_KIND);
+                if (thumb != null) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            WordPress.getBitmapCache().put(filePath, thumb);
+                            if (imageView.getTag() instanceof String
+                                    && ((String) imageView.getTag()).equalsIgnoreCase(filePath)) {
+
+                                imageView.setImageBitmap(thumb);
+                            }
+                        }
+                    });
+                }
+            }
+        }.start();
     }
 
     public boolean isEmpty() {
