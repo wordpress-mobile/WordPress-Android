@@ -564,7 +564,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             // TODO: right now only images & videos are supported
             String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
             if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
-                MediaPreviewActivity.showPreview(this, sourceView, mSite, localMediaId);
+                if (media.getUploadState() != null &&
+                        MediaUtils.isLocalFile(media.getUploadState().toLowerCase())) {
+                    // Show the simple preview in case of uploading items. i.e: No metadata info, and other options only available
+                    // for files already on the remote site.
+                    MediaPreviewActivity.showPreview(this, sourceView, media.getFilePath(), mimeType.startsWith("video"));
+                } else {
+                    MediaPreviewActivity.showPreview(this, sourceView, mSite, localMediaId);
+                }
             }
         }
     }
