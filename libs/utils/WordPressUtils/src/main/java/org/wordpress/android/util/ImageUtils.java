@@ -453,7 +453,7 @@ public class ImageUtils {
         }
 
         // Resize the bitmap to exact size: calculate exact scale in order to resize accurately
-        float scaleBy = getScaleImageBy(maxSize, bmpResized, isPortrait);
+        float scaleBy = getScaleImageBy(maxSize, bmpResized);
 
         Matrix matrix = new Matrix();
         matrix.postScale(scaleBy, scaleBy);
@@ -871,13 +871,8 @@ public class ImageUtils {
         return null;
     }
 
-    private static float getScaleImageBy(float maxSize, Bitmap bmpResized, boolean isPortrait) {
-        int divideBy;
-        if (isPortrait) {
-            divideBy = bmpResized.getHeight();
-        } else {
-            divideBy = bmpResized.getWidth();
-        }
+    private static float getScaleImageBy(float maxSize, Bitmap bmpResized) {
+        int divideBy = Math.max(bmpResized.getHeight(), bmpResized.getWidth());
         float percentage = maxSize / divideBy;
 
         float proportionateHeight = bmpResized.getHeight() * percentage;
