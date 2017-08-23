@@ -665,9 +665,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     public void deleteMedia(final ArrayList<Integer> ids) {
-        Set<String> sanitizedIds = new HashSet<>(ids.size());
-
         final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
+        int processedItemCount = 0;
         // Make sure there are no media in "uploading"
         for (int currentId : ids) {
             MediaModel mediaModel = mMediaStore.getMediaWithLocalId(currentId);
@@ -675,26 +674,30 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 continue;
             }
 
-            if (WPMediaUtils.canDeleteMedia(mediaModel)) {
+            // only able to delete items that are not being uploaded for a post
+            // i.e. standalone uploading items can be deleted, but items inserted in a Post can't
+            if (!UploadService.isMediaBeingUploadedForAPost(mediaModel)) {
+
+                // if uploading, first issue a cancel upload command
+                if (UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
+                    MediaStore.CancelMediaPayload payload = new MediaStore.CancelMediaPayload(mSite, mediaModel, false);
+                    mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+                }
+
                 if (mediaModel.getUploadState() != null &&
                         MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
                     mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
-                    sanitizedIds.add(String.valueOf(currentId));
-                    continue;
+                } else {
+                    mediaToDelete.add(mediaModel);
+                    mediaModel.setUploadState(MediaUploadState.DELETING);
+                    mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
                 }
-                mediaToDelete.add(mediaModel);
-                mediaModel.setUploadState(MediaUploadState.DELETING);
-                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
-                sanitizedIds.add(String.valueOf(currentId));
+                processedItemCount++;
             }
         }
 
-        if (sanitizedIds.size() != ids.size()) {
-            if (ids.size() == 1) {
-                ToastUtils.showToast(this, R.string.wait_until_upload_completes, ToastUtils.Duration.LONG);
-            } else {
-                ToastUtils.showToast(this, R.string.cannot_delete_multi_media_items, ToastUtils.Duration.LONG);
-            }
+        if (processedItemCount != ids.size()) {
+            ToastUtils.showToast(this, R.string.cannot_delete_some_multi_media_items, ToastUtils.Duration.LONG);
         }
 
         // mark items for delete without actually deleting items yet,

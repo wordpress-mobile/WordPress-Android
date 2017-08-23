@@ -188,8 +188,7 @@
     <!-- Delete Media -->
     <string name="confirm_delete_media">Delete selected item?</string>
     <string name="confirm_delete_multi_media">Delete selected items?</string>
-    <string name="wait_until_upload_completes">Wait until upload completes</string>
-    <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
+    <string name="cannot_delete_some_multi_media_items">Some media can\'t be deleted at this time. Wait until upload completes, or try deleting it from within the associated Post.</string>
     <string name="media_empty_list">No media</string>
     <string name="media_empty_image_list">You don\'t have any images</string>
     <string name="media_empty_videos_list">You don\'t have any videos</string>
