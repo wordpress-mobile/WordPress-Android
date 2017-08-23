@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts.login;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -13,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -278,28 +276,8 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
     private void requestAccountsPermission() {
         // Request accounts permission to get emails for Google login.
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-            // Show explanation for permission then permission request dialog.
-            if (shouldShowRequestPermissionRationale(Manifest.permission.GET_ACCOUNTS)) {
-                // Show permission request dialog.
-                DialogInterface.OnDismissListener dialogDismissListener = new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, REQUEST_PERMISSIONS_GET_ACCOUNTS);
-                    }
-                };
-
-                // Show explanation for permission.
-                new AlertDialog.Builder(getContext())
-                        .setTitle(getResources().getString(R.string.dialog_permissions_accounts_title))
-                        .setMessage(getResources().getString(R.string.dialog_permissions_accounts_message))
-                        .setPositiveButton(R.string.dialog_permissions_accounts_positive, null)
-                        .setOnDismissListener(dialogDismissListener)
-                        .show();
-            // Show permission request dialog.
-            } else {
-                isShowingDialog = true;
-                requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, REQUEST_PERMISSIONS_GET_ACCOUNTS);
-            }
+            isShowingDialog = true;
+            requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, REQUEST_PERMISSIONS_GET_ACCOUNTS);
         // Connect Google API client.
         } else {
             connectGoogleClient();

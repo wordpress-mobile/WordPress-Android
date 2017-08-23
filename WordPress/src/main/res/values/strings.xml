@@ -1902,8 +1902,5 @@
     <string name="login_third_party_button">Try again</string>
     <string name="login_third_party_description">Checking page illustration</string>
     <string name="login_third_party_label">Waiting for Google login to complete&#8230;</string>
-    <string name="dialog_permissions_accounts_message">WordPress would like to access your contacts to use Google login.</string>
-    <string name="dialog_permissions_accounts_positive">OK</string>
-    <string name="dialog_permissions_accounts_title">Permissions</string>
 
 </resources>
