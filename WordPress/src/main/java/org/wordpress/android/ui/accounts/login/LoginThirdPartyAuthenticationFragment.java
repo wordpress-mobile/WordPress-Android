@@ -151,7 +151,7 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
         // Configure sign-in to request user's ID, basic profile, email address, and ID token.
         // ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestServerAuthCode(getString(R.string.default_web_client_id), false)
+                .requestServerAuthCode(getString(R.string.default_web_client_id))
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestProfile()
                 .requestEmail()
