@@ -75,7 +75,6 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
-import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -177,10 +176,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         // if media was shared add it to the library
         handleSharedMedia();
-
-        if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
-            SmartToast.show(this, SmartToast.SmartToastType.WP_MEDIA_BROWSER_LONG_PRESS);
-        }
 
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         setupTabs();
