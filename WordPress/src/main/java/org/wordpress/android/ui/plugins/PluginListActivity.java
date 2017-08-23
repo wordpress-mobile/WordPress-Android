@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginInfoChanged;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginsChanged;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -43,6 +44,7 @@ import javax.inject.Inject;
 
 public class PluginListActivity extends AppCompatActivity {
     private SiteModel mSite;
+    private RecyclerView mRecyclerView;
     private PluginListAdapter mAdapter;
     private ProgressBar mProgressBar;
 
@@ -102,14 +104,14 @@ public class PluginListActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.plugins_recycler_view);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+        mRecyclerView = (RecyclerView) findViewById(R.id.plugins_recycler_view);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 DividerItemDecoration.VERTICAL_LIST);
-        recyclerView.addItemDecoration(dividerItemDecoration);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
         mAdapter = new PluginListAdapter(this);
-        recyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
         mProgressBar = (ProgressBar) findViewById(R.id.plugin_progress_bar);
 
@@ -143,7 +145,7 @@ public class PluginListActivity extends AppCompatActivity {
         }
     }
 
-    private class PluginListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class PluginListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
         private List<PluginModel> mPlugins;
 
         private final LayoutInflater mLayoutInflater;
@@ -172,6 +174,7 @@ public class PluginListActivity extends AppCompatActivity {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = mLayoutInflater.inflate(R.layout.plugin_list_row, parent, false);
+            view.setOnClickListener(this);
             return new PluginViewHolder(view);
         }
 
@@ -202,6 +205,13 @@ public class PluginListActivity extends AppCompatActivity {
                 }
             }
             return -1;
+        }
+
+        @Override
+        public void onClick(View view) {
+            int itemPosition = mRecyclerView.getChildLayoutPosition(view);
+            PluginModel plugin = getItem(itemPosition);
+            ActivityLauncher.viewPluginDetail(PluginListActivity.this, mSite, plugin);
         }
 
         private class PluginViewHolder extends RecyclerView.ViewHolder {

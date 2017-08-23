@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.store.PluginStore;
 import javax.inject.Inject;
 
 public class PluginDetailActivity extends AppCompatActivity {
+    public static final String KEY_PLUGIN_NAME = "KEY_PLUGIN_NAME";
+
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
 
