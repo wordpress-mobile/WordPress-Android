@@ -1,16 +1,12 @@
 package org.wordpress.android.ui.accounts.login;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,9 +32,7 @@ import org.wordpress.android.util.AppLog;
 import static android.app.Activity.RESULT_OK;
 
 public class LoginThirdPartyAuthenticationFragment extends Fragment
-        implements ActivityCompat.OnRequestPermissionsResultCallback,
-                   GoogleApiClient.ConnectionCallbacks,
-                   GoogleApiClient.OnConnectionFailedListener {
+        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
     private LoginListener mLoginListener;
@@ -50,7 +44,6 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
     private static final String STATE_SHOWING_DIALOG = "STATE_SHOWING_DIALOG";
     private static final int REQUEST_CONNECT = 1000;
     private static final int REQUEST_LOGIN = 1001;
-    private static final int REQUEST_PERMISSIONS_GET_ACCOUNTS = 9000;
 
     public static final String TAG = "login_third_party_authentication_fragment_tag";
 
@@ -171,7 +164,7 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
 
         // Request account permission and start login process.
         if (!isShowingDialog) {
-            requestAccountsPermission();
+            connectGoogleClient();
         }
     }
 
@@ -189,7 +182,7 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
             @Override
             public void onClick(View view) {
                 if (!isResolvingError) {
-                    requestAccountsPermission();
+                    connectGoogleClient();
                 }
             }
         });
@@ -217,22 +210,6 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
         }
 
         return false;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int request, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(request, permissions, grantResults);
-
-        switch (request) {
-            case REQUEST_PERMISSIONS_GET_ACCOUNTS:
-                isShowingDialog = false;
-
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    connectGoogleClient();
-                }
-
-                break;
-        }
     }
 
     @Override
@@ -270,17 +247,6 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
         if (mGoogleApiClient.isConnected()) {
             Auth.GoogleSignInApi.signOut(mGoogleApiClient);
             mGoogleApiClient.disconnect();
-        }
-    }
-
-    private void requestAccountsPermission() {
-        // Request accounts permission to get emails for Google login.
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-            isShowingDialog = true;
-            requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, REQUEST_PERMISSIONS_GET_ACCOUNTS);
-        // Connect Google API client.
-        } else {
-            connectGoogleClient();
         }
     }
 
