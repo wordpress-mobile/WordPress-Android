@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-24 14:43:56+0000
+Translation-Revision-Date: 2017-08-02 07:42:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="login_epilogue_mysites_other">Mina webbplatser</string>
+	<string name="login_epilogue_mysites_one">Min webbplats</string>
+	<string name="login_logged_in_as">Inloggad som</string>
+	<string name="login_email_client_not_found">Lyckas inte hitta ditt e-postprogram</string>
+	<string name="login_empty_2fa">Skriv in en verifieringskod</string>
+	<string name="login_empty_username">Skriv in ett användarnamn</string>
+	<string name="login_empty_site_url">Skriv in en webbplatadress</string>
+	<string name="login_log_in_for_deeplink">Logga in till ditt konto på WordPress.com för att nå inlägget.</string>
+	<string name="login_error_while_adding_site">Ett fel inträffade när webbplatsen skulle läggas till. Felkod: %s</string>
+	<string name="login_checking_site_address">Webbplatsadressen kontrolleras</string>
+	<string name="login_site_address_more_help">Behöver du mer hjälp?</string>
+	<string name="login_site_address_help_content">Din webbplatsadress visas i fältet längst upp när du besöker din webbplats i Chrome.</string>
+	<string name="login_site_address_help_title">Vilket webbplatsadress har jag?</string>
+	<string name="login_site_address_help">Behöver du hjälp att hitta din webbplatsadress?</string>
+	<string name="login_site_address">Webbplatsadress</string>
+	<string name="enter_site_address">Skriv in adressen för den WordPress-webbplats du vill ansluta.</string>
+	<string name="login_username_at">\@%s</string>
+	<string name="login_already_logged_in_wpcom">Redan inloggad på WordPress.com</string>
+	<string name="login_continue">Fortsätt</string>
+	<string name="connect_more">Anslut ytterligare webbplats</string>
+	<string name="enter_wpcom_password">Skriv in ditt lösenord för WordPress.com.</string>
+	<string name="login_magic_link_email_requesting">Begär e-postadress för inloggning</string>
+	<string name="login_magic_links_sent_description">Illustration för att magisk länk har skickats</string>
+	<string name="login_magic_links_sent_label">Din magiska länk är på väg! Kolla e-posten på din enhet och knacka på länken i e-postmeddelandet du just fick från WordPress.com</string>
+	<string name="login_magic_links_label">Vi skickar en magisk länk som låter dig logga in direkt, utan något lösenord. Slut på pekfingervalsandet!</string>
+	<string name="login_error_while_checking_email">Ett fel inträffade när e-postadressen skulle kontrolleras!</string>
+	<string name="password_incorrect">Det verkar som om ditt lösenord inte stämmer. Dubbelkolla dina uppgifer och försök igen.</string>
+	<string name="email_not_registered_wpcom">Denna e-postadress finns inte registrerad på WordPress.com</string>
+	<string name="requesting_otp">Begär en verifieringskod via SMS.</string>
+	<string name="login_text_otp">Skicka mig en kod via SMS istället.</string>
+	<string name="enter_verification_code">Nästan klart! Skriv in verifieringskoden från din Authenticator-app.</string>
+	<string name="enter_the_address_of_your_wordpress_site">Skriv in adressen till din WordPress-webbplats</string>
+	<string name="enter_username_instead">Logga in med användarnamn istället.</string>
+	<string name="enter_site_address_instead">Logga in till din webbplats genom att ange din webbplatsadress istället.</string>
+	<string name="open_mail">Öppna e-posten</string>
+	<string name="next">Nästa</string>
+	<string name="enter_email_wordpress_com">Logga in på WordPress.com med hjälp av en e-postadress för att hantera alla dina WordPress-webbplatser.</string>
+	<string name="login_promo_text_jetpack">Hantera din Jetpack-förstärkta webbplats när som helst – WordPress finns i din ficka.</string>
+	<string name="login_promo_text_notifications">Dina notifieringar följer alltid med dig – ha koll på kommentarer och gillanden i realtid.</string>
+	<string name="login_promo_text_anytime">Håll koll på dina favoritwebbplatser och delta i diskussion där och när det passar dig.</string>
+	<string name="login_promo_text_realtime">Se hur läsare från hela världen läser och interagerar med din webbplats – i direktsändning.</string>
+	<string name="login_promo_text_onthego">Publicera från parkbänken. Blogga från bussen. Kommentera när du dricker kaffe. WordPress finns där du är.</string>
+	<string name="create_wordpress_site">Skapa WordPress-webbplats</string>
+	<string name="email_not_found">Vi kunde inte hitta någon användare på WordPress.com med den e-postadressen</string>
+	<string name="login_password_image">Ikon för inloggings-lösenord</string>
+	<string name="login_username_image">Ikon för inloggningsnamn</string>
+	<string name="login_site_address_help_image">Bild som visar var webbplatsadressen syns</string>
+	<string name="login_globe_icon">Glob-ikon för webbplatsadress</string>
+	<string name="login_email_image">Ikon för e-postadress för inloggning</string>
 	<string name="image_optimization_promo_desc">Bildoptimering minskar storleken på blder för snabbare uppladdning.\n\nDu kan när som helst ändra detta i webbplatsinställningarna.</string>
 	<string name="image_optimization_promo_title">Aktivera bildoptimering?</string>
 	<string name="leave_off">Behåll avstängt</string>
@@ -217,14 +266,11 @@ Language: sv_SE
 	<string name="error_fetch_site_after_creation">Webbplatsen har skapats, du kan behöva uppdatera din webbplatslista i listan för val av webbplats.</string>
 	<string name="error_upload_params">Fel vid uppladdning av %1$s: %2$s</string>
 	<string name="submit_for_review">Skicka</string>
-	<string name="role_subscriber">Prenumerant</string>
 	<string name="tell_me_more">Jag vill veta mer</string>
 	<string name="duplicate_site_detected">En dublett-webbplats har hittats.</string>
 	<string name="cannot_add_duplicate_site">Det går inte att lägga till denna webbplats. Den finns redan i appen.</string>
 	<string name="already_logged_in_wpcom_same_username">Du är redan inloggad till ditt konto på WordPress.com. Din webbplats bör synas i listan för val av webbplatser, se till att den inte är dold.</string>
 	<string name="already_logged_in_wpcom">Du är redan inloggad till ditt konto hos WordPress.com. Du kan inte lägga till någon webbplats från WordPress.com som är kopplad till ett annat konto.</string>
-	<string name="migration_error_not_connected">Migreringen misslyckades: försök att starta appen när du har nätverksanslutning.</string>
-	<string name="migration_message">WordPress-appen uppdateras ...</string>
 	<string name="checking_username">Användarnamnet kontrolleras</string>
 	<string name="jetpack_different_com_account">Det finns inte stöd för att ha samtidigt ha Jetpack-webbplatser som hör till olika konton på WordPress.com</string>
 	<string name="jetpack_use_com_account">För att lägga till din Jetpack-webbplats behöver du logga in till det konto på WordPress.com du använde när du anslöt Jetpack.</string>
@@ -303,10 +349,6 @@ Language: sv_SE
 	<string name="timespan_now">nu</string>
 	<string name="role_viewer">Läsare</string>
 	<string name="role_follower">Prenumerant</string>
-	<string name="role_contributor">Medarbetare</string>
-	<string name="role_author">Författare</string>
-	<string name="role_editor">Redaktör</string>
-	<string name="role_admin">Administratör</string>
 	<string name="error_post_my_profile_no_connection">Ingen nätverksanslutning, kunde inte spara din profil</string>
 	<string name="alignment_right">Höger</string>
 	<string name="alignment_left">Vänster</string>
@@ -1298,6 +1340,7 @@ Language: sv_SE
 	<string name="publish_date">Publicera</string>
 	<string name="post_content">Innehåll (knacka för att lägga till text och media)</string>
 	<string name="incorrect_credentials">Felaktigt användarnamn eller lösenord.</string>
+	<string name="log_in">Logga in</string>
 	<string name="username">Användarnamn</string>
 	<string name="password">Lösenord</string>
 	<string name="reader">Läsare</string>

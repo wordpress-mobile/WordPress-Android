@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-26 12:08:58+0000
+Translation-Revision-Date: 2017-08-03 12:18:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+	<string name="login_epilogue_mysites_other">Mis sitios</string>
+	<string name="login_epilogue_mysites_one">Mi sitio</string>
+	<string name="login_logged_in_as">Conectado como</string>
+	<string name="login_email_client_not_found">No se pudo detectar una aplicación cliente de correo electrónico</string>
+	<string name="login_empty_2fa">Por favor, introduce un código de verificación</string>
+	<string name="login_empty_username">Por favor, introduce un nombre de usuario</string>
+	<string name="login_empty_site_url">Por favor, introduce una dirección del sitio</string>
+	<string name="login_log_in_for_deeplink">Accede a WordPress.com para acceder a la entrada.</string>
+	<string name="login_error_while_adding_site">Error al añadir el sitio. Código de error: %s</string>
+	<string name="login_checking_site_address">Comprobando dirección del sitio</string>
+	<string name="login_site_address_more_help">¿Necesitas más ayuda?</string>
+	<string name="login_site_address_help_content">La dirección de tu sitio aparece en la barra de la parte superior de la pantalla cuando visitas tu sitio en Chrome.</string>
+	<string name="login_site_address_help_title">¿Cuál es la dirección de mi sitio?</string>
+	<string name="login_site_address_help">¿Necesitas ayuda para encontrar la dirección de tu sitio?</string>
+	<string name="login_site_address">Dirección del sitio</string>
+	<string name="enter_site_address">Introduce la dirección de tu sitio WordPress con el que te gustaría conectar.</string>
+	<string name="login_username_at">\@%s</string>
+	<string name="login_already_logged_in_wpcom">Ya estás conectado a WordPress.com</string>
+	<string name="login_continue">Seguir</string>
+	<string name="connect_more">Conectar otro sitio</string>
+	<string name="enter_wpcom_password">Introduce tu contraseña de WordPress.com</string>
+	<string name="login_magic_link_email_requesting">Solicitando el correo electrónico de acceso</string>
+	<string name="login_magic_links_sent_description">Ilustración enviada por enlace mágico</string>
+	<string name="login_magic_links_sent_label">¡Tu enlace mágico está en camino! Revisa tu correo electrónico en este dispositivo y pulsa el enlace que hay en el correo electrónico que has recibido de WordPress.com.</string>
+	<string name="login_magic_links_label">Te enviaremos por correo electrónico un enlace mágico que te conectará al instante, sin tener que introducir contraseña. ¡Caza y no picotees más!</string>
+	<string name="login_error_while_checking_email">¡Ocurrió un error al comprobar la dirección de correo electrónico!</string>
+	<string name="password_incorrect">Parece que esta contraseña es incorrecta. Por favor, vuelve a comprobar tu información e inténtalo de nuevo.</string>
+	<string name="email_not_registered_wpcom">Este correo electrónico no está registrado en WordPress.com</string>
+	<string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
+	<string name="login_text_otp">Envíame un código en texto en su lugar.</string>
+	<string name="enter_verification_code">¡Casi lo tenemos! Por favor, introduce un código de verificación desde tu aplicación Authenticator.</string>
+	<string name="enter_the_address_of_your_wordpress_site">Introduce la dirección de tu sitio WordPress</string>
+	<string name="enter_username_instead">Accede con tu nombre de usuario en su lugar.</string>
+	<string name="enter_site_address_instead">Accede a tu sitio introduciendo la dirección de tu sitio en su lugar.</string>
+	<string name="open_mail">Abrir correo electrónico</string>
+	<string name="next">Siguiente</string>
+	<string name="enter_email_wordpress_com">Accede a WordPress.com usando una dirección de correo electrónico para gestionar todos tus sitios WordPress.</string>
+	<string name="login_promo_text_jetpack">Gestiona tu sitio con Jetpack instalado sobre la marcha - tienes WordPress en tu bolsillo.</string>
+	<string name="login_promo_text_notifications">Tus avisos viajan contigo - ve los comentarios y "me gusta" a medida que ocurran.</string>
+	<string name="login_promo_text_anytime">Revisa tus sitios favoritos y únete a la conversación en cualquier sitio, en cualquier momento.</string>
+	<string name="login_promo_text_realtime">Observa a lectores de todo el mundo leyendo e interactuando con tu sitio - en tiempo real. </string>
+	<string name="login_promo_text_onthego">Publica desde el parque. Bloguea desde el autobús. Comenta desde el café. WordPress está donde tú vas.</string>
+	<string name="create_wordpress_site">Crear un sitio WordPress</string>
+	<string name="email_not_found">No hemos encontrado un usuario de WordPress.com con esa dirección de correo electrónico</string>
+	<string name="login_password_image">Icono de la contraseña de acceso</string>
+	<string name="login_username_image">Icono del usuario de acceso</string>
+	<string name="login_site_address_help_image">Imagen de posición de la dirección del sitio</string>
+	<string name="login_globe_icon">Icono del globo de la dirección del sitio</string>
+	<string name="login_email_image">Icono del correo electrónico de acceso</string>
 	<string name="image_optimization_promo_desc">La optimización de imagen reduce las imágenes para que suban más rápido.\n\nPuedes cambiar esto en cualquier momento en los ajustes del sitio.</string>
 	<string name="image_optimization_promo_title">¿Activar optimización de la imagen?</string>
 	<string name="leave_off">Detener</string>
@@ -217,14 +266,11 @@ Language: es
 	<string name="error_fetch_site_after_creation">El sitio ha sido creado, puede que necesite actualizar sus sitios en el selector de sitio.</string>
 	<string name="error_upload_params">Error durante la carga de %1$s: %2$s</string>
 	<string name="submit_for_review">Enviar</string>
-	<string name="role_subscriber">Suscriptor</string>
 	<string name="tell_me_more">Más información</string>
 	<string name="duplicate_site_detected">Se ha detectado un sitio duplicado.</string>
 	<string name="cannot_add_duplicate_site">Este sitio ya existe en la aplicación, no se puede Agregar.</string>
 	<string name="already_logged_in_wpcom_same_username">Ya estás conectado en tu cuenta de WordPress.com. Tu sitio aparecerá en el selector de sitio, asegúrese de que no está oculto.</string>
 	<string name="already_logged_in_wpcom">Ya estás registrado en una cuenta de WordPress.com, no se puede agregar un sitio de WordPress.com a otra cuenta.</string>
-	<string name="migration_error_not_connected">Falló el proceso de migración: trata de relanzar la app cuando \n       tengas una conexión de red.</string>
-	<string name="migration_message">Actualizando de la app de WordPress...</string>
 	<string name="checking_username">Comprobar Nombre de usuario</string>
 	<string name="jetpack_different_com_account">No se admiten sitios de Jetpack pertenecientes a diferentes cuentas de WordPress.com</string>
 	<string name="jetpack_use_com_account">Para agregar su sitio Jetpack, inicie sesión la cuenta de WordPress.com que utilizó para conectar Jetpack.</string>
@@ -303,10 +349,6 @@ Language: es
 	<string name="timespan_now">ahora</string>
 	<string name="role_viewer">Espectador</string>
 	<string name="role_follower">Seguidor</string>
-	<string name="role_contributor">Colaborador</string>
-	<string name="role_author">Autor</string>
-	<string name="role_editor">Editor</string>
-	<string name="role_admin">Administrador</string>
 	<string name="error_post_my_profile_no_connection">Sin conexión, no se pudo guardar tu perfil</string>
 	<string name="alignment_right">Derecha</string>
 	<string name="alignment_left">Izquierda</string>
@@ -1298,6 +1340,7 @@ Language: es
 	<string name="publish_date">Publicar</string>
 	<string name="post_content">Contenido (pulsa para añadir texto y multimedia)</string>
 	<string name="incorrect_credentials">Nombre de usuario o contraseña incorrecta</string>
+	<string name="log_in">Acceder</string>
 	<string name="username">Nombre de usuario</string>
 	<string name="password">Contraseña</string>
 	<string name="reader">Lector</string>

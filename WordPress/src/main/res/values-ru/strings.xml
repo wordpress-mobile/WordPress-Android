@@ -51,10 +51,6 @@ Language: ru
 	<string name="timespan_now">сейчас</string>
 	<string name="role_viewer">Обозреватель</string>
 	<string name="role_follower">Читатель</string>
-	<string name="role_contributor">Участник</string>
-	<string name="role_author">Автор</string>
-	<string name="role_editor">Редактор</string>
-	<string name="role_admin">Администратор</string>
 	<string name="error_post_my_profile_no_connection">Нет сети — не удалось сохранить профиль.</string>
 	<string name="alignment_right">Справа</string>
 	<string name="alignment_left">Слева</string>
@@ -1020,6 +1016,7 @@ Language: ru
 	<string name="publish_date">Опубликовано</string>
 	<string name="post_content">Содержимое (нажмите, чтобы добавить текст и медиа)</string>
 	<string name="incorrect_credentials">Неправильное имя или пароль.</string>
+	<string name="log_in">Войти</string>
 	<string name="username">Имя</string>
 	<string name="password">Пароль</string>
 	<string name="reader">Читать</string>

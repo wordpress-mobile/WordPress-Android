@@ -30,10 +30,21 @@ public class UploadUtils {
      * Returns a post-type specific error message string.
      */
     static @NonNull String getErrorMessage(Context context, PostModel post, String errorMessage, boolean isMediaError) {
-        String baseErrorString = context.getString(
-                isMediaError ? R.string.error_upload_post_media_params : R.string.error_upload_post_params);
-        String postType = context.getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
-        return String.format(baseErrorString, postType, errorMessage);
+        String baseErrorString;
+        if (post.isPage()) {
+            if (isMediaError) {
+                baseErrorString = context.getString(R.string.error_upload_page_media_params);
+            } else {
+                baseErrorString = context.getString(R.string.error_upload_page_params);
+            }
+        } else {
+            if (isMediaError) {
+                baseErrorString = context.getString(R.string.error_upload_post_media_params);
+            } else {
+                baseErrorString = context.getString(R.string.error_upload_post_params);
+            }
+        }
+        return String.format(baseErrorString, errorMessage);
     }
 
     /**
@@ -42,7 +53,7 @@ public class UploadUtils {
     public static @NonNull String getErrorMessageFromPostError(Context context, PostModel post, PostError error) {
         switch (error.type) {
             case UNKNOWN_POST:
-                return context.getString(R.string.error_unknown_post);
+                return post.isPage() ? context.getString(R.string.error_unknown_page_param) : context.getString(R.string.error_unknown_post_param);
             case UNKNOWN_POST_TYPE:
                 return context.getString(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
@@ -179,7 +190,8 @@ public class UploadUtils {
 
         // If the post is empty, don't publish
         if (!PostUtils.isPublishable(post)) {
-            ToastUtils.showToast(activity, R.string.error_publish_empty_post, ToastUtils.Duration.SHORT);
+            String message = activity.getString(post.isPage() ? R.string.error_publish_empty_page_param : R.string.error_publish_empty_post_param);
+            ToastUtils.showToast(activity, message, ToastUtils.Duration.SHORT);
             return;
         }
 
