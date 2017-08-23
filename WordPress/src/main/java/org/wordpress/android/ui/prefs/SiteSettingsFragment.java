@@ -1290,7 +1290,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
+    /**
+     * Verifies that a given string can correctly be interpreted as an IP address or an IP range.
+     */
     private boolean isValidIpOrRange(String entry) {
+        // empty strings are not valid
         if (TextUtils.isEmpty(entry)) {
             return false;
         }
@@ -1298,14 +1302,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         // remove whitespace
         entry = entry.trim();
         entry = entry.replaceAll(" ", "");
+
+        // if entry is a range it will be formatted as two IP addresses separated by a '-'
         String[] ipStrings = entry.split("-");
 
-        // should not be more than 2 IP address strings (IP range) in an entry
+        // entry is not well-formed if there are more than 2 ipStrings (a range) or no ipStrings
         if (ipStrings.length > 2 || ipStrings.length < 1) {
             return false;
         }
 
-        // if any IP string is invalid return false
+        // if any IP string is not a valid IP address then entry is not valid
         for (String ip : ipStrings) {
             if (!InetAddressUtils.isIPv4Address(ip)) {
                 return false;
