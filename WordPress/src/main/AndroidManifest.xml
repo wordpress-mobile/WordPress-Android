@@ -456,6 +456,10 @@
             android:label="@string/plugins"
             android:theme="@style/Calypso.NoActionBar"/>
 
+        <activity
+            android:name=".ui.plugins.PluginDetailActivity"
+            android:theme="@style/Calypso.NoActionBar"/>
+
         <!-- Me activities -->
         <activity
             android:name=".ui.prefs.MyProfileActivity"
