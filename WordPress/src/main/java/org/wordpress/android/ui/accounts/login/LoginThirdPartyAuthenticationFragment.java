@@ -24,9 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
@@ -155,7 +153,7 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestServerAuthCode(getString(R.string.default_web_client_id), false)
                 .requestIdToken(getString(R.string.default_web_client_id))
-                .requestScopes(new Scope(Scopes.PROFILE))
+                .requestProfile()
                 .requestEmail()
                 .build();
 
