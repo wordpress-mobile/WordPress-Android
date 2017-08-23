@@ -323,22 +323,32 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     }
 
     @Override
-    public void onSettingsUpdated(Exception error) {
-        if (!isAdded()) return;
-
-        if (error != null) {
+    public void onFetchError(Exception error) {
+        if (isAdded()) {
             ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
             getActivity().finish();
-        } else {
-            setPreferencesFromSiteSettings();
         }
     }
+
     @Override
-    public void onSettingsSaved(Exception error) {
-        if (isAdded() && error != null) {
+    public void onSaveError(Exception error) {
+        if (isAdded()) {
             ToastUtils.showToast(WordPress.getContext(), R.string.error_post_remote_site_settings);
         }
     }
+
+    @Override
+    public void onSettingsUpdated() {
+        if (isAdded()) {
+            setPreferencesFromSiteSettings();
+        }
+    }
+
+    @Override
+    public void onSettingsSaved() {
+        // no-op
+    }
+
     @Override
     public void onCredentialsValidated(Exception error) {
         // noop
