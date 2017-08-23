@@ -18,38 +18,24 @@ import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey;
 public class SmartToast {
 
     public enum SmartToastType {
-        WP_MEDIA_LONG_PRESS,
-        PHOTO_PICKER_LONG_PRESS,
-        COMMENTS_LONG_PRESS;
+        WP_MEDIA_LONG_PRESS
+                (UndeletablePrefKey.SMART_TOAST_WP_MEDIA_LONG_PRESS_USAGE_COUNTER,
+                        UndeletablePrefKey.SMART_TOAST_WP_MEDIA_LONG_PRESS_TOAST_COUNTER),
+        PHOTO_PICKER_LONG_PRESS
+                (UndeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_USAGE_COUNTER,
+                        UndeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_TOAST_COUNTER),
+        COMMENTS_LONG_PRESS
+                (UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
+                        UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER);
 
-        /*
-         * returns the preference key which stores the number of times the feature associated with the smart toast
-         * type has been used
-        */
-        private UndeletablePrefKey getUsageKey() {
-            switch (this) {
-                case COMMENTS_LONG_PRESS:
-                    return UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER;
-                case PHOTO_PICKER_LONG_PRESS:
-                    return UndeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_USAGE_COUNTER;
-                default: // WP_MEDIA_LONG_PRESS
-                    return UndeletablePrefKey.SMART_TOAST_WP_MEDIA_LONG_PRESS_USAGE_COUNTER;
-            }
-        }
+        // key which stores the number of times the feature associated with the smart toast has been used
+        private final UndeletablePrefKey usageKey;
+        // key which stores the number of times the toast associated with the smart toast type has been shown
+        private final UndeletablePrefKey shownKey;
 
-        /*
-         * returns the preference key which stores the number of times the toast associated with the smart toast type
-         * has been shown
-         */
-        private UndeletablePrefKey getShownKey() {
-            switch (this) {
-                case COMMENTS_LONG_PRESS:
-                    return UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER;
-                case PHOTO_PICKER_LONG_PRESS:
-                    return UndeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_TOAST_COUNTER;
-                default: // WP_MEDIA_LONG_PRESS
-                    return UndeletablePrefKey.SMART_TOAST_WP_MEDIA_LONG_PRESS_TOAST_COUNTER;
-            }
+        SmartToastType(@NonNull UndeletablePrefKey usageKey, @NonNull UndeletablePrefKey shownKey) {
+            this.usageKey = usageKey;
+            this.shownKey = shownKey;
         }
     }
 
@@ -58,15 +44,15 @@ public class SmartToast {
 
     public static boolean show(@NonNull Context context, @NonNull SmartToastType type) {
         // limit the number of times to show the toast
-        int numTimesShown = AppPrefs.getInt(type.getShownKey());
+        int numTimesShown = AppPrefs.getInt(type.shownKey);
         if (numTimesShown >= MAX_TIMES_TO_SHOW_TOAST) {
             return false;
         }
 
         // don't show the toast until the user has used this feature a few times
-        int numTypesFeatureUsed = AppPrefs.getInt(type.getUsageKey());
+        int numTypesFeatureUsed = AppPrefs.getInt(type.usageKey);
         numTypesFeatureUsed++;
-        AppPrefs.setInt(type.getUsageKey(), numTypesFeatureUsed);
+        AppPrefs.setInt(type.usageKey, numTypesFeatureUsed);
         if (numTypesFeatureUsed <= MIN_TIMES_TO_USE_FEATURE) {
             return false;
         }
@@ -98,7 +84,7 @@ public class SmartToast {
         toast.show();
 
         numTimesShown++;
-        AppPrefs.setInt(type.getShownKey(), numTimesShown);
+        AppPrefs.setInt(type.shownKey, numTimesShown);
         return true;
     }
 
@@ -108,6 +94,6 @@ public class SmartToast {
      * they can do it
      */
     public static void disableSmartToast(@NonNull SmartToastType type) {
-        AppPrefs.setInt(type.getShownKey(), MAX_TIMES_TO_SHOW_TOAST);
+        AppPrefs.setInt(type.shownKey, MAX_TIMES_TO_SHOW_TOAST);
     }
 }
