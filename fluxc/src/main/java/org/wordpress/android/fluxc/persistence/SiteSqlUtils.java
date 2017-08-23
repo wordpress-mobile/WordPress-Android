@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.wellsql.generated.AccountModelTable;
 import com.wellsql.generated.PostFormatModelTable;
+import com.wellsql.generated.RoleModelTable;
 import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
@@ -13,6 +14,7 @@ import com.yarolegovich.wellsql.mapper.InsertMapper;
 
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
+import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -252,6 +254,26 @@ public class SiteSqlUtils {
             postFormat.setSiteId(site.getId());
         }
         WellSql.insert(postFormats).execute();
+    }
+
+    public static List<RoleModel> getUserRoles(@NonNull SiteModel site) {
+        return WellSql.select(RoleModel.class)
+                .where()
+                .equals(RoleModelTable.SITE_ID, site.getId())
+                .endWhere().getAsModel();
+    }
+
+    public static void insertOrReplaceUserRoles(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
+        // Remove previous roles for this site
+        WellSql.delete(RoleModel.class)
+                .where()
+                .equals(RoleModelTable.SITE_ID, site.getId())
+                .endWhere().execute();
+        // Insert new user roles for this site
+        for (RoleModel role : roles) {
+            role.setSiteId(site.getId());
+        }
+        WellSql.insert(roles).execute();
     }
 
     /**
