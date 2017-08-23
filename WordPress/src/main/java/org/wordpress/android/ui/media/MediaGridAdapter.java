@@ -475,7 +475,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                             WordPress.getBitmapCache().put(filePath, thumb);
                             if (imageView.getTag() instanceof String
                                     && ((String) imageView.getTag()).equalsIgnoreCase(filePath)) {
-
                                 imageView.setImageBitmap(thumb);
                             }
                         }
