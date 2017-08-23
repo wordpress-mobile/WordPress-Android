@@ -28,6 +28,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.wordpress.android.fluxc.plugin.PluginTestUtils.generatePluginInfo;
 import static org.wordpress.android.fluxc.plugin.PluginTestUtils.generatePlugins;
+import static org.wordpress.android.fluxc.plugin.PluginTestUtils.generatePlugin;
 
 @RunWith(RobolectricTestRunner.class)
 public class PluginStoreUnitTest {
@@ -65,5 +66,16 @@ public class PluginStoreUnitTest {
         PluginSqlUtils.insertOrUpdatePluginInfo(generatePluginInfo(slug));
         PluginInfoModel pluginInfo = mPluginStore.getPluginInfoBySlug(slug);
         assertEquals(slug, pluginInfo.getSlug());
+    }
+
+    @Test
+    public void testGetPlugin() throws DuplicateSiteException {
+        SiteModel site = SiteUtils.generateJetpackSiteOverRestOnly();
+        SiteSqlUtils.insertOrUpdateSite(site);
+
+        String name = "akismet/akismet";
+        PluginSqlUtils.insertOrUpdatePlugin(site, generatePlugin(name));
+        PluginModel plugin = mPluginStore.getPluginByName(site, name);
+        assertEquals(name, plugin.getName());
     }
 }
