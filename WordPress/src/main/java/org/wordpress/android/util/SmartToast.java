@@ -18,12 +18,9 @@ import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey;
 public class SmartToast {
 
     public enum SmartToastType {
-        WP_MEDIA_LONG_PRESS
-                (UndeletablePrefKey.SMART_TOAST_WP_MEDIA_LONG_PRESS_USAGE_COUNTER,
-                        UndeletablePrefKey.SMART_TOAST_WP_MEDIA_LONG_PRESS_TOAST_COUNTER),
-        PHOTO_PICKER_LONG_PRESS
-                (UndeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_USAGE_COUNTER,
-                        UndeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_TOAST_COUNTER),
+        MEDIA_LONG_PRESS
+                (UndeletablePrefKey.SMART_TOAST_MEDIA_LONG_PRESS_USAGE_COUNTER,
+                        UndeletablePrefKey.SMART_TOAST_MEDIA_LONG_PRESS_TOAST_COUNTER),
         COMMENTS_LONG_PRESS
                 (UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
                         UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER);
@@ -57,18 +54,9 @@ public class SmartToast {
             return false;
         }
 
-        // if we're showing the toast explaining long press multiselect in the WP media library, disable showing the
-        // multiselect toast in the photo picker (and vice versa) since explaining one should explain the other
-        if (type == SmartToastType.WP_MEDIA_LONG_PRESS) {
-            disableSmartToast(SmartToastType.PHOTO_PICKER_LONG_PRESS);
-        } else if (type == SmartToastType.PHOTO_PICKER_LONG_PRESS) {
-            disableSmartToast(SmartToastType.WP_MEDIA_LONG_PRESS);
-        }
-
         int stringResId;
         switch (type) {
-            case WP_MEDIA_LONG_PRESS:
-            case PHOTO_PICKER_LONG_PRESS:
+            case MEDIA_LONG_PRESS:
                 stringResId = R.string.smart_toast_photo_long_press;
                 break;
             case COMMENTS_LONG_PRESS:
