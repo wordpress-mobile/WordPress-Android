@@ -48,6 +48,10 @@ public class WPMediaUtils {
         if (isVideo) {
             return null;
         }
+        if (!AppPrefs.isImageOptimize()) {
+            return null;
+        }
+        
         int resizeDimension = AppPrefs.getImageOptimizeMaxSize() > 1 ? AppPrefs.getImageOptimizeMaxSize() : Integer.MAX_VALUE;
         int quality = AppPrefs.getImageOptimizeQuality();
         // do not optimize if original-size and 100% quality are set.
@@ -80,8 +84,7 @@ public class WPMediaUtils {
     }
 
     public static boolean isVideoOptimizationAvailable() {
-        return org.wordpress.android.BuildConfig.VIDEO_OPTIMIZATION_AVAILABLE
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 
     public static boolean isVideoOptimizationEnabled() {
