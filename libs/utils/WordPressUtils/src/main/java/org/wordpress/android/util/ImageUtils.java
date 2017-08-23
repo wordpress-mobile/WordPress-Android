@@ -791,12 +791,7 @@ public class ImageUtils {
                 prefix = fileName;
             }
 
-            if (prefix.length() < 3) {
-                // prefix must be at least 3 characters
-                prefix = "wp-image";
-            }
-
-            rotatedImageFile = File.createTempFile(prefix, "." + fileExtension);
+            rotatedImageFile = File.createTempFile(prefix + "-rot", "." + fileExtension);
             out = new FileOutputStream(rotatedImageFile);
         } catch (IOException e) {
             AppLog.e(AppLog.T.MEDIA, "Failed to create the temp file on storage.");
