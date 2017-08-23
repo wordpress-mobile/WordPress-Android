@@ -643,7 +643,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         mSite.setName(mSiteSettings.getTitle());
-
         // Locally save the site
         mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
     }

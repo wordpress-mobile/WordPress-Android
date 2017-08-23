@@ -92,11 +92,6 @@ public abstract class SiteSettingsInterface {
     private static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
 
     /**
-     * Key used to access the sharing button style stored in {@link SharedPreferences}.
-     */
-    public static final String SHARING_BUTTON_STYLE_PREF_KEY = "site-settings-sharing-button-style-pref";
-
-    /**
      * Identifies an Ascending (oldest to newest) sort order.
      */
     static final int ASCENDING_SORT = 0;
