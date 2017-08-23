@@ -85,7 +85,7 @@ public class PluginRestClient extends BaseWPComRestClient {
     public void updatePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
         String name;
         try {
-            // We need to encode plugin name since for cases like "akismet/akismet" which would otherwise fail
+            // We need to encode plugin name otherwise names like "akismet/akismet" would fail
             name = URLEncoder.encode(plugin.getName(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             name = plugin.getName();
