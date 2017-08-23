@@ -185,6 +185,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mShowNewEditor;
 
     private List<String> mPendingVideoPressInfoRequests;
+    private List<String> mAztecBackspaceDeletedMediaItemIds = new ArrayList<>();
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -1289,6 +1290,9 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     finish();
                 }
+
+                definitelyDeleteBackspaceDeletedMediaItems();
+
             }
         }).start();
     }
@@ -2329,6 +2333,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
+            mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
             // passing false here as we need to keep the media item in case the user wants to undo
             cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
         }
@@ -2339,6 +2344,33 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mediaModel != null) {
             CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel, delete);
             mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+        }
+    }
+
+    /*
+    * When the user deletes a media item that was being uploaded at that moment, we only cancel the
+    * upload but keep the media item in FluxC DB because the user might have deleted it accidentally,
+    * and they can always UNDO the delete action in Aztec.
+    * So, when the user exits then editor (and thus we lose the undo/redo history) we are safe to
+    * physically delete from the FluxC DB those items that have been deleted by the user using backspace.
+    * */
+    private void definitelyDeleteBackspaceDeletedMediaItems() {
+        for (String mediaId : mAztecBackspaceDeletedMediaItemIds) {
+            if (!TextUtils.isEmpty(mediaId)) {
+                // make sure the MediaModel exists
+                MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
+                if (mediaModel == null) {
+                    continue;
+                }
+
+                // also make sure it's not being uploaded anywhere else (maybe on some other Post,
+                // simultaneously)
+                if (mediaModel.getUploadState() != null &&
+                        MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())
+                        && !UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
+                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
+                }
+            }
         }
     }
 
@@ -2365,6 +2397,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
             if (!found) {
                 if (mEditorFragment instanceof AztecEditorFragment) {
+                    mAztecBackspaceDeletedMediaItemIds.remove(mediaId);
                     ((AztecEditorFragment)mEditorFragment).setMediaToFailed(mediaId);
                 }
             }
