@@ -197,16 +197,18 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     private void toggleTwitterPreference() {
         if (!isAdded()) return;
 
-        View twitterCard = getView().findViewById(R.id.card_view_twitter);
-        for (int i = 0; i < mPublicizeButtons.size(); i++) {
-            PublicizeButton publicizeButton = mPublicizeButtons.get(i);
-            if (publicizeButton.getId().equals(TWITTER_ID) && publicizeButton.isEnabled()) {
-                twitterCard.setVisibility(View.VISIBLE);
-                return;
+        View view = getView();
+        if (view != null) {
+            View twitterCard = getView().findViewById(R.id.card_view_twitter);
+            for (int i = 0; i < mPublicizeButtons.size(); i++) {
+                PublicizeButton publicizeButton = mPublicizeButtons.get(i);
+                if (publicizeButton.getId().equals(TWITTER_ID) && publicizeButton.isEnabled()) {
+                    twitterCard.setVisibility(View.VISIBLE);
+                    return;
+                }
             }
+            twitterCard.setVisibility(View.GONE);
         }
-
-        twitterCard.setVisibility(View.GONE);
     }
 
     /*
@@ -351,7 +353,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
     @Override
     public void onCredentialsValidated(Exception error) {
-        // noop
+        // no-op
     }
 
     @Override
