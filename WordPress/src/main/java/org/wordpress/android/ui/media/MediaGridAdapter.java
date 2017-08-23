@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -174,10 +176,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             } else {
                 holder.imageView.setImageUrl(getBestImageUrl(media), WPNetworkImageView.ImageType.PHOTO);
             }
-        } else if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
+        } else if (media.isVideo()) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.VISIBLE);
-            holder.imageView.setImageUrl(media.getThumbnailUrl(), WPNetworkImageView.ImageType.VIDEO);
+            if (isLocalFile) {
+                Bitmap thumb = ThumbnailUtils.createVideoThumbnail(media.getFilePath(),
+                        MediaStore.Images.Thumbnails.MINI_KIND);
+                holder.imageView.setImageUrl(null, WPNetworkImageView.ImageType.NONE);
+                holder.imageView.setImageBitmap(thumb);
+            } else {
+                holder.imageView.setImageUrl(media.getThumbnailUrl(), WPNetworkImageView.ImageType.VIDEO);
+            }
         } else {
             // not an image or video, so show file name and file type
             holder.videoOverlayContainer.setVisibility(View.GONE);
