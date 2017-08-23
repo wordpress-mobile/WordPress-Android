@@ -19,7 +19,7 @@ import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -127,7 +127,7 @@ public class GCMMessageService extends GcmListenerService {
             HelpshiftHelper.getInstance().handlePush(this, new Intent().putExtras(data));
             return;
         }
-        
+
         if (!mAccountStore.hasAccessToken()) {
             return;
         }

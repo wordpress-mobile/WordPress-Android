@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats.models;
 
 import android.text.TextUtils;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
