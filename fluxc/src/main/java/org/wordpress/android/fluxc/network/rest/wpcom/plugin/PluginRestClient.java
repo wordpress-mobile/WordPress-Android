@@ -26,6 +26,8 @@ import org.wordpress.android.fluxc.store.PluginStore.UpdatePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatePluginErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedPluginPayload;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +83,14 @@ public class PluginRestClient extends BaseWPComRestClient {
     }
 
     public void updatePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(plugin.getName()).getUrlV1_1();
+        String name;
+        try {
+            // We need to encode plugin name since for cases like "akismet/akismet" which would otherwise fail
+            name = URLEncoder.encode(plugin.getName(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            name = plugin.getName();
+        }
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(name).getUrlV1_1();
         Map<String, Object> params = paramsFromPluginModel(plugin);
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, params,
                 PluginWPComRestResponse.class,
