@@ -429,11 +429,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // now check if the newcontent still has items marked as failed. If it does,
         // then hook this post up to our error list, so it can be queried by the Posts List later
         // and be shown properly to the user
-        if (AztecEditorFragment.hasMediaItemsMarkedFailed(this, newContent)) {
-            UploadService.markPostAsError(mPost);
-        } else {
-            UploadService.removeUploadErrorForPost(mPost);
-        }
+        updateUploadServiceErrorForPost(newContent);
 
         if (!TextUtils.isEmpty(oldContent) && newContent != null && oldContent.compareTo(newContent) != 0) {
             mPost.setContent(newContent);
@@ -445,6 +441,15 @@ public class EditPostActivity extends AppCompatActivity implements
             mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
     }
+
+    private void updateUploadServiceErrorForPost(String postContent) {
+        if (AztecEditorFragment.hasMediaItemsMarkedFailed(this, postContent)) {
+            UploadService.markPostAsError(mPost);
+        } else {
+            UploadService.removeUploadErrorForPost(mPost);
+        }
+    }
+
 
     private Runnable mAutoSave = new Runnable() {
         @Override
@@ -1262,6 +1267,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 saveResult(shouldSave && shouldSync, false);
 
+                definitelyDeleteBackspaceDeletedMediaItems();
+                updateUploadServiceErrorForPost(mPost.getContent());
+
                 if (shouldSave) {
                     if (isNewPost()) {
                         // new post - user just left the editor without publishing, they probably want
@@ -1290,9 +1298,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     finish();
                 }
-
-                definitelyDeleteBackspaceDeletedMediaItems();
-
             }
         }).start();
     }
