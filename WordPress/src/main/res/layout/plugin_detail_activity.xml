@@ -10,12 +10,15 @@
         layout="@layout/toolbar"/>
 
     <RelativeLayout
-        style="@style/PluginStateContainer"
-        android:layout_marginTop="@dimen/margin_medium">
+        style="@style/PluginStateContainer">
 
         <TextView
             style="@style/PluginStateTitle"
             android:text="@string/plugin_detail_label_state_active"/>
+
+        <Switch
+            android:id="@+id/plugin_state_active"
+            style="@style/PluginStateSwitch"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -24,6 +27,10 @@
         <TextView
             style="@style/PluginStateTitle"
             android:text="@string/plugin_detail_label_state_autoupdates"/>
+
+        <Switch
+            android:id="@+id/plugin_state_autoupdates"
+            style="@style/PluginStateSwitch"/>
     </RelativeLayout>
 
 </LinearLayout>
