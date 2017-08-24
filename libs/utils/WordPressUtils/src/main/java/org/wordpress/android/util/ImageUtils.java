@@ -552,15 +552,9 @@ public class ImageUtils {
 
         try {
             // try to re-use the same name as prefix of the temp file
-            String prefix;
-            int dotPos = fileName.indexOf('.');
-            if (dotPos > 0) {
-                prefix = fileName.substring(0, dotPos);
-            } else {
-                prefix = fileName;
-            }
+            String prefix = MediaUtils.getFileNameFromPath(fileName);
 
-            if (prefix.length() < 3) {
+            if (TextUtils.isEmpty(prefix) || prefix.length() < 3) {
                 // prefix must be at least 3 characters
                 prefix = "wp-image";
             }
@@ -797,15 +791,9 @@ public class ImageUtils {
 
         try {
             // try to re-use the same name as prefix of the temp file
-            String prefix;
-            int dotPos = fileName.indexOf('.');
-            if (dotPos > 0) {
-                prefix = fileName.substring(0, dotPos);
-            } else {
-                prefix = fileName;
-            }
+            String prefix = MediaUtils.getFileNameFromPath(fileName);
 
-            if (prefix.length() < 3) {
+            if (TextUtils.isEmpty(prefix) || prefix.length() < 3) {
                 // prefix must be at least 3 characters
                 prefix = "wp-image";
             }
@@ -851,7 +839,6 @@ public class ImageUtils {
 
         return null;
     }
-
 
     /**
      * This is a wrapper around MediaStore.Images.Thumbnails.getThumbnail that takes in consideration
