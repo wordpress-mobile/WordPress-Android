@@ -23,6 +23,16 @@ import javax.inject.Inject;
 
 public class PluginStore extends Store {
     // Payloads
+    public static class UpdatePluginPayload extends Payload {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public UpdatePluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+    }
+
     public static class FetchedPluginsPayload extends Payload {
         public SiteModel site;
         public List<PluginModel> plugins;
@@ -51,6 +61,21 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class UpdatedPluginPayload extends Payload {
+        public SiteModel site;
+        public PluginModel plugin;
+        public UpdatePluginError error;
+
+        public UpdatedPluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+
+        public UpdatedPluginPayload(SiteModel site, UpdatePluginError error) {
+            this.error = error;
+        }
+    }
+
     public static class FetchPluginsError implements OnChangedError {
         public FetchPluginsErrorType type;
         public String message;
@@ -72,6 +97,15 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class UpdatePluginError implements OnChangedError {
+        public UpdatePluginErrorType type;
+        public String message;
+
+        public UpdatePluginError(UpdatePluginErrorType type) {
+            this.type = type;
+        }
+    }
+
     public enum FetchPluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
@@ -80,6 +114,14 @@ public class PluginStore extends Store {
 
     public enum FetchPluginInfoErrorType {
         GENERIC_ERROR
+    }
+
+    public enum UpdatePluginErrorType {
+        GENERIC_ERROR,
+        UNAUTHORIZED,
+        ACTIVATION_ERROR, // plugin is already enabled
+        DEACTIVATION_ERROR, // plugin is already disabled
+        NOT_AVAILABLE // Return for non-jetpack sites
     }
 
     public static class OnPluginsChanged extends OnChanged<FetchPluginsError> {
@@ -91,6 +133,14 @@ public class PluginStore extends Store {
 
     public static class OnPluginInfoChanged extends OnChanged<FetchPluginInfoError> {
         public PluginInfoModel pluginInfo;
+    }
+
+    public static class OnPluginChanged extends OnChanged<UpdatePluginError> {
+        public SiteModel site;
+        public PluginModel plugin;
+        public OnPluginChanged(SiteModel site) {
+            this.site = site;
+        }
     }
 
     private final PluginRestClient mPluginRestClient;
@@ -122,17 +172,27 @@ public class PluginStore extends Store {
             case FETCH_PLUGIN_INFO:
                 fetchPluginInfo((String) action.getPayload());
                 break;
+            case UPDATE_PLUGIN:
+                updatePlugin((UpdatePluginPayload) action.getPayload());
+                break;
             case FETCHED_PLUGINS:
                 fetchedPlugins((FetchedPluginsPayload) action.getPayload());
                 break;
             case FETCHED_PLUGIN_INFO:
                 fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
                 break;
+            case UPDATED_PLUGIN:
+                updatedPlugin((UpdatedPluginPayload) action.getPayload());
+                break;
         }
     }
 
     public List<PluginModel> getPlugins(SiteModel site) {
         return PluginSqlUtils.getPlugins(site);
+    }
+
+    public PluginModel getPluginByName(SiteModel site, String name) {
+        return PluginSqlUtils.getPluginByName(site, name);
     }
 
     public PluginInfoModel getPluginInfoBySlug(String slug) {
@@ -153,6 +213,16 @@ public class PluginStore extends Store {
         mPluginWPOrgClient.fetchPluginInfo(plugin);
     }
 
+    private void updatePlugin(UpdatePluginPayload payload) {
+        if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
+            mPluginRestClient.updatePlugin(payload.site, payload.plugin);
+        } else {
+            UpdatePluginError error = new UpdatePluginError(UpdatePluginErrorType.NOT_AVAILABLE);
+            UpdatedPluginPayload errorPayload = new UpdatedPluginPayload(payload.site, error);
+            updatedPlugin(errorPayload);
+        }
+    }
+
     private void fetchedPlugins(FetchedPluginsPayload payload) {
         OnPluginsChanged event = new OnPluginsChanged(payload.site);
         if (payload.isError()) {
@@ -170,6 +240,18 @@ public class PluginStore extends Store {
         } else {
             event.pluginInfo = payload.pluginInfo;
             PluginSqlUtils.insertOrUpdatePluginInfo(payload.pluginInfo);
+        }
+        emitChange(event);
+    }
+
+    private void updatedPlugin(UpdatedPluginPayload payload) {
+        OnPluginChanged event = new OnPluginChanged(payload.site);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            payload.plugin.setLocalSiteId(payload.site.getId());
+            event.plugin = payload.plugin;
+            PluginSqlUtils.insertOrUpdatePlugin(payload.site, payload.plugin);
         }
         emitChange(event);
     }
