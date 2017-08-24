@@ -551,7 +551,21 @@ public class ImageUtils {
         FileOutputStream out;
 
         try {
-            resizedImageFile = File.createTempFile("wp-image-", "." + fileExtension);
+            // try to re-use the same name as prefix of the temp file
+            String prefix;
+            int dotPos = fileName.indexOf('.');
+            if (dotPos > 0) {
+                prefix = fileName.substring(0, dotPos);
+            } else {
+                prefix = fileName;
+            }
+
+            if (prefix.length() < 3) {
+                // prefix must be at least 3 characters
+                prefix = "wp-image";
+            }
+
+            resizedImageFile = File.createTempFile(prefix, "." + fileExtension);
             out = new FileOutputStream(resizedImageFile);
         } catch (IOException e) {
             AppLog.e(AppLog.T.MEDIA, "Failed to create the temp file on storage. Use the original picture instead.");
@@ -791,7 +805,12 @@ public class ImageUtils {
                 prefix = fileName;
             }
 
-            rotatedImageFile = File.createTempFile(prefix + "-rot", "." + fileExtension);
+            if (prefix.length() < 3) {
+                // prefix must be at least 3 characters
+                prefix = "wp-image";
+            }
+
+            rotatedImageFile = File.createTempFile(prefix, "." + fileExtension);
             out = new FileOutputStream(rotatedImageFile);
         } catch (IOException e) {
             AppLog.e(AppLog.T.MEDIA, "Failed to create the temp file on storage.");
