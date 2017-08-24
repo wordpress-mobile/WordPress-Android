@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
@@ -38,9 +37,9 @@ import javax.inject.Inject;
 
 public class CommentXMLRPCClient extends BaseXMLRPCClient {
     @Inject
-    public CommentXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
-                               UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
+    public CommentXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent,
+                               HTTPAuthManager httpAuthManager) {
+        super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     public void fetchComments(final SiteModel site, final int number, final int offset, CommentStatus status) {
