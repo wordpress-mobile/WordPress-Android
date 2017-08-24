@@ -2304,6 +2304,7 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
         if (media == null) {
             AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
+            ToastUtils.showToast(this, getString(R.string.cannot_retry_deleted_media_item));
             return;
         }
 
