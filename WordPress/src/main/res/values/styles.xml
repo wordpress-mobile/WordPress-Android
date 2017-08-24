@@ -632,4 +632,10 @@
         <item name="android:minHeight">8dip</item>
         <item name="android:maxHeight">8dip</item>
     </style>
+
+    <style name="PluginStateContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/margin_large</item>
+    </style>
 </resources>

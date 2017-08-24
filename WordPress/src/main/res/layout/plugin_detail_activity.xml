@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
+
+    <RelativeLayout
+        style="@style/PluginStateContainer"
+        android:layout_marginTop="@dimen/margin_medium">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/plugin_detail_label_state_active"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        style="@style/PluginStateContainer">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/plugin_detail_label_state_autoupdates"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"/>
+    </RelativeLayout>
+
+</LinearLayout>

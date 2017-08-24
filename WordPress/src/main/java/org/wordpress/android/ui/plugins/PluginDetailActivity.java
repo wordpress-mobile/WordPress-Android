@@ -24,6 +24,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
+        setContentView(R.layout.plugin_detail_activity);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
