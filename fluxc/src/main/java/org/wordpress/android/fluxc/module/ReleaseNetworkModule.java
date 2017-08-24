@@ -12,8 +12,9 @@ import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.OkHttpStack;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient;
+import org.wordpress.android.fluxc.network.discovery.DiscoveryXMLRPCClient;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
-import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
@@ -23,7 +24,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
-import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
@@ -83,23 +83,6 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public BaseXMLRPCClient provideBaseXMLRPCClient(Dispatcher dispatcher,
-                                                    @Named("custom-ssl") RequestQueue requestQueue,
-                                                    AccessToken token,
-                                                    UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        return new BaseXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
-    }
-
-    @Singleton
-    @Provides
-    public BaseWPAPIRestClient provideBaseWPAPIClient(Dispatcher dispatcher,
-                                                    @Named("custom-ssl") RequestQueue requestQueue,
-                                                    UserAgent userAgent) {
-        return new BaseWPAPIRestClient(dispatcher, requestQueue, userAgent);
-    }
-
-    @Singleton
-    @Provides
     public SiteRestClient provideSiteRestClient(Context appContext, Dispatcher dispatcher,
                                                 @Named("regular") RequestQueue requestQueue,
                                                 AppSecrets appSecrets,
@@ -111,9 +94,8 @@ public class ReleaseNetworkModule {
     @Provides
     public SiteXMLRPCClient provideSiteXMLRPCClient(Dispatcher dispatcher,
                                                     @Named("custom-ssl") RequestQueue requestQueue,
-                                                    AccessToken token,
                                                     UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        return new SiteXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
+        return new SiteXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     @Singleton
@@ -130,9 +112,8 @@ public class ReleaseNetworkModule {
     public MediaXMLRPCClient provideMediaXMLRPCClient(Dispatcher dispatcher,
                                                       @Named("custom-ssl") RequestQueue requestQueue,
                                                       @Named("custom-ssl") OkHttpClient okHttpClient,
-                                                      AccessToken token, UserAgent userAgent,
-                                                      HTTPAuthManager httpAuthManager) {
-        return new MediaXMLRPCClient(dispatcher, requestQueue, okHttpClient, token, userAgent, httpAuthManager);
+                                                      UserAgent userAgent, HTTPAuthManager httpAuthManager) {
+        return new MediaXMLRPCClient(dispatcher, requestQueue, okHttpClient, userAgent, httpAuthManager);
     }
 
     @Singleton
@@ -156,9 +137,8 @@ public class ReleaseNetworkModule {
     @Provides
     public PostXMLRPCClient providePostXMLRPCClient(Dispatcher dispatcher,
                                                     @Named("custom-ssl") RequestQueue requestQueue,
-                                                    AccessToken token,
                                                     UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        return new PostXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
+        return new PostXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     @Singleton
@@ -173,9 +153,8 @@ public class ReleaseNetworkModule {
     @Provides
     public CommentXMLRPCClient provideCommentXMLRPCClient(Dispatcher dispatcher,
                                                        @Named("custom-ssl") RequestQueue requestQueue,
-                                                       AccessToken token,
                                                        UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        return new CommentXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
+        return new CommentXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     @Singleton
@@ -190,17 +169,32 @@ public class ReleaseNetworkModule {
     @Provides
     public TaxonomyXMLRPCClient provideTaxonomyXMLRPCClient(Dispatcher dispatcher,
                                                             @Named("custom-ssl") RequestQueue requestQueue,
-                                                            AccessToken token,
                                                             UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        return new TaxonomyXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
+        return new TaxonomyXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager);
+    }
+
+    @Singleton
+    @Provides
+    public DiscoveryXMLRPCClient provideDiscoveryXMLRPCClient(Dispatcher dispatcher,
+                                                              @Named("custom-ssl") RequestQueue requestQueue,
+                                                              UserAgent userAgent, HTTPAuthManager httpAuthManager) {
+        return new DiscoveryXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager);
+    }
+
+    @Singleton
+    @Provides
+    public DiscoveryWPAPIRestClient provideDiscoveryWPAPIRestClient(Dispatcher dispatcher,
+                                                                    @Named("custom-ssl") RequestQueue requestQueue,
+                                                                    UserAgent userAgent) {
+        return new DiscoveryWPAPIRestClient(dispatcher, requestQueue, userAgent);
     }
 
     @Singleton
     @Provides
     public SelfHostedEndpointFinder provideSelfHostedEndpointFinder(Dispatcher dispatcher,
-                                                                    BaseXMLRPCClient baseXMLRPCClient,
-                                                                    BaseWPAPIRestClient baseWPAPIRestClient) {
-        return new SelfHostedEndpointFinder(dispatcher, baseXMLRPCClient, baseWPAPIRestClient);
+                                                                    DiscoveryXMLRPCClient discoveryXMLRPCClient,
+                                                                    DiscoveryWPAPIRestClient discoveryWPAPIRestClient) {
+        return new SelfHostedEndpointFinder(dispatcher, discoveryXMLRPCClient, discoveryWPAPIRestClient);
     }
 
     @Singleton

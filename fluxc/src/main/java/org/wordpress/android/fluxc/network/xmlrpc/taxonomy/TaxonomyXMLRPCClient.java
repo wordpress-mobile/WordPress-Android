@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermResponsePayload;
@@ -33,9 +32,9 @@ import java.util.List;
 import java.util.Map;
 
 public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
-    public TaxonomyXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
-                                UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
+    public TaxonomyXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent,
+                                HTTPAuthManager httpAuthManager) {
+        super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     public void fetchTerm(final TermModel term, final SiteModel site) {

@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.discovery.WPAPIHeadRequest;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 
-public class BaseWPAPIRestClient {
+public abstract class BaseWPAPIRestClient {
     private final RequestQueue mRequestQueue;
     private final Dispatcher mDispatcher;
     private UserAgent mUserAgent;
@@ -31,11 +31,11 @@ public class BaseWPAPIRestClient {
         };
     }
 
-    public Request add(WPAPIGsonRequest request) {
+    protected Request add(WPAPIGsonRequest request) {
         return mRequestQueue.add(setRequestAuthParams(request));
     }
 
-    public Request add(WPAPIHeadRequest request) {
+    protected Request add(WPAPIHeadRequest request) {
         return mRequestQueue.add(setRequestAuthParams(request));
     }
 
