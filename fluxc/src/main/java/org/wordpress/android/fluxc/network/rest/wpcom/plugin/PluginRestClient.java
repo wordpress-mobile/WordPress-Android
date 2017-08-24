@@ -22,9 +22,16 @@ import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResp
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginsError;
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginsErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginsPayload;
+import org.wordpress.android.fluxc.store.PluginStore.UpdatePluginError;
+import org.wordpress.android.fluxc.store.PluginStore.UpdatePluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.UpdatedPluginPayload;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -75,6 +82,53 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void updatePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
+        String name;
+        try {
+            // We need to encode plugin name otherwise names like "akismet/akismet" would fail
+            name = URLEncoder.encode(plugin.getName(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            name = plugin.getName();
+        }
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(name).getUrlV1_1();
+        Map<String, Object> params = paramsFromPluginModel(plugin);
+        final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, params,
+                PluginWPComRestResponse.class,
+                new Listener<PluginWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PluginWPComRestResponse response) {
+                        PluginModel pluginModel = pluginModelFromResponse(site, response);
+                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedPluginAction(
+                                new UpdatedPluginPayload(site, pluginModel)));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                        UpdatePluginError updatePluginError
+                                = new UpdatePluginError(UpdatePluginErrorType.GENERIC_ERROR);
+                        if (networkError instanceof WPComGsonNetworkError) {
+                            switch (((WPComGsonNetworkError) networkError).apiError) {
+                                case "unauthorized":
+                                    updatePluginError.type = UpdatePluginErrorType.UNAUTHORIZED;
+                                    break;
+                                case "activation_error":
+                                    updatePluginError.type = UpdatePluginErrorType.ACTIVATION_ERROR;
+                                    break;
+                                case "deactivation_error":
+                                    updatePluginError.type = UpdatePluginErrorType.DEACTIVATION_ERROR;
+                                    break;
+                            }
+                        }
+                        updatePluginError.message = networkError.message;
+                        UpdatedPluginPayload payload = new UpdatedPluginPayload(site, updatePluginError);
+                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedPluginAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
     private PluginModel pluginModelFromResponse(SiteModel siteModel, PluginWPComRestResponse response) {
         PluginModel pluginModel = new PluginModel();
         pluginModel.setLocalSiteId(siteModel.getId());
@@ -89,5 +143,12 @@ public class PluginRestClient extends BaseWPComRestClient {
         pluginModel.setSlug(response.slug);
         pluginModel.setVersion(response.version);
         return pluginModel;
+    }
+
+    private Map<String, Object> paramsFromPluginModel(PluginModel pluginModel) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("active", pluginModel.isActive());
+        params.put("autoupdate", pluginModel.isAutoUpdateEnabled());
+        return params;
     }
 }
