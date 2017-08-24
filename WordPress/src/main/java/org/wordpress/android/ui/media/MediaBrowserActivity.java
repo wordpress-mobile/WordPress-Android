@@ -689,8 +689,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
                 } else {
                     mediaToDelete.add(mediaModel);
-                    mediaModel.setUploadState(MediaUploadState.DELETING);
-                    mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
                 }
                 processedItemCount++;
             }
