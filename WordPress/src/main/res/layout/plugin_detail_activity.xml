@@ -14,7 +14,7 @@
         android:layout_marginTop="@dimen/margin_medium">
 
         <TextView
-            style="@style/PluginStateContainer.Title"
+            style="@style/PluginStateTitle"
             android:text="@string/plugin_detail_label_state_active"/>
     </RelativeLayout>
 
@@ -22,7 +22,7 @@
         style="@style/PluginStateContainer">
 
         <TextView
-            style="@style/PluginStateContainer.Title"
+            style="@style/PluginStateTitle"
             android:text="@string/plugin_detail_label_state_autoupdates"/>
     </RelativeLayout>
 
