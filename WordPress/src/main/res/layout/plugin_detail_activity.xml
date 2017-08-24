@@ -14,22 +14,16 @@
         android:layout_marginTop="@dimen/margin_medium">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/plugin_detail_label_state_active"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"/>
+            style="@style/PluginStateContainer.Title"
+            android:text="@string/plugin_detail_label_state_active"/>
     </RelativeLayout>
 
     <RelativeLayout
         style="@style/PluginStateContainer">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/plugin_detail_label_state_autoupdates"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"/>
+            style="@style/PluginStateContainer.Title"
+            android:text="@string/plugin_detail_label_state_autoupdates"/>
     </RelativeLayout>
 
 </LinearLayout>
