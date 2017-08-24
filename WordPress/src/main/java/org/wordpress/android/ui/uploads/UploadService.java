@@ -439,15 +439,15 @@ public class UploadService extends Service {
         return MediaUploadHandler.isPendingOrInProgressMediaUpload(media);
     }
 
-    public static boolean isMediaBeingUploadedForAPost(@NonNull MediaModel mediaToCheck) {
+    public static PostModel isMediaBeingUploadedForAPost(@NonNull MediaModel mediaToCheck) {
         for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
             for (MediaModel media : uploadingPost.pendingMedia) {
                 if (media.getId() == mediaToCheck.getId()) {
-                    return true;
+                    return uploadingPost.postModel;
                 }
             }
         }
-        return false;
+        return null;
     }
 
     /**
