@@ -49,3 +49,4 @@
 /sites/$siteUrl#String
 
 /users/new/
+/users/social/new
