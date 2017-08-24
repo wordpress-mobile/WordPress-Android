@@ -265,8 +265,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void loginViaThirdParty() {
-        LoginThirdPartyAuthenticationFragment loginloginThirdPartyAuthenticationFragment = new LoginThirdPartyAuthenticationFragment();
-        slideInFragment(loginloginThirdPartyAuthenticationFragment, true, LoginThirdPartyAuthenticationFragment.TAG);
+        LoginThirdPartyAuthenticationFragment loginThirdPartyAuthenticationFragment = new LoginThirdPartyAuthenticationFragment();
+        slideInFragment(loginThirdPartyAuthenticationFragment, true, LoginThirdPartyAuthenticationFragment.TAG);
     }
 
     @Override
