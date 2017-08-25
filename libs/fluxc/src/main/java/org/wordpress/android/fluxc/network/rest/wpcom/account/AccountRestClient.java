@@ -59,7 +59,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         public AccountPushSocialResponsePayload(BaseNetworkError error) {
             this.error = error;
         }
-        public Map<String, Object> settings;
+        public Map<String, Object> social;
     }
 
     public static class NewAccountResponsePayload extends Payload {
@@ -213,7 +213,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(Map<String, Object> response) {
                         AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(null);
-                        payload.settings = response;
+                        payload.social = response;
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 },
