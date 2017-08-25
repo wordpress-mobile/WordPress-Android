@@ -258,7 +258,7 @@ Language: it
 	<string name="people_dropdown_item_email_followers">Follower via email</string>
 	<string name="people_dropdown_item_followers">Follower</string>
 	<string name="people_dropdown_item_team">Team</string>
-	<string name="invite_message_usernames_limit">Invita fino a 10 indirizzi email e/o nome utente di WordPress.com. A coloro che non hanno un nome utente, saranno spedite le istruzioni su come crearne uno.</string>
+	<string name="invite_message_usernames_limit">Invita fino a 10 indirizzi email e/o nome utente di WordPress.com. A coloro che che non hanno un nome utente, saranno spedite le istruzioni su come crearne uno.</string>
 	<string name="viewer_remove_confirmation_message">Se rimuovi questo visitatore, lui o lei non avrà più la possibilità di visitare questo sito.\n\nVuoi ancora rimuovere questo visitatore?</string>
 	<string name="follower_remove_confirmation_message">Se rimosso, questo follower smetterà di ricevere notifiche da questo sito, a meno che non si iscriva di nuovo.\n\nVuoi ancora di rimuovere questo follower?</string>
 	<string name="follower_subscribed_since">Dal %1$s</string>
@@ -380,7 +380,7 @@ Language: it
 	<string name="delete_site_hint">Elimina il sito</string>
 	<string name="delete_site_summary">Questa azione è irreversibile. Cancellando il tuo sito rimuoverai tutti i contenuti, collaboratori, e domini.</string>
 	<string name="export_site_hint">Esporta il sito in un file XML</string>
-	<string name="export_site_summary">Se sei sicuro, esporta prima i contenuti perché non potranno più essere recuperati.</string>
+	<string name="export_site_summary">Se sei sicuro, esporta prima i contenuti perchè non potranno più essere recuperati.</string>
 	<string name="keep_your_content">Mantieni il tuo contenuto</string>
 	<string name="domain_removal_hint">I domini non funzioneranno più una volta che avrai rimosso il sito</string>
 	<string name="domain_removal_summary">Attenzione! Cancellando il sito rimuoverai anche i domini sottoelencati.</string>
