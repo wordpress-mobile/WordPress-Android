@@ -168,6 +168,13 @@ configurations.all {
     exclude group: 'org.wordpress', module: 'analytics'
 }
 
+task copyGoogleServicesExampleFile(type: Copy) {
+    from('.')
+    into('.')
+    include('google-services.json-example')
+    rename('google-services.json-example', 'google-services.json')
+}
+
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
     def inputFile = checkGradlePropertiesFile()
@@ -188,8 +195,8 @@ android.applicationVariants.all { variant ->
     variant.generateBuildConfig.dependsOn(generateCrashlyticsConfig)
 }
 
-// Add properties named "wp.xxx" to our BuildConfig
 android.buildTypes.all { buildType ->
+    // Add properties named "wp.xxx" to our BuildConfig
     def inputFile = checkGradlePropertiesFile()
     def properties = loadPropertiesFromFile(inputFile)
     properties.any { property ->
@@ -201,6 +208,11 @@ android.buildTypes.all { buildType ->
             buildType.resValue "string", property.key.replace("wp.res.", "").replace(".", "_").toLowerCase(),
                     "${property.value}"
         }
+    }
+
+    // Copy example if Google services file doesn't exist
+    if (!file("google-services.json").exists()) {
+        tasks.copyGoogleServicesExampleFile.execute()
     }
 }
 
