@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.fluxc.store.PluginStore.OnPluginChanged;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginInfoChanged;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginsChanged;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -143,6 +144,16 @@ public class PluginListActivity extends AppCompatActivity {
         if (event.pluginInfo != null && !TextUtils.isEmpty(event.pluginInfo.getSlug())) {
             mAdapter.refreshPluginWithSlug(event.pluginInfo.getSlug());
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPluginChanged(OnPluginChanged event) {
+        if (event.isError()) {
+            // We can ignore the error since the action is taken in `PluginDetailActivity`
+            return;
+        }
+        refreshPluginList();
     }
 
     private class PluginListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
