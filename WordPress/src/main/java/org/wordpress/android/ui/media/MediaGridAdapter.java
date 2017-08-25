@@ -4,10 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -27,6 +25,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
@@ -36,6 +35,7 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
@@ -179,11 +179,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         } else if (media.isVideo()) {
             holder.fileContainer.setVisibility(View.GONE);
             holder.videoOverlayContainer.setVisibility(View.VISIBLE);
-            if (isLocalFile) {
-                loadLocalVideoThumbnail(media.getFilePath(), holder.imageView);
-            } else {
-                holder.imageView.setImageUrl(media.getThumbnailUrl(), WPNetworkImageView.ImageType.VIDEO);
-            }
+            loadVideoThumbnail(media, holder.imageView);
         } else {
             // not an image or video, so show file name and file type
             holder.videoOverlayContainer.setVisibility(View.GONE);
@@ -453,28 +449,51 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
-    private void loadLocalVideoThumbnail(final String filePath, final WPNetworkImageView imageView) {
+    /*
+     * loads the thumbnail for the passed video media item - works with both local and network videos
+     */
+    private void loadVideoThumbnail(final @NonNull MediaModel media, @NonNull final WPNetworkImageView imageView) {
+        // if we have a thumbnail url, use it and be done
+        if (!TextUtils.isEmpty(media.getThumbnailUrl())) {
+            imageView.setImageUrl(media.getThumbnailUrl(), WPNetworkImageView.ImageType.VIDEO);
+            return;
+        }
+
+        // thumbnail url is empty, so either this is a local (still uploading) video or the server simply
+        // hasn't supplied the thumbnail url
+        final String filePath;
+        if (!TextUtils.isEmpty(media.getFilePath()) && new File(media.getFilePath()).exists()) {
+            filePath = media.getFilePath();
+        } else {
+            filePath = media.getUrl();
+        }
+
+        imageView.setImageUrl(null, WPNetworkImageView.ImageType.NONE);
+        imageView.setTag(filePath);
+
+        if (TextUtils.isEmpty(filePath)) {
+            AppLog.w(AppLog.T.MEDIA, "MediaGridAdapter > No path to video thumbnail");
+            return;
+        }
+
+        // see if we have a cached thumbnail before retrieving it
         Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
         if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
             return;
         }
 
-        imageView.setImageUrl(null, WPNetworkImageView.ImageType.NONE);
-        imageView.setTag(filePath);
-
         new Thread() {
             @Override
             public void run() {
-                final Bitmap thumb = ThumbnailUtils.createVideoThumbnail(filePath,
-                        MediaStore.Images.Thumbnails.MINI_KIND);
+                final Bitmap thumb = ImageUtils.getVideoFrameFromVideo(filePath, mThumbWidth);
                 if (thumb != null) {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
                             WordPress.getBitmapCache().put(filePath, thumb);
                             if (imageView.getTag() instanceof String
-                                    && ((String) imageView.getTag()).equalsIgnoreCase(filePath)) {
+                                    && (imageView.getTag()).equals(filePath)) {
                                 imageView.setImageBitmap(thumb);
                             }
                         }
