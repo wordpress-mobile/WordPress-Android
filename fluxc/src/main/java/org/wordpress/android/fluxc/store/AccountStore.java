@@ -500,6 +500,18 @@ public class AccountStore extends Store {
     }
 
     private void handlePushSocialCompleted(AccountPushSocialResponsePayload payload) {
+        if (payload.social.containsKey("bearer_token")) {
+            updateToken(new UpdateTokenPayload((String) payload.social.get("bearer_token")));
+        } else if (payload.social.containsKey("no_matching_account")) {
+            OnAuthenticationChanged event = new OnAuthenticationChanged();
+            event.error = new AuthenticationError(AuthenticationErrorType.INCORRECT_USERNAME_OR_PASSWORD,
+                    (String) payload.social.get("no_matching_account"));
+            emitChange(event);
+        } else {
+            OnAuthenticationChanged event = new OnAuthenticationChanged();
+            event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR, "");
+            emitChange(event);
+        }
     }
 
     private void handleNewAccountCreated(NewAccountResponsePayload payload) {
