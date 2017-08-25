@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.Di
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
@@ -344,6 +345,9 @@ public class AccountStore extends Store {
             case PUSH_SETTINGS:
                 mAccountRestClient.pushAccountSettings(((PushAccountSettingsPayload) payload).params);
                 break;
+            case PUSH_SOCIAL:
+                mAccountRestClient.pushSocialLogin(((PushSocialLoginPayload) payload).params);
+                break;
             case UPDATE_ACCOUNT:
                 updateDefaultAccount((AccountModel) payload, AccountAction.UPDATE_ACCOUNT);
                 break;
@@ -361,6 +365,9 @@ public class AccountStore extends Store {
                 break;
             case PUSHED_SETTINGS:
                 handlePushSettingsCompleted((AccountPushSettingsResponsePayload) payload);
+                break;
+            case PUSHED_SOCIAL:
+                handlePushSocialCompleted((AccountPushSocialResponsePayload) payload);
                 break;
             case FETCHED_SETTINGS:
                 handleFetchSettingsCompleted((AccountRestPayload) payload);
@@ -490,6 +497,9 @@ public class AccountStore extends Store {
         } else {
             emitAccountChangeError(AccountErrorType.SETTINGS_POST_ERROR);
         }
+    }
+
+    private void handlePushSocialCompleted(AccountPushSocialResponsePayload payload) {
     }
 
     private void handleNewAccountCreated(NewAccountResponsePayload payload) {
