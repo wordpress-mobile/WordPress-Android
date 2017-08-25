@@ -54,6 +54,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
@@ -672,36 +673,40 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     public void deleteMedia(final ArrayList<Integer> ids) {
-        Set<String> sanitizedIds = new HashSet<>(ids.size());
-
         final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
-        // Make sure there are no media in "uploading"
+        int processedItemCount = 0;
+
         for (int currentId : ids) {
             MediaModel mediaModel = mMediaStore.getMediaWithLocalId(currentId);
             if (mediaModel == null) {
                 continue;
             }
 
-            if (WPMediaUtils.canDeleteMedia(mediaModel)) {
-                if (mediaModel.getUploadState() != null &&
-                        MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
-                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
-                    sanitizedIds.add(String.valueOf(currentId));
-                    continue;
+            // if uploading, first issue a cancel upload command
+            if (UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
+                MediaStore.CancelMediaPayload payload = new MediaStore.CancelMediaPayload(mSite, mediaModel, false);
+                mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+
+                // check if media item was inserted into a Post - if that is the case, then
+                // mark it in the error list so it can be shown properly in the  Posts list, and
+                // also can be accessible from the Error Notification that will be shown.
+                PostModel post = UploadService.isMediaBeingUploadedForAPost(mediaModel);
+                if (post != null) {
+                    UploadService.markPostAsError(post);
                 }
-                mediaToDelete.add(mediaModel);
-                mediaModel.setUploadState(MediaUploadState.DELETING);
-                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
-                sanitizedIds.add(String.valueOf(currentId));
             }
+
+            if (mediaModel.getUploadState() != null &&
+                    MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
+                mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
+            } else {
+                mediaToDelete.add(mediaModel);
+            }
+            processedItemCount++;
         }
 
-        if (sanitizedIds.size() != ids.size()) {
-            if (ids.size() == 1) {
-                ToastUtils.showToast(this, R.string.wait_until_upload_completes, ToastUtils.Duration.LONG);
-            } else {
-                ToastUtils.showToast(this, R.string.cannot_delete_multi_media_items, ToastUtils.Duration.LONG);
-            }
+        if (processedItemCount != ids.size()) {
+            ToastUtils.showToast(this, R.string.cannot_delete_multi_media_items, ToastUtils.Duration.LONG);
         }
 
         // mark items for delete without actually deleting items yet,

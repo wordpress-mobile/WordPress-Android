@@ -2296,15 +2296,38 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMediaRetryClicked(String mediaId) {
+    public boolean onMediaRetryClicked(final String mediaId) {
         if (TextUtils.isEmpty(mediaId)) {
             AppLog.e(T.MEDIA, "Invalid media id passed to onMediaRetryClicked");
-            return;
+            return false;
         }
         MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
         if (media == null) {
             AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
-            return;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.cannot_retry_deleted_media_item));
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mEditorFragment.removeMedia(mediaId);
+                        }
+                    });
+                    dialog.dismiss();
+                }
+            });
+
+            builder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            return false;
         }
 
         if (media.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
@@ -2322,6 +2345,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
+        return true;
     }
 
     @Override
