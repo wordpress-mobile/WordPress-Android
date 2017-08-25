@@ -195,6 +195,38 @@ public class AccountRestClient extends BaseWPComRestClient {
         ));
     }
 
+    /**
+     * Performs an HTTP POST call to the v1.1 /users/social/new endpoint. Upon receiving a response
+     * (success or error) a {@link AccountAction#PUSHED_SOCIAL} action is dispatched with a payload
+     * of type {@link AccountPushSocialResponsePayload}.
+     *
+     * {@link AccountPushSocialResponsePayload#isError()} can be used to check the request result.
+     *
+     * No HTTP POST call is made if the given parameter map is null or contains no entries.
+     */
+    public void pushSocialLogin(Map<String, Object> body) {
+        if (body == null || body.isEmpty()) return;
+        String url = WPCOMREST.users.social.new_.getUrlV1_1();
+        // Map is used in onResponse since the API response format differs depending on the request.
+        add(WPComGsonRequest.buildPostRequest(url, body, Map.class,
+                new Listener<Map<String, Object>>() {
+                    @Override
+                    public void onResponse(Map<String, Object> response) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(null);
+                        payload.settings = response;
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(error);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                }
+        ));
+    }
+
     public void newAccount(@NonNull String username, @NonNull String password, @NonNull String email,
                            final boolean dryRun) {
         String url = WPCOMREST.users.new_.getUrlV1();
