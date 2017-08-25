@@ -208,12 +208,11 @@ public class AccountRestClient extends BaseWPComRestClient {
         if (body == null || body.isEmpty()) return;
         String url = WPCOMREST.users.social.new_.getUrlV1_1();
         // Map is used in onResponse since the API response format differs depending on the request.
-        add(WPComGsonRequest.buildPostRequest(url, body, Map.class,
-                new Listener<Map<String, Object>>() {
+        add(WPComGsonRequest.buildPostRequest(url, body, AccountSocialResponse.class,
+                new Listener<AccountSocialResponse>() {
                     @Override
-                    public void onResponse(Map<String, Object> response) {
+                    public void onResponse(AccountSocialResponse response) {
                         AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(null);
-                        payload.social = response;
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 },
