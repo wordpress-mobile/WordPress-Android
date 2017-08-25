@@ -809,6 +809,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public void removeMedia(String mediaId) {
+        content.removeMedia(MediaPredicate.getLocalMediaIdPredicate(mediaId));
+    }
+
+    @Override
     public Spanned getSpannedContent() {
         return null;
     }

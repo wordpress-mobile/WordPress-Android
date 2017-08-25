@@ -1091,6 +1091,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void removeMedia(String mediaId) {
+        mWebView.execJavaScriptFromString("ZSSEditor.removeMedia('" + mediaId + "');");
+    }
+
+    @Override
     public Spanned getSpannedContent() {
         return null;
     }
