@@ -19,6 +19,8 @@
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <string name="format_bar_tag_bold" translatable="false">bold</string>
     <string name="format_bar_tag_italic" translatable="false">italic</string>
