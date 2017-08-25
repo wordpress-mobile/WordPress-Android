@@ -55,6 +55,13 @@ public class AccountRestClient extends BaseWPComRestClient {
         public Map<String, Object> settings;
     }
 
+    public static class AccountPushSocialResponsePayload extends Payload {
+        public AccountPushSocialResponsePayload(BaseNetworkError error) {
+            this.error = error;
+        }
+        public Map<String, Object> settings;
+    }
+
     public static class NewAccountResponsePayload extends Payload {
         public NewUserError error;
         public boolean dryRun;

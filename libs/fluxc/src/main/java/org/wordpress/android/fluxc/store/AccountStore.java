@@ -70,6 +70,12 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class PushSocialLoginPayload extends Payload {
+        public Map<String, Object> params;
+        public PushSocialLoginPayload() {
+        }
+    }
+
     public static class NewAccountPayload extends Payload {
         public String username;
         public String password;

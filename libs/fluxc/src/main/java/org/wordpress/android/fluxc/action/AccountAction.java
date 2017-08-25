@@ -5,9 +5,11 @@ import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.NewAccountPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
@@ -23,6 +25,8 @@ public enum AccountAction implements IAction {
     SEND_VERIFICATION_EMAIL, // request verification email for unverified accounts
     @Action(payloadType = PushAccountSettingsPayload.class)
     PUSH_SETTINGS,          // request saving Account Settings remotely
+    @Action(payloadType = AccountStore.PushSocialLoginPayload.class)
+    PUSH_SOCIAL,            // request social login remotely
     @Action(payloadType = NewAccountPayload.class)
     CREATE_NEW_ACCOUNT,     // create a new account (can be used to validate the account before creating it)
     @Action(payloadType = String.class)
@@ -43,6 +47,8 @@ public enum AccountAction implements IAction {
     SENT_VERIFICATION_EMAIL,
     @Action(payloadType = AccountPushSettingsResponsePayload.class)
     PUSHED_SETTINGS,        // response received from Account Settings post
+    @Action(payloadType = AccountPushSocialResponsePayload.class)
+    PUSHED_SOCIAL,          // response received from social login post
     @Action(payloadType = NewAccountResponsePayload.class)
     CREATED_NEW_ACCOUNT,    // create a new account response
     @Action(payloadType = IsAvailableResponsePayload.class)
