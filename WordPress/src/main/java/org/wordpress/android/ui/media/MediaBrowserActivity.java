@@ -948,6 +948,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         media.setFileName(filename);
+        media.setTitle(filename);
         media.setFilePath(path);
         media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);

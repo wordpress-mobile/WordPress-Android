@@ -2337,6 +2337,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         media.setFileName(filename);
+        media.setTitle(filename);
         media.setFilePath(path);
         media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);
