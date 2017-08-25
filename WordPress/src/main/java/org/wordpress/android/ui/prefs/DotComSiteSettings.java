@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -586,7 +587,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
             params.put("protect", mJpSettings.jetpackProtectEnabled);
         }
         if (!mJpSettings.whitelistMatches(mRemoteJpSettings.jetpackProtectWhitelist)) {
-            JSONArray whitelistArray = new JSONArray(mJpSettings.jetpackProtectWhitelist);
+            String whitelistArray = TextUtils.join(",", mJpSettings.jetpackProtectWhitelist);
             params.put("jetpack_protect_global_whitelist", whitelistArray);
         }
         if (mJpSettings.ssoActive != mRemoteJpSettings.ssoActive) {

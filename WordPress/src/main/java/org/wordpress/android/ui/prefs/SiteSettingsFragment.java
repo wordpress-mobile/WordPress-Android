@@ -42,6 +42,7 @@ import android.widget.NumberPicker.Formatter;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.helpshift.network.util.InetAddressUtils;
 import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -1245,6 +1246,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                     public void onClick(DialogInterface dialog, int which) {
                         String entry = input.getText().toString();
                         if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
+                            // don't modify mEditingList if it's not a reference to the JP whitelist keys
+                            if (mEditingList == mSiteSettings.getJetpackWhitelistKeys() && !isValidIpOrRange(entry)) {
+                                ToastUtils.showToast(getActivity(), R.string.invalid_ip_or_range);
+                                return;
+                            }
+
                             mEditingList.add(entry);
                             getAdapter().notifyItemInserted(getAdapter().getItemCount() - 1);
                             list.post(
@@ -1282,6 +1289,36 @@ public class SiteSettingsFragment extends PreferenceFragment
         });
 
         return view;
+    }
+
+    /**
+     * Verifies that a given string can correctly be interpreted as an IP address or an IP range.
+     */
+    private boolean isValidIpOrRange(String entry) {
+        // empty strings are not valid
+        if (TextUtils.isEmpty(entry)) {
+            return false;
+        }
+
+        // remove whitespace
+        entry = entry.replaceAll("\\s", "");
+
+        // if entry is a range it will be formatted as two IP addresses separated by a '-'
+        String[] ipStrings = entry.split("-");
+
+        // entry is not well-formed if there are more than 2 ipStrings (a range) or no ipStrings
+        if (ipStrings.length > 2 || ipStrings.length < 1) {
+            return false;
+        }
+
+        // if any IP string is not a valid IP address then entry is not valid
+        for (String ip : ipStrings) {
+            if (!InetAddressUtils.isIPv4Address(ip)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean shouldShowListPreference(DetailListPreference preference) {
