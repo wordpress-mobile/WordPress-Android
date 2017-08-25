@@ -809,6 +809,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public void removeMedia(String mediaId) {
+        content.removeMedia(MediaPredicate.getLocalMediaIdPredicate(mediaId));
+    }
+
+    @Override
     public Spanned getSpannedContent() {
         return null;
     }
@@ -1242,50 +1247,53 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 break;
             case ATTR_STATUS_FAILED:
                 // Retry media upload
+                boolean successfullyRetried = true;
                 if (mFailedMediaIds.contains(localMediaId)) {
-                    mEditorFragmentListener.onMediaRetryClicked(localMediaId);
+                    successfullyRetried = mEditorFragmentListener.onMediaRetryClicked(localMediaId);
                 }
-                switch (mediaType) {
-                    case IMAGE:
-                    case VIDEO:
-                        AttributesWithClass attributesWithClass = getAttributesWithClass(
-                                content.getElementAttributes(mTappedMediaPredicate));
+                if (successfullyRetried) {
+                    switch (mediaType) {
+                        case IMAGE:
+                        case VIDEO:
+                            AttributesWithClass attributesWithClass = getAttributesWithClass(
+                                    content.getElementAttributes(mTappedMediaPredicate));
 
-                        // remove the failed class
-                        attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
+                            // remove the failed class
+                            attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
 
-                        if (!attributesWithClass.hasClass(ATTR_STATUS_FAILED)) {
-                            // just save the item and leave
-                            content.clearOverlays(mTappedMediaPredicate);
+                            if (!attributesWithClass.hasClass(ATTR_STATUS_FAILED)) {
+                                // just save the item and leave
+                                content.clearOverlays(mTappedMediaPredicate);
+                                content.resetAttributedMediaSpan(mTappedMediaPredicate);
+                                return;
+                            }
+
+                            attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
+                            if (mediaType.equals(MediaType.VIDEO)) {
+                                attributesWithClass.addClass(TEMP_VIDEO_UPLOADING_CLASS);
+                            }
+
+                            // set intermediate shade overlay
+                            content.setOverlay(mTappedMediaPredicate, 0,
+                                    new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)), Gravity.FILL);
+
+                            Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
+                            // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
+                            progressDrawable.setBounds(0, 0, 0, 4);
+
+                            content.setOverlay(mTappedMediaPredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
+                            content.updateElementAttributes(mTappedMediaPredicate, attributesWithClass.getAttributes());
+
+                            if (mediaType.equals(MediaType.VIDEO)) {
+                                overlayVideoIcon(2, mTappedMediaPredicate);
+                            }
+
                             content.resetAttributedMediaSpan(mTappedMediaPredicate);
-                            return;
-                        }
-
-                        attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
-                        if (mediaType.equals(MediaType.VIDEO)) {
-                            attributesWithClass.addClass(TEMP_VIDEO_UPLOADING_CLASS);
-                        }
-
-                        // set intermediate shade overlay
-                        content.setOverlay(mTappedMediaPredicate, 0,
-                                new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)), Gravity.FILL);
-
-                        Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
-                        // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
-                        progressDrawable.setBounds(0, 0, 0, 4);
-
-                        content.setOverlay(mTappedMediaPredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
-                        content.updateElementAttributes(mTappedMediaPredicate, attributesWithClass.getAttributes());
-
-                        if (mediaType.equals(MediaType.VIDEO)) {
-                            overlayVideoIcon(2, mTappedMediaPredicate);
-                        }
-
-                        content.resetAttributedMediaSpan(mTappedMediaPredicate);
-                        break;
+                            break;
+                    }
+                    mFailedMediaIds.remove(localMediaId);
+                    mUploadingMediaProgressMax.put(localMediaId, 0f);
                 }
-                mFailedMediaIds.remove(localMediaId);
-                mUploadingMediaProgressMax.put(localMediaId, 0f);
                 break;
             default:
                 if (mediaType.equals(MediaType.VIDEO)) {
