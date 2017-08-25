@@ -328,6 +328,11 @@ public class EditPostActivity extends AppCompatActivity implements
             if (mEditorFragment instanceof EditorMediaUploadListener) {
                 mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
             }
+
+            if (mEditorFragment != null) {
+                mEditorFragment.setContent(mPost.getContent());
+                mEditorFragment.setTitle(mPost.getTitle());
+            }
         }
 
         if (mSite == null) {
@@ -1394,6 +1399,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 0:
                     mEditorFragment = (EditorFragmentAbstract) fragment;
                     mEditorFragment.setImageLoader(mImageLoader);
+
+                    if (mEditorFragment != null) {
+                        mEditorFragment.setContent(mPost.getContent());
+                        mEditorFragment.setTitle(mPost.getTitle());
+                    }
 
                     if (mEditorFragment instanceof EditorMediaUploadListener) {
                         mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;

@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -125,6 +126,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private AztecText title;
     private AztecText content;
     private boolean mAztecReady;
+    protected boolean mLateInit;
+    protected CharSequence mLateInitContent;
+    protected CharSequence mLateInitTitle;
     private SourceViewEditText source;
     private AztecToolbar formattingToolbar;
     private Html.ImageGetter aztecImageLoader;
@@ -238,6 +242,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onEditorFragmentInitialized();
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (mLateInit) {
+            setTitle(mLateInitTitle);
+            setContent(mLateInitContent);
+            mLateInit = false;
+        }
     }
 
     public void setEditorBetaClickListener(EditorBetaClickListener listener) {
@@ -371,11 +385,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setTitle(CharSequence text) {
+        if (title == null) {
+            mLateInit = true;
+            mLateInitTitle = text;
+            return;
+        }
         title.setText(text);
     }
 
     @Override
     public void setContent(CharSequence text) {
+        if (content == null) {
+            mLateInit = true;
+            mLateInitContent = text;
+            return;
+        }
+
         content.fromHtml(text.toString());
 
         updateFailedMediaList();
