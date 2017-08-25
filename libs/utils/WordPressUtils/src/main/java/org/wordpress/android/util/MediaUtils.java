@@ -379,33 +379,6 @@ public class MediaUtils {
         return originalFileName;
     }
 
-    /**
-     * Given the full file path, or the filename with extension (i.e. my-picture.jpg), returns the filename part only (my-picture).
-     *
-     * @param filePath The path to the file or the full filename
-     * @return filename part only or null
-     */
-    public static String getFileNameFromPath(String filePath) {
-        if (TextUtils.isEmpty(filePath)) {
-            return null;
-        }
-        if (filePath.contains("/")) {
-            if (filePath.lastIndexOf("/") + 1 >= filePath.length()) {
-                filePath = filePath.substring(0, filePath.length() - 1);
-            }
-            filePath = filePath.substring(filePath.lastIndexOf("/") + 1);
-        }
-
-        String filename;
-        int dotPos = filePath.indexOf('.');
-        if (dotPos > 0) {
-            filename = filePath.substring(0, dotPos);
-        } else {
-            filename = filePath;
-        }
-        return filename;
-    }
-
     public static String getExtensionForMimeType(String mimeType) {
         if (TextUtils.isEmpty(mimeType))
             return "";

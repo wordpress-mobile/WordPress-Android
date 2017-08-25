@@ -552,7 +552,7 @@ public class ImageUtils {
 
         try {
             // try to re-use the same name as prefix of the temp file
-            String prefix = MediaUtils.getFileNameFromPath(fileName);
+            String prefix = FileUtils.getFileNameFromPath(fileName);
 
             if (TextUtils.isEmpty(prefix) || prefix.length() < 3) {
                 // prefix must be at least 3 characters
@@ -791,7 +791,7 @@ public class ImageUtils {
 
         try {
             // try to re-use the same name as prefix of the temp file
-            String prefix = MediaUtils.getFileNameFromPath(fileName);
+            String prefix = FileUtils.getFileNameFromPath(fileName);
 
             if (TextUtils.isEmpty(prefix) || prefix.length() < 3) {
                 // prefix must be at least 3 characters
