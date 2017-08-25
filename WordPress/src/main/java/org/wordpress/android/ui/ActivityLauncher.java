@@ -162,7 +162,14 @@ public class ActivityLauncher {
         AnalyticsTracker.Stat stat = openFromHeader ? AnalyticsTracker.Stat.OPENED_VIEW_SITE_FROM_HEADER
                 : AnalyticsTracker.Stat.OPENED_VIEW_SITE;
         AnalyticsUtils.trackWithSiteDetails(stat, site);
-        openUrlExternal(context, site.getUrl());
+
+        final String siteUrl = site.getUrl();
+        if (siteUrl == null) {
+            ToastUtils.showToast(context, context.getString(R.string.site_url_null), ToastUtils.Duration.LONG);
+            AppLog.w(AppLog.T.UTILS, "Site URL is null. Login URL: " + site.getLoginUrl());
+        } else {
+            openUrlExternal(context, siteUrl);
+        }
     }
 
     public static void viewBlogAdmin(Context context, SiteModel site) {
