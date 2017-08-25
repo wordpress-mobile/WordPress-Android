@@ -1697,6 +1697,7 @@
     <string name="plugin_autoupdates_off">Autoupdates off</string>
     <string name="plugin_detail_label_state_active">Active</string>
     <string name="plugin_detail_label_state_autoupdates">Autoupdates</string>
+    <string name="plugin_not_found">An error occurred when accessing this plugin</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
