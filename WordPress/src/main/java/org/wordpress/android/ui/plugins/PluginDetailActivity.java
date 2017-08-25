@@ -9,6 +9,8 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -16,6 +18,8 @@ import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.fluxc.store.PluginStore.OnPluginChanged;
+import org.wordpress.android.fluxc.store.PluginStore.UpdatePluginErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatePluginPayload;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -124,5 +128,23 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void dispatchUpdateAction() {
         mDispatcher.dispatch(PluginActionBuilder.newUpdatePluginAction(
                 new UpdatePluginPayload(mSite, mPlugin)));
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPluginChanged(OnPluginChanged event) {
+        if (event.isError()) {
+            if (event.error.type == UpdatePluginErrorType.ACTIVATION_ERROR
+                    || event.error.type == UpdatePluginErrorType.DEACTIVATION_ERROR) {
+                // these errors are thrown when the plugin is already active and we try to activate it and vice versa.
+                return;
+            }
+            ToastUtils.showToast(this, "An error occurred while fetching the plugins: " + event.error.message);
+            return;
+        }
+        if (event.plugin != null) {
+            mPlugin = event.plugin;
+            refreshStates();
+        }
     }
 }
