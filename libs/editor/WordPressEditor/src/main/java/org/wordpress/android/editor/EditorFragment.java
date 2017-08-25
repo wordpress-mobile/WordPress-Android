@@ -1380,24 +1380,25 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 }
 
                 // Retry media upload
-                mEditorFragmentListener.onMediaRetryClicked(mediaId);
-
-                mWebView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        switch (mediaType) {
-                            case IMAGE:
-                                mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId
-                                        + ");");
-                                break;
-                            case VIDEO:
-                                mWebView.execJavaScriptFromString("ZSSEditor.unmarkVideoUploadFailed(" + mediaId
-                                        + ");");
+                boolean successfullyRetried = mEditorFragmentListener.onMediaRetryClicked(mediaId);
+                if (successfullyRetried) {
+                    mWebView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            switch (mediaType) {
+                                case IMAGE:
+                                    mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId
+                                            + ");");
+                                    break;
+                                case VIDEO:
+                                    mWebView.execJavaScriptFromString("ZSSEditor.unmarkVideoUploadFailed(" + mediaId
+                                            + ");");
+                            }
+                            mFailedMediaIds.remove(mediaId);
+                            mUploadingMedia.put(mediaId, mediaType);
                         }
-                        mFailedMediaIds.remove(mediaId);
-                        mUploadingMedia.put(mediaId, mediaType);
-                    }
-                });
+                    });
+                }
                 break;
             default:
                 if (!mediaType.equals(MediaType.IMAGE)) {
