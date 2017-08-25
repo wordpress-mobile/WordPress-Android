@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -57,6 +58,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ActivityLauncher {
 
@@ -374,18 +376,31 @@ public class ActivityLauncher {
      * open the passed url in the device's external browser
      */
     public static void openUrlExternal(Context context, @NonNull String url) {
+        Uri uri = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
         try {
             // disable deeplinking activity so to not catch WP URLs
             WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
 
-            Uri uri = Uri.parse(url);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             context.startActivity(intent);
             AppLockManager.getInstance().setExtendedTimeout();
 
         } catch (ActivityNotFoundException e) {
             ToastUtils.showToast(context, context.getString(R.string.no_default_app_available_to_open_link), ToastUtils.Duration.LONG);
             AppLog.e(AppLog.T.UTILS, "No default app available on the device to open the link: " + url, e);
+        } catch (SecurityException se) {
+            AppLog.e(AppLog.T.UTILS, "Error opening url in default browser. Url: " + url, se);
+
+            List<ResolveInfo> infos = context.getPackageManager().queryIntentActivities(intent, 0);
+            if (infos.size() == 1) {
+                // there's only one handler and apparently it caused the exception so, just inform and bail
+                AppLog.d(AppLog.T.UTILS, "Only one url handler found so, bailing.");
+                ToastUtils.showToast(context, context.getString(R.string.cant_open_url));
+            } else {
+                Intent chooser = Intent.createChooser(intent, context.getString(R.string.error_please_choose_browser));
+                context.startActivity(chooser);
+            }
         } finally {
             // re-enable deeplinking
             WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
