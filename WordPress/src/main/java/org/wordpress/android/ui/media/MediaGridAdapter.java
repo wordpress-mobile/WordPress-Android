@@ -469,6 +469,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         imageView.setImageUrl(null, WPNetworkImageView.ImageType.NONE);
+        imageView.setImageBitmap(null);
         imageView.setTag(filePath);
 
         if (TextUtils.isEmpty(filePath)) {
