@@ -5,13 +5,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Switch;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.fluxc.store.PluginStore.UpdatePluginPayload;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
@@ -22,6 +27,9 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private SiteModel mSite;
     private PluginModel mPlugin;
+
+    private Switch mSwitchActive;
+    private Switch mSwitchAutoupdates;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -65,6 +73,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setElevation(0);
         }
+
+        setupViews();
     }
 
     @Override
@@ -81,5 +91,38 @@ public class PluginDetailActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putString(KEY_PLUGIN_NAME, mPlugin.getName());
+    }
+
+    private void setupViews() {
+        mSwitchActive = (Switch) findViewById(R.id.plugin_state_active);
+        mSwitchAutoupdates = (Switch) findViewById(R.id.plugin_state_autoupdates);
+
+        mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                mPlugin.setIsActive(b);
+                dispatchUpdateAction();
+            }
+        });
+
+        mSwitchAutoupdates.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                mPlugin.setIsAutoUpdateEnabled(b);
+                dispatchUpdateAction();
+            }
+        });
+
+        refreshStates();
+    }
+
+    private void refreshStates() {
+        mSwitchActive.setChecked(mPlugin.isActive());
+        mSwitchAutoupdates.setChecked(mPlugin.isAutoUpdateEnabled());
+    }
+
+    private void dispatchUpdateAction() {
+        mDispatcher.dispatch(PluginActionBuilder.newUpdatePluginAction(
+                new UpdatePluginPayload(mSite, mPlugin)));
     }
 }
