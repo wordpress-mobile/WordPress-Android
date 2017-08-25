@@ -42,6 +42,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
 
         setContentView(R.layout.plugin_detail_activity);
 
