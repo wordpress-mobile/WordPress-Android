@@ -1301,8 +1301,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // remove whitespace
-        entry = entry.trim();
-        entry = entry.replaceAll(" ", "");
+        entry = entry.replaceAll("\\s", "");
 
         // if entry is a range it will be formatted as two IP addresses separated by a '-'
         String[] ipStrings = entry.split("-");
