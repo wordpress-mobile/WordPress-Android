@@ -331,11 +331,6 @@ public class EditPostActivity extends AppCompatActivity implements
             if (mEditorFragment instanceof EditorMediaUploadListener) {
                 mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
             }
-
-            if (mEditorFragment != null) {
-                mEditorFragment.setContent(mPost.getContent());
-                mEditorFragment.setTitle(mPost.getTitle());
-            }
         }
 
         if (mSite == null) {
@@ -352,6 +347,11 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mPost == null) {
             showErrorAndFinish(R.string.post_not_found);
             return;
+        }
+
+        if (mEditorFragment != null) {
+            mEditorFragment.setContent(mPost.getContent());
+            mEditorFragment.setTitle(mPost.getTitle());
         }
 
         if (mIsNewPost) {
