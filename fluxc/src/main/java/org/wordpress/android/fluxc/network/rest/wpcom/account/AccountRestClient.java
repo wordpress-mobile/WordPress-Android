@@ -56,10 +56,36 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     public static class AccountPushSocialResponsePayload extends Payload {
+        private final JSONObject mJson;
+
         public AccountPushSocialResponsePayload(BaseNetworkError error) {
             this.error = error;
+            this.mJson = new JSONObject();
         }
-        public Map<String, Object> social;
+
+        public AccountPushSocialResponsePayload(JSONObject json) {
+            this.mJson = json;
+        }
+
+        public CharSequence getError() {
+            return mJson.optString("error");
+        }
+
+        public CharSequence getErrorMessage() {
+            return mJson.optString("message");
+        }
+
+        public CharSequence getToken() {
+            return mJson.optString("bearer_token");
+        }
+
+        public CharSequence getUsername() {
+            return mJson.optString("username");
+        }
+
+        public boolean hasToken() {
+            return !mJson.optString("bearer_token").equalsIgnoreCase("");
+        }
     }
 
     public static class NewAccountResponsePayload extends Payload {
@@ -212,14 +238,16 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(null);
+                        AccountPushSocialResponsePayload payload =
+                                new AccountPushSocialResponsePayload(response.json);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(error);
+                        AccountPushSocialResponsePayload payload =
+                                new AccountPushSocialResponsePayload(error);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
