@@ -385,6 +385,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setTitle(CharSequence text) {
+        if (text == null) {
+            text = "";
+        }
+
         if (title == null) {
             mLateInit = true;
             mLateInitTitle = text;
@@ -395,6 +399,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setContent(CharSequence text) {
+        if (text == null) {
+            text = "";
+        }
+
         if (content == null) {
             mLateInit = true;
             mLateInitContent = text;
