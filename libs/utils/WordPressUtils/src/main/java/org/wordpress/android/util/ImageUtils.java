@@ -425,15 +425,7 @@ public class ImageUtils {
             throw e;
         }
 
-        // determine correct scale value (should be power of 2)
-        // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
-        int scale = 1;
-        int originalPictureMaxSize = Math.max(optBounds.outWidth, optBounds.outHeight);
-        if (maxSize > 0 && originalPictureMaxSize > maxSize) {
-            double d = Math.pow(2, (int) Math.round(Math.log(maxSize / originalPictureMaxSize) / Math.log(0.5)));
-
-            scale = (int) d;
-        }
+        int scale = getScaleForResizing(maxSize, optBounds);
 
         BitmapFactory.Options optActual = new BitmapFactory.Options();
         optActual.inSampleSize = scale;
@@ -870,6 +862,20 @@ public class ImageUtils {
         }
 
         return null;
+    }
+
+    // determine correct scale value (should be power of 2)
+    // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
+    protected static int getScaleForResizing(int maxSize, BitmapFactory.Options optBounds) {
+        if (maxSize < 1) {
+            return 1;
+        }
+        int scale = 1;
+        while(optBounds.outWidth / scale / 2 >= maxSize &&
+                optBounds.outHeight / scale / 2 >= maxSize) {
+            scale *= 2;
+        }
+        return scale;
     }
 
     private static float getScaleImageBy(float maxSize, Bitmap bmpResized) {
