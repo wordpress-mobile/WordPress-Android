@@ -29,7 +29,6 @@ Language: fr
 	<string name="login_magic_link_email_requesting">Demande de l’e-mail de connexion</string>
 	<string name="login_magic_links_sent_label">Votre lien magique est en route ! Vérifiez votre messagerie sur cet appareil et appuyez sur le lien dans l’e-mail reçu de WordPress.com.</string>
 	<string name="login_magic_links_label">Nous allons vous envoyer un lien magique qui vous connectera instantanément, sans mot de passe. Fini la frappe au clavier !</string>
-	<string name="login_error_while_checking_email">Un erreur est survenue lors de la vérification de l’adresse de messagerie !</string>
 	<string name="password_incorrect">Il semblerait que ce mot de passe est incorrect. Veuillez vérifier et essayer à nouveau.</string>
 	<string name="email_not_registered_wpcom">Cet e-mail n’est pas enregistré sur WordPress.com.</string>
 	<string name="requesting_otp">Demande d’un code de vérification par SMS.</string>
@@ -76,7 +75,6 @@ Language: fr
 	<string name="draft_uploaded">Brouillon envoyé</string>
 	<string name="report_bug">Rapport de bug</string>
 	<string name="video_quality">Qualité vidéo</string>
-	<string name="max_video_resolution">Largeur par défaut de vidéo</string>
 	<string name="permission_location">Emplacement</string>
 	<string name="permission_camera">Appareil photo</string>
 	<string name="permission_storage">Stockage</string>
@@ -126,7 +124,6 @@ Language: fr
 	<string name="fab_content_description_write">Écrire</string>
 	<string name="my_site_btn_sharing">Partage</string>
 	<string name="button_not_now">Pas maintenant</string>
-	<string name="media_error_internal_server_error">Erreur de mise en ligne. Essayez de changer « Optimiser les images » dans les réglages de votre site.</string>
 	<string name="media_downloading">Enregistrement du fichier sur cet appareil</string>
 	<string name="error_media_save">Impossible d’enregistrer les médias</string>
 	<string name="editor_scheduled_post_saved_online">Article programmé</string>
@@ -162,7 +159,6 @@ Language: fr
 	<string name="start_over_email_body">Je souhaite recommencer avec le site %s</string>
 	<string name="start_over_email_subject">Recommencer avec le site %s</string>
 	<string name="site_picker_remove_site_error">Erreur lors de la suppression du site, réessayez</string>
-	<string name="editor_post_saved_locally_unfinished_media">Le chargement multimédia de l\'article n\'est pas terminé et n\'a pas été enregistré localement</string>
 	<string name="sure_to_remove_account">Supprimer ce site de l\'application ?</string>
 	<string name="photo_picker_title">Choisir une photo</string>
 	<string name="error_publish_no_network">L’appareil est hors ligne. Les modifications ont été sauvegardées localement.</string>
@@ -185,9 +181,7 @@ Language: fr
 	<string name="image_quality">Qualité d’image</string>
 	<string name="error_all_media_upload_canceled">Tous les chargements de médias ont été annulés à cause d’une erreur inconnue. Veuillez recommencer le chargement</string>
 	<string name="error_unknown_post_type">Format d\'article inconnu</string>
-	<string name="error_unknown_post">Article inconnu, la copie locale de cet article n’est peut-être pas synchronisée avec le serveur</string>
 	<string name="error_fetch_site_after_creation">Le site a été créé. Vous devrez peut-être actualiser vos sites dans le sélecteur de site.</string>
-	<string name="error_upload_params">Erreur lors du chargement - %1$s : %2$s</string>
 	<string name="submit_for_review">Envoyer</string>
 	<string name="tell_me_more">En savoir plus</string>
 	<string name="duplicate_site_detected">Un site dupliqué a été détecté.</string>
@@ -612,7 +606,6 @@ Language: fr
 	<string name="site_settings_address_title">Adresse</string>
 	<string name="site_settings_tagline_title">Slogan</string>
 	<string name="site_settings_title_title">Titre du site</string>
-	<string name="site_settings_this_device_header">Cet appareil</string>
 	<string name="site_settings_discussion_new_posts_header">Par défaut pour les nouveaux articles</string>
 	<string name="site_settings_writing_header">Écriture</string>
 	<string name="site_settings_account_header">Compte</string>
@@ -840,7 +833,6 @@ Language: fr
 	<string name="stats_period">Période</string>
 	<string name="stats_overall">Global</string>
 	<string name="stats_total">Total</string>
-	<string name="post_uploading">En cours d\'upload</string>
 	<string name="stats_visitors">Visiteurs</string>
 	<string name="stats_views">Visites</string>
 	<string name="stats_timeframe_years">Années</string>
@@ -907,7 +899,6 @@ Language: fr
 	<string name="delete_sure">Supprimer ce brouillon</string>
 	<string name="delete_sure_post">Supprimer cet article</string>
 	<string name="signing_out">Déconnexion…</string>
-	<string name="posting_post">Publication de "%s"</string>
 	<string name="pages_empty_list">Pas encore de page. Pourquoi ne pas en créer une?</string>
 	<string name="comment_reply_to_user">Réponse à %s</string>
 	<string name="posts_empty_list">Pas encore d\'article. Pourquoi ne pas en créer un?</string>
@@ -915,7 +906,6 @@ Language: fr
 	<string name="comment">Commentaire</string>
 	<string name="mnu_comment_liked">Aimé</string>
 	<string name="uploading_total">Upload %1$d sur %2$d</string>
-	<string name="sending_content">Upload du contenu de %s</string>
 	<string name="select_a_blog">Sélectionnez un site WordPress</string>
 	<string name="stats_no_blog">Les statistiques ne peuvent pas être chargée pour ce blog</string>
 	<string name="older_last_week">Plus d\'une semaine</string>

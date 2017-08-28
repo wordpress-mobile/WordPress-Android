@@ -380,7 +380,6 @@ Language: gl_ES
 	<string name="site_settings_address_title">Enderezo</string>
 	<string name="site_settings_title_title">Título do sitio</string>
 	<string name="site_settings_tagline_title">Subtítulo</string>
-	<string name="site_settings_this_device_header">Este dispositivo</string>
 	<string name="site_settings_discussion_new_posts_header">Prederterminado para os artigos novos</string>
 	<string name="site_settings_account_header">Conta</string>
 	<string name="site_settings_writing_header">Escrita</string>
@@ -597,7 +596,6 @@ Language: gl_ES
 	<string name="toast_err_post_uploading">Non se pode abrir o artigo mentres está en proceso de carga</string>
 	<string name="stats_empty_search_terms_desc">Aprende máis sobre o tráfico de buscas mirando os termos que levaron aos lectores ao teu sitio.</string>
 	<string name="reader_empty_posts_request_failed">Fallou a procura de artigos</string>
-	<string name="post_uploading">Cargando</string>
 	<string name="stats_total">Total</string>
 	<string name="stats_overall">En total</string>
 	<string name="stats_period">Período</string>
@@ -700,7 +698,6 @@ Language: gl_ES
 	<string name="posts_empty_list">Aínda sen artigos. Por que non crear un?</string>
 	<string name="comment_reply_to_user">Resposta a %s</string>
 	<string name="pages_empty_list">Aínda sen páxinas. Por que non crear unha?</string>
-	<string name="posting_post">Enviando "%s"</string>
 	<string name="stats_no_blog">Non foi posible cargar as estatísticas do blogue requirido</string>
 	<string name="reader_empty_posts_liked">Non deches "gústame" a artigo ningún</string>
 	<string name="reader_label_like">Gústame</string>
@@ -708,7 +705,6 @@ Language: gl_ES
 	<string name="mnu_comment_liked">Gustou</string>
 	<string name="nux_help_description">Vai ao centro de axuda para obter respostas a preguntas comúns ou visita os foros para tratar outras cuestións.</string>
 	<string name="agree_terms_of_service">Ao creares unha conta aceptas os fascinantes %1$sTerms of Service%2$s</string>
-	<string name="sending_content">Cargando o contido de %s</string>
 	<string name="uploading_total">Cargando %1$d de %2$d</string>
 	<string name="browse_our_faq_button">Ves as FAQ</string>
 	<string name="signing_out">Saíndo...</string>

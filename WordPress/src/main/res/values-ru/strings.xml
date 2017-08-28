@@ -22,7 +22,6 @@ Language: ru
 	<string name="start_over_email_body">Я хочу переделать сайт %s</string>
 	<string name="start_over_email_subject">Переделать сайт %s</string>
 	<string name="site_picker_remove_site_error">Невозможно удалить сайт, попробуйте позже.</string>
-	<string name="editor_post_saved_locally_unfinished_media">Эта запись сохранена локально: она содержит медиафайлы, загрузка которых не завершена.</string>
 	<string name="sure_to_remove_account">Удалить этот сайт из приложения?</string>
 	<string name="photo_picker_title">Выбрать фото</string>
 	<string name="error_publish_no_network">Нет доступа к сети Интернет. Изменения сохранены локально.</string>
@@ -43,9 +42,7 @@ Language: ru
 	<string name="keep_editing">Продолжить редактирование</string>
 	<string name="error_all_media_upload_canceled">Все процессы загрузки медиафайлов были прерваны из-за неизвестной ошибки. Попробуйте начать загрузку заново</string>
 	<string name="error_unknown_post_type">Неизвестный формат записи</string>
-	<string name="error_unknown_post">Неизвестная запись. Возможно, локальная копия этой записи не синхронизирована с сервером</string>
 	<string name="error_fetch_site_after_creation">Создан новый сайт. Возможно, вам следует обновить список сайтов в подборке.</string>
-	<string name="error_upload_params">При загрузке %1$s произошла ошибка: %2$s</string>
 	<string name="submit_for_review">Отправить</string>
 	<string name="signout">Выйти</string>
 	<string name="timespan_now">сейчас</string>
@@ -382,7 +379,6 @@ Language: ru
 	<string name="site_settings_address_title">Адрес</string>
 	<string name="site_settings_tagline_title">Ключевая фраза</string>
 	<string name="site_settings_title_title">Название сайта</string>
-	<string name="site_settings_this_device_header">На этом устройстве</string>
 	<string name="site_settings_discussion_new_posts_header">Параметры по умолчанию для новых записей</string>
 	<string name="site_settings_writing_header">Написание</string>
 	<string name="site_settings_account_header">Учетная запись</string>
@@ -605,7 +601,6 @@ Language: ru
 	<string name="stats_period">Период</string>
 	<string name="stats_overall">Все время</string>
 	<string name="stats_total">Итого</string>
-	<string name="post_uploading">Идет отправка на сервер.</string>
 	<string name="stats_visitors">Посетителей</string>
 	<string name="stats_views">Просмотров</string>
 	<string name="stats_timeframe_years">Годы</string>
@@ -672,7 +667,6 @@ Language: ru
 	<string name="delete_sure">Удалить черновик</string>
 	<string name="delete_sure_post">Удалить запись</string>
 	<string name="signing_out">Выход из системы...</string>
-	<string name="posting_post">Публикуется материал "%s"</string>
 	<string name="pages_empty_list">Пока нет страниц. Создайте первую!</string>
 	<string name="comment_reply_to_user">Ответить автору %s</string>
 	<string name="posts_empty_list">Пока нет записей. Создайте первую!</string>
@@ -680,7 +674,6 @@ Language: ru
 	<string name="comment">Комментировать</string>
 	<string name="mnu_comment_liked">Понравилось</string>
 	<string name="uploading_total">Загружается %1$d из %2$d</string>
-	<string name="sending_content">Загрузка содержимого: %s</string>
 	<string name="stats_no_blog">Невозможно загрузить статистику для этого блога.</string>
 	<string name="older_last_week">Больше недели</string>
 	<string name="older_two_days">Больше двух дней назад</string>

@@ -389,7 +389,6 @@ Language: ms
 	<string name="site_settings_address_title">Alamat</string>
 	<string name="site_settings_title_title">Tajuk Laman</string>
 	<string name="site_settings_tagline_title">Baris Slogan</string>
-	<string name="site_settings_this_device_header">Peranti ini</string>
 	<string name="site_settings_discussion_new_posts_header">Tetapan lalai bagi kiriman baharu</string>
 	<string name="site_settings_account_header">Akaun</string>
 	<string name="site_settings_writing_header">Menulis</string>
@@ -610,7 +609,6 @@ Language: ms
 	<string name="stats_average_per_day">Purata Sehari</string>
 	<string name="stats_months_and_years">Bulan dan Tahun</string>
 	<string name="reader_label_new_posts">Kiriman baharu</string>
-	<string name="post_uploading">Memuat naik</string>
 	<string name="stats_total">Jumlah</string>
 	<string name="stats_overall">Keseluruhan</string>
 	<string name="stats_period">Tempoh</string>
@@ -700,12 +698,10 @@ Language: ms
 	<string name="older_two_days">Lebih dari 2 hari</string>
 	<string name="older_last_week">Lebih dari seminggu</string>
 	<string name="stats_no_blog">Statistik tidak dapat dimuatkan bagi blog yang diperlukan</string>
-	<string name="sending_content">Memuat naik %s kandungan</string>
 	<string name="uploading_total">Memuat naik %1$d daripada %2$d</string>
 	<string name="posts_empty_list">Belum ada kiriman. Kenapa tidak wujudkannya?</string>
 	<string name="comment_reply_to_user">Balasan kepada %s</string>
 	<string name="pages_empty_list">Belum ada halaman. Kenapa tidak wujudkannya?</string>
-	<string name="posting_post">Mengirim "%s"</string>
 	<string name="signing_out">Melog keluar…</string>
 	<string name="reader_empty_followed_blogs_title">Anda belum mengikuti mana-mana laman</string>
 	<string name="reader_empty_posts_liked">Anda belum menyukai mana-mana kiriman</string>
