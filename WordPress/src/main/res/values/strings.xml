@@ -1905,6 +1905,5 @@
     <string name="login_error_footer_site_address">Try with the site address</string>
     <string name="login_error_header_email_not_found_heading">Connected but&#8230;</string>
     <string name="login_error_header_email_not_found_message_long">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
-    <string name="login_error_header_email_not_found_message_short">Not on WordPress.com</string>
 
 </resources>
