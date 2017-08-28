@@ -39,7 +39,6 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.editor.MetadataUtils.AttributesWithClass;
@@ -801,7 +800,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void removeAllFailedMediaUploads() {
         content.removeMedia(new AztecText.AttributePredicate() {
             @Override
-            public boolean matches(@NotNull Attributes attrs) {
+            public boolean matches(@NonNull Attributes attrs) {
                 return getAttributesWithClass(attrs).hasClass(ATTR_STATUS_FAILED);
             }
         });
@@ -909,7 +908,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         @Override
-        public boolean matches(@NotNull Attributes attrs) {
+        public boolean matches(@NonNull Attributes attrs) {
             return attrs.getIndex(mAttributeName) > -1 && attrs.getValue(mAttributeName).equals(mId);
         }
     }
@@ -1168,17 +1167,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onImageTapped(@NotNull AztecAttributes attrs, int naturalWidth, int naturalHeight) {
+    public void onImageTapped(@NonNull AztecAttributes attrs, int naturalWidth, int naturalHeight) {
         onMediaTapped(attrs, naturalWidth, naturalHeight, MediaType.IMAGE);
     }
 
     @Override
-    public void onVideoTapped(@NotNull AztecAttributes attrs) {
+    public void onVideoTapped(@NonNull AztecAttributes attrs) {
         onMediaTapped(attrs, 0, 0, MediaType.VIDEO);
     }
 
 
-    private void onMediaTapped(@NotNull AztecAttributes attrs, int naturalWidth, int naturalHeight, final MediaType mediaType) {
+    private void onMediaTapped(@NonNull AztecAttributes attrs, int naturalWidth, int naturalHeight, final MediaType mediaType) {
         if (mediaType == null || !isAdded()) {
             return;
         }
