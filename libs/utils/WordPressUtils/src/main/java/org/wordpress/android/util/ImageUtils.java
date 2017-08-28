@@ -517,7 +517,8 @@ public class ImageUtils {
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
         String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
 
-        int selectedMaxSize = getImageSize(srcImageUri, context)[0];
+        int[] imageDimensions = getImageSize(srcImageUri, context);
+        int selectedMaxSize = Math.max(imageDimensions[0], imageDimensions[1]);
         if (selectedMaxSize == 0) {
             // Can't read the src dimensions.
             return path;
