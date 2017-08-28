@@ -349,10 +349,18 @@ public class AccountRestClient extends BaseWPComRestClient {
         old.copyAccountAttributes(accountModel);
         old.setId(accountModel.getId());
         old.copyAccountSettingsAttributes(accountModel);
-        if (from.containsKey("display_name")) accountModel.setDisplayName((String) from.get("display_name"));
-        if (from.containsKey("first_name")) accountModel.setFirstName((String) from.get("first_name"));
-        if (from.containsKey("last_name")) accountModel.setLastName((String) from.get("last_name"));
-        if (from.containsKey("description")) accountModel.setAboutMe((String) from.get("description"));
+        if (from.containsKey("display_name")) {
+            accountModel.setDisplayName(StringEscapeUtils.unescapeHtml4((String) from.get("display_name")));
+        }
+        if (from.containsKey("first_name")) {
+            accountModel.setFirstName(StringEscapeUtils.unescapeHtml4((String) from.get("first_name")));
+        }
+        if (from.containsKey("last_name")) {
+            accountModel.setLastName(StringEscapeUtils.unescapeHtml4((String) from.get("last_name")));
+        }
+        if (from.containsKey("description")) {
+            accountModel.setAboutMe(StringEscapeUtils.unescapeHtml4((String) from.get("description")));
+        }
         if (from.containsKey("user_email")) accountModel.setEmail((String) from.get("user_email"));
         if (from.containsKey("user_email_change_pending")) {
             accountModel.setPendingEmailChange((Boolean) from.get("user_email_change_pending"));
