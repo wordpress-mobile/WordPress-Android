@@ -471,12 +471,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * AsyncTask which loads sites from database and populates the adapter
      */
-    private boolean mIsTaskRunning;
-    private class LoadSitesTask extends AsyncTask<Void, Void, Void> {
+    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList[]> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mIsTaskRunning = true;
             if (mDataLoadedListener != null) {
                 boolean isEmpty = mSites == null || mSites.size() == 0;
                 mDataLoadedListener.onBeforeLoad(isEmpty);
@@ -486,11 +484,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            mIsTaskRunning = false;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected SiteList[] doInBackground(Void... params) {
             List<SiteModel> siteModels;
             if (mIsInSearchMode) {
                 siteModels = mSiteStore.getSites();
@@ -541,17 +538,22 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             if (mSites == null || !mSites.isSameList(sites)) {
-                mAllSites = (SiteList) sites.clone();
-                mSites = filteredSitesByTextIfInSearchMode(sites);
+                SiteList allSites = (SiteList) sites.clone();
+                SiteList filteredSites = filteredSitesByTextIfInSearchMode(sites);
+
+                return new SiteList[]{allSites, filteredSites};
             }
 
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void results) {
-            notifyDataSetChanged();
-            mIsTaskRunning = false;
+        protected void onPostExecute(SiteList[] updatedSiteLists) {
+            if (updatedSiteLists != null) {
+                mAllSites = updatedSiteLists[0];
+                mSites = updatedSiteLists[1];
+                notifyDataSetChanged();
+            }
             if (mDataLoadedListener != null) {
                 mDataLoadedListener.onAfterLoad();
             }
@@ -652,12 +654,5 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             return -1;
         }
-    }
-
-    /*
-     * same as Long.compare() which wasn't added until API 19
-     */
-    private static int compareTimestamps(long timestamp1, long timestamp2) {
-        return timestamp1 < timestamp2 ? -1 : (timestamp1 == timestamp2 ? 0 : 1);
     }
 }

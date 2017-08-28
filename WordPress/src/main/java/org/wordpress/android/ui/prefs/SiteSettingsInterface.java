@@ -113,7 +113,7 @@ public abstract class SiteSettingsInterface {
     /**
      * Key for the Standard post format. Used as default if post format is not set/known.
      */
-    private static final String STANDARD_POST_FORMAT_KEY = "standard";
+    static final String STANDARD_POST_FORMAT_KEY = "standard";
 
     /**
      * Standard sharing button style value. Used as default value if button style is unknown.
