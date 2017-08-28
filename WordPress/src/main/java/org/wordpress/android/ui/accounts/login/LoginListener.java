@@ -21,6 +21,9 @@ public interface LoginListener {
     void helpEmailScreen(String email);
     void helpSocialEmailScreen(String email);
 
+    // Login Error callbacks
+    void helpErrorEmail(String email);
+
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
     void usePasswordInstead(String email);
