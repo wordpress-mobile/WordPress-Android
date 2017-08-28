@@ -97,8 +97,9 @@
     <string name="send">Send</string>
     <string name="swipe_for_more">Swipe for more</string>
     <string name="confirm">Confirm</string>
-    <string name="no_default_app_available_to_open_link">Unable to open the link</string>
+    <string name="cant_open_url">Unable to open the link</string>
     <string name="retry">Retry</string>
+    <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -188,8 +189,8 @@
     <!-- Delete Media -->
     <string name="confirm_delete_media">Delete selected item?</string>
     <string name="confirm_delete_multi_media">Delete selected items?</string>
-    <string name="wait_until_upload_completes">Wait until upload completes</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
+    <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
     <string name="media_empty_list">No media</string>
     <string name="media_empty_image_list">You don\'t have any images</string>
     <string name="media_empty_videos_list">You don\'t have any videos</string>

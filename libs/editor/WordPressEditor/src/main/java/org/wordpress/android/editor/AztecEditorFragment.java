@@ -545,12 +545,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.AttributePredicate predicate = new AztecText.AttributePredicate() {
             @Override
             public boolean matches(@NonNull Attributes attrs) {
-                AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
+                AttributesWithClass attributesWithClass = getAttributesWithClass(attrs);
                 return attributesWithClass.hasClass(classToUse);
             }
         };
 
         return predicate;
+    }
+
+    static private AttributesWithClass getAttributesWithClass(@NonNull Attributes attrs) {
+        return new AttributesWithClass(attrs);
     }
 
     private void updateFailedMediaList() {
@@ -570,7 +574,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             overlayProgressingMedia(predicate);
             // here check if this is a video uploading in progress or not; if it is, show the video play icon
             for (Attributes attrs : content.getAllElementAttributes(predicate)) {
-                AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
+                AttributesWithClass attributesWithClass = getAttributesWithClass(attrs);
                 if (attributesWithClass.hasClass(TEMP_VIDEO_UPLOADING_CLASS)) {
                     overlayVideoIcon(2, predicate);
                 }
@@ -798,10 +802,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content.removeMedia(new AztecText.AttributePredicate() {
             @Override
             public boolean matches(@NotNull Attributes attrs) {
-                return new AttributesWithClass(attrs).hasClass(ATTR_STATUS_FAILED);
+                return getAttributesWithClass(attrs).hasClass(ATTR_STATUS_FAILED);
             }
         });
         mFailedMediaIds.clear();
+    }
+
+    @Override
+    public void removeMedia(String mediaId) {
+        content.removeMedia(MediaPredicate.getLocalMediaIdPredicate(mediaId));
     }
 
     @Override
@@ -839,7 +848,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
                 // remove the uploading class
-                AttributesWithClass attributesWithClass = new AttributesWithClass(
+                AttributesWithClass attributesWithClass = getAttributesWithClass(
                         content.getElementAttributes(predicate));
                 attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
                 if (mediaFile.isVideo()) {
@@ -876,6 +885,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onMediaDeleted(AztecAttributes aztecAttributes) {
         String localMediaId = aztecAttributes.getValue(ATTR_ID_WP);
+        mUploadingMediaProgressMax.remove(localMediaId);
         if (!TextUtils.isEmpty(localMediaId)) {
             mEditorFragmentListener.onMediaDeleted(localMediaId);
         }
@@ -958,7 +968,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 case IMAGE:
                 case VIDEO:
                     MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-                    AttributesWithClass attributesWithClass = new AttributesWithClass(
+                    AttributesWithClass attributesWithClass = getAttributesWithClass(
                             content.getElementAttributes(localMediaIdPredicate));
 
                     attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
@@ -1176,7 +1186,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         Set<String> classes = MetadataUtils.getClassAttribute(attrs);
         String idName;
         String uploadStatus = "";
-        final JSONObject meta = MetadataUtils.getMetadata(new AttributesWithClass(attrs), naturalWidth, naturalHeight);
+        final JSONObject meta = MetadataUtils.getMetadata(getAttributesWithClass(attrs), naturalWidth, naturalHeight);
         if (classes.contains(ATTR_STATUS_UPLOADING)) {
             uploadStatus = ATTR_STATUS_UPLOADING;
             idName = ATTR_ID_WP;
@@ -1237,50 +1247,53 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 break;
             case ATTR_STATUS_FAILED:
                 // Retry media upload
+                boolean successfullyRetried = true;
                 if (mFailedMediaIds.contains(localMediaId)) {
-                    mEditorFragmentListener.onMediaRetryClicked(localMediaId);
+                    successfullyRetried = mEditorFragmentListener.onMediaRetryClicked(localMediaId);
                 }
-                switch (mediaType) {
-                    case IMAGE:
-                    case VIDEO:
-                        AttributesWithClass attributesWithClass = new AttributesWithClass(
-                                content.getElementAttributes(mTappedMediaPredicate));
+                if (successfullyRetried) {
+                    switch (mediaType) {
+                        case IMAGE:
+                        case VIDEO:
+                            AttributesWithClass attributesWithClass = getAttributesWithClass(
+                                    content.getElementAttributes(mTappedMediaPredicate));
 
-                        // remove the failed class
-                        attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
+                            // remove the failed class
+                            attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
 
-                        if (!attributesWithClass.hasClass(ATTR_STATUS_FAILED)) {
-                            // just save the item and leave
-                            content.clearOverlays(mTappedMediaPredicate);
+                            if (!attributesWithClass.hasClass(ATTR_STATUS_FAILED)) {
+                                // just save the item and leave
+                                content.clearOverlays(mTappedMediaPredicate);
+                                content.resetAttributedMediaSpan(mTappedMediaPredicate);
+                                return;
+                            }
+
+                            attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
+                            if (mediaType.equals(MediaType.VIDEO)) {
+                                attributesWithClass.addClass(TEMP_VIDEO_UPLOADING_CLASS);
+                            }
+
+                            // set intermediate shade overlay
+                            content.setOverlay(mTappedMediaPredicate, 0,
+                                    new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)), Gravity.FILL);
+
+                            Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
+                            // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
+                            progressDrawable.setBounds(0, 0, 0, 4);
+
+                            content.setOverlay(mTappedMediaPredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
+                            content.updateElementAttributes(mTappedMediaPredicate, attributesWithClass.getAttributes());
+
+                            if (mediaType.equals(MediaType.VIDEO)) {
+                                overlayVideoIcon(2, mTappedMediaPredicate);
+                            }
+
                             content.resetAttributedMediaSpan(mTappedMediaPredicate);
-                            return;
-                        }
-
-                        attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
-                        if (mediaType.equals(MediaType.VIDEO)) {
-                            attributesWithClass.addClass(TEMP_VIDEO_UPLOADING_CLASS);
-                        }
-
-                        // set intermediate shade overlay
-                        content.setOverlay(mTappedMediaPredicate, 0,
-                                new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)), Gravity.FILL);
-
-                        Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
-                        // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
-                        progressDrawable.setBounds(0, 0, 0, 4);
-
-                        content.setOverlay(mTappedMediaPredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
-                        content.updateElementAttributes(mTappedMediaPredicate, attributesWithClass.getAttributes());
-
-                        if (mediaType.equals(MediaType.VIDEO)) {
-                            overlayVideoIcon(2, mTappedMediaPredicate);
-                        }
-
-                        content.resetAttributedMediaSpan(mTappedMediaPredicate);
-                        break;
+                            break;
+                    }
+                    mFailedMediaIds.remove(localMediaId);
+                    mUploadingMediaProgressMax.put(localMediaId, 0f);
                 }
-                mFailedMediaIds.remove(localMediaId);
-                mUploadingMediaProgressMax.put(localMediaId, 0f);
                 break;
             default:
                 if (mediaType.equals(MediaType.VIDEO)) {
@@ -1392,7 +1405,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     attributes.setValue(ATTR_ALT, JSONUtils.getString(meta, ATTR_ALT));
                 }
 
-                AttributesWithClass attributesWithClass = new AttributesWithClass(attributes);
+                AttributesWithClass attributesWithClass = getAttributesWithClass(attributes);
 
                 // remove previously set class attributes to add updated values
                 attributesWithClass.removeClassStartingWith(ATTR_ALIGN_DASH);
@@ -1455,7 +1468,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private static void addDefaultSizeClassIfMissing(AztecAttributes attributes) {
-        AttributesWithClass attrs = new AttributesWithClass(attributes);
+        AttributesWithClass attrs = getAttributesWithClass(attributes);
         if (!attrs.hasClassStartingWith("size")) {
             attrs.addClass("size-full");
         }
@@ -1465,7 +1478,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     // this is used for reattachment: when the editor is opened again on a Post that has in-progress
     // video uploads, we need to show the progress bar and the video play icon to differentiate from images
     private static void addVideoUploadingClassIfMissing(AztecAttributes attributes) {
-        AttributesWithClass attrs = new AttributesWithClass(attributes);
+        AttributesWithClass attrs = getAttributesWithClass(attributes);
         if (!attrs.hasClass(TEMP_VIDEO_UPLOADING_CLASS)) {
             attrs.addClass(TEMP_VIDEO_UPLOADING_CLASS);
         }
@@ -1501,6 +1514,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return allAttrs;
     }
 
+    private static @NonNull List<IAztecAttributedSpan> getSpansForPredicate(Spanned content,
+                                                                            AztecText.AttributePredicate predicate,
+                                                                            boolean returnFirstFoundOnly) {
+        IAztecAttributedSpan[] spans = content.getSpans(0, content.length(), IAztecAttributedSpan.class);
+        List<IAztecAttributedSpan> allMatchingSpans = new ArrayList<>();
+        for (IAztecAttributedSpan span : spans) {
+            if (predicate.matches(span.getAttributes())) {
+                allMatchingSpans.add(span);
+                if (returnFirstFoundOnly) return allMatchingSpans;
+            }
+        }
+        return allMatchingSpans;
+    }
+
     private static void updateElementAttributes(Spanned content,
                                                 AztecText.AttributePredicate predicate,
                                                 AztecAttributes attrs) {
@@ -1524,23 +1551,27 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
             // remove the uploading class
-            AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    getFirstElementAttributes(content, predicate));
-            attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
-            if (mediaFile.isVideo()) {
-                attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
+            Attributes firstElementAttributes = getFirstElementAttributes(content, predicate);
+            // let's make sure the element is still there within the content. Sometimes it may happen
+            // this method is called but the element doesn't exist in the post content anymore
+            if (firstElementAttributes != null) {
+                AttributesWithClass attributesWithClass = getAttributesWithClass(firstElementAttributes);
+                attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+                if (mediaFile.isVideo()) {
+                    attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
+                }
+
+                // add then new src property with the remoteUrl
+                AztecAttributes attrs = attributesWithClass.getAttributes();
+                attrs.setValue("src", remoteUrl);
+
+                addDefaultSizeClassIfMissing(attrs);
+
+                updateElementAttributes(content, predicate, attrs);
+
+                // re-set the post content
+                postContent = parser.toHtml(content, false);
             }
-
-            // add then new src property with the remoteUrl
-            AztecAttributes attrs = attributesWithClass.getAttributes();
-            attrs.setValue("src", remoteUrl);
-
-            addDefaultSizeClassIfMissing(attrs);
-
-            updateElementAttributes(content, predicate, attrs);
-
-            // re-set the post content
-            postContent = parser.toHtml(content, false);
         }
         return postContent;
     }
@@ -1555,20 +1586,25 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
             // remove the uploading class
-            AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    getFirstElementAttributes(content, predicate));
-            attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
-            if (mediaFile.isVideo()) {
-                attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
+            Attributes firstElementAttributes = getFirstElementAttributes(content, predicate);
+            // let's make sure the element is still there within the content. Sometimes it may happen
+            // this method is called but the element doesn't exist in the post content anymore
+            if (firstElementAttributes != null) {
+                AttributesWithClass attributesWithClass = getAttributesWithClass(
+                        firstElementAttributes);
+                attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+                if (mediaFile.isVideo()) {
+                    attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
+                }
+
+                // mark failed
+                attributesWithClass.addClass(ATTR_STATUS_FAILED);
+
+                updateElementAttributes(content, predicate, attributesWithClass.getAttributes());
+
+                // re-set the post content
+                postContent = parser.toHtml(content, false);
             }
-
-            // mark failed
-            attributesWithClass.addClass(ATTR_STATUS_FAILED);
-
-            updateElementAttributes(content, predicate, attributesWithClass.getAttributes());
-
-            // re-set the post content
-            postContent = parser.toHtml(content, false);
         }
         return postContent;
     }
@@ -1627,7 +1663,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void setMediaToFailed(@NonNull String mediaId) {
         AztecText.AttributePredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(mediaId);
-        clearMediaUploadingAndSetToFailedIfLocal(content.getText(), localMediaIdPredicate);
+        // we should be obtaining just one span for this media Id predicate, but just in case something
+        // weird happened we make sure we run through all obtained spans and mark them failed if a local src found
+        List<IAztecAttributedSpan> spans = getSpansForPredicate(content.getText(), localMediaIdPredicate, false);
+        for (IAztecAttributedSpan span : spans) {
+            clearMediaUploadingAndSetToFailedIfLocal(span);
+        }
         content.clearOverlays(localMediaIdPredicate);
         overlayFailedMedia(mediaId, content.getElementAttributes(localMediaIdPredicate));
         safeAddMediaIdToSet(mFailedMediaIds, mediaId);
@@ -1635,42 +1676,26 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private static void resetMediaWithStatus(Spanned content, String status) {
-        // get all items with "uploading" class
-        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(status);
+        // get all items with class defined by the "status" variable
+        AztecText.AttributePredicate statusPredicate = getPredicateWithClass(status);
 
         // update all items to failed, unless they already have a remote URL, in which case
         // it means the upload completed, but the item remained inconsistently marked as uploading
         // (for example after an app crash)
-        for (Attributes attrs : getAllElementAttributes(content, uploadingPredicate)) {
-            clearMediaUploadingAndSetToFailedIfLocal(content, getPredicateForMedia(attrs));
+        for (IAztecAttributedSpan span : getSpansForPredicate(content, statusPredicate, false)) {
+            clearMediaUploadingAndSetToFailedIfLocal(span);
         }
     }
 
-    private static AztecText.AttributePredicate getPredicateForMedia(Attributes attrs) {
-        String itemId = attrs.getValue(ATTR_ID_WP);
-        AztecText.AttributePredicate predicate;
-
-        if (!TextUtils.isEmpty(itemId)) {
-            predicate = MediaPredicate.getLocalMediaIdPredicate(itemId);
-        } else {
-            // if ATTR_ID_WP is missing, try with TEMP_IMAGE_ID
-            itemId = attrs.getValue(TEMP_IMAGE_ID);
-            predicate = MediaPredicate.getTempMediaIdPredicate(itemId);
-        }
-        return predicate;
-    }
-
-    private static void clearMediaUploadingAndSetToFailedIfLocal(Spanned content, AztecText.AttributePredicate predicate) {
+    private static void clearMediaUploadingAndSetToFailedIfLocal(IAztecAttributedSpan span) {
         // remove the uploading class
-        AttributesWithClass attributesWithClass = new AttributesWithClass(
-                getFirstElementAttributes(content,predicate));
+        AttributesWithClass attributesWithClass = getAttributesWithClass(span.getAttributes());
         attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
 
         attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
 
-        updateElementAttributes(content, predicate, attributesWithClass.getAttributes());
+        span.setAttributes(attributesWithClass.getAttributes());
     }
-
 
     private static AttributesWithClass addFailedStatusToMediaIfLocalSrcPresent(AttributesWithClass attributesWithClass) {
         // check if "src" value is remote or local, it only makes sense to mark failed local files

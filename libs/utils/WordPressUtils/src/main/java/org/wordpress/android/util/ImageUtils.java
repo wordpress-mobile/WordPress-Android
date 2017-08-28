@@ -546,7 +546,15 @@ public class ImageUtils {
         FileOutputStream out;
 
         try {
-            resizedImageFile = File.createTempFile("wp-image-", "." + fileExtension);
+            // try to re-use the same name as prefix of the temp file
+            String prefix = FileUtils.getFileNameFromPath(fileName);
+
+            if (TextUtils.isEmpty(prefix) || prefix.length() < 3) {
+                // prefix must be at least 3 characters
+                prefix = "wp-image";
+            }
+
+            resizedImageFile = File.createTempFile(prefix, "." + fileExtension);
             out = new FileOutputStream(resizedImageFile);
         } catch (IOException e) {
             AppLog.e(AppLog.T.MEDIA, "Failed to create the temp file on storage. Use the original picture instead.");
@@ -778,15 +786,9 @@ public class ImageUtils {
 
         try {
             // try to re-use the same name as prefix of the temp file
-            String prefix;
-            int dotPos = fileName.indexOf('.');
-            if (dotPos > 0) {
-                prefix = fileName.substring(0, dotPos);
-            } else {
-                prefix = fileName;
-            }
+            String prefix = FileUtils.getFileNameFromPath(fileName);
 
-            if (prefix.length() < 3) {
+            if (TextUtils.isEmpty(prefix) || prefix.length() < 3) {
                 // prefix must be at least 3 characters
                 prefix = "wp-image";
             }
@@ -832,7 +834,6 @@ public class ImageUtils {
 
         return null;
     }
-
 
     /**
      * This is a wrapper around MediaStore.Images.Thumbnails.getThumbnail that takes in consideration
