@@ -871,9 +871,10 @@ public class ImageUtils {
             return 1;
         }
 
+        int maxDimension = Math.max(optBounds.outWidth, optBounds.outHeight);
         int scale = 1;
-        while(optBounds.outWidth / scale / 2 >= maxSize &&
-                optBounds.outHeight / scale / 2 >= maxSize) {
+        
+        while (maxDimension / scale / 2 >= maxSize) {
             scale *= 2;
         }
         return scale;
