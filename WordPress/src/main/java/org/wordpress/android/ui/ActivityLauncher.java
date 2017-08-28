@@ -400,6 +400,7 @@ public class ActivityLauncher {
             } else {
                 Intent chooser = Intent.createChooser(intent, context.getString(R.string.error_please_choose_browser));
                 context.startActivity(chooser);
+                AppLockManager.getInstance().setExtendedTimeout();
             }
         } finally {
             // re-enable deeplinking
