@@ -120,6 +120,8 @@ public class LoginErrorFragment extends LoginBaseFormFragment<LoginListener> {
 
         if (mIsEmailNotFound) {
             view = layoutInflater.inflate(R.layout.login_error_header_email_not_found, null);
+            TextView subheading = (TextView) view.findViewById(R.id.subheading);
+            subheading.setText(getString(R.string.login_error_header_email_not_found_message_long, mEmail));
         } else {
             // TODO: Inflate generic error header.
         }
