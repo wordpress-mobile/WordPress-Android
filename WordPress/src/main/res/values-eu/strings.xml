@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-12 06:30:18+0000
+Translation-Revision-Date: 2017-08-18 14:48:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: eu_ES
@@ -22,6 +22,7 @@ Language: eu_ES
 	<string name="comment_q_action_done_generic">Ekintza eginda!</string>
 	<string name="sign_in_wpcom">Hasi saioa WordPress.com-en</string>
 	<string name="signout">Itxi saioa</string>
+	<string name="invite_invalid_email">%s: e-posta baliogabea</string>
 	<string name="reader_label_image_count_one">Irudi 1</string>
 	<string name="timespan_now">orain</string>
 	<string name="role_follower">Jarraitzailea</string>
@@ -51,6 +52,9 @@ Language: eu_ES
 	<string name="error_fetch_email_followers_list">Ezin izan dira guneko e-posta jarraitzaileak eskuratu</string>
 	<string name="error_fetch_followers_list">Ezin izan dira guneko jarraitzaileak eskuratu</string>
 	<string name="visual_editor">Editore bisuala</string>
+	<string name="format_bar_description_ul">Ordenarik gabeko zerrenda</string>
+	<string name="format_bar_description_ol">Zerrenda ordenatua</string>
+	<string name="format_bar_description_more">Irakurri gehiago</string>
 	<string name="format_bar_description_underline">Azpimarra</string>
 	<string name="format_bar_description_italic">Etzana</string>
 	<string name="image_settings_save_toast">Aldaketak gorde dira</string>
@@ -114,6 +118,7 @@ Language: eu_ES
 	<string name="plans_loading_error">Ezin izan dira planak kargatu</string>
 	<string name="plan">Plana</string>
 	<string name="plans">Planak</string>
+	<string name="export_your_content_message">Zure bidalketak, orrialdeak eta ezarpenak e-posta bidez bidaliko zaizkizu %s helbidera.</string>
 	<string name="export_your_content">Esportatu zure edukia</string>
 	<string name="exporting_content_progress">Edukia esportatzen...</string>
 	<string name="export_email_sent">Esportazio e-posta bidalita!</string>
@@ -231,7 +236,6 @@ Language: eu_ES
 	<string name="site_settings_default_category_title">Kategoria lehenetsia</string>
 	<string name="site_settings_address_title">Helbidea</string>
 	<string name="site_settings_title_title">Gunearen izenburua</string>
-	<string name="site_settings_this_device_header">Gailu hau</string>
 	<string name="site_settings_discussion_new_posts_header">Lehenetsitakoak bidalketa berrientzako</string>
 	<string name="site_settings_account_header">Kontua</string>
 	<string name="site_settings_writing_header">Idazketa</string>
@@ -324,6 +328,7 @@ Language: eu_ES
 	<string name="stats_insights">Ezagutzak</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Zure estatistikak ikusteko, hasi saioa Jetpack konektatzeko erabili zenuen WordPress.com kontuarekin.</string>
 	<string name="stats_other_recent_stats_moved_label">\'Bestelako estatistika berrien\' bila zabiltza? Ezagutzak orrialdera mugitu dugu.</string>
+	<string name="me_disconnect_from_wordpress_com">Itxi saioa WordPress.com-en</string>
 	<string name="me_connect_to_wordpress_com">Hasi saioa WordPress.com-en</string>
 	<string name="me_btn_login_logout">Hasi/itxi saioa</string>
 	<string name="account_settings">Kontuaren ezarpenak</string>
@@ -368,7 +373,6 @@ Language: eu_ES
 	<string name="publisher">Argitaratzailea:</string>
 	<string name="stats_entry_search_terms">Bilaketa terminoa</string>
 	<string name="stats_view_search_terms">Bilaketa terminoak</string>
-	<string name="post_uploading">Kargatzen</string>
 	<string name="stats_total">Guztira</string>
 	<string name="reader_label_new_posts">Bidalketa berriak</string>
 	<string name="reader_empty_posts_in_blog">Blog hau hutsik dago</string>
@@ -377,6 +381,7 @@ Language: eu_ES
 	<string name="error_copy_to_clipboard">Errore bat gertatu da testua arbelera kopiatzean</string>
 	<string name="reader_page_recommended_blogs">Gogoko izan ditzakezun guneak</string>
 	<string name="stats_months_and_years">Hilabeteak eta urteak</string>
+	<string name="post_uploading">Bidalketa igotzen</string>
 	<string name="stats_empty_video">Ez da bideorik erreproduzitu</string>
 	<string name="stats_entry_video_plays">Bideoak</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
@@ -427,6 +432,7 @@ Language: eu_ES
 	<string name="reader_empty_comments">Oraindik ez dago iruzkinik</string>
 	<string name="reader_label_view_original">Ikusi artikulu originala</string>
 	<string name="reader_label_like">Gustukoa</string>
+	<string name="select_a_blog">Aukeratu WordPress gune bat</string>
 	<string name="reader_empty_followed_blogs_title">Oraindik ez duzu webgunetik jarraitzen</string>
 	<string name="posts_empty_list">Bidalketarik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
 	<string name="pages_empty_list">Orrialderik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
@@ -607,6 +613,7 @@ Language: eu_ES
 	<string name="image_settings">Irudiaren ezarpenak</string>
 	<string name="invalid_site_url_message">Egiaztatu sartutako URL gunea baliozkoa dela</string>
 	<string name="theme_premium_theme">Ordainpeko itxura</string>
+	<string name="jetpack_message_not_admin">Jetpack plugina beharrezkoa da. Jarri harremanetan guneko administratzailearekin.</string>
 	<string name="share_url_page">Partekatu orrialdea</string>
 	<string name="share_link">Partekatu esteka</string>
 	<string name="deleting_page">Orrialdea ezabatzen</string>
@@ -767,6 +774,7 @@ Language: eu_ES
 	<string name="upload_full_size_image">Igo eta irudi osora estekatu</string>
 	<string name="title">Izenburua</string>
 	<string name="categories">Kategoriak</string>
+	<string name="tags_separate_with_commas">Banandu etiketak komak erabiliz</string>
 	<string name="dlg_deleting_comments">Iruzkinak ezabatzen</string>
 	<string name="notification_vibrate">Bibratu</string>
 	<string name="notification_blink">Jakinarazpen keinukariaren argia</string>

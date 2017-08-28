@@ -103,7 +103,6 @@ Language: az
 	<string name="toast_err_post_uploading">Yazı yüklənərkən açılmır</string>
 	<string name="posts_fetching">Yazılar alınır...</string>
 	<string name="media_fetching">Media faylı alınır...</string>
-	<string name="post_uploading">Yüklənir</string>
 	<string name="stats_total">Cəmi</string>
 	<string name="stats_overall">Əsas</string>
 	<string name="stats_period">Dövr</string>
@@ -207,12 +206,10 @@ Language: az
 	<string name="older_two_days">2 gündən əski</string>
 	<string name="older_last_week">1 həftədən əski</string>
 	<string name="stats_no_blog">İstənən bloq üçün statistiklar yüklənmir</string>
-	<string name="sending_content">%s içəriyi yüklənir</string>
 	<string name="uploading_total">%1$d / %2$d yüklənir</string>
 	<string name="posts_empty_list">Hələlik yazı yoxdur. Bir yazı yaratmağa nə deyərsiniz?</string>
 	<string name="comment_reply_to_user">Bunu cavabla: %s</string>
 	<string name="pages_empty_list">Hələlik səhifə yoxdur. Bir səhifə yaratmağa nə deyərsiniz?</string>
-	<string name="posting_post">Yazılan: "%s"</string>
 	<string name="reader_empty_followed_blogs_title">Hələki heç bir sayt izləmirsiniz</string>
 	<string name="reader_toast_err_generic">Bu hərəkət həyata keçirilə bilmir</string>
 	<string name="reader_toast_err_block_blog">Bu bloq əngəllənə bilmir</string>

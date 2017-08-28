@@ -114,7 +114,6 @@ Language: da_DK
 	<string name="reader_empty_posts_in_blog">Denne blog er tom</string>
 	<string name="stats_average_per_day">Dagligt gennemsnit</string>
 	<string name="stats_period">Periode</string>
-	<string name="post_uploading">Overfører</string>
 	<string name="reader_page_recommended_blogs">Websteder du måske vil synes om</string>
 	<string name="stats_followers_total_email">Total antal følgere på email: %1$s</string>
 	<string name="stats_followers_total_wpcom">Totale antal følgere på WordPress.com: %1$s</string>
@@ -184,8 +183,6 @@ Language: da_DK
 	<string name="stats_no_blog">Statistiken kunne ikke hentes for den valgte blog</string>
 	<string name="pages_empty_list">Endnu ingen sider! Hvorfor ikke lave en?</string>
 	<string name="posts_empty_list">Ingen indlæg endnu! Hvorfor ikke skabe et?</string>
-	<string name="posting_post">Sender "%s"</string>
-	<string name="sending_content">Overfører %s indhold</string>
 	<string name="uploading_total">Overfører %1$d af %2$d</string>
 	<string name="comment_reply_to_user">Besvar %s</string>
 	<string name="older_month">Ældre end en måned</string>

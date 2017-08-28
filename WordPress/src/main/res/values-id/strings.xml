@@ -22,7 +22,6 @@ Language: id
 	<string name="start_over_email_body">Saya ingin memulai situs %s dari awal</string>
 	<string name="start_over_email_subject">Mulai situs %s dari awal</string>
 	<string name="site_picker_remove_site_error">Terjadi error saat menghapus situs, coba lagi nanti</string>
-	<string name="editor_post_saved_locally_unfinished_media">Pos memiliki unggahan media yang belum selesai dan telah disimpan secara lokal</string>
 	<string name="sure_to_remove_account">Hapus situs ini dari aplikasi?</string>
 	<string name="photo_picker_title">Pilih foto</string>
 	<string name="error_publish_no_network">Perangkat offline. Perubahan disimpan secara lokal.</string>
@@ -43,9 +42,7 @@ Language: id
 	<string name="keep_editing">Lanjutkan menyunting</string>
 	<string name="error_all_media_upload_canceled">Semua unggahan media telah dibatalkan karena error yang tidak diketahui. Coba unggah lagi</string>
 	<string name="error_unknown_post_type">Format pos tidak diketahui</string>
-	<string name="error_unknown_post">Pos tidak diketahui, salinan lokal pos ini mungkin tidak sinkron dengan server</string>
 	<string name="error_fetch_site_after_creation">Situs telah dibuat, Anda mungkin perlu menyegarkan situs di pemilih situs.</string>
-	<string name="error_upload_params">Error saat mengunggah %1$s: %2$s</string>
 	<string name="submit_for_review">Kirim</string>
 	<string name="reader_empty_followed_blogs_search_title">Tidak ada situs yang cocok</string>
 	<string name="reader_hint_search_followed_sites">Cari di situs yang diikuti</string>
@@ -445,7 +442,6 @@ Language: id
 	<string name="site_settings_address_title">Alamat</string>
 	<string name="site_settings_title_title">Judul Situs</string>
 	<string name="site_settings_tagline_title">Slogan</string>
-	<string name="site_settings_this_device_header">Perangkat ini</string>
 	<string name="site_settings_discussion_new_posts_header">Baku untuk pos baru</string>
 	<string name="site_settings_account_header">Akun</string>
 	<string name="site_settings_writing_header">Tulisan</string>
@@ -661,7 +657,6 @@ Language: id
 	<string name="reader_empty_posts_request_failed">Gagal memuat pos-pos</string>
 	<string name="publisher">Penerbit:</string>
 	<string name="error_notification_open">Gagal membuka notifikasi</string>
-	<string name="post_uploading">Mengunggah</string>
 	<string name="stats_overall">Keseluruhan</string>
 	<string name="reader_empty_posts_in_blog">Blog ini kosong</string>
 	<string name="stats_recent_weeks">Beberapa Minggu Terakhir</string>
@@ -764,7 +759,6 @@ Language: id
 	<string name="older_two_days">Lebih dari 2 hari</string>
 	<string name="older_last_week">Lebih dari satu minggu</string>
 	<string name="stats_no_blog">Statistik tidak dapat dimuat untuk blog yang diminta</string>
-	<string name="sending_content">Mengunggah konten %s</string>
 	<string name="uploading_total">Mengunggah %1$d dari %2$d</string>
 	<string name="mnu_comment_liked">Disukai</string>
 	<string name="comment">Komentar</string>
@@ -772,7 +766,6 @@ Language: id
 	<string name="posts_empty_list">Belum ada pos. Mengapa tidak membuatnya?</string>
 	<string name="comment_reply_to_user">Balas ke %s</string>
 	<string name="pages_empty_list">Belum ada halaman. Mengapa tidak membuatnya?</string>
-	<string name="posting_post">Mengeposkan "%s"</string>
 	<string name="reader_empty_followed_blogs_title">Anda belum mengikuti situs apapun</string>
 	<string name="signing_out">Log out…</string>
 	<string name="reader_toast_err_generic">Tidak bisa menjalankan proses ini</string>
