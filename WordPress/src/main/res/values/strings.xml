@@ -98,7 +98,6 @@
     <string name="swipe_for_more">Swipe for more</string>
     <string name="confirm">Confirm</string>
     <string name="no_default_app_available_to_open_link">Unable to open the link</string>
-    <string name="site_url_null">Sorry, invalid site URL (null)</string>
     <string name="retry">Retry</string>
 
     <string name="button_skip">Skip</string>

@@ -154,21 +154,17 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {
-        if (site == null) {
-            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            return;
-        }
-
         AnalyticsTracker.Stat stat = openFromHeader ? AnalyticsTracker.Stat.OPENED_VIEW_SITE_FROM_HEADER
                 : AnalyticsTracker.Stat.OPENED_VIEW_SITE;
         AnalyticsUtils.trackWithSiteDetails(stat, site);
 
-        final String siteUrl = site.getUrl();
-        if (siteUrl == null) {
-            ToastUtils.showToast(context, context.getString(R.string.site_url_null), ToastUtils.Duration.LONG);
+        if (site == null) {
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+        } else if (site.getUrl() == null) {
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             AppLog.w(AppLog.T.UTILS, "Site URL is null. Login URL: " + site.getLoginUrl());
         } else {
-            openUrlExternal(context, siteUrl);
+            openUrlExternal(context, site.getUrl());
         }
     }
 
