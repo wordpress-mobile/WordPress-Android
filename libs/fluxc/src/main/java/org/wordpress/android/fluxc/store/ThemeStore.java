@@ -71,6 +71,16 @@ public class ThemeStore extends Store {
         }
     }
 
+    public static class OnCurrentThemeFetched extends OnChanged<FetchThemesError> {
+        public SiteModel site;
+        public ThemeModel theme;
+
+        public OnCurrentThemeFetched(SiteModel site, ThemeModel theme) {
+            this.site = site;
+            this.theme = theme;
+        }
+    }
+
     @Inject
     public ThemeStore(Dispatcher dispatcher) {
         super(dispatcher);
