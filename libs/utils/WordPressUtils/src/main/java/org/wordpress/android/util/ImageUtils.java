@@ -870,6 +870,7 @@ public class ImageUtils {
         if (maxSize < 1) {
             return 1;
         }
+
         int scale = 1;
         while(optBounds.outWidth / scale / 2 >= maxSize &&
                 optBounds.outHeight / scale / 2 >= maxSize) {
