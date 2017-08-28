@@ -9,6 +9,19 @@
     android:paddingTop="@dimen/margin_extra_large" >
 
     <TextView
+        android:id="@+id/heading"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_width="match_parent"
+        android:text="@string/login_error_header_generic_heading"
+        style="@style/LoginTheme.Heading" >
+    </TextView>
+
+    <TextView
         android:id="@+id/subheading"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_extra_large"
