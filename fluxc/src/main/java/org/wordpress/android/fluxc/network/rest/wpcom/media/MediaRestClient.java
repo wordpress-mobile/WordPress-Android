@@ -9,6 +9,7 @@ import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -506,10 +507,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         media.setFileName(from.file);
         media.setFileExtension(from.extension);
         media.setMimeType(from.mime_type);
-        media.setTitle(from.title);
-        media.setCaption(from.caption);
-        media.setDescription(from.description);
-        media.setAlt(from.alt);
+        media.setTitle(StringEscapeUtils.unescapeHtml4(from.title));
+        media.setCaption(StringEscapeUtils.unescapeHtml4(from.caption));
+        media.setDescription(StringEscapeUtils.unescapeHtml4(from.description));
+        media.setAlt(StringEscapeUtils.unescapeHtml4(from.alt));
         if (from.thumbnails != null) {
             if (!TextUtils.isEmpty(from.thumbnails.fmt_std)) {
                 media.setThumbnailUrl(from.thumbnails.fmt_std);

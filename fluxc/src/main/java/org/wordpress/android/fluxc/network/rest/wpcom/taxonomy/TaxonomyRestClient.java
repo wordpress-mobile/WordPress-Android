@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
@@ -156,9 +157,9 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
     private TermModel termResponseToTermModel(TermWPComRestResponse from) {
         TermModel term = new TermModel();
         term.setRemoteTermId(from.ID);
-        term.setName(from.name);
+        term.setName(StringEscapeUtils.unescapeHtml4(from.name));
         term.setSlug(from.slug);
-        term.setDescription(from.description);
+        term.setDescription(StringEscapeUtils.unescapeHtml4(from.description));
         term.setParentRemoteId(from.parent);
 
         return term;
