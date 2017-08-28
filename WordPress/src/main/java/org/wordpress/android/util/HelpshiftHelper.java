@@ -66,6 +66,7 @@ public class HelpshiftHelper {
         ORIGIN_LOGIN_EMAIL("origin:login-email"),
         ORIGIN_LOGIN_MAGIC_LINK("origin:login-magic-link"),
         ORIGIN_LOGIN_EMAIL_PASSWORD("origin:login-wpcom-password"),
+        ORIGIN_LOGIN_ERROR_EMAIL("origin:login-error-email"),
         ORIGIN_LOGIN_2FA("origin:login-2fa"),
         ORIGIN_LOGIN_SITE_ADDRESS("origin:login-site-address"),
         ORIGIN_LOGIN_SOCIAL("origin:login-social"),

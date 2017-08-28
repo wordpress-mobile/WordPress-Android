@@ -93,7 +93,7 @@ public class LoginErrorFragment extends LoginBaseFormFragment<LoginListener> {
 
     @Override
     protected void onHelp() {
-        // No help action on error screen.
+        mLoginListener.helpErrorEmail(mEmail);
     }
 
     @Override
