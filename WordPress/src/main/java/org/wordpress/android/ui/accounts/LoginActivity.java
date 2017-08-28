@@ -358,6 +358,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
+    public void helpErrorGeneric(String email) {
+        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_ERROR_GENERIC);
+    }
+
+    @Override
     public void helpMagicLinkRequest(String email) {
         launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_MAGIC_LINK);
     }
