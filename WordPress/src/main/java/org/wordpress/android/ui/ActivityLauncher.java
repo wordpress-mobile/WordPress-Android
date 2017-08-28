@@ -387,7 +387,7 @@ public class ActivityLauncher {
             AppLockManager.getInstance().setExtendedTimeout();
 
         } catch (ActivityNotFoundException e) {
-            ToastUtils.showToast(context, context.getString(R.string.no_default_app_available_to_open_link), ToastUtils.Duration.LONG);
+            ToastUtils.showToast(context, context.getString(R.string.cant_open_url), ToastUtils.Duration.LONG);
             AppLog.e(AppLog.T.UTILS, "No default app available on the device to open the link: " + url, e);
         } catch (SecurityException se) {
             AppLog.e(AppLog.T.UTILS, "Error opening url in default browser. Url: " + url, se);
