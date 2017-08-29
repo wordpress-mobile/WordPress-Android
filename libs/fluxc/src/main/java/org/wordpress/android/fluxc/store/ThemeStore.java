@@ -170,12 +170,15 @@ public class ThemeStore extends Store {
     }
 
     private void fetchCurrentTheme(@NonNull SiteModel site) {
+        mThemeRestClient.fetchCurrentTheme(site);
     }
 
     private void handleCurrentThemeFetched(FetchedCurrentThemePayload payload) {
         OnCurrentThemeFetched event = new OnCurrentThemeFetched(payload.site, payload.theme);
         if (payload.isError()) {
             event.error = payload.error;
+        } else {
+            ThemeSqlUtils.insertTheme(payload.theme);
         }
         emitChange(event);
     }
