@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
+import org.wordpress.android.fluxc.persistence.ThemeSqlUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.List;
@@ -126,12 +127,17 @@ public class ThemeStore extends Store {
     }
 
     private void fetchWpThemes() {
+        mThemeRestClient.fetchWpComThemes();
     }
 
     private void handleWpThemesFetched(FetchedThemesPayload payload) {
         OnThemesChanged event = new OnThemesChanged(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
+        } else {
+            ThemeSqlUtils.insertOrReplaceWpThemes(payload.themes);
+        }
+        emitChange(event);
     }
 
     private void fetchInstalledThemes(@NonNull SiteModel site) {
