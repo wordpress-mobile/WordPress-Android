@@ -58,7 +58,7 @@ public class ThemeStore extends Store {
     }
 
     public static class FetchThemesError implements OnChangedError {
-        ThemeErrorType type;
+        public ThemeErrorType type;
         public String message;
         public FetchThemesError(ThemeErrorType type, String message) {
             this.type = type;
