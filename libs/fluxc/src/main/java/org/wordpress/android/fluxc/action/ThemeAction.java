@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedThemesPayload;
+import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
 
 @ActionEnum
 public enum ThemeAction implements IAction {
@@ -18,6 +19,8 @@ public enum ThemeAction implements IAction {
     FETCH_PURCHASED_THEMES,
     @Action(payloadType = SiteModel.class)
     FETCH_CURRENT_THEME,
+    @Action(payloadType = ActivateThemePayload.class)
+    ACTIVATE_THEME,
 
     // Remote responses
     @Action(payloadType = FetchedThemesPayload.class)
@@ -28,4 +31,6 @@ public enum ThemeAction implements IAction {
     FETCHED_PURCHASED_THEMES,
     @Action(payloadType = FetchedCurrentThemePayload.class)
     FETCHED_CURRENT_THEME,
+    @Action(payloadType = ActivateThemePayload.class)
+    ACTIVATED_THEME,
 }

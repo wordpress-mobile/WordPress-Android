@@ -51,6 +51,21 @@ public class ThemeStore extends Store {
         }
     }
 
+    public static class ActivateThemePayload extends Payload {
+        public SiteModel site;
+        public ThemeModel theme;
+        public ActivateThemeError error;
+
+        public ActivateThemePayload(ActivateThemeError error) {
+            this.error = error;
+        }
+
+        public ActivateThemePayload(SiteModel site, ThemeModel theme) {
+            this.site = site;
+            this.theme = theme;
+        }
+    }
+
     public enum ThemeErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
@@ -61,6 +76,16 @@ public class ThemeStore extends Store {
         public ThemeErrorType type;
         public String message;
         public FetchThemesError(ThemeErrorType type, String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public static class ActivateThemeError implements OnChangedError {
+        public ThemeErrorType type;
+        public String message;
+
+        public ActivateThemeError(ThemeErrorType type, String message) {
             this.type = type;
             this.message = message;
         }
@@ -79,6 +104,16 @@ public class ThemeStore extends Store {
         public ThemeModel theme;
 
         public OnCurrentThemeFetched(SiteModel site, ThemeModel theme) {
+            this.site = site;
+            this.theme = theme;
+        }
+    }
+
+    public static class OnThemeActivated extends OnChanged<ActivateThemeError> {
+        public SiteModel site;
+        public ThemeModel theme;
+
+        public OnThemeActivated(SiteModel site, ThemeModel theme) {
             this.site = site;
             this.theme = theme;
         }
@@ -117,6 +152,10 @@ public class ThemeStore extends Store {
                 break;
             case FETCHED_CURRENT_THEME:
                 handleCurrentThemeFetched((FetchedCurrentThemePayload) action.getPayload());
+                break;
+            case ACTIVATE_THEME:
+                break;
+            case ACTIVATED_THEME:
                 break;
         }
     }
