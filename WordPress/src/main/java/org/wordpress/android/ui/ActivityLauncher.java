@@ -156,15 +156,18 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {
-        if (site == null) {
-            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            return;
-        }
-
         AnalyticsTracker.Stat stat = openFromHeader ? AnalyticsTracker.Stat.OPENED_VIEW_SITE_FROM_HEADER
                 : AnalyticsTracker.Stat.OPENED_VIEW_SITE;
         AnalyticsUtils.trackWithSiteDetails(stat, site);
-        openUrlExternal(context, site.getUrl());
+
+        if (site == null) {
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+        } else if (site.getUrl() == null) {
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            AppLog.w(AppLog.T.UTILS, "Site URL is null. Login URL: " + site.getLoginUrl());
+        } else {
+            openUrlExternal(context, site.getUrl());
+        }
     }
 
     public static void viewBlogAdmin(Context context, SiteModel site) {
