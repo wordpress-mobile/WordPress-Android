@@ -154,8 +154,10 @@ public class ThemeStore extends Store {
                 handleCurrentThemeFetched((FetchedCurrentThemePayload) action.getPayload());
                 break;
             case ACTIVATE_THEME:
+                activateTheme((ActivateThemePayload) action.getPayload());
                 break;
             case ACTIVATED_THEME:
+                handleThemeActivated((ActivateThemePayload) action.getPayload());
                 break;
         }
     }
@@ -218,6 +220,20 @@ public class ThemeStore extends Store {
             event.error = payload.error;
         } else {
             ThemeSqlUtils.insertTheme(payload.theme);
+        }
+        emitChange(event);
+    }
+
+    private void activateTheme(@NonNull ActivateThemePayload payload) {
+        mThemeRestClient.activateTheme(payload.site, payload.theme);
+    }
+
+    private void handleThemeActivated(@NonNull ActivateThemePayload payload) {
+        OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            // TODO update local db?
         }
         emitChange(event);
     }
