@@ -1213,7 +1213,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     EditPostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            String message = getString(mIsPage ? R.string.error_publish_empty_page_param : R.string.error_publish_empty_post_param);
+                            String message = getString(mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
                             ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
                         }
                     });
