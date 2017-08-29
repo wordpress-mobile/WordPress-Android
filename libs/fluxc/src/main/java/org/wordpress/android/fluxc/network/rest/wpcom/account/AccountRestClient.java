@@ -56,16 +56,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     public static class AccountPushSocialResponsePayload extends Payload {
-        private final JSONObject mJson;
-
-        public AccountPushSocialResponsePayload(BaseNetworkError error) {
-            this.error = error;
-            this.mJson = new JSONObject();
-        }
-
-        public AccountPushSocialResponsePayload(JSONObject json) {
-            this.mJson = json;
-        }
+        public JSONObject mJson = new JSONObject();
 
         public CharSequence getError() {
             return mJson.optString("error");
@@ -238,16 +229,16 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload =
-                                new AccountPushSocialResponsePayload(response.json);
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                        payload.mJson = response.json;
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AccountPushSocialResponsePayload payload =
-                                new AccountPushSocialResponsePayload(error);
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                        payload.error = error;
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
