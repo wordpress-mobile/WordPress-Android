@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-03 17:43:31+0000
+Translation-Revision-Date: 2017-08-17 01:10:12+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+	<string name="error_unknown_post">Não foi possível encontrar o post no servidor</string>
+	<string name="error_post_does_not_exist">Este post não existe mais</string>
+	<string name="error_media_recover">Não foi possível fazer o upload desta mídia para o post. Edite o post ou tente novamente.</string>
+	<string name="error_media_canceled">O upload da mídia foi cancelado</string>
+	<string name="error_upload_post_media_params">Erro no upload da mídia para %1$s: %2$s.</string>
+	<string name="error_upload_post_params">Erro no upload de %1$s: %2$s.</string>
+	<string name="async_promo_link">Como isso funciona?</string>
+	<string name="async_promo_description">Agora você pode sair do editor e o seu post será salvo e publicado por trás dos panos! Faça uma tentativa!</string>
+	<string name="async_promo_title">Publique com confiança</string>
+	<string name="editor_uploading_post">Seu post está sendo enviado</string>
+	<string name="uploading_post_media">Fazendo upload da mídia...</string>
+	<string name="dialog_confirm_cancel_post_media_uploading">Tem certeza? Excluir este post também cancelará o upload da mídia.</string>
+	<string name="page_scheduled">Página agendada</string>
+	<string name="post_scheduled">Post agendado</string>
+	<string name="post_draft_param">"%s" foi salvo como rascunho!</string>
+	<string name="post_scheduled_param">"%s" foi agendado!</string>
+	<string name="post_updated_param">"%s" foi atualizado!</string>
+	<string name="post_published_param">"%s" foi publicado!</string>
+	<string name="button_retry">Tentar novamente</string>
+	<string name="post_queued">Post na fila</string>
+	<string name="uploading_post">Fazendo upload de "%s"</string>
+	<string name="connection_to_server_lost">Conexão com o servidor perdida</string>
+	<string name="max_video_resolution">Resolução máxima</string>
 	<string name="login_epilogue_mysites_other">Meus sites</string>
 	<string name="login_epilogue_mysites_one">Meu site</string>
 	<string name="login_logged_in_as">Logado como</string>
@@ -31,7 +54,6 @@ Language: pt_BR
 	<string name="login_magic_links_sent_description">Ilustração do link mágico enviado</string>
 	<string name="login_magic_links_sent_label">Seu link mágico está a caminho! Verifique seu e-mail neste dispositivo e toque no link que você recebeu do WordPress.com.</string>
 	<string name="login_magic_links_label">Enviaremos um e-mail pra você com um link mágico que fará você se conectar instantaneamente, sem precisar de senha. Chega de catar milho no teclado!</string>
-	<string name="login_error_while_checking_email">Ocorreu um erro ao verificar o endereço de e-mail!</string>
 	<string name="password_incorrect">Parece que esta senha está errada. Verifique seus dados e tente novamente.</string>
 	<string name="email_not_registered_wpcom">Este e-mail não está registrado no WordPress.com</string>
 	<string name="requesting_otp">Solicitando um código de verificação via SMS.</string>
@@ -50,11 +72,7 @@ Language: pt_BR
 	<string name="login_promo_text_onthego">Publique do parque. Escreva do ônibus. Comente de um café. O WordPress te acompanha para onde você for.</string>
 	<string name="create_wordpress_site">Criar um site WordPress</string>
 	<string name="email_not_found">Não encontramos um usuário do WordPress.com com este endereço de e-mail</string>
-	<string name="login_password_image">Ícone de senha do login</string>
-	<string name="login_username_image">Ícone de nome do usuário</string>
 	<string name="login_site_address_help_image">Imagem de posicionamento de endereço do site</string>
-	<string name="login_globe_icon">Ícone do globo do endereço do site</string>
-	<string name="login_email_image">Ícone de e-mail do login</string>
 	<string name="image_optimization_promo_desc">A otimização de imagens as deixa mais leves, tornando seu upload mais rápido.\n\nVocê pode alterar essa funcionalidade a qualquer momento nas configurações do site.</string>
 	<string name="image_optimization_promo_title">Habilitar  otimização de imagens?</string>
 	<string name="leave_off">Permanecer desligado</string>
@@ -98,7 +116,6 @@ Language: pt_BR
 	<string name="notifications_tab_title_all">Todas</string>
 	<string name="top_level_category_name">Primeiro nível</string>
 	<string name="category_parent">Categoria ascendente (opcional):</string>
-	<string name="toast_err_post_media_uploading">Não é possível excluir um post enquanto está sendo feito um upload</string>
 	<string name="media_empty_audio_list">Você não possui arquivos de áudio</string>
 	<string name="media_empty_documents_list">Você não possui documentos</string>
 	<string name="media_empty_videos_list">Você não possui vídeos</string>
@@ -107,7 +124,7 @@ Language: pt_BR
 	<string name="media_error_exceeds_memory_limit">Arquivo muito grande para ser carregado neste site</string>
 	<string name="media_error_exceeds_php_filesize">O arquivo excede o tamanho máximo de upload para este site</string>
 	<string name="media_error_http_too_large_video_upload">Vídeo muito grande para fazer upload</string>
-	<string name="media_error_http_too_large_photo_upload">Imagem muito grande para fazer upload. Experimente alterar Otimizar Imagens nas configurações do site</string>
+	<string name="media_error_http_too_large_photo_upload">Imagem muito grande para fazer upload. Tente alterar Otimizar imagens nas configurações do seu aplicativo</string>
 	<string name="media_audio">Áudio</string>
 	<string name="media_videos">Vídeos</string>
 	<string name="media_documents">Documentos</string>
@@ -144,7 +161,6 @@ Language: pt_BR
 	<string name="draft_uploaded">Upload do rascunho concluído</string>
 	<string name="report_bug">Comunicar erro</string>
 	<string name="video_quality">Qualidade do vídeo</string>
-	<string name="max_video_resolution">Largura padrão do vídeo</string>
 	<string name="permission_location">Localização</string>
 	<string name="permission_camera">Câmera</string>
 	<string name="permission_storage">Armazenamento</string>
@@ -203,7 +219,7 @@ Language: pt_BR
 	<string name="fab_content_description_write">Escrever</string>
 	<string name="my_site_btn_sharing">Compartilhar</string>
 	<string name="button_not_now">Não agora</string>
-	<string name="media_error_internal_server_error">Erro no upload. Tente habilitar Otimizar imagens nas configurações do seu site.</string>
+	<string name="media_error_internal_server_error">Erro no upload. Tente alterar Otimizar imagens nas configurações do seu aplicativo</string>
 	<string name="media_downloading">Salvando mídia neste dispositivo</string>
 	<string name="error_media_save">Não foi possível salvar a mídia</string>
 	<string name="editor_scheduled_post_saved_online">Post agendado</string>
@@ -239,7 +255,7 @@ Language: pt_BR
 	<string name="start_over_email_body">Quero recomeçar o site %s</string>
 	<string name="start_over_email_subject">Recomeçar o site %s</string>
 	<string name="site_picker_remove_site_error">Ocorreu um erro ao remover o site, tente novamente mais tarde</string>
-	<string name="editor_post_saved_locally_unfinished_media">O post tem uploads de mídias não concluídos e foi salvo localmente</string>
+	<string name="editor_post_saved_locally_failed_media">O post tem uploads de mídias não concluídos e foi salvo localmente</string>
 	<string name="sure_to_remove_account">Remover esse site do aplicativo?</string>
 	<string name="photo_picker_title">Escolha a foto</string>
 	<string name="error_publish_no_network">O dispositivo está off-line. As alterações serão salvas localmente.</string>
@@ -262,9 +278,7 @@ Language: pt_BR
 	<string name="image_quality">Qualidade da imagem</string>
 	<string name="error_all_media_upload_canceled">Todos os uploads de mídia foram cancelados devido a um erro desconhecido. Tente fazer upload novamente</string>
 	<string name="error_unknown_post_type">Formato de post desconhecido</string>
-	<string name="error_unknown_post">Post desconhecido, a cópia local desse post pode não estar sincronizada com o servidor</string>
 	<string name="error_fetch_site_after_creation">O site foi criado, talvez seja necessário atualizar seus sites no seletor de sites.</string>
-	<string name="error_upload_params">Erro ao fazer upload de %1$s: %2$s</string>
 	<string name="submit_for_review">Enviar</string>
 	<string name="tell_me_more">Conte-me mais</string>
 	<string name="duplicate_site_detected">Um site duplicado foi detectado.</string>
@@ -693,7 +707,6 @@ Language: pt_BR
 	<string name="site_settings_address_title">Endereço</string>
 	<string name="site_settings_tagline_title">Tagline</string>
 	<string name="site_settings_title_title">Título do site</string>
-	<string name="site_settings_this_device_header">Este dispositivo</string>
 	<string name="site_settings_discussion_new_posts_header">Padrões para novos posts</string>
 	<string name="site_settings_writing_header">Escrevendo</string>
 	<string name="site_settings_account_header">Conta</string>
@@ -922,7 +935,7 @@ Language: pt_BR
 	<string name="stats_period">Período</string>
 	<string name="stats_overall">Geral</string>
 	<string name="stats_total">Total</string>
-	<string name="post_uploading">Fazendo upload</string>
+	<string name="post_uploading">Fazendo upload do post</string>
 	<string name="stats_visitors">Visitantes</string>
 	<string name="stats_views">Visualizações</string>
 	<string name="stats_timeframe_years">Anos</string>
@@ -989,7 +1002,6 @@ Language: pt_BR
 	<string name="delete_sure">Excluir este rascunho</string>
 	<string name="delete_sure_post">Excluir este post</string>
 	<string name="signing_out">Saindo…</string>
-	<string name="posting_post">Publicando "%s"</string>
 	<string name="pages_empty_list">Nenhuma página. Por que não criar uma?</string>
 	<string name="comment_reply_to_user">Responder %s</string>
 	<string name="posts_empty_list">Nenhum post. Por que não criar um?</string>
@@ -997,7 +1009,7 @@ Language: pt_BR
 	<string name="comment">Comentário</string>
 	<string name="mnu_comment_liked">Curtiu</string>
 	<string name="uploading_total">Fazendo upload de %1$d de %2$d</string>
-	<string name="sending_content">Fazendo upload do conteúdo de %s</string>
+	<string name="sending_content">Fazendo upload do conteúdo de %s...</string>
 	<string name="select_a_blog">Escolha um site WordPress</string>
 	<string name="stats_no_blog">Não foi possível carregar as estatísticas do blog</string>
 	<string name="older_last_week">Há mais de uma semana</string>

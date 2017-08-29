@@ -383,7 +383,6 @@ Language: es_VE
 	<string name="site_settings_address_title">Dirección</string>
 	<string name="site_settings_title_title">Título del sitio</string>
 	<string name="site_settings_tagline_title">Lema</string>
-	<string name="site_settings_this_device_header">Este dispositivo</string>
 	<string name="site_settings_discussion_new_posts_header">Por defecto para nuevas entradas</string>
 	<string name="site_settings_writing_header">Escribiendo</string>
 	<string name="site_settings_account_header">Cuenta</string>
@@ -609,7 +608,6 @@ Language: es_VE
 	<string name="logs_copied_to_clipboard">Los informes de la aplicación se han copiado al portapapeles</string>
 	<string name="stats_overall">Global</string>
 	<string name="reader_empty_posts_in_blog">Este blog está vacío</string>
-	<string name="post_uploading">Cargando</string>
 	<string name="stats_recent_weeks">Últimas Semanas</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
 	<string name="stats_views">Vistas</string>
@@ -683,7 +681,6 @@ Language: es_VE
 	<string name="pages_empty_list">Sin páginas todavía. ¿Por qué no crear una?</string>
 	<string name="new_blog_wpcom_created">Se ha creado un blog de WordPress.com.</string>
 	<string name="comment_reply_to_user">Responder a %s</string>
-	<string name="posting_post">Publicando "%s"</string>
 	<string name="faq_button">Preguntas frecuentes</string>
 	<string name="error_refresh_unauthorized_pages">No tienes permiso para ver o editar páginas.</string>
 	<string name="error_refresh_unauthorized_posts">No tienes permiso para ver o editar entradas.</string>
@@ -705,7 +702,6 @@ Language: es_VE
 	<string name="reader_label_comments_on">Comentarios en</string>
 	<string name="comment">Comentario</string>
 	<string name="signing_out">Cerrando sesión…</string>
-	<string name="sending_content">Cargando el contenido de %s</string>
 	<string name="uploading_total">Cargando %1$d de %2$d</string>
 	<string name="agree_terms_of_service">Al crear una cuenta, aceptas los fascinantes %1$sTérminos de servicio%2$s.</string>
 	<string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>

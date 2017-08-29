@@ -22,7 +22,6 @@ Language: is
 	<string name="start_over_email_body">Ég vil byrja upp á nýtt með vefinn %s</string>
 	<string name="start_over_email_subject">Byrja upp á nýtt með vefinn %s</string>
 	<string name="site_picker_remove_site_error">Villa við að eyða vef, reyndu aftur síðar</string>
-	<string name="editor_post_saved_locally_unfinished_media">Færslan inniheldur ókláraðar skráarupphleðslur og hefur verið vistuð staðvært</string>
 	<string name="sure_to_remove_account">Fjarlægja þennan vef úr appinu?</string>
 	<string name="photo_picker_title">Veldu mynd</string>
 	<string name="error_publish_no_network">Tæki er ónettengt. Breytingar vistaðar staðbundið.</string>
@@ -43,9 +42,7 @@ Language: is
 	<string name="keep_editing">Halda áfram að breyta</string>
 	<string name="error_all_media_upload_canceled">Hætt hefur verið við allar upphleðslur á skrám vegna óþekktrar villu. Vinsamlegast reyndu aftur að hlaða upp.</string>
 	<string name="error_unknown_post_type">Óþekkt færslusnið</string>
-	<string name="error_unknown_post">Óþekkt færsla, staðbundið afrit af þessari færslu gæti verið ósamstætt við netþjón</string>
 	<string name="error_fetch_site_after_creation">Vefur hefur verið stofnaður, þú gætir þurft að endurfríska vefina þína í vefvali.</string>
-	<string name="error_upload_params">Villa við að hlaða upp %1$s: %2$s</string>
 	<string name="submit_for_review">Áfram</string>
 	<string name="tell_me_more">Segðu mér meira</string>
 	<string name="duplicate_site_detected">Fleiri en eitt eintak af vef fannst.</string>
@@ -466,7 +463,6 @@ Language: is
 	<string name="site_settings_address_title">Heimilisfang</string>
 	<string name="site_settings_tagline_title">Kjörorð</string>
 	<string name="site_settings_title_title">Titill vefs</string>
-	<string name="site_settings_this_device_header">Þetta tæki</string>
 	<string name="site_settings_discussion_new_posts_header">Sjálfgildi fyrir nýjar færslur</string>
 	<string name="site_settings_writing_header">Ritun</string>
 	<string name="site_settings_account_header">Aðgangur</string>
@@ -694,7 +690,6 @@ Language: is
 	<string name="stats_period">Tímabil</string>
 	<string name="stats_overall">Heildar</string>
 	<string name="stats_total">Samtals</string>
-	<string name="post_uploading">Hlaða upp</string>
 	<string name="stats_visitors">Gestir</string>
 	<string name="stats_views">Flettingar</string>
 	<string name="stats_timeframe_years">Ár</string>
@@ -761,7 +756,6 @@ Language: is
 	<string name="delete_sure">Eyða þessum drögum</string>
 	<string name="delete_sure_post">Eyða þessari færslu</string>
 	<string name="signing_out">Skrái út…</string>
-	<string name="posting_post">Birti “%s”</string>
 	<string name="pages_empty_list">Engar síður enn. Hvers vegna ekki að búa til eina?</string>
 	<string name="comment_reply_to_user">Svara %s</string>
 	<string name="posts_empty_list">Engar færslur enn. Hví ekki rita eina?</string>
@@ -769,7 +763,6 @@ Language: is
 	<string name="comment">Athugasemd</string>
 	<string name="mnu_comment_liked">Líkar við</string>
 	<string name="uploading_total">Hleð upp %1$d af %2$d</string>
-	<string name="sending_content">Hleð upp %s efni</string>
 	<string name="stats_no_blog">Ekki var hægt að hlaða tölfræði fyrir bloggið</string>
 	<string name="older_last_week">Eldri en vika</string>
 	<string name="older_two_days">Eldri en 2 dagar</string>

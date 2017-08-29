@@ -164,7 +164,6 @@ Language: es_CL
 	<string name="posts_fetching">Recuperando entradas…</string>
 	<string name="media_fetching">Recuperando medios…</string>
 	<string name="stats_search_terms_unknown_search_terms">Términos de Búsqueda Desconocidos</string>
-	<string name="post_uploading">Cargando</string>
 	<string name="stats_total">Total</string>
 	<string name="stats_overall">Global</string>
 	<string name="stats_period">Periodo</string>
@@ -265,7 +264,6 @@ Language: es_CL
 	<string name="older_two_days">Hace más de 2 días</string>
 	<string name="older_last_week">Hace más de 1 semana</string>
 	<string name="stats_no_blog">No se han podido cargar las estadísticas del blog solicitado</string>
-	<string name="sending_content">Cargando el contenido de %s</string>
 	<string name="uploading_total">Cargando %1$d de %2$d</string>
 	<string name="mnu_comment_liked">Me gustó</string>
 	<string name="comment">Comentario</string>
@@ -273,7 +271,6 @@ Language: es_CL
 	<string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
 	<string name="comment_reply_to_user">Responder a %s</string>
 	<string name="pages_empty_list">Sin páginas todavía. ¿Por qué no crear una?</string>
-	<string name="posting_post">Publicando "%s"</string>
 	<string name="browse_our_faq_button">Revisa nuestras Preguntas Más Frecuentes.</string>
 	<string name="reader_toast_err_generic">No es posible realizar esta acción</string>
 	<string name="reader_toast_err_block_blog">No es posible bloquear este blog</string>

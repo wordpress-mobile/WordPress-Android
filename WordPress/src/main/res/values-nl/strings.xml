@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-07 18:55:31+0000
+Translation-Revision-Date: 2017-08-22 10:07:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+	<string name="error_unknown_post">Bericht niet gevonden op server</string>
+	<string name="error_post_does_not_exist">Dit bericht bestaat niet meer</string>
+	<string name="error_media_recover">We kunnen de media van dit bericht niet uploaden. Bewerk het bericht en probeer het opnieuw.</string>
+	<string name="error_media_canceled">Het uploaden van media is geannuleerd</string>
+	<string name="error_upload_post_media_params">Er is een fout opgetreden bij het uploaden van media in deze %1$s: %2$s.</string>
+	<string name="error_upload_post_params">Er is een fout opgetreden bij het uploaden van deze %1$s: %2$s.</string>
+	<string name="async_promo_link">Hoe werkt het?</string>
+	<string name="async_promo_description">Je kunt de editor nu afsluiten; je bericht wordt automatisch opgeslagen en gepubliceerd! Probeer het ook eens!</string>
+	<string name="async_promo_title">Vol vertrouwen publiceren</string>
+	<string name="editor_uploading_post">Je bericht wordt geüpload</string>
+	<string name="uploading_post_media">Media worden geüpload ...</string>
+	<string name="dialog_confirm_cancel_post_media_uploading">Weet je het zeker? Door dit bericht te verwijderen, wordt de media-upload ook geannuleerd.</string>
+	<string name="page_scheduled">Pagina ingepland</string>
+	<string name="post_scheduled">Bericht ingepland</string>
+	<string name="post_draft_param">"%s" is opgeslagen als concept!</string>
+	<string name="post_scheduled_param">"%s" is ingepland!</string>
+	<string name="post_updated_param">"%s" is bijgewerkt!</string>
+	<string name="post_published_param">"%s" is gepubliceerd!</string>
+	<string name="button_retry">Opnieuw proberen</string>
+	<string name="post_queued">Bericht in wachtrij</string>
+	<string name="uploading_post">"%s" wordt geüpload</string>
+	<string name="connection_to_server_lost">De verbinding met de server is verbroken</string>
+	<string name="max_video_resolution">Maximale resolutie</string>
 	<string name="login_epilogue_mysites_other">Mijn sites</string>
 	<string name="login_epilogue_mysites_one">Mijn site</string>
 	<string name="login_logged_in_as">Ingelogd als</string>
@@ -31,7 +54,6 @@ Language: nl
 	<string name="login_magic_links_sent_description">Afbeelding Magische link verzonden</string>
 	<string name="login_magic_links_sent_label">Je magische link is onderweg! Controleer je e-mail op dit apparaat en tik op de link in de e-mail die je van WordPress.com ontvangt.</string>
 	<string name="login_magic_links_label">We sturen je een e-mail met een magische link waarmee je onmiddellijk kunt inloggen, zonder wachtwoord. Nooit meer moeite doen!</string>
-	<string name="login_error_while_checking_email">Fout opgetreden bij het controleren van het e-mailadres!</string>
 	<string name="password_incorrect">Het lijkt erop alsof dit wachtwoord onjuist is. Controleer je gegevens en probeer het nogmaals.</string>
 	<string name="email_not_registered_wpcom">Deze e-mail staat niet geregistreerd op WordPress.com.</string>
 	<string name="requesting_otp">Verificatiecode via sms aanvragen.</string>
@@ -50,11 +72,7 @@ Language: nl
 	<string name="login_promo_text_onthego">Publiceren in het park. Bloggen in de bus. Reageren in het restaurant. WordPress gaat altijd met je mee.</string>
 	<string name="create_wordpress_site">Een WordPress-site maken</string>
 	<string name="email_not_found">We konden geen WordPress.com-gebruiker met dat e-mailadres vinden</string>
-	<string name="login_password_image">Pictogram Wachtwoord inloggen</string>
-	<string name="login_username_image">Pictogram Gebruikersnaam inloggen</string>
 	<string name="login_site_address_help_image">Afbeelding site-adres positioneren</string>
-	<string name="login_globe_icon">Pictogram wereldbol site-adres</string>
-	<string name="login_email_image">Pictogram E-mail inloggen</string>
 	<string name="image_optimization_promo_desc">Afbeeldingoptimalisatie maakt afbeeldingen kleiner, zodat ze sneller geüpload kunnen worden.\n\nJe kunt deze optie op elk moment wijzigen in de site-instellingen.</string>
 	<string name="image_optimization_promo_title">Afbeeldingoptimalisatie aanzetten?</string>
 	<string name="leave_off">Uit laten staan</string>
@@ -98,7 +116,6 @@ Language: nl
 	<string name="notifications_tab_title_all">Alles</string>
 	<string name="top_level_category_name">Bovenste niveau</string>
 	<string name="category_parent">Overkoepelende categorie (optioneel):</string>
-	<string name="toast_err_post_media_uploading">Kan bericht niet verwijderen tijdens het uploaden</string>
 	<string name="media_empty_audio_list">Je hebt geen audio</string>
 	<string name="media_empty_documents_list">Je hebt geen documenten</string>
 	<string name="media_empty_videos_list">Je hebt geen video\'s</string>
@@ -107,7 +124,7 @@ Language: nl
 	<string name="media_error_exceeds_memory_limit">Bestanden te groot om naar deze site te uploaden</string>
 	<string name="media_error_exceeds_php_filesize">Bestand overschrijdt de maximale uploadgrootte voor deze site</string>
 	<string name="media_error_http_too_large_video_upload">Video te groot om te uploaden</string>
-	<string name="media_error_http_too_large_photo_upload">Afbeelding te groot om te uploaden. Probeer Afbeeldingen optimaliseren te wijzigen in de instellingen van je site</string>
+	<string name="media_error_http_too_large_photo_upload">Afbeelding te groot om te uploaden. Probeer Afbeeldingen optimaliseren te wijzigen in de instellingen van je app</string>
 	<string name="media_audio">Audio</string>
 	<string name="media_videos">Video\'s</string>
 	<string name="media_documents">Documenten</string>
@@ -144,7 +161,6 @@ Language: nl
 	<string name="draft_uploaded">Concept toegevoegd</string>
 	<string name="report_bug">Bug rapporteren</string>
 	<string name="video_quality">Videokwaliteit</string>
-	<string name="max_video_resolution">Standaard videobreedte</string>
 	<string name="permission_location">Locatie</string>
 	<string name="permission_camera">Camera</string>
 	<string name="permission_storage">Opslag</string>
@@ -203,7 +219,7 @@ Language: nl
 	<string name="fab_content_description_write">Schrijven</string>
 	<string name="my_site_btn_sharing">Delen</string>
 	<string name="button_not_now">Niet nu</string>
-	<string name="media_error_internal_server_error">Uploadfout. Probeer "Afbeeldingen optimaliseren" in te schakelen via de instellingen van je site</string>
+	<string name="media_error_internal_server_error">Uploadfout. Probeer "Afbeeldingen optimaliseren" in te schakelen via de instellingen van je app</string>
 	<string name="media_downloading">Media op dit apparaat opslaan</string>
 	<string name="error_media_save">Media opslaan is mislukt</string>
 	<string name="editor_scheduled_post_saved_online">Bericht is ingepland</string>
@@ -239,7 +255,7 @@ Language: nl
 	<string name="start_over_email_body">Ik wil opnieuw beginnen met de site %s</string>
 	<string name="start_over_email_subject">Opnieuw beginnen met de site %s</string>
 	<string name="site_picker_remove_site_error">Fout bij verwijderen van site. Probeer het later opnieuw</string>
-	<string name="editor_post_saved_locally_unfinished_media">Het bericht bevat onafgeronde media-uploads en is lokaal opgeslagen</string>
+	<string name="editor_post_saved_locally_failed_media">Het bericht bevat mislukte media-uploads en is lokaal opgeslagen</string>
 	<string name="sure_to_remove_account">Deze site uit de app verwijderen?</string>
 	<string name="photo_picker_title">Kies een foto</string>
 	<string name="error_publish_no_network">Apparaat is offline. Wijzigingen lokaal opgeslagen.</string>
@@ -262,9 +278,7 @@ Language: nl
 	<string name="image_quality">Afbeeldingskwaliteit</string>
 	<string name="error_all_media_upload_canceled">Alle media-uploads zijn vanwege een onverwachte fout geannuleerd. Probeer ze opnieuw te uploaden</string>
 	<string name="error_unknown_post_type">Onbekende berichtindeling</string>
-	<string name="error_unknown_post">Onbekend bericht. Lokaal bericht is mogelijk niet gesynchroniseerd met de server</string>
 	<string name="error_fetch_site_after_creation">Site is aangemaakt. Je moet mogelijk je sites vernieuwen in de sitekiezer.</string>
-	<string name="error_upload_params">Fout bij het uploaden van %1$s: %2$s</string>
 	<string name="submit_for_review">Verzenden</string>
 	<string name="tell_me_more">Meer informatie</string>
 	<string name="duplicate_site_detected">Er is een dubbele site gevonden.</string>
@@ -693,7 +707,6 @@ Language: nl
 	<string name="site_settings_address_title">Adres</string>
 	<string name="site_settings_tagline_title">Slogan</string>
 	<string name="site_settings_title_title">Sitetitel</string>
-	<string name="site_settings_this_device_header">Dit apparaat</string>
 	<string name="site_settings_discussion_new_posts_header">Standaardinstellingen voor nieuwe berichten</string>
 	<string name="site_settings_writing_header">Schrijven</string>
 	<string name="site_settings_account_header">Account</string>
@@ -922,7 +935,7 @@ Language: nl
 	<string name="stats_period">Periode</string>
 	<string name="stats_overall">Totaal</string>
 	<string name="stats_total">Totaal</string>
-	<string name="post_uploading">Uploaden</string>
+	<string name="post_uploading">Uploaden bericht</string>
 	<string name="stats_visitors">Bezoekers</string>
 	<string name="stats_views">Weergaven</string>
 	<string name="stats_timeframe_years">Jaren</string>
@@ -989,7 +1002,6 @@ Language: nl
 	<string name="delete_sure">Dit concept verwijderen</string>
 	<string name="delete_sure_post">Dit bericht verwijderen</string>
 	<string name="signing_out">Uitloggen…</string>
-	<string name="posting_post">Publiceren "%s"</string>
 	<string name="pages_empty_list">Nog geen pagina\'s. Waarom maak je er niet een?</string>
 	<string name="comment_reply_to_user">Antwoord op %s</string>
 	<string name="posts_empty_list">Nog geen berichten. Waarom maak je er niet een?</string>
@@ -997,7 +1009,7 @@ Language: nl
 	<string name="comment">Reactie</string>
 	<string name="mnu_comment_liked">Liked</string>
 	<string name="uploading_total">Uploaden %1$d van %2$d</string>
-	<string name="sending_content">Uploaden %s inhoud</string>
+	<string name="sending_content">Uploaden %s inhoud...</string>
 	<string name="select_a_blog">Selecteer een WordPress site</string>
 	<string name="stats_no_blog">Statistieken konden niet worden geladen voor het vereiste blog</string>
 	<string name="older_last_week">Ouder dan een week</string>
