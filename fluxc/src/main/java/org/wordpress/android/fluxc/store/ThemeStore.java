@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
 import org.wordpress.android.util.AppLog;
 
 import java.util.List;
@@ -82,9 +83,12 @@ public class ThemeStore extends Store {
         }
     }
 
+    private final ThemeRestClient mThemeRestClient;
+
     @Inject
-    public ThemeStore(Dispatcher dispatcher) {
+    public ThemeStore(Dispatcher dispatcher, ThemeRestClient themeRestClient) {
         super(dispatcher);
+        mThemeRestClient = themeRestClient;
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
