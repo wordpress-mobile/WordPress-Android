@@ -149,12 +149,22 @@ public class ThemeStore extends Store {
     }
 
     private void fetchInstalledThemes(@NonNull SiteModel site) {
+        if (site.isJetpackConnected()) {
+            mThemeRestClient.fetchJetpackInstalledThemes(site);
+        } else {
+            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE,
+                    "Site must have Jetpack connection to fetch installed themes.");
+            FetchedThemesPayload payload = new FetchedThemesPayload(error);
+            handleInstalledThemesFetched(payload);
+        }
     }
 
     private void handleInstalledThemesFetched(FetchedThemesPayload payload) {
         OnThemesChanged event = new OnThemesChanged(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
+        } else {
+            ThemeSqlUtils.insertOrReplaceInstalledThemes(payload.site, payload.themes);
         }
         emitChange(event);
     }
