@@ -44,7 +44,7 @@ public class ThemeModel implements Identifiable, Serializable {
     @Override
     public boolean equals(Object other) {
         if (other == null || !(other instanceof ThemeModel)) {
-            return  false;
+            return false;
         }
         ThemeModel otherTheme = (ThemeModel) other;
         return getId() == otherTheme.getId()
