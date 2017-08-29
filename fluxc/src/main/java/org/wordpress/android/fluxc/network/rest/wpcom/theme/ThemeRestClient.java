@@ -22,10 +22,14 @@ import org.wordpress.android.fluxc.store.ThemeStore.ThemeErrorType;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchThemesError;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
+import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
+import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemeError;
 import org.wordpress.android.fluxc.utils.ThemeUtils;
 import org.wordpress.android.util.AppLog;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,7 +42,34 @@ public class ThemeRestClient extends BaseWPComRestClient {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
-    /** Endpoint: v1.1/themes/ */
+    /** Endpoint: v1.1/site/$siteId/themes/mine */
+    public void activateTheme(@NonNull final SiteModel site, @NonNull final ThemeModel theme) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).themes.mine.getUrlV1_1();
+        Map<String, Object> params = new HashMap<>();
+        params.put("theme", theme.getThemeId());
+
+        add(WPComGsonRequest.buildPostRequest(url, params, ThemeWPComResponse.class,
+                new Response.Listener<ThemeWPComResponse>() {
+                    @Override
+                    public void onResponse(ThemeWPComResponse response) {
+                        AppLog.d(AppLog.T.API, "Received response to theme activation request.");
+                        ActivateThemePayload payload = new ActivateThemePayload(site, theme);
+                        payload.theme.setActive(true);
+                        mDispatcher.dispatch(ThemeActionBuilder.newActivatedThemeAction(payload));
+                    }
+                }, new BaseRequest.BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                        AppLog.d(AppLog.T.API, "Received error response to theme activation request.");
+                        ActivateThemeError themeError =
+                                new ActivateThemeError(ThemeErrorType.GENERIC_ERROR, "Error activating theme.");
+                        ActivateThemePayload payload = new ActivateThemePayload(themeError);
+                        mDispatcher.dispatch(ThemeActionBuilder.newActivatedThemeAction(payload));
+                    }
+                }));
+    }
+
+    /** Endpoint: v1.1/themes */
     public void fetchWpComThemes() {
         String url = WPCOMREST.themes.getUrlV1_1();
         add(WPComGsonRequest.buildGetRequest(url, null, MultipleWPComThemesResponse.class,
@@ -118,8 +149,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(ThemeWPComResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to current theme fetch request.");
-                        FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(null);
-                        payload.theme = ThemeUtils.createThemeFromWPComResponse(response);
+                        ThemeModel responseTheme = ThemeUtils.createThemeFromWPComResponse(response);
+                        FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(site, responseTheme);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedCurrentThemeAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
