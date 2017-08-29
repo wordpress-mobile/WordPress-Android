@@ -126,6 +126,14 @@ public class ThemeStore extends Store {
         AppLog.d(AppLog.T.API, "ThemeStore onRegister");
     }
 
+    public List<ThemeModel> getWpThemes() {
+        return ThemeSqlUtils.getWpThemes();
+    }
+
+    public List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
+        return ThemeSqlUtils.getThemesForSite(site);
+    }
+
     private void fetchWpThemes() {
         mThemeRestClient.fetchWpComThemes();
     }
