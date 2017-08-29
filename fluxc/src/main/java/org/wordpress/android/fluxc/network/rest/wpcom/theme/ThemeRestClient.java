@@ -39,6 +39,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     public void onResponse(MultipleWPComThemesResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to WP.com themes fetch request.");
                         FetchedThemesPayload payload = new FetchedThemesPayload(null);
+                        payload.themes = ThemeUtils.createThemeListFromWPComResponse(response);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
