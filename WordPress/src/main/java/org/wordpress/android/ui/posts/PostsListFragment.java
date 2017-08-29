@@ -215,6 +215,11 @@ public class PostsListFragment extends Fragment
         final PostModel post = mPostStore.
                 getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
 
+        if (post == null) {
+            ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.LONG);
+            return;
+        }
+
         UploadUtils.handleEditPostResultSnackbars(getActivity(),
                 getActivity().findViewById(R.id.coordinator), resultCode, data, post, mSite,
                 new View.OnClickListener() {
