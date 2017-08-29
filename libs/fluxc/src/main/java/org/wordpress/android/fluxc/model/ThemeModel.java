@@ -17,12 +17,14 @@ public class ThemeModel implements Identifiable, Serializable {
     @Column private String mThemeId;
     @Column private String mName;
     @Column private String mDescription;
+    @Column private String mSlug;
     @Column private String mVersion;
     @Column private String mAuthorName;
     @Column private String mAuthorUrl;
     @Column private String mThemeUrl;
     @Column private String mScreenshotUrl;
     @Column private String mDemoUrl;
+    @Column private String mDownloadUrl;
     @Column private String mStylesheet;
     @Column private float mPrice;
     @Column private boolean mActive;
@@ -56,6 +58,8 @@ public class ThemeModel implements Identifiable, Serializable {
                 && StringUtils.equals(getThemeUrl(), otherTheme.getThemeUrl())
                 && StringUtils.equals(getScreenshotUrl(), otherTheme.getScreenshotUrl())
                 && StringUtils.equals(getDemoUrl(), otherTheme.getDemoUrl())
+                && StringUtils.equals(getSlug(), otherTheme.getSlug())
+                && StringUtils.equals(getDownloadUrl(), otherTheme.getDownloadUrl())
                 && StringUtils.equals(getStylesheet(), otherTheme.getStylesheet())
                 && getPrice() == otherTheme.getPrice()
                 && getActive() == otherTheme.getActive()
@@ -93,6 +97,14 @@ public class ThemeModel implements Identifiable, Serializable {
 
     public void setDescription(String description) {
         mDescription = description;
+    }
+
+    public String getSlug() {
+        return mSlug;
+    }
+
+    public void setSlug(String slug) {
+        mSlug = slug;
     }
 
     public String getVersion() {
@@ -141,6 +153,14 @@ public class ThemeModel implements Identifiable, Serializable {
 
     public void setDemoUrl(String demoUrl) {
         mDemoUrl = demoUrl;
+    }
+
+    public String getDownloadUrl() {
+        return mDownloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        mDownloadUrl = downloadUrl;
     }
 
     public String getStylesheet() {
