@@ -28,6 +28,11 @@ public class ThemeSqlUtils {
     public static void insertOrReplaceWpThemes(@NonNull List<ThemeModel> themes) {
         // remove existing WP.com themes
         removeThemesWithNoSite();
+
+        for (ThemeModel theme : themes) {
+            theme.setLocalSiteId(0);
+        }
+
         WellSql.insert(themes).asSingleTransaction(true).execute();
     }
 
