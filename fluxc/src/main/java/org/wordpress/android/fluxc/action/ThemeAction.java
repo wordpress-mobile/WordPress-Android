@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
 public enum ThemeAction implements IAction {
     // Remote actions
     @Action
-    FETCH_WP_THEMES,
+    FETCH_WP_COM_THEMES,
     @Action(payloadType = SiteModel.class)
     FETCH_INSTALLED_THEMES, // Jetpack only
     @Action(payloadType = SiteModel.class)
@@ -24,7 +24,7 @@ public enum ThemeAction implements IAction {
 
     // Remote responses
     @Action(payloadType = FetchedThemesPayload.class)
-    FETCHED_WP_THEMES,
+    FETCHED_WP_COM_THEMES,
     @Action(payloadType = FetchedThemesPayload.class)
     FETCHED_INSTALLED_THEMES,
     @Action(payloadType = FetchedThemesPayload.class)

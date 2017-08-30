@@ -24,10 +24,11 @@ import org.wordpress.android.fluxc.store.ThemeStore.FetchedThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemeError;
-import org.wordpress.android.fluxc.utils.ThemeUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -78,15 +79,14 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     public void onResponse(MultipleWPComThemesResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to WP.com themes fetch request.");
                         FetchedThemesPayload payload = new FetchedThemesPayload(null);
-                        payload.themes = ThemeUtils.createThemeListFromWPComResponse(response);
+                        payload.themes = createThemeListFromWPComResponse(response);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                        AppLog.d(AppLog.T.API, "Received error response to WP.com themes fetch request.");
-                        FetchThemesError themeError =
-                                new FetchThemesError(ThemeErrorType.GENERIC_ERROR, "Error fetching WP.com themes");
+                        AppLog.e(AppLog.T.API, "Received error response to WP.com themes fetch request.");
+                        FetchThemesError themeError = new FetchThemesError(ThemeErrorType.GENERIC_ERROR, null);
                         FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpThemesAction(payload));
                     }
@@ -101,18 +101,17 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(MultipleJetpackThemesResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to Jetpack installed themes fetch request.");
-                        List<ThemeModel> themes = ThemeUtils.createThemeListFromJetpackResponse(response);
+                        List<ThemeModel> themes = createThemeListFromJetpackResponse(response);
                         FetchedThemesPayload payload = new FetchedThemesPayload(site, themes);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedInstalledThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                        FetchThemesError themeError = new FetchThemesError(ThemeErrorType.GENERIC_ERROR,
-                                "Error fetching installed themes for Jetpack site.");
+                        AppLog.e(AppLog.T.API, "Received error response to Jetpack installed themes fetch request.");
+                        FetchThemesError themeError = new FetchThemesError(ThemeErrorType.GENERIC_ERROR, null);
                         FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedInstalledThemesAction(payload));
-                        AppLog.d(AppLog.T.API, "Received error response to Jetpack installed themes fetch request.");
                     }
                 }));
     }
@@ -126,15 +125,14 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     public void onResponse(MultipleWPComThemesResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to themes fetch request for WP.com site.");
                         FetchedThemesPayload payload = new FetchedThemesPayload(null);
-                        payload.themes = ThemeUtils.createThemeListFromWPComResponse(response);
+                        payload.themes = createThemeListFromWPComResponse(response);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                        AppLog.d(AppLog.T.API, "Received error response to themes fetch request for WP.com site.");
-                        FetchThemesError themeError =
-                                new FetchThemesError(ThemeErrorType.GENERIC_ERROR, "Error fetching site themes");
+                        AppLog.e(AppLog.T.API, "Received error response to themes fetch request for WP.com site.");
+                        FetchThemesError themeError = new FetchThemesError(ThemeErrorType.GENERIC_ERROR, null);
                         FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpThemesAction(payload));
                     }
@@ -149,19 +147,76 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(ThemeWPComResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to current theme fetch request.");
-                        ThemeModel responseTheme = ThemeUtils.createThemeFromWPComResponse(response);
+                        ThemeModel responseTheme = createThemeFromWPComResponse(response);
                         FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(site, responseTheme);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedCurrentThemeAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                        AppLog.d(AppLog.T.API, "Received error response to current theme fetch request.");
-                        FetchThemesError themeError =
-                                new FetchThemesError(ThemeErrorType.GENERIC_ERROR, "Error fetching current site theme");
+                        AppLog.e(AppLog.T.API, "Received error response to current theme fetch request.");
+                        FetchThemesError themeError = new FetchThemesError(ThemeErrorType.GENERIC_ERROR, null);
                         FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedCurrentThemeAction(payload));
                     }
                 }));
+    }
+
+    private static ThemeModel createThemeFromWPComResponse(ThemeWPComResponse response) {
+        ThemeModel theme = new ThemeModel();
+        theme.setThemeId(response.id);
+        theme.setSlug(response.slug);
+        theme.setStylesheet(response.stylesheet);
+        theme.setName(response.name);
+        theme.setAuthorName(response.author);
+        theme.setAuthorUrl(response.author_uri);
+        theme.setThemeUrl(response.theme_uri);
+        theme.setDemoUrl(response.demo_uri);
+        theme.setVersion(response.version);
+        theme.setScreenshotUrl(response.screenshot);
+        theme.setDescription(response.description);
+        theme.setDownloadUrl(response.download_uri);
+        return theme;
+    }
+
+    private static ThemeModel createThemeFromJetpackResponse(ThemeJetpackResponse response) {
+        ThemeModel theme = new ThemeModel();
+        theme.setThemeId(response.id);
+        theme.setName(response.name);
+        theme.setThemeUrl(response.theme_uri);
+        theme.setDescription(response.description);
+        theme.setAuthorName(response.author);
+        theme.setAuthorUrl(response.author_uri);
+        theme.setVersion(response.version);
+        theme.setActive(response.active);
+        theme.setAutoUpdate(response.autoupdate);
+        theme.setAutoUpdateTranslation(response.autoupdate_translation);
+
+        // the screenshot field in Jetpack responses does not contain a protocol so we'll prepend 'https'
+        String screenshotUrl = response.screenshot;
+        if (screenshotUrl != null && screenshotUrl.startsWith("//")) {
+            screenshotUrl = "https" + screenshotUrl;
+        }
+        theme.setScreenshotUrl(screenshotUrl);
+
+        return theme;
+    }
+
+    /** Creates a list of ThemeModels from the WP.com /v1.1/themes REST response. */
+    private static List<ThemeModel> createThemeListFromWPComResponse(MultipleWPComThemesResponse response) {
+        List<ThemeModel> themeList = new ArrayList<>();
+        for (ThemeWPComResponse item : response.themes.values()) {
+            themeList.add(createThemeFromWPComResponse(item));
+        }
+        return themeList;
+    }
+
+    /** Creates a list of ThemeModels from the Jetpack /v1/sites/$siteId/themes REST response. */
+    private static List<ThemeModel> createThemeListFromJetpackResponse(MultipleJetpackThemesResponse response) {
+        List<ThemeModel> themeList = new ArrayList<>();
+        for (ThemeJetpackResponse item : response.themes) {
+            themeList.add(createThemeFromJetpackResponse(item));
+        }
+        return themeList;
     }
 }

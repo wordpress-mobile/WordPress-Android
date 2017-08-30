@@ -135,10 +135,10 @@ public class ThemeStore extends Store {
             return;
         }
         switch ((ThemeAction) actionType) {
-            case FETCH_WP_THEMES:
+            case FETCH_WP_COM_THEMES:
                 fetchWpThemes();
                 break;
-            case FETCHED_WP_THEMES:
+            case FETCHED_WP_COM_THEMES:
                 handleWpThemesFetched((FetchedThemesPayload) action.getPayload());
                 break;
             case FETCH_INSTALLED_THEMES:
@@ -168,7 +168,7 @@ public class ThemeStore extends Store {
     }
 
     public List<ThemeModel> getWpThemes() {
-        return ThemeSqlUtils.getWpThemes();
+        return ThemeSqlUtils.getThemesForSite(null);
     }
 
     public List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
@@ -190,11 +190,10 @@ public class ThemeStore extends Store {
     }
 
     private void fetchInstalledThemes(@NonNull SiteModel site) {
-        if (site.isJetpackConnected()) {
+        if (site.isJetpackConnected() && site.isUsingWpComRestApi()) {
             mThemeRestClient.fetchJetpackInstalledThemes(site);
         } else {
-            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE,
-                    "Site must have Jetpack connection to fetch installed themes.");
+            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE, null);
             FetchedThemesPayload payload = new FetchedThemesPayload(error);
             handleInstalledThemesFetched(payload);
         }
@@ -211,7 +210,13 @@ public class ThemeStore extends Store {
     }
 
     private void fetchCurrentTheme(@NonNull SiteModel site) {
-        mThemeRestClient.fetchCurrentTheme(site);
+        if (site.isUsingWpComRestApi()) {
+            mThemeRestClient.fetchCurrentTheme(site);
+        } else {
+            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE, null);
+            FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(error);
+            handleCurrentThemeFetched(payload);
+        }
     }
 
     private void handleCurrentThemeFetched(FetchedCurrentThemePayload payload) {
@@ -219,7 +224,7 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.insertTheme(payload.theme);
+            ThemeSqlUtils.insertOrUpdateTheme(payload.theme);
         }
         emitChange(event);
     }
