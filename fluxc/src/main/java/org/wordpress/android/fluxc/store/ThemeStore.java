@@ -183,7 +183,7 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.insertTheme(payload.theme);
+            ThemeSqlUtils.insertOrUpdateTheme(payload.theme);
         }
         emitChange(event);
     }
