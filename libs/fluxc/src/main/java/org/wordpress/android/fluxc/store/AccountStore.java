@@ -125,6 +125,9 @@ public class AccountStore extends Store {
     public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {
     }
 
+    public static class OnSocialChanged extends OnChanged<AccountSocialError> {
+    }
+
     public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
         public String xmlRpcEndpoint;
         public String wpRestEndpoint;
@@ -552,6 +555,13 @@ public class AccountStore extends Store {
     }
 
     private void handlePushSocialCompleted(AccountPushSocialResponsePayload payload) {
+        if (payload.isError()) {
+            OnSocialChanged event = new OnSocialChanged();
+            event.error = new AccountSocialError(payload.error.type, payload.error.message);
+            emitChange(event);
+        } else {
+            updateToken(new UpdateTokenPayload(payload.bearerToken));
+        }
     }
 
     private void handleNewAccountCreated(NewAccountResponsePayload payload) {
