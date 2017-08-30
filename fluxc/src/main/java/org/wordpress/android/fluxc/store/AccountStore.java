@@ -72,8 +72,13 @@ public class AccountStore extends Store {
     }
 
     public static class PushSocialLoginPayload extends Payload {
-        public Map<String, Object> params;
-        public PushSocialLoginPayload() {
+        public String clientId;
+        public String idToken;
+        public String service;
+        public PushSocialLoginPayload(@NonNull String clientId, @NonNull String idToken, @NonNull String service) {
+            this.clientId = clientId;
+            this.idToken = idToken;
+            this.service = service;
         }
     }
 
@@ -346,7 +351,7 @@ public class AccountStore extends Store {
                 mAccountRestClient.pushAccountSettings(((PushAccountSettingsPayload) payload).params);
                 break;
             case PUSH_SOCIAL:
-                mAccountRestClient.pushSocialLogin(((PushSocialLoginPayload) payload).params);
+                createPushSocialLogin((PushSocialLoginPayload) payload);
                 break;
             case UPDATE_ACCOUNT:
                 updateDefaultAccount((AccountModel) payload, AccountAction.UPDATE_ACCOUNT);
@@ -540,6 +545,10 @@ public class AccountStore extends Store {
 
     private void createNewAccount(NewAccountPayload payload) {
         mAccountRestClient.newAccount(payload.username, payload.password, payload.email, payload.dryRun);
+    }
+
+    private void createPushSocialLogin(PushSocialLoginPayload payload) {
+        mAccountRestClient.pushSocialLogin(payload.clientId, payload.idToken, payload.service);
     }
 
     private void signOut() {
