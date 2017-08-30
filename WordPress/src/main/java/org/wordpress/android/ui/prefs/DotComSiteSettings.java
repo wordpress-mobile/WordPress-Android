@@ -366,17 +366,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
     }
 
     private void pushJetpackMonitorSettings() {
-        final Map<String, String> params = serializeJetpackMonitorParams();
-        if (params.isEmpty()) {
-            return;
-        }
-
         // The response object doesn't contain any relevant info so we have to create a copy of values
         // being sent over the network in case mJpSettings is modified while awaiting response
         final JetpackSettingsModel sentJpData = new JetpackSettingsModel(mJpSettings);
         ++mSaveRequestCount;
         WordPress.getRestClientUtilsV1_1().setJetpackMonitorSettings(
-                mSite.getSiteId(), params, new RestRequest.Listener() {
+                mSite.getSiteId(), serializeJetpackMonitorParams(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack Monitor module updated");
@@ -609,12 +604,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
     private @NonNull Map<String, String> serializeJetpackMonitorParams() {
         Map<String, String> params = new HashMap<>();
-        if (mJpSettings.emailNotifications != mRemoteJpSettings.emailNotifications) {
-            params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mJpSettings.emailNotifications));
-        }
-        if (mJpSettings.wpNotifications != mRemoteJpSettings.wpNotifications) {
-            params.put(JP_MONITOR_WP_NOTES_KEY, String.valueOf(mJpSettings.wpNotifications));
-        }
+        params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mJpSettings.emailNotifications));
+        params.put(JP_MONITOR_WP_NOTES_KEY, String.valueOf(mJpSettings.wpNotifications));
         return params;
     }
 
