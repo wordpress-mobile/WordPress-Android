@@ -85,6 +85,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
     // used to track network fetches to prevent multiple errors from generating multiple toasts
     private int mFetchRequestCount = 0;
     private int mSaveRequestCount = 0;
+    private boolean mWasFetchError = false;
+    private boolean mWasSaveError = false;
+    private Exception mFetchError = null;
+    private Exception mSaveError = null;
 
     /** Only instantiated by {@link SiteSettingsInterface}. */
     DotComSiteSettings(Activity host, SiteModel site, SiteSettingsListener listener) {
@@ -127,7 +131,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Received response to Settings REST request.");
-                        --mFetchRequestCount;
                         credentialsVerified(true);
 
                         mRemoteSettings.localTableId = mSite.getId();
@@ -144,15 +147,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
                             SiteSettingsTable.saveSettings(mSettings);
                         }
-                        notifyUpdatedOnUiThread();
+                        onFetchResponseReceived(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error response to Settings REST request: " + error);
-                        if (--mFetchRequestCount <= 0) {
-                            notifyFetchErrorOnUiThread(error);
-                        }
+                        onFetchResponseReceived(error);
                     }
                 });
     }
@@ -166,7 +167,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.v(AppLog.T.API, "Received site Categories");
-                        --mFetchRequestCount;
                         credentialsVerified(true);
 
                         CategoryModel[] models = deserializeCategoryRestResponse(response);
@@ -175,15 +175,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         SiteSettingsTable.saveCategories(models);
                         mRemoteSettings.categories = models;
                         mSettings.categories = models;
-                        notifyUpdatedOnUiThread();
+                        onFetchResponseReceived(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.d(AppLog.T.API, "Error fetching WP.com categories:" + error);
-                        if (--mFetchRequestCount <= 0) {
-                            notifyFetchErrorOnUiThread(error);
-                        }
+                        onFetchResponseReceived(error);
                     }
                 });
     }
@@ -198,11 +196,11 @@ class DotComSiteSettings extends SiteSettingsInterface {
         WordPress.getRestClientUtilsV1_1().getJetpackSettings(mSite.getSiteId(), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                --mFetchRequestCount;
                 final JSONObject data = response.optJSONObject("data");
 
                 if (data == null) {
                     AppLog.w(AppLog.T.API, "Unexpected state: Received empty Jetpack settings response");
+                    onFetchResponseReceived(null);
                     return;
                 }
 
@@ -237,15 +235,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mJpSettings.ssoActive = mRemoteJpSettings.ssoActive;
                 mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
                 mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
-                notifyUpdatedOnUiThread();
+                onFetchResponseReceived(null);
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 AppLog.w(AppLog.T.API, "Error fetching Jetpack settings: " + error);
-                if (--mFetchRequestCount <= 0) {
-                    notifyFetchErrorOnUiThread(error);
-                }
+                onFetchResponseReceived(error);
             }
         });
     }
@@ -257,22 +253,19 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.v(AppLog.T.API, "Received Jetpack Monitor module options");
-                        --mFetchRequestCount;
                         mRemoteJpSettings.localTableId = mSite.getId();
                         deserializeJetpackRestResponse(mSite, response);
                         mJpSettings.localTableId = mRemoteJpSettings.localTableId;
                         mJpSettings.emailNotifications = mRemoteJpSettings.emailNotifications;
                         mJpSettings.wpNotifications = mRemoteJpSettings.wpNotifications;
                         SiteSettingsTable.saveJpSettings(mJpSettings);
-                        notifyUpdatedOnUiThread();
+                        onFetchResponseReceived(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error fetching Jetpack Monitor module options: " + error);
-                        if (--mFetchRequestCount <= 0) {
-                            notifyFetchErrorOnUiThread(error);
-                        }
+                        onFetchResponseReceived(error);
                     }
                 });
     }
@@ -297,7 +290,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Site Settings saved remotely");
-                        --mSaveRequestCount;
                         mRemoteSettings.copyFrom(mSettings);
 
                         if (response != null) {
@@ -315,15 +307,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             AnalyticsUtils.trackWithSiteDetails(
                                     AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
                         }
-                        notifySavedOnUiThread();
+                        onSaveResponseReceived(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
-                        if (--mSaveRequestCount <= 0) {
-                            notifySaveErrorOnUiThread(error);
-                        }
+                        onSaveResponseReceived(error);
                     }
                 });
     }
@@ -344,7 +334,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack settings updated");
-                        --mSaveRequestCount;
                         mRemoteJpSettings.monitorActive = sentJpData.monitorActive;
                         mRemoteJpSettings.jetpackProtectEnabled = sentJpData.jetpackProtectEnabled;
                         mRemoteJpSettings.jetpackProtectWhitelist.clear();
@@ -352,15 +341,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         mRemoteJpSettings.ssoActive = sentJpData.ssoActive;
                         mRemoteJpSettings.ssoMatchEmail = sentJpData.ssoMatchEmail;
                         mRemoteJpSettings.ssoRequireTwoFactor = sentJpData.ssoRequireTwoFactor;
-                        notifySavedOnUiThread();
+                        onSaveResponseReceived(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error updating Jetpack settings: " + error);
-                        if (--mSaveRequestCount <= 0) {
-                            notifySaveErrorOnUiThread(error);
-                        }
+                        onSaveResponseReceived(error);
                     }
                 });
     }
@@ -375,20 +362,45 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Jetpack Monitor module updated");
-                        --mSaveRequestCount;
                         mRemoteJpSettings.emailNotifications = sentJpData.emailNotifications;
                         mRemoteJpSettings.wpNotifications = sentJpData.wpNotifications;
-                        notifySavedOnUiThread();
+                        onSaveResponseReceived(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module: " + error);
-                        if (--mSaveRequestCount <= 0) {
-                            notifySaveErrorOnUiThread(error);
-                        }
+                        onSaveResponseReceived(error);
                     }
                 });
+    }
+
+    private void onFetchResponseReceived(Exception error) {
+        if (error != null) {
+            mWasFetchError = true;
+            mFetchError = error;
+        } else {
+            notifyUpdatedOnUiThread();
+        }
+        if (--mFetchRequestCount <= 0 && mWasFetchError) {
+            notifyFetchErrorOnUiThread(mFetchError);
+            mWasFetchError = false;
+            mFetchError = null;
+        }
+    }
+
+    private void onSaveResponseReceived(Exception error) {
+        if (error != null) {
+            mWasSaveError = true;
+            mSaveError = error;
+        } else {
+            notifySavedOnUiThread();
+        }
+        if (--mSaveRequestCount <= 0 && mWasSaveError) {
+            notifySaveErrorOnUiThread(mSaveError);
+            mWasSaveError = false;
+            mSaveError = null;
+        }
     }
 
     /**
