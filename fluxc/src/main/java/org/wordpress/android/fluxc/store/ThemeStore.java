@@ -127,7 +127,7 @@ public class ThemeStore extends Store {
     }
 
     public List<ThemeModel> getWpThemes() {
-        return ThemeSqlUtils.getThemesForSite(null);
+        return ThemeSqlUtils.getThemesWithNoSite();
     }
 
     public List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
