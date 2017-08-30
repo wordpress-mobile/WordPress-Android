@@ -241,6 +241,52 @@ public class AccountRestClient extends BaseWPComRestClient {
         ));
     }
 
+    /**
+     * Performs an HTTP POST call to the v1.1 /users/social/new endpoint. Upon receiving a response
+     * (success or error) a {@link AccountAction#PUSHED_SOCIAL} action is dispatched with a payload
+     * of type {@link AccountPushSocialResponsePayload}.
+     *
+     * {@link AccountPushSocialResponsePayload#isError()} can be used to check the request result.
+     *
+     * No HTTP POST call is made if the given parameter map is null or contains no entries.
+     *
+     * @param idToken       OpenID Connect Token (JWT) from the service the user is using to
+     *                      authenticate their account.
+     * @param service       Slug representing the service for the given token (e.g. google).
+     */
+    public void pushSocialSignup(@NonNull String accessToken, @NonNull String idToken,
+                                 @NonNull String service, @NonNull String signupFlowName) {
+        String url = WPCOMREST.users.social.new_.getUrlV1_1();
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("access_token", accessToken);
+        body.put("id_token", idToken);
+        body.put("service", service);
+        body.put("signup_flow_name", signupFlowName);
+        body.put("client_id", mAppSecrets.getAppId());
+        body.put("client_secret", mAppSecrets.getAppSecret());
+
+        add(WPComGsonRequest.buildPostRequest(url, body, AccountSocialResponse.class,
+                new Listener<AccountSocialResponse>() {
+                    @Override
+                    public void onResponse(AccountSocialResponse response) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                        payload.bearerToken = response.bearer_token;
+                        payload.username = response.username;
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                        payload.error = new AccountSocialError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                }
+        ));
+    }
+
     public void newAccount(@NonNull String username, @NonNull String password, @NonNull String email,
                            final boolean dryRun) {
         String url = WPCOMREST.users.new_.getUrlV1();
