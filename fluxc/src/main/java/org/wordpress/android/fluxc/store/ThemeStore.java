@@ -169,7 +169,13 @@ public class ThemeStore extends Store {
     }
 
     private void fetchCurrentTheme(@NonNull SiteModel site) {
-        mThemeRestClient.fetchCurrentTheme(site);
+        if (site.isUsingWpComRestApi()) {
+            mThemeRestClient.fetchCurrentTheme(site);
+        } else {
+            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE, null);
+            FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(error);
+            handleCurrentThemeFetched(payload);
+        }
     }
 
     private void handleCurrentThemeFetched(FetchedCurrentThemePayload payload) {
