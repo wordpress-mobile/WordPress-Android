@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import android.support.annotation.Nullable;
 
 import com.wellsql.generated.ThemeModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -28,10 +28,8 @@ public class ThemeSqlUtils {
 
     public static void insertOrReplaceWpThemes(@NonNull List<ThemeModel> themes) {
         // remove existing WP.com themes
-        for (ThemeModel theme : themes) {
-            removeThemeWithId(theme);
-        }
-        WellSql.insert(themes).execute();
+        removeThemes(null);
+        WellSql.insert(themes).asSingleTransaction(true).execute();
     }
 
     public static int insertOrReplaceInstalledThemes(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
@@ -47,21 +45,12 @@ public class ThemeSqlUtils {
         return themes.size();
     }
 
-    public static void removeThemes(@NonNull SiteModel site) {
+    public static void removeThemes(@Nullable SiteModel site) {
+        long siteId = site == null ? -1 : site.getSiteId();
         WellSql.delete(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getSiteId())
+                .equals(ThemeModelTable.LOCAL_SITE_ID, siteId)
                 .endWhere().execute();
-    }
-
-    public static void removeThemeWithId(@NonNull ThemeModel theme) {
-        String themeId = theme.getThemeId();
-        if (!TextUtils.isEmpty(themeId)) {
-            WellSql.delete(ThemeModel.class)
-                    .where()
-                    .equals(ThemeModelTable.THEME_ID, themeId)
-                    .endWhere().execute();
-        }
     }
 
     /**
@@ -70,7 +59,7 @@ public class ThemeSqlUtils {
     public static List<ThemeModel> getWpThemes() {
         return WellSql.select(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, 0)
+                .equals(ThemeModelTable.LOCAL_SITE_ID, -1)
                 .endWhere().getAsModel();
     }
 
