@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
@@ -16,7 +17,6 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
@@ -31,9 +31,9 @@ import java.util.List;
 import java.util.Map;
 
 public class SiteXMLRPCClient extends BaseXMLRPCClient {
-    public SiteXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
-                            UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
+    public SiteXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent,
+                            HTTPAuthManager httpAuthManager) {
+        super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     public void fetchSites(final String xmlrpcUrl, final String username, final String password) {
@@ -159,7 +159,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             Map<?, ?> siteMap = (Map<?, ?>) siteObject;
             SiteModel site = new SiteModel();
             site.setSelfHostedSiteId(MapUtils.getMapInt(siteMap, "blogid", 1));
-            site.setName(MapUtils.getMapStr(siteMap, "blogName"));
+            site.setName(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(siteMap, "blogName")));
             site.setUrl(MapUtils.getMapStr(siteMap, "url"));
             site.setXmlRpcUrl(MapUtils.getMapStr(siteMap, "xmlrpc"));
             site.setIsSelfHostedAdmin(MapUtils.getMapBool(siteMap, "isAdmin"));
@@ -232,7 +232,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         Map<?, ?> siteOptions = (Map<?, ?>) response;
         String siteTitle = XMLRPCUtils.safeGetNestedMapValue(siteOptions, "blog_title", "");
         if (!siteTitle.isEmpty()) {
-            oldModel.setName(siteTitle);
+            oldModel.setName(StringEscapeUtils.unescapeHtml4(siteTitle));
         }
 
         // TODO: set a canonical URL here

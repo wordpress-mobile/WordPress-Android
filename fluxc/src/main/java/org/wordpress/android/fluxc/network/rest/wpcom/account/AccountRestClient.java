@@ -7,6 +7,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -313,7 +314,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     private AccountModel responseToAccountModel(AccountResponse from) {
         AccountModel account = new AccountModel();
         account.setUserId(from.ID);
-        account.setDisplayName(from.display_name);
+        account.setDisplayName(StringEscapeUtils.unescapeHtml4(from.display_name));
         account.setUserName(from.username);
         account.setEmail(from.email);
         account.setPrimarySiteId(from.primary_blog);
@@ -330,10 +331,10 @@ public class AccountRestClient extends BaseWPComRestClient {
     private AccountModel responseToAccountSettingsModel(AccountSettingsResponse from) {
         AccountModel account = new AccountModel();
         account.setUserName(from.user_login);
-        account.setDisplayName(from.display_name);
-        account.setFirstName(from.first_name);
-        account.setLastName(from.last_name);
-        account.setAboutMe(from.description);
+        account.setDisplayName(StringEscapeUtils.unescapeHtml4(from.display_name));
+        account.setFirstName(StringEscapeUtils.unescapeHtml4(from.first_name));
+        account.setLastName(StringEscapeUtils.unescapeHtml4(from.last_name));
+        account.setAboutMe(StringEscapeUtils.unescapeHtml4(from.description));
         account.setNewEmail(from.new_user_email);
         account.setAvatarUrl(from.avatar_URL);
         account.setPendingEmailChange(from.user_email_change_pending);
@@ -348,10 +349,18 @@ public class AccountRestClient extends BaseWPComRestClient {
         old.copyAccountAttributes(accountModel);
         old.setId(accountModel.getId());
         old.copyAccountSettingsAttributes(accountModel);
-        if (from.containsKey("display_name")) accountModel.setDisplayName((String) from.get("display_name"));
-        if (from.containsKey("first_name")) accountModel.setFirstName((String) from.get("first_name"));
-        if (from.containsKey("last_name")) accountModel.setLastName((String) from.get("last_name"));
-        if (from.containsKey("description")) accountModel.setAboutMe((String) from.get("description"));
+        if (from.containsKey("display_name")) {
+            accountModel.setDisplayName(StringEscapeUtils.unescapeHtml4((String) from.get("display_name")));
+        }
+        if (from.containsKey("first_name")) {
+            accountModel.setFirstName(StringEscapeUtils.unescapeHtml4((String) from.get("first_name")));
+        }
+        if (from.containsKey("last_name")) {
+            accountModel.setLastName(StringEscapeUtils.unescapeHtml4((String) from.get("last_name")));
+        }
+        if (from.containsKey("description")) {
+            accountModel.setAboutMe(StringEscapeUtils.unescapeHtml4((String) from.get("description")));
+        }
         if (from.containsKey("user_email")) accountModel.setEmail((String) from.get("user_email"));
         if (from.containsKey("user_email_change_pending")) {
             accountModel.setPendingEmailChange((Boolean) from.get("user_email_change_pending"));
