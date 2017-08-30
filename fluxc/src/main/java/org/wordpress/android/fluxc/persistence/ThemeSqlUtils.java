@@ -54,23 +54,14 @@ public class ThemeSqlUtils {
     }
 
     /**
-     * Retrieves themes stored with no associated site.
-     */
-    public static List<ThemeModel> getWpThemes() {
-        return WellSql.select(ThemeModel.class)
-                .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, -1)
-                .endWhere().getAsModel();
-    }
-
-    /**
      * Retrieves themes stored with a non-zero site ID. Installed themes (for Jetpack sites) are the only themes
      * with a non-zero site ID, for now.
      */
-    public static List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
+    public static List<ThemeModel> getThemesForSite(@Nullable SiteModel site) {
+        long siteId = site == null ? -1 : site.getSiteId();
         return WellSql.select(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getSiteId())
+                .equals(ThemeModelTable.LOCAL_SITE_ID, siteId)
                 .endWhere().getAsModel();
     }
 }
