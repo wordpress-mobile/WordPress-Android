@@ -314,7 +314,6 @@ Language: vi_VN
 	<string name="site_settings_address_title">Địa chỉ</string>
 	<string name="site_settings_tagline_title">Khẩu hiệu</string>
 	<string name="site_settings_title_title">Tiêu đề Site</string>
-	<string name="site_settings_this_device_header">Thiết bị này</string>
 	<string name="site_settings_discussion_new_posts_header">Mặc định cho cá bài viết mới</string>
 	<string name="site_settings_writing_header">Viết</string>
 	<string name="site_settings_account_header">Tài khoản</string>
@@ -541,7 +540,6 @@ Language: vi_VN
 	<string name="stats_period">Khoảng thời gian</string>
 	<string name="stats_overall">Tổng quan</string>
 	<string name="stats_total">Tổng cộng</string>
-	<string name="post_uploading">Tải lên</string>
 	<string name="stats_visitors">Khách ghé thăm</string>
 	<string name="stats_views">Xem</string>
 	<string name="stats_timeframe_years">Năm</string>
@@ -608,7 +606,6 @@ Language: vi_VN
 	<string name="delete_sure">Xóa bản nháp này</string>
 	<string name="delete_sure_post">Xóa bài viết này</string>
 	<string name="signing_out">Đang đăng xuất...</string>
-	<string name="posting_post">Đang viết bài "%s"</string>
 	<string name="pages_empty_list">Chưa có trang nào. Tại sao không tạo 1 trang?</string>
 	<string name="comment_reply_to_user">Trả lời tới %s</string>
 	<string name="posts_empty_list">Chưa viết bài nào. Tại sao không tạo 1 bài?</string>
@@ -616,7 +613,6 @@ Language: vi_VN
 	<string name="comment">Bình luận</string>
 	<string name="mnu_comment_liked">Đã thích</string>
 	<string name="uploading_total">Đang tải lên %1$d của %2$d</string>
-	<string name="sending_content">Đang tải lên %s nội dung</string>
 	<string name="stats_no_blog">Thống kê không thể được nạp cho các blog yêu cầu</string>
 	<string name="older_last_week">Cũ hơn 1 tuần</string>
 	<string name="older_two_days">Cũ hơn 2 ngày</string>

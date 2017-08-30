@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-12 23:23:55+0000
+Translation-Revision-Date: 2017-08-18 23:31:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: hi_IN
@@ -9,6 +9,7 @@ Language: hi_IN
 	<string name="editor_draft_saved_locally">ड्राफ़्ट डिवाइस पर सहेजा गया</string>
 	<string name="editor_post_saved_locally">पोस्ट डिवाइस पर सहेजा गया</string>
 	<string name="button_sync">सिंक</string>
+	<string name="wp_media_title">वर्डप्रेस मीडिया </string>
 	<string name="error_unknown_post_type">अज्ञात पोस्ट प्रारूप</string>
 	<string name="jetpack_stats_module_disabled_message_not_admin">जेटपैक प्लगइन से जुड़ा हुआ है, लेकिन आँकड़े मॉड्यूल सक्रिय नहीं है। साइट व्यवस्थापक से संपर्क करें।</string>
 	<string name="jetpack_stats_module_disabled_message">जेटपैक प्लगइन से जुड़ा हुआ है, लेकिन आँकड़े मॉड्यूल सक्रिय नहीं है। क्या आप आँकड़े सक्रिय करना चाहते हैं?</string>
@@ -38,6 +39,7 @@ Language: hi_IN
 	<string name="image_width">चौड़ाई </string>
 	<string name="invite_error_for_username">%1$s: %2$s</string>
 	<string name="post_format_video">विडियो </string>
+	<string name="alignment_center">मध्य में</string>
 	<string name="post_format_status">स्थिति</string>
 	<string name="theme_free">नि: शुल्क</string>
 	<string name="theme_all">सभी</string>
@@ -71,7 +73,6 @@ Language: hi_IN
 	<string name="site_settings_default_category_title">डिफ़ॉल्ट श्रेणी</string>
 	<string name="site_settings_tagline_title">टैगलाइन</string>
 	<string name="site_settings_title_title">साइट शीर्षक</string>
-	<string name="site_settings_this_device_header">यह डिवाइस</string>
 	<string name="comments">टिप्पणियां</string>
 	<string name="privacy">गोपनीयता</string>
 	<string name="never">कभी नहीं </string>
@@ -149,6 +150,7 @@ Language: hi_IN
 	<string name="stats_insights_most_popular_day">सबसे लोकप्रिय दिन</string>
 	<string name="stats_insights_popular">सबसे लोकप्रिय दिन और घण्टा</string>
 	<string name="stats_insights_today">आज के आँकड़े</string>
+	<string name="account_settings">अकाउंट सेटिंग्स</string>
 	<string name="me_btn_support">मदद और सहायता</string>
 	<string name="site_picker_add_self_hosted">सेल्फ-होस्टेड साइट डाले </string>
 	<string name="site_picker_edit_visibility">साइट्स दिखाए या छिपाये</string>
@@ -393,6 +395,7 @@ Language: hi_IN
 	<string name="email_reserved">यह ईमेल पता पहले से ही इस्तेमाल में है. सक्रियण ईमेल के लिए अपने इनबॉक्स की जाँच करें. यदि आप सक्रिय नहीं करेंगे, तो आप कुछ दिनों में फिर से कोशिश कर सकते हैं.</string>
 	<string name="remove_account">ब्लॉग हटाये</string>
 	<string name="blog_removed_successfully">ब्लॉग सफलतापूर्वक हटा दिया गया</string>
+	<string name="jetpack_message_not_admin">Jetpack प्लगइन आवश्यक है. साइट व्यवस्थापक से संपर्क करें.</string>
 	<string name="deleting_page">पृष्ठ हटाया जा रहा है</string>
 	<string name="deleting_post">पोस्ट हटाया जा रहा है</string>
 	<string name="share_link">कड़ी साझा करे</string>
@@ -420,6 +423,7 @@ Language: hi_IN
 	<string name="account_two_step_auth_enabled">इस खाते में दो स्टेप प्रमाणीकरण सक्षम किया गया है.  WordPress.com पर अपनी सुरक्षा सेटिंग में जाएं और एक ऐप्लिकेशन विशिष्ट पासवर्ड उत्पन्न करे.</string>
 	<string name="nux_tap_continue">जारी रखे</string>
 	<string name="nux_welcome_create_account">खाता बनाएं</string>
+	<string name="nux_oops_not_selfhosted_blog">वर्डप्रेस डॉट कॉम पर साइन इन करे</string>
 	<string name="nux_add_selfhosted_blog">अपने से होस्ट किया हुआ साईट जोड़े</string>
 	<string name="password_invalid">आपको एक अधिक सुरक्षित पासवर्ड की जरूरत है. सुनिश्चित करें की आप 7 या अधिक वर्णों ,बड़े और छोटे अक्षरों, संख्या या विशेष वर्ण मिश्रण का उपयोग कर रहे है.</string>
 	<string name="reader_untitled_post">(शीर्षक रहित)</string>
@@ -442,6 +446,7 @@ Language: hi_IN
 	<string name="empty_list_default">इस सूची खाली है</string>
 	<string name="nux_tutorial_get_started_title">शुरू हो जाये!</string>
 	<string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>
+	<string name="connecting_wpcom">WordPress.com से कनेक्ट हो रहा</string>
 	<string name="limit_reached">सीमा पहुँच गयी. आप 1 मिनट में फिर से कोशिश कर सकते हैं. उसके पहले कोशिश करने पर आपके प्रतिबंध हटाने के इन्तजार समय में वृद्धि होगी. आपको लगता है यह त्रुटी है तो, सहायता से संपर्क करे.</string>
 	<string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे...</string>
 	<string name="create_account_wpcom">Wordpress.com पे अकाउंट बनाये|</string>
@@ -467,6 +472,7 @@ Language: hi_IN
 	<string name="stats_timeframe_weeks">सप्ताह</string>
 	<string name="stats_timeframe_yesterday">कल</string>
 	<string name="media_edit_success">अपडेट किया गया</string>
+	<string name="share_action_title">में जोड़े …</string>
 	<string name="media_edit_failure">अपडेट करने में असफल</string>
 	<string name="media_gallery_type">प्रकार</string>
 	<string name="stats_entry_tags_and_categories">विषय</string>
@@ -500,6 +506,7 @@ Language: hi_IN
 	<string name="note_reply_successful">जवाब प्रकाशित हो गया</string>
 	<string name="new_notifications">%d नयी सूचनाएं</string>
 	<string name="more_notifications">और %d और भी.</string>
+	<string name="sign_in">साइन इन</string>
 	<string name="loading">लोड किया जा रहा...</string>
 	<string name="httppassword">एचटीटीपी कूटशब्द</string>
 	<string name="httpuser">एचटीटीपी उपयोगकर्ता नाम</string>
@@ -546,9 +553,11 @@ Language: hi_IN
 	<string name="upload_full_size_image">अपलोड करें और पूर्ण छवि से जोड़े</string>
 	<string name="categories">श्रेणिया</string>
 	<string name="title">शीर्षक</string>
+	<string name="tags_separate_with_commas">टैग को अल्पविराम से अलग करे \n</string>
 	<string name="dlg_deleting_comments">टिप्पणियों को हटाना</string>
 	<string name="notification_vibrate">वाइब्रेट</string>
 	<string name="notification_blink">ब्लिंक सुचना का प्रकाश </string>
+	<string name="notification_sound">सूचना ध्वनि</string>
 	<string name="sdcard_title">एसडी कार्ड आवश्यक है</string>
 	<string name="media">मीडिया</string>
 	<string name="delete">हटाये</string>

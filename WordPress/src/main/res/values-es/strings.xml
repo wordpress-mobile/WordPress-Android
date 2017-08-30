@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-03 12:18:30+0000
+Translation-Revision-Date: 2017-08-21 16:56:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+	<string name="error_unknown_post">No se pudo encontrar la entrada en el servidor</string>
+	<string name="error_post_does_not_exist">Esta entrada ya no existe</string>
+	<string name="error_media_recover">No hemos sido capaces de subir este medio a la entrada. Por favor, edita la entrada e inténtalo de nuevo.</string>
+	<string name="error_media_canceled">Se canceló la subida de medios</string>
+	<string name="error_upload_post_media_params">Hubo un error al subir el medio en este %1$s: %2$s.</string>
+	<string name="error_upload_post_params">Hubo un error al subir este %1$s: %2$s.</string>
+	<string name="async_promo_link">¿Cómo funciona?</string>
+	<string name="async_promo_description">¡Ahora puedes salir del editor y tu entrada se guardará y publicará entre bambalinas! ¡Anímate a probarlo!</string>
+	<string name="async_promo_title">Publica con confianza</string>
+	<string name="editor_uploading_post">Tu entrada se está subiendo</string>
+	<string name="uploading_post_media">Subiendo medios…</string>
+	<string name="dialog_confirm_cancel_post_media_uploading">¿Estás seguro? Al borrar esta entrada también cancelarás la subida de medios.</string>
+	<string name="page_scheduled">Página programada</string>
+	<string name="post_scheduled">Entrada programada</string>
+	<string name="post_draft_param">¡"%s" se ha guardado como borrador!</string>
+	<string name="post_scheduled_param">¡"%s" se ha programado!</string>
+	<string name="post_updated_param">¡"%s" se ha actualizado!</string>
+	<string name="post_published_param">¡"%s" se ha publicado!</string>
+	<string name="button_retry">Reintentar</string>
+	<string name="post_queued">Entrada a la espera</string>
+	<string name="uploading_post">Subiendo "%s"</string>
+	<string name="connection_to_server_lost">Se ha perdido la conexión al servidor</string>
+	<string name="max_video_resolution">Resolución máxima</string>
 	<string name="login_epilogue_mysites_other">Mis sitios</string>
 	<string name="login_epilogue_mysites_one">Mi sitio</string>
 	<string name="login_logged_in_as">Conectado como</string>
@@ -31,7 +54,6 @@ Language: es
 	<string name="login_magic_links_sent_description">Ilustración enviada por enlace mágico</string>
 	<string name="login_magic_links_sent_label">¡Tu enlace mágico está en camino! Revisa tu correo electrónico en este dispositivo y pulsa el enlace que hay en el correo electrónico que has recibido de WordPress.com.</string>
 	<string name="login_magic_links_label">Te enviaremos por correo electrónico un enlace mágico que te conectará al instante, sin tener que introducir contraseña. ¡Caza y no picotees más!</string>
-	<string name="login_error_while_checking_email">¡Ocurrió un error al comprobar la dirección de correo electrónico!</string>
 	<string name="password_incorrect">Parece que esta contraseña es incorrecta. Por favor, vuelve a comprobar tu información e inténtalo de nuevo.</string>
 	<string name="email_not_registered_wpcom">Este correo electrónico no está registrado en WordPress.com</string>
 	<string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
@@ -50,11 +72,7 @@ Language: es
 	<string name="login_promo_text_onthego">Publica desde el parque. Bloguea desde el autobús. Comenta desde el café. WordPress está donde tú vas.</string>
 	<string name="create_wordpress_site">Crear un sitio WordPress</string>
 	<string name="email_not_found">No hemos encontrado un usuario de WordPress.com con esa dirección de correo electrónico</string>
-	<string name="login_password_image">Icono de la contraseña de acceso</string>
-	<string name="login_username_image">Icono del usuario de acceso</string>
 	<string name="login_site_address_help_image">Imagen de posición de la dirección del sitio</string>
-	<string name="login_globe_icon">Icono del globo de la dirección del sitio</string>
-	<string name="login_email_image">Icono del correo electrónico de acceso</string>
 	<string name="image_optimization_promo_desc">La optimización de imagen reduce las imágenes para que suban más rápido.\n\nPuedes cambiar esto en cualquier momento en los ajustes del sitio.</string>
 	<string name="image_optimization_promo_title">¿Activar optimización de la imagen?</string>
 	<string name="leave_off">Detener</string>
@@ -98,7 +116,6 @@ Language: es
 	<string name="notifications_tab_title_all">Todos</string>
 	<string name="top_level_category_name">Nivel superior</string>
 	<string name="category_parent">Categoría superior (opcional):</string>
-	<string name="toast_err_post_media_uploading">No se puede eliminar una publicación mientras está subiendo</string>
 	<string name="media_empty_audio_list">No tienes ningún audio</string>
 	<string name="media_empty_documents_list">No tienes ningún documento</string>
 	<string name="media_empty_videos_list">No tienes ningún vídeo</string>
@@ -107,7 +124,7 @@ Language: es
 	<string name="media_error_exceeds_memory_limit">Archivo demasiado grande para subir a este sitio</string>
 	<string name="media_error_exceeds_php_filesize">El archivo supera el tamaño máximo de subida de este sitio</string>
 	<string name="media_error_http_too_large_video_upload">Vídeo demasiado grande para subir</string>
-	<string name="media_error_http_too_large_photo_upload">La imagen es demasiado grande para subirla. Trata de cambiar la optimización de imágenes en los ajustes de tu sitio</string>
+	<string name="media_error_http_too_large_photo_upload">La imagen es demasiado grande para subirla. Trata de cambiar la optimización de imágenes en los ajustes de la aplicación</string>
 	<string name="media_audio">Audio</string>
 	<string name="media_videos">Vídeos</string>
 	<string name="media_documents">Documentos</string>
@@ -144,7 +161,6 @@ Language: es
 	<string name="draft_uploaded">Borrador subido</string>
 	<string name="report_bug">Informar de fallo</string>
 	<string name="video_quality">Calidad del vídeo</string>
-	<string name="max_video_resolution">Ancho por defecto del vídeo</string>
 	<string name="permission_location">Ubicación</string>
 	<string name="permission_camera">Cámara</string>
 	<string name="permission_storage">Almacenamiento</string>
@@ -203,7 +219,7 @@ Language: es
 	<string name="fab_content_description_write">Escribe</string>
 	<string name="my_site_btn_sharing">Compartir</string>
 	<string name="button_not_now">Ahora no</string>
-	<string name="media_error_internal_server_error">Error en la subida. Trata de cambiar la optimización de imágenes en los ajustes de tu sitio</string>
+	<string name="media_error_internal_server_error">Error en la subida. Trata de cambiar la optimización de imágenes en los ajustes de tu aplicación</string>
 	<string name="media_downloading">Guardando medios en este dispositivo</string>
 	<string name="error_media_save">No fue posible guardar los medios</string>
 	<string name="editor_scheduled_post_saved_online">Entrada programada</string>
@@ -239,7 +255,7 @@ Language: es
 	<string name="start_over_email_body">Quiero empezar con el sitio %s</string>
 	<string name="start_over_email_subject">Empezar con el sitio %s</string>
 	<string name="site_picker_remove_site_error">Error al borrar el sitio, inténtalo de nuevo más tarde</string>
-	<string name="editor_post_saved_locally_unfinished_media">La entrada tiene subidas de medios sin terminar y se ha guardado localmente</string>
+	<string name="editor_post_saved_locally_failed_media">La entrada falló al subir los medios y se ha guardado localmente</string>
 	<string name="sure_to_remove_account">¿Borrar este sitio de la aplicación?</string>
 	<string name="photo_picker_title">Elegir foto</string>
 	<string name="error_publish_no_network">El dispositivo está desconectado. Los cambios se guardarán localmente.</string>
@@ -262,9 +278,7 @@ Language: es
 	<string name="image_quality">Calidad de la imagen</string>
 	<string name="error_all_media_upload_canceled">Todos los archivos de multimedia han sido cancelados debido a un error desconocido. Por favor vuelva a intentar cargarlos</string>
 	<string name="error_unknown_post_type">Formato de entrada desconocido</string>
-	<string name="error_unknown_post">Entrada desconocida, puede que la copia local de este entrada no esté sincronizada con el servidor</string>
 	<string name="error_fetch_site_after_creation">El sitio ha sido creado, puede que necesite actualizar sus sitios en el selector de sitio.</string>
-	<string name="error_upload_params">Error durante la carga de %1$s: %2$s</string>
 	<string name="submit_for_review">Enviar</string>
 	<string name="tell_me_more">Más información</string>
 	<string name="duplicate_site_detected">Se ha detectado un sitio duplicado.</string>
@@ -693,7 +707,6 @@ Language: es
 	<string name="site_settings_address_title">Dirección</string>
 	<string name="site_settings_tagline_title">Lema</string>
 	<string name="site_settings_title_title">Título del sitio</string>
-	<string name="site_settings_this_device_header">Este dispositivo</string>
 	<string name="site_settings_discussion_new_posts_header">Por defecto para nuevas entradas</string>
 	<string name="site_settings_writing_header">Escribiendo</string>
 	<string name="site_settings_account_header">Cuenta</string>
@@ -922,7 +935,7 @@ Language: es
 	<string name="stats_period">Periodo</string>
 	<string name="stats_overall">Global</string>
 	<string name="stats_total">Total</string>
-	<string name="post_uploading">Cargando</string>
+	<string name="post_uploading">Subiendo entrada</string>
 	<string name="stats_visitors">Visitantes</string>
 	<string name="stats_views">Vistas</string>
 	<string name="stats_timeframe_years">Años</string>
@@ -989,7 +1002,6 @@ Language: es
 	<string name="delete_sure">Eliminar este borrador</string>
 	<string name="delete_sure_post">Eliminar esta entrada</string>
 	<string name="signing_out">Cerrando sesión…</string>
-	<string name="posting_post">Publicando "%s"</string>
 	<string name="pages_empty_list">Sin páginas todavía. ¿Por qué no crear una?</string>
 	<string name="comment_reply_to_user">Responder a %s</string>
 	<string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
@@ -997,7 +1009,7 @@ Language: es
 	<string name="comment">Comentario</string>
 	<string name="mnu_comment_liked">Me gustó</string>
 	<string name="uploading_total">Cargando %1$d de %2$d</string>
-	<string name="sending_content">Cargando el contenido de %s</string>
+	<string name="sending_content">Subiendo el contenido de %s…</string>
 	<string name="select_a_blog">Elige un sitio WordPress</string>
 	<string name="stats_no_blog">No se han podido cargar las estadísticas del blog solicitado</string>
 	<string name="older_last_week">Hace más de 1 semana</string>

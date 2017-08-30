@@ -22,7 +22,6 @@ Language: zh_CN
 	<string name="start_over_email_body">我想重新开始创建站点 %s</string>
 	<string name="start_over_email_subject">重新开始创建站点 %s</string>
 	<string name="site_picker_remove_site_error">删除站点时出错，请稍后重试</string>
-	<string name="editor_post_saved_locally_unfinished_media">该文章包含未完成上传的媒体，已保存在本地</string>
 	<string name="sure_to_remove_account">从应用中删除此站点？</string>
 	<string name="photo_picker_title">选择照片</string>
 	<string name="error_publish_no_network">设备未连接网络。已将更改保存在本地。</string>
@@ -43,9 +42,7 @@ Language: zh_CN
 	<string name="keep_editing">继续编辑</string>
 	<string name="error_all_media_upload_canceled">由于发生未知错误，所有媒体上传均已取消。请重新尝试上传</string>
 	<string name="error_unknown_post_type">未知文章格式</string>
-	<string name="error_unknown_post">未知文章，该文章的本地副本可能未与服务器同步</string>
 	<string name="error_fetch_site_after_creation">站点已创建，您可能需要在站点选择器中刷新您的站点。</string>
-	<string name="error_upload_params">上传%1$s时出错：%2$s</string>
 	<string name="submit_for_review">提交</string>
 	<string name="role_viewer">查看者</string>
 	<string name="role_follower">粉丝</string>
@@ -371,7 +368,6 @@ Language: zh_CN
 	<string name="site_settings_address_title">地址</string>
 	<string name="site_settings_tagline_title">标语</string>
 	<string name="site_settings_title_title">站点标题</string>
-	<string name="site_settings_this_device_header">此设备</string>
 	<string name="site_settings_discussion_new_posts_header">默认用于新文章</string>
 	<string name="site_settings_writing_header">撰写</string>
 	<string name="site_settings_account_header">帐户</string>
@@ -591,7 +587,6 @@ Language: zh_CN
 	<string name="stats_period">时段</string>
 	<string name="stats_overall">总体</string>
 	<string name="stats_total">总计</string>
-	<string name="post_uploading">正在上传</string>
 	<string name="stats_visitors">访客</string>
 	<string name="stats_views">浏览量</string>
 	<string name="stats_timeframe_years">年</string>
@@ -657,7 +652,6 @@ Language: zh_CN
 	<string name="delete_sure_page">删除此页面</string>
 	<string name="delete_sure">删除此草稿</string>
 	<string name="delete_sure_post">删除此文章</string>
-	<string name="posting_post">正在发布“%s”</string>
 	<string name="pages_empty_list">还没有页面。为何不创建一个？</string>
 	<string name="comment_reply_to_user">回复 %s</string>
 	<string name="posts_empty_list">尚无文章。为何不创建一个？</string>
@@ -665,7 +659,6 @@ Language: zh_CN
 	<string name="comment">评论</string>
 	<string name="mnu_comment_liked">赞</string>
 	<string name="uploading_total">正在上传 %1$d/%2$d</string>
-	<string name="sending_content">正在上传“%s”内容</string>
 	<string name="stats_no_blog">无法加载所需博客的统计信息</string>
 	<string name="older_last_week">超过 1 周</string>
 	<string name="older_two_days">超过 2 天</string>

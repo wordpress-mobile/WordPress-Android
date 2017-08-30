@@ -32,7 +32,6 @@ Language: sq_AL
 	<string name="start_over_email_body">Dua t’ia filloj nga e para me sajtin %s</string>
 	<string name="start_over_email_subject">Fillojani nga e para me sajtin %s</string>
 	<string name="site_picker_remove_site_error">Gabim në heqjen e sajtit, riprovoni më vonë</string>
-	<string name="editor_post_saved_locally_unfinished_media">Postimi ka ngarkime mediash të papërfunduar dhe u ruajt lokalisht</string>
 	<string name="sure_to_remove_account">Të hiqet ky sajt nga aplikacioni?</string>
 	<string name="photo_picker_title">Zgjidhni foto</string>
 	<string name="error_publish_no_network">Pajisja është e palidhur në internet. Ndryshimet u ruajtën lokalisht.</string>
@@ -54,9 +53,7 @@ Language: sq_AL
 	<string name="keep_editing">Vazhdoni përpunimin</string>
 	<string name="error_all_media_upload_canceled">Krejt ngarkimet e mediave u anuluan për shkak të një gabimi të panjohur. Ju lutemi, riprovoni t’i ringarkoni</string>
 	<string name="error_unknown_post_type">Format i panjohur postimesh</string>
-	<string name="error_unknown_post">Postim i panjohur, kopja vendore e këtij postimi mund të jetë e panjëkohësuar me atë të shërbyesit</string>
 	<string name="error_fetch_site_after_creation">Sajti është krijuar, mund t’ju duhet të rifreskoni sajtet tuaj te zgjedhësi i sajteve.</string>
-	<string name="error_upload_params">Gabim teksa ngarkohej %1$s: %2$s</string>
 	<string name="submit_for_review">Parashtroje</string>
 	<string name="tell_me_more">Tregomëni më tepër</string>
 	<string name="duplicate_site_detected">U pikas një sajt i përsëdytur.</string>
@@ -477,7 +474,6 @@ Language: sq_AL
 	<string name="site_settings_address_title">Adresë</string>
 	<string name="site_settings_title_title">Titull Sajti</string>
 	<string name="site_settings_tagline_title">Përmbledhtas</string>
-	<string name="site_settings_this_device_header">Këtë pajisje</string>
 	<string name="site_settings_discussion_new_posts_header">Parazgjedhje për postime të reja</string>
 	<string name="site_settings_account_header">Llogari</string>
 	<string name="site_settings_writing_header">Shkrim</string>
@@ -694,7 +690,6 @@ Language: sq_AL
 	<string name="error_notification_open">S&amp;#8217;u hap dot njoftimi</string>
 	<string name="stats_empty_search_terms">S&amp;#8217;ka terma kërkimesh të regjistruar</string>
 	<string name="toast_err_post_uploading">S&amp;#8217;arrin të hapë postim teksa ngarkohet</string>
-	<string name="post_uploading">Ngarkim</string>
 	<string name="stats_total">Gjithsej</string>
 	<string name="stats_overall">Gjithsej</string>
 	<string name="stats_period">Periudhë</string>
@@ -796,9 +791,7 @@ Language: sq_AL
 	<string name="signing_out">Po dilet…</string>
 	<string name="nux_help_description">Vizitoni qendrën e ndihmës që të merrni përgjigje për pyetje të rëndomta, ose vizitoni forumet që të bëni pyetje të reja</string>
 	<string name="reader_title_photo_viewer">%1$d nga %2$d</string>
-	<string name="sending_content">Po ngarkohet lëndë %s</string>
 	<string name="mnu_comment_liked">U pëlqye</string>
-	<string name="posting_post">Po postohet "%s"</string>
 	<string name="agree_terms_of_service">Duke krijuar një llogari, pajtoheni me %1$sKushtet tërheqëse të Shërbimit%2$s</string>
 	<string name="more">Më tepër</string>
 	<string name="reader_empty_followed_blogs_title">S&amp;#8217;ndiqni ende ndonjë sajt</string>

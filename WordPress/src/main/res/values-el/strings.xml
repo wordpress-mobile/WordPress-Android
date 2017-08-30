@@ -9,7 +9,6 @@ Language: el_GR
 	<string name="error_all_media_upload_canceled">Όλες οι μεταφορτώσεις πολυμέσων έχουν ακυρωθεί εξαιτίας άγνωστου σφάλματος. Παρακαλούμε δοκιμάστε ξανά να τα μεταφορτώσετε</string>
 	<string name="error_unknown_post_type">Άγνωστη μορφή άρθρου</string>
 	<string name="error_fetch_site_after_creation">Ο ιστότοπος έχει δημιουργηθεί, μπορεί να χρειάζεται ανανέωση των ιστοτόπων σας στον επιλογέα ιστοτόπων.</string>
-	<string name="error_upload_params">Σφάλμα κατά τη μεταφόρτωση του %1$s: %2$s</string>
 	<string name="submit_for_review">Υποβολή</string>
 	<string name="tell_me_more">Πείτε μου περισσότερα</string>
 	<string name="duplicate_site_detected">Ανιχνεύθηκε πανομοιότυπος ιστότοπος.</string>
@@ -417,7 +416,6 @@ Language: el_GR
 	<string name="site_settings_address_title">Διεύθυνση</string>
 	<string name="site_settings_tagline_title">Γραμμή ετικετών</string>
 	<string name="site_settings_title_title">Τίτλος Ιστότοπου</string>
-	<string name="site_settings_this_device_header">Αυτή η συσκευή</string>
 	<string name="site_settings_discussion_new_posts_header">Προεπιλογές για νέα άρθρα</string>
 	<string name="site_settings_writing_header">Συγγραφή</string>
 	<string name="site_settings_account_header">Λογαριασμός</string>
@@ -637,7 +635,6 @@ Language: el_GR
 	<string name="stats_period">Περίοδος</string>
 	<string name="stats_overall">Συνολικά</string>
 	<string name="stats_total">Σύνολα</string>
-	<string name="post_uploading">Μεταφόρτωση</string>
 	<string name="stats_visitors">Επισκέπτες</string>
 	<string name="stats_views">Προβολές</string>
 	<string name="stats_timeframe_years">Χρόνια</string>
@@ -703,7 +700,6 @@ Language: el_GR
 	<string name="delete_sure_page">Διαγραφή της σελίδας</string>
 	<string name="delete_sure">Διαγραφή αυτού του προσχεδίου</string>
 	<string name="delete_sure_post">Διαγραφή αυτής της ανάρτησης</string>
-	<string name="posting_post">Δημοσίευση "%s"</string>
 	<string name="pages_empty_list">Δεν υπάρχουν σελίδες ακόμη. Γιατί να μη δημιουργήσετε μία;</string>
 	<string name="comment_reply_to_user">Απάντηση σε %s</string>
 	<string name="posts_empty_list">Δεν υπάρχουν άρθρα ακόμη. Γιατί να μη δημιουργήσετε ένα;</string>
@@ -711,7 +707,6 @@ Language: el_GR
 	<string name="comment">Σχόλιο</string>
 	<string name="mnu_comment_liked">Liked</string>
 	<string name="uploading_total">Μεταφόρτωση %1$d από %2$d</string>
-	<string name="sending_content">Μεταφόρτωση %s περιεχομένου</string>
 	<string name="stats_no_blog">Αδυναμία φόρτωσης στατιστικών για το ιστολόγιο αυτό</string>
 	<string name="older_last_week">Παλιότερο από 1 βδομάδα</string>
 	<string name="older_two_days">Παλιότερο από 2 μέρες</string>
