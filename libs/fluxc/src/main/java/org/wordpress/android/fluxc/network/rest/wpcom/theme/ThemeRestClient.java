@@ -48,7 +48,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                         AppLog.d(AppLog.T.API, "Received response to WP.com themes fetch request.");
                         FetchedThemesPayload payload = new FetchedThemesPayload(null);
                         payload.themes = createThemeListFromWPComResponse(response);
-                        mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpThemesAction(payload));
+                        mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
@@ -56,7 +56,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                         AppLog.e(AppLog.T.API, "Received error response to WP.com themes fetch request.");
                         FetchThemesError themeError = new FetchThemesError(ThemeErrorType.GENERIC_ERROR, null);
                         FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
-                        mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpThemesAction(payload));
+                        mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
                 }));
     }
@@ -94,7 +94,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                         AppLog.d(AppLog.T.API, "Received response to themes fetch request for WP.com site.");
                         FetchedThemesPayload payload = new FetchedThemesPayload(null);
                         payload.themes = createThemeListFromWPComResponse(response);
-                        mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpThemesAction(payload));
+                        mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
@@ -102,7 +102,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                         AppLog.e(AppLog.T.API, "Received error response to themes fetch request for WP.com site.");
                         FetchThemesError themeError = new FetchThemesError(ThemeErrorType.GENERIC_ERROR, null);
                         FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
-                        mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpThemesAction(payload));
+                        mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
                 }));
     }
