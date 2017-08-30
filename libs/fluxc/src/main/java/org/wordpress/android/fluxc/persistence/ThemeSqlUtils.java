@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.wellsql.generated.ThemeModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -45,15 +44,21 @@ public class ThemeSqlUtils {
         return themes.size();
     }
 
-    /**
-     * Retrieves themes stored with a non-zero site ID. Installed themes (for Jetpack sites) are the only themes
-     * with a non-zero site ID, for now.
-     */
-    public static List<ThemeModel> getThemesForSite(@Nullable SiteModel site) {
-        long siteId = site == null ? -1 : site.getSiteId();
+    public static List<ThemeModel> getThemesWithNoSite() {
         return WellSql.select(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, siteId)
+                .equals(ThemeModelTable.LOCAL_SITE_ID, 0)
+                .endWhere().getAsModel();
+    }
+
+    /**
+     * Retrieves themes associated with a given site. Installed themes (for Jetpack sites) are the only themes
+     * targeted for now.
+     */
+    public static List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
+        return WellSql.select(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().getAsModel();
     }
 
