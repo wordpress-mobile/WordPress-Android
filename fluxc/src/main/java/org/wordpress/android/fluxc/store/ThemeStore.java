@@ -152,8 +152,7 @@ public class ThemeStore extends Store {
         if (site.isJetpackConnected() && site.isUsingWpComRestApi()) {
             mThemeRestClient.fetchJetpackInstalledThemes(site);
         } else {
-            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE,
-                    "Site must have Jetpack connection to fetch installed themes.");
+            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE, null);
             FetchedThemesPayload payload = new FetchedThemesPayload(error);
             handleInstalledThemesFetched(payload);
         }
