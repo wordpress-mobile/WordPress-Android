@@ -27,7 +27,7 @@ public enum AccountAction implements IAction {
     @Action(payloadType = PushAccountSettingsPayload.class)
     PUSH_SETTINGS,          // request saving Account Settings remotely
     @Action(payloadType = PushSocialLoginPayload.class)
-    PUSH_SOCIAL,            // request social login remotely
+    PUSH_SOCIAL_LOGIN,      // request social login remotely
     @Action(payloadType = PushSocialSignupPayload.class)
     PUSH_SOCIAL_SIGNUP,     // request social signup remotely
     @Action(payloadType = NewAccountPayload.class)
