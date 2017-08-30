@@ -98,6 +98,7 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
+import org.wordpress.android.ui.uploads.MediaUploadHandler;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
@@ -164,10 +165,10 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
     public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
-    private static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
-    private static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
+    private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
+    private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -314,24 +315,16 @@ public class EditPostActivity extends AppCompatActivity implements
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
             } else if (extras != null) {
                 // Load post passed in extras
-                mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
-                if (mPost != null) {
-                    mOriginalPost = mPost.clone();
-                    mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
-                    mIsPage = mPost.isPage();
-                }
+                initializePostObjects(extras.getInt(EXTRA_POST_LOCAL_ID));
             }
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
+            mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
 
-            if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
-                try {
-                    mPost = (PostModel) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
-                    mOriginalPost = (PostModel) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
-                } catch (ClassCastException e) {
-                    mPost = null;
-                }
+            if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
+                initializePostObjects(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID));
             }
+
             mEditorFragment = (EditorFragmentAbstract) fragmentManager.getFragment(savedInstanceState, STATE_KEY_EDITOR_FRAGMENT);
 
             if (mEditorFragment instanceof EditorMediaUploadListener) {
@@ -407,6 +400,15 @@ public class EditPostActivity extends AppCompatActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
+    private void initializePostObjects(int localPostId) {
+        mPost = mPostStore.getPostByLocalPostId(localPostId);
+        if (mPost != null) {
+            mOriginalPost = mPost.clone();
+            mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
+            mIsPage = mPost.isPage();
+        }
+    }
+
     // this method aims at recovering the current state of media items if they're inconsistent within the PostModel.
     private void resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued() {
         boolean useAztec = AppPrefs.isAztecEditorEnabled();
@@ -479,8 +481,32 @@ public class EditPostActivity extends AppCompatActivity implements
         EventBus.getDefault().register(this);
 
         if (mEditorMediaUploadListener != null) {
+            // UploadService.getPendingMediaForPost will be populated only when the user exits the editor
+            // But if the user doesn't exit the editor and sends the app to the background, a reattachment
+            // for the media within this Post is needed as soon as the app comes back to foreground,
+            // so we get the list of progressing media for this Post from the MediaUploadHandler
+            List<MediaModel> allUploadingMediaInPost = new ArrayList<>();
             List<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
-            for (MediaModel media : uploadingMediaInPost) {
+            allUploadingMediaInPost.addAll(uploadingMediaInPost);
+            // add them to the array only if they are not in there yet
+            for (MediaModel media1 : MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(mPost)) {
+                boolean found = false;
+                for (MediaModel media2 : uploadingMediaInPost) {
+                    if (media1.getId() == media2.getId()) {
+                        // if it exists, just break the loop and check for the next one
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    // we haven't found it before, so let's add it to the list.
+                    allUploadingMediaInPost.add(media1);
+                }
+            }
+
+            // now do proper re-attachment of upload progress on each media item
+            for (MediaModel media : allUploadingMediaInPost) {
                 if (media != null) {
                     mEditorMediaUploadListener.onMediaUploadReattached(String.valueOf(media.getId()),
                             UploadService.getUploadProgressForMedia(media));
@@ -512,8 +538,8 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
         savePostAsync(null);
-        outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
-        outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
+        outState.putInt(STATE_KEY_POST_LOCAL_ID, mPost.getId());
+        outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putSerializable(WordPress.SITE, mSite);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);

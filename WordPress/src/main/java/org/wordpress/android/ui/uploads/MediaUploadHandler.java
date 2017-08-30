@@ -117,7 +117,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return hasInProgressMediaUploadsForPost(postModel) || hasPendingMediaUploadsForPost(postModel);
     }
 
-    static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
+    public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
         if (postModel == null) {
             return Collections.emptyList();
         }

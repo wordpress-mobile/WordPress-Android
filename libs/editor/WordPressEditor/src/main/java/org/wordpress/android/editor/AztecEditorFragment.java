@@ -370,11 +370,26 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setTitle(CharSequence text) {
+        if (text == null) {
+            text = "";
+        }
+
+        if (title == null) {
+            return;
+        }
         title.setText(text);
     }
 
     @Override
     public void setContent(CharSequence text) {
+        if (text == null) {
+            text = "";
+        }
+
+        if (content == null) {
+            return;
+        }
+
         content.fromHtml(text.toString());
 
         updateFailedMediaList();
@@ -569,17 +584,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private void overlayProgressingMedia() {
         for (String localMediaId : mUploadingMediaProgressMax.keySet()) {
-            MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-            overlayProgressingMedia(predicate);
-            // here check if this is a video uploading in progress or not; if it is, show the video play icon
-            for (Attributes attrs : content.getAllElementAttributes(predicate)) {
-                AttributesWithClass attributesWithClass = getAttributesWithClass(attrs);
-                if (attributesWithClass.hasClass(TEMP_VIDEO_UPLOADING_CLASS)) {
-                    overlayVideoIcon(2, predicate);
-                }
+            overlayProgressingMediaForMediaId(localMediaId);
+        }
+    }
+
+    private void overlayProgressingMediaForMediaId(String localMediaId) {
+        MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
+        overlayProgressingMedia(predicate);
+        // here check if this is a video uploading in progress or not; if it is, show the video play icon
+        for (Attributes attrs : content.getAllElementAttributes(predicate)) {
+            AttributesWithClass attributesWithClass = getAttributesWithClass(attrs);
+            if (attributesWithClass.hasClass(TEMP_VIDEO_UPLOADING_CLASS)) {
+                overlayVideoIcon(2, predicate);
             }
         }
     }
+
 
     private void overlayVideoIcon(int overlayLevel, AztecText.AttributePredicate predicate) {
         Drawable videoDrawable = getResources().getDrawable(R.drawable.ic_overlay_video);
@@ -828,6 +848,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onMediaUploadReattached(String localId, float currentProgress) {
         mUploadingMediaProgressMax.put(localId, currentProgress);
+        overlayProgressingMediaForMediaId(localId);
     }
 
     @Override
