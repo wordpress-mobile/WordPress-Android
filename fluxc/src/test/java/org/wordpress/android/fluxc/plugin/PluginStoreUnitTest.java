@@ -57,6 +57,8 @@ public class PluginStoreUnitTest {
         // Set 1 plugin
         PluginSqlUtils.insertOrReplacePlugins(site, generatePlugins("jetpack"));
         plugins = mPluginStore.getPlugins(site);
+        // make sure the previous plugins are removed
+        assertEquals(1, plugins.size());
         assertEquals("jetpack", plugins.get(0).getName());
     }
 
