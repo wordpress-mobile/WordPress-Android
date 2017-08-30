@@ -250,9 +250,12 @@ public class AccountRestClient extends BaseWPComRestClient {
      *
      * No HTTP POST call is made if the given parameter map is null or contains no entries.
      *
-     * @param idToken       OpenID Connect Token (JWT) from the service the user is using to
-     *                      authenticate their account.
-     * @param service       Slug representing the service for the given token (e.g. google).
+     * @param accessToken       Access Token from the service the user is using to authenticate
+     *                          their account.
+     * @param idToken           OpenID Connect Token (JWT) from the service the user is using to
+     *                          authenticate their account.
+     * @param service           Slug representing the service for the given token (e.g. google).
+     * @param signupFlowName    The signup flow name that was used to create the user.
      */
     public void pushSocialSignup(@NonNull String accessToken, @NonNull String idToken,
                                  @NonNull String service, @NonNull String signupFlowName) {
