@@ -28,7 +28,7 @@ public class ThemeSqlUtils {
 
     public static void insertOrReplaceWpThemes(@NonNull List<ThemeModel> themes) {
         // remove existing WP.com themes
-        removeThemes(null);
+        removeThemesWithNoSite();
         WellSql.insert(themes).asSingleTransaction(true).execute();
     }
 
@@ -45,14 +45,6 @@ public class ThemeSqlUtils {
         return themes.size();
     }
 
-    public static void removeThemes(@Nullable SiteModel site) {
-        long siteId = site == null ? -1 : site.getSiteId();
-        WellSql.delete(ThemeModel.class)
-                .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, siteId)
-                .endWhere().execute();
-    }
-
     /**
      * Retrieves themes stored with a non-zero site ID. Installed themes (for Jetpack sites) are the only themes
      * with a non-zero site ID, for now.
@@ -63,5 +55,21 @@ public class ThemeSqlUtils {
                 .where()
                 .equals(ThemeModelTable.LOCAL_SITE_ID, siteId)
                 .endWhere().getAsModel();
+    }
+
+    public static void removeThemes(@NonNull SiteModel site) {
+        removeThemes(site.getId());
+    }
+
+    private static void removeThemesWithNoSite() {
+        // Remove themes whose localSiteId is 0
+        removeThemes(0);
+    }
+
+    private static void removeThemes(int localSiteId) {
+        WellSql.delete(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.LOCAL_SITE_ID, localSiteId)
+                .endWhere().execute();
     }
 }
