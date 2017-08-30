@@ -100,10 +100,10 @@ public class ThemeStore extends Store {
             return;
         }
         switch ((ThemeAction) actionType) {
-            case FETCH_WP_THEMES:
+            case FETCH_WP_COM_THEMES:
                 fetchWpThemes();
                 break;
-            case FETCHED_WP_THEMES:
+            case FETCHED_WP_COM_THEMES:
                 handleWpThemesFetched((FetchedThemesPayload) action.getPayload());
                 break;
             case FETCH_INSTALLED_THEMES:
