@@ -47,8 +47,6 @@ public class PostUploadModel extends Payload implements Identifiable, Serializab
     @Column private String mErrorType;
     @Column private String mErrorMessage;
 
-    // TODO Progress?
-
     public PostUploadModel() {}
 
     public PostUploadModel(int id) {
