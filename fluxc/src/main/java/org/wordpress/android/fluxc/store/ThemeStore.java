@@ -149,7 +149,7 @@ public class ThemeStore extends Store {
     }
 
     private void fetchInstalledThemes(@NonNull SiteModel site) {
-        if (site.isJetpackConnected()) {
+        if (site.isJetpackConnected() && site.isUsingWpComRestApi()) {
             mThemeRestClient.fetchJetpackInstalledThemes(site);
         } else {
             FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE,
