@@ -5,6 +5,8 @@ import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
+import org.wordpress.android.util.StringUtils;
+
 import java.io.Serializable;
 
 @Table
@@ -56,6 +58,9 @@ public class RoleModel implements Identifiable, Serializable {
         if (other == null || !(other instanceof RoleModel)) return false;
 
         RoleModel otherRole = (RoleModel) other;
-        return getName().equals(otherRole.getName());
+        return getId() == otherRole.getId()
+                && getSiteId() == otherRole.getSiteId()
+                && StringUtils.equals(getName(), otherRole.getName())
+                && StringUtils.equals(getDisplayName(), otherRole.getDisplayName());
     }
 }
