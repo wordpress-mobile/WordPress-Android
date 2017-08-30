@@ -4,11 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CategoryModel;
-import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -18,24 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class SiteSettingsTable {
-    private static final String ID_COLUMN_NAME = "id";
-    private static final String JP_MONITOR_ACTIVE_COLUMN_NAME = "monitorActive";
-    private static final String JP_MONITOR_EMAIL_NOTES_COLUMN_NAME = "jpEmailNotifications";
-    private static final String JP_MONITOR_WP_NOTES_COLUMN_NAME = "jpWpNotifications";
-
-    private static final String JP_SETTINGS_TABLE_NAME = "jp_site_settings";
-    private static final String CREATE_JP_SETTINGS_TABLE_SQL =
-            "CREATE TABLE IF NOT EXISTS " +
-                    JP_SETTINGS_TABLE_NAME +
-                    " (" +
-                    ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
-                    JP_MONITOR_ACTIVE_COLUMN_NAME + " BOOLEAN, " +
-                    JP_MONITOR_EMAIL_NOTES_COLUMN_NAME + " BOOLEAN, " +
-                    JP_MONITOR_WP_NOTES_COLUMN_NAME + " BOOLEAN" +
-                    ");";
-
     private static final String CATEGORIES_TABLE_NAME = "site_categories";
-
     private static final String CREATE_CATEGORIES_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
             CATEGORIES_TABLE_NAME +
@@ -51,7 +32,6 @@ public final class SiteSettingsTable {
     public static void createTable(SQLiteDatabase db) {
         if (db != null) {
             db.execSQL(SiteSettingsModel.CREATE_SETTINGS_TABLE_SQL);
-            db.execSQL(CREATE_JP_SETTINGS_TABLE_SQL);
             db.execSQL(CREATE_CATEGORIES_TABLE_SQL);
         }
     }
@@ -65,21 +45,6 @@ public final class SiteSettingsTable {
             db.execSQL(SiteSettingsModel.ADD_ALLOW_COMMENT_LIKES);
             db.execSQL(SiteSettingsModel.ADD_TWITTER_USERNAME);
         }
-    }
-
-    public static void deserializeJetpackDatabaseCursor(final @NonNull JetpackSettingsModel jpSettings, Cursor cursor) {
-        if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) return;
-        jpSettings.monitorActive = getBooleanFromCursor(cursor, JP_MONITOR_ACTIVE_COLUMN_NAME);
-        jpSettings.emailNotifications = getBooleanFromCursor(cursor, JP_MONITOR_EMAIL_NOTES_COLUMN_NAME);
-        jpSettings.wpNotifications = getBooleanFromCursor(cursor, JP_MONITOR_WP_NOTES_COLUMN_NAME);
-    }
-
-    public static ContentValues serializeJetpackSettingsToDatabase(final @NonNull JetpackSettingsModel jpSettings) {
-        ContentValues values = new ContentValues();
-        values.put(JP_MONITOR_ACTIVE_COLUMN_NAME, jpSettings.monitorActive);
-        values.put(JP_MONITOR_EMAIL_NOTES_COLUMN_NAME, jpSettings.emailNotifications);
-        values.put(JP_MONITOR_WP_NOTES_COLUMN_NAME, jpSettings.wpNotifications);
-        return values;
     }
 
     public static Map<Integer, CategoryModel> getAllCategories() {
@@ -114,14 +79,6 @@ public final class SiteSettingsTable {
         return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
     }
 
-    public static Cursor getJpSettings(long id) {
-        if (id < 0) return null;
-
-        String whereClause = sqlWhere(ID_COLUMN_NAME, Long.toString(id));
-        String sqlCommand = sqlSelectAllJpSettings() + whereClause + ";";
-        return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
-    }
-
     public static void saveCategory(CategoryModel category) {
         if (category == null) return;
 
@@ -136,14 +93,6 @@ public final class SiteSettingsTable {
         for (CategoryModel category : categories) {
             saveCategory(category);
         }
-    }
-
-    public static void saveJpSettings(JetpackSettingsModel settings) {
-        if (settings == null) return;
-
-        ContentValues values = serializeJetpackSettingsToDatabase(settings);
-        WordPress.wpDB.getDatabase().insertWithOnConflict(
-                JP_SETTINGS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     public static void saveSettings(SiteSettingsModel settings) {
@@ -164,17 +113,8 @@ public final class SiteSettingsTable {
         return "SELECT * FROM " + SiteSettingsModel.SETTINGS_TABLE_NAME + " ";
     }
 
-    private static String sqlSelectAllJpSettings() {
-        return "SELECT * FROM " + JP_SETTINGS_TABLE_NAME + " ";
-    }
-
     private static String sqlWhere(String variable, String value) {
         return "WHERE " + variable + "=\"" + value + "\" ";
-    }
-
-    private static boolean getBooleanFromCursor(Cursor cursor, String columnName) {
-        int columnIndex = cursor.getColumnIndex(columnName);
-        return columnIndex != -1 && cursor.getInt(columnIndex) != 0;
     }
 
     public static boolean migrateMediaOptimizeSettings(SQLiteDatabase db) {

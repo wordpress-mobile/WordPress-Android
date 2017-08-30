@@ -258,7 +258,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         mJpSettings.localTableId = mRemoteJpSettings.localTableId;
                         mJpSettings.emailNotifications = mRemoteJpSettings.emailNotifications;
                         mJpSettings.wpNotifications = mRemoteJpSettings.wpNotifications;
-                        SiteSettingsTable.saveJpSettings(mJpSettings);
                         onFetchResponseReceived(null);
                     }
                 }, new RestRequest.ErrorListener() {
