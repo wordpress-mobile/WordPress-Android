@@ -1169,6 +1169,9 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     public void removeAllFailedMediaUploads() {}
 
     @Override
+    public void removeMedia(String mediaId) {}
+
+    @Override
     public void setTitlePlaceholder(CharSequence text) {
     }
 

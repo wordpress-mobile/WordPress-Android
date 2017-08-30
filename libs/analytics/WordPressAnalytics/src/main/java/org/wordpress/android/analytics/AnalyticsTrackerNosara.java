@@ -682,6 +682,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_autofill_credentials_filled";
             case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
                 return "login_autofill_credentials_updated";
+            case LOGIN_PROLOGUE_PAGED:
+                return "login_prologue_paged";
             case LOGIN_PROLOGUE_VIEWED:
                 return "login_prologue_viewed";
             case LOGIN_EMAIL_FORM_VIEWED:

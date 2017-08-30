@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-24 14:42:27+0000
+Translation-Revision-Date: 2017-08-21 11:13:24+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -116,7 +116,6 @@ Language: hr
 	<string name="site_settings_address_title">Adresa</string>
 	<string name="site_settings_tagline_title">Slogan</string>
 	<string name="site_settings_title_title">Naslov web-strancie</string>
-	<string name="site_settings_this_device_header">Ovaj uređaj</string>
 	<string name="site_settings_discussion_new_posts_header">Zadane postavke za nove objave</string>
 	<string name="site_settings_account_header">Račun</string>
 	<string name="site_settings_writing_header">Pisanje</string>
@@ -343,9 +342,9 @@ Language: hr
 	<string name="stats_months_and_years">Mjeseci i godine</string>
 	<string name="reader_label_new_posts">Nove objave</string>
 	<string name="stats_period">Razdoblje</string>
-	<string name="post_uploading">Prijenos</string>
 	<string name="logs_copied_to_clipboard">Zapisi aplikacije su kopirani međuspremnik</string>
 	<string name="reader_page_recommended_blogs">Web-stranice koje bi vam se mogle sviđati</string>
+	<string name="post_uploading">Objava se prenosi</string>
 	<string name="stats_followers_an_hour_ago">Prije sat vremena</string>
 	<string name="stats_followers_hours">%1$d sati</string>
 	<string name="stats_followers_a_day">Jučer</string>
@@ -433,13 +432,11 @@ Language: hr
 	<string name="older_month">Starije od mjesec dana</string>
 	<string name="older_two_days">Starije od 2 dana</string>
 	<string name="older_last_week">Starije od tjedan dana</string>
-	<string name="sending_content">Prijenos %s sadržaja</string>
 	<string name="uploading_total">Prijenos %1$d od %2$d</string>
 	<string name="comment_trashed">Komentar premješten u smeće</string>
 	<string name="posts_empty_list">Još nemate objava. Zašto ne napišete jednu?</string>
 	<string name="comment_reply_to_user">Odgovor na %s</string>
 	<string name="pages_empty_list">Još nemate stranica. Zašto ne kreirate jednu?</string>
-	<string name="posting_post">Objavljivanje "%s"</string>
 	<string name="nux_help_description">Posjetite centar za pomoć kako bi dobili odgovore na učestala pitanja, ili posjetite forume kako bi postavili nova pitanja</string>
 	<string name="browse_our_faq_button">Pregledajte naš ČPP (FAQ)</string>
 	<string name="agree_terms_of_service">Kreiranjem računa pristajete na fascinantne %1$sUvjeti pružanja usluge%2$s</string>
@@ -448,6 +445,7 @@ Language: hr
 	<string name="reader_empty_posts_in_tag">Nema objava s ovom oznakom</string>
 	<string name="select_a_blog">Odaberite WordPress web-stranicu</string>
 	<string name="reader_empty_followed_blogs_title">Još ne pratite ni jednu web-stranicu</string>
+	<string name="sending_content">Prijenos %s sadržaja...</string>
 	<string name="reader_toast_err_generic">Nije moguće izvesti tu akciju</string>
 	<string name="reader_toast_err_block_blog">Nije moguće blokirati ovaj blog</string>
 	<string name="reader_toast_blog_blocked">Objave sa ovog bloga više neće biti prikazane</string>

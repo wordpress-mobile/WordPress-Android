@@ -67,7 +67,6 @@ Language: nb_NO
 	<string name="pages_fetching">Henter sider …</string>
 	<string name="reader_label_new_posts">Nye innlegg</string>
 	<string name="stats_total">Totalt</string>
-	<string name="post_uploading">Laster opp</string>
 	<string name="stats_months_and_years">Måneder og år</string>
 	<string name="stats_view_all">Vis alle</string>
 	<string name="stats_view">Vis</string>

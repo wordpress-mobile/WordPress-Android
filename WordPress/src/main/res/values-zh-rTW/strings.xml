@@ -40,7 +40,6 @@ Language: zh_TW
 	<string name="start_over_email_body">我想重新開始設計網站 %s</string>
 	<string name="start_over_email_subject">重新開始設計網站 %s</string>
 	<string name="site_picker_remove_site_error">移除網站時發生錯誤，請稍後再試</string>
-	<string name="editor_post_saved_locally_unfinished_media">此文章尚未完成媒體上傳，但已儲存到本機</string>
 	<string name="sure_to_remove_account">從應用程式移除此網站？</string>
 	<string name="photo_picker_title">選擇照片</string>
 	<string name="error_publish_no_network">裝置已離線。變更已儲存到本機。</string>
@@ -62,9 +61,7 @@ Language: zh_TW
 	<string name="keep_editing">繼續編輯</string>
 	<string name="error_all_media_upload_canceled">由於未知的錯誤，所有的媒體上傳均已取消。請重試上傳</string>
 	<string name="error_unknown_post_type">未知的文章格式</string>
-	<string name="error_unknown_post">未知的文章，此文章的本機副本可能並未與伺服器同步</string>
 	<string name="error_fetch_site_after_creation">網站已建立，你可能需要重新整理網站挑選器中的網站清單。</string>
-	<string name="error_upload_params">上傳 %1$s 時發生錯誤：%2$s</string>
 	<string name="submit_for_review">送出</string>
 	<string name="tell_me_more">我想瞭解更多</string>
 	<string name="duplicate_site_detected">已偵測到重複的網站。</string>
@@ -485,7 +482,6 @@ Language: zh_TW
 	<string name="site_settings_address_title">位址</string>
 	<string name="site_settings_title_title">網站標題</string>
 	<string name="site_settings_tagline_title">標語</string>
-	<string name="site_settings_this_device_header">此裝置</string>
 	<string name="site_settings_discussion_new_posts_header">新文章預設設定</string>
 	<string name="site_settings_account_header">帳號</string>
 	<string name="site_settings_writing_header">撰寫</string>
@@ -712,7 +708,6 @@ Language: zh_TW
 	<string name="logs_copied_to_clipboard">應用程式記錄已複製到剪貼簿</string>
 	<string name="stats_total">總計</string>
 	<string name="stats_overall">整體</string>
-	<string name="post_uploading">正在上傳</string>
 	<string name="reader_page_recommended_blogs">你或許也會喜歡以下網站：</string>
 	<string name="stats_comments_total_comments_followers">含有留言關注者的文章總數：%1$s</string>
 	<string name="stats_visitors">訪客</string>
@@ -806,7 +801,6 @@ Language: zh_TW
 	<string name="older_last_week">超過一週</string>
 	<string name="stats_no_blog">無法為所需網誌載入統計</string>
 	<string name="select_a_blog">選取 WordPress 網站</string>
-	<string name="sending_content">正在上傳 %s 內容</string>
 	<string name="uploading_total">正在上傳第 %1$d 個，共 %2$d 個</string>
 	<string name="mnu_comment_liked">已按讚</string>
 	<string name="comment">留言</string>
@@ -814,7 +808,6 @@ Language: zh_TW
 	<string name="posts_empty_list">尚無文章。建立文章？</string>
 	<string name="comment_reply_to_user">回覆 %s</string>
 	<string name="pages_empty_list">尚無任何頁面。建立頁面？</string>
-	<string name="posting_post">正在發表「%s」</string>
 	<string name="signing_out">正在登出…</string>
 	<string name="reader_empty_followed_blogs_title">你尚未關注任何網站</string>
 	<string name="reader_toast_err_generic">無法執行此動作</string>
