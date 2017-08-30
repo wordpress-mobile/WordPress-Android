@@ -349,11 +349,6 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
-        if (mEditorFragment != null) {
-            mEditorFragment.setContent(mPost.getContent());
-            mEditorFragment.setTitle(mPost.getTitle());
-        }
-
         if (mIsNewPost) {
             trackEditorCreatedPost(action, getIntent());
         } else {
@@ -1403,11 +1398,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 0:
                     mEditorFragment = (EditorFragmentAbstract) fragment;
                     mEditorFragment.setImageLoader(mImageLoader);
-
-                    if (mEditorFragment != null) {
-                        mEditorFragment.setContent(mPost.getContent());
-                        mEditorFragment.setTitle(mPost.getTitle());
-                    }
 
                     if (mEditorFragment instanceof EditorMediaUploadListener) {
                         mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
