@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
@@ -82,8 +81,7 @@ public class SiteXMLRPCClientTest {
                 return null;
             }
         });
-        mSiteXMLRPCClient = new SiteXMLRPCClient(mDispatcher, mMockedQueue,
-                mock(AccessToken.class), mock(UserAgent.class),
+        mSiteXMLRPCClient = new SiteXMLRPCClient(mDispatcher, mMockedQueue, mock(UserAgent.class),
                 mock(HTTPAuthManager.class));
 
         Context appContext = RuntimeEnvironment.application.getApplicationContext();

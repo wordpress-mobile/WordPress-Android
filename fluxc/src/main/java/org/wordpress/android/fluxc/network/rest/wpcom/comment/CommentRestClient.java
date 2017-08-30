@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
@@ -280,7 +281,7 @@ public class CommentRestClient extends BaseWPComRestClient {
 
         if (response.author != null) {
             comment.setAuthorUrl(response.author.URL);
-            comment.setAuthorName(response.author.name);
+            comment.setAuthorName(StringEscapeUtils.unescapeHtml4(response.author.name));
             if ("false".equals(response.author.email)) {
                 comment.setAuthorEmail("");
             } else {
@@ -291,7 +292,7 @@ public class CommentRestClient extends BaseWPComRestClient {
 
         if (response.post != null) {
             comment.setRemotePostId(response.post.ID);
-            comment.setPostTitle(response.post.title);
+            comment.setPostTitle(StringEscapeUtils.unescapeHtml4(response.post.title));
         }
 
         if (response.author != null) {
