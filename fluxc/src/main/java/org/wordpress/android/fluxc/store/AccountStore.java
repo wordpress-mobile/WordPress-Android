@@ -226,6 +226,38 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class AccountSocialError implements OnChangedError {
+        public AccountSocialErrorType type;
+        public String message;
+
+        public AccountSocialError(AccountSocialErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+
+        public AccountSocialError(@NonNull String type, @NonNull String message) {
+            this.type = AccountSocialErrorType.fromString(type);
+            this.message = message;
+        }
+    }
+
+    public enum AccountSocialErrorType {
+        NO_MATCHING_ACCOUNT,
+        GENERIC_ERROR;
+
+        public static AccountSocialErrorType fromString(String string) {
+            if (string != null) {
+                for (AccountSocialErrorType type : AccountSocialErrorType.values()) {
+                    if (string.equalsIgnoreCase(type.name())) {
+                        return type;
+                    }
+                }
+            }
+
+            return GENERIC_ERROR;
+        }
+    }
+
     public static class AuthEmailError implements OnChangedError {
         public AuthEmailErrorType type;
         public String message;

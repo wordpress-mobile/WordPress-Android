@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
+import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
@@ -56,6 +57,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     public static class AccountPushSocialResponsePayload extends Payload {
+        public AccountSocialError error;
         public String bearerToken;
         public String username;
         public AccountPushSocialResponsePayload() {
@@ -210,6 +212,7 @@ public class AccountRestClient extends BaseWPComRestClient {
      */
     public void pushSocialLogin(@NonNull String idToken, @NonNull String service) {
         String url = WPCOMREST.users.social.new_.getUrlV1_1();
+
         Map<String, Object> body = new HashMap<>();
         body.put("id_token", idToken);
         body.put("service", service);
@@ -231,7 +234,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
-                        payload.error = error;
+                        payload.error = new AccountSocialError(((WPComGsonNetworkError) error).apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
