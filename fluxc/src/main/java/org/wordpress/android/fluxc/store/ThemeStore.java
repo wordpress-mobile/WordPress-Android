@@ -230,7 +230,12 @@ public class ThemeStore extends Store {
     }
 
     private void activateTheme(@NonNull ActivateThemePayload payload) {
-        mThemeRestClient.activateTheme(payload.site, payload.theme);
+        if (payload.site.isUsingWpComRestApi()) {
+            mThemeRestClient.activateTheme(payload.site, payload.theme);
+        } else {
+            payload.error = new ActivateThemeError(ThemeErrorType.NOT_AVAILABLE, null);
+            handleThemeActivated(payload);
+        }
     }
 
     private void handleThemeActivated(@NonNull ActivateThemePayload payload) {
