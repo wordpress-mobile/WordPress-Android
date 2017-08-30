@@ -37,7 +37,7 @@ public class ThemeSqlUtils {
         removeThemes(site);
 
         for (ThemeModel theme : themes) {
-            theme.setLocalSiteId(site.getSiteId());
+            theme.setLocalSiteId(site.getId());
         }
 
         WellSql.insert(themes).execute();
