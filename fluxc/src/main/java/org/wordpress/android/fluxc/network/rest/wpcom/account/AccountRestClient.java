@@ -56,26 +56,9 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     public static class AccountPushSocialResponsePayload extends Payload {
-        public JSONObject json = new JSONObject();
-
-        public CharSequence getError() {
-            return json.optString("error");
-        }
-
-        public CharSequence getErrorMessage() {
-            return json.optString("message");
-        }
-
-        public CharSequence getToken() {
-            return json.optString("bearer_token");
-        }
-
-        public CharSequence getUsername() {
-            return json.optString("username");
-        }
-
-        public boolean hasToken() {
-            return !json.optString("bearer_token").equalsIgnoreCase("");
+        public String bearerToken;
+        public String username;
+        public AccountPushSocialResponsePayload() {
         }
     }
 
@@ -239,7 +222,8 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
                         AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
-                        payload.json = response.json;
+                        payload.bearerToken = response.bearer_token;
+                        payload.username = response.username;
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 },
