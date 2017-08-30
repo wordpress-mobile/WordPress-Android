@@ -45,7 +45,7 @@ public class ThemeUtils {
         // the screenshot field in Jetpack responses does not contain a protocol so we'll prepend 'https'
         String screenshotUrl = response.screenshot;
         if (!TextUtils.isEmpty(screenshotUrl) && screenshotUrl.startsWith("//")) {
-            screenshotUrl = screenshotUrl + "https";
+            screenshotUrl = "https" + screenshotUrl;
         }
         theme.setScreenshotUrl(screenshotUrl);
 
