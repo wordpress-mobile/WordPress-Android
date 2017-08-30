@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.TaxonomyAction;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
@@ -17,7 +18,6 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermResponsePayload;
@@ -33,9 +33,9 @@ import java.util.List;
 import java.util.Map;
 
 public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
-    public TaxonomyXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
-                                UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
+    public TaxonomyXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent,
+                                HTTPAuthManager httpAuthManager) {
+        super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     public void fetchTerm(final TermModel term, final SiteModel site) {
@@ -236,8 +236,8 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         term.setLocalSiteId(site.getId());
         term.setRemoteTermId(Integer.valueOf(termId));
         term.setSlug(MapUtils.getMapStr(termMap, "slug"));
-        term.setName(MapUtils.getMapStr(termMap, "name"));
-        term.setDescription(MapUtils.getMapStr(termMap, "description"));
+        term.setName(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(termMap, "name")));
+        term.setDescription(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(termMap, "description")));
         term.setParentRemoteId(MapUtils.getMapLong(termMap, "parent"));
         term.setTaxonomy(MapUtils.getMapStr(termMap, "taxonomy"));
 
