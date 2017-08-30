@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.BuildConfig;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.store.Store.OnChangedError;
 import org.wordpress.android.fluxc.utils.WPUrlUtils;
 import org.wordpress.android.util.AppLog;
@@ -51,10 +50,9 @@ public class SelfHostedEndpointFinder {
         }
     }
 
-    public static class DiscoveryResultPayload extends Payload<BaseNetworkError> {
+    public static class DiscoveryResultPayload extends Payload<DiscoveryError> {
         public String xmlRpcEndpoint;
         public String wpRestEndpoint;
-        public DiscoveryError discoveryError;
         public String failedEndpoint;
 
         public DiscoveryResultPayload(String xmlRpcEndpoint, String wpRestEndpoint) {
@@ -63,12 +61,8 @@ public class SelfHostedEndpointFinder {
         }
 
         public DiscoveryResultPayload(DiscoveryError discoveryError, String failedEndpoint) {
-            this.discoveryError = discoveryError;
+            this.error = discoveryError;
             this.failedEndpoint = failedEndpoint;
-        }
-
-        public boolean isDiscoveryError() {
-            return discoveryError != null;
         }
     }
 

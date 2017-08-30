@@ -418,10 +418,7 @@ public class AccountStore extends Store {
     private void discoveryResult(DiscoveryResultPayload payload) {
         OnDiscoveryResponse discoveryResponse = new OnDiscoveryResponse();
         if (payload.isError()) {
-            discoveryResponse.error = DiscoveryError.GENERIC_ERROR;
-            discoveryResponse.failedEndpoint = payload.failedEndpoint;
-        } else if (payload.isDiscoveryError()) {
-            discoveryResponse.error = payload.discoveryError;
+            discoveryResponse.error = payload.error;
             discoveryResponse.failedEndpoint = payload.failedEndpoint;
         } else {
             discoveryResponse.xmlRpcEndpoint = payload.xmlRpcEndpoint;
