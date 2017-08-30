@@ -221,19 +221,18 @@ public class AccountRestClient extends BaseWPComRestClient {
      *
      * No HTTP POST call is made if the given parameter map is null or contains no entries.
      *
-     * @param clientId      OAuth 2.0 client server ID
      * @param idToken       OpenID Connect Token (JWT) from the service the user is using to
      *                      authenticate their account.
      * @param service       Slug representing the service for the given token (e.g. google).
      */
-    public void pushSocialLogin(@NonNull String clientId, @NonNull String idToken, @NonNull String service) {
+    public void pushSocialLogin(@NonNull String idToken, @NonNull String service) {
         String url = WPCOMREST.users.social.new_.getUrlV1_1();
         Map<String, Object> body = new HashMap<>();
-        body.put("client_secret", mAppSecrets.getAppSecret());
-        body.put("client_id", clientId);
         body.put("id_token", idToken);
         body.put("service", service);
         body.put("skip_signup", true);
+        body.put("client_id", mAppSecrets.getAppId());
+        body.put("client_secret", mAppSecrets.getAppSecret());
 
         add(WPComGsonRequest.buildPostRequest(url, body, AccountSocialResponse.class,
                 new Listener<AccountSocialResponse>() {
