@@ -394,7 +394,7 @@ public class AccountStore extends Store {
             case PUSH_SETTINGS:
                 mAccountRestClient.pushAccountSettings(((PushAccountSettingsPayload) payload).params);
                 break;
-            case PUSH_SOCIAL:
+            case PUSH_SOCIAL_LOGIN:
                 createPushSocialLogin((PushSocialLoginPayload) payload);
                 break;
             case PUSH_SOCIAL_SIGNUP:
