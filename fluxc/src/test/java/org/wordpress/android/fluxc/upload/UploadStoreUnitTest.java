@@ -66,7 +66,7 @@ public class UploadStoreUnitTest {
         UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
 
         // Check that the stored MediaUploadModel has the right state
-        mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(testMedia.getId());
+        mediaUploadModel = UploadTestUtils.getMediaUploadModelForMediaModel(testMedia);
         assertNotNull(mediaUploadModel);
         assertEquals(testMedia.getId(), mediaUploadModel.getId());
         assertEquals(MediaUploadModel.UPLOADING, mediaUploadModel.getUploadState());
@@ -93,7 +93,7 @@ public class UploadStoreUnitTest {
         mUploadStore.registerPostModel(postModel, associatedMedia);
 
         // Confirm that the PostUploadModel has been created and has the expected status
-        PostUploadModel postUploadModel = mUploadStore.getPostUploadModelForPostModel(postModel);
+        PostUploadModel postUploadModel = UploadTestUtils.getPostUploadModelForPostModel(postModel);
         assertNotNull(postUploadModel);
         assertEquals(2, postUploadModel.getAssociatedMediaIdSet().size());
         assertTrue(postUploadModel.getAssociatedMediaIdSet().contains(5));
@@ -111,7 +111,7 @@ public class UploadStoreUnitTest {
         mUploadStore.registerPostModel(postModel, associatedMedia);
 
         // Expect the updated model to have both the original media and the new one
-        postUploadModel = mUploadStore.getPostUploadModelForPostModel(postModel);
+        postUploadModel = UploadTestUtils.getPostUploadModelForPostModel(postModel);
         assertNotNull(postUploadModel);
         assertEquals(3, postUploadModel.getAssociatedMediaIdSet().size());
         assertTrue(postUploadModel.getAssociatedMediaIdSet().contains(5));
@@ -148,7 +148,7 @@ public class UploadStoreUnitTest {
         mUploadStore.registerPostModel(postModel, associatedMedia);
 
         // Confirm that the PostUploadModel has been created and has a null error state
-        PostUploadModel postUploadModel = mUploadStore.getPostUploadModelForPostModel(postModel);
+        PostUploadModel postUploadModel = UploadTestUtils.getPostUploadModelForPostModel(postModel);
         assertNotNull(postUploadModel);
         assertNull(mUploadStore.getUploadErrorForPost(postModel));
 
@@ -169,7 +169,7 @@ public class UploadStoreUnitTest {
         assertNull(mUploadStore.getUploadErrorForPost(postModel));
 
         // Confirm that the MediaUploadModel's default state is error-free
-        MediaUploadModel mediaUploadModel1 = mUploadStore.getMediaUploadModelForMediaModel(media1);
+        MediaUploadModel mediaUploadModel1 = UploadTestUtils.getMediaUploadModelForMediaModel(media1);
         assertNull(mediaUploadModel1.getMediaError());
 
         // Add an error to the first MediaUploadModel

@@ -131,11 +131,6 @@ public class UploadStore extends Store {
         }
     }
 
-    // TODO Might be better never to return UploadModels and instead have methods like getUploadProgressForMedia()
-    public MediaUploadModel getMediaUploadModelForMediaModel(MediaModel mediaModel) {
-        return UploadSqlUtils.getMediaUploadModelForLocalId(mediaModel.getId());
-    }
-
     public void registerPostModel(PostModel postModel, List<MediaModel> mediaModelList) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId());
         Set<Integer> mediaIdSet = new HashSet<>();
@@ -153,10 +148,6 @@ public class UploadStore extends Store {
 
         postUploadModel.setAssociatedMediaIdSet(mediaIdSet);
         UploadSqlUtils.insertOrUpdatePost(postUploadModel);
-    }
-
-    public PostUploadModel getPostUploadModelForPostModel(PostModel postModel) {
-        return UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId());
     }
 
     public @NonNull Set<MediaModel> getUploadingMediaForPost(PostModel post) {
@@ -190,17 +181,17 @@ public class UploadStore extends Store {
     }
 
     public boolean isPendingPost(PostModel post) {
-        PostUploadModel postUploadModel = getPostUploadModelForPostModel(post);
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         return postUploadModel != null && postUploadModel.getUploadState() == PostUploadModel.PENDING;
     }
 
     public boolean isFailedPost(PostModel post) {
-        PostUploadModel postUploadModel = getPostUploadModelForPostModel(post);
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         return postUploadModel != null && postUploadModel.getUploadState() == PostUploadModel.FAILED;
     }
 
     public boolean isCancelledPost(PostModel post) {
-        PostUploadModel postUploadModel = getPostUploadModelForPostModel(post);
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         return postUploadModel != null && postUploadModel.getUploadState() == PostUploadModel.CANCELLED;
     }
 
@@ -395,7 +386,7 @@ public class UploadStore extends Store {
     }
 
     private @NonNull Set<MediaModel> getMediaForPostWithState(PostModel post, @MediaUploadModel.UploadState int state) {
-        PostUploadModel postUploadModel = getPostUploadModelForPostModel(post);
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         if (postUploadModel == null) {
             return Collections.emptySet();
         }
