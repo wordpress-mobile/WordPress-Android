@@ -126,9 +126,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private AztecText title;
     private AztecText content;
     private boolean mAztecReady;
-    protected boolean mLateInit;
-    protected CharSequence mLateInitContent;
-    protected CharSequence mLateInitTitle;
     private SourceViewEditText source;
     private AztecToolbar formattingToolbar;
     private Html.ImageGetter aztecImageLoader;
@@ -242,16 +239,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onEditorFragmentInitialized();
 
         return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (mLateInit) {
-            setTitle(mLateInitTitle);
-            setContent(mLateInitContent);
-            mLateInit = false;
-        }
     }
 
     public void setEditorBetaClickListener(EditorBetaClickListener listener) {
@@ -390,8 +377,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         if (title == null) {
-            mLateInit = true;
-            mLateInitTitle = text;
             return;
         }
         title.setText(text);
@@ -404,8 +389,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         if (content == null) {
-            mLateInit = true;
-            mLateInitContent = text;
             return;
         }
 
