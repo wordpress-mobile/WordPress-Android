@@ -201,9 +201,9 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public PluginWPOrgClient providePluginInfoClient(Dispatcher dispatcher,
-                                                     @Named("regular") RequestQueue requestQueue,
-                                                     UserAgent userAgent) {
+    public PluginWPOrgClient providePluginWPOrgClient(Dispatcher dispatcher,
+                                                      @Named("regular") RequestQueue requestQueue,
+                                                      UserAgent userAgent) {
         return new PluginWPOrgClient(dispatcher, requestQueue, userAgent);
     }
 
