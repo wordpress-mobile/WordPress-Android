@@ -72,11 +72,9 @@ public class AccountStore extends Store {
     }
 
     public static class PushSocialLoginPayload extends Payload {
-        public String clientId;
         public String idToken;
         public String service;
-        public PushSocialLoginPayload(@NonNull String clientId, @NonNull String idToken, @NonNull String service) {
-            this.clientId = clientId;
+        public PushSocialLoginPayload(@NonNull String idToken, @NonNull String service) {
             this.idToken = idToken;
             this.service = service;
         }
@@ -548,7 +546,7 @@ public class AccountStore extends Store {
     }
 
     private void createPushSocialLogin(PushSocialLoginPayload payload) {
-        mAccountRestClient.pushSocialLogin(payload.clientId, payload.idToken, payload.service);
+        mAccountRestClient.pushSocialLogin(payload.idToken, payload.service);
     }
 
     private void signOut() {
