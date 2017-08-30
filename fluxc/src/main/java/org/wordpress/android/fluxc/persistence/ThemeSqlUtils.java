@@ -44,7 +44,7 @@ public class ThemeSqlUtils {
             theme.setLocalSiteId(site.getId());
         }
 
-        WellSql.insert(themes).execute();
+        WellSql.insert(themes).asSingleTransaction(true).execute();
 
         return themes.size();
     }
