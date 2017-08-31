@@ -312,6 +312,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         super.onPrepareOptionsMenu(menu);
     }
 
+    public boolean hasAnyChanges() {
+        return (content.history.getHistoryEnabled() && !content.history.getHistoryList().isEmpty());
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 

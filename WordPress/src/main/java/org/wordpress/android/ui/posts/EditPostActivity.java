@@ -1734,7 +1734,14 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
-        boolean contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
+        boolean contentChanged = true;
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            contentChanged = ((AztecEditorFragment)mEditorFragment).hasAnyChanges();
+        }
+
+        if (contentChanged) {
+            contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
+        }
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
             mPost.setIsLocallyChanged(true);
