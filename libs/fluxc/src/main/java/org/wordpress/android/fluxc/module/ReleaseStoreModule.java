@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
@@ -21,6 +22,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
+import org.wordpress.android.fluxc.store.ThemeStore;
 
 import javax.inject.Singleton;
 
@@ -70,5 +72,11 @@ public class ReleaseStoreModule {
     public TaxonomyStore provideTaxonomyStore(Dispatcher dispatcher, TaxonomyRestClient taxonomyRestClient,
                                               TaxonomyXMLRPCClient taxonomyXMLRPCClient) {
         return new TaxonomyStore(dispatcher, taxonomyRestClient, taxonomyXMLRPCClient);
+    }
+
+    @Provides
+    @Singleton
+    public ThemeStore provideThemeStore(Dispatcher dispatcher, ThemeRestClient taxonomyRestClient) {
+        return new ThemeStore(dispatcher, taxonomyRestClient);
     }
 }
