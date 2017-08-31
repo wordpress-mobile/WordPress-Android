@@ -46,6 +46,9 @@
 /sites/$site/taxonomies/$taxonomy#String/terms/new/
 /sites/$site/taxonomies/$taxonomy#String/terms/slug:$slug#String/
 
+/themes
+/sites/$site/themes
+/sites/$site/themes/mine
 /sites/$siteUrl#String
 
 /users/new/
