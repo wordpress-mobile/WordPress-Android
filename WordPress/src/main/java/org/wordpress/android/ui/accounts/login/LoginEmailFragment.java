@@ -276,7 +276,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
             } else {
                 isResolvingError = false;
                 AppLog.e(T.NUX, GoogleApiAvailability.getInstance().getErrorString(connectionResult.getErrorCode()));
-                // TODO: Show error screen.
+                showErrorDialog(getString(R.string.login_error_generic));
             }
         }
     }
@@ -426,9 +426,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                         } catch (NullPointerException exception) {
                             disconnectGoogleClient();
                             AppLog.e(T.NUX, "Cannot get ID token from Google sign-in account.", exception);
-                            // TODO: Show error screen.
+                            showErrorDialog(getString(R.string.login_error_generic));
                         }
                     }
+                } else {
+                    showErrorDialog(getString(R.string.login_error_generic));
                 }
 
                 break;
