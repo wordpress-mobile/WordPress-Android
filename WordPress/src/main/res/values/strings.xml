@@ -1963,6 +1963,8 @@
     <string name="login_epilogue_mysites_other">My sites</string>
     <string name="login_google_button_prefix">Or you can</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
+    <string name="login_error_button">Close</string>
+    <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
 
     <!-- shared element names -->
     <string name="shared_element_media" translatable="false">media</string>
