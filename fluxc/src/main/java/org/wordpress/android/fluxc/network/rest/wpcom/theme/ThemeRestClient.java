@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemeError;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
