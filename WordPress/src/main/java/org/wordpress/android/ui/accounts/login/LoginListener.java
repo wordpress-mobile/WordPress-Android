@@ -18,7 +18,7 @@ public interface LoginListener {
     void gotWpcomEmail(String email);
     void loginViaSiteAddress();
     void loginViaWpcomUsernameInstead();
-    void helpEmailScreen(String email);
+    void helpEmailScreen(String email, boolean isThirdParty);
 
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
