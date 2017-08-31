@@ -47,11 +47,9 @@ public class PluginSqlUtils {
             WellSql.insert(plugin).execute();
             return 1;
         } else {
-            plugin.setId(oldPlugin.getId());
-            return WellSql.update(PluginModel.class)
-                    .where().equals(PluginModelTable.NAME, plugin.getName())
-                    .equals(PluginModelTable.LOCAL_SITE_ID, plugin.getLocalSiteId())
-                    .endWhere().put(plugin).execute();
+            int oldId = oldPlugin.getId();
+            return WellSql.update(PluginModel.class).whereId(oldId)
+                    .put(plugin, new UpdateAllExceptId<>(PluginModel.class)).execute();
         }
     }
 
@@ -61,13 +59,15 @@ public class PluginSqlUtils {
         }
 
         // Slug is the primary key in remote, so we should use that to identify PluginInfoModels
-        if (getPluginInfoBySlug(pluginInfo.getSlug()) == null) {
+        PluginInfoModel oldPluginInfo = getPluginInfoBySlug(pluginInfo.getSlug());
+
+        if (oldPluginInfo == null) {
             WellSql.insert(pluginInfo).execute();
             return 1;
         } else {
-            return WellSql.update(PluginInfoModel.class)
-                    .where().equals(PluginInfoModelTable.SLUG, pluginInfo.getSlug()).endWhere()
-                    .put(pluginInfo).execute();
+            int oldId = oldPluginInfo.getId();
+            return WellSql.update(PluginInfoModel.class).whereId(oldId)
+                    .put(pluginInfo, new UpdateAllExceptId<>(PluginInfoModel.class)).execute();
         }
     }
 
