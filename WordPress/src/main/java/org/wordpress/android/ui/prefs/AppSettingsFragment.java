@@ -218,6 +218,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                             case 2:
                                 AppPrefs.setAztecEditorEnabled(true);
                                 AppPrefs.setVisualEditorEnabled(false);
+                                AppPrefs.setNewEditorPromoRequired(false);
                                 break;
                             default:
                                 AppPrefs.setAztecEditorEnabled(false);
