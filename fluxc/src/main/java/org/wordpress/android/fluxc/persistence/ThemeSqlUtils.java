@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.wellsql.generated.ThemeModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -28,7 +27,12 @@ public class ThemeSqlUtils {
 
     public static void insertOrReplaceWpThemes(@NonNull List<ThemeModel> themes) {
         // remove existing WP.com themes
-        removeThemes(null);
+        removeThemesWithNoSite();
+
+        for (ThemeModel theme : themes) {
+            theme.setLocalSiteId(0);
+        }
+
         WellSql.insert(themes).asSingleTransaction(true).execute();
     }
 
@@ -37,31 +41,45 @@ public class ThemeSqlUtils {
         removeThemes(site);
 
         for (ThemeModel theme : themes) {
-            theme.setLocalSiteId(site.getSiteId());
+            theme.setLocalSiteId(site.getId());
         }
 
-        WellSql.insert(themes).execute();
+        WellSql.insert(themes).asSingleTransaction(true).execute();
 
         return themes.size();
     }
 
-    public static void removeThemes(@Nullable SiteModel site) {
-        long siteId = site == null ? -1 : site.getSiteId();
-        WellSql.delete(ThemeModel.class)
+    public static List<ThemeModel> getThemesWithNoSite() {
+        return WellSql.select(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, siteId)
-                .endWhere().execute();
+                .equals(ThemeModelTable.LOCAL_SITE_ID, 0)
+                .endWhere().getAsModel();
     }
 
     /**
-     * Retrieves themes stored with a non-zero site ID. Installed themes (for Jetpack sites) are the only themes
-     * with a non-zero site ID, for now.
+     * Retrieves themes associated with a given site. Installed themes (for Jetpack sites) are the only themes
+     * targeted for now.
      */
-    public static List<ThemeModel> getThemesForSite(@Nullable SiteModel site) {
-        long siteId = site == null ? -1 : site.getSiteId();
+    public static List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
         return WellSql.select(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, siteId)
+                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().getAsModel();
+    }
+
+    public static void removeThemes(@NonNull SiteModel site) {
+        removeThemes(site.getId());
+    }
+
+    private static void removeThemesWithNoSite() {
+        // Remove themes whose localSiteId is 0
+        removeThemes(0);
+    }
+
+    private static void removeThemes(int localSiteId) {
+        WellSql.delete(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.LOCAL_SITE_ID, localSiteId)
+                .endWhere().execute();
     }
 }
