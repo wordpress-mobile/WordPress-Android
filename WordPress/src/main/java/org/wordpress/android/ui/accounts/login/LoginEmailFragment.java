@@ -40,6 +40,7 @@ import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
@@ -171,10 +172,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         if (mLoginListener != null) {
             if (isThirdParty) {
                 // Send last email chosen from Google login if available
-                mLoginListener.helpEmailScreen(mGoogleEmail, true);
+                mLoginListener.helpEmailScreen(mGoogleEmail, Tag.ORIGIN_LOGIN_THIRD_PARTY);
             } else {
                 // send to Help the exact string the user has inputted for email
-                mLoginListener.helpEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()), false);
+                mLoginListener.helpEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()), Tag.ORIGIN_LOGIN_EMAIL);
             }
         }
     }
