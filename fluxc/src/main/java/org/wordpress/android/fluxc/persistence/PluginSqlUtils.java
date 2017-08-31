@@ -27,7 +27,7 @@ public class PluginSqlUtils {
         for (PluginModel pluginModel : plugins) {
             pluginModel.setLocalSiteId(site.getId());
         }
-        WellSql.insert(plugins).execute();
+        WellSql.insert(plugins).asSingleTransaction(true).execute();
     }
 
     private static void removePlugins(@NonNull SiteModel site) {
