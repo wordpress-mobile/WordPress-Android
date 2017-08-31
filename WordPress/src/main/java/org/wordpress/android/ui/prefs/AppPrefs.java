@@ -468,7 +468,7 @@ public class AppPrefs {
     }
 
     public static boolean isNewEditorPromoRequired() {
-       return true; // TODO: getBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, true);
+       return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, true);
    }
 
     public static boolean isAsyncPromoRequired() {
