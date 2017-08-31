@@ -199,7 +199,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
         View view = getView();
         if (view != null) {
-            View twitterCard = getView().findViewById(R.id.card_view_twitter);
+            View twitterCard = view.findViewById(R.id.card_view_twitter);
             for (int i = 0; i < mPublicizeButtons.size(); i++) {
                 PublicizeButton publicizeButton = mPublicizeButtons.get(i);
                 if (publicizeButton.getId().equals(TWITTER_ID) && publicizeButton.isEnabled()) {
