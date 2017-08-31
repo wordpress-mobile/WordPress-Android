@@ -61,9 +61,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     public static final int MAX_EMAIL_LENGTH = 100;
 
     private GoogleApiClient mGoogleApiClient;
+    private String mGoogleEmail;
     private String mRequestedEmail;
     private WPLoginInputRow mEmailInput;
     private boolean isResolvingError;
+    private boolean isThirdParty;
     private boolean shouldResolveError;
 
     @Override
@@ -114,6 +116,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                 // Start login process.
                 if (!isResolvingError) {
                     connectGoogleClient();
+                    isThirdParty = true;
                 }
             }
         });
@@ -166,8 +169,13 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @Override
     protected void onHelp() {
         if (mLoginListener != null) {
-            // send to Help the exact string the user has inputted for email
-            mLoginListener.helpEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()), false);
+            if (isThirdParty) {
+                // Send last email chosen from Google login if available
+                mLoginListener.helpEmailScreen(mGoogleEmail, true);
+            } else {
+                // send to Help the exact string the user has inputted for email
+                mLoginListener.helpEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()), false);
+            }
         }
     }
 
@@ -302,6 +310,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mEmailInput.setError(null);
+        isThirdParty = false;
     }
 
     private void showEmailError(int messageId) {
@@ -397,6 +406,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                     if (signInResult.isSuccess()) {
                         try {
                             GoogleSignInAccount account = signInResult.getSignInAccount();
+                            mGoogleEmail = account.getEmail();
                             String token = account.getIdToken();
                             // TODO: Validate token with server.
                         } catch (NullPointerException exception) {
