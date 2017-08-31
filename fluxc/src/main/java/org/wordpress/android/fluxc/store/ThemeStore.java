@@ -242,8 +242,6 @@ public class ThemeStore extends Store {
         OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
         if (payload.isError()) {
             event.error = payload.error;
-        } else {
-            // TODO update local db?
         }
         emitChange(event);
     }
