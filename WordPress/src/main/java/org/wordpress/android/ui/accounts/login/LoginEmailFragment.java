@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.accounts.login;
 
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +16,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -34,15 +45,20 @@ import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher, OnEditorCommitListener {
+public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
+        implements TextWatcher, OnEditorCommitListener, ConnectionCallbacks, OnConnectionFailedListener {
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
+    private static final String STATE_RESOLVING_ERROR = "STATE_RESOLVING_ERROR";
+    private static final int REQUEST_CONNECT = 1000;
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
-    private WPLoginInputRow mEmailInput;
-
+    private GoogleApiClient mGoogleApiClient;
     private String mRequestedEmail;
+    private WPLoginInputRow mEmailInput;
+    private boolean isResolvingError;
+    private boolean shouldResolveError;
 
     @Override
     protected @LayoutRes int getContentLayout() {
@@ -146,6 +162,27 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+
+        // Restore state of error resolving.
+        if (savedInstanceState != null) {
+            isResolvingError = savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+        }
+
+        // Configure sign-in to request user's ID, basic profile, email address, and ID token.
+        // ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestServerAuthCode(getString(R.string.default_web_client_id))
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestProfile()
+                .requestEmail()
+                .build();
+
+        // Build Google API client with access to sign-in API and options specified above.
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
     }
 
     @Override
@@ -178,6 +215,46 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         } else {
             showEmailError(R.string.email_invalid);
         }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        // Indicates account was selected, that account has granted any required permissions, and a
+        // connection to Google Play services has been established.
+        if (shouldResolveError) {
+            shouldResolveError = false;
+            // TODO: Show account dialog.
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        // Could not connect to Google Play Services.  The user needs to select an account, grant
+        // permissions or resolve an error in order to sign in.  Refer to the documentation for
+        // ConnectionResult to see possible error codes.
+        if (!isResolvingError && shouldResolveError) {
+            if (connectionResult.hasResolution()) {
+                try {
+                    isResolvingError = true;
+                    connectionResult.startResolutionForResult(getActivity(), REQUEST_CONNECT);
+                } catch (IntentSender.SendIntentException exception) {
+                    isResolvingError = false;
+                    mGoogleApiClient.connect();
+                }
+            } else {
+                isResolvingError = false;
+                AppLog.e(AppLog.T.NUX, GoogleApiAvailability.getInstance().getErrorString(connectionResult.getErrorCode()));
+                // TODO: Show error screen.
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        // Connection to Google Play services was lost.  GoogleApiClient will automatically attempt
+        // to re-connect.  Any UI elements depending on connection to Google APIs should be hidden
+        // or disabled until onConnected is called again.
+        Log.w(LoginEmailFragment.class.getSimpleName(), "onConnectionSuspended: " + i);
     }
 
     private String getCleanedEmail() {
