@@ -143,9 +143,6 @@ public class AppPrefs {
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
 
-        // aztec editor available
-        AZTEC_EDITOR_AVAILABLE,
-
         // smart toast counters
         SMART_TOAST_MEDIA_LONG_PRESS_USAGE_COUNTER,
         SMART_TOAST_MEDIA_LONG_PRESS_TOAST_COUNTER,
