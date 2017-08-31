@@ -499,13 +499,13 @@ public class WPMainActivity extends AppCompatActivity {
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
-                // show the new editor promo if the user is logged in and this is at least the third time
+                // show the new editor promo if the user is logged in and this is at least the second time
                 // the my site tab has been visited
                 if (AppPrefs.isNewEditorPromoRequired()
                         && !AppPrefs.isAztecEditorEnabled()
                         && FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                     int count = AppPrefs.bumpAndReturnAztecPromoCounter();
-                    if (count >= 3)  {
+                    if (count >= 2)  {
                         showNewEditorPromoDialog();
                     }
                 }
