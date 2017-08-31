@@ -1736,7 +1736,7 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
         boolean contentChanged = true;
         if (mEditorFragment instanceof AztecEditorFragment) {
-            contentChanged = ((AztecEditorFragment)mEditorFragment).hasAnyChanges();
+            contentChanged = ((AztecEditorFragment)mEditorFragment).hasHistory();
         }
 
         if (contentChanged) {
