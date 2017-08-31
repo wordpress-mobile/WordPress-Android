@@ -1899,11 +1899,5 @@
     <string name="login_epilogue_mysites_other">My sites</string>
     <string name="login_google_button_prefix">Or you can</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
-    <string name="description_google_logo">Google logo</string>
-    <string name="login_error_footer_another_email">Try with another email</string>
-    <string name="login_error_footer_sign_up">Sign up</string>
-    <string name="login_error_footer_site_address">Try with the site address</string>
-    <string name="login_error_header_email_not_found_heading">Connected but&#8230;</string>
-    <string name="login_error_header_email_not_found_message_long">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
 
 </resources>
