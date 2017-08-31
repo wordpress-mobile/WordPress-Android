@@ -109,6 +109,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
 
         LinearLayout googleLoginButton = (LinearLayout) rootView.findViewById(R.id.login_google_button);
         googleLoginButton.setOnClickListener(new OnClickListener() {
+            @SuppressWarnings("PrivateMemberAccessBetweenOuterAndInnerClass")
             @Override
             public void onClick(View view) {
                 WPActivityUtils.hideKeyboard(getActivity().getCurrentFocus());
@@ -154,6 +155,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         }
 
         primaryButton.setOnClickListener(new OnClickListener() {
+            @SuppressWarnings("PrivateMemberAccessBetweenOuterAndInnerClass")
             public void onClick(View v) {
                 next(getCleanedEmail());
             }
