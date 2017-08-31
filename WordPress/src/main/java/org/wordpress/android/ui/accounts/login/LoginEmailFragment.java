@@ -54,7 +54,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         implements TextWatcher, OnEditorCommitListener, ConnectionCallbacks, OnConnectionFailedListener {
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
     private static final String STATE_RESOLVING_ERROR = "STATE_RESOLVING_ERROR";
-    private static final String STATE_SHOWING_DIALOG = "STATE_SHOWING_DIALOG";
     private static final int REQUEST_CONNECT = 1000;
     private static final int REQUEST_LOGIN = 1001;
 
@@ -65,7 +64,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     private String mRequestedEmail;
     private WPLoginInputRow mEmailInput;
     private boolean isResolvingError;
-    private boolean isShowingDialog;
     private boolean shouldResolveError;
 
     @Override
@@ -183,7 +181,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         // Restore state of error resolving.
         if (savedInstanceState != null) {
             isResolvingError = savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
-            isShowingDialog = savedInstanceState.getBoolean(STATE_SHOWING_DIALOG, false);
         }
 
         // Configure sign-in to request user's ID, basic profile, email address, and ID token.
@@ -201,11 +198,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
-        // Start login process.
-        if (!isShowingDialog && !isResolvingError) {
-            connectGoogleClient();
-        }
     }
 
     @Override
@@ -253,7 +245,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         // connection to Google Play services has been established.
         if (shouldResolveError) {
             shouldResolveError = false;
-            // TODO: Show account dialog.
+            showAccountDialog();
         }
     }
 
@@ -380,7 +372,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     }
 
     private void showAccountDialog() {
-        isShowingDialog = true;
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, REQUEST_LOGIN);
     }
@@ -405,7 +396,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                 break;
             case REQUEST_LOGIN:
                 if (result == RESULT_OK) {
-                    isShowingDialog = false;
                     GoogleSignInResult signInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 
                     if (signInResult.isSuccess()) {
