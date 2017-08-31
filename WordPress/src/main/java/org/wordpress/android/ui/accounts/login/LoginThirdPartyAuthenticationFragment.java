@@ -205,7 +205,6 @@ public class LoginThirdPartyAuthenticationFragment extends Fragment
             case R.id.help:
                 if (mLoginListener != null) {
                     // TODO: Pass email from Google login to help method.
-                    mLoginListener.helpThirdParty("");
                 }
 
                 return true;

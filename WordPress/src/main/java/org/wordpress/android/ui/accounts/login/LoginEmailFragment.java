@@ -90,7 +90,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             @Override
             public void onClick(View view) {
                 WPActivityUtils.hideKeyboard(getActivity().getCurrentFocus());
-                mLoginListener.loginViaThirdParty();
             }
         });
     }
