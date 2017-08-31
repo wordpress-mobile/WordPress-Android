@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login;
 
+import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -18,7 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -45,11 +48,15 @@ import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static android.app.Activity.RESULT_OK;
+
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         implements TextWatcher, OnEditorCommitListener, ConnectionCallbacks, OnConnectionFailedListener {
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
     private static final String STATE_RESOLVING_ERROR = "STATE_RESOLVING_ERROR";
+    private static final String STATE_SHOWING_DIALOG = "STATE_SHOWING_DIALOG";
     private static final int REQUEST_CONNECT = 1000;
+    private static final int REQUEST_LOGIN = 1001;
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
@@ -58,6 +65,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     private String mRequestedEmail;
     private WPLoginInputRow mEmailInput;
     private boolean isResolvingError;
+    private boolean isShowingDialog;
     private boolean shouldResolveError;
 
     @Override
@@ -106,6 +114,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
             @Override
             public void onClick(View view) {
                 WPActivityUtils.hideKeyboard(getActivity().getCurrentFocus());
+
+                // Start login process.
+                if (!isResolvingError) {
+                    connectGoogleClient();
+                }
             }
         });
     }
@@ -170,6 +183,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         // Restore state of error resolving.
         if (savedInstanceState != null) {
             isResolvingError = savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+            isShowingDialog = savedInstanceState.getBoolean(STATE_SHOWING_DIALOG, false);
         }
 
         // Configure sign-in to request user's ID, basic profile, email address, and ID token.
@@ -187,6 +201,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+        // Start login process.
+        if (!isShowingDialog && !isResolvingError) {
+            connectGoogleClient();
+        }
     }
 
     @Override
@@ -219,6 +238,13 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         } else {
             showEmailError(R.string.email_invalid);
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mLoginListener = null;
+        disconnectGoogleClient();
     }
 
     @Override
@@ -333,6 +359,67 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                 break;
             default:
                 AppLog.e(T.API, "OnAvailabilityChecked unhandled event type: " + event.error.type);
+                break;
+        }
+    }
+
+    public void connectGoogleClient() {
+        if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
+            shouldResolveError = true;
+            mGoogleApiClient.connect();
+        } else {
+            showAccountDialog();
+        }
+    }
+
+    private void disconnectGoogleClient() {
+        if (mGoogleApiClient.isConnected()) {
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    private void showAccountDialog() {
+        isShowingDialog = true;
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, REQUEST_LOGIN);
+    }
+
+    @Override
+    public void onActivityResult(int request, int result, Intent data) {
+        super.onActivityResult(request, result, data);
+
+        switch (request) {
+            case REQUEST_CONNECT:
+                if (result != RESULT_OK) {
+                    shouldResolveError = false;
+                }
+
+                if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
+                    mGoogleApiClient.connect();
+                } else {
+                    showAccountDialog();
+                }
+
+                isResolvingError = false;
+                break;
+            case REQUEST_LOGIN:
+                if (result == RESULT_OK) {
+                    isShowingDialog = false;
+                    GoogleSignInResult signInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+
+                    if (signInResult.isSuccess()) {
+                        try {
+                            GoogleSignInAccount account = signInResult.getSignInAccount();
+                            String token = account.getIdToken();
+                            // TODO: Validate token with server.
+                        } catch (NullPointerException exception) {
+                            AppLog.e(AppLog.T.NUX, "Cannot get ID token from Google sign-in account.", exception);
+                            // TODO: Show error screen.
+                        }
+                    }
+                }
+
                 break;
         }
     }
