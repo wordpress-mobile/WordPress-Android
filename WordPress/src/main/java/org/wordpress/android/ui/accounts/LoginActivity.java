@@ -28,7 +28,6 @@ import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
-import org.wordpress.android.ui.accounts.login.LoginThirdPartyAuthenticationFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -262,12 +261,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void loginViaThirdParty() {
-        LoginThirdPartyAuthenticationFragment loginThirdPartyAuthenticationFragment = new LoginThirdPartyAuthenticationFragment();
-        slideInFragment(loginThirdPartyAuthenticationFragment, true, LoginThirdPartyAuthenticationFragment.TAG);
-    }
-
-    @Override
     public void loginViaWpcomUsernameInstead() {
         jumpToUsernamePassword(null, null);
     }
@@ -347,11 +340,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void helpSiteAddress(String url) {
         launchHelpshift(url, null, false, Tag.ORIGIN_LOGIN_SITE_ADDRESS);
-    }
-
-    @Override
-    public void helpThirdParty(String email) {
-        launchHelpshift(null, email, false, Tag.ORIGIN_LOGIN_THIRD_PARTY);
     }
 
     @Override
