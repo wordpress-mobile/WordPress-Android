@@ -65,6 +65,16 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
     }
 
     @Override
+    public void onMediaDeleted(String mediaId) {
+
+    }
+
+    @Override
+    public void onUndoMediaCheck(String undoedContent) {
+
+    }
+
+    @Override
     public void onFeaturedImageChanged(long mediaId) {
 
     }

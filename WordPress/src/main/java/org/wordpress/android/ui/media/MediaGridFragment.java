@@ -43,6 +43,7 @@ import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -177,6 +178,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
+        }
+
+        if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+            SmartToast.show(getActivity(), SmartToast.SmartToastType.MEDIA_LONG_PRESS);
         }
     }
 
@@ -430,11 +435,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
      * update just the passed media item - if it doesn't exist it may be because
      * it was just added, so reload the adapter
      */
-    void updateMediaItem(@NonNull MediaModel media) {
+    void updateMediaItem(@NonNull MediaModel media, boolean forceUpdate) {
         if (!isAdded() || !hasAdapter()) return;
 
         if (getAdapter().mediaExists(media)) {
-            getAdapter().updateMediaItem(media);
+            getAdapter().updateMediaItem(media, forceUpdate);
         } else {
             reload();
         }
@@ -705,6 +710,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             setSwipeToRefreshEnabled(false);
             getAdapter().setInMultiSelect(true);
             updateActionModeTitle(selectCount);
+            SmartToast.disableSmartToast(SmartToast.SmartToastType.MEDIA_LONG_PRESS);
             return true;
         }
 

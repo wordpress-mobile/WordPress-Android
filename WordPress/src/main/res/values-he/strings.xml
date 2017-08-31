@@ -1,11 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-01 23:18:06+0000
+Translation-Revision-Date: 2017-08-24 23:24:33+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+	<string name="error_post_does_not_exist">הפוסט כבר לא קיים</string>
+	<string name="async_promo_link">כיצד זה עובד?</string>
+	<string name="editor_uploading_post">הפוסט נטען</string>
+	<string name="uploading_post_media">מעלה מדיה...</string>
+	<string name="page_scheduled">העמוד תוזמן לפרסום</string>
+	<string name="post_scheduled">הפוסט תוזמן לפרסום</string>
+	<string name="post_draft_param">"%s" נשמר כטיוטה!</string>
+	<string name="post_scheduled_param">"%s" תוזמן לפרסום!</string>
+	<string name="post_updated_param">"%s" עודכן!</string>
+	<string name="post_published_param">"%s" פורסם!</string>
+	<string name="button_retry">לנסות שנית</string>
+	<string name="uploading_post">מעלה את "%s"</string>
+	<string name="max_video_resolution">רזולוציה מרבית</string>
+	<string name="login_epilogue_mysites_other">האתרים שלי</string>
+	<string name="login_epilogue_mysites_one">האתר שלי</string>
+	<string name="login_logged_in_as">מחובר בתור</string>
+	<string name="login_checking_site_address">בודק את כתובת האתר</string>
+	<string name="login_site_address">כתובת אתר</string>
+	<string name="login_username_at">‎@‎%s‎</string>
+	<string name="login_continue">המשך</string>
+	<string name="connect_more">חיבור של אתר אחר</string>
+	<string name="open_mail">פתיחת דואר</string>
+	<string name="next">הבא</string>
+	<string name="leave_off">להשאיר מכובה</string>
+	<string name="turn_on">הפעלה</string>
+	<string name="me_profile_photo">תמונת פרופיל</string>
+	<string name="post_title">כותרת</string>
+	<string name="menu_redo">בצע שוב</string>
+	<string name="menu_undo">ביטול פעולה אחרונה</string>
+	<string name="post_status_trashed">הועבר לפח</string>
+	<string name="post_status_scheduled">מתוזמן לפרסום</string>
+	<string name="post_status_post_private">פרטי</string>
+	<string name="post_status_draft">טיוטה</string>
+	<string name="post_status_publish_post">פרסום</string>
+	<string name="change_location">שינוי מיקום</string>
+	<string name="remove_location">הסרת מיקום</string>
+	<string name="post_settings_location">מיקום</string>
+	<string name="now">עכשיו</string>
+	<string name="post_settings_tags">תגיות</string>
+	<string name="post_settings_slug">מזהה לכתובת</string>
+	<string name="post_settings_excerpt">תקציר</string>
+	<string name="post_settings_not_set">לא הוגדר</string>
+	<string name="post_settings_more_options">אפשרויות נוספות</string>
+	<string name="post_settings_categories_and_tags">קטגוריות ותגיות</string>
+	<string name="notifications_tab_title_unread">לא נקרא</string>
+	<string name="notifications_tab_title_all">הכל</string>
+	<string name="category_parent">קטגוריית אב (אופציונלי):</string>
+	<string name="media_empty_audio_list">אין לך פריטי אודיו</string>
+	<string name="media_empty_documents_list">אין לך מסמכים</string>
+	<string name="media_empty_videos_list">אין לך סרטוני וידאו</string>
+	<string name="media_empty_image_list">אין לך תמונות</string>
+	<string name="media_error_timeout">זמן התגובה של השרת היה ארוך מדי</string>
+	<string name="media_audio">אודיו</string>
+	<string name="media_videos">וידאו</string>
+	<string name="media_documents">מסמכים</string>
+	<string name="media_images"> תמונות</string>
+	<string name="media_all">הכל</string>
 	<string name="format_bar_description_link">קישור</string>
 	<string name="format_bar_description_list">רשימה</string>
 	<string name="format_bar_description_heading">כותרת</string>
@@ -14,9 +71,27 @@ Language: he_IL
 	<string name="new_editor_promo_link">מה חדש?</string>
 	<string name="new_editor_promo_confirmation_action">הגדרות</string>
 	<string name="new_editor_promo_button_negative">לא עכשיו</string>
+	<string name="new_editor_beta_action">מידע נוסף</string>
+	<string name="draft_uploaded">הטיוטה הועלתה</string>
+	<string name="report_bug">דיווח על באג</string>
+	<string name="video_quality">איכות וידאו</string>
 	<string name="permission_location">מיקום</string>
 	<string name="permission_camera">מצלמה</string>
 	<string name="permission_storage">אחסון</string>
+	<string name="button_edit_permissions">עריכת הרשאות</string>
+	<string name="photo_picker_soft_ask_allow">להרשות</string>
+	<string name="connecting_account">חיבור חשבון</string>
+	<string name="connected">מחובר</string>
+	<string name="twitter">טוויטר</string>
+	<string name="likes"> לייקים</string>
+	<string name="visual">עורך ויזואלי</string>
+	<string name="buttons">כפתורים</string>
+	<string name="twitter_username">שם המשתמש בטוויטר</string>
+	<string name="sharing">שיתוף</string>
+	<string name="fab_content_description_write">כתיבה</string>
+	<string name="my_site_btn_sharing">שיתוף</string>
+	<string name="button_not_now">לא עכשיו</string>
+	<string name="button_sync">סנכרון</string>
 	<string name="smart_toast_comments_long_press">יש להקיש ולהחזיק כדי לבחור מספר תגובות</string>
 	<string name="smart_toast_photo_long_press">יש להקיש ולהחזיק כדי לבחור מספר תמונות</string>
 	<string name="photo_picker_choose_video">בחירת וידאו מהמכשיר</string>
@@ -44,7 +119,7 @@ Language: he_IL
 	<string name="start_over_email_body">אני רוצה להתחיל מחדש את בניית האתר %s</string>
 	<string name="start_over_email_subject">התחלה מחדש של בניית האתר %s</string>
 	<string name="site_picker_remove_site_error">שגיאה בהסרת האתר, יש לנסות שוב מאוחר יותר</string>
-	<string name="editor_post_saved_locally_unfinished_media">בפוסט קיימים פריטי מדיה שהעלאתם טרם הסתיימה והם נשמרו במחשב המקומי</string>
+	<string name="editor_post_saved_locally_failed_media">בפוסט קיימים פריטי מדיה שהעלאתם טרם הסתיימה והם נשמרו במחשב המקומי</string>
 	<string name="sure_to_remove_account">האם להסיר את האתר מהאפליקציה?</string>
 	<string name="photo_picker_title">בחירת תמונה</string>
 	<string name="error_publish_no_network">המכשיר אינו מחובר. השינויים נשמרו בשרת המקומי.</string>
@@ -67,9 +142,7 @@ Language: he_IL
 	<string name="image_quality">איכות תמונה</string>
 	<string name="error_all_media_upload_canceled">כל ההעלאות של פריטי המדיה בוטלו עקב שגיאה לא מזוהה. יש לנסות לבצע את ההעלאה שוב</string>
 	<string name="error_unknown_post_type">סוג פוסט לא מזוהה</string>
-	<string name="error_unknown_post">פוסט לא מזוהה, ייתכן שהעותק המקומי של הפוסט לא מסונכרן עם השרת</string>
 	<string name="error_fetch_site_after_creation">האתר כבר נוצר, ייתכן שיידרש ריענון של האתרים שלך בתפריט בחירת האתרים.</string>
-	<string name="error_upload_params">אירעה שגיאה בעת העלאת של %1$s: %2$s</string>
 	<string name="submit_for_review">שלח</string>
 	<string name="tell_me_more">אני רוצה לראות מידע נוסף</string>
 	<string name="duplicate_site_detected">נמצא אתר כפול.</string>
@@ -187,6 +260,7 @@ Language: he_IL
 	<string name="format_bar_description_html">HTML</string>
 	<string name="format_bar_description_ol">רשימה מסודרת</string>
 	<string name="format_bar_description_ul">רשימה לא מסודרת</string>
+	<string name="format_bar_description_more">מידע נוסף</string>
 	<string name="format_bar_description_quote">ציטוט</string>
 	<string name="format_bar_description_strike">קו חוצה</string>
 	<string name="format_bar_description_underline">קו תחתון</string>
@@ -371,6 +445,8 @@ Language: he_IL
 	<string name="pending_email_change_snackbar">יש ללחוץ על הקישור לאימות באימייל שנשלח לכתובת %1$s כדי לאשר את כתובתך החדשה</string>
 	<string name="editor_toast_uploading_please_wait">מתבצעת כרגע העלאת מדיה על-ידך. יש להמתין להשלמת הפעולה.</string>
 	<string name="error_refresh_comments_showing_older">לא ניתן לרענן תגובות כרגע - מציג תגובות ישנות</string>
+	<string name="post_settings_set_featured_image">בחירת תמונה ראשית</string>
+	<string name="post_settings_featured_image">תמונה ראשית</string>
 	<string name="visual_editor_enabled">עורך ויזואלי מופעל</string>
 	<string name="editor_content_placeholder">מומלץ לשתף את הסיפור שלך כאן…</string>
 	<string name="editor_page_title_placeholder">כותרת עמוד</string>
@@ -494,7 +570,6 @@ Language: he_IL
 	<string name="site_settings_address_title">כתובת</string>
 	<string name="site_settings_tagline_title">תיאור האתר</string>
 	<string name="site_settings_title_title">שם האתר</string>
-	<string name="site_settings_this_device_header">מכשיר זה</string>
 	<string name="site_settings_discussion_new_posts_header">ברירות מחדל עבור פוסטים חדשים</string>
 	<string name="site_settings_writing_header">כתיבה</string>
 	<string name="site_settings_account_header">חשבון</string>
@@ -723,7 +798,7 @@ Language: he_IL
 	<string name="stats_period">תקופה</string>
 	<string name="stats_overall">מבט כללי</string>
 	<string name="stats_total">סה"כ</string>
-	<string name="post_uploading">מעלה</string>
+	<string name="post_uploading">מעלה פוסט</string>
 	<string name="stats_visitors">מבקרים</string>
 	<string name="stats_views">צפיות</string>
 	<string name="stats_timeframe_years">שנים</string>
@@ -790,7 +865,6 @@ Language: he_IL
 	<string name="delete_sure">מחיקת טיוטה</string>
 	<string name="delete_sure_post">מחיקת פוסט</string>
 	<string name="signing_out">יוצא מהמערכת...</string>
-	<string name="posting_post">מפרסם "%s"</string>
 	<string name="pages_empty_list">אין עמודים עדיין. למה לא ליצור אחד?</string>
 	<string name="comment_reply_to_user">להגיב ל-%s</string>
 	<string name="posts_empty_list">אין פוסטים עדיין. למה לא ליצור אחד?</string>
@@ -798,7 +872,7 @@ Language: he_IL
 	<string name="comment">תגובה</string>
 	<string name="mnu_comment_liked">פרסם לייק</string>
 	<string name="uploading_total">העלאה %1$d של %2$d</string>
-	<string name="sending_content">מעלה תוכן של %s</string>
+	<string name="sending_content">מעלה תוכן של %s...</string>
 	<string name="select_a_blog">בחר אתר WordPress</string>
 	<string name="stats_no_blog">לא ניתן לטעון את הנתונים הסטטיסטיים עבור האתר הדרוש</string>
 	<string name="older_last_week">בן יותר משבוע</string>

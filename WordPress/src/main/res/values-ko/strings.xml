@@ -22,7 +22,6 @@ Language: ko_KR
 	<string name="start_over_email_body">%s 사이트를 처음부터 다시 시작합니다.</string>
 	<string name="start_over_email_subject">%s 사이트를 처음부터 다시 시작합니다.</string>
 	<string name="site_picker_remove_site_error">사이트 제거 중 오류가 발생했습니다. 나중에 다시 시도하세요.</string>
-	<string name="editor_post_saved_locally_unfinished_media">글에 완료되지 않은 미디어 업로드가 있어 글이 로컬에 저장되었습니다.</string>
 	<string name="sure_to_remove_account">앱에서 이 사이트를 제거할까요?</string>
 	<string name="photo_picker_title">사진 선택</string>
 	<string name="error_publish_no_network">기기가 오프라인 상태입니다. 변경사항이 로컬로 저장되었습니다.</string>
@@ -43,9 +42,7 @@ Language: ko_KR
 	<string name="keep_editing">계속 편집하기</string>
 	<string name="error_all_media_upload_canceled">알 수 없는 오류로 인해 모든 미디어 업로드가 취소되었습니다. 업로드를 다시 시도하세요.</string>
 	<string name="error_unknown_post_type">알 수 없는 글 형식입니다.</string>
-	<string name="error_unknown_post">알 수 없는 글로 인해 이 글의 로컬 복사본을 서버와 동기화할 수 없습니다.</string>
 	<string name="error_fetch_site_after_creation">사이트가 생성되면 사이트 선택 도구에서 사이트를 새로 고쳐야 할 수 있습니다.</string>
-	<string name="error_upload_params">%1$s을(를) 업로드하는 동안 다음 오류가 발생했습니다. %2$s</string>
 	<string name="submit_for_review">제출하기</string>
 	<string name="invalid_verification_code_format">반드시 6자리 숫자이어야 함</string>
 	<string name="confirm_discard_changes">저장하지 않은 변경사항을 버리시겠습니까?</string>
@@ -399,7 +396,6 @@ Language: ko_KR
 	<string name="site_settings_address_title">주소</string>
 	<string name="site_settings_title_title">사이트 제목</string>
 	<string name="site_settings_tagline_title">태그라인</string>
-	<string name="site_settings_this_device_header">이 기기</string>
 	<string name="site_settings_discussion_new_posts_header">새 글에 대한 기본값</string>
 	<string name="site_settings_account_header">계정</string>
 	<string name="site_settings_writing_header">쓰기</string>
@@ -625,7 +621,6 @@ Language: ko_KR
 	<string name="stats_overall">전체</string>
 	<string name="stats_period">기간</string>
 	<string name="logs_copied_to_clipboard">애플리케이션 로그가 클립보드에 복사되었습니다.</string>
-	<string name="post_uploading">업로드</string>
 	<string name="reader_label_new_posts">새 게시물</string>
 	<string name="stats_comments_total_comments_followers">댓글 팔로워 수를 포함한 총 게시글 수: %1$s</string>
 	<string name="stats_timeframe_years">년</string>
@@ -718,7 +713,6 @@ Language: ko_KR
 	<string name="older_two_days">2일 이전</string>
 	<string name="older_last_week">1주일 이전</string>
 	<string name="stats_no_blog">요청한 블로그에 대해 통계 자료를 로드할 수 없습니다.</string>
-	<string name="sending_content">%s 콘텐츠 업로딩</string>
 	<string name="uploading_total">%1$d/%2$d 업로딩</string>
 	<string name="mnu_comment_liked">좋아함</string>
 	<string name="comment">댓글</string>
@@ -726,7 +720,6 @@ Language: ko_KR
 	<string name="posts_empty_list">아직 글이 없습니다. 하나 만들어보세요!</string>
 	<string name="comment_reply_to_user">%s에 응답</string>
 	<string name="pages_empty_list">페이지가 없습니다. 하나 만들어보세요!</string>
-	<string name="posting_post">"%s" 게시</string>
 	<string name="reader_label_liked_by">좋아요를 표시한 회원:</string>
 	<string name="signing_out">로그아웃…</string>
 	<string name="reader_toast_err_generic">이 작업을 실행할 수 없습니다</string>

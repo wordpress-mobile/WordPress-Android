@@ -49,7 +49,6 @@ Language: ja_JP
 	<string name="notifications_tab_title_all">すべて</string>
 	<string name="top_level_category_name">トップレベル</string>
 	<string name="category_parent">親カテゴリー (オプション):</string>
-	<string name="toast_err_post_media_uploading">アップロード中は投稿を削除できません</string>
 	<string name="media_empty_audio_list">音声がありません。</string>
 	<string name="media_empty_documents_list">文書がありません。</string>
 	<string name="media_empty_videos_list">動画がありません。</string>
@@ -58,7 +57,6 @@ Language: ja_JP
 	<string name="media_error_exceeds_memory_limit">ファイルが大きすぎてこのサイトにアップロードできません</string>
 	<string name="media_error_exceeds_php_filesize">このサイトのアップロードサイズ上限を超えているファイルです</string>
 	<string name="media_error_http_too_large_video_upload">動画が大きすぎてアップロードできません</string>
-	<string name="media_error_http_too_large_photo_upload">画像が大きすぎてアップロードできませんサイトの設定で画像の最適化を変更してみてください</string>
 	<string name="media_audio">音声</string>
 	<string name="media_videos">動画</string>
 	<string name="media_documents">文書</string>
@@ -95,7 +93,6 @@ Language: ja_JP
 	<string name="draft_uploaded">下書きをアップロードしました</string>
 	<string name="report_bug">バグを報告</string>
 	<string name="video_quality">動画の画質</string>
-	<string name="max_video_resolution">ビデオのデフォルト幅</string>
 	<string name="permission_location">位置</string>
 	<string name="permission_camera">カメラ</string>
 	<string name="permission_storage">容量</string>
@@ -189,7 +186,6 @@ Language: ja_JP
 	<string name="start_over_email_body">サイト %s をもう一度始めたい</string>
 	<string name="start_over_email_subject">サイト %s をもう一度始める</string>
 	<string name="site_picker_remove_site_error">サイトの削除中にエラーが発生しました。後でもう一度やり直してください</string>
-	<string name="editor_post_saved_locally_unfinished_media">投稿に未完了のメディアのアップロードがあるため、ローカルに保存されました</string>
 	<string name="sure_to_remove_account">アプリからこのサイトを削除しますか ?</string>
 	<string name="photo_picker_title">写真を選択</string>
 	<string name="error_publish_no_network">端末がオフラインです。変更をローカルで保存しました。</string>
@@ -212,9 +208,7 @@ Language: ja_JP
 	<string name="image_quality">画質</string>
 	<string name="error_all_media_upload_canceled">不明なエラーにより、メディアのアップロードはすべてキャンセルされました。もう一度アップロードをお試しください</string>
 	<string name="error_unknown_post_type">投稿フォーマットが不明です</string>
-	<string name="error_unknown_post">不明な投稿です。この投稿のローカルコピーがサーバーと同期されていない可能性があります。</string>
 	<string name="error_fetch_site_after_creation">サイトは作成されているので、サイトピッカーでサイトを最新表示してください。</string>
-	<string name="error_upload_params">%1$sをアップロードする際にエラーが発生しました。%2$s</string>
 	<string name="submit_for_review">送信</string>
 	<string name="tell_me_more">もっと知る</string>
 	<string name="duplicate_site_detected">重複サイトが検出されました。</string>
@@ -640,7 +634,6 @@ Language: ja_JP
 	<string name="site_settings_address_title">アドレス</string>
 	<string name="site_settings_title_title">サイトのタイトル</string>
 	<string name="site_settings_tagline_title">キャッチフレーズ</string>
-	<string name="site_settings_this_device_header">この端末</string>
 	<string name="site_settings_discussion_new_posts_header">新しい投稿のデフォルト</string>
 	<string name="site_settings_account_header">アカウント</string>
 	<string name="site_settings_writing_header">投稿設定</string>
@@ -867,7 +860,6 @@ Language: ja_JP
 	<string name="logs_copied_to_clipboard">アプリケーションログをクリップボードにコピーしました</string>
 	<string name="stats_total">合計</string>
 	<string name="stats_overall">全体</string>
-	<string name="post_uploading">アップロード中</string>
 	<string name="reader_page_recommended_blogs">おすすめのサイト</string>
 	<string name="stats_comments_total_comments_followers">コメントをフォロー中の人がいる投稿の合計数: %1$s</string>
 	<string name="stats_empty_geoviews_desc">リストから、どの国や地域からのトラフィックが多いのかを見ることができます。</string>
@@ -954,7 +946,6 @@ Language: ja_JP
 	<string name="error_refresh_unauthorized_comments">コメントの表示/編集の権限がありません。</string>
 	<string name="more">続き</string>
 	<string name="stats_no_blog">要求されたブログの統計を読み込めませんでした。</string>
-	<string name="sending_content">%s のコンテンツをアップロードしています</string>
 	<string name="uploading_total">%2$d件中%1$d件目をアップロード中</string>
 	<string name="mnu_comment_liked">「いいね」済み</string>
 	<string name="comment">コメント</string>
@@ -962,7 +953,6 @@ Language: ja_JP
 	<string name="posts_empty_list">投稿はまだありません。新規作成してください。</string>
 	<string name="comment_reply_to_user">%s への返信</string>
 	<string name="pages_empty_list">ページはまだありません。新規作成してください。</string>
-	<string name="posting_post">"%s" を投稿</string>
 	<string name="signing_out">ログアウト中…</string>
 	<string name="reader_label_comment_count_multi">コメント%,d件</string>
 	<string name="reader_label_comment_count_single">1件のコメント</string>

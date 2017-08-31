@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-02 21:12:05+0000
+Translation-Revision-Date: 2017-08-15 20:30:55+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_CA
 -->
 <resources>
+	<string name="error_unknown_post">Could not find the post on the server</string>
+	<string name="error_post_does_not_exist">This post no longer exists</string>
+	<string name="error_media_recover">We were unable to upload this post\'s media. Please edit the post to try again.</string>
+	<string name="error_media_canceled">Uploading media were cancelled</string>
+	<string name="error_upload_post_media_params">There was an error uploading the media in this %1$s: %2$s.</string>
+	<string name="error_upload_post_params">There was an error uploading this %1$s: %2$s.</string>
+	<string name="async_promo_link">How does it work?</string>
+	<string name="async_promo_description">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
+	<string name="async_promo_title">Publish with Confidence</string>
+	<string name="editor_uploading_post">Your post is uploading</string>
+	<string name="uploading_post_media">Uploading media…</string>
+	<string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
+	<string name="page_scheduled">Page scheduled</string>
+	<string name="post_scheduled">Post scheduled</string>
+	<string name="post_draft_param">"%s" has been saved as a draft!</string>
+	<string name="post_scheduled_param">"%s" has been scheduled!</string>
+	<string name="post_updated_param">"%s" has been updated!</string>
+	<string name="post_published_param">"%s" has been published!</string>
+	<string name="button_retry">Retry</string>
+	<string name="post_queued">Queued post</string>
+	<string name="uploading_post">Uploading "%s"</string>
+	<string name="connection_to_server_lost">The connection to the server was lost</string>
+	<string name="max_video_resolution">Maximum Resolution</string>
 	<string name="login_epilogue_mysites_other">My sites</string>
 	<string name="login_epilogue_mysites_one">My site</string>
 	<string name="login_logged_in_as">Logged in as</string>
@@ -31,7 +54,6 @@ Language: en_CA
 	<string name="login_magic_links_sent_description">Magic link sent illustration</string>
 	<string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
 	<string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
-	<string name="login_error_while_checking_email">An error occurred while checking the email address!</string>
 	<string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
 	<string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
 	<string name="requesting_otp">Requesting a verification code via SMS.</string>
@@ -50,11 +72,7 @@ Language: en_CA
 	<string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
 	<string name="create_wordpress_site">Create a WordPress site</string>
 	<string name="email_not_found">We didn\'t find a WordPress.com user with that email address</string>
-	<string name="login_password_image">Login password icon</string>
-	<string name="login_username_image">Login username icon</string>
 	<string name="login_site_address_help_image">Site address positioning image</string>
-	<string name="login_globe_icon">Site address globe icon</string>
-	<string name="login_email_image">Login email icon</string>
 	<string name="image_optimization_promo_desc">Image optimization shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
 	<string name="image_optimization_promo_title">Turn on image optimization?</string>
 	<string name="leave_off">Leave off</string>
@@ -98,7 +116,6 @@ Language: en_CA
 	<string name="notifications_tab_title_all">All</string>
 	<string name="top_level_category_name">Top level</string>
 	<string name="category_parent">Parent category (optional):</string>
-	<string name="toast_err_post_media_uploading">Unable to delete a post while it\'s uploading</string>
 	<string name="media_empty_audio_list">You don\'t have any audio</string>
 	<string name="media_empty_documents_list">You don\'t have any documents</string>
 	<string name="media_empty_videos_list">You don\'t have any videos</string>
@@ -107,7 +124,7 @@ Language: en_CA
 	<string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
 	<string name="media_error_exceeds_php_filesize">File exceeds the maximum upload size for this site</string>
 	<string name="media_error_http_too_large_video_upload">Video too large to upload</string>
-	<string name="media_error_http_too_large_photo_upload">Image too large to upload. Try changing Optimize Images in your site\'s settings</string>
+	<string name="media_error_http_too_large_photo_upload">Image too large to upload. Try changing Optimize Images in your app\'s settings</string>
 	<string name="media_audio">Audio</string>
 	<string name="media_videos">Videos</string>
 	<string name="media_documents">Documents</string>
@@ -144,7 +161,6 @@ Language: en_CA
 	<string name="draft_uploaded">Draft uploaded</string>
 	<string name="report_bug">Report bug</string>
 	<string name="video_quality">Video Quality</string>
-	<string name="max_video_resolution">Default Video Width</string>
 	<string name="permission_location">Location</string>
 	<string name="permission_camera">Camera</string>
 	<string name="permission_storage">Storage</string>
@@ -203,7 +219,7 @@ Language: en_CA
 	<string name="fab_content_description_write">Write</string>
 	<string name="my_site_btn_sharing">Sharing</string>
 	<string name="button_not_now">Not now</string>
-	<string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your site\'s settings</string>
+	<string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your app\'s settings</string>
 	<string name="media_downloading">Saving media to this device</string>
 	<string name="error_media_save">Unable to save media</string>
 	<string name="editor_scheduled_post_saved_online">Post scheduled</string>
@@ -239,7 +255,7 @@ Language: en_CA
 	<string name="start_over_email_body">I want to start over with the site %s</string>
 	<string name="start_over_email_subject">Start over with site %s</string>
 	<string name="site_picker_remove_site_error">Error removing site, try again later</string>
-	<string name="editor_post_saved_locally_unfinished_media">The post has unfinished media uploads and has been saved locally</string>
+	<string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
 	<string name="sure_to_remove_account">Remove this site from the app?</string>
 	<string name="photo_picker_title">Choose photo</string>
 	<string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
@@ -262,9 +278,7 @@ Language: en_CA
 	<string name="image_quality">Image Quality</string>
 	<string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 	<string name="error_unknown_post_type">Unknown post format</string>
-	<string name="error_unknown_post">Unknown post, local copy of this post may be out of sync with the server</string>
 	<string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
-	<string name="error_upload_params">Error while uploading the %1$s: %2$s</string>
 	<string name="submit_for_review">Submit</string>
 	<string name="tell_me_more">Tell me more</string>
 	<string name="duplicate_site_detected">A duplicate site has been detected.</string>
@@ -290,9 +304,9 @@ Language: en_CA
 	<string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs\n        that in order to communicate with your site. Contact your host to solve this problem.</string>
 	<string name="reader_empty_followed_blogs_search_title">No matching sites</string>
 	<string name="reader_hint_search_followed_sites">Search followed sites</string>
+	<string name="preference_editor_legacy">Legacy</string>
 	<string name="visual_editor_disabled">Visual Editor disabled</string>
 	<string name="preference_editor_visual">Visual</string>
-	<string name="preference_editor_legacy">Legacy</string>
 	<string name="preference_editor_type">Set editor type</string>
 	<string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
 	<string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
@@ -693,7 +707,6 @@ Language: en_CA
 	<string name="site_settings_address_title">Address</string>
 	<string name="site_settings_title_title">Site Title</string>
 	<string name="site_settings_tagline_title">Tagline</string>
-	<string name="site_settings_this_device_header">This device</string>
 	<string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
 	<string name="site_settings_account_header">Account</string>
 	<string name="site_settings_writing_header">Writing</string>
@@ -911,7 +924,6 @@ Language: en_CA
 	<string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
 	<string name="posts_fetching">Fetching posts…</string>
 	<string name="media_fetching">Fetching media…</string>
-	<string name="post_uploading">Uploading</string>
 	<string name="stats_total">Total</string>
 	<string name="stats_overall">Overall</string>
 	<string name="stats_period">Period</string>
@@ -923,6 +935,7 @@ Language: en_CA
 	<string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
 	<string name="reader_page_recommended_blogs">Sites you may like</string>
 	<string name="stats_months_and_years">Months and Years</string>
+	<string name="post_uploading">Uploading post</string>
 	<string name="stats_entry_publicize">Service</string>
 	<string name="stats_totals_publicize">Followers</string>
 	<string name="stats_comments_by_authors">By Authors</string>
@@ -1014,18 +1027,17 @@ Language: en_CA
 	<string name="older_two_days">Older than 2 days</string>
 	<string name="older_last_week">Older than a week</string>
 	<string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
-	<string name="sending_content">Uploading %s content</string>
 	<string name="uploading_total">Uploading %1$d of %2$d</string>
 	<string name="mnu_comment_liked">Liked</string>
 	<string name="comment">Comment</string>
 	<string name="posts_empty_list">No posts yet. Why not create one?</string>
 	<string name="comment_reply_to_user">Reply to %s</string>
 	<string name="pages_empty_list">No pages yet. Why not create one?</string>
-	<string name="posting_post">Posting "%s"</string>
 	<string name="comment_trashed">Comment trashed</string>
 	<string name="reader_label_liked_by">Liked By</string>
 	<string name="signing_out">Logging out…</string>
 	<string name="select_a_blog">Choose a WordPress site</string>
+	<string name="sending_content">Uploading %s content…</string>
 	<string name="reader_toast_err_generic">Unable to perform this action</string>
 	<string name="reader_toast_err_block_blog">Unable to block this blog</string>
 	<string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>

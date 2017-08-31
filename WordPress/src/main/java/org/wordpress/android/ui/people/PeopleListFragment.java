@@ -275,6 +275,11 @@ public class PeopleListFragment extends Fragment {
 
     // Refresh the role display names after user roles is fetched
     public void refreshUserRoles() {
+        if (mFilteredRecyclerView == null) {
+            // bail when list is not available
+            return;
+        }
+
         PeopleAdapter peopleAdapter = (PeopleAdapter) mFilteredRecyclerView.getAdapter();
         if (peopleAdapter != null) {
             peopleAdapter.refreshUserRoles();

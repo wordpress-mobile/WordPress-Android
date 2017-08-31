@@ -126,7 +126,6 @@ Language: gd_GB
 	<string name="logs_copied_to_clipboard">Chaidh lethbhreac de logaichean na h-aplacaid a chur air an stòr-bhòrd</string>
 	<string name="stats_total">Iomlan</string>
 	<string name="stats_overall">San fharsaingeachd</string>
-	<string name="post_uploading">’Ga luchdadh suas</string>
 	<string name="reader_page_recommended_blogs">Bidh ùidh agad sna leanas is dòcha</string>
 	<string name="stats_comments_total_comments_followers">Puist air fad aig a bheil luchd-leantainn phost: %1$s</string>
 	<string name="stats_visitors">Aoighean</string>
@@ -193,14 +192,12 @@ Language: gd_GB
 	<string name="delete_sure_page">Sguab às an duilleag seo</string>
 	<string name="confirm_delete_multi_media">A bheil thu airson na rudan a thagh thu a sguabadh às?</string>
 	<string name="delete_sure_post">Sguab às am post seo</string>
-	<string name="posting_post">A’ postadh “%s”</string>
 	<string name="comment_trashed">Chaidh am beachd a chur dhan sgudal</string>
 	<string name="posts_empty_list">Chan eil post agad fhathast. Carson nach cruthaich thu fear?</string>
 	<string name="comment_reply_to_user">Freagair %s</string>
 	<string name="pages_empty_list">Chan eil duilleag agad fhathast. Carson nach cruthaich thu tè?</string>
 	<string name="mnu_comment_liked">’S toil leat seo</string>
 	<string name="comment">Beachd</string>
-	<string name="sending_content">A’ luchdadh suas susbaint %s</string>
 	<string name="uploading_total">A’ luchdadh suas %1$d de %2$d</string>
 	<string name="stats_no_blog">Cha b’ urrainn dhuinn na stats aig a’ bhloga sin a luchdadh</string>
 	<string name="older_last_week">Nas sine na seachdain</string>

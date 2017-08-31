@@ -136,7 +136,6 @@ Language: sr_RS
 	<string name="stats_period">Период</string>
 	<string name="stats_overall">Просек</string>
 	<string name="stats_total">Укупно</string>
-	<string name="post_uploading">Отпремљујем</string>
 	<string name="reader_page_recommended_blogs">Веб места која би могла да вам се свиде</string>
 	<string name="stats_empty_referrers_desc">Сазнајте више о видљивости свог веб места пратећи веб претраживаче и друга веб места која вам шаљу највише посетилаца</string>
 	<string name="stats_empty_publicize_desc">Пратите своје пратиоце са разних друштвених мрежа користећи Publicize.</string>
@@ -209,14 +208,12 @@ Language: sr_RS
 	<string name="pages_empty_list">Не постоји ниједна страна. Зашто не бисте направили нову?</string>
 	<string name="reader_empty_posts_liked">Нисте означили да вам се свиђа ниједан чланак</string>
 	<string name="error_refresh_unauthorized_pages">Немате дозволу да прегледате или уређујете стране</string>
-	<string name="posting_post">Објављивање "%s"</string>
 	<string name="comment_reply_to_user">Одговор %s</string>
 	<string name="comment_trashed">Коментар померен на отпад</string>
 	<string name="posts_empty_list">Не постоје чланци. Зашто не бисте направили нови?</string>
 	<string name="comment">Коментар</string>
 	<string name="mnu_comment_liked">Свиђа се</string>
 	<string name="uploading_total">Отпремљивање %1$d од %2$d</string>
-	<string name="sending_content">Отпремљивање %s садржаја</string>
 	<string name="stats_no_blog">Статистике не могу бити учитане за тражени блог</string>
 	<string name="older_two_days">Старије од два дана</string>
 	<string name="older_last_week">Старије од недељу дана</string>

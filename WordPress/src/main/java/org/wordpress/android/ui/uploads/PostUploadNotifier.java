@@ -196,7 +196,11 @@ class PostUploadNotifier {
                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
         notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
-        notificationBuilder.setContentTitle(mContext.getString(R.string.upload_failed));
+
+        String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
+        String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), postTitle);
+        notificationBuilder.setContentTitle(notificationTitle);
+
         notificationBuilder.setContentText(errorMessage);
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(errorMessage));
         notificationBuilder.setContentIntent(pendingIntent);

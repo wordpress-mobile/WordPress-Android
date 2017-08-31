@@ -254,8 +254,10 @@ class ReaderPostRenderer {
      * returns the basic content of the post tweaked for use here
      */
     private String getPostContent() {
+        String content = mPost.shouldShowExcerpt() ? mPost.getExcerpt() : mPost.getText();
+
         // some content (such as Vimeo embeds) don't have "http:" before links
-        String content = mPost.getText().replace("src=\"//", "src=\"http://");
+        content = content.replace("src=\"//", "src=\"http://");
 
         // add the featured image (if any)
         if (shouldAddFeaturedImage()) {

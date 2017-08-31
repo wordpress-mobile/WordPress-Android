@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-02 07:42:44+0000
+Translation-Revision-Date: 2017-08-15 19:35:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="error_unknown_post">Hittade inte inlägget på servern</string>
+	<string name="error_post_does_not_exist">Detta inlägg finns inte kvar</string>
+	<string name="error_media_recover">Det gick inte att ladda upp mediafilerna för detta inlägg. Redigera inlägget och försök igen.</string>
+	<string name="error_media_canceled">Uppladdningen av media avbröts</string>
+	<string name="error_upload_post_media_params">Ett fel inträffade vid uppladdning av media med detta %1$s: %2$s.</string>
+	<string name="error_upload_post_params">Ett fel inträffade vid uppladdning av %1$s: %2$s.</string>
+	<string name="async_promo_link">Hur fungerar det?</string>
+	<string name="async_promo_description">Nu kan du gå ur redigeraren. Inlägget kommer att sparas och publiceras automatiskt! Prova!</string>
+	<string name="async_promo_title">Publicera utan oro</string>
+	<string name="editor_uploading_post">Ditt inlägg håller på att laddas upp</string>
+	<string name="uploading_post_media">Laddar upp media …</string>
+	<string name="dialog_confirm_cancel_post_media_uploading">Är du säker? Om du raderar detta inlägg kommer även mediauppladdningen att avbrytas.</string>
+	<string name="page_scheduled">Sidan har tidsinställts</string>
+	<string name="post_scheduled">Inlägget har tidsinställts</string>
+	<string name="post_draft_param">”%s” har sparats som utkast!</string>
+	<string name="post_scheduled_param">”%s” har tidsinställts!</string>
+	<string name="post_updated_param">”%s” har uppdaterats!</string>
+	<string name="post_published_param">”%s” har publicerats!</string>
+	<string name="button_retry">Försök igen</string>
+	<string name="post_queued">Inlägget i kö</string>
+	<string name="uploading_post">Laddar upp ”%s”</string>
+	<string name="connection_to_server_lost">Förbindelsen med servern bröts</string>
+	<string name="max_video_resolution">Maximal upplösning</string>
 	<string name="login_epilogue_mysites_other">Mina webbplatser</string>
 	<string name="login_epilogue_mysites_one">Min webbplats</string>
 	<string name="login_logged_in_as">Inloggad som</string>
@@ -31,7 +54,6 @@ Language: sv_SE
 	<string name="login_magic_links_sent_description">Illustration för att magisk länk har skickats</string>
 	<string name="login_magic_links_sent_label">Din magiska länk är på väg! Kolla e-posten på din enhet och knacka på länken i e-postmeddelandet du just fick från WordPress.com</string>
 	<string name="login_magic_links_label">Vi skickar en magisk länk som låter dig logga in direkt, utan något lösenord. Slut på pekfingervalsandet!</string>
-	<string name="login_error_while_checking_email">Ett fel inträffade när e-postadressen skulle kontrolleras!</string>
 	<string name="password_incorrect">Det verkar som om ditt lösenord inte stämmer. Dubbelkolla dina uppgifer och försök igen.</string>
 	<string name="email_not_registered_wpcom">Denna e-postadress finns inte registrerad på WordPress.com</string>
 	<string name="requesting_otp">Begär en verifieringskod via SMS.</string>
@@ -50,11 +72,7 @@ Language: sv_SE
 	<string name="login_promo_text_onthego">Publicera från parkbänken. Blogga från bussen. Kommentera när du dricker kaffe. WordPress finns där du är.</string>
 	<string name="create_wordpress_site">Skapa WordPress-webbplats</string>
 	<string name="email_not_found">Vi kunde inte hitta någon användare på WordPress.com med den e-postadressen</string>
-	<string name="login_password_image">Ikon för inloggings-lösenord</string>
-	<string name="login_username_image">Ikon för inloggningsnamn</string>
 	<string name="login_site_address_help_image">Bild som visar var webbplatsadressen syns</string>
-	<string name="login_globe_icon">Glob-ikon för webbplatsadress</string>
-	<string name="login_email_image">Ikon för e-postadress för inloggning</string>
 	<string name="image_optimization_promo_desc">Bildoptimering minskar storleken på blder för snabbare uppladdning.\n\nDu kan när som helst ändra detta i webbplatsinställningarna.</string>
 	<string name="image_optimization_promo_title">Aktivera bildoptimering?</string>
 	<string name="leave_off">Behåll avstängt</string>
@@ -98,7 +116,6 @@ Language: sv_SE
 	<string name="notifications_tab_title_all">Allt</string>
 	<string name="top_level_category_name">Högsta nivån</string>
 	<string name="category_parent">Överordnad kategori (valfritt)</string>
-	<string name="toast_err_post_media_uploading">Kan inte radera ett inlägg medan det laddas upp</string>
 	<string name="media_empty_audio_list">Du har inga ljudfiler</string>
 	<string name="media_empty_documents_list">Du har inga dokument</string>
 	<string name="media_empty_videos_list">Du har inga videofiler</string>
@@ -107,7 +124,7 @@ Language: sv_SE
 	<string name="media_error_exceeds_memory_limit">Filen är för stor för att laddas upp på denna webbplats</string>
 	<string name="media_error_exceeds_php_filesize">Filen är större än största filuppladdningsstorleken för denna webbplats</string>
 	<string name="media_error_http_too_large_video_upload">Videofilen är för stor för att ladda upp</string>
-	<string name="media_error_http_too_large_photo_upload">Bildfilen är för stor för att ladda upp. Du kan försöka ändra inställningarna för bildoptimering i webbplatsinställningarna</string>
+	<string name="media_error_http_too_large_photo_upload">Bildfilen är för stor för att laddas upp. Du kan försöka optimera bilder i appens inställningar</string>
 	<string name="media_audio">Ljudfiler</string>
 	<string name="media_videos">Videofiler</string>
 	<string name="media_documents">Dokument</string>
@@ -144,7 +161,6 @@ Language: sv_SE
 	<string name="draft_uploaded">Utkastet uppladdat</string>
 	<string name="report_bug">Rapportera ett fel</string>
 	<string name="video_quality">Videokvalitet</string>
-	<string name="max_video_resolution">Standardbredd för video</string>
 	<string name="permission_location">Din plats</string>
 	<string name="permission_camera">Kamera</string>
 	<string name="permission_storage">Lagring</string>
@@ -203,7 +219,7 @@ Language: sv_SE
 	<string name="fab_content_description_write">Skriva</string>
 	<string name="my_site_btn_sharing">Delning</string>
 	<string name="button_not_now">Inte just nu.</string>
-	<string name="media_error_internal_server_error">Fel vid uppladdning. Prova att aktivera ”Optimera bilder” under inställningarna för din webbplats</string>
+	<string name="media_error_internal_server_error">Fel vid uppladdning. Prova att aktivera ”Optimera bilder” i appens inställningar</string>
 	<string name="media_downloading">Mediafilerna sparas i denna enhet</string>
 	<string name="error_media_save">Kan inte spara media</string>
 	<string name="editor_scheduled_post_saved_online">Inlägget schemalagt</string>
@@ -239,7 +255,7 @@ Language: sv_SE
 	<string name="start_over_email_body">Jag vill börja om med webbplatsen %s</string>
 	<string name="start_over_email_subject">Börja om med webbplatsen %s</string>
 	<string name="site_picker_remove_site_error">Ett fel inträffade när webbplatsen skulle tas bort. Försök igen senare</string>
-	<string name="editor_post_saved_locally_unfinished_media">Inlägget innehåller media som inte laddats upp färdigt och har därför sparats på enheten</string>
+	<string name="editor_post_saved_locally_failed_media">Inlägget innehåller media som inte kunde laddas upp och har sparats lokalt på enheten</string>
 	<string name="sure_to_remove_account">Ta bort denna webbplats från appen?</string>
 	<string name="photo_picker_title">Välj foto</string>
 	<string name="error_publish_no_network">Enheten är off-line. Ändringarna har sparats lokalt.</string>
@@ -262,9 +278,7 @@ Language: sv_SE
 	<string name="image_quality">Bildkvalitet</string>
 	<string name="error_all_media_upload_canceled">Alla mediauppladdningar har avbrutits på grund av ett okänt fel. Försök ladda upp igen</string>
 	<string name="error_unknown_post_type">Okänt inläggsformat</string>
-	<string name="error_unknown_post">Okänt inlägg, Den lokala kopian av detta inlägg skiljer sig eventuellt från versionen på servern</string>
 	<string name="error_fetch_site_after_creation">Webbplatsen har skapats, du kan behöva uppdatera din webbplatslista i listan för val av webbplats.</string>
-	<string name="error_upload_params">Fel vid uppladdning av %1$s: %2$s</string>
 	<string name="submit_for_review">Skicka</string>
 	<string name="tell_me_more">Jag vill veta mer</string>
 	<string name="duplicate_site_detected">En dublett-webbplats har hittats.</string>
@@ -693,7 +707,6 @@ Language: sv_SE
 	<string name="site_settings_address_title">Adress</string>
 	<string name="site_settings_tagline_title">Slogan</string>
 	<string name="site_settings_title_title">Webbplatsens titel</string>
-	<string name="site_settings_this_device_header">Denna enhet</string>
 	<string name="site_settings_discussion_new_posts_header">Standard för nya inlägg</string>
 	<string name="site_settings_writing_header">Skriva</string>
 	<string name="site_settings_account_header">Konto</string>
@@ -922,7 +935,7 @@ Language: sv_SE
 	<string name="stats_period">Period</string>
 	<string name="stats_overall">Övergripande</string>
 	<string name="stats_total">Totalt</string>
-	<string name="post_uploading">Laddar upp</string>
+	<string name="post_uploading">Laddar upp inlägg</string>
 	<string name="stats_visitors">Besökare</string>
 	<string name="stats_views">Visningar</string>
 	<string name="stats_timeframe_years">År</string>
@@ -989,7 +1002,6 @@ Language: sv_SE
 	<string name="delete_sure">Radera detta utkast</string>
 	<string name="delete_sure_post">Radera detta inlägg</string>
 	<string name="signing_out">Loggar ut...</string>
-	<string name="posting_post">Postar "%s"</string>
 	<string name="pages_empty_list">Inga sidor än. Varför inte skapa en?</string>
 	<string name="comment_reply_to_user">Svar till %s</string>
 	<string name="posts_empty_list">Inga inlägg än. Varför inte skapa ett?</string>
@@ -997,7 +1009,7 @@ Language: sv_SE
 	<string name="comment">Kommentar</string>
 	<string name="mnu_comment_liked">Gillat</string>
 	<string name="uploading_total">Laddar upp %1$d av %2$d</string>
-	<string name="sending_content">Laddar upp %s innehåll</string>
+	<string name="sending_content">Laddar upp %s innehåll …</string>
 	<string name="select_a_blog">Välj en WordPress-webbplats</string>
 	<string name="stats_no_blog">Statistiken för efterfrågad blogg kunde inte laddas</string>
 	<string name="older_last_week">Äldre än en vecka</string>

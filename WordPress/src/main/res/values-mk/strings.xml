@@ -16,7 +16,6 @@ Language: mk
 	<string name="stats_period">Период</string>
 	<string name="stats_overall">Севкупно</string>
 	<string name="stats_total">Вкупно</string>
-	<string name="post_uploading">Прикачување</string>
 	<string name="stats_empty_top_authors_desc">Пратете ги гледањата на написите на секој соработник и откријте ја најпопуларната содржина на секој автор.</string>
 	<string name="stats_empty_comments_desc">Доколку дозволите коментари на вашата страница, пратете ги вашите најдобри коментатори и откријте што ја распламтува конверзацијата врз база на последните 1000 коментари.</string>
 	<string name="stats_followers_total_email">Вкупно Е-Пошта Следбеници: %1$s</string>
@@ -106,14 +105,12 @@ Language: mk
 	<string name="older_two_days">Постари од 2 дена</string>
 	<string name="older_last_week">Постари од седмица</string>
 	<string name="stats_no_blog">Статиска неможе да се покаже за побараниот блог</string>
-	<string name="sending_content">Испраќа %s содржина</string>
 	<string name="uploading_total">Испраќа %1$d of %2$d</string>
 	<string name="mnu_comment_liked">Допаднато</string>
 	<string name="comment">Коментар</string>
 	<string name="posts_empty_list">Сеуште нема написи. Зошто не создадете еден?</string>
 	<string name="comment_reply_to_user">Одговори на %s</string>
 	<string name="pages_empty_list">Сеуште нема страници. Зошто не создадете една?</string>
-	<string name="posting_post">Објавување "%s"</string>
 	<string name="comment_trashed">Комента исфрлен</string>
 	<string name="reader_toast_err_generic">Неможе да се изврши ова дејство</string>
 	<string name="reader_toast_err_block_blog">Неможе да се блокира овој блог</string>

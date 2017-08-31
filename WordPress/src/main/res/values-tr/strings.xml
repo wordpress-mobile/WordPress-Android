@@ -31,7 +31,6 @@ Language: tr
 	<string name="login_magic_links_sent_description">Sihirli bağlantı gönderim örneklemesi</string>
 	<string name="login_magic_links_sent_label">Sihirli bağlantınız yola koyuldu. Bu cihazdaki e-posta adresinizi kontrol edin ve WordPress.com\'dan aldığınız e-posta içindeki bağlantıya basın.</string>
 	<string name="login_magic_links_label">Size anında giriş yapacağınız bir sihirli bağlantıyı e-posta ile göndereceğiz, hiç bir parolaya gerek yok. Artık tek tek yazmak yok.</string>
-	<string name="login_error_while_checking_email">E-posta adresi kontrol edilirken bir hata oluştu.</string>
 	<string name="password_incorrect">Bu parola yanlış gibi görünüyor. Lütfen bilgilerinizi iki kez kontrol edin ve tekrar deneyin.</string>
 	<string name="email_not_registered_wpcom">Bu e-posta WordPress.com\'a kayıtlı değil</string>
 	<string name="requesting_otp">SMS ile bir doğrulama kodu istemek.</string>
@@ -50,11 +49,7 @@ Language: tr
 	<string name="login_promo_text_onthego">Parktan yayınlayın. Otobüsten blog tutun. Kafeden yorum yapın. Siz nereye giderseniz WordPress de gider.</string>
 	<string name="create_wordpress_site">Yeni bir WordPress sitesi oluştur</string>
 	<string name="email_not_found">Bu e-posta adresine sahip bir WordPress.com kullanıcısı bulamadık</string>
-	<string name="login_password_image">Giriş parolası simgesi</string>
-	<string name="login_username_image">Giriş kullanıcı adı simgesi</string>
 	<string name="login_site_address_help_image">Site adresi konumlama görseli </string>
-	<string name="login_globe_icon">Site adresi dünya simgesi</string>
-	<string name="login_email_image">Giriş e-postası simgesi</string>
 	<string name="image_optimization_promo_desc">Görsel optimizasyonu daha hızlı yükleme için görselleri küçültür\n\nSite ayarlarından bu ayarı istediğiniz zaman değiştirebilirsiniz.</string>
 	<string name="image_optimization_promo_title">Görsel optimizasyonu etkinleştirilsin mi?</string>
 	<string name="leave_off">Kapalı bırak</string>
@@ -98,7 +93,6 @@ Language: tr
 	<string name="notifications_tab_title_all">Tümü</string>
 	<string name="top_level_category_name">Üst seviye</string>
 	<string name="category_parent">Üst kategori (tercihe bağlı):</string>
-	<string name="toast_err_post_media_uploading">Bir yazı yükleme sırasında silinemez</string>
 	<string name="media_empty_audio_list">Hiç ses dosyanız yok</string>
 	<string name="media_empty_documents_list">Hiç belgeniz yok</string>
 	<string name="media_empty_videos_list">Hiç videonuz yok</string>
@@ -107,7 +101,6 @@ Language: tr
 	<string name="media_error_exceeds_memory_limit">Dosya bu siteye yüklemek için çok büyük</string>
 	<string name="media_error_exceeds_php_filesize">Dosya bu site için izin verilen en yüksek yükleme boyutunu aşıyor</string>
 	<string name="media_error_http_too_large_video_upload">Video yüklemek için çok büyük</string>
-	<string name="media_error_http_too_large_photo_upload">Görsel yüklemek için çok büyük. Site ayarlarınızdan görselleri optimize et seçeneğini değiştirmeyi deneyin.</string>
 	<string name="media_audio">Ses</string>
 	<string name="media_videos">Videolar</string>
 	<string name="media_documents">Belgeler</string>
@@ -144,7 +137,6 @@ Language: tr
 	<string name="draft_uploaded">Taslak yüklendi</string>
 	<string name="report_bug">Hata bildirin</string>
 	<string name="video_quality">Video kalitesi</string>
-	<string name="max_video_px_width">Varsayılan video genişliği</string>
 	<string name="permission_location">Konum</string>
 	<string name="permission_camera">Kamera</string>
 	<string name="permission_storage">Depolama</string>
@@ -203,7 +195,6 @@ Language: tr
 	<string name="fab_content_description_write">Yaz</string>
 	<string name="my_site_btn_sharing">Paylaşım</string>
 	<string name="button_not_now">Şimdi değil</string>
-	<string name="media_error_internal_server_error">Yükleme hatası. Sitenizin ayarlar bölümünden görsel optimizasyonunu değiştirmeyi deneyin</string>
 	<string name="media_downloading">Ortam dosyaları bu cihazda saklanıyor</string>
 	<string name="error_media_save">Ortam dosyası kaydedilemiyor</string>
 	<string name="editor_scheduled_post_saved_online">Yazı zamanlandı</string>
@@ -239,7 +230,6 @@ Language: tr
 	<string name="start_over_email_body">%s sitesine baştan başlamak istiyorum</string>
 	<string name="start_over_email_subject">%s sitesine baştan başla</string>
 	<string name="site_picker_remove_site_error">Site kaldırılırken hata oluştu, lütfen daha sonra tekrar deneyin</string>
-	<string name="editor_post_saved_locally_unfinished_media">Gönderide tamamlanmamış ortam yüklemeleri olduğundan yerel olarak kaydedildi</string>
 	<string name="sure_to_remove_account">Bu site uygulamadan kaldırılsın mı?</string>
 	<string name="photo_picker_title">Fotoğraf seç</string>
 	<string name="error_publish_no_network">Cihaz çevrimdışı. Değişiklikler yerel olarak kaydedildi.</string>
@@ -262,9 +252,7 @@ Language: tr
 	<string name="image_quality">Görsel kalitesi</string>
 	<string name="error_all_media_upload_canceled">Tüm ortam yüklemeleri bilimeyen bir hata sebebiyle iptal edildi. Lütfen tekrar yüklemeyi deneyin</string>
 	<string name="error_unknown_post_type">Bilinmeyen yazı biçimi</string>
-	<string name="error_unknown_post">Bilinmeyen yazı, yazının yerel kopyası sunucu ile eşzamanlı olmayabilir</string>
 	<string name="error_fetch_site_after_creation">Site oluşturuldu, site seçicideki siteleri yenilemeniz gerekebilir.</string>
-	<string name="error_upload_params">%1$s yüklemesinde problem: %2$s</string>
 	<string name="submit_for_review">Gönder</string>
 	<string name="tell_me_more">Daha fazlası</string>
 	<string name="duplicate_site_detected">Tekrar eden bir site tespit edildi.</string>
@@ -693,7 +681,6 @@ Language: tr
 	<string name="site_settings_address_title">Adres</string>
 	<string name="site_settings_tagline_title">Etiket Satırı</string>
 	<string name="site_settings_title_title">Site Başlığı</string>
-	<string name="site_settings_this_device_header">Bu cihaz</string>
 	<string name="site_settings_discussion_new_posts_header">Yeni yazılar için varsayılanlar</string>
 	<string name="site_settings_writing_header">Yazma</string>
 	<string name="site_settings_account_header">Hesap</string>
@@ -922,7 +909,6 @@ Language: tr
 	<string name="stats_period">Dönem</string>
 	<string name="stats_overall">Genel</string>
 	<string name="stats_total">Toplam</string>
-	<string name="post_uploading">Yükleniyor</string>
 	<string name="stats_visitors">Ziyaretçiler</string>
 	<string name="stats_views">Görüntülemeler</string>
 	<string name="stats_timeframe_years">Yıl</string>
@@ -989,7 +975,6 @@ Language: tr
 	<string name="delete_sure">Bu taslağı sil</string>
 	<string name="delete_sure_post">Bu yazıyı sil</string>
 	<string name="signing_out">Çıkış yapılıyor…</string>
-	<string name="posting_post">Yazılan: "%s"</string>
 	<string name="pages_empty_list">Henüz sayfa yok. Bir sayfa oluşturmaya ne dersiniz?</string>
 	<string name="comment_reply_to_user">Şunu cevapla: %s</string>
 	<string name="posts_empty_list">Henüz yazı yok. Bir yazı oluşturmaya ne dersiniz?</string>
@@ -997,7 +982,6 @@ Language: tr
 	<string name="comment">Yorum Yap</string>
 	<string name="mnu_comment_liked">Beğenildi</string>
 	<string name="uploading_total">%1$d / %2$d yükleniyor</string>
-	<string name="sending_content">%s içeriği yükleniyor</string>
 	<string name="select_a_blog">Bir WordPress sitesi seçin</string>
 	<string name="stats_no_blog">İstenen blog için istatistikler yüklenemiyor</string>
 	<string name="older_last_week">1 haftadan eski</string>
