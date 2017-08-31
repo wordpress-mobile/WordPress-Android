@@ -179,9 +179,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         // Restore state of error resolving.
-        if (savedInstanceState != null) {
-            isResolvingError = savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
-        }
+        isResolvingError = savedInstanceState != null && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
 
         // Configure sign-in to request user's ID, basic profile, email address, and ID token.
         // ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -214,8 +212,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);
+        outState.putBoolean(STATE_RESOLVING_ERROR, isResolvingError);
     }
 
     protected void next(String email) {
