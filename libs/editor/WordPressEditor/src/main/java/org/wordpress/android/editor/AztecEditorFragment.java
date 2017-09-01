@@ -316,6 +316,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return (content.history.getHistoryEnabled() && !content.history.getHistoryList().isEmpty());
     }
 
+    public boolean isHistoryEnabled() {
+        return content.history.getHistoryEnabled();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
