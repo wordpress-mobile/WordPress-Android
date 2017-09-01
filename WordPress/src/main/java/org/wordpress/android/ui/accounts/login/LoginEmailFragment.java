@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -427,6 +428,34 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                             disconnectGoogleClient();
                             AppLog.e(T.NUX, "Cannot get ID token from Google sign-in account.", exception);
                             showErrorDialog(getString(R.string.login_error_generic));
+                        }
+                    } else {
+                        switch (signInResult.getStatus().getStatusCode()) {
+                            // Network error.
+                            case GoogleSignInStatusCodes.NETWORK_ERROR:
+                                // TODO: Show generic network error.
+                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: network error.");
+                                break;
+                            // Cancelled by the user.
+                            case GoogleSignInStatusCodes.SIGN_IN_CANCELLED:
+                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: cancelled by user.");
+                                break;
+                            // Attempted to connect with an invalid account name specified.
+                            case GoogleSignInStatusCodes.INVALID_ACCOUNT:
+                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: invalid account name.");
+                            // Internal error.
+                            case GoogleSignInStatusCodes.INTERNAL_ERROR:
+                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: internal error.");
+                            // Attempt didn't succeed with the current account.
+                            case GoogleSignInStatusCodes.SIGN_IN_FAILED:
+                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: current account failed.");
+                            // Attempted to connect, but the user is not signed in.
+                            case GoogleSignInStatusCodes.SIGN_IN_REQUIRED:
+                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: user is not signed in.");
+                            // Unknown error.
+                            default:
+                                showErrorDialog(getString(R.string.login_error_generic));
+                                break;
                         }
                     }
                 } else {
