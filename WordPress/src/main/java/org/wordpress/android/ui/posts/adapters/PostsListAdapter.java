@@ -441,7 +441,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             int statusColorResId = R.color.grey_darken_10;
             String errorMessage = null;
 
-            UploadError reason = UploadService.getUploadErrorForPost(post, mUploadStore);
+            UploadError reason = mUploadStore.getUploadErrorForPost(post);
             if (reason != null) {
                 if (reason.mediaError != null) {
                     errorMessage = context.getString(post.isPage() ? R.string.error_media_recover_page
@@ -527,7 +527,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
 
-        if (UploadService.getUploadErrorForPost(post, mUploadStore) != null) {
+        if (mUploadStore.getUploadErrorForPost(post) != null) {
             holder.btnPublish.setButtonType(PostListButton.BUTTON_RETRY);
         } else {
             if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {

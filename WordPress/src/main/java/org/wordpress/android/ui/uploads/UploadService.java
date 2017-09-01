@@ -316,12 +316,8 @@ public class UploadService extends Service {
     }
 
     public static boolean hasMediaErrorForPost(PostModel post, UploadStore uploadStore) {
-        UploadError error  = getUploadErrorForPost(post, uploadStore);
+        UploadError error  = uploadStore.getUploadErrorForPost(post);
         return error != null && error.mediaError != null;
-    }
-
-    public static UploadError getUploadErrorForPost(PostModel post, UploadStore uploadStore) {
-        return uploadStore.getUploadErrorForPost(post);
     }
 
     public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel post){
