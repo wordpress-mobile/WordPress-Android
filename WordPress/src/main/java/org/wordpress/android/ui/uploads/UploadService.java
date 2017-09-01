@@ -31,6 +31,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -354,7 +355,14 @@ public class UploadService extends Service {
             return 0;
         }
 
-        return MediaUploadHandler.getProgressForMedia(mediaModel, sInstance.mUploadStore);
+        float uploadProgress = sInstance.mUploadStore.getUploadProgressForMedia(mediaModel);
+
+        // If this is a video and video optimization is enabled, include the optimization progress in the outcome
+        if (mediaModel.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
+            return MediaUploadHandler.getOverallProgressForVideo(mediaModel, uploadProgress);
+        }
+
+        return uploadProgress;
     }
 
     public static @NonNull Set<MediaModel> getPendingMediaForPost(PostModel postModel) {

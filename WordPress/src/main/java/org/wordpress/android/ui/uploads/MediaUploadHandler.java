@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -156,25 +155,16 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return false;
     }
 
-    // TODO Update to avoid the UploadStore dependency, either passing in the raw progress or moving this logic to
-    // the UploadService and only returning the optimizationProgress from here
     /**
-     * Returns the last recorded progress value for the given {@param media}. If there is no record for that media,
-     * it's assumed to be a completed upload.
+     * Returns an overall progress for the given {@param video}, including the video optimization progress. If there is
+     * no record for that video, it's assumed to be a completed upload.
      */
-    static float getProgressForMedia(MediaModel media, UploadStore uploadStore) {
-        float uploadProgress = uploadStore.getUploadProgressForMedia(media);
-
-        // if this is a video and video optimization is enabled, include the optimization progress in the outcome
-        if (media.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
-            if (sOptimizationProgressByMediaId.containsKey(media.getId())) {
-                float optimizationProgress = sOptimizationProgressByMediaId.get(media.getId());
-                return optimizationProgress * 0.5F;
-            }
-            return 0.5F + (uploadProgress * 0.5F);
+    static float getOverallProgressForVideo(MediaModel video, float uploadProgress) {
+        if (sOptimizationProgressByMediaId.containsKey(video.getId())) {
+            float optimizationProgress = sOptimizationProgressByMediaId.get(video.getId());
+            return optimizationProgress * 0.5F;
         }
-
-        return uploadProgress;
+        return 0.5F + (uploadProgress * 0.5F);
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
