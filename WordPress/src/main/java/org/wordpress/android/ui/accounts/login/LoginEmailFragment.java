@@ -433,20 +433,20 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                         switch (signInResult.getStatus().getStatusCode()) {
                             // Internal error.
                             case GoogleSignInStatusCodes.INTERNAL_ERROR:
+                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: internal error.");
                                 showErrorDialog(getString(R.string.login_error_generic)
                                         + getString(R.string.login_error_suffix_internal));
-                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: internal error.");
                                 break;
                             // Attempted to connect with an invalid account name specified.
                             case GoogleSignInStatusCodes.INVALID_ACCOUNT:
+                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: invalid account name.");
                                 showErrorDialog(getString(R.string.login_error_generic)
                                         + getString(R.string.login_error_suffix_invalid));
-                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: invalid account name.");
                                 break;
                             // Network error.
                             case GoogleSignInStatusCodes.NETWORK_ERROR:
-                                showErrorDialog(getString(R.string.error_generic_network));
                                 AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: network error.");
+                                showErrorDialog(getString(R.string.error_generic_network));
                                 break;
                             // Cancelled by the user.
                             case GoogleSignInStatusCodes.SIGN_IN_CANCELLED:
@@ -465,6 +465,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                         }
                     }
                 } else {
+                    AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: result was not RESULT_OK.");
                     showErrorDialog(getString(R.string.login_error_generic));
                 }
 
