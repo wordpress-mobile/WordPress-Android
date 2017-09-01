@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
-import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -313,11 +312,6 @@ public class UploadService extends Service {
 
     public static boolean hasPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
         return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel);
-    }
-
-    public static boolean hasMediaErrorForPost(PostModel post, UploadStore uploadStore) {
-        UploadError error  = uploadStore.getUploadErrorForPost(post);
-        return error != null && error.mediaError != null;
     }
 
     public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel post){
