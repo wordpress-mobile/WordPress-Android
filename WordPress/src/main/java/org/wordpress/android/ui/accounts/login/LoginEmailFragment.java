@@ -437,7 +437,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                         switch (signInResult.getStatus().getStatusCode()) {
                             // Network error.
                             case GoogleSignInStatusCodes.NETWORK_ERROR:
-                                // TODO: Show generic network error.
+                                showErrorDialog(getString(R.string.error_generic_network));
                                 AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: network error.");
                                 break;
                             // Cancelled by the user.
