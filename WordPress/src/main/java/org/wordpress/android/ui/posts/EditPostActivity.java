@@ -1740,7 +1740,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (contentChanged) {
-            contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
+            mPost.setContent(content);
         }
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
