@@ -86,6 +86,7 @@
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="uploading_post">Uploading \"%s\"</string>
+    <string name="uploading_media">Uploading media</string>
     <string name="language">Language</string>
     <string name="interface_language">Interface Language</string>
     <string name="signout">Log out</string>

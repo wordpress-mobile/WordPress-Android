@@ -14,6 +14,7 @@ import android.util.SparseArray;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -24,6 +25,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 
+import java.util.List;
 import java.util.Random;
 
 class PostUploadNotifier {
@@ -34,6 +36,9 @@ class PostUploadNotifier {
     private final Notification.Builder mNotificationBuilder;
 
     private static final SparseArray<NotificationData> sPostIdToNotificationData = new SparseArray<>();
+
+    // used to hold notification data for media being uploaded from the Media Browser (i.e. not belonging to a Post)
+    private static NotificationData sStandAloneMediaNotificationData;
 
     private class NotificationData {
         int notificationId;
@@ -48,6 +53,7 @@ class PostUploadNotifier {
         // Add the uploader to the notification bar
         mContext = context;
         mService = service;
+        sStandAloneMediaNotificationData = new NotificationData();
         mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                 Context.NOTIFICATION_SERVICE);
         mNotificationBuilder = new Notification.Builder(mContext.getApplicationContext());
@@ -64,6 +70,23 @@ class PostUploadNotifier {
         NotificationData notificationData = new NotificationData();
         notificationData.notificationId = notificationId;
         sPostIdToNotificationData.put(post.getId(), notificationData);
+        mService.startForeground(notificationId, mNotificationBuilder.build());
+    }
+
+    void showForegroundNotificationForMedia(@NonNull List<MediaModel> media, String message) {
+        if (media.isEmpty()) {
+            return;
+        }
+
+        mNotificationBuilder.setContentTitle(mContext.getString(R.string.uploading_media));
+        if (message != null) {
+            mNotificationBuilder.setContentText(message);
+        }
+        int notificationId = (new Random()).nextInt() + media.get(0).getId();
+
+        NotificationData notificationData = new NotificationData();
+        notificationData.notificationId = notificationId;
+        sStandAloneMediaNotificationData.notificationId;
         mService.startForeground(notificationId, mNotificationBuilder.build());
     }
 
