@@ -316,6 +316,9 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         mLanguagePreference.refreshAdapter();
     }
 
+    /*
+     * only show the editor footer when Aztec is enabled
+     */
     private void toggleEditorFooterPreference() {
         PreferenceCategory editorCategory = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_editor));
         boolean showFooter = AppPrefs.isAztecEditorEnabled();
