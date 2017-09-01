@@ -379,9 +379,11 @@ class DotComSiteSettings extends SiteSettingsInterface {
             mWasFetchError = true;
             mFetchError = error;
         } else {
+            // we received successful response to GET request, notify listener to update UI
             notifyUpdatedOnUiThread();
         }
         if (--mFetchRequestCount <= 0 && mWasFetchError) {
+            // all of our GET requests are completed and at least one had an error so we need to notify
             notifyFetchErrorOnUiThread(mFetchError);
             mWasFetchError = false;
             mFetchError = null;
@@ -393,9 +395,11 @@ class DotComSiteSettings extends SiteSettingsInterface {
             mWasSaveError = true;
             mSaveError = error;
         } else {
+            // we received successful response to POST request, notify listener to update UI
             notifySavedOnUiThread();
         }
         if (--mSaveRequestCount <= 0 && mWasSaveError) {
+            // all of our POST requests are completed and at least one had an error so we need to notify
             notifySaveErrorOnUiThread(mSaveError);
             mWasSaveError = false;
             mSaveError = null;
