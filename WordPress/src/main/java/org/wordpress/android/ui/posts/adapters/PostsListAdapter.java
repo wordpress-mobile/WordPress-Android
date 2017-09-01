@@ -441,8 +441,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             UploadService.UploadError reason = UploadService.getUploadErrorForPost(post);
             if (reason != null) {
                 if (reason.mediaError != null) {
-                    String postType = context.getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
-                    errorMessage = context.getString(R.string.error_media_recover_params, postType);
+                    errorMessage = context.getString(post.isPage() ? R.string.error_media_recover_page
+                            : R.string.error_media_recover_post);
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError);
                 }

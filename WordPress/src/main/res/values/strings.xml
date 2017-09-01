@@ -1133,7 +1133,6 @@
     <string name="wordpress_dot_com_capitalized" translatable="false">WordPress.com</string>
 
     <!-- Error Messages -->
-    <string name="error_delete_post">An error occurred while deleting the %s</string>
     <!-- The following messages can\'t be factorized due to i18n -->
     <string name="error_refresh_posts">Posts couldn\'t be refreshed at this time</string>
     <string name="error_refresh_pages">Pages couldn\'t be refreshed at this time</string>
@@ -1142,6 +1141,8 @@
     <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
     <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
+    <string name="error_deleting_post">An error occurred while deleting the post</string>
+    <string name="error_deleting_page">An error occurred while deleting the page</string>
 
     <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
@@ -1170,8 +1171,10 @@
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
-    <string name="error_media_recover_params">We were unable to upload this %1$s\'s media. Please edit the %1$s to try again.</string>
-    <string name="error_post_does_not_exist_param">This %s no longer exists</string>
+    <string name="error_media_recover_post">We were unable to upload this post\'s media. Please edit the post to try again.</string>
+    <string name="error_media_recover_page">We were unable to upload this page\'s media. Please edit the page to try again.</string>
+    <string name="error_post_does_not_exist">This post no longer exists</string>
+    <string name="error_page_does_not_exist">This page no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
