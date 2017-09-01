@@ -1150,6 +1150,7 @@
     <string name="error_post_my_profile_no_connection">No connection, couldn\'t save your profile</string>
     <string name="error_post_account_settings">Couldn\'t save your account settings</string>
     <string name="error_generic">An error occurred</string>
+    <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
