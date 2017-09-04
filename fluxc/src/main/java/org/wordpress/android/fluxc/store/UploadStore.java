@@ -163,21 +163,23 @@ public class UploadStore extends Store {
     }
 
     public @NonNull List<PostModel> getPendingPosts() {
-        List<PostUploadModel> uploadingPostUploadModels = UploadSqlUtils.getPostUploadModelsWithState(
-                PostUploadModel.PENDING);
-        return UploadSqlUtils.getPostModelsForPostUploadModels(uploadingPostUploadModels);
+        List<PostUploadModel> postUploadModels = UploadSqlUtils.getPostUploadModelsWithState(PostUploadModel.PENDING);
+        return UploadSqlUtils.getPostModelsForPostUploadModels(postUploadModels);
     }
 
     public @NonNull List<PostModel> getFailedPosts() {
-        List<PostUploadModel> uploadingPostUploadModels = UploadSqlUtils.getPostUploadModelsWithState(
-                PostUploadModel.FAILED);
-        return UploadSqlUtils.getPostModelsForPostUploadModels(uploadingPostUploadModels);
+        List<PostUploadModel> postUploadModels = UploadSqlUtils.getPostUploadModelsWithState(PostUploadModel.FAILED);
+        return UploadSqlUtils.getPostModelsForPostUploadModels(postUploadModels);
     }
 
     public @NonNull List<PostModel> getCancelledPosts() {
-        List<PostUploadModel> uploadingPostUploadModels = UploadSqlUtils.getPostUploadModelsWithState(
-                PostUploadModel.CANCELLED);
-        return UploadSqlUtils.getPostModelsForPostUploadModels(uploadingPostUploadModels);
+        List<PostUploadModel> postUploadModels = UploadSqlUtils.getPostUploadModelsWithState(PostUploadModel.CANCELLED);
+        return UploadSqlUtils.getPostModelsForPostUploadModels(postUploadModels);
+    }
+
+    public @NonNull List<PostModel> getAllRegisteredPosts() {
+        List<PostUploadModel> postUploadModels = UploadSqlUtils.getAllPostUploadModels();
+        return UploadSqlUtils.getPostModelsForPostUploadModels(postUploadModels);
     }
 
     public boolean isPendingPost(PostModel post) {
