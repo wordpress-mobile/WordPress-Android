@@ -81,7 +81,7 @@ public class UploadService extends Service {
         }
 
         // Update posts with any completed AND failed uploads in our post->media map
-        updatePostModelWithCompletedAndFailedUploads();
+        updatePostModelsWithCompletedAndFailedUploads();
 
         for (PostModel pendingPost : mUploadStore.getPendingPosts()) {
             cancelQueuedPostUpload(pendingPost);
@@ -446,15 +446,14 @@ public class UploadService extends Service {
             return;
         }
 
-        updatePostModelWithCompletedAndFailedUploads();
+        updatePostModelsWithCompletedAndFailedUploads();
 
         AppLog.i(T.MAIN, "UploadService > Completed");
         stopSelf();
     }
 
-    private void updatePostModelWithCompletedAndFailedUploads(){
-        List<PostModel> uploadingPosts = mUploadStore.getPendingPosts();
-        for (PostModel postModel : uploadingPosts) {
+    private void updatePostModelsWithCompletedAndFailedUploads(){
+        for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
             // For each post with completed media uploads, update the content with the new remote URLs
             // This is done in a batch when all media is complete to prevent conflicts by updating separate images
             // at a time simultaneously for the same post
@@ -521,9 +520,9 @@ public class UploadService extends Service {
             if (event.media.getLocalPostId() != 0) {
                 AppLog.i(T.MAIN, "UploadService > Processing completed media with id " + event.media.getId()
                         + " and local post id " + event.media.getLocalPostId());
-                // If this was the last media upload a pending post was waiting for, send it to the PostUploadManager
-                List<PostModel> pendingPostModels = mUploadStore.getPendingPosts();
-                for (PostModel postModel : pendingPostModels) {
+                // If this was the last media upload a post was waiting for, update the post content
+                // This done for pending as well as cancelled and failed posts
+                for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
                     if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
                         // Replace local with remote media in the post content
                         PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(postModel);
@@ -531,11 +530,12 @@ public class UploadService extends Service {
                         updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
                         // finally, save the PostModel
                         if (updatedPost != null) {
-                            AppLog.d(T.MAIN, "uploading the post");
                             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
-                            // TODO Should do some extra validation here
-                            // e.g. what if the post has local media URLs but no pending media uploads?
-                            mPostUploadHandler.upload(updatedPost);
+                            if (mUploadStore.isPendingPost(postModel)) {
+                                // TODO Should do some extra validation here
+                                // e.g. what if the post has local media URLs but no pending media uploads?
+                                mPostUploadHandler.upload(updatedPost);
+                            }
                         }
                     }
                 }
