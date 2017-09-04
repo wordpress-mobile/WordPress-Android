@@ -191,6 +191,7 @@ public class UploadSqlUtilsTest {
         assertEquals(2, pendingPostUploadModels.size());
         assertEquals(0, UploadSqlUtils.getPostUploadModelsWithState(PostUploadModel.FAILED).size());
         assertEquals(0, UploadSqlUtils.getPostUploadModelsWithState(PostUploadModel.CANCELLED).size());
+        assertEquals(2, UploadSqlUtils.getAllPostUploadModels().size());
 
         // Fetch the corresponding PostModels
         List<PostModel> pendingPostModels = UploadSqlUtils.getPostModelsForPostUploadModels(pendingPostUploadModels);
@@ -208,6 +209,7 @@ public class UploadSqlUtilsTest {
         assertEquals(1, pendingPostUploadModels.size());
         assertEquals(1, cancelledPostUploadModels.size());
         assertEquals(0, UploadSqlUtils.getPostUploadModelsWithState(PostUploadModel.FAILED).size());
+        assertEquals(2, UploadSqlUtils.getAllPostUploadModels().size());
 
         // Fetch the corresponding PostModels
         pendingPostModels = UploadSqlUtils.getPostModelsForPostUploadModels(pendingPostUploadModels);

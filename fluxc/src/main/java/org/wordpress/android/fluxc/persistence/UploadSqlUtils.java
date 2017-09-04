@@ -110,6 +110,10 @@ public class UploadSqlUtils {
                 .getAsModel();
     }
 
+    public static @NonNull List<PostUploadModel> getAllPostUploadModels() {
+        return WellSql.select(PostUploadModel.class).getAsModel();
+    }
+
     public static @NonNull List<PostModel> getPostModelsForPostUploadModels(List<PostUploadModel> postUploadModels) {
         if (postUploadModels.size() > 0) {
             Set<Integer> postIdSet = new HashSet<>();
