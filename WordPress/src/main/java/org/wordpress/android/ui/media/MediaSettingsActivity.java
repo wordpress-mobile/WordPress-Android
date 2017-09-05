@@ -33,7 +33,6 @@ import android.widget.VideoView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -63,8 +62,6 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
-
 public class MediaSettingsActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
@@ -75,8 +72,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private int mMediaId;
     private long mDownloadId;
     private boolean mIsVideo;
-    private boolean mEnableMetadata;
-    private boolean mIsClosable;
 
     private SiteModel mSite;
 
@@ -157,8 +152,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
         }
 
-        setLookClosable(true);
-
         String mediaUri = null;
         if (!TextUtils.isEmpty(mContentUri)) {
             mediaUri = mContentUri;
@@ -169,7 +162,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 return;
             }
             mIsVideo = media.isVideo();
-            mEnableMetadata = true;
             mediaUri = media.getUrl();
         }
 
@@ -178,16 +170,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             return;
         }
 
-        if (mEnableMetadata) {
-            setSupportActionBar(mToolbar);
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayShowTitleEnabled(true);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setTitle(R.string.media);
-            }
-        } else {
-            mToolbar.setVisibility(View.GONE);
+        setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.media);
         }
 
         mImageView.setVisibility(mIsVideo ? View.GONE : View.VISIBLE);
@@ -226,6 +214,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         super.onStop();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_bottom);
+    }
+
     private void delayedFinish(boolean showError) {
         if (showError) {
             ToastUtils.showToast(this, R.string.error_media_not_found);
@@ -245,9 +239,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public void onBackPressed() {
         saveChanges();
-        setLookClosable(false);
         invalidateOptionsMenu();
-
         super.onBackPressed();
     }
 
@@ -375,7 +367,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private void setBitmap(@NonNull Bitmap bmp) {
         // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
         // for it to be correctly resized upon loading
-        PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+        //PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
         mImageView.setImageBitmap(bmp);
         invalidateOptionsMenu();
     }
@@ -422,13 +414,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             }
         }
         return dateString;
-    }
-
-    private void setLookClosable(boolean lookClosable) {
-        mIsClosable = lookClosable;
-        if (mToolbar != null) {
-            mToolbar.setNavigationIcon(lookClosable ? R.drawable.ic_close_white_24dp : R.drawable.ic_arrow_left_white_24dp);
-        }
     }
 
     @Override
