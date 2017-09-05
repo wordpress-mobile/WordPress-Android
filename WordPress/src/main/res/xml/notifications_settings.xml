@@ -28,14 +28,14 @@
         android:title="@string/notification_settings_category_sights_and_sounds" >
 
         <SwitchPreference
-            android:key="@string/wp_pref_notification_enable"
+            android:key="@string/wp_pref_notification_receive"
             android:defaultValue="true"
-            android:title="@string/notification_settings_item_sights_and_sounds_enable_notifications" />
+            android:title="@string/notification_settings_item_sights_and_sounds_receive_notifications" />
 
         <RingtonePreference
             android:key="@string/wp_pref_custom_notification_sound"
             android:defaultValue="content://settings/system/notification_sound"
-            android:dependency="wp_pref_notification_enable"
+            android:dependency="@string/wp_pref_notification_receive"
             android:ringtoneType="notification"
             android:showDefault="true"
             android:title="@string/notification_settings_item_sights_and_sounds_choose_sound" />
@@ -43,13 +43,13 @@
         <SwitchPreference
             android:key="@string/wp_pref_notification_vibrate"
             android:defaultValue="false"
-            android:dependency="wp_pref_notification_enable"
+            android:dependency="@string/wp_pref_notification_receive"
             android:title="@string/notification_settings_item_sights_and_sounds_vibrate_device" />
 
         <SwitchPreference
             android:key="@string/wp_pref_notification_light"
             android:defaultValue="true"
-            android:dependency="wp_pref_notification_enable"
+            android:dependency="@string/wp_pref_notification_receive"
             android:title="@string/notification_settings_item_sights_and_sounds_blink_light" />
 
     </PreferenceCategory>
