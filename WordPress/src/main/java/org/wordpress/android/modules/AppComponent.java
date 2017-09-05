@@ -44,6 +44,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaEditFragment;
 import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
+import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -185,6 +186,7 @@ public interface AppComponent {
     void inject(MediaGridFragment object);
     void inject(MediaEditFragment object);
     void inject(MediaPreviewActivity object);
+    void inject(MediaSettingsActivity object);
 
     void inject(PublicizeListActivity object);
     void inject(PublicizeWebViewFragment object);

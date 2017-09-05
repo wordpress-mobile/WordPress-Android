@@ -83,10 +83,8 @@ import org.wordpress.android.util.WPPermissionUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -557,19 +555,25 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             setResult(RESULT_OK, intent);
             finish();
         } else {
-            // TODO: right now only images & videos are supported
-            String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-            if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
-                if (media.getUploadState() != null &&
-                        MediaUtils.isLocalFile(media.getUploadState().toLowerCase())) {
-                    // Show the simple preview in case of uploading items. i.e: No metadata info, and other options only available
-                    // for files already on the remote site.
-                    MediaPreviewActivity.showPreview(this, sourceView, media.getFilePath(), mimeType.startsWith("video"));
-                } else {
-                    MediaPreviewActivity.showPreview(this, sourceView, mSite, localMediaId);
-                }
-            }
+            showMediaSettings(media);
         }
+    }
+
+    private void showMediaSettings(@NonNull MediaModel media) {
+        // TODO: right now only images & videos are supported
+        String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
+        if (!mimeType.startsWith("image") && !mimeType.startsWith("video")) {
+            return;
+        }
+
+        // Show the simple preview in case of uploading items. i.e: No metadata info, and other options only available
+        // for files already on the remote site.
+        if (media.getUploadState() != null && MediaUtils.isLocalFile(media.getUploadState())) {
+            MediaPreviewActivity.showPreview(this, null, media.getFilePath(), mimeType.startsWith("video"));
+            return;
+        }
+
+        MediaSettingsActivity.show(this, mSite, media.getId());
     }
 
     @Override
