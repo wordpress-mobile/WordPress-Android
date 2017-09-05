@@ -55,11 +55,6 @@
     <string name="hide">Hide</string>
     <string name="select_all">Select all</string>
     <string name="deselect_all">Deselect all</string>
-    <string name="notification_enable">Enable notifications</string>
-    <string name="notification_sound">Notification sound</string>
-    <string name="notification_vibrate">Vibrate</string>
-    <string name="notification_pending_drafts">Notify me on pending drafts</string>
-    <string name="notification_blink">Blink notification light</string>
     <string name="sure_to_remove_account">Remove this site from the app?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -890,14 +885,19 @@
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
-    <string name="notifications_sights_and_sounds">Sights and Sounds</string>
-    <string name="your_sites">Your Sites</string>
-    <string name="all_your_sites">All My Sites</string>
-    <string name="notifications_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
-    <string name="notifications_account_emails">Email from WordPress.com</string>
+    <string name="notification_settings_category_your_sites">Your Sites</string>
+    <string name="notification_settings_item_your_sites_all_your_sites">All My Sites</string>
+    <string name="notification_settings_category_other">Other</string>
+    <string name="notification_settings_item_other_comments_other_blogs">Comments on other sites</string>
+    <string name="notification_settings_item_other_pending_drafts">Notify me on pending drafts</string>
+    <string name="notification_settings_item_other_account_emails">Email from WordPress.com</string>
+    <string name="notification_settings_item_other_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
+    <string name="notification_settings_category_sights_and_sounds">Sights and Sounds</string>
+    <string name="notification_settings_item_sights_and_sounds_enable_notifications">Enable notifications</string>
+    <string name="notification_settings_item_sights_and_sounds_choose_sound">Notification sound</string>
+    <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate</string>
+    <string name="notification_settings_item_sights_and_sounds_blink_light">Blink notification light</string>
     <string name="notifications_wpcom_updates">WordPress.com Updates</string>
-    <string name="notifications_other">Other</string>
-    <string name="notifications_comments_other_blogs">Comments on other sites</string>
     <string name="notifications_tab">Notifications tab</string>
     <string name="email">Email</string>
     <string name="email_address">Email address</string>
