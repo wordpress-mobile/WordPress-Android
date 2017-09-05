@@ -19,19 +19,26 @@
     <PreferenceCategory
         android:key="@string/pref_notification_sights_sounds"
         android:title="@string/notifications_sights_and_sounds">
+        <SwitchPreference
+            android:key="wp_pref_notification_enable"
+            android:defaultValue="true"
+            android:title="@string/notification_enable"/>
         <RingtonePreference
             android:key="wp_pref_custom_notification_sound"
             android:ringtoneType="notification"
             android:showDefault="true"
             android:defaultValue="content://settings/system/notification_sound"
+            android:dependency="wp_pref_notification_enable"
             android:title="@string/notification_sound"/>
         <SwitchPreference
             android:defaultValue="false"
             android:key="wp_pref_notification_vibrate"
+            android:dependency="wp_pref_notification_enable"
             android:title="@string/notification_vibrate"/>
         <SwitchPreference
             android:defaultValue="true"
             android:key="wp_pref_notification_light"
+            android:dependency="wp_pref_notification_enable"
             android:title="@string/notification_blink"/>
     </PreferenceCategory>
 </PreferenceScreen>
