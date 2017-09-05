@@ -1,44 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:key="@string/wp_pref_notifications_root">
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="@string/wp_pref_notifications_root" >
+
     <PreferenceCategory
         android:key="@string/pref_notification_blogs"
-        android:title="@string/notification_settings_category_your_sites">
-    </PreferenceCategory>
+        android:title="@string/notification_settings_category_your_sites" />
+
     <PreferenceCategory
         android:key="@string/pref_notification_other_category"
-        android:title="@string/notification_settings_category_other">
+        android:title="@string/notification_settings_category_other" >
+
         <PreferenceScreen
             android:key="@string/pref_notification_other_blogs"
-            android:title="@string/notification_settings_item_other_comments_other_blogs"/>
+            android:title="@string/notification_settings_item_other_comments_other_blogs" />
+
         <SwitchPreference
-            android:defaultValue="true"
             android:key="@string/pref_key_notification_pending_drafts"
-            android:title="@string/notification_settings_item_other_pending_drafts"/>
+            android:defaultValue="true"
+            android:title="@string/notification_settings_item_other_pending_drafts" />
+
     </PreferenceCategory>
+
     <PreferenceCategory
         android:key="@string/pref_notification_sights_sounds"
-        android:title="@string/notification_settings_category_sights_and_sounds">
+        android:title="@string/notification_settings_category_sights_and_sounds" >
+
         <SwitchPreference
             android:key="@string/wp_pref_notification_enable"
             android:defaultValue="true"
-            android:title="@string/notification_settings_item_sights_and_sounds_enable_notifications"/>
+            android:title="@string/notification_settings_item_sights_and_sounds_enable_notifications" />
+
         <RingtonePreference
             android:key="@string/wp_pref_custom_notification_sound"
-            android:ringtoneType="notification"
-            android:showDefault="true"
             android:defaultValue="content://settings/system/notification_sound"
             android:dependency="wp_pref_notification_enable"
-            android:title="@string/notification_settings_item_sights_and_sounds_choose_sound"/>
+            android:ringtoneType="notification"
+            android:showDefault="true"
+            android:title="@string/notification_settings_item_sights_and_sounds_choose_sound" />
+
         <SwitchPreference
-            android:defaultValue="false"
             android:key="@string/wp_pref_notification_vibrate"
+            android:defaultValue="false"
             android:dependency="wp_pref_notification_enable"
-            android:title="@string/notification_settings_item_sights_and_sounds_vibrate_device"/>
+            android:title="@string/notification_settings_item_sights_and_sounds_vibrate_device" />
+
         <SwitchPreference
-            android:defaultValue="true"
             android:key="@string/wp_pref_notification_light"
+            android:defaultValue="true"
             android:dependency="wp_pref_notification_enable"
-            android:title="@string/notification_settings_item_sights_and_sounds_blink_light"/>
+            android:title="@string/notification_settings_item_sights_and_sounds_blink_light" />
+
     </PreferenceCategory>
+
 </PreferenceScreen>
