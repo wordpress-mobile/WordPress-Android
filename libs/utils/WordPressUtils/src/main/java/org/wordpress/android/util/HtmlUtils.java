@@ -51,7 +51,7 @@ public class HtmlUtils {
         }
 
         // use regex to strip tags, then convert entities in the result
-        return trimStart(StringEscapeUtils.escapeHtml4(str.replaceAll("<(.|\n)*?>", "")));
+        return trimStart(StringEscapeUtils.unescapeHtml4(str.replaceAll("<(.|\n)*?>", "")));
     }
 
     /*
