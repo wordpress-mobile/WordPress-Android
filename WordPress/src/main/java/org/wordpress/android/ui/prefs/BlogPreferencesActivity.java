@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteDeleted;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
@@ -59,7 +58,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(site)));
+            actionBar.setTitle(SiteUtils.getSiteNameOrHomeURL(site));
         }
 
         FragmentManager fragmentManager = getFragmentManager();

@@ -45,6 +45,7 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1035,7 +1036,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (newValue == null || pref == null || pref.getEditText().isInEditMode()) return;
 
         if (!newValue.equals(pref.getSummary())) {
-            String formattedValue = StringUtils.unescapeHTML(newValue.replaceFirst(ADDRESS_FORMAT_REGEX, ""));
+            String formattedValue = StringEscapeUtils.unescapeHtml4(newValue.replaceFirst(ADDRESS_FORMAT_REGEX, ""));
 
             pref.setText(formattedValue);
             pref.setSummary(formattedValue);

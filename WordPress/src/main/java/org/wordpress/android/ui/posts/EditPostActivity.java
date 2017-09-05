@@ -354,7 +354,7 @@ public class EditPostActivity extends AppCompatActivity implements
             resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued();
         }
 
-        setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
+        setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
         // Set up the ViewPager with the sections adapter.
@@ -371,7 +371,7 @@ public class EditPostActivity extends AppCompatActivity implements
             public void onPageSelected(int position) {
                 invalidateOptionsMenu();
                 if (position == PAGE_CONTENT) {
-                    setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
+                    setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                     hidePhotoPicker();

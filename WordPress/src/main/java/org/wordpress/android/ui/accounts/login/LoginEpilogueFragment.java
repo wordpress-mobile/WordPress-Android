@@ -231,7 +231,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
             holder.mUsernameTextView.setText(getString(R.string.login_username_at, defaultAccount.getUserName()));
 
-            String displayName = StringUtils.unescapeHTML(defaultAccount.getDisplayName());
+            String displayName = defaultAccount.getDisplayName();
             if (!TextUtils.isEmpty(displayName)) {
                 holder.mDisplayNameTextView.setText(displayName);
             } else {
