@@ -693,13 +693,13 @@ public class GCMMessageService extends GcmListenerService {
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean enabledNotification = prefs.getBoolean("wp_pref_notification_enable", true);
+            boolean shouldReceiveNotifications = prefs.getBoolean(context.getString(R.string.wp_pref_notification_receive), true);
 
-            if (enabledNotification) {
+            if (shouldReceiveNotifications) {
                 if (notifyUser) {
-                    boolean shouldVibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
-                    boolean shouldBlinkLight = prefs.getBoolean("wp_pref_notification_light", true);
-                    String notificationSound = prefs.getString("wp_pref_custom_notification_sound", "content://settings/system/notification_sound"); //"" if None is selected
+                    boolean shouldVibrate = prefs.getBoolean(context.getString(R.string.wp_pref_notification_vibrate), false);
+                    boolean shouldBlinkLight = prefs.getBoolean(context.getString(R.string.wp_pref_notification_light), true);
+                    String notificationSound = prefs.getString(context.getString(R.string.wp_pref_custom_notification_sound), "content://settings/system/notification_sound"); //"" if None is selected
 
                     if (!TextUtils.isEmpty(notificationSound)) {
                         builder.setSound(Uri.parse(notificationSound));
