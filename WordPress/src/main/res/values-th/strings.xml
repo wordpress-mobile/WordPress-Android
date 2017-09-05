@@ -78,7 +78,6 @@ Language: th
 	<string name="site_settings_address_title">ที่อยู่</string>
 	<string name="site_settings_title_title">หัวข้อเว็บ</string>
 	<string name="site_settings_tagline_title">คำอธิบาย</string>
-	<string name="site_settings_this_device_header">อุปกรณ์นี้</string>
 	<string name="site_settings_discussion_new_posts_header">ค่าเริ่มต้นสำหรับเรื่องใหม่</string>
 	<string name="site_settings_account_header">บัญชี</string>
 	<string name="site_settings_writing_header">การเขียน</string>
@@ -304,7 +303,6 @@ Language: th
 	<string name="stats_period">ช่วงเวลา</string>
 	<string name="stats_overall">ทั้งหมด</string>
 	<string name="stats_total">ทั้งหมด</string>
-	<string name="post_uploading">กำลังอัปโหลด</string>
 	<string name="reader_page_recommended_blogs">เว็บที่คุณอาจจะชอบ</string>
 	<string name="stats_comments_total_comments_followers">เรื่องทั้งหมดที่มีผู้ติดตามความเห็น: %1$s</string>
 	<string name="stats_empty_publicize_desc">ติดตามจำนวนผู้ติดตามจากบริการโซเชียลเน็ตเวิร์คโดยใช้การเผยแพร่</string>
@@ -373,11 +371,9 @@ Language: th
 	<string name="confirm_delete_media">ลบสิ่งที่ถูกเลือกหรือไม่?</string>
 	<string name="comment_reply_to_user">ตอบกลับไปที่ %s</string>
 	<string name="pages_empty_list">ยังไม่มีหน้า ทำไมไม่สร้างสักหนึ่งหน้า?</string>
-	<string name="posting_post">กำลังส่งเรื่อง "%s"</string>
 	<string name="older_two_days">เก่ากว่า 2 วัน</string>
 	<string name="older_last_week">เก่ากว่าหนึ่งอาทิตย์</string>
 	<string name="stats_no_blog">ไม่สามารถโหลดสถิติได้สำหรับบล็อกที่ต้องการ</string>
-	<string name="sending_content">กำลังอัปโหลดเนื้อหา %s</string>
 	<string name="uploading_total">กำลังอัปโหลด %1$d จาก %2$d</string>
 	<string name="mnu_comment_liked">ชื่นชอบแล้ว</string>
 	<string name="comment">ความเห็น</string>

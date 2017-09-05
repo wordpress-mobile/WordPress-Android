@@ -383,7 +383,6 @@ Language: bg
 	<string name="site_settings_address_title">Адрес</string>
 	<string name="site_settings_tagline_title">Кратко описание</string>
 	<string name="site_settings_title_title">Заглавие на сайта</string>
-	<string name="site_settings_this_device_header">Това устройство</string>
 	<string name="site_settings_discussion_new_posts_header">По подразбиране за нови публикации</string>
 	<string name="site_settings_account_header">Профил</string>
 	<string name="site_settings_writing_header">Писане</string>
@@ -608,7 +607,6 @@ Language: bg
 	<string name="stats_total">Общо</string>
 	<string name="reader_empty_posts_in_blog">Този блог е празен</string>
 	<string name="error_copy_to_clipboard">Възникна грешка при копиране на текста в clipboard-а</string>
-	<string name="post_uploading">Качване</string>
 	<string name="reader_label_new_posts">Нови публикации</string>
 	<string name="logs_copied_to_clipboard">Логовете на приложението бяха копирани в буфера за обмен на данни</string>
 	<string name="stats_empty_top_posts_title">Няма гледани публикации или страници</string>
@@ -680,7 +678,6 @@ Language: bg
 	<string name="error_refresh_unauthorized_pages">Нямате нужните права за да преглеждате или редактирате страници</string>
 	<string name="mnu_comment_liked">Харесано</string>
 	<string name="new_blog_wpcom_created">Блог-а в WordPress.com е създаден!</string>
-	<string name="posting_post">Публикуване на "%s"</string>
 	<string name="reader_label_comment_count_single">Един коментар</string>
 	<string name="nux_help_description">Посете помощния център за да намерите отговор на често задавани въпроси или посете форума за да зададете нови</string>
 	<string name="uploading_total">Качване на %1$d от %2$d</string>
@@ -701,7 +698,6 @@ Language: bg
 	<string name="reader_label_comment_count_multi">%,d коментари</string>
 	<string name="reader_label_liked_by">Харесано от</string>
 	<string name="older_two_days">По-стари от 2 дена</string>
-	<string name="sending_content">Качване на съдържанието %s</string>
 	<string name="reader_empty_followed_blogs_title">Все още не следвате блогове</string>
 	<string name="browse_our_faq_button">Преглед на секцията за ЧЗВ</string>
 	<string name="error_refresh_unauthorized_posts">Нямате нужните права за да преглеждате или променяте публикации</string>

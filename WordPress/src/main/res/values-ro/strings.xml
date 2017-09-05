@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-02 16:16:21+0000
+Translation-Revision-Date: 2017-08-17 10:27:49+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="error_unknown_post">N-am putut găsi articolul pe server</string>
+	<string name="error_post_does_not_exist">Acest articol nu mai există</string>
+	<string name="error_media_recover">Nu am putut să încărcăm media pentru acest articol. Te rog editează articolul pentru a încerca din nou.</string>
+	<string name="error_media_canceled">Încărcarea media a fost anulată</string>
+	<string name="error_upload_post_media_params">A fost o eroare la încărcarea mediei în acest %1$s: %2$s.</string>
+	<string name="error_upload_post_params">A fost o eroare la încărcarea acestui %1$s: %2$s.</string>
+	<string name="async_promo_link">Cum funcționează?</string>
+	<string name="async_promo_description">Acum poți părăsi editorul și articolul tău se va salva și publica în spatele scenei! Încearcă!</string>
+	<string name="async_promo_title">Publică cu Confidence</string>
+	<string name="editor_uploading_post">Articolul tău se încarcă</string>
+	<string name="uploading_post_media">Încarc media...</string>
+	<string name="dialog_confirm_cancel_post_media_uploading">Sigur? Ștergerea acestui articol va anula, de asemenea, încărcarea media.</string>
+	<string name="page_scheduled">Pagină programată</string>
+	<string name="post_scheduled">Articol programat</string>
+	<string name="post_draft_param">„%s” a fost salvat ca o ciornă!</string>
+	<string name="post_scheduled_param">„%s” a fost programat!</string>
+	<string name="post_updated_param">„%s” a fost actualizat!</string>
+	<string name="post_published_param">„%s” a fost publicat!</string>
+	<string name="button_retry">Reîncearcă</string>
+	<string name="post_queued">Articol în coada de așteptare</string>
+	<string name="uploading_post">Încarc „%s”</string>
+	<string name="connection_to_server_lost">Conexiunea cu serverul s-a pierdut</string>
+	<string name="max_video_resolution">Rezoluție maximă</string>
 	<string name="login_epilogue_mysites_other">Siturile mele</string>
 	<string name="login_epilogue_mysites_one">Situl meu</string>
 	<string name="login_logged_in_as">Autentificat ca</string>
@@ -31,7 +54,6 @@ Language: ro
 	<string name="login_magic_links_sent_description">Ilustrare legătură magică trimisă</string>
 	<string name="login_magic_links_sent_label">Legătura ta magică este pe drum! Verifică-ți emailul pe acest dispozitiv și atinge legătura din emailul pe care l-ai primit de la WordPress.com.</string>
 	<string name="login_magic_links_label">Îți vom trimite prin email o legătură magică care te va autentifica instantaneu, fără nicio parolă. Nu mai trebuie să scrii nimic!</string>
-	<string name="login_error_while_checking_email">A apărut o eroare în timpul verificării adresei de email!</string>
 	<string name="password_incorrect">Se pare că această parolă este incorectă. Te rog verifică-ți din nou informațiile și încearcă din nou.</string>
 	<string name="email_not_registered_wpcom">Acest email nu este înregistrat pe WordPress.com</string>
 	<string name="requesting_otp">Cer un cod de verificare prin SMS.</string>
@@ -50,11 +72,7 @@ Language: ro
 	<string name="login_promo_text_onthego">Publici din parc. Scrii pe blog în autobuz. Comentezi dintr-o cafenea. WordPress merge oriunde ești.</string>
 	<string name="create_wordpress_site">Creează un sit WordPress</string>
 	<string name="email_not_found">Nu am găsit un utilizator WordPress.com cu acea adresă de email</string>
-	<string name="login_password_image">Icon parolă de autentificare</string>
-	<string name="login_username_image">Icon nume utilizator de autentificare</string>
 	<string name="login_site_address_help_image">Imagine de poziționare adresă sit</string>
-	<string name="login_globe_icon">Icon global adresă sit</string>
-	<string name="login_email_image">Icon email de autentiifcare</string>
 	<string name="image_optimization_promo_desc">Optimizarea imaginilor micșorează imaginile pentru a le încărca mai rapid.\n\nPoți modifica asta oricând în setările sitului.</string>
 	<string name="image_optimization_promo_title">Pornești optimizarea imaginilor?</string>
 	<string name="leave_off">Las-o oprită</string>
@@ -98,7 +116,6 @@ Language: ro
 	<string name="notifications_tab_title_all">Toate</string>
 	<string name="top_level_category_name">Nivel superior</string>
 	<string name="category_parent">Categorie părinte (opțional):</string>
-	<string name="toast_err_post_media_uploading">Nu pot șterge un articol în timp ce se încarcă</string>
 	<string name="media_empty_audio_list">Nu ai niciun audio</string>
 	<string name="media_empty_documents_list">Nu ai niciun document</string>
 	<string name="media_empty_videos_list">Nu ai niciun video</string>
@@ -107,7 +124,7 @@ Language: ro
 	<string name="media_error_exceeds_memory_limit">Fișier prea mare pentru a fi încărcat pe acest sit</string>
 	<string name="media_error_exceeds_php_filesize">Fișierul depășește dimensiunea maximă de încărcare pentru acest sit</string>
 	<string name="media_error_http_too_large_video_upload">Video prea mare pentru a-l încărca</string>
-	<string name="media_error_http_too_large_photo_upload">Imagine prea mare pentru a o încărca. Încearcă să modifici Optimizează imaginile în setările sitului tău.</string>
+	<string name="media_error_http_too_large_photo_upload">Imagine prea mare pentru a o încărca. Încearcă să modifici Optimizează imaginile în setările aplicației tale</string>
 	<string name="media_audio">Audio</string>
 	<string name="media_videos">Videouri</string>
 	<string name="media_documents">Documente</string>
@@ -144,7 +161,6 @@ Language: ro
 	<string name="draft_uploaded">Ciornă încărcată</string>
 	<string name="report_bug">Raportează o eroare</string>
 	<string name="video_quality">Calitate video</string>
-	<string name="max_video_resolution">Lățime implicită video</string>
 	<string name="permission_location">Locație</string>
 	<string name="permission_camera">Aparat foto</string>
 	<string name="permission_storage">Stocare</string>
@@ -203,7 +219,7 @@ Language: ro
 	<string name="fab_content_description_write">Scrie</string>
 	<string name="my_site_btn_sharing">Partajare</string>
 	<string name="button_not_now">Nu acum</string>
-	<string name="media_error_internal_server_error">Eroare la încărcare. Încearcă să modifici Optimizează imaginile în setările sitului tău.</string>
+	<string name="media_error_internal_server_error">Eroare la încărcare. Încearcă să modifici Optimizează imaginile în setările aplicației tale</string>
 	<string name="media_downloading">Salvez media pe acest dispozitiv</string>
 	<string name="error_media_save">Nu pot salva media</string>
 	<string name="editor_scheduled_post_saved_online">Articol programat</string>
@@ -239,7 +255,7 @@ Language: ro
 	<string name="start_over_email_body">Vreau să încep cu situl %s</string>
 	<string name="start_over_email_subject">Începe cu situl %s</string>
 	<string name="site_picker_remove_site_error">Eroare la înlăturarea sitului, încearcă din nou mai târziu</string>
-	<string name="editor_post_saved_locally_unfinished_media">Articolul are încărcări media nefinalizate și a fost salvat local</string>
+	<string name="editor_post_saved_locally_failed_media">Articolul a eșuat la încărcările media și a fost salvat local</string>
 	<string name="sure_to_remove_account">Înlături acest sit din aplicație?</string>
 	<string name="photo_picker_title">Alege fotografie</string>
 	<string name="error_publish_no_network">Dispozitivul este deconectat. Modificări salvate local.</string>
@@ -262,9 +278,7 @@ Language: ro
 	<string name="image_quality">Calitate imagine</string>
 	<string name="error_all_media_upload_canceled">Toate încărcările media au fost anulate din cauza unei erori necunoscute. Te rog reîncearcă încărcarea</string>
 	<string name="error_unknown_post_type">Format de articol necunoscut</string>
-	<string name="error_unknown_post">Articol necunoscut, copia locală a acestui articol poate nu este sincronizată cu serverul</string>
 	<string name="error_fetch_site_after_creation">Situl a fost creat, ar trebui să-ți reîmprospătezi siturile în selectorul de sit.</string>
-	<string name="error_upload_params">Eroare în timpul încărcării %1$s: %2$s</string>
 	<string name="submit_for_review">Trimite</string>
 	<string name="tell_me_more">Spune-mi mai mult</string>
 	<string name="duplicate_site_detected">A fost detectat un sit duplicat.</string>
@@ -693,7 +707,6 @@ Language: ro
 	<string name="site_settings_address_title">Adresă</string>
 	<string name="site_settings_tagline_title">Slogan</string>
 	<string name="site_settings_title_title">Titlu sit</string>
-	<string name="site_settings_this_device_header">Acest dispozitiv</string>
 	<string name="site_settings_discussion_new_posts_header">Implicite pentru articole noi</string>
 	<string name="site_settings_writing_header">Scriere</string>
 	<string name="site_settings_account_header">Cont</string>
@@ -922,7 +935,7 @@ Language: ro
 	<string name="stats_period">Perioadă</string>
 	<string name="stats_overall">În ansamblu</string>
 	<string name="stats_total">Total</string>
-	<string name="post_uploading">Încărcare</string>
+	<string name="post_uploading">Încarc articolul</string>
 	<string name="stats_visitors">Vizitatori</string>
 	<string name="stats_views">Vizualizări</string>
 	<string name="stats_timeframe_years">Ani</string>
@@ -989,7 +1002,6 @@ Language: ro
 	<string name="delete_sure">Șterge această ciornă</string>
 	<string name="delete_sure_post">Șterge acest articol</string>
 	<string name="signing_out">Deautentificare....</string>
-	<string name="posting_post">Public "%s"</string>
 	<string name="pages_empty_list">Nicio pagină încă. De ce să nu creezi una?</string>
 	<string name="comment_reply_to_user">Răspunde la %s</string>
 	<string name="posts_empty_list">Niciun articol încă. De ce să nu creezi unul?</string>
@@ -997,7 +1009,7 @@ Language: ro
 	<string name="comment">Comentariu</string>
 	<string name="mnu_comment_liked">Apreciat</string>
 	<string name="uploading_total">Încarc %1$d din %2$d</string>
-	<string name="sending_content">Încarc conținutul %s</string>
+	<string name="sending_content">Încarc conținutul %s...</string>
 	<string name="select_a_blog">Alege un sit WordPress</string>
 	<string name="stats_no_blog">Statisticile nu au putut fi încărcate pentru blogul solicitat</string>
 	<string name="older_last_week">Mai vechi de o săptămână</string>

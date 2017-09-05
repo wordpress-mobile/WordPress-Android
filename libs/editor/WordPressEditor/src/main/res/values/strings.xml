@@ -118,4 +118,7 @@
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_small">Media too small to show</string>
 
+    <string name="stop_upload_dialog_button_yes">Yes</string>
+    <string name="stop_upload_dialog_button_no">No</string>
+
 </resources>

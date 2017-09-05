@@ -439,6 +439,16 @@ public class UploadService extends Service {
         return MediaUploadHandler.isPendingOrInProgressMediaUpload(media);
     }
 
+    public static PostModel isMediaBeingUploadedForAPost(@NonNull MediaModel mediaToCheck) {
+        for (UploadingPost uploadingPost : sPostsWithPendingMedia) {
+            for (MediaModel media : uploadingPost.pendingMedia) {
+                if (media.getId() == mediaToCheck.getId()) {
+                    return uploadingPost.postModel;
+                }
+            }
+        }
+        return null;
+    }
 
     /**
      * Rechecks all media in the MediaStore marked UPLOADING/QUEUED against the UploadingService to see

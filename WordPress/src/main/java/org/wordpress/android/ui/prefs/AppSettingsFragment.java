@@ -41,8 +41,13 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     public static final String LANGUAGE_PREF_KEY = "language-pref";
     public static final int LANGUAGE_CHANGED = 1000;
 
+    private static final int IDX_LEGACY_EDITOR = 0;
+    private static final int IDX_VISUAL_EDITOR = 1;
+    private static final int IDX_AZTEC_EDITOR = 2;
+
     private DetailListPreference mLanguagePreference;
     private SharedPreferences mSettings;
+    private Preference mEditorFooterPref;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
@@ -65,6 +70,8 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
+
+        mEditorFooterPref = findPreference(getString(R.string.pref_key_editor_footer));
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
@@ -211,11 +218,11 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                         editorTypePreference.setSummary(entries[index]);
 
                         switch (index) {
-                            case 1:
+                            case IDX_VISUAL_EDITOR:
                                 AppPrefs.setAztecEditorEnabled(false);
                                 AppPrefs.setVisualEditorEnabled(true);
                                 break;
-                            case 2:
+                            case IDX_AZTEC_EDITOR:
                                 AppPrefs.setAztecEditorEnabled(true);
                                 AppPrefs.setVisualEditorEnabled(false);
                                 break;
@@ -225,6 +232,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                                 break;
                         }
 
+                        toggleEditorFooterPreference();
                         return true;
                     } else {
                         return false;
@@ -239,6 +247,8 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 CharSequence[] entries = editorTypePreference.getEntries();
                 editorTypePreference.setSummary(entries[Integer.parseInt(editorTypeSetting)]);
             }
+
+            toggleEditorFooterPreference();
         }
     }
 
@@ -303,6 +313,21 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         mLanguagePreference.setValue(languageCode);
         mLanguagePreference.setSummary(WPPrefUtils.getLanguageString(languageCode, languageLocale));
         mLanguagePreference.refreshAdapter();
+    }
+
+    /*
+     * only show the editor footer when Aztec is enabled
+     */
+    private void toggleEditorFooterPreference() {
+        PreferenceCategory editorCategory = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_editor));
+        boolean showFooter = AppPrefs.isAztecEditorEnabled();
+        boolean isFooterShowing = editorCategory.findPreference(getString(R.string.pref_key_editor_footer)) != null;
+
+        if (showFooter && !isFooterShowing) {
+            editorCategory.addPreference(mEditorFooterPref);
+        } else if (!showFooter && isFooterShowing) {
+            editorCategory.removePreference(mEditorFooterPref);
+        }
     }
 
     private boolean handleEditorFooterPreferenceClick() {

@@ -98,6 +98,7 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
+import org.wordpress.android.ui.uploads.MediaUploadHandler;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
@@ -164,10 +165,10 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
     public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
-    private static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
-    private static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
+    private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
+    private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -183,6 +184,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mShowNewEditor;
 
     private List<String> mPendingVideoPressInfoRequests;
+    private List<String> mAztecBackspaceDeletedMediaItemIds = new ArrayList<>();
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -313,24 +315,16 @@ public class EditPostActivity extends AppCompatActivity implements
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
             } else if (extras != null) {
                 // Load post passed in extras
-                mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
-                if (mPost != null) {
-                    mOriginalPost = mPost.clone();
-                    mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
-                    mIsPage = mPost.isPage();
-                }
+                initializePostObjects(extras.getInt(EXTRA_POST_LOCAL_ID));
             }
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
+            mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
 
-            if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
-                try {
-                    mPost = (PostModel) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
-                    mOriginalPost = (PostModel) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
-                } catch (ClassCastException e) {
-                    mPost = null;
-                }
+            if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
+                initializePostObjects(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID));
             }
+
             mEditorFragment = (EditorFragmentAbstract) fragmentManager.getFragment(savedInstanceState, STATE_KEY_EDITOR_FRAGMENT);
 
             if (mEditorFragment instanceof EditorMediaUploadListener) {
@@ -406,6 +400,15 @@ public class EditPostActivity extends AppCompatActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
+    private void initializePostObjects(int localPostId) {
+        mPost = mPostStore.getPostByLocalPostId(localPostId);
+        if (mPost != null) {
+            mOriginalPost = mPost.clone();
+            mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
+            mIsPage = mPost.isPage();
+        }
+    }
+
     // this method aims at recovering the current state of media items if they're inconsistent within the PostModel.
     private void resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued() {
         boolean useAztec = AppPrefs.isAztecEditorEnabled();
@@ -426,11 +429,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // now check if the newcontent still has items marked as failed. If it does,
         // then hook this post up to our error list, so it can be queried by the Posts List later
         // and be shown properly to the user
-        if (AztecEditorFragment.hasMediaItemsMarkedFailed(this, newContent)) {
-            UploadService.markPostAsError(mPost);
-        } else {
-            UploadService.removeUploadErrorForPost(mPost);
-        }
+        updateUploadServiceErrorForPost(newContent);
 
         if (!TextUtils.isEmpty(oldContent) && newContent != null && oldContent.compareTo(newContent) != 0) {
             mPost.setContent(newContent);
@@ -442,6 +441,15 @@ public class EditPostActivity extends AppCompatActivity implements
             mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
     }
+
+    private void updateUploadServiceErrorForPost(String postContent) {
+        if (AztecEditorFragment.hasMediaItemsMarkedFailed(this, postContent)) {
+            UploadService.markPostAsError(mPost);
+        } else {
+            UploadService.removeUploadErrorForPost(mPost);
+        }
+    }
+
 
     private Runnable mAutoSave = new Runnable() {
         @Override
@@ -473,8 +481,32 @@ public class EditPostActivity extends AppCompatActivity implements
         EventBus.getDefault().register(this);
 
         if (mEditorMediaUploadListener != null) {
+            // UploadService.getPendingMediaForPost will be populated only when the user exits the editor
+            // But if the user doesn't exit the editor and sends the app to the background, a reattachment
+            // for the media within this Post is needed as soon as the app comes back to foreground,
+            // so we get the list of progressing media for this Post from the MediaUploadHandler
+            List<MediaModel> allUploadingMediaInPost = new ArrayList<>();
             List<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
-            for (MediaModel media : uploadingMediaInPost) {
+            allUploadingMediaInPost.addAll(uploadingMediaInPost);
+            // add them to the array only if they are not in there yet
+            for (MediaModel media1 : MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(mPost)) {
+                boolean found = false;
+                for (MediaModel media2 : uploadingMediaInPost) {
+                    if (media1.getId() == media2.getId()) {
+                        // if it exists, just break the loop and check for the next one
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    // we haven't found it before, so let's add it to the list.
+                    allUploadingMediaInPost.add(media1);
+                }
+            }
+
+            // now do proper re-attachment of upload progress on each media item
+            for (MediaModel media : allUploadingMediaInPost) {
                 if (media != null) {
                     mEditorMediaUploadListener.onMediaUploadReattached(String.valueOf(media.getId()),
                             UploadService.getUploadProgressForMedia(media));
@@ -506,8 +538,8 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
         savePostAsync(null);
-        outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
-        outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
+        outState.putInt(STATE_KEY_POST_LOCAL_ID, mPost.getId());
+        outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putSerializable(WordPress.SITE, mSite);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
@@ -1207,8 +1239,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     EditPostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            String postType = getString(mIsPage ? R.string.page : R.string.post).toLowerCase();
-                            String message = getString(R.string.error_publish_empty_post_param, postType);
+                            String message = getString(mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
                             ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
                         }
                     });
@@ -1259,6 +1290,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 boolean shouldSync = isPublishable || !isNewPost();
 
                 saveResult(shouldSave && shouldSync, false);
+
+                definitelyDeleteBackspaceDeletedMediaItems();
+                updateUploadServiceErrorForPost(mPost.getContent());
 
                 if (shouldSave) {
                     if (isNewPost()) {
@@ -1726,7 +1760,20 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
-        boolean contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
+        boolean contentChanged;
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            contentChanged = ((AztecEditorFragment)mEditorFragment).hasHistory();
+            if (contentChanged) {
+                mPost.setContent(content);
+            } else if (!((AztecEditorFragment)mEditorFragment).isHistoryEnabled()){
+                // if history is not enabled, then we can only confirm whether there's been a content change
+                // by comparing content
+                contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
+            }
+        } else {
+            // not Aztec, compare content to look for changes
+            contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
+        }
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
             mPost.setIsLocallyChanged(true);
@@ -2329,6 +2376,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         media.setFileName(filename);
+        media.setTitle(filename);
         media.setFilePath(path);
         media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);
@@ -2384,15 +2432,38 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMediaRetryClicked(String mediaId) {
+    public boolean onMediaRetryClicked(final String mediaId) {
         if (TextUtils.isEmpty(mediaId)) {
             AppLog.e(T.MEDIA, "Invalid media id passed to onMediaRetryClicked");
-            return;
+            return false;
         }
         MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
         if (media == null) {
             AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
-            return;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.cannot_retry_deleted_media_item));
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mEditorFragment.removeMedia(mediaId);
+                        }
+                    });
+                    dialog.dismiss();
+                }
+            });
+
+            builder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            return false;
         }
 
         if (media.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
@@ -2410,6 +2481,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
+        return true;
     }
 
     @Override
@@ -2426,6 +2498,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
+            mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
             // passing false here as we need to keep the media item in case the user wants to undo
             cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
         }
@@ -2436,6 +2509,33 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mediaModel != null) {
             CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel, delete);
             mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+        }
+    }
+
+    /*
+    * When the user deletes a media item that was being uploaded at that moment, we only cancel the
+    * upload but keep the media item in FluxC DB because the user might have deleted it accidentally,
+    * and they can always UNDO the delete action in Aztec.
+    * So, when the user exits then editor (and thus we lose the undo/redo history) we are safe to
+    * physically delete from the FluxC DB those items that have been deleted by the user using backspace.
+    * */
+    private void definitelyDeleteBackspaceDeletedMediaItems() {
+        for (String mediaId : mAztecBackspaceDeletedMediaItemIds) {
+            if (!TextUtils.isEmpty(mediaId)) {
+                // make sure the MediaModel exists
+                MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
+                if (mediaModel == null) {
+                    continue;
+                }
+
+                // also make sure it's not being uploaded anywhere else (maybe on some other Post,
+                // simultaneously)
+                if (mediaModel.getUploadState() != null &&
+                        MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())
+                        && !UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
+                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
+                }
+            }
         }
     }
 
@@ -2462,6 +2562,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
             if (!found) {
                 if (mEditorFragment instanceof AztecEditorFragment) {
+                    mAztecBackspaceDeletedMediaItemIds.remove(mediaId);
                     ((AztecEditorFragment)mEditorFragment).setMediaToFailed(mediaId);
                 }
             }

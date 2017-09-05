@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-10 15:21:42+0000
+Translation-Revision-Date: 2017-08-16 15:03:39+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="error_unknown_post">Nie można było odnaleźć wpisu na serwerze</string>
+	<string name="error_post_does_not_exist">Ten wpis już nie istnieje</string>
+	<string name="error_media_recover">Nie mogliśmy przesłać mediów tego wpisu. Proszę edytować wpis i spróbuj ponownie.</string>
+	<string name="error_media_canceled">Przesyłanie mediów zostało anulowane</string>
+	<string name="error_upload_post_media_params">Wystąpił błąd podczas przesyłania mediów w tym %1$s: %2$s.</string>
+	<string name="error_upload_post_params">Wystąpił błąd podczas przesyłania tego %1$s: %2$s.</string>
+	<string name="async_promo_link">Jak to działa?</string>
+	<string name="async_promo_description">Możesz teraz opuścić edytora a twój wpis zostanie zapisany i opublikowany poza kulisami! Wypróbuj to!</string>
+	<string name="async_promo_title">Publikuj z pełnym zaufaniem</string>
+	<string name="editor_uploading_post">Twój wpis jest przesyłany</string>
+	<string name="uploading_post_media">Przesyłanie mediów...</string>
+	<string name="dialog_confirm_cancel_post_media_uploading">Jesteś pewien? Usunięcie tego wpisu anuluje również przesyłanie mediów.</string>
+	<string name="page_scheduled">Strona zaplanowana</string>
+	<string name="post_scheduled">Wpis zaplanowany</string>
+	<string name="post_draft_param">"%s" został zapisany jako szkic!</string>
+	<string name="post_scheduled_param">"%s" został zaplanowany!</string>
+	<string name="post_updated_param">"%s" został zaktualizowany!</string>
+	<string name="post_published_param">"%s" został opublikowany!</string>
+	<string name="button_retry">Spróbuj ponownie</string>
+	<string name="post_queued">Wpis w kolejce</string>
+	<string name="uploading_post">Przesyłanie "%s"</string>
+	<string name="connection_to_server_lost">Połączenie z serwerem zostało utracone</string>
+	<string name="max_video_resolution">Maksymalna rozdzielczość</string>
 	<string name="login_epilogue_mysites_other">Moje witryny</string>
 	<string name="login_epilogue_mysites_one">Moja witryna</string>
 	<string name="login_logged_in_as">Zalogowany jako</string>
@@ -31,7 +54,6 @@ Language: pl
 	<string name="login_magic_links_sent_description">Odnośnik wysłał ilustrację</string>
 	<string name="login_magic_links_sent_label">Twój odnośnik jest już w drodze! Sprawdź swoje konto email na tym urządzeniu, stuknij  na odnośnik w emailu, którego otrzymałeś od WordPress.com</string>
 	<string name="login_magic_links_label">Wyślemy tobie odnośnik, który zaloguje cie automatycznie, żadne hasło nie będzie wymagane.Oszczędzisz sobie pisania jednym palcem!</string>
-	<string name="login_error_while_checking_email">Wystąpił błąd podczas sprawdzania adresu email!</string>
 	<string name="password_incorrect">Wygląda na to, że hasło jest nieprawidłowe. Proszę sprawdzić te dane i spróbować ponownie.</string>
 	<string name="email_not_registered_wpcom">Ten adres email nie jest zarejestrowany na WordPress.com</string>
 	<string name="requesting_otp">Żądanie kodu weryfikacyjnego przez SMS</string>
@@ -50,11 +72,7 @@ Language: pl
 	<string name="login_promo_text_onthego">Publikuj z parku. Bloguj z autobusu. Komentuj z kawiarni. Wordpress idzie tam gdzie ty.</string>
 	<string name="create_wordpress_site">Stwórz witrynę WordPress</string>
 	<string name="email_not_found">Nie odnaleźliśmy użytkownika WordPress.com z tym adresem email</string>
-	<string name="login_password_image">Ikona hasła logowania</string>
-	<string name="login_username_image">Ikona użytkownika logowania</string>
 	<string name="login_site_address_help_image">Obrazek pozycjonujący adres witryny</string>
-	<string name="login_globe_icon">Ikonkę globu adresu witryny</string>
-	<string name="login_email_image">Ikona adresu email logowania</string>
 	<string name="image_optimization_promo_desc">Optymalizacja obrazów zmniejsza ich rozmiar w celu szybszego przesyłania.\n\nMożesz zmienić to ustawienie później w ustawieniach witryny.</string>
 	<string name="image_optimization_promo_title">Włączyć optymalizację obrazków?</string>
 	<string name="leave_off">Zostaw na później</string>
@@ -98,7 +116,6 @@ Language: pl
 	<string name="notifications_tab_title_all">Wszystkie</string>
 	<string name="top_level_category_name">Najwyższy poziom (nadrzędny)</string>
 	<string name="category_parent">Kategoria nadrzędna (opcjonalnie)</string>
-	<string name="toast_err_post_media_uploading">Nie można usunąć wpisu poczas przesyłania</string>
 	<string name="media_empty_audio_list">Nie masz żadnych plików dźwiękowych</string>
 	<string name="media_empty_documents_list">Nie masz żadnych dokumentów</string>
 	<string name="media_empty_videos_list">Nie masz żadnych filmów</string>
@@ -107,7 +124,7 @@ Language: pl
 	<string name="media_error_exceeds_memory_limit">Rozmiar pliku jest zbyt duży aby przesłać go na tą witrynę</string>
 	<string name="media_error_exceeds_php_filesize">Przesyłany plik przekracza maksymalny rozmiar dla tej witryny</string>
 	<string name="media_error_http_too_large_video_upload">Film jest zbyt duży aby można go było przesłać</string>
-	<string name="media_error_http_too_large_photo_upload">Obrazek za duży aby można go było przesłać. Spróbuj zmienić konfigurację optymalizacji obrazków w ustawieniach witryny</string>
+	<string name="media_error_http_too_large_photo_upload">Obrazek za duży aby można go było przesłać. Spróbuj zmienić konfigurację optymalizacji obrazków w ustawieniach aplikacji.</string>
 	<string name="media_audio">Pliki dźwiękowe</string>
 	<string name="media_videos">Filmy</string>
 	<string name="media_documents">Dokumenty</string>
@@ -144,7 +161,6 @@ Language: pl
 	<string name="draft_uploaded">Szkic wczytany</string>
 	<string name="report_bug">Raportuj błąd</string>
 	<string name="video_quality">Jakość filmu</string>
-	<string name="max_video_resolution">Domyślna szerokość filmu</string>
 	<string name="permission_location">Lokalizacja</string>
 	<string name="permission_camera">Aparat</string>
 	<string name="permission_storage">Pamięć</string>
@@ -203,7 +219,7 @@ Language: pl
 	<string name="fab_content_description_write">Napisz</string>
 	<string name="my_site_btn_sharing">Udostępnianie</string>
 	<string name="button_not_now">Nie teraz</string>
-	<string name="media_error_internal_server_error">Błąd przesyłania. Spróbuj zmienić opcję optymalizacji obrazków w ustawieniach witryny</string>
+	<string name="media_error_internal_server_error">Błąd przesyłania. Spróbuj zmienić opcję optymalizacji obrazków w ustawieniach aplikacji</string>
 	<string name="media_downloading">Zapisywanie mediów na to urządzenie</string>
 	<string name="error_media_save">Nie można zapisać pliku mediów</string>
 	<string name="editor_scheduled_post_saved_online">Publikacja wpisu została zaplanowana</string>
@@ -239,7 +255,7 @@ Language: pl
 	<string name="start_over_email_body">Chcę zacząć od nowa i stworzyć witrynę %s od początku</string>
 	<string name="start_over_email_subject">Zacznij jeszcze raz i stwórz od początku witrynę %s</string>
 	<string name="site_picker_remove_site_error">Błąd usuwania witryny, spróbuj ponownie później</string>
-	<string name="editor_post_saved_locally_unfinished_media">Wpis ma niezakończone próby przesyłania mediów i nie został zapisany lokalnie</string>
+	<string name="editor_post_saved_locally_failed_media">Wpis ma zakończone błędem próby przesyłania mediów i został zapisany lokalnie</string>
 	<string name="sure_to_remove_account">Usunąć tą witrynę z aplikacji?</string>
 	<string name="photo_picker_title">Wybierz zdjęcie</string>
 	<string name="error_publish_no_network">Urządzenie jest offline. Zmiany zapisywane lokalnie.</string>
@@ -262,9 +278,7 @@ Language: pl
 	<string name="image_quality">Jakość obrazka</string>
 	<string name="error_all_media_upload_canceled">Wszystkie zadania przesyłania mediów zostały anulowane z powodu nieznanego błędu. Proszę ponownie przesłać pliki mediów.</string>
 	<string name="error_unknown_post_type">Nieznany format wpisu</string>
-	<string name="error_unknown_post">Nieznany wpis, lokalna kopia wpisu może nie być zsynchronizowana z serwerem</string>
 	<string name="error_fetch_site_after_creation">Witryna została utworzona, może wystąpić konieczność odświeżenia listy witryn.</string>
-	<string name="error_upload_params">Błąd podczas przesyłania %1$s: %2$s </string>
 	<string name="submit_for_review">Prześlij</string>
 	<string name="tell_me_more">Powiedz mi więcej</string>
 	<string name="duplicate_site_detected">Wykryto duplikat witryny</string>
@@ -693,7 +707,6 @@ Language: pl
 	<string name="site_settings_address_title">Adres</string>
 	<string name="site_settings_tagline_title">Opis</string>
 	<string name="site_settings_title_title">Tytuł witryny</string>
-	<string name="site_settings_this_device_header">To urządzenie</string>
 	<string name="site_settings_discussion_new_posts_header">Ustawienia domyślne dla nowych wpisów</string>
 	<string name="site_settings_writing_header">Redagowanie wpisów</string>
 	<string name="site_settings_account_header">Konto</string>
@@ -922,7 +935,7 @@ Language: pl
 	<string name="stats_period">Okres</string>
 	<string name="stats_overall">Ogólnie</string>
 	<string name="stats_total">Suma</string>
-	<string name="post_uploading">Dodawanie</string>
+	<string name="post_uploading">Przesyłanie wpisu</string>
 	<string name="stats_visitors">Odwiedzających</string>
 	<string name="stats_views">Wyświetleń</string>
 	<string name="stats_timeframe_years">Lata</string>
@@ -989,7 +1002,6 @@ Language: pl
 	<string name="delete_sure">Usuń ten szkic</string>
 	<string name="delete_sure_post">Usuń ten wpis</string>
 	<string name="signing_out">Wylogowywanie...</string>
-	<string name="posting_post">Publikowanie "%s"</string>
 	<string name="pages_empty_list">Brak stron. Może jakąś opublikujesz?</string>
 	<string name="comment_reply_to_user">Odpowiedz na komentarz %s</string>
 	<string name="posts_empty_list">Brak wpisów. Może jakiś opublikujesz?</string>
@@ -997,7 +1009,7 @@ Language: pl
 	<string name="comment">Komentarz</string>
 	<string name="mnu_comment_liked">Polubiony</string>
 	<string name="uploading_total">Wysyłanie %1$d z %2$d</string>
-	<string name="sending_content">Wysyłanie %s treści</string>
+	<string name="sending_content">Wysyłanie treści %s ...</string>
 	<string name="select_a_blog">Wybierz witrynę WordPress</string>
 	<string name="stats_no_blog">Nie udało się załadować statystyk dla wskazanego blogu</string>
 	<string name="older_last_week">Starsze niż tydzień</string>

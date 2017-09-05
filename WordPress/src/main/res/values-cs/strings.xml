@@ -422,7 +422,6 @@ Language: cs_CZ
 	<string name="site_settings_address_title">Adresa</string>
 	<string name="site_settings_tagline_title">Popis webu</string>
 	<string name="site_settings_title_title">Název webu</string>
-	<string name="site_settings_this_device_header">Toto zařízení</string>
 	<string name="site_settings_discussion_new_posts_header">Výchozí pro nové příspěvky</string>
 	<string name="site_settings_writing_header">Psaní</string>
 	<string name="site_settings_account_header">Účet</string>
@@ -640,7 +639,6 @@ Language: cs_CZ
 	<string name="stats_followers_total_wpcom_paged">WordPress.com odběratelé %1$d - %2$d z %3$s</string>
 	<string name="stats_empty_search_terms_desc">Zjistěte, jaká klíčová slova zvyšují návštěvnost vašeho webu.</string>
 	<string name="reader_label_new_posts">Nové příspěvky</string>
-	<string name="post_uploading">Nahrávám</string>
 	<string name="reader_empty_posts_in_blog">Tento web je prázdný</string>
 	<string name="reader_page_recommended_blogs">Stránky které by se vám mohly líbit</string>
 	<string name="stats_months_and_years">Měsíce a Roky</string>
@@ -734,13 +732,11 @@ Language: cs_CZ
 	<string name="comment">Komentář</string>
 	<string name="comment_trashed">Komentář byl přesunut do koše</string>
 	<string name="comment_reply_to_user">Odpovědět uživateli %s</string>
-	<string name="posting_post">Publikuji "%s"</string>
 	<string name="faq_button">Časté dotazy</string>
 	<string name="browse_our_faq_button">Prohledat časté dotazy</string>
 	<string name="nux_help_description">Pro odpovědi na časté dotazy navštivte naše centrum nápovědy nebo fórum</string>
 	<string name="reader_empty_posts_in_tag">Neexistuje žádný příspěvek s tímto štítkem</string>
 	<string name="stats_no_blog">Statistiky pro daný web nebylo možné načíst</string>
-	<string name="sending_content">Nahrávání obsahu %s</string>
 	<string name="posts_empty_list">Žádné příspěvky. Přejete si nějaký vytvořit?</string>
 	<string name="pages_empty_list">Žádné stránky. Přejete si nějakou vytvořit?</string>
 	<string name="agree_terms_of_service">Založením účtu souhlasíte s našimi %1$sPodmínkami používání služby%2$s</string>

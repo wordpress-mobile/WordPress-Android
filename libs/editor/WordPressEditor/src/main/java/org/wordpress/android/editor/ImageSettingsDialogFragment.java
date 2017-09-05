@@ -366,9 +366,11 @@ public class ImageSettingsDialogFragment extends DialogFragment {
      * Loads the given network image URL into the {@link NetworkImageView}.
      */
     private void loadThumbnail(String imageUrl) {
-        if (imageUrl == null) {
-            AppLog.e(AppLog.T.MEDIA, "Image url is null! Show the default error image.");
+        if (imageUrl == null || mImageLoader == null) {
             showErrorImage();
+            if (imageUrl == null) {
+                AppLog.e(AppLog.T.MEDIA, "Image url is null! Show the default error image.");
+            }
             return;
         }
 
