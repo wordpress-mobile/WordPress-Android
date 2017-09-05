@@ -265,7 +265,7 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".ui.media.MediaSettingsActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/MediaSettingsTheme" />
 
         <!-- Theme Activities -->
         <activity
