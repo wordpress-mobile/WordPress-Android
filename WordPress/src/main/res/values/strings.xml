@@ -894,9 +894,9 @@
     <string name="notification_settings_item_other_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
     <string name="notification_settings_category_sights_and_sounds">Sights and Sounds</string>
     <string name="notification_settings_item_sights_and_sounds_enable_notifications">Enable notifications</string>
-    <string name="notification_settings_item_sights_and_sounds_choose_sound">Notification sound</string>
-    <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate</string>
-    <string name="notification_settings_item_sights_and_sounds_blink_light">Blink notification light</string>
+    <string name="notification_settings_item_sights_and_sounds_choose_sound">Choose sound</string>
+    <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate device</string>
+    <string name="notification_settings_item_sights_and_sounds_blink_light">Blink light</string>
     <string name="notifications_wpcom_updates">WordPress.com Updates</string>
     <string name="notifications_tab">Notifications tab</string>
     <string name="email">Email</string>
