@@ -15,6 +15,8 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
+import org.wordpress.android.fluxc.model.PluginInfoModel;
+import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
@@ -41,6 +43,8 @@ public class WellSqlConfig extends DefaultWellConfig {
         add(HTTPAuthModel.class);
         add(MediaModel.class);
         add(MediaUploadModel.class);
+        add(PluginInfoModel.class);
+        add(PluginModel.class);
         add(PostFormatModel.class);
         add(PostModel.class);
         add(PostUploadModel.class);
@@ -52,7 +56,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 13;
+        return 15;
     }
 
     @Override
@@ -122,6 +126,17 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "NAME TEXT,DISPLAY_NAME TEXT)");
                 oldVersion++;
             case 12:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE PluginModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "NAME TEXT,DISPLAY_NAME TEXT,PLUGIN_URL TEXT,VERSION TEXT,SLUG TEXT,DESCRIPTION TEXT,"
+                        + "AUTHOR_NAME TEXT,AUTHOR_URL TEXT,IS_ACTIVE INTEGER,IS_AUTO_UPDATE_ENABLED INTEGER)");
+                oldVersion++;
+            case 13:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE PluginInfoModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        + "NAME TEXT,SLUG TEXT,VERSION TEXT,RATING TEXT,ICON TEXT)");
+                oldVersion++;
+            case 14:
                 db.execSQL("CREATE TABLE MediaUploadModel (_id INTEGER PRIMARY KEY,UPLOAD_STATE INTEGER,"
                         + "PROGRESS REAL,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,FOREIGN KEY(_id) REFERENCES "
                         + "MediaModel(_id) ON DELETE CASCADE)");

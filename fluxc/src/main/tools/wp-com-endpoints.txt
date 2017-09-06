@@ -19,6 +19,8 @@
 /sites/
 /sites/$site/delete
 /sites/$site/exports/start
+/sites/$site/plugins
+/sites/$site/plugins/$name#String
 /sites/$site/post-formats/
 /sites/$site/roles
 /sites/new/
