@@ -71,16 +71,12 @@ import javax.inject.Inject;
 
 public class MediaSettingsActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
-    private static final String ARG_IS_VIDEO = "is_video";
 
-    private String mContentUri;
-    private int mMediaId;
     private long mDownloadId;
-    private boolean mIsVideo;
 
     private SiteModel mSite;
+    private MediaModel mMedia;
 
     private ImageView mImageView;
     private VideoView mVideoView;
@@ -99,20 +95,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     Dispatcher mDispatcher;
 
     /**
-     * @param context    self explanatory
-     * @param contentUri local content:// uri of media
-     * @param isVideo    whether the passed media is a video - assumed to be an image otherwise
-     */
-    public static void show(Context context,
-                            String contentUri,
-                            boolean isVideo) {
-        Intent intent = new Intent(context, MediaSettingsActivity.class);
-        intent.putExtra(ARG_MEDIA_CONTENT_URI, contentUri);
-        intent.putExtra(ARG_IS_VIDEO, isVideo);
-        showSettingsIntent(context, intent);
-    }
-
-    /**
      * @param context self explanatory
      * @param site    site which contains this media item
      * @param mediaId local ID in site's media library
@@ -123,10 +105,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         Intent intent = new Intent(context, MediaSettingsActivity.class);
         intent.putExtra(ARG_MEDIA_LOCAL_ID, mediaId);
         intent.putExtra(WordPress.SITE, site);
-        showSettingsIntent(context, intent);
-    }
-
-    private static void showSettingsIntent(Context context, Intent intent) {
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 context,
                 R.anim.activity_slide_up_from_bottom,
@@ -149,37 +127,21 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mDescriptionView = (EditText) findViewById(R.id.edit_description);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        int mediaId;
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mContentUri = savedInstanceState.getString(ARG_MEDIA_CONTENT_URI);
-            mMediaId = savedInstanceState.getInt(ARG_MEDIA_LOCAL_ID);
-            mIsVideo = savedInstanceState.getBoolean(ARG_IS_VIDEO);
+            mediaId = savedInstanceState.getInt(ARG_MEDIA_LOCAL_ID);
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            mContentUri = getIntent().getStringExtra(ARG_MEDIA_CONTENT_URI);
-            mMediaId = getIntent().getIntExtra(ARG_MEDIA_LOCAL_ID, 0);
-            mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
+            mediaId = getIntent().getIntExtra(ARG_MEDIA_LOCAL_ID, 0);
         }
 
-        String mediaUri = null;
-        if (!TextUtils.isEmpty(mContentUri)) {
-            mediaUri = mContentUri;
-        } else if (mMediaId != 0) {
-            MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
-            if (media == null) {
-                delayedFinish(true);
-                return;
-            }
-            mIsVideo = media.isVideo();
-            mediaUri = media.getUrl();
-        }
-
-        if (TextUtils.isEmpty(mediaUri)) {
+        mMedia = mMediaStore.getMediaWithLocalId(mediaId);
+        if (mMedia == null) {
             delayedFinish(true);
             return;
         }
 
-        //setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
@@ -188,23 +150,21 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             actionBar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.transparent)));
         }
 
-        mImageView.setVisibility(mIsVideo ? View.GONE : View.VISIBLE);
-        findViewById(R.id.frame_video).setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
-        loadMediaMetaData();
+        mImageView.setVisibility(mMedia.isVideo() ? View.GONE : View.VISIBLE);
+        findViewById(R.id.frame_video).setVisibility(mMedia.isVideo() ? View.VISIBLE : View.GONE);
+        showMediaMetaData();
 
-        if (mIsVideo) {
-            playVideo(mediaUri);
+        if (mMedia.isVideo()) {
+            playVideo();
         } else {
-            loadImage(mediaUri);
+            loadImage();
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(ARG_MEDIA_CONTENT_URI, mContentUri);
-        outState.putInt(ARG_MEDIA_LOCAL_ID, mMediaId);
-        outState.putBoolean(ARG_IS_VIDEO, mIsVideo);
+        outState.putInt(ARG_MEDIA_LOCAL_ID, mMedia.getId());
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
@@ -261,9 +221,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean showSaveMenu = mMediaId != 0 && mSite != null && !mSite.isPrivate();
-        boolean showShareMenu = mMediaId != 0 && mSite != null && !mSite.isPrivate();
-        boolean showTrashMenu = mMediaId != 0 && mSite != null;
+        boolean showSaveMenu = mSite != null && !mSite.isPrivate();
+        boolean showShareMenu = mSite != null && !mSite.isPrivate();
+        boolean showTrashMenu = mSite != null;
 
         MenuItem mnuSave = menu.findItem(R.id.menu_save);
         mnuSave.setVisible(showSaveMenu);
@@ -297,24 +257,20 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         return super.onOptionsItemSelected(item);
     }
 
-    void loadMediaMetaData() {
-        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
-        if (media != null) {
-            mTitleView.setText(media.getTitle());
-            mCaptionView.setText(media.getCaption());
-            mDescriptionView.setText(media.getDescription());
+    private void showMediaMetaData() {
+        mTitleView.setText(mMedia.getTitle());
+        mCaptionView.setText(mMedia.getCaption());
+        mDescriptionView.setText(mMedia.getDescription());
 
-            mTitleView.requestFocus();
-            mTitleView.setSelection(mTitleView.getText().length());
-        } else {
-            ToastUtils.showToast(this, R.string.error_media_load);
-        }
+        mTitleView.requestFocus();
+        mTitleView.setSelection(mTitleView.getText().length());
     }
 
     /*
      * loads and displays a remote or local image
      */
-    private void loadImage(@NonNull String mediaUri) {
+    private void loadImage() {
+        String mediaUri = mMedia.getUrl();
         int width = DisplayUtils.getDisplayPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
         int size = Math.max(width, height);
@@ -392,7 +348,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     /*
      * loads and plays a remote or local video
      */
-    private void playVideo(@NonNull String mediaUri) {
+    private void playVideo() {
         final MediaController controls = new MediaController(this);
         mVideoView.setMediaController(controls);
 
@@ -414,7 +370,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             }
         });
 
-        mVideoView.setVideoURI(Uri.parse(mediaUri));
+        mVideoView.setVideoURI(Uri.parse(mMedia.getUrl()));
         mVideoView.requestFocus();
     }
 
@@ -471,7 +427,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public void saveChanges() {
         if (isFinishing()) return;
 
-        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+        MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());
         if (media == null) {
             AppLog.w(AppLog.T.MEDIA, "MediaSettingsActivity > Cannot save null media");
             ToastUtils.showToast(this, R.string.media_edit_failure);
@@ -511,16 +467,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             return;
         }
 
-        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
-        if (media == null) {
-            ToastUtils.showToast(this, R.string.error_media_not_found);
-            return;
-        }
-
         DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(media.getUrl()));
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(mMedia.getUrl()));
         try {
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, media.getFileName());
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mMedia.getFileName());
         } catch (IllegalStateException error) {
             AppLog.e(AppLog.T.MEDIA, error);
             ToastUtils.showToast(MediaSettingsActivity.this, R.string.error_media_save);
@@ -535,19 +485,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void shareMedia() {
-        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
-        if (media == null) {
-            ToastUtils.showToast(this, R.string.error_media_not_found);
-            return;
-        }
-
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, media.getUrl());
-        if (!TextUtils.isEmpty(media.getTitle())) {
-            intent.putExtra(Intent.EXTRA_SUBJECT, media.getTitle());
-        } else if (!TextUtils.isEmpty(media.getDescription())) {
-            intent.putExtra(Intent.EXTRA_SUBJECT, media.getDescription());
+        intent.putExtra(Intent.EXTRA_TEXT, mMedia.getUrl());
+        if (!TextUtils.isEmpty(mMedia.getTitle())) {
+            intent.putExtra(Intent.EXTRA_SUBJECT, mMedia.getTitle());
+        } else if (!TextUtils.isEmpty(mMedia.getDescription())) {
+            intent.putExtra(Intent.EXTRA_SUBJECT, mMedia.getDescription());
         }
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
@@ -557,7 +501,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void deleteMediaWithConfirmation() {
-        @StringRes int resId = mIsVideo ? R.string.confirm_delete_media_video : R.string.confirm_delete_media_image;
+        @StringRes int resId = mMedia.isVideo() ? R.string.confirm_delete_media_video : R.string.confirm_delete_media_image;
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage(resId)
                 .setCancelable(true).setPositiveButton(
                         R.string.delete, new DialogInterface.OnClickListener() {
@@ -573,20 +517,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private void deleteMedia() {
         if (!NetworkUtils.checkConnection(this)) return;
 
-        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
-        if (media == null) {
-            ToastUtils.showToast(this, R.string.error_media_not_found);
-            return;
-        }
-
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setMessage(getString(R.string.deleting_media_dlg));
         mProgressDialog.show();
 
-        AppLog.v(AppLog.T.MEDIA, "Deleting " + media.getTitle() + " (id=" + media.getMediaId() + ")");
-        MediaStore.MediaPayload payload = new MediaStore.MediaPayload(mSite, media);
+        AppLog.v(AppLog.T.MEDIA, "Deleting " + mMedia.getTitle() + " (id=" + mMedia.getMediaId() + ")");
+        MediaStore.MediaPayload payload = new MediaStore.MediaPayload(mSite, mMedia);
         mDispatcher.dispatch(MediaActionBuilder.newDeleteMediaAction(payload));
     }
 
@@ -603,7 +541,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 finish();
             }
         } else if (!event.isError()) {
-            loadMediaMetaData();
+            MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());
+            if (media != null) {
+                mMedia = media;
+                showMediaMetaData();
+            }
         }
     }
 }
