@@ -30,6 +30,7 @@
         <SwitchPreference
             android:key="@string/wp_pref_notification_receive"
             android:defaultValue="true"
+            android:summary="@string/notification_settings_item_sights_and_sounds_receive_notifications_summary"
             android:title="@string/notification_settings_item_sights_and_sounds_receive_notifications" />
 
         <RingtonePreference
