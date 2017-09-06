@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.annotations.endpoint.EndpointNode;
 import org.wordpress.android.fluxc.annotations.endpoint.EndpointTreeGenerator;
 import org.wordpress.android.fluxc.annotations.endpoint.WPAPIEndpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.WPComEndpoint;
+import org.wordpress.android.fluxc.annotations.endpoint.WPOrgAPIEndpoint;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,9 +33,11 @@ public class EndpointProcessor extends AbstractProcessor {
     private static final String WPCOMREST_ENDPOINT_FILE = "fluxc/src/main/tools/wp-com-endpoints.txt";
     private static final String XMLRPC_ENDPOINT_FILE = "fluxc/src/main/tools/xmlrpc-endpoints.txt";
     private static final String WPAPI_ENDPOINT_FILE = "fluxc/src/main/tools/wp-api-endpoints.txt";
+    private static final String WPORG_API_ENDPOINT_FILE = "fluxc/src/main/tools/wporg-api-endpoints.txt";
 
     private static final Pattern WPCOMREST_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("\\$");
     private static final Pattern WPAPI_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("^<.*>/$");
+    private static final Pattern WPORG_API_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("^\\{.*\\}");
 
     private static final Map<String, List<String>> XML_RPC_ALIASES;
     static {
@@ -62,6 +65,7 @@ public class EndpointProcessor extends AbstractProcessor {
             generateWPCOMRESTEndpointFile();
             generateXMLRPCEndpointFile();
             generateWPAPIEndpointFile();
+            generateWPORGAPIEndpointFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,6 +98,15 @@ public class EndpointProcessor extends AbstractProcessor {
 
         TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPAPI", WPAPIEndpoint.class,
                 WPAPI_VARIABLE_ENDPOINT_PATTERN);
+        writeEndpointClassToFile(endpointClass);
+    }
+
+    private void generateWPORGAPIEndpointFile() throws IOException {
+        File file = new File(WPORG_API_ENDPOINT_FILE);
+        EndpointNode rootNode = EndpointTreeGenerator.process(file);
+
+        TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPORGAPI", WPOrgAPIEndpoint.class,
+                WPORG_API_VARIABLE_ENDPOINT_PATTERN);
         writeEndpointClassToFile(endpointClass);
     }
 
