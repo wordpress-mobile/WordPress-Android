@@ -117,6 +117,7 @@ public class UploadStore extends Store {
         }
     }
 
+    @SuppressWarnings("EnumSwitchStatementWhichMissesCases")
     private void onMediaAction(MediaAction actionType, Object payload) {
         switch (actionType) {
             case UPLOAD_MEDIA:
