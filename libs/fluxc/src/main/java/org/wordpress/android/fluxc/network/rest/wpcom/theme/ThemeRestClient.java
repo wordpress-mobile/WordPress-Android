@@ -62,7 +62,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.d(AppLog.T.API, "Received error response to theme activation request.");
-                        ActivateThemeError themeError = new ActivateThemeError(ThemeErrorType.GENERIC_ERROR, null);
+                        ActivateThemeError themeError = new ActivateThemeError(
+                                ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
                         ActivateThemePayload payload = new ActivateThemePayload(themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newActivatedThemeAction(payload));
                     }
