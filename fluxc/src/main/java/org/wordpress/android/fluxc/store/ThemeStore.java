@@ -88,8 +88,8 @@ public class ThemeStore extends Store {
     public static class FetchThemesError implements OnChangedError {
         public ThemeErrorType type;
         public String message;
-        public FetchThemesError(ThemeErrorType type, String message) {
-            this.type = type;
+        public FetchThemesError(String type, String message) {
+            this.type = ThemeErrorType.fromString(type);
             this.message = message;
         }
     }
@@ -206,7 +206,7 @@ public class ThemeStore extends Store {
         if (site.isJetpackConnected() && site.isUsingWpComRestApi()) {
             mThemeRestClient.fetchJetpackInstalledThemes(site);
         } else {
-            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE, null);
+            FetchThemesError error = new FetchThemesError("not_available", null);
             FetchedThemesPayload payload = new FetchedThemesPayload(error);
             handleInstalledThemesFetched(payload);
         }
@@ -226,7 +226,7 @@ public class ThemeStore extends Store {
         if (site.isUsingWpComRestApi()) {
             mThemeRestClient.fetchCurrentTheme(site);
         } else {
-            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE, null);
+            FetchThemesError error = new FetchThemesError("not_available", null);
             FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(error);
             handleCurrentThemeFetched(payload);
         }
