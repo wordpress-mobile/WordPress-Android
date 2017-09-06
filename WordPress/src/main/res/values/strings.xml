@@ -187,7 +187,6 @@
     <string name="confirm_discard_changes">Discard unsaved changes?</string>
 
     <!-- Delete Media -->
-    <string name="confirm_delete_media">Delete selected item?</string>
     <string name="confirm_delete_multi_media">Delete selected items?</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
@@ -197,6 +196,9 @@
     <string name="media_empty_documents_list">You don\'t have any documents</string>
     <string name="media_empty_audio_list">You don\'t have any audio</string>
     <string name="delete">Delete</string>
+    <string name="confirm_delete_media_image">Delete this image?</string>
+    <string name="confirm_delete_media_video">Delete this video?</string>
+    <string name="deleting_media_dlg">Deleting</string>
 
     <!-- Media details -->
     <string name="media_details_label_date_added">Added</string>

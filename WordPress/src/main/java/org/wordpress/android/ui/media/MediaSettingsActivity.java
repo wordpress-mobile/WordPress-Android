@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -18,6 +21,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
@@ -41,6 +45,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -83,6 +88,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private EditText mCaptionView;
     private EditText mDescriptionView;
     private Toolbar mToolbar;
+
+    private ProgressDialog mProgressDialog;
 
     @Inject
     MediaStore mMediaStore;
@@ -256,6 +263,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean showSaveMenu = mMediaId != 0 && mSite != null && !mSite.isPrivate();
         boolean showShareMenu = mMediaId != 0 && mSite != null && !mSite.isPrivate();
+        boolean showTrashMenu = mMediaId != 0 && mSite != null;
 
         MenuItem mnuSave = menu.findItem(R.id.menu_save);
         mnuSave.setVisible(showSaveMenu);
@@ -263,6 +271,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         MenuItem mnuShare = menu.findItem(R.id.menu_share);
         mnuShare.setVisible(showShareMenu);
+
+        MenuItem mnuTrash = menu.findItem(R.id.menu_trash);
+        mnuTrash.setVisible(showTrashMenu);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -277,6 +288,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             return true;
         } else if (item.getItemId() == R.id.menu_share) {
             shareMedia();
+            return true;
+        } else if (item.getItemId() == R.id.menu_trash) {
+            deleteMediaWithConfirmation();
             return true;
         }
 
@@ -542,10 +556,53 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
     }
 
+    private void deleteMediaWithConfirmation() {
+        @StringRes int resId = mIsVideo ? R.string.confirm_delete_media_video : R.string.confirm_delete_media_image;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage(resId)
+                .setCancelable(true).setPositiveButton(
+                        R.string.delete, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteMedia();
+                            }
+                        }).setNegativeButton(R.string.cancel, null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void deleteMedia() {
+        if (!NetworkUtils.checkConnection(this)) return;
+
+        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.error_media_not_found);
+            return;
+        }
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage(getString(R.string.deleting_media_dlg));
+        mProgressDialog.show();
+
+        AppLog.v(AppLog.T.MEDIA, "Deleting " + media.getTitle() + " (id=" + media.getMediaId() + ")");
+        MediaStore.MediaPayload payload = new MediaStore.MediaPayload(mSite, media);
+        mDispatcher.dispatch(MediaActionBuilder.newDeleteMediaAction(payload));
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        if (!event.isError()) {
+        if (event.cause == MediaAction.DELETE_MEDIA) {
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+            if (event.isError()) {
+                ToastUtils.showToast(this, R.string.error_generic);
+            } else {
+                finish();
+            }
+        } else if (!event.isError()) {
             loadMediaMetaData();
         }
     }

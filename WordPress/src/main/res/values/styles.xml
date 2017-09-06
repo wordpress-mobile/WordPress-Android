@@ -241,7 +241,7 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="MediaSettingsTheme" parent="Theme.AppCompat.Light">
+    <style name="MediaSettingsTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_close_white_24dp</item>
