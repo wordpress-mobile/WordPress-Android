@@ -69,7 +69,20 @@ public class ThemeStore extends Store {
     public enum ThemeErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
-        NOT_AVAILABLE
+        NOT_AVAILABLE,
+        THEME_NOT_FOUND,
+        MISSING_THEME;
+
+        public static ThemeErrorType fromString(String type) {
+            if (type != null) {
+                for (ThemeErrorType v : ThemeErrorType.values()) {
+                    if (type.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public static class FetchThemesError implements OnChangedError {
@@ -85,8 +98,8 @@ public class ThemeStore extends Store {
         public ThemeErrorType type;
         public String message;
 
-        public ActivateThemeError(ThemeErrorType type, String message) {
-            this.type = type;
+        public ActivateThemeError(String type, String message) {
+            this.type = ThemeErrorType.fromString(type);
             this.message = message;
         }
     }
@@ -233,7 +246,7 @@ public class ThemeStore extends Store {
         if (payload.site.isUsingWpComRestApi()) {
             mThemeRestClient.activateTheme(payload.site, payload.theme);
         } else {
-            payload.error = new ActivateThemeError(ThemeErrorType.NOT_AVAILABLE, null);
+            payload.error = new ActivateThemeError("not_available", null);
             handleThemeActivated(payload);
         }
     }
