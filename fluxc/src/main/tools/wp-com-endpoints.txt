@@ -23,11 +23,6 @@
 /sites/$site/roles
 /sites/new/
 
-/sites/$site/plugins
-/sites/$site/plugins/$name#String
-/sites/$site/plugins/$name#String/install
-/sites/$site/plugins/$name#String/delete
-
 /sites/$site/comments/
 /sites/$site/comments/$comment_ID
 /sites/$site/comments/$comment_ID/delete
@@ -39,6 +34,11 @@
 /sites/$site/media/$media_ID/
 /sites/$site/media/$media_ID/delete/
 /sites/$site/media/new/
+
+/sites/$site/plugins
+/sites/$site/plugins/$name#String
+/sites/$site/plugins/$name#String/delete
+/sites/$site/plugins/$name#String/install
 
 /sites/$site/posts/
 /sites/$site/posts/$post_ID/
