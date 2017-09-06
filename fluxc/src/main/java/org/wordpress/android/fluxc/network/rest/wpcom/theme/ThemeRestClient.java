@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemeError;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     public void onResponse(ThemeWPComResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to theme activation request.");
                         ActivateThemePayload payload = new ActivateThemePayload(site, theme);
-                        payload.theme.setActive(true);
+                        payload.theme.setActive(StringUtils.equals(theme.getThemeId(), response.id));
                         mDispatcher.dispatch(ThemeActionBuilder.newActivatedThemeAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
