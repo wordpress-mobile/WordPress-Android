@@ -79,6 +79,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -2746,16 +2747,17 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (event.isError()) {
             onUploadError(event.media, event.error);
-        }
-        else
-        if (event.canceled) {
+        } else if (event.canceled) {
             onUploadCanceled(event.media);
-        }
-        else
-        if (event.completed) {
-            onUploadSuccess(event.media);
-        }
-        else {
+        } else if (event.completed) {
+            // if the remote url on completed is null, we consider this upload wasn't successful
+            if (event.media.getUrl() == null) {
+                MediaStore.MediaError error = new MediaStore.MediaError(MediaErrorType.GENERIC_ERROR);
+                onUploadError(event.media, error);
+            } else {
+                onUploadSuccess(event.media);
+            }
+        } else {
             onUploadProgress(event.media, event.progress);
         }
     }
