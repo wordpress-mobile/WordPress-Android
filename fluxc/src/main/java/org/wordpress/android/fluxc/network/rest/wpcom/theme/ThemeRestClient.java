@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeWPComResponse.MultipleWPComThemesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeJetpackResponse.MultipleJetpackThemesResponse;
-import org.wordpress.android.fluxc.store.ThemeStore.ThemeErrorType;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchThemesError;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
@@ -86,7 +85,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.e(AppLog.T.API, "Received error response to WP.com themes fetch request.");
-                        FetchThemesError themeError = new FetchThemesError(ThemeErrorType.GENERIC_ERROR, null);
+                        FetchThemesError themeError = new FetchThemesError(
+                                ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
                         FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
@@ -109,7 +109,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.e(AppLog.T.API, "Received error response to Jetpack installed themes fetch request.");
-                        FetchThemesError themeError = new FetchThemesError(ThemeErrorType.GENERIC_ERROR, null);
+                        FetchThemesError themeError = new FetchThemesError(
+                                ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
                         FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedInstalledThemesAction(payload));
                     }
@@ -132,7 +133,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.e(AppLog.T.API, "Received error response to themes fetch request for WP.com site.");
-                        FetchThemesError themeError = new FetchThemesError(ThemeErrorType.GENERIC_ERROR, null);
+                        FetchThemesError themeError = new FetchThemesError(
+                                ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
                         FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
@@ -155,7 +157,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.e(AppLog.T.API, "Received error response to current theme fetch request.");
-                        FetchThemesError themeError = new FetchThemesError(ThemeErrorType.GENERIC_ERROR, null);
+                        FetchThemesError themeError = new FetchThemesError(
+                                ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
                         FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedCurrentThemeAction(payload));
                     }
