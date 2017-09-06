@@ -111,8 +111,8 @@ public class UploadStore extends Store {
             case CANCEL_POST:
                 handleCancelPost((PostModel) payload);
                 break;
-            case CLEAR_MEDIA:
-                handleClearMedia((ClearMediaPayload) payload);
+            case CLEAR_MEDIA_FOR_POST:
+                handleClearMediaForPost((ClearMediaPayload) payload);
                 break;
         }
     }
@@ -363,7 +363,7 @@ public class UploadStore extends Store {
         emitChange(new OnUploadChanged(UploadAction.CANCEL_POST));
     }
 
-    private void handleClearMedia(ClearMediaPayload payload) {
+    private void handleClearMediaForPost(ClearMediaPayload payload) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(payload.post.getId());
         if (postUploadModel == null) {
             return;
@@ -384,7 +384,7 @@ public class UploadStore extends Store {
         }
         UploadSqlUtils.deleteMediaUploadModelsWithLocalIds(localMediaIds);
 
-        emitChange(new OnUploadChanged(UploadAction.CLEAR_MEDIA));
+        emitChange(new OnUploadChanged(UploadAction.CLEAR_MEDIA_FOR_POST));
     }
 
     private @NonNull Set<MediaModel> getMediaForPostWithState(PostModel post, @MediaUploadModel.UploadState int state) {
