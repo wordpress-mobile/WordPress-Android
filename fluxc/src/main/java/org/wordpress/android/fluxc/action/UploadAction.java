@@ -20,5 +20,5 @@ public enum UploadAction implements IAction {
     @Action(payloadType = PostModel.class)
     CANCEL_POST,
     @Action(payloadType = ClearMediaPayload.class)
-    CLEAR_MEDIA
+    CLEAR_MEDIA_FOR_POST
 }
