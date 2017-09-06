@@ -32,6 +32,10 @@ public class WPComEndpointTest {
         assertEquals("/sites/56/media/78/delete/", WPCOMREST.sites.site(56).media.item(78).delete.getEndpoint());
         assertEquals("/sites/56/media/new/", WPCOMREST.sites.site(56).media.new_.getEndpoint());
 
+        // Plugins
+        assertEquals("/sites/56/plugins/", WPCOMREST.sites.site(56).plugins.getEndpoint());
+        assertEquals("/sites/56/plugins/akismet/", WPCOMREST.sites.site(56).plugins.name("akismet").getEndpoint());
+
         // Sites - Taxonomies
         assertEquals("/sites/56/taxonomies/category/terms/",
                 WPCOMREST.sites.site(56).taxonomies.taxonomy("category").terms.getEndpoint());
