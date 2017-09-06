@@ -56,10 +56,6 @@ public class ThemeStore extends Store {
         public ThemeModel theme;
         public ActivateThemeError error;
 
-        public ActivateThemePayload(ActivateThemeError error) {
-            this.error = error;
-        }
-
         public ActivateThemePayload(SiteModel site, ThemeModel theme) {
             this.site = site;
             this.theme = theme;
