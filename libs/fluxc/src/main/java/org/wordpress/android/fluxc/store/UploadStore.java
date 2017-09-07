@@ -277,12 +277,15 @@ public class UploadStore extends Store {
         if (payload.completed) {
             mediaUploadModel.setUploadState(MediaUploadModel.COMPLETED);
             mediaUploadModel.setProgress(1F);
+            UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
         } else {
             if (mediaUploadModel.getProgress() < payload.progress) {
                 mediaUploadModel.setProgress(payload.progress);
+                // To avoid conflicts with another action handler updating the state of the MediaUploadModel,
+                // update the progress value only, since that's all the new information this event gives us
+                UploadSqlUtils.updateMediaProgressOnly(mediaUploadModel);
             }
         }
-        UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
     }
 
     private void handleCancelMedia(@NonNull CancelMediaPayload payload) {

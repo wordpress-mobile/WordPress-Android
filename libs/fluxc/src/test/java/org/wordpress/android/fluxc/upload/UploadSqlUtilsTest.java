@@ -91,6 +91,38 @@ public class UploadSqlUtilsTest {
     }
 
     @Test
+    public void testUpdateMediaProgress() {
+        long testId = Math.abs(mRandom.nextLong());
+        MediaModel testMedia = UploadTestUtils.getTestMedia(testId);
+        MediaSqlUtils.insertOrUpdateMedia(testMedia);
+        testMedia = MediaSqlUtils.getSiteMediaWithId(UploadTestUtils.getTestSite(), testId).get(0);
+
+        // Store a MediaUploadModel corresponding to this MediaModel
+        MediaUploadModel mediaUploadModel = new MediaUploadModel(testMedia.getId());
+        mediaUploadModel.setProgress(0.65F);
+        UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+
+        mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(testMedia.getId());
+        assertNotNull(mediaUploadModel);
+        assertEquals(0.65F, mediaUploadModel.getProgress());
+
+        // Update the progress for the MediaUploadModel
+        mediaUploadModel.setProgress(0.87F);
+        assertEquals(1, UploadSqlUtils.updateMediaProgressOnly(mediaUploadModel));
+
+        mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(testMedia.getId());
+        assertNotNull(mediaUploadModel);
+        assertEquals(testMedia.getId(), mediaUploadModel.getId());
+        assertEquals(0.87F, mediaUploadModel.getProgress());
+
+        // Attempting to update the progress for a MediaUploadModel that doesn't exist in the db should fail
+        MediaUploadModel mediaUploadModel2 = new MediaUploadModel(mRandom.nextInt());
+        mediaUploadModel2.setProgress(0.45F);
+        assertEquals(0, UploadSqlUtils.updateMediaProgressOnly(mediaUploadModel2));
+        assertNull(UploadSqlUtils.getMediaUploadModelForLocalId(mediaUploadModel2.getId()));
+    }
+
+    @Test
     public void testDeleteMediaUploadModel() {
         MediaModel testMedia1 = UploadTestUtils.getTestMedia(65);
         MediaModel testMedia2 = UploadTestUtils.getTestMedia(35);
