@@ -13,7 +13,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "",
+          "client_id": "123-abc.apps.googleusercontent.com",
           "client_type": 3
         },
         {
@@ -55,7 +55,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "",
+          "client_id": "123-abc.apps.googleusercontent.com",
           "client_type": 3
         },
         {
