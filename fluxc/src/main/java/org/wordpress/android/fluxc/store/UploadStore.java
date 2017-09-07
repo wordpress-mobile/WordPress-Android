@@ -254,6 +254,11 @@ public class UploadStore extends Store {
 
         MediaUploadModel mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(payload.media.getId());
         if (mediaUploadModel == null) {
+            if (!payload.isError() && !payload.canceled && !payload.completed) {
+                // This is a progress event, and the upload seems to have already been cancelled
+                // We don't want to store a new MediaUploadModel in this case, just move on
+                return;
+            }
             mediaUploadModel = new MediaUploadModel(payload.media.getId());
         }
 
