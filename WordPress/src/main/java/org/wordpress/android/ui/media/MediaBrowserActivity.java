@@ -83,10 +83,8 @@ import org.wordpress.android.util.WPPermissionUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -697,6 +695,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
             } else {
                 mediaToDelete.add(mediaModel);
+                mediaModel.setUploadState(MediaUploadState.DELETING);
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
             }
             processedItemCount++;
         }
@@ -709,9 +709,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         // and then refresh the grid
         if (!mediaToDelete.isEmpty()) {
             startMediaDeleteService(mediaToDelete);
-        }
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.clearSelection();
         }
     }
 
