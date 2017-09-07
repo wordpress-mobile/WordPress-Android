@@ -563,12 +563,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                                     ((MediaBrowserActivity) getActivity()).deleteMedia(
                                             getAdapter().getSelectedItems());
                                 }
-                                // update upload state
-                                for (int itemId : getAdapter().getSelectedItems()) {
-                                    MediaModel media = mMediaStore.getMediaWithLocalId(itemId);
-                                    media.setUploadState(MediaUploadState.DELETING);
-                                    mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-                                }
                                 getAdapter().clearSelection();
                                 if (mActionMode != null) {
                                     mActionMode.finish();
