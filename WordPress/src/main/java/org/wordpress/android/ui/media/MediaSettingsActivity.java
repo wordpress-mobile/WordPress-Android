@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -16,6 +17,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -27,11 +29,12 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -83,7 +86,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mDescriptionView;
-    private Toolbar mToolbar;
 
     private ProgressDialog mProgressDialog;
 
@@ -118,6 +120,16 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_settings_activity);
+        setupStatusBar();
+
+        int toolbarColor = ContextCompat.getColor(this, R.color.grey_dark_translucent_50);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.media);
+            actionBar.setBackgroundDrawable(new ColorDrawable(toolbarColor));
+        }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
@@ -125,7 +137,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mTitleView = (EditText) findViewById(R.id.edit_title);
         mCaptionView = (EditText) findViewById(R.id.edit_caption);
         mDescriptionView = (EditText) findViewById(R.id.edit_description);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         int mediaId;
         if (savedInstanceState != null) {
@@ -142,14 +153,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             return;
         }
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.media);
-            actionBar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.transparent)));
-        }
-
         int height = DisplayUtils.getDisplayPixelHeight(this) / 3;
         mImageView.getLayoutParams().height = height;
 
@@ -161,6 +164,17 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             playVideo();
         } else {
             loadImage();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setupStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            int statusColor = ContextCompat.getColor(this, R.color.grey_dark_translucent_50);
+            window.setStatusBarColor(statusColor);
         }
     }
 
