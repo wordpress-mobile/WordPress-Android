@@ -153,8 +153,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             return;
         }
 
-        int height = DisplayUtils.getDisplayPixelHeight(this) / 3;
-        mImageView.getLayoutParams().height = height;
+        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
+        int imageHeight = (int) (displayHeight * 0.4);
+        mImageView.getLayoutParams().height = imageHeight;
 
         mImageView.setVisibility(mMedia.isVideo() ? View.GONE : View.VISIBLE);
         findViewById(R.id.frame_video).setVisibility(mMedia.isVideo() ? View.VISIBLE : View.GONE);
@@ -173,7 +174,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            int statusColor = ContextCompat.getColor(this, R.color.grey_dark_translucent_50);
+            int statusColor = ContextCompat.getColor(this, R.color.grey_dark_translucent_70);
             window.setStatusBarColor(statusColor);
         }
     }
