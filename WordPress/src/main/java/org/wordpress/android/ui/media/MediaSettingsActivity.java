@@ -119,7 +119,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_settings_activity);
-        setupStatusBar();
+        makeStatusBarTransparent();
 
         int toolbarColor = ContextCompat.getColor(this, R.color.grey_dark_translucent_50);
         ActionBar actionBar = getSupportActionBar();
@@ -159,19 +159,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setupStatusBar() {
+    private void makeStatusBarTransparent() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
             int statusColor = ContextCompat.getColor(this, R.color.grey_dark_translucent_70);
             window.setStatusBarColor(statusColor);
-
-            Resources resources = getResources();
-            int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                int margin = resources.getDimensionPixelSize(resourceId);
-            }
         }
     }
 
@@ -348,7 +341,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                     if (!isFinishing() && response.getBitmap() != null) {
                         showProgress(false);
-                        setBitmap(response.getBitmap());
+                        mImageView.setImageBitmap(response.getBitmap());
                     }
                 }
 
@@ -392,19 +385,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 return;
             }
             if (bitmap != null) {
-                setBitmap(bitmap);
+                mImageView.setImageBitmap(bitmap);
             } else {
                 delayedFinishWithError();
             }
         }
-    }
-
-    private void setBitmap(@NonNull Bitmap bmp) {
-        // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
-        // for it to be correctly resized upon loading
-        //PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
-        mImageView.setImageBitmap(bmp);
-        invalidateOptionsMenu();
     }
 
     @Override
