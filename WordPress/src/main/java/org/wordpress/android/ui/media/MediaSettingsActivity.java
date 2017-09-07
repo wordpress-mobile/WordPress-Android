@@ -150,6 +150,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             actionBar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.transparent)));
         }
 
+        int height = DisplayUtils.getDisplayPixelHeight(this) / 3;
+        mImageView.getLayoutParams().height = height;
+
         mImageView.setVisibility(mMedia.isVideo() ? View.GONE : View.VISIBLE);
         findViewById(R.id.frame_video).setVisibility(mMedia.isVideo() ? View.VISIBLE : View.GONE);
         showMediaMetaData();

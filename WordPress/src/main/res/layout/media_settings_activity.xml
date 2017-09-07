@@ -10,10 +10,9 @@
     <ImageView
         android:id="@+id/image_preview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:background="@color/grey_lighten_10"
-        tools:layout_height="64dp"/>
+        android:layout_height="224dp"
+        android:background="@color/grey"
+        android:scaleType="centerCrop"/>
 
     <FrameLayout
         android:id="@+id/frame_video"
@@ -43,7 +42,7 @@
         android:id="@+id/layout_metadata"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="224dp"
+        android:layout_below="@+id/image_preview"
         android:background="@color/white"
         android:orientation="vertical"
         android:padding="@dimen/margin_extra_large">
