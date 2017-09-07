@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.persistence;
 
+import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -7,6 +8,7 @@ import com.wellsql.generated.MediaUploadModelTable;
 import com.wellsql.generated.PostModelTable;
 import com.wellsql.generated.PostUploadModelTable;
 import com.yarolegovich.wellsql.WellSql;
+import com.yarolegovich.wellsql.mapper.InsertMapper;
 
 import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -36,6 +38,33 @@ public class UploadSqlUtils {
             int oldId = existingMedia.get(0).getId();
             return WellSql.update(MediaUploadModel.class).whereId(oldId)
                     .put(media, new UpdateAllExceptId<>(MediaUploadModel.class)).execute();
+        }
+    }
+
+    public static int updateMediaProgressOnly(MediaUploadModel media) {
+        if (media == null) return 0;
+
+        List<MediaUploadModel> existingMedia;
+        existingMedia = WellSql.select(MediaUploadModel.class)
+                .where()
+                .equals(MediaUploadModelTable.ID, media.getId())
+                .endWhere().getAsModel();
+
+        if (existingMedia.isEmpty()) {
+            // We're only interested in updating the progress for existing MediaUploadModels
+            return 0;
+        } else {
+            // Update, media item already exists
+            int oldId = existingMedia.get(0).getId();
+            return WellSql.update(MediaUploadModel.class).whereId(oldId)
+                    .put(media, new InsertMapper<MediaUploadModel>() {
+                        @Override
+                        public ContentValues toCv(MediaUploadModel item) {
+                            ContentValues cv = new ContentValues();
+                            cv.put(MediaUploadModelTable.PROGRESS, item.getProgress());
+                            return cv;
+                        }
+                    }).execute();
         }
     }
 
