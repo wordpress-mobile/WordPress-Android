@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
+import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -309,6 +310,30 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             mFetchedFilters[i] = true;
             mFetchedAllFilters[i] = true;
         }
+    }
+
+    /*
+     * make sure media that is being deleted still has the right UploadState, as it may have
+     * been overwritten by a refresh while deletion was still in progress
+     */
+    private List<MediaModel> getFilteredMediaWithSanitizedDeleteState() {
+        List<MediaModel> filteredMedia = getFilteredMedia();
+
+        Activity activity = getActivity();
+        if (activity != null && activity instanceof MediaBrowserActivity) {
+            MediaDeleteService service = ((MediaBrowserActivity)activity).getMediaDeleteService();
+            if (service != null) {
+                List<MediaModel> mediaInDeleteQueue = service.getDeleteQueue();
+                for (MediaModel mediaToBeDeleted : mediaInDeleteQueue) {
+                    for (MediaModel media : filteredMedia) {
+                        if (media.getId() == mediaToBeDeleted.getId()) {
+                            media.setUploadState(MediaUploadState.DELETING);
+                        }
+                    }
+                }
+            }
+        }
+        return filteredMedia;
     }
 
     private List<MediaModel> getFilteredMedia() {
@@ -628,7 +653,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
         }
 
-        getAdapter().setMediaList(getFilteredMedia());
+        getAdapter().setMediaList(getFilteredMediaWithSanitizedDeleteState());
 
         boolean hasRetrievedAll = !event.canLoadMore;
         getAdapter().setHasRetrievedAll(hasRetrievedAll);
