@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,6 +37,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -52,6 +54,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -62,6 +65,9 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPPermissionUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -141,13 +147,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         mMedia = mMediaStore.getMediaWithLocalId(mediaId);
         if (mMedia == null) {
-            delayedFinish(true);
+            delayedFinishWithError();
             return;
         }
 
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
-        int imageHeight = (int) (displayHeight * 0.4);
-        mImageView.getLayoutParams().height = imageHeight;
+        mImageView.getLayoutParams().height = (int) (displayHeight * 0.4);
 
         showMediaMetaData();
         loadImage();
@@ -157,10 +162,16 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private void setupStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
             int statusColor = ContextCompat.getColor(this, R.color.grey_dark_translucent_70);
             window.setStatusBarColor(statusColor);
+
+            Resources resources = getResources();
+            int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                int margin = resources.getDimensionPixelSize(resourceId);
+            }
         }
     }
 
@@ -193,10 +204,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_bottom);
     }
 
-    private void delayedFinish(boolean showError) {
-        if (showError) {
-            ToastUtils.showToast(this, R.string.error_media_not_found);
-        }
+    private void delayedFinishWithError() {
+        ToastUtils.showToast(this, R.string.error_media_not_found);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -266,8 +275,46 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mAltTextView.setText(mMedia.getAlt());
         mDescriptionView.setText(mMedia.getDescription());
 
-        mTitleView.requestFocus();
-        mTitleView.setSelection(mTitleView.getText().length());
+        TextView txtUrl = (TextView) findViewById(R.id.text_url);
+        txtUrl.setText(mMedia.getUrl());
+
+        TextView txtFilename = (TextView) findViewById(R.id.text_filename);
+        txtFilename.setText(mMedia.getFileName());
+
+        TextView txtFileType = (TextView) findViewById(R.id.text_filetype);
+        txtFileType.setText(mMedia.getFileExtension().toUpperCase());
+
+        float mediaWidth = mMedia.getWidth();
+        float mediaHeight = mMedia.getHeight();
+        TextView txtDimensions = (TextView) findViewById(R.id.text_image_dimensions);
+        TextView txtDimensionsLabel = (TextView) findViewById(R.id.text_image_dimensions_label);
+        if (mediaWidth > 0 && mediaHeight > 0) {
+            txtDimensions.setVisibility(View.VISIBLE);
+            txtDimensionsLabel.setVisibility(View.VISIBLE);
+            String dimens = (int) mediaWidth + " x " + (int) mediaHeight;
+            txtDimensions.setText(dimens);
+        } else {
+            txtDimensions.setVisibility(View.GONE);
+            txtDimensionsLabel.setVisibility(View.GONE);
+        }
+
+        String uploadDate = null;
+        if (mMedia.getUploadDate() != null) {
+            Date date = DateTimeUtils.dateFromIso8601(mMedia.getUploadDate());
+            if (date != null) {
+                uploadDate = SimpleDateFormat.getDateInstance().format(date);
+            }
+        }
+        TextView txtUploadDate = (TextView) findViewById(R.id.text_upload_date);
+        TextView txtUploadDateLabel = (TextView) findViewById(R.id.text_upload_date_label);
+        if (uploadDate != null) {
+            txtUploadDate.setVisibility(View.VISIBLE);
+            txtUploadDateLabel.setVisibility(View.VISIBLE);
+            txtUploadDate.setText(uploadDate);
+        } else {
+            txtUploadDate.setVisibility(View.GONE);
+            txtUploadDateLabel.setVisibility(View.GONE);
+        }
     }
 
     /*
@@ -310,7 +357,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                     AppLog.e(AppLog.T.MEDIA, error);
                     if (!isFinishing()) {
                         showProgress(false);
-                        delayedFinish(true);
+                        delayedFinishWithError();
                     }
                 }
             }, size, 0);
@@ -347,7 +394,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             if (bitmap != null) {
                 setBitmap(bitmap);
             } else {
-                delayedFinish(true);
+                delayedFinishWithError();
             }
         }
     }
@@ -395,7 +442,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
     };
 
-    public void saveChanges() {
+    private void saveChanges() {
         if (isFinishing()) return;
 
         MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());

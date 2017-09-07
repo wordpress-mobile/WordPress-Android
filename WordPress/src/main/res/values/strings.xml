@@ -135,7 +135,6 @@
     <string name="media_insert_individually">Add individually</string>
     <string name="media_insert_as_gallery">Add as gallery</string>
     <string name="media_downloading">Saving media to this device</string>
-    <string name="media_settings_card_caption">File Details</string>
     <string name="wp_media_title">WordPress media</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
@@ -187,6 +186,12 @@
     <string name="media_edit_failure">Failed to update</string>
     <string name="saving">Saving…</string>
     <string name="confirm_discard_changes">Discard unsaved changes?</string>
+    <string name="media_edit_card_caption">File Details</string>
+    <string name="media_edit_url_caption">URL</string>
+    <string name="media_edit_filename_caption">File Name</string>
+    <string name="media_edit_filetype_caption">File Type</string>
+    <string name="media_edit_image_dimensions_caption">Image Dimensions</string>
+    <string name="media_edit_upload_date_caption">Upload Date</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_multi_media">Delete selected items?</string>
