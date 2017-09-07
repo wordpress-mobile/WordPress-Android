@@ -14,7 +14,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -37,8 +36,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
-import android.widget.VideoView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -55,7 +52,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -66,9 +62,6 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPPermissionUtils;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -82,7 +75,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private MediaModel mMedia;
 
     private ImageView mImageView;
-    private VideoView mVideoView;
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mDescriptionView;
@@ -132,8 +124,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
-        mVideoView = (VideoView) findViewById(R.id.video_preview);
-
         mTitleView = (EditText) findViewById(R.id.edit_title);
         mCaptionView = (EditText) findViewById(R.id.edit_caption);
         mDescriptionView = (EditText) findViewById(R.id.edit_description);
@@ -157,15 +147,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         int imageHeight = (int) (displayHeight * 0.4);
         mImageView.getLayoutParams().height = imageHeight;
 
-        mImageView.setVisibility(mMedia.isVideo() ? View.GONE : View.VISIBLE);
-        findViewById(R.id.frame_video).setVisibility(mMedia.isVideo() ? View.VISIBLE : View.GONE);
         showMediaMetaData();
-
-        if (mMedia.isVideo()) {
-            playVideo();
-        } else {
-            loadImage();
-        }
+        loadImage();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -288,10 +271,21 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
      * loads and displays a remote or local image
      */
     private void loadImage() {
-        String mediaUri = mMedia.getUrl();
         int width = DisplayUtils.getDisplayPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
         int size = Math.max(width, height);
+
+        String mediaUri;
+        if (mMedia.isVideo()) {
+            mediaUri = mMedia.getThumbnailUrl();
+        } else {
+            mediaUri = mMedia.getUrl();
+        }
+
+        if (TextUtils.isEmpty(mediaUri)) {
+            ToastUtils.showToast(this, R.string.error_media_load);
+            return;
+        }
 
         if (mediaUri.startsWith("http")) {
             showProgress(true);
@@ -361,50 +355,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         //PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
         mImageView.setImageBitmap(bmp);
         invalidateOptionsMenu();
-    }
-
-    /*
-     * loads and plays a remote or local video
-     */
-    private void playVideo() {
-        final MediaController controls = new MediaController(this);
-        mVideoView.setMediaController(controls);
-
-        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                delayedFinish(false);
-                return false;
-            }
-        });
-
-        showProgress(true);
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                showProgress(false);
-                controls.show();
-                mp.start();
-            }
-        });
-
-        mVideoView.setVideoURI(Uri.parse(mMedia.getUrl()));
-        mVideoView.requestFocus();
-    }
-
-
-    /*
-     * returns the passed string formatted as a short date if it's valid ISO 8601 date,
-     * otherwise returns the passed string
-     */
-    private String getDisplayDate(String dateString) {
-        if (dateString != null) {
-            Date date = DateTimeUtils.dateFromIso8601(dateString);
-            if (date != null) {
-                return SimpleDateFormat.getDateInstance().format(date);
-            }
-        }
-        return dateString;
     }
 
     @Override
