@@ -672,6 +672,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // make sure we initialized the photo picker
         if (mPhotoPickerFragment == null) {
+            //SmartToast.reset();
             initPhotoPicker();
         }
 
