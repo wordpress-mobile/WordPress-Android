@@ -731,15 +731,12 @@ public class MediaStore extends Store {
     }
 
     private void handleMediaUploaded(@NonNull ProgressPayload payload) {
-        if (!payload.isError() && payload.completed) {
+        if (payload.isError() || payload.canceled || payload.completed) {
             updateMedia(payload.media, false);
         }
         OnMediaUploaded onMediaUploaded =
                 new OnMediaUploaded(payload.media, payload.progress, payload.completed, payload.canceled);
         onMediaUploaded.error = payload.error;
-        if (payload.media != null) {
-            MediaSqlUtils.insertOrUpdateMedia(payload.media);
-        }
         emitChange(onMediaUploaded);
     }
 
