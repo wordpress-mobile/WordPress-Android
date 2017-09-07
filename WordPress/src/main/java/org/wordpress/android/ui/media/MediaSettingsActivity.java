@@ -77,6 +77,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private ImageView mImageView;
     private EditText mTitleView;
     private EditText mCaptionView;
+    private EditText mAltTextView;
     private EditText mDescriptionView;
 
     private ProgressDialog mProgressDialog;
@@ -126,6 +127,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mTitleView = (EditText) findViewById(R.id.edit_title);
         mCaptionView = (EditText) findViewById(R.id.edit_caption);
+        mAltTextView = (EditText) findViewById(R.id.edit_alt_text);
         mDescriptionView = (EditText) findViewById(R.id.edit_description);
 
         int mediaId;
@@ -261,6 +263,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private void showMediaMetaData() {
         mTitleView.setText(mMedia.getTitle());
         mCaptionView.setText(mMedia.getCaption());
+        mAltTextView.setText(mMedia.getAlt());
         mDescriptionView.setText(mMedia.getDescription());
 
         mTitleView.requestFocus();
@@ -404,15 +407,18 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         String thisTitle = EditTextUtils.getText(mTitleView);
         String thisCaption = EditTextUtils.getText(mCaptionView);
+        String thisAltText = EditTextUtils.getText(mAltTextView);
         String thisDescription = EditTextUtils.getText(mDescriptionView);
 
         boolean hasChanged = !StringUtils.equals(media.getTitle(), thisTitle)
                 || !StringUtils.equals(media.getCaption(), thisCaption)
+                || !StringUtils.equals(media.getAlt(), thisAltText)
                 || !StringUtils.equals(media.getDescription(), thisDescription);
         if (hasChanged) {
             AppLog.d(AppLog.T.MEDIA, "MediaSettingsActivity > Saving changes");
             media.setTitle(thisTitle);
             media.setCaption(thisCaption);
+            media.setAlt(thisAltText);
             media.setDescription(thisDescription);
             mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaStore.MediaPayload(mSite, media)));
         }
