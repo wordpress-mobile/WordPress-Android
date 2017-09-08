@@ -299,6 +299,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             AppLog.e(AppLog.T.UTILS, e);
         }
 
+        // De-anonymize user only when it's WPCOM and we have the username available (might still be waiting for it to
+        //  be fetched).
         if (metadata.isUserConnected() && metadata.isWordPressComUser()
                 && !TextUtils.isEmpty(metadata.getUsername())) {
             setWordPressComUserName(metadata.getUsername());
