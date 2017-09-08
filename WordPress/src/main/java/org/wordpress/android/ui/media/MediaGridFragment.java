@@ -316,24 +316,17 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
      * make sure media that is being deleted still has the right UploadState, as it may have
      * been overwritten by a refresh while deletion was still in progress
      */
-    private List<MediaModel> getFilteredMediaWithSanitizedDeleteState() {
-        List<MediaModel> filteredMedia = getFilteredMedia();
-
-        Activity activity = getActivity();
-        if (activity != null && activity instanceof MediaBrowserActivity) {
-            MediaDeleteService service = ((MediaBrowserActivity)activity).getMediaDeleteService();
+    private void ensureCorrectState(List<MediaModel> mediaModels) {
+        if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
+            MediaDeleteService service = ((MediaBrowserActivity)getActivity()).getMediaDeleteService();
             if (service != null) {
-                List<MediaModel> mediaInDeleteQueue = service.getDeleteQueue();
-                for (MediaModel mediaToBeDeleted : mediaInDeleteQueue) {
-                    for (MediaModel media : filteredMedia) {
-                        if (media.getId() == mediaToBeDeleted.getId()) {
-                            media.setUploadState(MediaUploadState.DELETING);
-                        }
+                for (MediaModel media : mediaModels) {
+                    if (service.isMediaBeingDeleted(media)) {
+                        media.setUploadState(MediaUploadState.DELETING);
                     }
                 }
             }
         }
-        return filteredMedia;
     }
 
     private List<MediaModel> getFilteredMedia() {
@@ -653,7 +646,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
         }
 
-        getAdapter().setMediaList(getFilteredMediaWithSanitizedDeleteState());
+        List<MediaModel> filteredMedia = getFilteredMedia();
+        ensureCorrectState(filteredMedia);
+        getAdapter().setMediaList(filteredMedia);
 
         boolean hasRetrievedAll = !event.canLoadMore;
         getAdapter().setHasRetrievedAll(hasRetrievedAll);
