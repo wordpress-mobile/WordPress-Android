@@ -186,10 +186,6 @@ public class PhotoPickerFragment extends Fragment {
             });
         }
 
-        if (savedInstanceState == null && mAllowMultiSelect && hasStoragePermission()) {
-            SmartToast.show(getActivity(), SmartToast.SmartToastType.MEDIA_LONG_PRESS);
-        }
-
         return view;
     }
 

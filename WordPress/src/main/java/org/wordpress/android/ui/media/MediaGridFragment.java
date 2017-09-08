@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
+import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -311,6 +312,23 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
+    /*
+     * make sure media that is being deleted still has the right UploadState, as it may have
+     * been overwritten by a refresh while deletion was still in progress
+     */
+    private void ensureCorrectState(List<MediaModel> mediaModels) {
+        if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
+            MediaDeleteService service = ((MediaBrowserActivity)getActivity()).getMediaDeleteService();
+            if (service != null) {
+                for (MediaModel media : mediaModels) {
+                    if (service.isMediaBeingDeleted(media)) {
+                        media.setUploadState(MediaUploadState.DELETING);
+                    }
+                }
+            }
+        }
+    }
+
     private List<MediaModel> getFilteredMedia() {
         if (!TextUtils.isEmpty(mSearchTerm)) {
             return mMediaStore.searchSiteMedia(mSite, mSearchTerm);
@@ -563,12 +581,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                                     ((MediaBrowserActivity) getActivity()).deleteMedia(
                                             getAdapter().getSelectedItems());
                                 }
-                                // update upload state
-                                for (int itemId : getAdapter().getSelectedItems()) {
-                                    MediaModel media = mMediaStore.getMediaWithLocalId(itemId);
-                                    media.setUploadState(MediaUploadState.DELETING);
-                                    mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-                                }
                                 getAdapter().clearSelection();
                                 if (mActionMode != null) {
                                     mActionMode.finish();
@@ -634,7 +646,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
         }
 
-        getAdapter().setMediaList(getFilteredMedia());
+        List<MediaModel> filteredMedia = getFilteredMedia();
+        ensureCorrectState(filteredMedia);
+        getAdapter().setMediaList(filteredMedia);
 
         boolean hasRetrievedAll = !event.canLoadMore;
         getAdapter().setHasRetrievedAll(hasRetrievedAll);

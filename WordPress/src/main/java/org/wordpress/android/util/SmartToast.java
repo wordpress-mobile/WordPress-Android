@@ -39,6 +39,13 @@ public class SmartToast {
     private static final int MIN_TIMES_TO_USE_FEATURE = 3;
     private static final int MAX_TIMES_TO_SHOW_TOAST = 2;
 
+    public static void reset() {
+        for (SmartToastType type: SmartToastType.values()) {
+            AppPrefs.setInt(type.shownKey, 0);
+            AppPrefs.setInt(type.usageKey, 0);
+        }
+    }
+
     public static boolean show(@NonNull Context context, @NonNull SmartToastType type) {
         // limit the number of times to show the toast
         int numTimesShown = AppPrefs.getInt(type.shownKey);
@@ -50,7 +57,7 @@ public class SmartToast {
         int numTypesFeatureUsed = AppPrefs.getInt(type.usageKey);
         numTypesFeatureUsed++;
         AppPrefs.setInt(type.usageKey, numTypesFeatureUsed);
-        if (numTypesFeatureUsed <= MIN_TIMES_TO_USE_FEATURE) {
+        if (numTypesFeatureUsed < MIN_TIMES_TO_USE_FEATURE) {
             return false;
         }
 
