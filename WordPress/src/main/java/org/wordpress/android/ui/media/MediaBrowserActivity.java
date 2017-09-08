@@ -200,6 +200,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
+    public MediaDeleteService getMediaDeleteService() {
+        if (mDeleteService == null) {
+            return null;
+        }
+        return mDeleteService.getService();
+    }
+
     /*
      * only show tabs when being used as a media browser rather than a media picker
      */
