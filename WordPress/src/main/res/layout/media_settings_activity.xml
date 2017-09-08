@@ -1,274 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/card1"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/cardview_default_radius"
-            app:cardElevation="@dimen/card_elevation">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
+                android:id="@+id/card1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardElevation="@dimen/card_elevation">
 
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/image_preview"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/grey"
-                        android:scaleType="centerCrop"
-                        tools:layout_height="224dp"
-                        tools:src="@drawable/drake_empty_results_400dp"/>
+                        android:layout_height="wrap_content">
 
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/fab_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end|bottom"
-                        android:layout_marginBottom="@dimen/fab_margin"
-                        android:layout_marginRight="@dimen/fab_margin"
-                        android:contentDescription="@string/fab_content_description_write"
-                        android:visibility="gone"
-                        app:borderWidth="0dp"
-                        app:srcCompat="@drawable/ic_fullscreen_white_24dp"
-                        tools:visibility="visible"/>
-                </FrameLayout>
+                        <ImageView
+                            android:id="@+id/image_preview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/grey"
+                            android:scaleType="centerCrop"
+                            tools:layout_height="224dp"
+                            tools:src="@drawable/drake_empty_results_400dp"/>
 
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/fab_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|bottom"
+                            android:layout_marginBottom="@dimen/fab_margin"
+                            android:layout_marginRight="@dimen/fab_margin"
+                            android:contentDescription="@string/fab_content_description_write"
+                            android:visibility="gone"
+                            app:borderWidth="0dp"
+                            app:srcCompat="@drawable/ic_fullscreen_white_24dp"
+                            tools:visibility="visible"/>
+                    </FrameLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="@dimen/margin_extra_large">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_small"
+                            android:text="@string/media_edit_card_caption"
+                            android:textColor="@color/color_primary"
+                            android:textSize="@dimen/text_sz_large"
+                            android:textStyle="bold"/>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_extra_large">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/edit_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/media_edit_title_text"
+                                android:inputType="textCapSentences|textAutoCorrect"
+                                tools:text="edit_title"/>
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/edit_caption"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/media_edit_caption_text"
+                                android:inputType="textCapSentences|textAutoCorrect"
+                                tools:text="edit_caption"/>
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/edit_alt_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/media_edit_alttext_text"
+                                android:inputType="textCapSentences|textAutoCorrect"
+                                tools:text="edit_alt_text"/>
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/edit_description"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="top|start"
+                                android:hint="@string/media_edit_description_text"
+                                android:inputType="textCapSentences|textAutoCorrect"
+                                android:lines="3"
+                                tools:text="edit_description"/>
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/card1"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardElevation="@dimen/card_elevation">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_small"
                     android:orientation="vertical"
                     android:padding="@dimen/margin_extra_large">
 
+                    <!-- url -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_small"
-                        android:text="@string/media_edit_card_caption"
-                        android:textColor="@color/color_primary"
-                        android:textSize="@dimen/text_sz_large"
-                        android:textStyle="bold"/>
+                        android:text="@string/media_edit_url_caption"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="@dimen/text_sz_large"/>
 
-                    <android.support.design.widget.TextInputLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_extra_large">
+                        android:layout_height="wrap_content">
 
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/edit_title"
+                        <TextView
+                            android:id="@+id/text_url"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/media_edit_title_text"
-                            android:inputType="textCapSentences|textAutoCorrect"
-                            tools:text="edit_title"/>
+                            android:layout_centerVertical="true"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:layout_toLeftOf="@+id/button_copy_url"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="@color/grey"
+                            android:textSize="@dimen/text_sz_medium"
+                            tools:text="text_url"/>
 
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_small">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/edit_caption"
-                            android:layout_width="match_parent"
+                        <Button
+                            android:id="@+id/button_copy_url"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:hint="@string/media_edit_caption_text"
-                            android:inputType="textCapSentences|textAutoCorrect"
-                            tools:text="edit_caption"/>
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/margin_large"
+                            android:text="@string/copy"/>
+                    </RelativeLayout>
 
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
+                    <!-- filename -->
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_small">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/edit_alt_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/media_edit_alttext_text"
-                            android:inputType="textCapSentences|textAutoCorrect"
-                            tools:text="edit_alt_text"/>
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_small">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/edit_description"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="top|start"
-                            android:hint="@string/media_edit_description_text"
-                            android:inputType="textCapSentences|textAutoCorrect"
-                            android:lines="3"
-                            tools:text="edit_description"/>
-
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/card2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/card1"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/cardview_default_radius"
-            app:cardElevation="@dimen/card_elevation">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:orientation="vertical"
-                android:padding="@dimen/margin_extra_large">
-
-                <!-- url -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/media_edit_url_caption"
-                    android:textColor="@color/grey_dark"
-                    android:textSize="@dimen/text_sz_large"/>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                        android:layout_marginTop="@dimen/margin_extra_large"
+                        android:text="@string/media_edit_filename_caption"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="@dimen/text_sz_large"/>
 
                     <TextView
-                        android:id="@+id/text_url"
-                        android:layout_width="match_parent"
+                        android:id="@+id/text_filename"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_marginTop="@dimen/margin_small"
-                        android:layout_toLeftOf="@+id/button_copy_url"
-                        android:ellipsize="end"
-                        android:maxLines="1"
                         android:textColor="@color/grey"
                         android:textSize="@dimen/text_sz_medium"
-                        tools:text="text_url"/>
+                        tools:text="text_filename"/>
 
-                    <Button
-                        android:id="@+id/button_copy_url"
+                    <!-- file type -->
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_large"
-                        android:text="@string/copy"/>
-                </RelativeLayout>
+                        android:layout_marginTop="@dimen/margin_extra_large"
+                        android:text="@string/media_edit_filetype_caption"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="@dimen/text_sz_large"/>
 
-                <!-- filename -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_extra_large"
-                    android:text="@string/media_edit_filename_caption"
-                    android:textColor="@color/grey_dark"
-                    android:textSize="@dimen/text_sz_large"/>
+                    <TextView
+                        android:id="@+id/text_filetype"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/text_sz_medium"
+                        tools:text="text_filetype"/>
 
-                <TextView
-                    android:id="@+id/text_filename"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/text_sz_medium"
-                    tools:text="text_filename"/>
+                    <!-- dimensions -->
+                    <TextView
+                        android:id="@+id/text_image_dimensions_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_extra_large"
+                        android:text="@string/media_edit_image_dimensions_caption"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="@dimen/text_sz_large"/>
 
-                <!-- file type -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_extra_large"
-                    android:text="@string/media_edit_filetype_caption"
-                    android:textColor="@color/grey_dark"
-                    android:textSize="@dimen/text_sz_large"/>
+                    <TextView
+                        android:id="@+id/text_image_dimensions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/text_sz_medium"
+                        tools:text="text_image_dimensions"/>
 
-                <TextView
-                    android:id="@+id/text_filetype"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/text_sz_medium"
-                    tools:text="text_filetype"/>
+                    <!-- upload date -->
+                    <TextView
+                        android:id="@+id/text_upload_date_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_extra_large"
+                        android:text="@string/media_edit_upload_date_caption"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="@dimen/text_sz_large"/>
 
-                <!-- dimensions -->
-                <TextView
-                    android:id="@+id/text_image_dimensions_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_extra_large"
-                    android:text="@string/media_edit_image_dimensions_caption"
-                    android:textColor="@color/grey_dark"
-                    android:textSize="@dimen/text_sz_large"/>
+                    <TextView
+                        android:id="@+id/text_upload_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/text_sz_medium"
+                        tools:text="text_upload_date"/>
 
-                <TextView
-                    android:id="@+id/text_image_dimensions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/text_sz_medium"
-                    tools:text="text_image_dimensions"/>
+                </LinearLayout>
 
-                <!-- upload date -->
-                <TextView
-                    android:id="@+id/text_upload_date_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_extra_large"
-                    android:text="@string/media_edit_upload_date_caption"
-                    android:textColor="@color/grey_dark"
-                    android:textSize="@dimen/text_sz_large"/>
+            </android.support.v7.widget.CardView>
 
-                <TextView
-                    android:id="@+id/text_upload_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/text_sz_medium"
-                    tools:text="text_upload_date"/>
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:elevation="@dimen/card_elevation"
+                android:visibility="gone"
+                tools:visibility="visible"/>
 
-            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
 
-        </android.support.v7.widget.CardView>
+    <ImageView
+        android:id="@+id/image_gradient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@drawable/media_settings_gradient"
+        tools:layout_height="74dp"/>
 
-        <ProgressBar
-            android:id="@+id/progress"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:elevation="@dimen/card_elevation"
-            android:visibility="gone"
-            tools:visibility="visible"/>
-
-    </RelativeLayout>
-</ScrollView>
+</FrameLayout>

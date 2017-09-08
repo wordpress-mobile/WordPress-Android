@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -18,7 +17,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -35,8 +33,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -123,9 +119,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_settings_activity);
-        makeStatusBarTransparent();
 
-        int toolbarColor = ContextCompat.getColor(this, R.color.grey_dark_translucent_50);
+        int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
@@ -157,7 +152,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
-        mImageView.getLayoutParams().height = (int) (displayHeight * 0.4);
+        int imageHeight = (int) (displayHeight * 0.4);
+        mImageView.getLayoutParams().height = imageHeight;
+
+        int toolbarHeight = DisplayUtils.getActionBarHeight(this);
+        int gradientHeight = toolbarHeight * 3;
+        ImageView imgGradient = (ImageView) findViewById(R.id.image_gradient);
+        imgGradient.getLayoutParams().height = gradientHeight;
 
         showMediaMetaData();
         loadImage();
@@ -174,16 +175,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     private void notImplemented() {
         ToastUtils.showToast(this, "Not implemented yet!");
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void makeStatusBarTransparent() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            int statusColor = ContextCompat.getColor(this, R.color.grey_dark_translucent_70);
-            window.setStatusBarColor(statusColor);
-        }
     }
 
     private boolean shouldShowFab() {

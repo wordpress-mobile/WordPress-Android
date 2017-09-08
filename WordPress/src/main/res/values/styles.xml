@@ -242,6 +242,8 @@
     </style>
 
     <style name="MediaSettingsTheme" parent="WordPress">
+        <item name="android:windowTranslucentStatus">true</item>
+
         <item name="colorAccent">@color/blue_medium</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_close_white_24dp</item>
     </style>
