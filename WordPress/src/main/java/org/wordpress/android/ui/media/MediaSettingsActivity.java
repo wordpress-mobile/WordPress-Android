@@ -164,15 +164,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showFullScreenPreview();
+                ToastUtils.showToast(v.getContext(), "Full-screen preview now implemented yet!");
             }
         };
         mFabView.setOnClickListener(listener);
         mImageView.setOnClickListener(listener);
-    }
-
-    private void showFullScreenPreview() {
-        ToastUtils.showToast(this, "Not implemented yet!");
     }
 
     private boolean shouldShowFab() {
@@ -201,8 +197,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             }
         }, delayMs);
     }
-
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
