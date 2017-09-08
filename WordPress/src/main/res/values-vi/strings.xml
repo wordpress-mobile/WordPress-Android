@@ -970,7 +970,7 @@ Language: vi_VN
 	<string name="app_title">WordPress cho Android</string>
 	<string name="tos">Điều khoản dịch vụ</string>
 	<string name="version">Phiên bản</string>
-	<string name="max_thumbnail_px_width">Chiều rộng ảnh mặc định</string>
+	<string name="max_thumbnail_px_size">Chiều rộng ảnh mặc định</string>
 	<string name="image_alignment">Canh lề</string>
 	<string name="refresh">Làm mới</string>
 	<string name="untitled">Chưa có tiêu đề</string>

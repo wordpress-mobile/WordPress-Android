@@ -1123,7 +1123,7 @@ Language: is
 	<string name="app_title">WordPress fyrir Android</string>
 	<string name="tos">Notendaskilmálar</string>
 	<string name="version">Útgáfa</string>
-	<string name="max_thumbnail_px_width">Sjálfgefin breidd myndar</string>
+	<string name="max_thumbnail_px_size">Sjálfgefin breidd myndar</string>
 	<string name="image_alignment">Jöfnun</string>
 	<string name="refresh">Endurhlaða</string>
 	<string name="untitled">Án titils</string>

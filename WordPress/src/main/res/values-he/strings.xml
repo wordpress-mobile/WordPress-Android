@@ -1236,7 +1236,7 @@ Language: he_IL
 	<string name="app_title">וורדפרס עבור אנדרואיד</string>
 	<string name="tos">תנאי שימוש</string>
 	<string name="version">גרסה</string>
-	<string name="max_thumbnail_px_width">ברירת מחדל לרוחב תמונה</string>
+	<string name="max_thumbnail_px_size">ברירת מחדל לרוחב תמונה</string>
 	<string name="image_alignment">יישור</string>
 	<string name="refresh">רענון</string>
 	<string name="untitled">ללא כותרת</string>

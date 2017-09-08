@@ -1374,7 +1374,7 @@ Language: nl
 	<string name="app_title">WordPress voor Android</string>
 	<string name="tos">Eindgebruikersovereenkomst</string>
 	<string name="version">Versie</string>
-	<string name="max_thumbnail_px_width">Standaardbreedte van afbeelding</string>
+	<string name="max_thumbnail_px_size">Standaardbreedte van afbeelding</string>
 	<string name="image_alignment">Uitlijning </string>
 	<string name="refresh">Vernieuw</string>
 	<string name="untitled">Zonder titel</string>

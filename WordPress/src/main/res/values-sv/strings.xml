@@ -1374,7 +1374,7 @@ Language: sv_SE
 	<string name="app_title">WordPress for Android</string>
 	<string name="tos">Allmänna villkor</string>
 	<string name="version">Version</string>
-	<string name="max_thumbnail_px_width">Förvald bildbredd</string>
+	<string name="max_thumbnail_px_size">Förvald bildbredd</string>
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Uppdatera</string>
 	<string name="untitled">Utan titel</string>
