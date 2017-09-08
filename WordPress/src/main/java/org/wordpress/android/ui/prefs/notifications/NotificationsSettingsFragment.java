@@ -519,7 +519,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
         }
 
         // Track when users enable and disable global notification setting (i.e. "Allow app notifications").
-        if (preference instanceof SwitchPreference&& preference.getKey().equalsIgnoreCase(getString(R.string.wp_pref_notification_receive))) {
+        if (preference instanceof SwitchPreference && preference.getKey().equalsIgnoreCase(getString(R.string.wp_pref_notification_receive))) {
             if (((SwitchPreference) preference).isChecked()) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED);
             } else {
