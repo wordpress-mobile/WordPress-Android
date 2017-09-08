@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -357,6 +359,18 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             txtUploadDate.setVisibility(View.GONE);
             txtUploadDateLabel.setVisibility(View.GONE);
         }
+
+        boolean hasUrl = !TextUtils.isEmpty(mMedia.getUrl());
+        View btnCopy = findViewById(R.id.button_copy_url);
+        btnCopy.setVisibility(hasUrl ? View.VISIBLE : View.GONE);
+        if (hasUrl) {
+            btnCopy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    copyMediaUrlToClipboard();
+                }
+            });
+        }
     }
 
     /*
@@ -601,6 +615,17 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 mMedia = media;
                 showMediaMetaData();
             }
+        }
+    }
+
+    private void copyMediaUrlToClipboard() {
+        try {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText(getString(R.string.app_name), mMedia.getUrl()));
+            ToastUtils.showToast(this, R.string.media_edit_copy_url_toast);
+        } catch (Exception e) {
+            AppLog.e(AppLog.T.UTILS, e);
+            ToastUtils.showToast(this, R.string.error_copy_to_clipboard);
         }
     }
 }
