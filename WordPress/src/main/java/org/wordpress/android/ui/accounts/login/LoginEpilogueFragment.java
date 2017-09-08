@@ -175,13 +175,18 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
             @Override
             public void onAfterLoad() {
-                if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
-                    mBottomShadow.setVisibility(View.VISIBLE);
-                    mBottomButtonsContainer.setBackgroundResource(R.color.white);
-                } else {
-                    mBottomShadow.setVisibility(View.GONE);
-                    mBottomButtonsContainer.setBackground(null);
-                }
+                mSitesList.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
+                            mBottomShadow.setVisibility(View.VISIBLE);
+                            mBottomButtonsContainer.setBackgroundResource(R.color.white);
+                        } else {
+                            mBottomShadow.setVisibility(View.GONE);
+                            mBottomButtonsContainer.setBackground(null);
+                        }
+                    }
+                });
             }
         }, new SitePickerAdapter.HeaderHandler() {
             @Override
