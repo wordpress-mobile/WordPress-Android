@@ -194,7 +194,7 @@ public class ThemeStore extends Store {
         mThemeRestClient.fetchWpComThemes();
     }
 
-    private void handleWpThemesFetched(FetchedThemesPayload payload) {
+    private void handleWpThemesFetched(@NonNull FetchedThemesPayload payload) {
         OnThemesChanged event = new OnThemesChanged(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
@@ -214,7 +214,7 @@ public class ThemeStore extends Store {
         }
     }
 
-    private void handleInstalledThemesFetched(FetchedThemesPayload payload) {
+    private void handleInstalledThemesFetched(@NonNull FetchedThemesPayload payload) {
         OnThemesChanged event = new OnThemesChanged(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
@@ -234,7 +234,7 @@ public class ThemeStore extends Store {
         }
     }
 
-    private void handleCurrentThemeFetched(FetchedCurrentThemePayload payload) {
+    private void handleCurrentThemeFetched(@NonNull FetchedCurrentThemePayload payload) {
         OnCurrentThemeFetched event = new OnCurrentThemeFetched(payload.site, payload.theme);
         if (payload.isError()) {
             event.error = payload.error;
