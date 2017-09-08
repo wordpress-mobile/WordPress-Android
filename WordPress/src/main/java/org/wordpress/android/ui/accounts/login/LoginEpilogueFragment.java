@@ -39,6 +39,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     private RecyclerView mSitesList;
     private View mBottomShadow;
     private View mBottomButtonsContainer;
+    private Button mConnectMore;
 
     @Inject AccountStore mAccountStore;
 
@@ -90,6 +91,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
 
         mBottomButtonsContainer = rootView.findViewById(R.id.bottom_buttons);
+        mConnectMore = (Button) mBottomButtonsContainer.findViewById(R.id.secondary_button);
 
         mSitesList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mSitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -244,12 +246,16 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
         if (numberOfSites == 0) {
             holder.mMySitesHeadingTextView.setVisibility(View.GONE);
+
+            mConnectMore.setText(R.string.connect_site);
         } else {
             holder.mMySitesHeadingTextView.setVisibility(View.VISIBLE);
             holder.mMySitesHeadingTextView.setText(
                     StringUtils.getQuantityString(
                             getActivity(), R.string.days_quantity_one, R.string.login_epilogue_mysites_one,
                             R.string.login_epilogue_mysites_other, numberOfSites));
+
+            mConnectMore.setText(R.string.connect_more);
         }
     }
 
