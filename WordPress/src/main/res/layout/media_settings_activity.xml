@@ -34,7 +34,7 @@
                             android:id="@+id/image_preview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/grey"
+                            android:background="@color/grey_darken_10"
                             android:scaleType="centerCrop"
                             tools:layout_height="224dp"
                             tools:src="@drawable/drake_empty_results_400dp"/>
@@ -48,6 +48,9 @@
                             android:layout_marginRight="@dimen/fab_margin"
                             android:contentDescription="@string/fab_content_description_write"
                             android:visibility="gone"
+                            app:borderWidth="0dp"
+                            app:elevation="4dp"
+                            app:fabSize="normal"
                             app:srcCompat="@drawable/ic_fullscreen_white_24dp"
                             tools:visibility="visible"/>
                     </FrameLayout>
@@ -71,7 +74,8 @@
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_extra_large">
+                            android:layout_marginTop="@dimen/margin_extra_large"
+                            android:textColorHint="@color/grey_500">
 
                             <android.support.design.widget.TextInputEditText
                                 android:id="@+id/edit_title"
@@ -86,7 +90,8 @@
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_small">
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:textColorHint="@color/grey_500">
 
                             <android.support.design.widget.TextInputEditText
                                 android:id="@+id/edit_caption"
@@ -101,7 +106,8 @@
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_small">
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:textColorHint="@color/grey_500">
 
                             <android.support.design.widget.TextInputEditText
                                 android:id="@+id/edit_alt_text"
@@ -116,7 +122,8 @@
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_small">
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:textColorHint="@color/grey_500">
 
                             <android.support.design.widget.TextInputEditText
                                 android:id="@+id/edit_description"

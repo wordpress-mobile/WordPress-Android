@@ -11,11 +11,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -163,29 +161,22 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         showMediaMetaData();
         loadImage();
 
-        if (mMedia.isVideo()) {
-            mFabView.setImageResource(R.drawable.ic_play_video);
-            mFabView.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-        }
-
-        if (shouldShowFab()) {
-            mFabView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notImplemented();
-                }
-            });
-        }
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFullScreenPreview();
+            }
+        };
+        mFabView.setOnClickListener(listener);
+        mImageView.setOnClickListener(listener);
     }
 
-    private void notImplemented() {
+    private void showFullScreenPreview() {
         ToastUtils.showToast(this, "Not implemented yet!");
     }
 
     private boolean shouldShowFab() {
-        return mMedia != null
-                && (mMedia.isVideo()
-                || StringUtils.notNullStr(mMedia.getMimeType()).startsWith("image/"));
+        return mMedia != null && StringUtils.notNullStr(mMedia.getMimeType()).startsWith("image/");
     }
 
     @Override
