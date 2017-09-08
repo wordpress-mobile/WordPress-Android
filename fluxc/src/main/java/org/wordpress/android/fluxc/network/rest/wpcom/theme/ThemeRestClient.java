@@ -43,6 +43,31 @@ public class ThemeRestClient extends BaseWPComRestClient {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
+    /** Endpoint: v1.1/site/$siteId/themes/$themeId/install */
+    public void installTheme(@NonNull final SiteModel site, @NonNull final ThemeModel theme) {
+        String themeIdWIthSuffix = getThemeIdWithWpComSuffix(theme);
+        String url = WPCOMREST.sites.site(site.getSiteId()).themes.theme(themeIdWIthSuffix).install.getUrlV1_1();
+        add(WPComGsonRequest.buildPostRequest(url, null, ThemeJetpackResponse.class,
+                new Response.Listener<ThemeJetpackResponse>() {
+                    @Override
+                    public void onResponse(ThemeJetpackResponse response) {
+                        AppLog.d(AppLog.T.API, "Received response to Jetpack theme installation request.");
+                        ThemeModel responseTheme = createThemeFromJetpackResponse(response);
+                        ActivateThemePayload payload = new ActivateThemePayload(site, responseTheme);
+                        mDispatcher.dispatch(ThemeActionBuilder.newInstalledThemeAction(payload));
+                    }
+                }, new BaseRequest.BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AppLog.d(AppLog.T.API, "Received error response to Jetpack theme installation request.");
+                        ActivateThemePayload payload = new ActivateThemePayload(site, theme);
+                        payload.error = new ActivateThemeError(
+                                ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(ThemeActionBuilder.newInstalledThemeAction(payload));
+                    }
+                }));
+    }
+
     /** Endpoint: v1.1/site/$siteId/themes/mine */
     public void activateTheme(@NonNull final SiteModel site, @NonNull final ThemeModel theme) {
         String url = WPCOMREST.sites.site(site.getSiteId()).themes.mine.getUrlV1_1();
@@ -222,5 +247,16 @@ public class ThemeRestClient extends BaseWPComRestClient {
             themeList.add(createThemeFromJetpackResponse(item));
         }
         return themeList;
+    }
+
+    /**
+     * Must provide theme slug with -wpcom suffix to install a WP.com theme on a Jetpack site.
+     * Per documentation in the developer console: https://developer.wordpress.com/docs/api/console/
+     */
+    private @NonNull String getThemeIdWithWpComSuffix(ThemeModel theme) {
+        if (theme == null || theme.getThemeId() == null) {
+            return "";
+        }
+        return theme.getThemeId() + "-wpcom";
     }
 }
