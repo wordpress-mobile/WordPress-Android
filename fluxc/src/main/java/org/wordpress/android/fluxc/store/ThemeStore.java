@@ -168,6 +168,12 @@ public class ThemeStore extends Store {
             case ACTIVATED_THEME:
                 handleThemeActivated((ActivateThemePayload) action.getPayload());
                 break;
+            case INSTALL_THEME:
+                installTheme((ActivateThemePayload) action.getPayload());
+                break;
+            case INSTALLED_THEME:
+                handleThemeInstalled((ActivateThemePayload) action.getPayload());
+                break;
         }
     }
 
@@ -234,6 +240,23 @@ public class ThemeStore extends Store {
             event.error = payload.error;
         } else {
             ThemeSqlUtils.insertOrUpdateTheme(payload.theme);
+        }
+        emitChange(event);
+    }
+
+    private void installTheme(@NonNull ActivateThemePayload payload) {
+        if (payload.site.isJetpackConnected()) {
+            mThemeRestClient.installTheme(payload.site, payload.theme);
+        } else {
+            payload.error = new ActivateThemeError("not_available", null);
+            handleThemeInstalled(payload);
+        }
+    }
+
+    private void handleThemeInstalled(@NonNull ActivateThemePayload payload) {
+        OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
+        if (payload.isError()) {
+            event.error = payload.error;
         }
         emitChange(event);
     }
