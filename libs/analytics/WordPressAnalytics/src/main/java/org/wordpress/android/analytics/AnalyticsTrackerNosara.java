@@ -1,6 +1,7 @@
 package org.wordpress.android.analytics;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.automattic.android.tracks.TracksClient;
 
@@ -298,7 +299,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             AppLog.e(AppLog.T.UTILS, e);
         }
 
-        if (metadata.isUserConnected() && metadata.isWordPressComUser()) {
+        if (metadata.isUserConnected() && metadata.isWordPressComUser()
+                && !TextUtils.isEmpty(metadata.getUsername())) {
             setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
             if (getAnonID() != null) {
