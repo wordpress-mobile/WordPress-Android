@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,6 +23,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
@@ -53,6 +53,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -85,6 +86,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private EditText mCaptionView;
     private EditText mAltTextView;
     private EditText mDescriptionView;
+    private FloatingActionButton mFabView;
 
     private ProgressDialog mProgressDialog;
 
@@ -135,6 +137,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mCaptionView = (EditText) findViewById(R.id.edit_caption);
         mAltTextView = (EditText) findViewById(R.id.edit_alt_text);
         mDescriptionView = (EditText) findViewById(R.id.edit_description);
+        mFabView = (FloatingActionButton) findViewById(R.id.fab_button);
 
         int mediaId;
         if (savedInstanceState != null) {
@@ -156,6 +159,19 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         showMediaMetaData();
         loadImage();
+
+        if (shouldShowFab()) {
+            mFabView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notImplemented();
+                }
+            });
+        }
+    }
+
+    private void notImplemented() {
+        ToastUtils.showToast(this, "Not implemented yet!");
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -167,6 +183,39 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             window.setStatusBarColor(statusColor);
         }
     }
+
+    private boolean shouldShowFab() {
+        if (mMedia == null) {
+            return false;
+        }
+        String mimeType = StringUtils.notNullStr(mMedia.getMimeType());
+        return mimeType.startsWith("image/");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (shouldShowFab()) {
+            AniUtils.scaleOut(mFabView, AniUtils.Duration.SHORT);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing() && shouldShowFab() && mFabView.getVisibility() != View.VISIBLE) {
+                    AniUtils.scaleIn(mFabView, AniUtils.Duration.SHORT);
+                }
+            }
+        }, delayMs);
+    }
+
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
