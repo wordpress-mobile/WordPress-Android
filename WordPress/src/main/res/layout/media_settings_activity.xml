@@ -48,7 +48,6 @@
                             android:layout_marginRight="@dimen/fab_margin"
                             android:contentDescription="@string/fab_content_description_write"
                             android:visibility="gone"
-                            app:borderWidth="0dp"
                             app:srcCompat="@drawable/ic_fullscreen_white_24dp"
                             tools:visibility="visible"/>
                     </FrameLayout>

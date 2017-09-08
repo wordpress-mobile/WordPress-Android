@@ -11,9 +11,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -152,16 +154,19 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
-        int imageHeight = (int) (displayHeight * 0.4);
-        mImageView.getLayoutParams().height = imageHeight;
+        mImageView.getLayoutParams().height = (int) (displayHeight * 0.4);
 
         int toolbarHeight = DisplayUtils.getActionBarHeight(this);
-        int gradientHeight = toolbarHeight * 3;
         ImageView imgGradient = (ImageView) findViewById(R.id.image_gradient);
-        imgGradient.getLayoutParams().height = gradientHeight;
+        imgGradient.getLayoutParams().height = toolbarHeight * 3;
 
         showMediaMetaData();
         loadImage();
+
+        if (mMedia.isVideo()) {
+            mFabView.setImageResource(R.drawable.ic_play_video);
+            mFabView.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+        }
 
         if (shouldShowFab()) {
             mFabView.setOnClickListener(new View.OnClickListener() {
@@ -178,11 +183,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private boolean shouldShowFab() {
-        if (mMedia == null) {
-            return false;
-        }
-        String mimeType = StringUtils.notNullStr(mMedia.getMimeType());
-        return mimeType.startsWith("image/");
+        return mMedia != null
+                && (mMedia.isVideo()
+                || StringUtils.notNullStr(mMedia.getMimeType()).startsWith("image/"));
     }
 
     @Override
