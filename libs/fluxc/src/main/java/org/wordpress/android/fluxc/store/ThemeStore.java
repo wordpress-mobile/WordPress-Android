@@ -286,6 +286,7 @@ public class ThemeStore extends Store {
 
     private void deleteTheme(@NonNull ActivateThemePayload payload) {
         if (payload.site.isJetpackConnected() && payload.site.isUsingWpComRestApi()) {
+            mThemeRestClient.deleteTheme(payload.site, payload.theme);
         } else {
             payload.error = new ActivateThemeError("not_available", null);
             handleThemeDeleted(payload);
