@@ -241,9 +241,20 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="MediaSettingsTheme" parent="WordPress">
+    <style name="MediaSettings" />
+    <style name="MediaSettings.Theme" parent="WordPress">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_close_white_24dp</item>
+    </style>
+    <style name="MediaSettings.TextInputStyle">
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+    </style>
+    <style name="MediaSettings.TextInputTheme" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/grey_500</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlNormal">@color/grey_500</item>
+        <item name="colorControlActivated">@color/blue_wordpress</item>
     </style>
 
     <style name="EmptyListText">

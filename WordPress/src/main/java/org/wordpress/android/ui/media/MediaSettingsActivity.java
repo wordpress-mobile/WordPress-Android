@@ -164,7 +164,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.showToast(v.getContext(), "Full-screen preview now implemented yet!");
+                ToastUtils.showToast(v.getContext(), "Full-screen preview isn't implemented yet");
             }
         };
         mFabView.setOnClickListener(listener);
