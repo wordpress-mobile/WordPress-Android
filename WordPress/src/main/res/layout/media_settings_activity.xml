@@ -5,6 +5,14 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/image_gradient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@drawable/media_settings_gradient"
+        tools:layout_height="74dp"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -175,22 +183,29 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginTop="@dimen/margin_small"
-                            android:layout_toLeftOf="@+id/button_copy_url"
+                            android:layout_toLeftOf="@+id/text_copy_url"
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:textColor="@color/grey"
                             android:textSize="@dimen/text_sz_medium"
                             tools:text="text_url"/>
 
-                        <Button
-                            android:id="@+id/button_copy_url"
+                        <TextView
+                            android:id="@+id/text_copy_url"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/margin_large"
-                            android:text="@string/copy"/>
+                            android:background="@drawable/button_frame"
+                            android:paddingBottom="@dimen/margin_small"
+                            android:paddingLeft="@dimen/margin_extra_large"
+                            android:paddingRight="@dimen/margin_extra_large"
+                            android:paddingTop="@dimen/margin_small"
+                            android:text="@string/copy"
+                            android:textAllCaps="true"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="@dimen/text_sz_medium"/>
                     </RelativeLayout>
 
                     <!-- filename -->
@@ -283,13 +298,5 @@
 
         </RelativeLayout>
     </ScrollView>
-
-    <ImageView
-        android:id="@+id/image_gradient"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="@drawable/media_settings_gradient"
-        tools:layout_height="74dp"/>
 
 </FrameLayout>

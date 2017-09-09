@@ -242,7 +242,7 @@
     </style>
 
     <style name="MediaSettings" />
-    <style name="MediaSettings.Theme" parent="WordPress">
+    <style name="MediaSettings.ActivityTheme" parent="WordPress">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_close_white_24dp</item>
     </style>

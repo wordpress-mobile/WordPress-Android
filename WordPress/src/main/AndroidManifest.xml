@@ -266,7 +266,7 @@
         <activity
             android:name=".ui.media.MediaSettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            android:theme="@style/MediaSettings.Theme" />
+            android:theme="@style/MediaSettings.ActivityTheme" />
 
         <!-- Theme Activities -->
         <activity

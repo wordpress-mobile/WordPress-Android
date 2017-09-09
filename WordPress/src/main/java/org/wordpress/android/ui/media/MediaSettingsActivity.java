@@ -340,10 +340,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         boolean hasUrl = !TextUtils.isEmpty(mMedia.getUrl());
-        View btnCopy = findViewById(R.id.button_copy_url);
-        btnCopy.setVisibility(hasUrl ? View.VISIBLE : View.GONE);
+        View txtCopyUrl = findViewById(R.id.text_copy_url);
+        txtCopyUrl.setVisibility(hasUrl ? View.VISIBLE : View.GONE);
         if (hasUrl) {
-            btnCopy.setOnClickListener(new View.OnClickListener() {
+            txtCopyUrl.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     copyMediaUrlToClipboard();
