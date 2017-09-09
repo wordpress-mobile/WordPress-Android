@@ -199,6 +199,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
+    public MediaDeleteService getMediaDeleteService() {
+        if (mDeleteService == null) {
+            return null;
+        }
+        return mDeleteService.getService();
+    }
+
     /*
      * only show tabs when being used as a media browser rather than a media picker
      */
@@ -686,6 +693,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
             } else {
                 mediaToDelete.add(mediaModel);
+                mediaModel.setUploadState(MediaUploadState.DELETING);
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
             }
             processedItemCount++;
         }
@@ -698,9 +707,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         // and then refresh the grid
         if (!mediaToDelete.isEmpty()) {
             startMediaDeleteService(mediaToDelete);
-        }
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.clearSelection();
         }
     }
 

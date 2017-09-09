@@ -59,8 +59,8 @@
             android:id="@+id/pref_default_image_width"
             android:key="@string/pref_key_site_image_width"
             android:title="@string/site_settings_default_image_width_title"
-            android:entries="@array/site_settings_image_width_entries"
-            android:entryValues="@array/site_settings_image_width_values"
+            android:entries="@array/site_settings_image_max_size_entries"
+            android:entryValues="@array/site_settings_image_max_size_values"
             android:dependency="@string/pref_key_optimize_image"
             app:longClickHint="@string/site_settings_image_width_hint" />
 

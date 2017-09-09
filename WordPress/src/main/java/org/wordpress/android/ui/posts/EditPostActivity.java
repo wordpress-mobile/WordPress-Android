@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
@@ -8,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -22,6 +24,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -79,6 +82,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -116,6 +120,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -354,7 +359,7 @@ public class EditPostActivity extends AppCompatActivity implements
             resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued();
         }
 
-        setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
+        setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
         // Set up the ViewPager with the sections adapter.
@@ -371,7 +376,7 @@ public class EditPostActivity extends AppCompatActivity implements
             public void onPageSelected(int position) {
                 invalidateOptionsMenu();
                 if (position == PAGE_CONTENT) {
-                    setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
+                    setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                     hidePhotoPicker();
@@ -649,8 +654,11 @@ public class EditPostActivity extends AppCompatActivity implements
      * user has requested to show the photo picker
      */
     private void showPhotoPicker() {
+        boolean isAlreadyShowing = isPhotoPickerShowing();
+
         // make sure we initialized the photo picker
         if (mPhotoPickerFragment == null) {
+            //SmartToast.reset();
             initPhotoPicker();
         }
 
@@ -662,7 +670,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // slide in the photo picker
-        if (!isPhotoPickerShowing()) {
+        if (!isAlreadyShowing) {
             AniUtils.animateBottomBar(mPhotoPickerContainer, true, AniUtils.Duration.MEDIUM);
             mPhotoPickerFragment.refresh();
             mPhotoPickerFragment.setPhotoPickerListener(this);
@@ -673,6 +681,13 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment)mEditorFragment).enableMediaMode(true);
+        }
+
+        // let the user know about long-press to multiselect, but only if the user has already granted
+        // storage permission - otherwise the toast will appear above the "soft ask" view
+        if (!isAlreadyShowing && ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            SmartToast.show(this, SmartToast.SmartToastType.MEDIA_LONG_PRESS);
         }
     }
 
@@ -2731,16 +2746,17 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (event.isError()) {
             onUploadError(event.media, event.error);
-        }
-        else
-        if (event.canceled) {
+        } else if (event.canceled) {
             onUploadCanceled(event.media);
-        }
-        else
-        if (event.completed) {
-            onUploadSuccess(event.media);
-        }
-        else {
+        } else if (event.completed) {
+            // if the remote url on completed is null, we consider this upload wasn't successful
+            if (event.media.getUrl() == null) {
+                MediaStore.MediaError error = new MediaStore.MediaError(MediaErrorType.GENERIC_ERROR);
+                onUploadError(event.media, error);
+            } else {
+                onUploadSuccess(event.media);
+            }
+        } else {
             onUploadProgress(event.media, event.progress);
         }
     }

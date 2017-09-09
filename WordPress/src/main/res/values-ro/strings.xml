@@ -1374,7 +1374,7 @@ Language: ro
 	<string name="app_title">WordPress pentru Android</string>
 	<string name="tos">Termenii de funcționare a serviciului</string>
 	<string name="version">Versiune</string>
-	<string name="max_thumbnail_px_width">Lățime imagine implicită</string>
+	<string name="max_thumbnail_px_size">Lățime imagine implicită</string>
 	<string name="image_alignment">Aliniere</string>
 	<string name="refresh">Reîmprospătare</string>
 	<string name="untitled">Fără titlu</string>

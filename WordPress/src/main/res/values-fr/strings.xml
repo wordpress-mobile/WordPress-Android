@@ -1268,7 +1268,7 @@ Language: fr
 	<string name="app_title">WordPress pour Android</string>
 	<string name="tos">Conditions d\'utilisation</string>
 	<string name="version">Version</string>
-	<string name="max_thumbnail_px_width">Largeur d\'iImage par défaut</string>
+	<string name="max_thumbnail_px_size">Largeur d\'iImage par défaut</string>
 	<string name="image_alignment">Alignement</string>
 	<string name="refresh">Rafraichir</string>
 	<string name="untitled">Sans titre</string>

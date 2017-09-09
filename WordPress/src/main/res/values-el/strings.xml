@@ -1062,7 +1062,7 @@ Language: el_GR
 	<string name="app_title">WordPress για Android</string>
 	<string name="tos">Όροι Χρήσης</string>
 	<string name="version">Έκδοση</string>
-	<string name="max_thumbnail_px_width">Προεπιλεγμένο πλάτος εικόνας</string>
+	<string name="max_thumbnail_px_size">Προεπιλεγμένο πλάτος εικόνας</string>
 	<string name="image_alignment">Στοίχιση</string>
 	<string name="refresh">Ανανέωση</string>
 	<string name="untitled">Χωρίς τίτλο</string>

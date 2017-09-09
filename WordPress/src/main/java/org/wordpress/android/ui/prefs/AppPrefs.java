@@ -122,6 +122,9 @@ public class AppPrefs {
         // When we need to show the new editor promo dialog
         AZTEC_EDITOR_PROMO_REQUIRED,
 
+        // counter which determines whether it's time to show the above promo
+        AZTEC_EDITOR_PROMO_COUNTER,
+
         // When we need to show the async promo dialog
         ASYNC_PROMO_REQUIRED,
 
@@ -142,9 +145,6 @@ public class AppPrefs {
 
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
-
-        // aztec editor available
-        AZTEC_EDITOR_AVAILABLE,
 
         // smart toast counters
         SMART_TOAST_MEDIA_LONG_PRESS_USAGE_COUNTER,
@@ -513,6 +513,12 @@ public class AppPrefs {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
     }
 
+    public static int bumpAndReturnAztecPromoCounter() {
+        int count = getInt(UndeletablePrefKey.AZTEC_EDITOR_PROMO_COUNTER) + 1;
+        setInt(UndeletablePrefKey.AZTEC_EDITOR_PROMO_COUNTER, count);
+        return count;
+    }
+
     public static void setGlobalPlansFeatures(String jsonOfFeatures) {
         if (jsonOfFeatures != null) {
             setString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, jsonOfFeatures);
@@ -593,13 +599,13 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.IMAGE_OPTIMIZE_ENABLED, optimize);
     }
 
-    public static void setImageOptimizeWidth(int width) {
+    public static void setImageOptimizeMaxSize(int width) {
         setInt(DeletablePrefKey.IMAGE_OPTIMIZE_WIDTH, width);
     }
 
-    public static int getImageOptimizeWidth() {
+    public static int getImageOptimizeMaxSize() {
         int resizeWidth = getInt(DeletablePrefKey.IMAGE_OPTIMIZE_WIDTH, 0);
-        return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_IMAGE_MAX_WIDTH : resizeWidth;
+        return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_IMAGE_MAX_SIZE : resizeWidth;
     }
 
     public static void setImageOptimizeQuality(int quality) {
