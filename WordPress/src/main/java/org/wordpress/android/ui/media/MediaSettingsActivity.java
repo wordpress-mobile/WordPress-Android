@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -17,6 +18,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -34,6 +36,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -121,13 +124,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         setContentView(R.layout.media_settings_activity);
 
-        int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
             actionBar.setTitle(R.string.media);
-            actionBar.setBackgroundDrawable(new ColorDrawable(toolbarColor));
+            makeStatusAndToolbarTransparent();
         }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
@@ -177,10 +180,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         };
         mFabView.setOnClickListener(listener);
         mImageView.setOnClickListener(listener);
-    }
-
-    private boolean shouldShowFab() {
-        return mMedia != null && StringUtils.notNullStr(mMedia.getMimeType()).startsWith("image/");
     }
 
     @Override
@@ -243,6 +242,19 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 finish();
             }
         }, 1500);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void makeStatusAndToolbarTransparent() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(toolbarColor));
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
+
+    private boolean shouldShowFab() {
+        return mMedia != null && StringUtils.notNullStr(mMedia.getMimeType()).startsWith("image/");
     }
 
     private void showProgress(boolean show) {

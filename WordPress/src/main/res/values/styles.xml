@@ -242,10 +242,6 @@
     </style>
 
     <style name="MediaSettings" />
-    <style name="MediaSettings.ActivityTheme" parent="WordPress">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_close_white_24dp</item>
-    </style>
     <style name="MediaSettings.TextInputStyle">
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
     </style>
