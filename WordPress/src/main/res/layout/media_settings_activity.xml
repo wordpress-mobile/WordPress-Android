@@ -5,14 +5,6 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/image_gradient"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="@drawable/media_settings_gradient"
-        tools:layout_height="74dp"/>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -20,6 +12,22 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end|bottom"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:contentDescription="@string/fab_content_description_write"
+                android:visibility="gone"
+                app:borderWidth="0dp"
+                app:elevation="4dp"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/ic_fullscreen_white_24dp"
+                tools:visibility="visible"/>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/card1"
@@ -34,35 +42,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <FrameLayout
+                    <ImageView
+                        android:id="@+id/image_preview"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/image_preview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/grey_darken_10"
-                            android:scaleType="centerCrop"
-                            tools:layout_height="224dp"
-                            tools:src="@drawable/drake_empty_results_400dp"/>
-
-                        <android.support.design.widget.FloatingActionButton
-                            android:id="@+id/fab_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end|bottom"
-                            android:layout_marginBottom="@dimen/fab_margin"
-                            android:layout_marginRight="@dimen/fab_margin"
-                            android:contentDescription="@string/fab_content_description_write"
-                            android:visibility="gone"
-                            app:borderWidth="0dp"
-                            app:elevation="4dp"
-                            app:fabSize="normal"
-                            app:srcCompat="@drawable/ic_fullscreen_white_24dp"
-                            tools:visibility="visible"/>
-                    </FrameLayout>
-
+                        android:layout_height="wrap_content"
+                        android:background="@color/grey_darken_10"
+                        android:scaleType="centerCrop"
+                        tools:layout_height="224dp"
+                        tools:src="@drawable/drake_empty_results_400dp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -298,5 +285,13 @@
 
         </RelativeLayout>
     </ScrollView>
+
+    <ImageView
+        android:id="@+id/image_gradient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@drawable/media_settings_gradient"
+        tools:layout_height="74dp"/>
 
 </FrameLayout>

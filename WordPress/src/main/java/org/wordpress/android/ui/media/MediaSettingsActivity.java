@@ -33,6 +33,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -152,7 +153,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
-        mImageView.getLayoutParams().height = (int) (displayHeight * 0.4);
+        int imageHeight = (int) (displayHeight * 0.4);
+        mImageView.getLayoutParams().height = imageHeight;
+
+        int fabHeight = DisplayUtils.dpToPx(this, 56);
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mFabView.getLayoutParams();
+        int topMargin = imageHeight - (fabHeight / 2);
+        int rightMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
+        params.setMargins(0, topMargin, rightMargin, 0);
 
         int toolbarHeight = DisplayUtils.getActionBarHeight(this);
         ImageView imgGradient = (ImageView) findViewById(R.id.image_gradient);
