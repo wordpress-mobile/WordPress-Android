@@ -151,15 +151,15 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_small"
                     android:orientation="vertical"
-                    android:padding="@dimen/margin_extra_large">
+                    android:paddingBottom="@dimen/margin_extra_large"
+                    android:paddingTop="@dimen/margin_extra_large">
 
                     <!-- url -->
                     <TextView
+                        style="@style/MediaSettings.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_edit_url_caption"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large"/>
+                        android:text="@string/media_edit_url_caption"/>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -167,14 +167,13 @@
 
                         <TextView
                             android:id="@+id/text_url"
+                            style="@style/MediaSettings.Value"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@+id/text_copy_url"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:textColor="@color/grey"
-                            android:textSize="@dimen/text_sz_medium"
                             tools:text="text_url"/>
 
                         <TextView
@@ -183,7 +182,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/margin_large"
+                            android:layout_marginRight="@dimen/margin_extra_large"
                             android:background="@drawable/button_frame"
                             android:paddingBottom="@dimen/margin_small"
                             android:paddingLeft="@dimen/margin_extra_large"
@@ -202,20 +201,16 @@
 
                     <!-- filename -->
                     <TextView
+                        style="@style/MediaSettings.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_medium"
-                        android:text="@string/media_edit_filename_caption"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large"/>
+                        android:text="@string/media_edit_filename_caption"/>
 
                     <TextView
                         android:id="@+id/text_filename"
+                        style="@style/MediaSettings.Value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_small"
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/text_sz_medium"
                         tools:text="text_filename"/>
 
                     <View
@@ -225,20 +220,16 @@
 
                     <!-- file type -->
                     <TextView
+                        style="@style/MediaSettings.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_medium"
-                        android:text="@string/media_edit_filetype_caption"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large"/>
+                        android:text="@string/media_edit_filetype_caption"/>
 
                     <TextView
                         android:id="@+id/text_filetype"
+                        style="@style/MediaSettings.Value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_small"
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/text_sz_medium"
                         tools:text="text_filetype"/>
 
                     <View
@@ -249,20 +240,16 @@
                     <!-- dimensions -->
                     <TextView
                         android:id="@+id/text_image_dimensions_label"
+                        style="@style/MediaSettings.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_medium"
-                        android:text="@string/media_edit_image_dimensions_caption"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large"/>
+                        android:text="@string/media_edit_image_dimensions_caption"/>
 
                     <TextView
                         android:id="@+id/text_image_dimensions"
+                        style="@style/MediaSettings.Value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_small"
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/text_sz_medium"
                         tools:text="text_image_dimensions"/>
 
                     <View
@@ -273,20 +260,16 @@
                     <!-- upload date -->
                     <TextView
                         android:id="@+id/text_upload_date_label"
+                        style="@style/MediaSettings.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_medium"
-                        android:text="@string/media_edit_upload_date_caption"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large"/>
+                        android:text="@string/media_edit_upload_date_caption"/>
 
                     <TextView
                         android:id="@+id/text_upload_date"
+                        style="@style/MediaSettings.Value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_small"
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/text_sz_medium"
                         tools:text="text_upload_date"/>
 
                 </LinearLayout>
