@@ -46,7 +46,7 @@
                         android:id="@+id/image_preview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/grey_darken_10"
+                        android:background="@color/grey_light"
                         android:scaleType="centerCrop"
                         tools:layout_height="224dp"
                         tools:src="@drawable/drake_empty_results_400dp"/>

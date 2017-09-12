@@ -403,7 +403,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                     if (!isFinishing() && response.getBitmap() != null) {
                         showProgress(false);
-                        mImageView.setImageBitmap(response.getBitmap());
+                        fadeInBitmap(response.getBitmap());
                     }
                 }
 
@@ -447,11 +447,16 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 return;
             }
             if (bitmap != null) {
-                mImageView.setImageBitmap(bitmap);
+                fadeInBitmap(bitmap);
             } else {
                 delayedFinishWithError();
             }
         }
+    }
+
+    private void fadeInBitmap(@NonNull Bitmap bitmap) {
+        mImageView.setImageBitmap(bitmap);
+        AniUtils.fadeIn(mImageView, AniUtils.Duration.LONG);
     }
 
     @Override
