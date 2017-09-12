@@ -194,6 +194,7 @@
     <string name="media_edit_image_dimensions_caption">Image Dimensions</string>
     <string name="media_edit_upload_date_caption">Upload Date</string>
     <string name="media_edit_copy_url_toast">URL copied to clipboard</string>
+    <string name="fab_content_description_preview">Preview</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_multi_media">Delete selected items?</string>
