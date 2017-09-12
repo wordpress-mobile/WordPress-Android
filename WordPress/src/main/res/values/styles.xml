@@ -255,6 +255,11 @@
         <item name="colorControlNormal">@color/grey_500</item>
         <item name="colorControlActivated">@color/blue_wordpress</item>
     </style>
+    <style name="MediaSettings.Divider">
+        <item name="android:background">@color/divider_grey</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:layout_marginBottom">@dimen/margin_medium</item>
+    </style>
 
     <style name="EmptyListText">
         <item name="android:layout_width">fill_parent</item>

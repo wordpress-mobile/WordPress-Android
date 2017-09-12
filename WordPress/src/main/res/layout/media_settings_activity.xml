@@ -195,11 +195,16 @@
                             android:textSize="@dimen/text_sz_medium"/>
                     </RelativeLayout>
 
+                    <View
+                        style="@style/MediaSettings.Divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+
                     <!-- filename -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_extra_large"
+                        android:layout_marginTop="@dimen/margin_medium"
                         android:text="@string/media_edit_filename_caption"
                         android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_sz_large"/>
@@ -213,11 +218,16 @@
                         android:textSize="@dimen/text_sz_medium"
                         tools:text="text_filename"/>
 
+                    <View
+                        style="@style/MediaSettings.Divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+
                     <!-- file type -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_extra_large"
+                        android:layout_marginTop="@dimen/margin_medium"
                         android:text="@string/media_edit_filetype_caption"
                         android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_sz_large"/>
@@ -231,12 +241,17 @@
                         android:textSize="@dimen/text_sz_medium"
                         tools:text="text_filetype"/>
 
+                    <View
+                        style="@style/MediaSettings.Divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+
                     <!-- dimensions -->
                     <TextView
                         android:id="@+id/text_image_dimensions_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_extra_large"
+                        android:layout_marginTop="@dimen/margin_medium"
                         android:text="@string/media_edit_image_dimensions_caption"
                         android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_sz_large"/>
@@ -250,12 +265,17 @@
                         android:textSize="@dimen/text_sz_medium"
                         tools:text="text_image_dimensions"/>
 
+                    <View
+                        style="@style/MediaSettings.Divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+
                     <!-- upload date -->
                     <TextView
                         android:id="@+id/text_upload_date_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_extra_large"
+                        android:layout_marginTop="@dimen/margin_medium"
                         android:text="@string/media_edit_upload_date_caption"
                         android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_sz_large"/>
