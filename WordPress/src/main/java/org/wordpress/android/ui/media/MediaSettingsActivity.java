@@ -155,25 +155,28 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             return;
         }
 
+        // make image 40% of screen height
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
         int imageHeight = (int) (displayHeight * 0.4);
         mImageView.getLayoutParams().height = imageHeight;
 
-        int fabHeight = DisplayUtils.dpToPx(this, 56);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mFabView.getLayoutParams();
-        int topMargin = imageHeight - (fabHeight / 2);
-        int rightMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
-        params.setMargins(0, topMargin, rightMargin, 0);
+        // position the fab so it overlaps the image
+        if (shouldShowFab()) {
+            int fabHeight = DisplayUtils.dpToPx(this, 56);
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mFabView.getLayoutParams();
+            int topMargin = imageHeight - (fabHeight / 2);
+            int rightMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
+            params.setMargins(0, topMargin, rightMargin, 0);
+        }
 
+        // set the height of the gradient scrim that appears atop the image
         int toolbarHeight = DisplayUtils.getActionBarHeight(this);
         ImageView imgGradient = (ImageView) findViewById(R.id.image_gradient);
         imgGradient.getLayoutParams().height = toolbarHeight * 3;
 
-        showMediaMetaData();
-        loadImage();
-
         ImageView imgPlayVideo = (ImageView) findViewById(R.id.image_play_video);
         imgPlayVideo.setVisibility(mMedia.isVideo() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.edit_alt_text_layout).setVisibility(mMedia.isVideo() ? View.GONE : View.VISIBLE);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -184,6 +187,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mFabView.setOnClickListener(listener);
         mImageView.setOnClickListener(listener);
         imgPlayVideo.setOnClickListener(listener);
+
+        showMediaMetaData();
+        loadImage();
     }
 
     @Override
@@ -258,6 +264,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private boolean shouldShowFab() {
+        // fab only shows for images
         return mMedia != null && StringUtils.notNullStr(mMedia.getMimeType()).startsWith("image/");
     }
 
