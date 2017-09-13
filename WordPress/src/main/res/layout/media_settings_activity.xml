@@ -55,7 +55,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:padding="@dimen/margin_extra_large">
+                        android:paddingBottom="@dimen/margin_extra_large"
+                        android:paddingLeft="@dimen/media_settings_margin"
+                        android:paddingRight="@dimen/media_settings_margin"
+                        android:paddingTop="@dimen/margin_extra_large">
 
                         <TextView
                             android:layout_width="wrap_content"

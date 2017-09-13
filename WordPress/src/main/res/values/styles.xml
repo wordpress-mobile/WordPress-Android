@@ -261,14 +261,14 @@
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
     <style name="MediaSettings.Label">
-        <item name="android:layout_marginLeft">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginLeft">@dimen/media_settings_margin</item>
+        <item name="android:layout_marginRight">@dimen/media_settings_margin</item>
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
     <style name="MediaSettings.Value">
-        <item name="android:layout_marginLeft">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginLeft">@dimen/media_settings_margin</item>
+        <item name="android:layout_marginRight">@dimen/media_settings_margin</item>
         <item name="android:textColor">@color/grey</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
