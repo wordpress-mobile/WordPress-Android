@@ -493,7 +493,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 query.setFilterById(mDownloadId);
                 DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                 Cursor cursor = dm.query(query);
-                if (cursor.moveToFirst()) {
+                if (cursor != null && cursor.moveToFirst()) {
                     int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
                     if (reason == DownloadManager.STATUS_FAILED) {
                         ToastUtils.showToast(MediaSettingsActivity.this, R.string.error_media_save);
