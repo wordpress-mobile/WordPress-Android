@@ -172,6 +172,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         showMediaMetaData();
         loadImage();
 
+        ImageView imgPlayVideo = (ImageView) findViewById(R.id.image_play_video);
+        imgPlayVideo.setVisibility(mMedia.isVideo() ? View.VISIBLE : View.GONE);
+
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,6 +183,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         };
         mFabView.setOnClickListener(listener);
         mImageView.setOnClickListener(listener);
+        imgPlayVideo.setOnClickListener(listener);
     }
 
     @Override
