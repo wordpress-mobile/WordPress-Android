@@ -263,6 +263,10 @@
             android:name=".ui.media.MediaPreviewActivity"
             android:windowSoftInputMode="adjustNothing"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".ui.media.MediaSettingsActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:theme="@style/MediaSettings.Theme" />
 
         <!-- Theme Activities -->
         <activity
