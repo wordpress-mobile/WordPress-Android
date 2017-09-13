@@ -392,6 +392,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     trackAddMediaFromDeviceEvents(true, true, uri);
                 }
                 break;
+            case RequestCodes.MEDIA_SETTINGS:
+                if (resultCode == MediaSettingsActivity.RESULT_MEDIA_DELETED) {
+                    reloadMediaGrid();
+                }
+                break;
         }
     }
 
@@ -575,12 +580,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         // Show the simple preview in case of uploading items. i.e: No metadata info, and other options only available
         // for files already on the remote site.
+        // TODO: this should be handled by MediaSettingsActivity
         if (media.getUploadState() != null && MediaUtils.isLocalFile(media.getUploadState())) {
             MediaPreviewActivity.showPreview(this, null, media.getFilePath(), mimeType.startsWith("video"));
             return;
         }
 
-        MediaSettingsActivity.show(this, mSite, media.getId());
+        MediaSettingsActivity.showForResult(this, mSite, media.getId());
     }
 
     @Override

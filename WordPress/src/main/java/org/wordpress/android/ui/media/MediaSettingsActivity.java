@@ -2,6 +2,7 @@ package org.wordpress.android.ui.media;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -55,6 +56,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -77,6 +79,7 @@ import javax.inject.Inject;
 public class MediaSettingsActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
+    public static final int RESULT_MEDIA_DELETED = RESULT_FIRST_USER;
 
     private long mDownloadId;
 
@@ -100,21 +103,21 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     Dispatcher mDispatcher;
 
     /**
-     * @param context self explanatory
-     * @param site    site which contains this media item
-     * @param mediaId local ID in site's media library
+     * @param activity self explanatory
+     * @param site     site which contains this media item
+     * @param mediaId  local ID in site's media library
      */
-    public static void show(Context context,
-                            SiteModel site,
-                            int mediaId) {
-        Intent intent = new Intent(context, MediaSettingsActivity.class);
+    public static void showForResult(Activity activity,
+                                     SiteModel site,
+                                     int mediaId) {
+        Intent intent = new Intent(activity, MediaSettingsActivity.class);
         intent.putExtra(ARG_MEDIA_LOCAL_ID, mediaId);
         intent.putExtra(WordPress.SITE, site);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                context,
+                activity,
                 R.anim.activity_slide_up_from_bottom,
                 R.anim.do_nothing);
-        ActivityCompat.startActivity(context, intent, options.toBundle());
+        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.MEDIA_SETTINGS, options.toBundle());
     }
 
     @Override
@@ -257,8 +260,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void makeStatusAndToolbarTransparent() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(toolbarColor));
+            if (getSupportActionBar() != null) {
+                int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(toolbarColor));
+            }
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
@@ -622,6 +627,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             if (event.isError()) {
                 ToastUtils.showToast(this, R.string.error_generic);
             } else {
+                setResult(RESULT_MEDIA_DELETED);
                 finish();
             }
         } else if (!event.isError()) {
