@@ -76,6 +76,8 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 public class MediaSettingsActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
@@ -87,6 +89,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private MediaModel mMedia;
 
     private ImageView mImageView;
+    private ImageView mImageFull;
+
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mAltTextView;
@@ -133,10 +137,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
             actionBar.setTitle(R.string.media);
+            actionBar.setShowHideAnimationEnabled(true);
             makeStatusAndToolbarTransparent();
         }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
+        mImageFull = (ImageView) findViewById(R.id.image_full);
+
         mTitleView = (EditText) findViewById(R.id.edit_title);
         mCaptionView = (EditText) findViewById(R.id.edit_caption);
         mAltTextView = (EditText) findViewById(R.id.edit_alt_text);
@@ -184,7 +191,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.showToast(v.getContext(), "Full-screen preview isn't implemented yet");
+                //ToastUtils.showToast(v.getContext(), "Full-screen preview isn't implemented yet");
+                showFullScreen();
             }
         };
         mFabView.setOnClickListener(listener);
@@ -279,9 +287,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     @Override
     public void onBackPressed() {
-        saveChanges();
-        invalidateOptionsMenu();
-        super.onBackPressed();
+        if (isFullScreenShowing()) {
+            hideFullScreen();
+        } else {
+            saveChanges();
+            invalidateOptionsMenu();
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -473,6 +485,25 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private void fadeInBitmap(@NonNull Bitmap bitmap) {
         mImageView.setImageBitmap(bitmap);
         AniUtils.fadeIn(mImageView, AniUtils.Duration.LONG);
+
+        PhotoViewAttacher attacher = new PhotoViewAttacher(mImageFull);
+        mImageFull.setImageBitmap(bitmap);
+    }
+
+    private boolean isFullScreenShowing() {
+        return mImageFull.getVisibility() == View.VISIBLE;
+    }
+
+    private void showFullScreen() {
+        getSupportActionBar().hide();
+        findViewById(R.id.scroll_view).setVisibility(View.GONE);
+        mImageFull.setVisibility(View.VISIBLE);
+    }
+
+    private void hideFullScreen() {
+        getSupportActionBar().show();
+        findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
+        mImageFull.setVisibility(View.GONE);
     }
 
     @Override
