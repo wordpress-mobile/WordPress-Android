@@ -17,6 +17,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -40,8 +41,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -91,6 +94,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     private ImageView mImageView;
     private ImageView mImageFull;
+    private VideoView mVideoView;
 
     private ScrollView mScrollView;
     private EditText mTitleView;
@@ -145,6 +149,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mImageFull = (ImageView) findViewById(R.id.image_full);
+        mVideoView = (VideoView) findViewById(R.id.video_view);
 
         mScrollView = (ScrollView) findViewById(R.id.scroll_view);
         mTitleView = (EditText) findViewById(R.id.edit_title);
@@ -248,6 +253,15 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         unregisterReceiver(mDownloadReceiver);
         mDispatcher.unregister(this);
         super.onStop();
+    }
+
+    private void delayedFinish() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 1500);
     }
 
     @Override
@@ -487,38 +501,88 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mImageView.setImageBitmap(bitmap);
         AniUtils.fadeIn(mImageView, AniUtils.Duration.LONG);
 
-        PhotoViewAttacher attacher = new PhotoViewAttacher(mImageFull);
-        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+        // preload the full screen image
+        if (!mMedia.isVideo()) {
+            PhotoViewAttacher attacher = new PhotoViewAttacher(mImageFull);
+            attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                @Override
+                public void onViewTap(View view, float x, float y) {
+                    hideFullScreen();
+                }
+            });
+            mImageFull.setImageBitmap(bitmap);
+        }
+    }
+
+    private void playVideo() {
+        final MediaController controls = new MediaController(this);
+        mVideoView.setMediaController(controls);
+
+        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
-            public void onViewTap(View view, float x, float y) {
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                delayedFinish();
+                return false;
+            }
+        });
+
+        showProgress(true);
+        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                showProgress(false);
+                controls.show();
+                mp.start();
+            }
+        });
+
+        mVideoView.setVideoURI(Uri.parse(mMedia.getUrl()));
+        mVideoView.requestFocus();
+
+        mVideoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 hideFullScreen();
             }
         });
-        mImageFull.setImageBitmap(bitmap);
     }
 
     private boolean isFullScreenShowing() {
-        return mImageFull.getVisibility() == View.VISIBLE;
+        return mImageFull.getVisibility() == View.VISIBLE || mVideoView.getVisibility() == View.VISIBLE;
     }
 
     private void showFullScreen() {
         if (isFullScreenShowing()) return;
 
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         hideFab();
-
         AniUtils.fadeOut(mScrollView, AniUtils.Duration.MEDIUM);
-        AniUtils.fadeIn(mImageFull, AniUtils.Duration.MEDIUM);
+
+        if (mMedia.isVideo()) {
+            AniUtils.fadeIn(mVideoView, AniUtils.Duration.MEDIUM);
+            playVideo();
+        } else {
+            AniUtils.fadeIn(mImageFull, AniUtils.Duration.MEDIUM);
+        }
     }
 
     private void hideFullScreen() {
         if (!isFullScreenShowing()) return;
 
-        getSupportActionBar().show();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().show();
+        }
         showFab();
-
         AniUtils.fadeIn(mScrollView, AniUtils.Duration.MEDIUM);
-        AniUtils.fadeOut(mImageFull, AniUtils.Duration.MEDIUM);
+
+        if (mMedia.isVideo()) {
+            mVideoView.stopPlayback();
+            AniUtils.fadeOut(mVideoView, AniUtils.Duration.MEDIUM);
+        } else {
+            AniUtils.fadeOut(mImageFull, AniUtils.Duration.MEDIUM);
+        }
     }
 
     private void showFab() {
