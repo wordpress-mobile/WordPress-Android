@@ -158,6 +158,7 @@
                 app:elevation="8dp"
                 app:fabSize="normal"
                 app:srcCompat="@drawable/ic_fullscreen_white_24dp"
+                app:backgroundTint="@color/blue_wordpress"
                 tools:visibility="visible"/>
 
             <android.support.v7.widget.CardView

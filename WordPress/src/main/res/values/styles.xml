@@ -242,9 +242,6 @@
     </style>
 
     <style name="MediaSettings" />
-    <style name="MediaSettings.Theme" parent="WordPress">
-        <item name="colorAccent">@color/blue_wordpress</item>
-    </style>
     <style name="MediaSettings.TextInputStyle">
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
     </style>

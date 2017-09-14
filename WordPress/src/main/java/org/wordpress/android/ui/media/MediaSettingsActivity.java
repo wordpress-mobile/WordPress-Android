@@ -140,7 +140,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-            actionBar.setTitle(R.string.media);
             makeStatusAndToolbarTransparent();
             //noinspection RestrictedApi
             actionBar.setShowHideAnimationEnabled(true);
