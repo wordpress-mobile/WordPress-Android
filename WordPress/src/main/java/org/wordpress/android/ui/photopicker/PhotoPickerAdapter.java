@@ -360,7 +360,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                         MediaPreviewActivity.showPreview(
                                 mContext,
                                 null,
-                                v,
                                 item.uri.toString(),
                                 item.isVideo);
                     }

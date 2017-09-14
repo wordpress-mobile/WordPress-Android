@@ -58,13 +58,11 @@ public class MediaPreviewActivity extends AppCompatActivity {
     /**
      * @param context     self explanatory
      * @param site        optional site this media is associated with
-     * @param sourceView  optional imageView on calling activity which shows thumbnail of same media
-     * @param contentUri  local content:// uri of media
+     * @param contentUri  URI of media
      * @param isVideo     whether the passed media is a video - assumed to be an image otherwise
      */
     public static void showPreview(Context context,
                                    SiteModel site,
-                                   View sourceView,
                                    String contentUri,
                                    boolean isVideo) {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
@@ -74,22 +72,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
             intent.putExtra(WordPress.SITE, site);
         }
 
-        ActivityOptionsCompat options;
-        if (sourceView != null) {
-            int startWidth = sourceView.getWidth();
-            int startHeight = sourceView.getHeight();
-            int startX = startWidth / 2;
-            int startY = startHeight / 2;
-
-            options = ActivityOptionsCompat.makeScaleUpAnimation(
-                    sourceView,
-                    startX,
-                    startY,
-                    startWidth,
-                    startHeight);
-        } else {
-            options = ActivityOptionsCompat.makeBasic();
-        }
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                context,
+                R.anim.fade_in,
+                R.anim.fade_out);
         ActivityCompat.startActivity(context, intent, options.toBundle());
     }
 
@@ -126,6 +112,12 @@ public class MediaPreviewActivity extends AppCompatActivity {
         } else {
             loadImage(mContentUri);
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override
@@ -226,7 +218,13 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private void setBitmap(@NonNull Bitmap bmp) {
         // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
         // for it to be correctly resized upon loading
-        new PhotoViewAttacher(mImageView);
+        PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+                finish();
+            }
+        });
         mImageView.setImageBitmap(bmp);
     }
 

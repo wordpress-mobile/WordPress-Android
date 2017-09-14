@@ -17,7 +17,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -41,10 +40,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -81,8 +77,6 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
-
 public class MediaSettingsActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
@@ -94,12 +88,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private MediaModel mMedia;
 
     private ImageView mImageView;
-    private ImageView mImageFull;
-
-    private ViewGroup mVideoFrame;
-    private VideoView mVideoView;
-
-    private ScrollView mScrollView;
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mAltTextView;
@@ -115,11 +103,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Inject
     Dispatcher mDispatcher;
 
-    /**
-     * @param activity self explanatory
-     * @param site     site which contains this media item
-     * @param mediaId  local ID in site's media library
-     */
     public static void showForResult(Activity activity,
                                      SiteModel site,
                                      MediaModel media) {
@@ -131,7 +114,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         // go directly to preview for local files
         if (media.getUploadState() != null && MediaUtils.isLocalFile(media.getUploadState())) {
-            MediaPreviewActivity.showPreview(activity, site, null, media.getFilePath(), mimeType.startsWith("video"));
+            MediaPreviewActivity.showPreview(activity, site, media.getFilePath(), mimeType.startsWith("video"));
             return;
         }
 
@@ -163,12 +146,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
-        mImageFull = (ImageView) findViewById(R.id.image_full);
-
-        mVideoFrame = (ViewGroup) findViewById(R.id.frame_video);
-        mVideoView = (VideoView) findViewById(R.id.video_view);
-
-        mScrollView = (ScrollView) findViewById(R.id.scroll_view);
         mTitleView = (EditText) findViewById(R.id.edit_title);
         mCaptionView = (EditText) findViewById(R.id.edit_caption);
         mAltTextView = (EditText) findViewById(R.id.edit_alt_text);
@@ -246,6 +223,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 }
             }
         }, delayMs);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null && !actionBar.isShowing()) {
+            actionBar.show();
+        }
     }
 
     @Override
@@ -269,15 +251,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         unregisterReceiver(mDownloadReceiver);
         mDispatcher.unregister(this);
         super.onStop();
-    }
-
-    private void delayedFinish() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-            }
-        }, 1500);
     }
 
     @Override
@@ -318,13 +291,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     @Override
     public void onBackPressed() {
-        if (isFullScreenShowing()) {
-            hideFullScreen();
-        } else {
-            saveChanges();
-            invalidateOptionsMenu();
-            super.onBackPressed();
-        }
+        saveChanges();
+        invalidateOptionsMenu();
+        super.onBackPressed();
     }
 
     @Override
@@ -518,78 +487,17 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         AniUtils.fadeIn(mImageView, AniUtils.Duration.LONG);
     }
 
-    private void playVideo() {
-        final MediaController controls = new MediaController(this);
-        mVideoView.setMediaController(controls);
-
-        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                delayedFinish();
-                return false;
-            }
-        });
-
-        showProgress(true);
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                showProgress(false);
-                controls.show();
-                mp.start();
-            }
-        });
-
-        mVideoView.setVideoURI(Uri.parse(mMedia.getUrl()));
-        mVideoView.requestFocus();
-    }
-
-    private boolean isFullScreenShowing() {
-        return mImageFull.getVisibility() == View.VISIBLE || mVideoFrame.getVisibility() == View.VISIBLE;
-    }
-
     private void showFullScreen() {
-        if (isFullScreenShowing()) return;
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
-        if (mMedia.isVideo()) {
-            mScrollView.setVisibility(View.GONE);
-            mVideoFrame.setVisibility(View.VISIBLE);
-            playVideo();
-        } else {
-            PhotoViewAttacher attacher = new PhotoViewAttacher(mImageFull);
-            attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                @Override
-                public void onViewTap(View view, float x, float y) {
-                    hideFullScreen();
-                }
-            });
-            mImageFull.setImageDrawable(mImageView.getDrawable());
-            AniUtils.fadeOut(mScrollView, AniUtils.Duration.MEDIUM);
-            AniUtils.fadeIn(mImageFull, AniUtils.Duration.MEDIUM);
-            hideFab();
-        }
-    }
-
-    private void hideFullScreen() {
-        if (!isFullScreenShowing()) return;
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().show();
-        }
-
-        if (mMedia.isVideo()) {
-            mVideoView.stopPlayback();
-            AniUtils.fadeOut(mVideoFrame, AniUtils.Duration.MEDIUM);
-        } else {
-            AniUtils.fadeOut(mImageFull, AniUtils.Duration.MEDIUM);
-            showFab();
-        }
-
-        AniUtils.fadeIn(mScrollView, AniUtils.Duration.MEDIUM);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia.getUrl(), mMedia.isVideo());
+            }
+        }, 200);
     }
 
     private void showFab() {
