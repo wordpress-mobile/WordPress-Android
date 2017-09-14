@@ -40,6 +40,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -91,6 +92,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private ImageView mImageView;
     private ImageView mImageFull;
 
+    private ScrollView mScrollView;
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mAltTextView;
@@ -144,6 +146,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mImageFull = (ImageView) findViewById(R.id.image_full);
 
+        mScrollView = (ScrollView) findViewById(R.id.scroll_view);
         mTitleView = (EditText) findViewById(R.id.edit_title);
         mCaptionView = (EditText) findViewById(R.id.edit_caption);
         mAltTextView = (EditText) findViewById(R.id.edit_alt_text);
@@ -206,9 +209,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     protected void onPause() {
         super.onPause();
-        if (shouldShowFab()) {
-            AniUtils.scaleOut(mFabView, AniUtils.Duration.SHORT);
-        }
+        hideFab();
     }
 
     @Override
@@ -219,8 +220,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (!isFinishing() && shouldShowFab() && mFabView.getVisibility() != View.VISIBLE) {
-                    AniUtils.scaleIn(mFabView, AniUtils.Duration.SHORT);
+                if (!isFinishing()) {
+                    showFab();
                 }
             }
         }, delayMs);
@@ -431,7 +432,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                     if (!isFinishing() && response.getBitmap() != null) {
                         showProgress(false);
-                        fadeInBitmap(response.getBitmap());
+                        loadBitmap(response.getBitmap());
                     }
                 }
 
@@ -475,18 +476,24 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 return;
             }
             if (bitmap != null) {
-                fadeInBitmap(bitmap);
+                loadBitmap(bitmap);
             } else {
                 delayedFinishWithError();
             }
         }
     }
 
-    private void fadeInBitmap(@NonNull Bitmap bitmap) {
+    private void loadBitmap(@NonNull Bitmap bitmap) {
         mImageView.setImageBitmap(bitmap);
         AniUtils.fadeIn(mImageView, AniUtils.Duration.LONG);
 
         PhotoViewAttacher attacher = new PhotoViewAttacher(mImageFull);
+        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+                hideFullScreen();
+            }
+        });
         mImageFull.setImageBitmap(bitmap);
     }
 
@@ -495,15 +502,35 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void showFullScreen() {
+        if (isFullScreenShowing()) return;
+
         getSupportActionBar().hide();
-        findViewById(R.id.scroll_view).setVisibility(View.GONE);
-        mImageFull.setVisibility(View.VISIBLE);
+        hideFab();
+
+        AniUtils.fadeOut(mScrollView, AniUtils.Duration.MEDIUM);
+        AniUtils.fadeIn(mImageFull, AniUtils.Duration.MEDIUM);
     }
 
     private void hideFullScreen() {
+        if (!isFullScreenShowing()) return;
+
         getSupportActionBar().show();
-        findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
-        mImageFull.setVisibility(View.GONE);
+        showFab();
+
+        AniUtils.fadeIn(mScrollView, AniUtils.Duration.MEDIUM);
+        AniUtils.fadeOut(mImageFull, AniUtils.Duration.MEDIUM);
+    }
+
+    private void showFab() {
+        if (shouldShowFab() && mFabView.getVisibility() != View.VISIBLE) {
+            AniUtils.scaleIn(mFabView, AniUtils.Duration.SHORT);
+        }
+    }
+
+    private void hideFab() {
+        if (mFabView.getVisibility() == View.VISIBLE) {
+            AniUtils.scaleOut(mFabView, AniUtils.Duration.SHORT);
+        }
     }
 
     @Override
