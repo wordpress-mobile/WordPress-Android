@@ -108,26 +108,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         Intent intent = new Intent(context, MediaPreviewActivity.class);
         intent.putExtra(ARG_MEDIA_CONTENT_URI, contentUri);
         intent.putExtra(ARG_IS_VIDEO, isVideo);
-        showPreviewIntent(context, sourceView, intent);
-    }
 
-    /**
-     * @param context     self explanatory
-     * @param sourceView  optional imageView on calling activity which shows thumbnail of same media
-     * @param site        site which contains this media item
-     * @param mediaId     local ID in site's media library
-     */
-    public static void showPreview(Context context,
-                                   View sourceView,
-                                   SiteModel site,
-                                   int mediaId) {
-        Intent intent = new Intent(context, MediaPreviewActivity.class);
-        intent.putExtra(ARG_MEDIA_LOCAL_ID, mediaId);
-        intent.putExtra(WordPress.SITE, site);
-        showPreviewIntent(context, sourceView, intent);
-    }
-
-    private static void showPreviewIntent(Context context, View sourceView, Intent intent) {
         ActivityOptionsCompat options;
         if (sourceView != null) {
             int startWidth = sourceView.getWidth();
