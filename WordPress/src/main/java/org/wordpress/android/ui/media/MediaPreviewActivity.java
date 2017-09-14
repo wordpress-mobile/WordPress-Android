@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -292,7 +293,16 @@ public class MediaPreviewActivity extends AppCompatActivity {
         @Override
         public void run() {
             if (!isFinishing() && mToolbar.getVisibility() == View.VISIBLE) {
-                AniUtils.fadeOut(mToolbar, AniUtils.Duration.MEDIUM);
+                AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_out_and_up, new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) { }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mToolbar.setVisibility(View.GONE);
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) { }
+                });
             }
         }
     };
@@ -302,7 +312,16 @@ public class MediaPreviewActivity extends AppCompatActivity {
             mFadeHandler.removeCallbacks(fadeOutRunnable);
             mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
             if (mToolbar.getVisibility() != View.VISIBLE) {
-                AniUtils.fadeIn(mToolbar, AniUtils.Duration.MEDIUM);
+                AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_in_and_down, new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        mToolbar.setVisibility(View.VISIBLE);
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) { }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) { }
+                });
             }
         }
     }
