@@ -103,9 +103,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Inject
     Dispatcher mDispatcher;
 
-    public static void showForResult(Activity activity,
-                                     SiteModel site,
-                                     MediaModel media) {
+    public static void showForResult(@NonNull Activity activity,
+                                     @NonNull SiteModel site,
+                                     @NonNull MediaModel media) {
         // TODO: right now only images & videos are supported
         String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
         if (!mimeType.startsWith("image") && !mimeType.startsWith("video")) {
@@ -113,7 +113,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         // go directly to preview for local files
-        if (media.getUploadState() != null && MediaUtils.isLocalFile(media.getUploadState())) {
+        if (MediaUtils.isLocalFile(media.getUploadState())) {
             MediaPreviewActivity.showPreview(activity, site, media.getFilePath(), mimeType.startsWith("video"));
             return;
         }

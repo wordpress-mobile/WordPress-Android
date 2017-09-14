@@ -58,7 +58,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
     /**
      * @param context     self explanatory
      * @param site        optional site this media is associated with
-     * @param contentUri  URI of media
+     * @param contentUri  URI of media - can be local or remote
      * @param isVideo     whether the passed media is a video - assumed to be an image otherwise
      */
     public static void showPreview(Context context,
