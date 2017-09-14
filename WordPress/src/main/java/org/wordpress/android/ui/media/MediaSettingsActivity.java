@@ -61,13 +61,13 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -122,9 +122,21 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
      */
     public static void showForResult(Activity activity,
                                      SiteModel site,
-                                     int mediaId) {
+                                     MediaModel media) {
+        // TODO: right now only images & videos are supported
+        String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
+        if (!mimeType.startsWith("image") && !mimeType.startsWith("video")) {
+            return;
+        }
+
+        // go directly to preview for local files
+        if (media.getUploadState() != null && MediaUtils.isLocalFile(media.getUploadState())) {
+            MediaPreviewActivity.showPreview(activity, site, null, media.getFilePath(), mimeType.startsWith("video"));
+            return;
+        }
+
         Intent intent = new Intent(activity, MediaSettingsActivity.class);
-        intent.putExtra(ARG_MEDIA_LOCAL_ID, mediaId);
+        intent.putExtra(ARG_MEDIA_LOCAL_ID, media.getId());
         intent.putExtra(WordPress.SITE, site);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
