@@ -141,8 +141,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
             actionBar.setTitle(R.string.media);
-            actionBar.setShowHideAnimationEnabled(true);
             makeStatusAndToolbarTransparent();
+            //noinspection RestrictedApi
+            actionBar.setShowHideAnimationEnabled(true);
         }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
@@ -202,12 +203,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         showMediaMetaData();
         loadImage();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        hideFab();
     }
 
     @Override
@@ -492,6 +487,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             getSupportActionBar().hide();
         }
 
+        hideFab();
+
+        // show fullscreen preview after a brief delay so fab & actionBar animations don't stutter
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
