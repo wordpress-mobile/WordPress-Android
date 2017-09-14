@@ -94,6 +94,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     private ImageView mImageView;
     private ImageView mImageFull;
+
+    private ViewGroup mVideoFrame;
     private VideoView mVideoView;
 
     private ScrollView mScrollView;
@@ -149,6 +151,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mImageFull = (ImageView) findViewById(R.id.image_full);
+
+        mVideoFrame = (ViewGroup) findViewById(R.id.frame_video);
         mVideoView = (VideoView) findViewById(R.id.video_view);
 
         mScrollView = (ScrollView) findViewById(R.id.scroll_view);
@@ -225,7 +229,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (!isFinishing()) {
+                if (!isFinishing() && shouldShowFab()) {
                     showFab();
                 }
             }
@@ -505,7 +509,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private void playVideo() {
         final MediaController controls = new MediaController(this);
         mVideoView.setMediaController(controls);
-        controls.show();
 
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
@@ -520,6 +523,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             @Override
             public void onPrepared(MediaPlayer mp) {
                 showProgress(false);
+                controls.show();
                 mp.start();
             }
         });
@@ -529,7 +533,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private boolean isFullScreenShowing() {
-        return mImageFull.getVisibility() == View.VISIBLE || mVideoView.getVisibility() == View.VISIBLE;
+        return mImageFull.getVisibility() == View.VISIBLE || mVideoFrame.getVisibility() == View.VISIBLE;
     }
 
     private void showFullScreen() {
@@ -538,11 +542,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-        hideFab();
-        AniUtils.fadeOut(mScrollView, AniUtils.Duration.MEDIUM);
 
         if (mMedia.isVideo()) {
-            AniUtils.fadeIn(mVideoView, AniUtils.Duration.MEDIUM);
+            mScrollView.setVisibility(View.GONE);
+            mVideoFrame.setVisibility(View.VISIBLE);
             playVideo();
         } else {
             PhotoViewAttacher attacher = new PhotoViewAttacher(mImageFull);
@@ -553,7 +556,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 }
             });
             mImageFull.setImageDrawable(mImageView.getDrawable());
+            AniUtils.fadeOut(mScrollView, AniUtils.Duration.MEDIUM);
             AniUtils.fadeIn(mImageFull, AniUtils.Duration.MEDIUM);
+            hideFab();
         }
     }
 
@@ -563,19 +568,20 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         if (getSupportActionBar() != null) {
             getSupportActionBar().show();
         }
-        showFab();
-        AniUtils.fadeIn(mScrollView, AniUtils.Duration.MEDIUM);
 
         if (mMedia.isVideo()) {
             mVideoView.stopPlayback();
-            AniUtils.fadeOut(mVideoView, AniUtils.Duration.MEDIUM);
+            AniUtils.fadeOut(mVideoFrame, AniUtils.Duration.MEDIUM);
         } else {
             AniUtils.fadeOut(mImageFull, AniUtils.Duration.MEDIUM);
+            showFab();
         }
+
+        AniUtils.fadeIn(mScrollView, AniUtils.Duration.MEDIUM);
     }
 
     private void showFab() {
-        if (shouldShowFab() && mFabView.getVisibility() != View.VISIBLE) {
+        if (mFabView.getVisibility() != View.VISIBLE) {
             AniUtils.scaleIn(mFabView, AniUtils.Duration.SHORT);
         }
     }
