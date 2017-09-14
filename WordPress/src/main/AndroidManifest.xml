@@ -261,7 +261,6 @@
             android:label="@string/wp_media_title" />
         <activity
             android:name=".ui.media.MediaPreviewActivity"
-            android:windowSoftInputMode="adjustNothing"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".ui.media.MediaSettingsActivity"

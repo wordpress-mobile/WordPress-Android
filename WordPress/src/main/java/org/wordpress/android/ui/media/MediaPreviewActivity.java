@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -13,8 +14,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -28,6 +33,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -49,8 +55,12 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
     private SiteModel mSite;
 
+    private Toolbar mToolbar;
     private ImageView mImageView;
     private VideoView mVideoView;
+
+    private static final long FADE_DELAY_MS = 3000;
+    private final Handler mFadeHandler = new Handler();
 
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
@@ -104,6 +114,16 @@ public class MediaPreviewActivity extends AppCompatActivity {
             return;
         }
 
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
+        mToolbar.setBackgroundDrawable(new ColorDrawable(toolbarColor));
+        setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
         videoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
@@ -112,6 +132,17 @@ public class MediaPreviewActivity extends AppCompatActivity {
         } else {
             loadImage(mContentUri);
         }
+
+        mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -222,7 +253,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float x, float y) {
-                finish();
+                showToolbar();
             }
         });
         mImageView.setImageBitmap(bmp);
@@ -256,4 +287,24 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mVideoView.setVideoURI(Uri.parse(mediaUri));
         mVideoView.requestFocus();
     }
+
+    private final Runnable fadeOutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!isFinishing() && mToolbar.getVisibility() == View.VISIBLE) {
+                AniUtils.fadeOut(mToolbar, AniUtils.Duration.MEDIUM);
+            }
+        }
+    };
+
+    private void showToolbar() {
+        if (!isFinishing()) {
+            mFadeHandler.removeCallbacks(fadeOutRunnable);
+            mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
+            if (mToolbar.getVisibility() != View.VISIBLE) {
+                AniUtils.fadeIn(mToolbar, AniUtils.Duration.MEDIUM);
+            }
+        }
+    }
+
 }
