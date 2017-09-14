@@ -307,16 +307,6 @@
 
             </android.support.v7.widget.CardView>
 
-            <ProgressBar
-                android:id="@+id/progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:elevation="@dimen/card_elevation"
-                android:textAppearance="?android:attr/progressBarStyle"
-                android:visibility="gone"
-                tools:visibility="visible"/>
-
         </RelativeLayout>
     </ScrollView>
 
@@ -328,4 +318,13 @@
         android:background="@drawable/media_settings_gradient"
         tools:layout_height="74dp"/>
 
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="@dimen/card_elevation"
+        android:textAppearance="?android:attr/progressBarStyle"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 </FrameLayout>

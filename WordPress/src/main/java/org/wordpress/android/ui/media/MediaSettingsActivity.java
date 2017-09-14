@@ -446,7 +446,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                     if (!isFinishing() && response.getBitmap() != null) {
                         showProgress(false);
-                        loadBitmap(response.getBitmap());
+                        fadeInBitmap(response.getBitmap());
                     }
                 }
 
@@ -490,33 +490,22 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 return;
             }
             if (bitmap != null) {
-                loadBitmap(bitmap);
+                fadeInBitmap(bitmap);
             } else {
                 delayedFinishWithError();
             }
         }
     }
 
-    private void loadBitmap(@NonNull Bitmap bitmap) {
+    private void fadeInBitmap(@NonNull Bitmap bitmap) {
         mImageView.setImageBitmap(bitmap);
         AniUtils.fadeIn(mImageView, AniUtils.Duration.LONG);
-
-        // preload the full screen image
-        if (!mMedia.isVideo()) {
-            PhotoViewAttacher attacher = new PhotoViewAttacher(mImageFull);
-            attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                @Override
-                public void onViewTap(View view, float x, float y) {
-                    hideFullScreen();
-                }
-            });
-            mImageFull.setImageBitmap(bitmap);
-        }
     }
 
     private void playVideo() {
         final MediaController controls = new MediaController(this);
         mVideoView.setMediaController(controls);
+        controls.show();
 
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
@@ -531,20 +520,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             @Override
             public void onPrepared(MediaPlayer mp) {
                 showProgress(false);
-                controls.show();
                 mp.start();
             }
         });
 
         mVideoView.setVideoURI(Uri.parse(mMedia.getUrl()));
         mVideoView.requestFocus();
-
-        mVideoView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideFullScreen();
-            }
-        });
     }
 
     private boolean isFullScreenShowing() {
@@ -564,6 +545,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             AniUtils.fadeIn(mVideoView, AniUtils.Duration.MEDIUM);
             playVideo();
         } else {
+            PhotoViewAttacher attacher = new PhotoViewAttacher(mImageFull);
+            attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                @Override
+                public void onViewTap(View view, float x, float y) {
+                    hideFullScreen();
+                }
+            });
+            mImageFull.setImageDrawable(mImageView.getDrawable());
             AniUtils.fadeIn(mImageFull, AniUtils.Duration.MEDIUM);
         }
     }
