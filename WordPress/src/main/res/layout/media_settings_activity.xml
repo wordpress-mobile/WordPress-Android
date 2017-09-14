@@ -21,9 +21,9 @@
 
         <VideoView
             android:id="@+id/video_view"
-            android:layout_gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
     </FrameLayout>
 
     <ScrollView
@@ -67,7 +67,7 @@
                             android:layout_height="56dp"
                             android:layout_gravity="center"
                             android:visibility="gone"
-                            app:srcCompat="@drawable/ic_play_video"
+                            app:srcCompat="@drawable/play_video_selector"
                             tools:visibility="visible"/>
                     </FrameLayout>
 
