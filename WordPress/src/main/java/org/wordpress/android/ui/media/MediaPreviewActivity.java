@@ -129,11 +129,18 @@ public class MediaPreviewActivity extends AppCompatActivity {
         videoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
         if (mIsVideo) {
+            videoFrame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showToolbar();
+                }
+            });
             playVideo(mContentUri);
         } else {
             loadImage(mContentUri);
-            mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
         }
+
+        mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
     }
 
     @Override
@@ -265,7 +272,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private void playVideo(@NonNull String mediaUri) {
         final MediaController controls = new MediaController(this);
         mVideoView.setMediaController(controls);
-        controls.setAnchorView(mVideoView);
 
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
