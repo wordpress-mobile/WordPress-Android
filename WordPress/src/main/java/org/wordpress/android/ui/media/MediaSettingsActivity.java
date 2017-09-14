@@ -483,7 +483,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void showFullScreen() {
-        if (getSupportActionBar() != null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
