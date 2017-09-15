@@ -356,6 +356,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         if (mediaWidth > 0 && mediaHeight > 0) {
             txtDimensions.setVisibility(View.VISIBLE);
             txtDimensionsLabel.setVisibility(View.VISIBLE);
+            txtDimensionsLabel.setText(mMedia.isVideo() ? R.string.media_edit_video_dimensions_caption : R.string
+                    .media_edit_image_dimensions_caption);
             String dimens = (int) mediaWidth + " x " + (int) mediaHeight;
             txtDimensions.setText(dimens);
         } else {
