@@ -167,6 +167,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             return;
         }
 
+        if (isVideo()) {
+            setTitle(R.string.media_title_video_details);
+        } else {
+            setTitle(R.string.media_title_image_details);
+        }
+
         // make image 40% of screen height
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
         int imageHeight = (int) (displayHeight * 0.4);
@@ -187,8 +193,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         imgGradient.getLayoutParams().height = toolbarHeight * 3;
 
         ImageView imgPlayVideo = (ImageView) findViewById(R.id.image_play_video);
-        imgPlayVideo.setVisibility(mMedia.isVideo() ? View.VISIBLE : View.GONE);
-        findViewById(R.id.edit_alt_text_layout).setVisibility(mMedia.isVideo() ? View.GONE : View.VISIBLE);
+        imgPlayVideo.setVisibility(isVideo() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() ? View.GONE : View.VISIBLE);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -200,7 +206,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mImageView.setOnClickListener(listener);
         imgPlayVideo.setOnClickListener(listener);
 
-        showMediaMetaData();
+        showMetaData();
         loadImage();
     }
 
@@ -333,8 +339,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         return super.onOptionsItemSelected(item);
     }
+    
+    private boolean isVideo() {
+        return mMedia.isVideo();
+    }
 
-    private void showMediaMetaData() {
+    private void showMetaData() {
         mTitleView.setText(mMedia.getTitle());
         mCaptionView.setText(mMedia.getCaption());
         mAltTextView.setText(mMedia.getAlt());
@@ -356,7 +366,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         if (mediaWidth > 0 && mediaHeight > 0) {
             txtDimensions.setVisibility(View.VISIBLE);
             txtDimensionsLabel.setVisibility(View.VISIBLE);
-            txtDimensionsLabel.setText(mMedia.isVideo() ? R.string.media_edit_video_dimensions_caption : R.string
+            txtDimensionsLabel.setText(isVideo() ? R.string.media_edit_video_dimensions_caption : R.string
                     .media_edit_image_dimensions_caption);
             String dimens = (int) mediaWidth + " x " + (int) mediaHeight;
             txtDimensions.setText(dimens);
@@ -405,7 +415,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         int size = Math.max(width, height);
 
         String mediaUri;
-        if (mMedia.isVideo()) {
+        if (isVideo()) {
             mediaUri = mMedia.getThumbnailUrl();
         } else {
             mediaUri = mMedia.getUrl();
@@ -494,7 +504,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia.getUrl(), mMedia.isVideo());
+                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia.getUrl(), isVideo());
             }
         }, 200);
     }
@@ -626,7 +636,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void deleteMediaWithConfirmation() {
-        @StringRes int resId = mMedia.isVideo() ? R.string.confirm_delete_media_video : R.string.confirm_delete_media_image;
+        @StringRes int resId = isVideo() ? R.string.confirm_delete_media_video : R.string.confirm_delete_media_image;
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage(resId)
                 .setCancelable(true).setPositiveButton(
                         R.string.delete, new DialogInterface.OnClickListener() {
@@ -670,7 +680,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());
             if (media != null) {
                 mMedia = media;
-                showMediaMetaData();
+                showMetaData();
             }
         }
     }

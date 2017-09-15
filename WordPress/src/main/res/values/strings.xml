@@ -197,6 +197,10 @@
     <string name="media_edit_copy_url_toast">URL copied to clipboard</string>
     <string name="fab_content_description_preview">Preview</string>
 
+    <!-- Media settings title -->
+    <string name="media_title_image_details">Image Details</string>
+    <string name="media_title_video_details">Video Details</string>
+
     <!-- Delete Media -->
     <string name="confirm_delete_multi_media">Delete selected items?</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
