@@ -181,6 +181,20 @@
         <item name="android:listDivider">@null</item>
     </style>
 
+    <style name="Toolbar.Primary" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/color_primary</item>
+        <item name="android:theme">@style/Toolbar.Theme</item>
+    </style>
+
+    <style name="Toolbar.Secondary" parent="@style/Toolbar.Primary">
+        <item name="android:background">@color/blue_medium</item>
+        <item name="contentInsetStart">@dimen/toolbar_content_offset</item>
+    </style>
+
+    <style name="Toolbar.Theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:listDivider">@null</item>
+    </style>
+
     <style name="ProgressBar.WordPress" parent="android:Widget.Holo.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_wordpress</item>
     </style>

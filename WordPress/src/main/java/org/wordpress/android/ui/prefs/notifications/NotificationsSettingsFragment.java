@@ -11,7 +11,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.preference.SwitchPreference;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
@@ -516,15 +515,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_STREAMS_OPENED);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_DETAILS_OPENED);
-        }
-
-        // Track when users enable and disable global notification setting (i.e. "Allow app notifications").
-        if (preference instanceof SwitchPreference && preference.getKey().equalsIgnoreCase(getString(R.string.wp_pref_notification_receive))) {
-            if (((SwitchPreference) preference).isChecked()) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED);
-            } else {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED);
-            }
         }
 
         return false;

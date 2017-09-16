@@ -885,6 +885,12 @@
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
+    <string name="notification_settings_master_status_on">On</string>
+    <string name="notification_settings_master_status_off">Off</string>
+    <string name="notification_settings_master_hint_on">Disable notifications</string>
+    <string name="notification_settings_master_hint_off">Enable notifications</string>
+    <string name="notification_settings_master_off_title">To receive notifications on this device, turn Notification Settings on.</string>
+    <string name="notification_settings_master_off_message">Turning Notification Settings off will disable all notifications from this app, regardless of type. You can fine-tune which kind of notification you receive after turning Notification Settings on.</string>
     <string name="notification_settings_category_your_sites">Your Sites</string>
     <string name="notification_settings_item_your_sites_all_your_sites">All My Sites</string>
     <string name="notification_settings_category_other">Other</string>
@@ -893,8 +899,6 @@
     <string name="notification_settings_item_other_account_emails">Email from WordPress.com</string>
     <string name="notification_settings_item_other_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
     <string name="notification_settings_category_sights_and_sounds">Sights and Sounds</string>
-    <string name="notification_settings_item_sights_and_sounds_receive_notifications">Allow app notifications</string>
-    <string name="notification_settings_item_sights_and_sounds_receive_notifications_summary">Disabling this will block all app notifications, regardless of type.</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Choose sound</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate device</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blink light</string>
