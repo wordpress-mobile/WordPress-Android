@@ -200,6 +200,7 @@
     <!-- Media settings title -->
     <string name="media_title_image_details">Image Details</string>
     <string name="media_title_video_details">Video Details</string>
+    <string name="media_title_audio_details">Audio Details</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_multi_media">Delete selected items?</string>

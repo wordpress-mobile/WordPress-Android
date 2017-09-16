@@ -169,6 +169,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         if (isVideo()) {
             setTitle(R.string.media_title_video_details);
+        } else if (isAudio()) {
+            setTitle(R.string.media_title_audio_details);
         } else {
             setTitle(R.string.media_title_image_details);
         }
@@ -342,6 +344,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     
     private boolean isVideo() {
         return mMedia.isVideo();
+    }
+
+    private boolean isAudio() {
+        String mimeType = StringUtils.notNullStr(mMedia.getMimeType()).toLowerCase();
+        return mimeType.startsWith("audio/");
     }
 
     private void showMetaData() {
