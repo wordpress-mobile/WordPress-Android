@@ -55,6 +55,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_IS_VIDEO = "is_video";
     private static final String ARG_IS_AUDIO = "is_audio";
+    private static final String ARG_POSITION = "position";
 
     private String mContentUri;
     private boolean mIsVideo;
@@ -138,16 +139,19 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         mVideoFrame = (ViewGroup) findViewById(R.id.frame_video);
         mAudioFrame = (ViewGroup) findViewById(R.id.frame_audio);
 
+        int position;
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mContentUri = savedInstanceState.getString(ARG_MEDIA_CONTENT_URI);
             mIsVideo = savedInstanceState.getBoolean(ARG_IS_VIDEO);
             mIsAudio = savedInstanceState.getBoolean(ARG_IS_AUDIO);
+            position = savedInstanceState.getInt(ARG_POSITION, 0);
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mContentUri = getIntent().getStringExtra(ARG_MEDIA_CONTENT_URI);
             mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
             mIsAudio = getIntent().getBooleanExtra(ARG_IS_AUDIO, false);
+            position = 0;
         }
 
         if (TextUtils.isEmpty(mContentUri)) {
@@ -181,10 +185,10 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
 
         if (mIsVideo) {
             mVideoFrame.setOnClickListener(listener);
-            playVideo(mContentUri);
+            playVideo(mContentUri, position);
         } else if (mIsAudio) {
             mAudioFrame.setOnClickListener(listener);
-            playAudio(mContentUri);
+            playAudio(mContentUri, position);
         } else {
             loadImage(mContentUri);
         }
@@ -234,8 +238,17 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(ARG_MEDIA_CONTENT_URI, mContentUri);
-        outState.putBoolean(ARG_IS_VIDEO, mIsVideo);
-        outState.putBoolean(ARG_IS_AUDIO, mIsAudio);
+
+        if (mIsVideo) {
+            outState.putBoolean(ARG_IS_VIDEO, true);
+            outState.putInt(ARG_POSITION, mVideoView.getCurrentPosition());
+        } else if (mIsAudio) {
+            outState.putBoolean(ARG_IS_AUDIO, true);
+            if (mAudioPlayer != null) {
+                outState.putInt(ARG_POSITION, mAudioPlayer.getCurrentPosition());
+            }
+        }
+
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
@@ -353,7 +366,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         }
     }
 
-    private void playVideo(@NonNull String mediaUri) {
+    private void playVideo(@NonNull String mediaUri, final int position) {
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -368,6 +381,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
             public void onPrepared(MediaPlayer mp) {
                 showProgress(false);
                 mp.start();
+                if (position > 0) {
+                    mp.seekTo(position);
+                }
                 mControls.show();
             }
         });
@@ -377,7 +393,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         mVideoView.requestFocus();
     }
 
-    private void playAudio(@NonNull String mediaUri) {
+    private void playAudio(@NonNull String mediaUri, final int position) {
         mAudioPlayer = new MediaPlayer();
         mAudioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
@@ -392,6 +408,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
             public void onPrepared(MediaPlayer mp) {
                 showProgress(false);
                 mp.start();
+                if (position > 0) {
+                    mp.seekTo(position);
+                }
                 mControls.show();
             }
         });
