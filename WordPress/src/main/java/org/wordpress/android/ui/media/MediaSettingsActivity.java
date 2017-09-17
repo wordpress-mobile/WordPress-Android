@@ -199,7 +199,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         imgGradient.getLayoutParams().height = toolbarHeight * 3;
 
         mImagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
-        findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() ? View.GONE : View.VISIBLE);
+        findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() || isAudio() ? View.GONE : View.VISIBLE);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
