@@ -173,6 +173,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         if (isVideo()) {
             setTitle(R.string.media_title_video_details);
+        } else if (isAudio()) {
+            setTitle(R.string.media_title_audio_details);
         } else {
             setTitle(R.string.media_title_image_details);
         }
@@ -196,7 +198,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         ImageView imgGradient = (ImageView) findViewById(R.id.image_gradient);
         imgGradient.getLayoutParams().height = toolbarHeight * 3;
 
-        mImagePlay.setVisibility(isVideo() ? View.VISIBLE : View.GONE);
+        mImagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
         findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() ? View.GONE : View.VISIBLE);
 
         View.OnClickListener listener = new View.OnClickListener() {

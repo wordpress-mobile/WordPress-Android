@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -41,6 +42,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
@@ -51,15 +53,19 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_IS_VIDEO = "is_video";
+    private static final String ARG_IS_AUDIO = "is_audio";
 
     private String mContentUri;
     private boolean mIsVideo;
+    private boolean mIsAudio;
 
     private SiteModel mSite;
 
     private Toolbar mToolbar;
     private ImageView mImageView;
     private VideoView mVideoView;
+
+    private MediaPlayer mMediaPlayer;
 
     private static final long FADE_DELAY_MS = 3000;
     private final Handler mFadeHandler = new Handler();
@@ -84,11 +90,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
             intent.putExtra(WordPress.SITE, site);
         }
 
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                context,
-                R.anim.fade_in,
-                R.anim.fade_out);
-        ActivityCompat.startActivity(context, intent, options.toBundle());
+        startIntent(context, intent);
     }
 
     /**
@@ -102,10 +104,18 @@ public class MediaPreviewActivity extends AppCompatActivity {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
         intent.putExtra(ARG_MEDIA_CONTENT_URI, media.getUrl());
         intent.putExtra(ARG_IS_VIDEO, media.isVideo());
+
+        String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
+        intent.putExtra(ARG_IS_AUDIO, mimeType.startsWith("audio"));
+
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
         }
 
+        startIntent(context, intent);
+    }
+
+    private static void startIntent(Context context, Intent intent) {
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 context,
                 R.anim.fade_in,
@@ -127,10 +137,12 @@ public class MediaPreviewActivity extends AppCompatActivity {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mContentUri = savedInstanceState.getString(ARG_MEDIA_CONTENT_URI);
             mIsVideo = savedInstanceState.getBoolean(ARG_IS_VIDEO);
+            mIsAudio = savedInstanceState.getBoolean(ARG_IS_AUDIO);
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mContentUri = getIntent().getStringExtra(ARG_MEDIA_CONTENT_URI);
             mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
+            mIsAudio = getIntent().getBooleanExtra(ARG_IS_AUDIO, false);
         }
 
         if (TextUtils.isEmpty(mContentUri)) {
@@ -148,22 +160,40 @@ public class MediaPreviewActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
+        mImageView.setVisibility(mIsVideo || mIsAudio ?  View.GONE : View.VISIBLE);
         videoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
+        videoFrame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToolbar();
+            }
+        });
+
         if (mIsVideo) {
-            videoFrame.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showToolbar();
-                }
-            });
             playVideo(mContentUri);
+        } else if (mIsAudio) {
+            playAudio(mContentUri);
         } else {
             loadImage(mContentUri);
         }
 
         mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopAudio();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -316,6 +346,45 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
         mVideoView.setVideoURI(Uri.parse(mediaUri));
         mVideoView.requestFocus();
+    }
+
+    private void playAudio(@NonNull String mediaUri) {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.reset();
+        } else {
+            mMediaPlayer = new MediaPlayer();
+        }
+
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mMediaPlayer.setDataSource(this, Uri.parse(mediaUri));
+            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    showProgress(false);
+                    mp.start();
+                }
+            });
+            mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    delayedFinish(false);
+                    return false;
+                }
+            });
+            showProgress(true);
+            mMediaPlayer.prepareAsync();
+        } catch (Exception e) {
+            AppLog.e(AppLog.T.MEDIA, e);
+            delayedFinish(true);
+        }
+
+    }
+
+    private void stopAudio() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+        }
     }
 
     private final Runnable fadeOutRunnable = new Runnable() {
