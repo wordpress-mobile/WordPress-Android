@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.android.volley.VolleyError;
@@ -55,8 +56,10 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_IS_VIDEO = "is_video";
     private static final String ARG_IS_AUDIO = "is_audio";
+    private static final String ARG_TITLE ="title";
 
     private String mContentUri;
+    private String mTitle;
     private boolean mIsVideo;
     private boolean mIsAudio;
 
@@ -65,6 +68,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
     private Toolbar mToolbar;
     private ImageView mImageView;
     private VideoView mVideoView;
+    private ViewGroup mVideoFrame;
+    private ViewGroup mAudioFrame;
 
     private MediaPlayer mAudioPlayer;
     private MediaController mControls;
@@ -106,7 +111,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         Intent intent = new Intent(context, MediaPreviewActivity.class);
         intent.putExtra(ARG_MEDIA_CONTENT_URI, media.getUrl());
         intent.putExtra(ARG_IS_VIDEO, media.isVideo());
-
+        intent.putExtra(ARG_TITLE, media.getTitle());
         String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
         intent.putExtra(ARG_IS_AUDIO, mimeType.startsWith("audio"));
 
@@ -133,15 +138,19 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         setContentView(R.layout.media_preview_activity);
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
-        ViewGroup videoFrame = (ViewGroup) findViewById(R.id.frame_video);
+
+        mVideoFrame = (ViewGroup) findViewById(R.id.frame_video);
+        mAudioFrame = (ViewGroup) findViewById(R.id.frame_audio);
 
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mContentUri = savedInstanceState.getString(ARG_MEDIA_CONTENT_URI);
+            mTitle = savedInstanceState.getString(ARG_TITLE);
             mIsVideo = savedInstanceState.getBoolean(ARG_IS_VIDEO);
             mIsAudio = savedInstanceState.getBoolean(ARG_IS_AUDIO);
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            mTitle = getIntent().getStringExtra(ARG_TITLE);
             mContentUri = getIntent().getStringExtra(ARG_MEDIA_CONTENT_URI);
             mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
             mIsAudio = getIntent().getBooleanExtra(ARG_IS_AUDIO, false);
@@ -162,8 +171,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mImageView.setVisibility(mIsVideo ? View.GONE : View.VISIBLE);
-        videoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
+        mImageView.setVisibility(mIsVideo || mIsAudio ? View.GONE : View.VISIBLE);
+        mVideoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
+        mAudioFrame.setVisibility(mIsAudio ? View.VISIBLE : View.GONE);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -176,12 +186,14 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         };
 
         if (mIsVideo) {
-            videoFrame.setOnClickListener(listener);
+            mVideoFrame.setOnClickListener(listener);
             playVideo(mContentUri);
         } else if (mIsAudio) {
-            mImageView.setOnClickListener(listener);
-            mImageView.setBackground(getDrawable(R.drawable.media_settings_background));
-            mImageView.setImageResource(R.drawable.ic_gridicons_audio);
+            if (!TextUtils.isEmpty(mTitle)) {
+                TextView txtTitle = (TextView) findViewById(R.id.text_audio_title);
+                txtTitle.setText(mTitle);
+            }
+            mAudioFrame.setOnClickListener(listener);
             playAudio(mContentUri);
         } else {
             loadImage(mContentUri);
@@ -339,10 +351,10 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
     private void initControls() {
         mControls = new MediaController(this);
         if (mIsVideo) {
-            mControls.setAnchorView(mVideoView);
+            mControls.setAnchorView(mVideoFrame);
             mControls.setMediaPlayer(mVideoView);
         } else if (mIsAudio) {
-            mControls.setAnchorView(mImageView);
+            mControls.setAnchorView(mAudioFrame);
             mControls.setMediaPlayer(this);
         }
     }
@@ -444,32 +456,44 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
 
     @Override
     public void start() {
-        mAudioPlayer.start();
+        if (mAudioPlayer != null) {
+            mAudioPlayer.start();
+        }
     }
 
     @Override
     public void pause() {
-        mAudioPlayer.pause();
+        if (mAudioPlayer != null) {
+            mAudioPlayer.pause();
+        }
     }
 
     @Override
     public int getDuration() {
-        return mAudioPlayer.getDuration();
+        if (mAudioPlayer != null) {
+            return mAudioPlayer.getDuration();
+        }
+        return 0;
     }
 
     @Override
     public int getCurrentPosition() {
-        return mAudioPlayer.getCurrentPosition();
+        if (mAudioPlayer != null) {
+            return mAudioPlayer.getCurrentPosition();
+        }
+        return 0;
     }
 
     @Override
     public void seekTo(int pos) {
-        mAudioPlayer.seekTo(pos);
+        if (mAudioPlayer != null) {
+            mAudioPlayer.seekTo(pos);
+        }
     }
 
     @Override
     public boolean isPlaying() {
-        return mAudioPlayer.isPlaying();
+        return mAudioPlayer != null && mAudioPlayer.isPlaying();
     }
 
     @Override
