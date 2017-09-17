@@ -113,6 +113,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         intent.putExtra(ARG_MEDIA_CONTENT_URI, media.getUrl());
         intent.putExtra(ARG_TITLE, media.getTitle());
         intent.putExtra(ARG_IS_VIDEO, media.isVideo());
+
         String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
         intent.putExtra(ARG_IS_AUDIO, mimeType.startsWith("audio"));
 
@@ -209,13 +210,16 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
 
     @Override
     protected void onStop() {
-        super.onStop();
+        if (mControls != null) {
+            mControls.hide();
+        }
         if (mAudioPlayer != null && mAudioPlayer.isPlaying()) {
             mAudioPlayer.stop();
         }
         if (mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
         }
+        super.onStop();
     }
 
     @Override
@@ -226,9 +230,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         }
         if (mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
-        }
-        if (mControls != null && mControls.isShowing()) {
-            mControls.hide();
+            mVideoView.setMediaController(null);
         }
         super.onDestroy();
     }
@@ -394,12 +396,14 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                showProgress(false);
-                mp.start();
-                if (position > 0) {
-                    mp.seekTo(position);
+                if (!isFinishing()) {
+                    showProgress(false);
+                    mp.start();
+                    if (position > 0) {
+                        mp.seekTo(position);
+                    }
+                    mControls.show();
                 }
-                mControls.show();
             }
         });
 
@@ -421,12 +425,14 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         mAudioPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                showProgress(false);
-                mp.start();
-                if (position > 0) {
-                    mp.seekTo(position);
+                if (!isFinishing()) {
+                    showProgress(false);
+                    mp.start();
+                    if (position > 0) {
+                        mp.seekTo(position);
+                    }
+                    mControls.show();
                 }
-                mControls.show();
             }
         });
         mAudioPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
