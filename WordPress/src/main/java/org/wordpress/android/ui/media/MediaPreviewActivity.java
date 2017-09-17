@@ -49,7 +49,7 @@ import javax.inject.Inject;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class MediaPreviewActivity extends AppCompatActivity {
+public class MediaPreviewActivity extends AppCompatActivity implements MediaController.MediaPlayerControl {
 
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_IS_VIDEO = "is_video";
@@ -65,7 +65,8 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private ImageView mImageView;
     private VideoView mVideoView;
 
-    private MediaPlayer mMediaPlayer;
+    private MediaPlayer mAudioPlayer;
+    private MediaController mAudioController;
 
     private static final long FADE_DELAY_MS = 3000;
     private final Handler mFadeHandler = new Handler();
@@ -160,7 +161,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mImageView.setVisibility(mIsVideo || mIsAudio ?  View.GONE : View.VISIBLE);
+        mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
         videoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
         videoFrame.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +174,8 @@ public class MediaPreviewActivity extends AppCompatActivity {
         if (mIsVideo) {
             playVideo(mContentUri);
         } else if (mIsAudio) {
+            mImageView.setBackground(getDrawable(R.drawable.media_settings_background));
+            mImageView.setImageResource(R.drawable.ic_gridicons_audio);
             playAudio(mContentUri);
         } else {
             loadImage(mContentUri);
@@ -184,14 +187,25 @@ public class MediaPreviewActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        stopAudio();
+        if (mAudioPlayer != null && mAudioPlayer.isPlaying()) {
+            mAudioPlayer.stop();
+        }
+        if (mAudioController != null) {
+            mAudioController.hide();
+        }
+        if (mVideoView.isPlaying()) {
+            mVideoView.stopPlayback();
+        }
     }
 
     @Override
     protected void onDestroy() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.release();
-            mMediaPlayer = null;
+        if (mAudioPlayer != null) {
+            mAudioPlayer.release();
+            mAudioPlayer = null;
+        }
+        if (mVideoView.isPlaying()) {
+            mVideoView.stopPlayback();
         }
         super.onDestroy();
     }
@@ -349,41 +363,40 @@ public class MediaPreviewActivity extends AppCompatActivity {
     }
 
     private void playAudio(@NonNull String mediaUri) {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.reset();
-        } else {
-            mMediaPlayer = new MediaPlayer();
-        }
-
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mAudioPlayer = new MediaPlayer();
+        mAudioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            mMediaPlayer.setDataSource(this, Uri.parse(mediaUri));
-            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    showProgress(false);
-                    mp.start();
-                }
-            });
-            mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                @Override
-                public boolean onError(MediaPlayer mp, int what, int extra) {
-                    delayedFinish(false);
-                    return false;
-                }
-            });
-            showProgress(true);
-            mMediaPlayer.prepareAsync();
+            mAudioPlayer.setDataSource(this, Uri.parse(mediaUri));
         } catch (Exception e) {
             AppLog.e(AppLog.T.MEDIA, e);
             delayedFinish(true);
         }
 
+        mAudioPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                showProgress(false);
+                mAudioController.show();
+                mp.start();
+            }
+        });
+        mAudioPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                delayedFinish(false);
+                return false;
+            }
+        });
+
+        mAudioController = new MediaController(this);
+        mAudioController.setAnchorView(mImageView);
+        showProgress(true);
+        mAudioPlayer.prepareAsync();
     }
 
     private void stopAudio() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.stop();
+        if (mAudioPlayer != null) {
+            mAudioPlayer.stop();
         }
     }
 
@@ -422,6 +435,61 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 });
             }
         }
+    }
+
+    @Override
+    public void start() {
+        mAudioPlayer.start();
+    }
+
+    @Override
+    public void pause() {
+        mAudioPlayer.pause();
+    }
+
+    @Override
+    public int getDuration() {
+        return mAudioPlayer.getDuration();
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return mAudioPlayer.getCurrentPosition();
+    }
+
+    @Override
+    public void seekTo(int pos) {
+        mAudioPlayer.seekTo(pos);
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return mAudioPlayer.isPlaying();
+    }
+
+    @Override
+    public int getBufferPercentage() {
+        return 0;
+    }
+
+    @Override
+    public boolean canPause() {
+        return true;
+    }
+
+    @Override
+    public boolean canSeekBackward() {
+        return true;
+    }
+
+    @Override
+    public boolean canSeekForward() {
+        return true;
+    }
+
+    @Override
+    public int getAudioSessionId() {
+        return 0;
     }
 
 }
