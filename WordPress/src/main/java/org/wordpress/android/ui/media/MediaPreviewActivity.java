@@ -376,7 +376,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
             @Override
             public void onPrepared(MediaPlayer mp) {
                 showProgress(false);
-                mAudioController.show();
+                mAudioController.show(0);
                 mp.start();
             }
         });
@@ -389,9 +389,10 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         });
 
         mAudioController = new MediaController(this);
+        mAudioController.setMediaPlayer(this);
         mAudioController.setAnchorView(mImageView);
-        showProgress(true);
         mAudioPlayer.prepareAsync();
+        showProgress(true);
     }
 
     private void stopAudio() {
