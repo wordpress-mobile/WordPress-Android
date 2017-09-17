@@ -261,6 +261,7 @@
             android:label="@string/wp_media_title" />
         <activity
             android:name=".ui.media.MediaPreviewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".ui.media.MediaSettingsActivity"
