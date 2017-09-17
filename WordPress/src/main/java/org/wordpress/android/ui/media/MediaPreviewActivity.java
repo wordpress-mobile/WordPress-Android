@@ -22,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -130,9 +131,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_preview_activity);
-        View videoFrame = findViewById(R.id.frame_video);
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
+        ViewGroup videoFrame = (ViewGroup) findViewById(R.id.frame_video);
 
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
@@ -161,7 +162,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
+        mImageView.setVisibility(mIsVideo ? View.GONE : View.VISIBLE);
         videoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -363,8 +364,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
             @Override
             public void onPrepared(MediaPlayer mp) {
                 showProgress(false);
-                mControls.show();
                 mp.start();
+                mControls.show();
             }
         });
 
@@ -387,8 +388,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
             @Override
             public void onPrepared(MediaPlayer mp) {
                 showProgress(false);
-                mControls.show();
                 mp.start();
+                mControls.show();
             }
         });
         mAudioPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
