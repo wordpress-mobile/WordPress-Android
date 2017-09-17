@@ -66,7 +66,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
     private VideoView mVideoView;
 
     private MediaPlayer mAudioPlayer;
-    private MediaController mAudioController;
+    private MediaController mControls;
 
     private static final long FADE_DELAY_MS = 3000;
     private final Handler mFadeHandler = new Handler();
@@ -164,16 +164,21 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
         videoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
-        videoFrame.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showToolbar();
+                if (mControls != null) {
+                    mControls.show();
+                }
             }
-        });
+        };
 
         if (mIsVideo) {
+            videoFrame.setOnClickListener(listener);
             playVideo(mContentUri);
         } else if (mIsAudio) {
+            mImageView.setOnClickListener(listener);
             mImageView.setBackground(getDrawable(R.drawable.media_settings_background));
             mImageView.setImageResource(R.drawable.ic_gridicons_audio);
             playAudio(mContentUri);
@@ -189,9 +194,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         super.onStop();
         if (mAudioPlayer != null && mAudioPlayer.isPlaying()) {
             mAudioPlayer.stop();
-        }
-        if (mAudioController != null) {
-            mAudioController.hide();
         }
         if (mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
@@ -333,13 +335,21 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         mImageView.setImageBitmap(bmp);
     }
 
+    private void initControls() {
+        mControls = new MediaController(this);
+        if (mIsVideo) {
+            mControls.setAnchorView(mVideoView);
+            mControls.setMediaPlayer(mVideoView);
+        } else if (mIsAudio) {
+            mControls.setAnchorView(mImageView);
+            mControls.setMediaPlayer(this);
+        }
+    }
+
     /*
      * loads and plays a remote or local video
      */
     private void playVideo(@NonNull String mediaUri) {
-        final MediaController controls = new MediaController(this);
-        mVideoView.setMediaController(controls);
-
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -353,11 +363,12 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
             @Override
             public void onPrepared(MediaPlayer mp) {
                 showProgress(false);
-                controls.show();
+                mControls.show();
                 mp.start();
             }
         });
 
+        initControls();
         mVideoView.setVideoURI(Uri.parse(mediaUri));
         mVideoView.requestFocus();
     }
@@ -376,7 +387,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
             @Override
             public void onPrepared(MediaPlayer mp) {
                 showProgress(false);
-                mAudioController.show(0);
+                mControls.show();
                 mp.start();
             }
         });
@@ -388,17 +399,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
             }
         });
 
-        mAudioController = new MediaController(this);
-        mAudioController.setMediaPlayer(this);
-        mAudioController.setAnchorView(mImageView);
-        mAudioPlayer.prepareAsync();
+        initControls();
         showProgress(true);
-    }
-
-    private void stopAudio() {
-        if (mAudioPlayer != null) {
-            mAudioPlayer.stop();
-        }
+        mAudioPlayer.prepareAsync();
     }
 
     private final Runnable fadeOutRunnable = new Runnable() {
