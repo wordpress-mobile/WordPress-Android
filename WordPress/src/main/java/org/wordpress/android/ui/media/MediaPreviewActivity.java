@@ -26,7 +26,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.MediaController;
-import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.android.volley.VolleyError;
@@ -56,10 +55,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_IS_VIDEO = "is_video";
     private static final String ARG_IS_AUDIO = "is_audio";
-    private static final String ARG_TITLE ="title";
 
     private String mContentUri;
-    private String mTitle;
     private boolean mIsVideo;
     private boolean mIsAudio;
 
@@ -111,7 +108,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         Intent intent = new Intent(context, MediaPreviewActivity.class);
         intent.putExtra(ARG_MEDIA_CONTENT_URI, media.getUrl());
         intent.putExtra(ARG_IS_VIDEO, media.isVideo());
-        intent.putExtra(ARG_TITLE, media.getTitle());
         String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
         intent.putExtra(ARG_IS_AUDIO, mimeType.startsWith("audio"));
 
@@ -145,12 +141,10 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mContentUri = savedInstanceState.getString(ARG_MEDIA_CONTENT_URI);
-            mTitle = savedInstanceState.getString(ARG_TITLE);
             mIsVideo = savedInstanceState.getBoolean(ARG_IS_VIDEO);
             mIsAudio = savedInstanceState.getBoolean(ARG_IS_AUDIO);
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            mTitle = getIntent().getStringExtra(ARG_TITLE);
             mContentUri = getIntent().getStringExtra(ARG_MEDIA_CONTENT_URI);
             mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
             mIsAudio = getIntent().getBooleanExtra(ARG_IS_AUDIO, false);
@@ -189,10 +183,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
             mVideoFrame.setOnClickListener(listener);
             playVideo(mContentUri);
         } else if (mIsAudio) {
-            if (!TextUtils.isEmpty(mTitle)) {
-                TextView txtTitle = (TextView) findViewById(R.id.text_audio_title);
-                txtTitle.setText(mTitle);
-            }
             mAudioFrame.setOnClickListener(listener);
             playAudio(mContentUri);
         } else {
@@ -348,6 +338,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         mImageView.setImageBitmap(bmp);
     }
 
+    /*
+     * initialize the media controls (audio/video only)
+     */
     private void initControls() {
         mControls = new MediaController(this);
         if (mIsVideo) {
@@ -359,9 +352,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         }
     }
 
-    /*
-     * loads and plays a remote or local video
-     */
     private void playVideo(@NonNull String mediaUri) {
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
@@ -454,6 +444,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         }
     }
 
+    /*
+     * MediaController.MediaPlayerControl - for audio playback only
+     */
     @Override
     public void start() {
         if (mAudioPlayer != null) {
