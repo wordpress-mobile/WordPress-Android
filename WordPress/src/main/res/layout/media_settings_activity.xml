@@ -5,13 +5,6 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/image_full"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black"
-        android:visibility="gone"/>
-
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
@@ -155,10 +148,10 @@
                 android:layout_marginRight="@dimen/fab_margin"
                 android:contentDescription="@string/fab_content_description_preview"
                 android:visibility="gone"
+                app:backgroundTint="@color/blue_wordpress"
                 app:elevation="8dp"
                 app:fabSize="normal"
                 app:srcCompat="@drawable/ic_fullscreen_white_24dp"
-                app:backgroundTint="@color/blue_wordpress"
                 tools:visibility="visible"/>
 
             <android.support.v7.widget.CardView
