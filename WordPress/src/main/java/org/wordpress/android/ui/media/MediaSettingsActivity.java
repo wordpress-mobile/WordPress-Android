@@ -217,7 +217,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             imgGradient.setVisibility(View.GONE);
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
             mImageView.setPadding(padding, padding * 2, padding, padding);
-            mImageView.setBackground(getDrawable(R.drawable.media_settings_background));
+            mImageView.setBackground(getResources().getDrawable(R.drawable.media_settings_background));
             mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             mImageView.setImageResource(R.drawable.ic_gridicons_audio);
         } else {
