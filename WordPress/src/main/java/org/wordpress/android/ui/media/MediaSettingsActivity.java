@@ -109,13 +109,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                                      @NonNull MediaModel media) {
         // TODO: right now only images & videos are supported
         String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-        if (!mimeType.startsWith("image") && !mimeType.startsWith("video")) {
+        if (!mimeType.startsWith("image") && !media.isVideo()) {
             return;
         }
 
         // go directly to preview for local files
         if (MediaUtils.isLocalFile(media.getUploadState())) {
-            MediaPreviewActivity.showPreview(activity, site, media.getFilePath(), mimeType.startsWith("video"));
+            MediaPreviewActivity.showPreview(activity, site, media.getFilePath(), media.isVideo());
             return;
         }
 
@@ -505,7 +505,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia.getUrl(), isVideo());
+                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia);
             }
         }, 200);
     }
