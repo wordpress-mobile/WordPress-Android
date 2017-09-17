@@ -23,6 +23,11 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
         init(context, swipeRefreshLayout, listener, android.R.color.holo_blue_dark);
     }
 
+    public SwipeToRefreshHelper(CustomSwipeRefreshLayout swipeRefreshLayout, RefreshListener listener,
+                                @ColorRes int... colorResIds) {
+        init(swipeRefreshLayout, listener, colorResIds);
+    }
+
     public void init(Context context, CustomSwipeRefreshLayout swipeRefreshLayout, RefreshListener listener,
                      @ColorRes int colorResId) {
         mRefreshListener = listener;
@@ -33,6 +38,14 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
         int color = styleAttrs.getColor(R.styleable.RefreshIndicator_refreshIndicatorColor, ContextCompat
                 .getColor(context, colorResId));
         mSwipeRefreshLayout.setColorSchemeColors(color, color, color, color);
+    }
+
+    public void init(CustomSwipeRefreshLayout swipeRefreshLayout, RefreshListener listener,
+                     @ColorRes int... colorResIds) {
+        mRefreshListener = listener;
+        mSwipeRefreshLayout = swipeRefreshLayout;
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(colorResIds);
     }
 
     public void setRefreshing(boolean refreshing) {
