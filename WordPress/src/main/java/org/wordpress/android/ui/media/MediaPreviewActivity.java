@@ -227,6 +227,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         if (mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
         }
+        if (mControls != null && mControls.isShowing()) {
+            mControls.hide();
+        }
         super.onDestroy();
     }
 
