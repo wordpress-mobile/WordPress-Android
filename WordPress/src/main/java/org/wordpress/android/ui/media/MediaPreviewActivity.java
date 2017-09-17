@@ -235,6 +235,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         super.onSaveInstanceState(outState);
         outState.putString(ARG_MEDIA_CONTENT_URI, mContentUri);
         outState.putBoolean(ARG_IS_VIDEO, mIsVideo);
+        outState.putBoolean(ARG_IS_AUDIO, mIsAudio);
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
