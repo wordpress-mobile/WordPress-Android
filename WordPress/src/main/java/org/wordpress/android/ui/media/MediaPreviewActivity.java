@@ -31,6 +31,7 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
@@ -79,6 +80,28 @@ public class MediaPreviewActivity extends AppCompatActivity {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
         intent.putExtra(ARG_MEDIA_CONTENT_URI, contentUri);
         intent.putExtra(ARG_IS_VIDEO, isVideo);
+        if (site != null) {
+            intent.putExtra(WordPress.SITE, site);
+        }
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                context,
+                R.anim.fade_in,
+                R.anim.fade_out);
+        ActivityCompat.startActivity(context, intent, options.toBundle());
+    }
+
+    /**
+     * @param context     self explanatory
+     * @param site        optional site this media is associated with
+     * @param media       media model
+     */
+    public static void showPreview(Context context,
+                                   SiteModel site,
+                                   MediaModel media) {
+        Intent intent = new Intent(context, MediaPreviewActivity.class);
+        intent.putExtra(ARG_MEDIA_CONTENT_URI, media.getUrl());
+        intent.putExtra(ARG_IS_VIDEO, media.isVideo());
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
         }

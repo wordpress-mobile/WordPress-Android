@@ -88,6 +88,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private MediaModel mMedia;
 
     private ImageView mImageView;
+    private ImageView mImagePlay;
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mAltTextView;
@@ -106,17 +107,15 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
                                      @NonNull MediaModel media) {
-        // TODO: right now only images, videos and audio files are supported
+        // TODO: right now only images & videos are supported
         String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-        if (!mimeType.startsWith("image")
-                && !mimeType.startsWith("video")
-                && !mimeType.startsWith("audio")) {
+        if (!mimeType.startsWith("image") && !media.isVideo()) {
             return;
         }
 
         // go directly to preview for local files
         if (MediaUtils.isLocalFile(media.getUploadState())) {
-            MediaPreviewActivity.showPreview(activity, site, media.getFilePath(), mimeType.startsWith("video"));
+            MediaPreviewActivity.showPreview(activity, site, media.getFilePath(), media.isVideo());
             return;
         }
 
@@ -148,6 +147,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
+        mImagePlay = (ImageView) findViewById(R.id.image_play);
         mTitleView = (EditText) findViewById(R.id.edit_title);
         mCaptionView = (EditText) findViewById(R.id.edit_caption);
         mAltTextView = (EditText) findViewById(R.id.edit_alt_text);
@@ -171,8 +171,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         if (isVideo()) {
             setTitle(R.string.media_title_video_details);
-        } else if (isAudio()) {
-            setTitle(R.string.media_title_audio_details);
         } else {
             setTitle(R.string.media_title_image_details);
         }
@@ -196,8 +194,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         ImageView imgGradient = (ImageView) findViewById(R.id.image_gradient);
         imgGradient.getLayoutParams().height = toolbarHeight * 3;
 
-        ImageView imgPlayVideo = (ImageView) findViewById(R.id.image_play_video);
-        imgPlayVideo.setVisibility(isVideo() ? View.VISIBLE : View.GONE);
+        mImagePlay.setVisibility(isVideo() ? View.VISIBLE : View.GONE);
         findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() ? View.GONE : View.VISIBLE);
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -208,20 +205,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         };
         mFabView.setOnClickListener(listener);
         mImageView.setOnClickListener(listener);
-        imgPlayVideo.setOnClickListener(listener);
+        mImagePlay.setOnClickListener(listener);
 
         showMetaData();
-
-        if (isAudio()) {
-            imgGradient.setVisibility(View.GONE);
-            int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
-            mImageView.setPadding(padding, padding * 2, padding, padding);
-            mImageView.setBackground(getDrawable(R.drawable.media_settings_background));
-            mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            mImageView.setImageResource(R.drawable.ic_gridicons_audio);
-        } else {
-            loadImage();
-        }
+        loadImage();
     }
 
     @Override
@@ -356,11 +343,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     
     private boolean isVideo() {
         return mMedia.isVideo();
-    }
-
-    private boolean isAudio() {
-        String mimeType = StringUtils.notNullStr(mMedia.getMimeType()).toLowerCase();
-        return mimeType.startsWith("audio/");
     }
 
     private void showMetaData() {
@@ -523,7 +505,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia.getUrl(), isVideo());
+                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia);
             }
         }, 200);
     }
