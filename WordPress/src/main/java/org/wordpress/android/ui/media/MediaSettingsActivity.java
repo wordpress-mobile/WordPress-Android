@@ -88,6 +88,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private MediaModel mMedia;
 
     private ImageView mImageView;
+    private ImageView mImagePlay;
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mAltTextView;
@@ -146,6 +147,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
+        mImagePlay = (ImageView) findViewById(R.id.image_play);
         mTitleView = (EditText) findViewById(R.id.edit_title);
         mCaptionView = (EditText) findViewById(R.id.edit_caption);
         mAltTextView = (EditText) findViewById(R.id.edit_alt_text);
@@ -192,8 +194,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         ImageView imgGradient = (ImageView) findViewById(R.id.image_gradient);
         imgGradient.getLayoutParams().height = toolbarHeight * 3;
 
-        ImageView imgPlayVideo = (ImageView) findViewById(R.id.image_play_video);
-        imgPlayVideo.setVisibility(isVideo() ? View.VISIBLE : View.GONE);
+        mImagePlay.setVisibility(isVideo() ? View.VISIBLE : View.GONE);
         findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() ? View.GONE : View.VISIBLE);
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -204,7 +205,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         };
         mFabView.setOnClickListener(listener);
         mImageView.setOnClickListener(listener);
-        imgPlayVideo.setOnClickListener(listener);
+        mImagePlay.setOnClickListener(listener);
 
         showMetaData();
         loadImage();
