@@ -1,8 +1,8 @@
 package org.wordpress.android.util.helpers;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.TypedValue;
 
@@ -28,8 +28,8 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
         mSwipeRefreshLayout.setOnRefreshListener(this);
         final TypedArray styleAttrs = obtainStyledAttrsFromThemeAttr(context, R.attr.swipeToRefreshStyle,
                 R.styleable.RefreshIndicator);
-        int color = styleAttrs.getColor(R.styleable.RefreshIndicator_refreshIndicatorColor, context.getResources()
-                .getColor(android.R.color.holo_blue_dark));
+        int color = styleAttrs.getColor(R.styleable.RefreshIndicator_refreshIndicatorColor, ContextCompat
+                .getColor(context, android.R.color.holo_blue_dark));
         mSwipeRefreshLayout.setColorSchemeColors(color, color, color, color);
     }
 
