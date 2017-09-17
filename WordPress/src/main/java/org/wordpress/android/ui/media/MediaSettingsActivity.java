@@ -106,9 +106,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
                                      @NonNull MediaModel media) {
-        // TODO: right now only images & videos are supported
+        // TODO: right now only images, videos and audio files are supported
         String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-        if (!mimeType.startsWith("image") && !mimeType.startsWith("video")) {
+        if (!mimeType.startsWith("image")
+                && !mimeType.startsWith("video")
+                && !mimeType.startsWith("audio")) {
             return;
         }
 
@@ -209,7 +211,17 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         imgPlayVideo.setOnClickListener(listener);
 
         showMetaData();
-        loadImage();
+
+        if (isAudio()) {
+            imgGradient.setVisibility(View.GONE);
+            int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
+            mImageView.setPadding(padding, padding * 2, padding, padding);
+            mImageView.setBackground(getDrawable(R.drawable.media_settings_background));
+            mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            mImageView.setImageResource(R.drawable.ic_gridicons_audio);
+        } else {
+            loadImage();
+        }
     }
 
     @Override

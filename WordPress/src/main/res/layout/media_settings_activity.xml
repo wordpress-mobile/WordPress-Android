@@ -38,7 +38,7 @@
                             android:background="@color/grey_light"
                             android:scaleType="centerCrop"
                             tools:layout_height="224dp"
-                            tools:src="@drawable/drake_empty_results_400dp"/>
+                            tools:src="@drawable/ic_gridicons_audio"/>
 
                         <ImageView
                             android:id="@+id/image_play_video"

@@ -198,9 +198,9 @@
     <string name="fab_content_description_preview">Preview</string>
 
     <!-- Media settings title -->
-    <string name="media_title_image_details">Image Details</string>
-    <string name="media_title_video_details">Video Details</string>
-    <string name="media_title_audio_details">Audio Details</string>
+    <string name="media_title_image_details">Image details</string>
+    <string name="media_title_video_details">Video details</string>
+    <string name="media_title_audio_details">Audio details</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_multi_media">Delete selected items?</string>
