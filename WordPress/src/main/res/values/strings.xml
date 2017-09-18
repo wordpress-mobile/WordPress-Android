@@ -197,6 +197,7 @@
     <string name="media_title_image_details">Image details</string>
     <string name="media_title_video_details">Video details</string>
     <string name="media_title_audio_details">Audio details</string>
+    <string name="media_title_document_details">Document details</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_multi_media">Delete selected items?</string>

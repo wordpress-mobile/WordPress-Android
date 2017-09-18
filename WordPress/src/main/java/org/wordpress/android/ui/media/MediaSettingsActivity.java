@@ -70,6 +70,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 
 import java.text.SimpleDateFormat;
@@ -107,17 +108,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
                                      @NonNull MediaModel media) {
-        // TODO: right now only image, video and audio files are supported
-        String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-        if (!mimeType.startsWith("image")
-                && !mimeType.startsWith("audio")
-                && !media.isVideo()) {
-            return;
-        }
-
-        // go directly to preview for local files
+        // go directly to preview for local files (no preview for local documents)
         if (MediaUtils.isLocalFile(media.getUploadState())) {
-            MediaPreviewActivity.showPreview(activity, site, media.getFilePath(), media.isVideo());
+            if (!MediaUtils.isDocument(media.getFilePath())) {
+                MediaPreviewActivity.showPreview(activity, site, media.getFilePath(), media.isVideo());
+            }
             return;
         }
 
@@ -175,6 +170,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             setTitle(R.string.media_title_video_details);
         } else if (isAudio()) {
             setTitle(R.string.media_title_audio_details);
+        } else if (isDocument()) {
+            setTitle(R.string.media_title_document_details);
         } else {
             setTitle(R.string.media_title_image_details);
         }
@@ -199,27 +196,30 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         imgGradient.getLayoutParams().height = toolbarHeight * 3;
 
         mImagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
-        findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() || isAudio() ? View.GONE : View.VISIBLE);
+        findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() || isAudio() || isDocument() ? View.GONE : View.VISIBLE);
 
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFullScreen();
-            }
-        };
-        mFabView.setOnClickListener(listener);
-        mImageView.setOnClickListener(listener);
-        mImagePlay.setOnClickListener(listener);
+        if (!isDocument()) {
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showFullScreen();
+                }
+            };
+            mFabView.setOnClickListener(listener);
+            mImageView.setOnClickListener(listener);
+            mImagePlay.setOnClickListener(listener);
+        }
 
         showMetaData();
 
-        if (isAudio()) {
+        if (isAudio() || isDocument()) {
             imgGradient.setVisibility(View.GONE);
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
+            int imageRes = WPMediaUtils.getPlaceholder(mMedia.getUrl());
             mImageView.setPadding(padding, padding * 2, padding, padding);
             mImageView.setBackground(getResources().getDrawable(R.drawable.media_settings_background));
             mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            mImageView.setImageResource(R.drawable.ic_gridicons_audio);
+            mImageView.setImageResource(imageRes);
         } else {
             loadImage();
         }
@@ -364,6 +364,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         return mimeType.startsWith("audio");
     }
 
+    private boolean isDocument() {
+        return MediaUtils.isDocument(mMedia.getUrl());
+    }
+
     private void showMetaData() {
         mTitleView.setText(mMedia.getTitle());
         mCaptionView.setText(mMedia.getCaption());
@@ -393,6 +397,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         } else {
             txtDimensions.setVisibility(View.GONE);
             txtDimensionsLabel.setVisibility(View.GONE);
+            findViewById(R.id.divider_dimensions).setVisibility(View.GONE);
         }
 
         String uploadDate = null;
