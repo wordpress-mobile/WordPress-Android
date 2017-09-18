@@ -1135,7 +1135,7 @@ Language: sq_AL
 	<string name="version">Version</string>
 	<string name="tos">Kushte Shërbimi</string>
 	<string name="app_title">WordPress për Android</string>
-	<string name="max_thumbnail_px_width">Gjerësi Parazgjedhje Figure</string>
+	<string name="max_thumbnail_px_size">Gjerësi Parazgjedhje Figure</string>
 	<string name="image_alignment">Drejtim</string>
 	<string name="refresh">Rifresko</string>
 	<string name="untitled">Pa titull</string>

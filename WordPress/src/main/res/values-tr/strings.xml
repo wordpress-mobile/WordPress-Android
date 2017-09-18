@@ -1346,7 +1346,7 @@ Language: tr
 	<string name="app_title">Android için WordPress</string>
 	<string name="tos">Hizmet Şartları</string>
 	<string name="version">Sürüm</string>
-	<string name="max_thumbnail_px_width">Varsayılan Görsel Genişliği</string>
+	<string name="max_thumbnail_px_size">Varsayılan Görsel Genişliği</string>
 	<string name="image_alignment">Konumlandırma</string>
 	<string name="refresh">Yenile</string>
 	<string name="untitled">Başlıksız</string>

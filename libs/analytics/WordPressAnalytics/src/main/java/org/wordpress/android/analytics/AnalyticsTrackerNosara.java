@@ -730,6 +730,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notification_settings_streams_opened";
             case NOTIFICATION_SETTINGS_DETAILS_OPENED:
                 return "notification_settings_details_opened";
+            case NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED:
+                return "notification_settings_app_notifications_disabled";
+            case NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED:
+                return "notification_settings_app_notifications_enabled";
             case ME_ACCESSED:
                 return "me_tab_accessed";
             case ME_GRAVATAR_TAPPED:

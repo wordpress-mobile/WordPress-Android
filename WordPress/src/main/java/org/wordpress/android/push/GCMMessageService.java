@@ -693,43 +693,46 @@ public class GCMMessageService extends GcmListenerService {
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            boolean shouldReceiveNotifications = prefs.getBoolean(context.getString(R.string.wp_pref_notification_receive), true);
 
-            if (notifyUser) {
-                boolean shouldVibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
-                boolean shouldBlinkLight = prefs.getBoolean("wp_pref_notification_light", true);
-                String notificationSound = prefs.getString("wp_pref_custom_notification_sound", "content://settings/system/notification_sound"); //"" if None is selected
+            if (shouldReceiveNotifications) {
+                if (notifyUser) {
+                    boolean shouldVibrate = prefs.getBoolean(context.getString(R.string.wp_pref_notification_vibrate), false);
+                    boolean shouldBlinkLight = prefs.getBoolean(context.getString(R.string.wp_pref_notification_light), true);
+                    String notificationSound = prefs.getString(context.getString(R.string.wp_pref_custom_notification_sound), "content://settings/system/notification_sound"); //"" if None is selected
 
-                if (!TextUtils.isEmpty(notificationSound)) {
-                    builder.setSound(Uri.parse(notificationSound));
+                    if (!TextUtils.isEmpty(notificationSound)) {
+                        builder.setSound(Uri.parse(notificationSound));
+                    }
+
+                    if (shouldVibrate) {
+                        builder.setVibrate(new long[]{500, 500, 500});
+                    }
+                    if (shouldBlinkLight) {
+                        builder.setLights(0xff0000ff, 1000, 5000);
+                    }
+                } else {
+                    builder.setVibrate(null);
+                    builder.setSound(null);
+                    // Do not turn the led off otherwise the previous (single) notification led is not shown. We're re-using the same builder for single and group.
                 }
 
-                if (shouldVibrate) {
-                    builder.setVibrate(new long[]{500, 500, 500});
-                }
-                if (shouldBlinkLight) {
-                    builder.setLights(0xff0000ff, 1000, 5000);
-                }
-            } else {
-                builder.setVibrate(null);
-                builder.setSound(null);
-                // Do not turn the led off otherwise the previous (single) notification led is not shown. We're re-using the same builder for single and group.
+                // Call broadcast receiver when notification is dismissed
+                Intent notificationDeletedIntent = new Intent(context, NotificationDismissBroadcastReceiver.class);
+                notificationDeletedIntent.putExtra("notificationId", pushId);
+                notificationDeletedIntent.setAction(String.valueOf(pushId));
+                PendingIntent pendingDeleteIntent =
+                        PendingIntent.getBroadcast(context, pushId, notificationDeletedIntent, 0);
+                builder.setDeleteIntent(pendingDeleteIntent);
+
+                builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
+
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, pushId, resultIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.setContentIntent(pendingIntent);
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+                notificationManager.notify(pushId, builder.build());
             }
-
-            // Call broadcast receiver when notification is dismissed
-            Intent notificationDeletedIntent = new Intent(context, NotificationDismissBroadcastReceiver.class);
-            notificationDeletedIntent.putExtra("notificationId", pushId);
-            notificationDeletedIntent.setAction(String.valueOf(pushId));
-            PendingIntent pendingDeleteIntent =
-                    PendingIntent.getBroadcast(context, pushId, notificationDeletedIntent, 0);
-            builder.setDeleteIntent(pendingDeleteIntent);
-
-            builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
-
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, pushId, resultIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
-            builder.setContentIntent(pendingIntent);
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify(pushId, builder.build());
         }
 
         private void rebuildAndUpdateNotificationsOnSystemBar(Context context, Bundle data) {

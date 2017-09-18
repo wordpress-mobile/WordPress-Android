@@ -1041,7 +1041,7 @@ Language: es_VE
 	<string name="version">Versión</string>
 	<string name="tos">Términos del servicio</string>
 	<string name="app_title">WordPress para Android</string>
-	<string name="max_thumbnail_px_width">Ancho predeterminado de la imagen </string>
+	<string name="max_thumbnail_px_size">Ancho predeterminado de la imagen </string>
 	<string name="image_alignment">Alineamiento</string>
 	<string name="refresh">Refrescar</string>
 	<string name="untitled">Sin Título</string>

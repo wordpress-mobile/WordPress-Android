@@ -1031,7 +1031,7 @@ Language: ru
 	<string name="app_title">WordPress для Android</string>
 	<string name="tos">Условия сервиса</string>
 	<string name="version">Версия</string>
-	<string name="max_thumbnail_px_width">Ширина изображения по умолчанию</string>
+	<string name="max_thumbnail_px_size">Ширина изображения по умолчанию</string>
 	<string name="image_alignment">Выравнивание</string>
 	<string name="refresh">Обновить</string>
 	<string name="untitled">Без заголовка</string>

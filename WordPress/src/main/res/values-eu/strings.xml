@@ -757,7 +757,7 @@ Language: eu_ES
 	<string name="app_title">WordPress Android-erako</string>
 	<string name="tos">Zerbitzuaren baldintzak</string>
 	<string name="version">Bertsioa:</string>
-	<string name="max_thumbnail_px_width">Lehenetsitako irudi zabalera</string>
+	<string name="max_thumbnail_px_size">Lehenetsitako irudi zabalera</string>
 	<string name="image_alignment">Lerrokatzea</string>
 	<string name="refresh">Freskatu</string>
 	<string name="untitled">Izenbururik gabe</string>

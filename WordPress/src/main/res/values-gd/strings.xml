@@ -554,7 +554,7 @@ Language: gd_GB
 	<string name="version">Tionndadh</string>
 	<string name="tos">Teirmichean na seirbheise</string>
 	<string name="app_title">WordPress airson Android</string>
-	<string name="max_thumbnail_px_width">Leud bunaiteach an deilbh</string>
+	<string name="max_thumbnail_px_size">Leud bunaiteach an deilbh</string>
 	<string name="image_alignment">Co-thaobhadh</string>
 	<string name="refresh">Ath-nuadhaich</string>
 	<string name="untitled">Gun tiotal</string>
