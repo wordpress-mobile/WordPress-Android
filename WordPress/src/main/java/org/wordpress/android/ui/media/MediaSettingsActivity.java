@@ -89,7 +89,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private MediaModel mMedia;
 
     private ImageView mImageView;
-    private ImageView mImagePlay;
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mAltTextView;
@@ -144,7 +143,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
-        mImagePlay = (ImageView) findViewById(R.id.image_play);
         mTitleView = (EditText) findViewById(R.id.edit_title);
         mCaptionView = (EditText) findViewById(R.id.edit_caption);
         mAltTextView = (EditText) findViewById(R.id.edit_alt_text);
@@ -195,9 +193,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         ImageView imgGradient = (ImageView) findViewById(R.id.image_gradient);
         imgGradient.getLayoutParams().height = toolbarHeight * 3;
 
-        mImagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
+        ImageView imagePlay = (ImageView) findViewById(R.id.image_play);
+        imagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
         findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() || isAudio() || isDocument() ? View.GONE : View.VISIBLE);
 
+        // tap to show full screen view (not supported for documents)
         if (!isDocument()) {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
@@ -207,11 +207,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             };
             mFabView.setOnClickListener(listener);
             mImageView.setOnClickListener(listener);
-            mImagePlay.setOnClickListener(listener);
+            imagePlay.setOnClickListener(listener);
         }
 
         showMetaData();
 
+        // audio & documents show a placeholder on top of a gradient, otherwise we show a thumbnail
         if (isAudio() || isDocument()) {
             imgGradient.setVisibility(View.GONE);
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
@@ -441,18 +442,17 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         String mediaUri;
         if (isVideo()) {
-            if (mMedia.getThumbnailUrl() != null) {
-                mediaUri = mMedia.getThumbnailUrl();
-            } else {
-                downloadVideoThumbnail();
-                return;
-            }
+            mediaUri = mMedia.getThumbnailUrl();
         } else {
             mediaUri = mMedia.getUrl();
         }
 
         if (TextUtils.isEmpty(mediaUri)) {
-            ToastUtils.showToast(this, R.string.error_media_load);
+            if (isVideo()) {
+                downloadVideoThumbnail();
+            } else {
+                ToastUtils.showToast(this, R.string.error_media_load);
+            }
             return;
         }
 
