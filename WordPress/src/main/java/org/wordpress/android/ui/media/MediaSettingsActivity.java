@@ -436,7 +436,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         String mediaUri;
         if (isVideo()) {
-            mediaUri = mMedia.getThumbnailUrl();
+            if (mMedia.getThumbnailUrl() != null) {
+                mediaUri = mMedia.getThumbnailUrl();
+            } else {
+                downloadVideoThumbnail();
+                return;
+            }
         } else {
             mediaUri = mMedia.getUrl();
         }
@@ -473,6 +478,31 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         } else {
             new LocalImageTask(mediaUri, size).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
+    }
+
+    /*
+     * downloads and displays the thumbnail for a video that doesn't already have a thumbnail assigned (seen most
+     * often with .org and JP sites)
+     */
+    private void downloadVideoThumbnail() {
+        new Thread() {
+            @Override
+            public void run() {
+                int width = DisplayUtils.getDisplayPixelWidth(MediaSettingsActivity.this);
+                final Bitmap thumb = ImageUtils.getVideoFrameFromVideo(mMedia.getUrl(), width);
+                if (thumb != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isFinishing()) {
+                                WordPress.getBitmapCache().put(mMedia.getUrl(), thumb);
+                                mImageView.setImageBitmap(thumb);
+                            }
+                        }
+                    });
+                }
+            }
+        }.start();
     }
 
     private class LocalImageTask extends AsyncTask<Void, Void, Bitmap> {
