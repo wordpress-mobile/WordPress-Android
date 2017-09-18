@@ -76,7 +76,6 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
@@ -392,6 +391,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     trackAddMediaFromDeviceEvents(true, true, uri);
                 }
                 break;
+            case RequestCodes.MEDIA_SETTINGS:
+                if (resultCode == MediaSettingsActivity.RESULT_MEDIA_DELETED) {
+                    reloadMediaGrid();
+                }
+                break;
         }
     }
 
@@ -562,19 +566,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             setResult(RESULT_OK, intent);
             finish();
         } else {
-            // TODO: right now only images & videos are supported
-            String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-            if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
-                if (media.getUploadState() != null &&
-                        MediaUtils.isLocalFile(media.getUploadState().toLowerCase())) {
-                    // Show the simple preview in case of uploading items. i.e: No metadata info, and other options only available
-                    // for files already on the remote site.
-                    MediaPreviewActivity.showPreview(this, sourceView, media.getFilePath(), mimeType.startsWith("video"));
-                } else {
-                    MediaPreviewActivity.showPreview(this, sourceView, mSite, localMediaId);
-                }
-            }
+            showMediaSettings(media);
         }
+    }
+
+    private void showMediaSettings(@NonNull MediaModel media) {
+        MediaSettingsActivity.showForResult(this, mSite, media);
     }
 
     @Override
