@@ -1014,7 +1014,7 @@ Language: zh_CN
 	<string name="app_title">WordPress for Android</string>
 	<string name="tos">服务条款</string>
 	<string name="version">版本</string>
-	<string name="max_thumbnail_px_width">默认图片宽度</string>
+	<string name="max_thumbnail_px_size">默认图片宽度</string>
 	<string name="image_alignment">对齐</string>
 	<string name="refresh">刷新</string>
 	<string name="untitled">无标题</string>

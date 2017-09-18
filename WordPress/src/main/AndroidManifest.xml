@@ -171,7 +171,12 @@
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/Calypso.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".networking.SSLCertsViewActivity"
             android:theme="@style/Calypso.NoActionBar" />

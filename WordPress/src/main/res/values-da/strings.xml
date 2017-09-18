@@ -517,7 +517,7 @@ Language: da_DK
 	<string name="version">Version</string>
 	<string name="app_title">WordPress til Android</string>
 	<string name="tos">Brugskrav</string>
-	<string name="max_thumbnail_px_width">Standard billedbredde</string>
+	<string name="max_thumbnail_px_size">Standard billedbredde</string>
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Genindlæs</string>
 	<string name="untitled">Ikke-navngivet</string>

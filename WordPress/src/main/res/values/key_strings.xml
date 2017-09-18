@@ -93,6 +93,13 @@
     <string name="pref_key_more_buttons" translatable="false">wp_pref_more_buttons</string>
     <string name="pref_key_twitter_category" translatable="false">wp_pref_twitter_category</string>
 
+    <string name="wp_pref_notifications_root" translatable="false">wp_pref_notifications_root</string>
+    <string name="wp_pref_notifications_master" translatable="false">wp_pref_notifications_master</string>
+    <string name="wp_pref_notification_receive" translatable="false">wp_pref_notification_receive</string>
+    <string name="wp_pref_custom_notification_sound" translatable="false">wp_pref_custom_notification_sound</string>
+    <string name="wp_pref_notification_vibrate" translatable="false">wp_pref_notification_vibrate</string>
+    <string name="wp_pref_notification_light" translatable="false">wp_pref_notification_light</string>
+
     <!-- Notifications -->
     <string-array name="notifications_blog_settings_values" translatable="false">
         <item>new_comment</item>
@@ -258,7 +265,7 @@
     <string name="wordpresscom_sample_post" translatable="false">https://en.blog.wordpress.com/2016/09/26/the-best-of-wordpress-september-2016/</string>
 
     <!-- Preference Entries -->
-    <string-array name="site_settings_image_width_entries" translatable="false">
+    <string-array name="site_settings_image_max_size_entries" translatable="false">
         <item>1000 px</item>
         <item>2000 px</item>
         <item>2500 px</item>
@@ -266,7 +273,7 @@
         <item>@string/site_settings_image_original_size</item>
     </string-array>
 
-    <string-array name="site_settings_image_width_values" translatable="false">
+    <string-array name="site_settings_image_max_size_values" translatable="false">
         <item>1000</item>
         <item>2000</item>
         <item>2500</item>
@@ -291,15 +298,17 @@
     </string-array>
 
     <string-array name="site_settings_video_width_entries" translatable="false">
-        <item>640 px</item>
-        <item>1024 px</item>
-        <item>1280 px</item>
+        <item>480p</item>
+        <item>720p</item>
+        <item>1080p</item>
+        <item>4K</item>
     </string-array>
 
     <string-array name="site_settings_video_width_values" translatable="false">
         <item>640</item>
-        <item>1024</item>
         <item>1280</item>
+        <item>1920</item>
+        <item>3840</item>
     </string-array>
 
     <string-array name="site_settings_video_bitrate_entries" translatable="false">

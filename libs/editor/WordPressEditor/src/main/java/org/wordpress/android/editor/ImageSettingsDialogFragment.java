@@ -188,7 +188,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
                 mLinkTo.setText(mImageMeta.getString(ATTR_URL_LINK));
 
-                mMaxImageWidth = MediaUtils.getMaximumImageWidth(mImageMeta.getInt("naturalWidth"),
+                mMaxImageWidth = MediaUtils.getMaximumImageSize(mImageMeta.getInt("naturalWidth"),
                         bundle.getString(EXTRA_MAX_WIDTH));
 
                 setupWidthSeekBar(widthSeekBar, mWidthText, mImageMeta.getInt(ATTR_DIMEN_WIDTH));
