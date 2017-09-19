@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -98,6 +99,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     private ProgressDialog mProgressDialog;
 
+    private enum MediaType {
+        IMAGE,
+        VIDEO,
+        AUDIO,
+        DOCUMENT
+    }
+    private MediaType mMediaType;
+
     @Inject
     MediaStore mMediaStore;
     @Inject
@@ -108,9 +117,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
                                      @NonNull MediaModel media) {
-        // go directly to preview for local files (no preview for local documents)
+        // go directly to preview for local images, videos and audio (do nothing for local documents)
         if (MediaUtils.isLocalFile(media.getUploadState())) {
-            if (!MediaUtils.isDocument(media.getFilePath())) {
+            if (MediaUtils.isValidImage(media.getUrl())
+                    || MediaUtils.isAudio(media.getUrl())
+                    || media.isVideo()) {
                 MediaPreviewActivity.showPreview(activity, site, media.getFilePath(), media.isVideo());
             }
             return;
@@ -165,14 +176,18 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             return;
         }
 
-        if (isVideo()) {
-            setTitle(R.string.media_title_video_details);
-        } else if (isAudio()) {
-            setTitle(R.string.media_title_audio_details);
-        } else if (isDocument()) {
-            setTitle(R.string.media_title_document_details);
-        } else {
+        if (MediaUtils.isValidImage(mMedia.getUrl())) {
+            mMediaType = MediaType.IMAGE;
             setTitle(R.string.media_title_image_details);
+        } else if (mMedia.isVideo()) {
+            mMediaType = MediaType.VIDEO;
+            setTitle(R.string.media_title_video_details);
+        } else if (MediaUtils.isAudio(mMedia.getUrl())) {
+            mMediaType = MediaType.AUDIO;
+            setTitle(R.string.media_title_audio_details);
+        } else {
+            mMediaType = MediaType.DOCUMENT;
+            setTitle(R.string.media_title_document_details);
         }
 
         // make image 40% of screen height
@@ -216,11 +231,15 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         // audio & documents show a placeholder on top of a gradient, otherwise we show a thumbnail
         if (isAudio() || isDocument()) {
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
-            int imageRes = WPMediaUtils.getPlaceholder(mMedia.getUrl());
+            @DrawableRes int imageRes = WPMediaUtils.getPlaceholder(mMedia.getUrl());
+            if (imageRes == 0) {
+                imageRes = R.drawable.ic_gridicons_page;
+            }
             mImageView.setPadding(padding, padding * 2, padding, padding);
-            mImageView.setBackground(getResources().getDrawable(R.drawable.media_settings_background));
             mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             mImageView.setImageResource(imageRes);
+            //noinspection deprecation
+            mImageView.setBackground(getResources().getDrawable(R.drawable.media_settings_background));
         } else {
             loadImage();
         }
@@ -355,18 +374,17 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         return super.onOptionsItemSelected(item);
     }
-    
+
     private boolean isVideo() {
-        return mMedia.isVideo();
+        return mMediaType == MediaType.VIDEO;
     }
 
     private boolean isAudio() {
-        String mimeType = StringUtils.notNullStr(mMedia.getMimeType()).toLowerCase();
-        return mimeType.startsWith("audio");
+        return mMediaType == MediaType.AUDIO;
     }
 
     private boolean isDocument() {
-        return MediaUtils.isDocument(mMedia.getUrl());
+        return mMediaType == MediaType.DOCUMENT;
     }
 
     private void showMetaData() {
