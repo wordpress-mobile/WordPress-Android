@@ -129,14 +129,16 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
         }
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this,
-                (CustomSwipeRefreshLayout) findViewById(R.id.swipe_to_refresh),
-                new SwipeToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        updatePostAndComments();
-                    }
-                });
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+            (CustomSwipeRefreshLayout) findViewById(R.id.swipe_to_refresh),
+            new SwipeToRefreshHelper.RefreshListener() {
+                @Override
+                public void onRefreshStarted() {
+                    updatePostAndComments();
+                }
+            },
+            R.color.color_primary, R.color.color_accent
+        );
 
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
         int spacingHorizontal = 0;

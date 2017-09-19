@@ -211,16 +211,20 @@ public class ReaderPostDetailFragment extends Fragment
         int swipeToRefreshOffset = getResources().getDimensionPixelSize(R.dimen.toolbar_content_offset);
         swipeRefreshLayout.setProgressViewOffset(false, 0, swipeToRefreshOffset);
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), swipeRefreshLayout, new SwipeToRefreshHelper.RefreshListener() {
-            @Override
-            public void onRefreshStarted() {
-                if (!isAdded()) {
-                    return;
-                }
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+            swipeRefreshLayout,
+            new SwipeToRefreshHelper.RefreshListener() {
+                @Override
+                public void onRefreshStarted() {
+                    if (!isAdded()) {
+                        return;
+                    }
 
-                updatePost();
-            }
-        });
+                    updatePost();
+                }
+            },
+            R.color.color_primary, R.color.color_accent
+        );
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);

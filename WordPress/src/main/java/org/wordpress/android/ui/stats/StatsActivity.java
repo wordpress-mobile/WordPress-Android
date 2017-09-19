@@ -135,7 +135,8 @@ public class StatsActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -146,7 +147,9 @@ public class StatsActivity extends AppCompatActivity
 
                         refreshStatsFromCurrentDate();
                     }
-                });
+                },
+                R.color.color_primary, R.color.color_accent
+        );
 
         setTitle(R.string.stats);
 

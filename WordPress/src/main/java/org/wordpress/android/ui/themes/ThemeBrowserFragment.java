@@ -187,21 +187,24 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     protected void configureSwipeToRefresh(View view) {
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(mThemeBrowserActivity, (CustomSwipeRefreshLayout) view.findViewById(
-                R.id.ptr_layout), new RefreshListener() {
-            @Override
-            public void onRefreshStarted() {
-                if (!isAdded()) {
-                    return;
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+            (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+            new RefreshListener() {
+                @Override
+                public void onRefreshStarted() {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    if (!NetworkUtils.checkConnection(mThemeBrowserActivity)) {
+                        mSwipeToRefreshHelper.setRefreshing(false);
+                        mEmptyTextView.setText(R.string.no_network_title);
+                        return;
+                    }
+                    mThemeBrowserActivity.fetchThemes();
                 }
-                if (!NetworkUtils.checkConnection(mThemeBrowserActivity)) {
-                    mSwipeToRefreshHelper.setRefreshing(false);
-                    mEmptyTextView.setText(R.string.no_network_title);
-                    return;
-                }
-                mThemeBrowserActivity.fetchThemes();
-            }
-        });
+            },
+            R.color.color_primary, R.color.color_accent
+        );
         mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
     }
 

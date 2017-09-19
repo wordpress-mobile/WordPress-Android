@@ -232,22 +232,23 @@ public class PostsListFragment extends Fragment
 
     private void initSwipeToRefreshHelper(View view) {
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(
-                getActivity(),
-                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
-                new RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        if (!isAdded()) {
-                            return;
-                        }
-                        if (!NetworkUtils.checkConnection(getActivity())) {
-                            setRefreshing(false);
-                            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-                            return;
-                        }
-                        requestPosts(false);
+            (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+            new RefreshListener() {
+                @Override
+                public void onRefreshStarted() {
+                    if (!isAdded()) {
+                        return;
                     }
-                });
+                    if (!NetworkUtils.checkConnection(getActivity())) {
+                        setRefreshing(false);
+                        updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+                        return;
+                    }
+                    requestPosts(false);
+                }
+            },
+            R.color.color_primary, R.color.color_accent
+        );
     }
 
     private @Nullable PostsListAdapter getPostListAdapter() {

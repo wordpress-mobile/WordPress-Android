@@ -133,27 +133,28 @@ public class FilteredRecyclerView extends RelativeLayout {
         mProgressLoadMore = (ProgressBar) findViewById(R.id.progress_loading);
         mProgressLoadMore.setVisibility(View.GONE);
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getContext(),
-                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
-                new SwipeToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!NetworkUtils.checkConnection(getContext())) {
-                                    mSwipeToRefreshHelper.setRefreshing(false);
-                                    updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-                                    return;
-                                }
-                                if (mFilterListener != null){
-                                    mFilterListener.onLoadData();
-                                }
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+            (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+            new SwipeToRefreshHelper.RefreshListener() {
+                @Override
+                public void onRefreshStarted() {
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!NetworkUtils.checkConnection(getContext())) {
+                                mSwipeToRefreshHelper.setRefreshing(false);
+                                updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+                                return;
                             }
-                        });
-                    }
-                });
-
+                            if (mFilterListener != null){
+                                mFilterListener.onLoadData();
+                            }
+                        }
+                    });
+                }
+            },
+            R.color.color_primary, R.color.color_accent
+        );
 
         if (mSpinner == null) {
             mSpinner = (Spinner) findViewById(R.id.filter_spinner);

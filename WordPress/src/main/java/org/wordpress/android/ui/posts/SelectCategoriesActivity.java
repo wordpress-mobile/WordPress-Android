@@ -112,17 +112,20 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         }
 
         // swipe to refresh setup
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
-                new RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        if (!NetworkUtils.checkConnection(getBaseContext())) {
-                            mSwipeToRefreshHelper.setRefreshing(false);
-                            return;
-                        }
-                        refreshCategories();
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+            (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+            new RefreshListener() {
+                @Override
+                public void onRefreshStarted() {
+                    if (!NetworkUtils.checkConnection(getBaseContext())) {
+                        mSwipeToRefreshHelper.setRefreshing(false);
+                        return;
                     }
-                });
+                    refreshCategories();
+                }
+            },
+            R.color.color_primary, R.color.color_accent
+        );
 
         populateCategoryList();
 

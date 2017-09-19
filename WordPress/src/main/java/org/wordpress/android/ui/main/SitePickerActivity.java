@@ -250,21 +250,22 @@ public class SitePickerActivity extends AppCompatActivity
             return;
         }
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(
-                this,
-                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
-                new SwipeToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        if (isFinishing()) {
-                            return;
-                        }
-                        if (!NetworkUtils.checkConnection(SitePickerActivity.this)) {
-                            mSwipeToRefreshHelper.setRefreshing(false);
-                            return;
-                        }
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+            (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+            new SwipeToRefreshHelper.RefreshListener() {
+                @Override
+                public void onRefreshStarted() {
+                    if (isFinishing()) {
+                        return;
                     }
-                });
+                    if (!NetworkUtils.checkConnection(SitePickerActivity.this)) {
+                        mSwipeToRefreshHelper.setRefreshing(false);
+                        return;
+                    }
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+                }
+            },
+            R.color.color_primary, R.color.color_accent
+        );
     }
 
     private void setupRecycleView() {

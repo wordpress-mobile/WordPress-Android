@@ -66,24 +66,26 @@ public class StatsViewAllActivity extends AppCompatActivity {
         mOuterScrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
 
         // pull to refresh setup
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
-                new SwipeToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        if (!NetworkUtils.checkConnection(getBaseContext())) {
-                            mSwipeToRefreshHelper.setRefreshing(false);
-                            mIsUpdatingStats = false;
-                            return;
-                        }
-
-                        if (mIsUpdatingStats) {
-                            AppLog.w(AppLog.T.STATS, "stats are already updating, refresh cancelled");
-                            return;
-                        }
-
-                        refreshStats();
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+            (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+            new SwipeToRefreshHelper.RefreshListener() {
+                @Override
+                public void onRefreshStarted() {
+                    if (!NetworkUtils.checkConnection(getBaseContext())) {
+                        mSwipeToRefreshHelper.setRefreshing(false);
+                        mIsUpdatingStats = false;
+                        return;
                     }
+
+                    if (mIsUpdatingStats) {
+                        AppLog.w(AppLog.T.STATS, "stats are already updating, refresh cancelled");
+                        return;
+                    }
+
+                    refreshStats();
                 }
+            },
+            R.color.color_primary, R.color.color_accent
         );
 
         if (savedInstanceState != null) {
