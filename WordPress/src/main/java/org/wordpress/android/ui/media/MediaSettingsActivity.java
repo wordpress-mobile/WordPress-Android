@@ -33,6 +33,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -417,6 +418,18 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         } else {
             txtUploadDate.setVisibility(View.GONE);
             txtUploadDateLabel.setVisibility(View.GONE);
+        }
+
+        TextView txtDuration = (TextView) findViewById(R.id.text_duration);
+        TextView txtDurationLabel = (TextView) findViewById(R.id.text_duration_label);
+        if (mMedia.getLength() > 0) {
+            txtDuration.setVisibility(View.VISIBLE);
+            txtDurationLabel.setVisibility(View.VISIBLE);
+            txtDuration.setText(DateUtils.formatElapsedTime(mMedia.getLength()));
+        } else {
+            txtDuration.setVisibility(View.GONE);
+            txtDurationLabel.setVisibility(View.GONE);
+            findViewById(R.id.divider_duration).setVisibility(View.GONE);
         }
 
         boolean hasUrl = !TextUtils.isEmpty(mMedia.getUrl());

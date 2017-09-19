@@ -276,6 +276,27 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"/>
 
+                    <!-- duration -->
+                    <TextView
+                        android:id="@+id/text_duration_label"
+                        style="@style/MediaSettings.Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/media_edit_duration_caption"/>
+
+                    <TextView
+                        android:id="@+id/text_duration"
+                        style="@style/MediaSettings.Value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="text_image_dimensions"/>
+
+                    <View
+                        android:id="@+id/divider_duration"
+                        style="@style/MediaSettings.Divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+
                     <!-- upload date -->
                     <TextView
                         android:id="@+id/text_upload_date_label"

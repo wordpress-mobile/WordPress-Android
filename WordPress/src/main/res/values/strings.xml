@@ -189,6 +189,7 @@
     <string name="media_edit_filetype_caption">File Type</string>
     <string name="media_edit_image_dimensions_caption">Image Dimensions</string>
     <string name="media_edit_video_dimensions_caption">Video Dimensions</string>
+    <string name="media_edit_duration_caption">Duration</string>
     <string name="media_edit_upload_date_caption">Upload Date</string>
     <string name="media_edit_copy_url_toast">URL copied to clipboard</string>
     <string name="fab_content_description_preview">Preview</string>
