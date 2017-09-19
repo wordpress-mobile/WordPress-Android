@@ -320,7 +320,7 @@
     </ScrollView>
 
     <ImageView
-        android:id="@+id/image_gradient"
+        android:id="@+id/image_gradient_scrim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"

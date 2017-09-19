@@ -191,8 +191,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         // set the height of the gradient scrim that appears atop the image
         int toolbarHeight = DisplayUtils.getActionBarHeight(this);
-        ImageView imgGradient = (ImageView) findViewById(R.id.image_gradient);
-        imgGradient.getLayoutParams().height = toolbarHeight * 3;
+        ImageView imgScrim = (ImageView) findViewById(R.id.image_gradient_scrim);
+        imgScrim.getLayoutParams().height = toolbarHeight * 3;
 
         ImageView imagePlay = (ImageView) findViewById(R.id.image_play);
         imagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
@@ -215,7 +215,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         // audio & documents show a placeholder on top of a gradient, otherwise we show a thumbnail
         if (isAudio() || isDocument()) {
-            imgGradient.setVisibility(View.GONE);
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
             int imageRes = WPMediaUtils.getPlaceholder(mMedia.getUrl());
             mImageView.setPadding(padding, padding * 2, padding, padding);
