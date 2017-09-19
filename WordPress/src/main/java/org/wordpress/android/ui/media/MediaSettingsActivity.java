@@ -176,6 +176,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             return;
         }
 
+        // determine media type up front, default to DOCUMENT if we can't detect it's an image, video, or audio file
         if (MediaUtils.isValidImage(mMedia.getUrl())) {
             mMediaType = MediaType.IMAGE;
             setTitle(R.string.media_title_image_details);
@@ -317,7 +318,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     private boolean shouldShowFab() {
         // fab only shows for images
-        return mMedia != null && StringUtils.notNullStr(mMedia.getMimeType()).startsWith("image/");
+        return mMedia != null && isImage();
     }
 
     private void showProgress(boolean show) {
@@ -373,6 +374,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isImage() {
+        return mMediaType == MediaType.IMAGE;
     }
 
     private boolean isVideo() {
