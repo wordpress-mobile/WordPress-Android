@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -40,6 +39,8 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import javax.inject.Inject;
 
@@ -59,7 +60,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
 
     private NotesAdapter mNotesAdapter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
     private ViewGroup mEmptyView;
@@ -105,14 +106,17 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_notifications);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                hideNewNotificationsBar();
-                fetchNotesFromRemote();
-            }
-        });
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+            (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_notifications),
+            new SwipeToRefreshHelper.RefreshListener() {
+                @Override
+                public void onRefreshStarted() {
+                    hideNewNotificationsBar();
+                    fetchNotesFromRemote();
+                }
+            },
+            R.color.color_primary, R.color.color_accent
+        );
 
 
         // bar that appears at bottom after new notes are received and the user is on this screen
@@ -212,7 +216,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             // let user know that notifications require a wp.com account and enable sign-in
             showEmptyView(R.string.notifications_account_required, 0, R.string.sign_in);
             mFilterRadioGroup.setVisibility(View.GONE);
-            mSwipeRefreshLayout.setVisibility(View.GONE);
         } else {
             getNotesAdapter().reloadNotesFromDBAsync();
         }
@@ -375,7 +378,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             mEmptyView.setVisibility(View.GONE);
             mFilterDivider.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
-            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -385,7 +387,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
             return;
         }
 
@@ -534,7 +536,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsRefreshError error) {
         if (isAdded()) {
-            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeToRefreshHelper.setRefreshing(false);
         }
     }
     @SuppressWarnings("unused")
@@ -542,7 +544,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         if (!isAdded()) {
             return;
         }
-        mSwipeRefreshLayout.setRefreshing(false);
+        mSwipeToRefreshHelper.setRefreshing(false);
         mNotesAdapter.addAll(event.notes, true);
     }
 
