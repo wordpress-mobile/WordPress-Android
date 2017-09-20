@@ -183,5 +183,29 @@ public class UploadStoreUnitTest {
         assertNull(uploadError.postError);
         assertNotNull(uploadError.mediaError);
         assertEquals(MediaErrorType.EXCEEDS_MEMORY_LIMIT, uploadError.mediaError.type);
+
+        // Create another PostModel and add it to the PostStore - this time, without registering it with the UploadStore
+        PostModel unregisteredPostModel = UploadTestUtils.getTestPost();
+        unregisteredPostModel.setId(55);
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(unregisteredPostModel);
+
+        // Create a MediaModel attached to the above post
+        MediaModel mediaLinkedToPost = UploadTestUtils.getLocalTestMedia();
+        mediaLinkedToPost.setId(7);
+        mediaLinkedToPost.setLocalPostId(unregisteredPostModel.getId());
+        MediaSqlUtils.insertMediaForResult(mediaLinkedToPost);
+        UploadSqlUtils.insertOrUpdateMedia(new MediaUploadModel(mediaLinkedToPost.getId()));
+        MediaUploadModel linkedMediaUploadModel = UploadTestUtils.getMediaUploadModelForMediaModel(mediaLinkedToPost);
+
+        // Add an error to the MediaUploadModel
+        linkedMediaUploadModel.setMediaError(new MediaError(MediaErrorType.EXCEEDS_MEMORY_LIMIT, "Too large!"));
+        UploadSqlUtils.insertOrUpdateMedia(linkedMediaUploadModel);
+
+        // Confirm that the store returns a media error for the post (even though there's no associated PostUploadModel)
+        uploadError = mUploadStore.getUploadErrorForPost(unregisteredPostModel);
+        assertNotNull(uploadError);
+        assertNull(uploadError.postError);
+        assertNotNull(uploadError.mediaError);
+        assertEquals(MediaErrorType.EXCEEDS_MEMORY_LIMIT, uploadError.mediaError.type);
     }
 }

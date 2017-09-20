@@ -288,4 +288,64 @@ public class UploadSqlUtilsTest {
         postModels = PostTestUtils.getPosts();
         assertEquals(2, postModels.size());
     }
+
+    @Test
+    public void testGetMediaUploadModelsForPost() {
+        // Check case where there are no matching MediaUploadModels for the post
+        assertEquals(0, UploadSqlUtils.getMediaUploadModelsForPostId(98).size());
+
+        // Set up a MediaModel with a local post ID
+        long testId = Math.abs(mRandom.nextLong());
+        MediaModel testMedia = UploadTestUtils.getTestMedia(testId);
+        testMedia.setLocalPostId(98);
+        assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testMedia));
+
+        // Store a MediaUploadModel corresponding to the MediaModel
+        MediaUploadModel mediaUploadModel = new MediaUploadModel(testMedia.getId());
+        mediaUploadModel.setProgress(0.65F);
+        UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+
+        // Test retrieving MediaUploadModels by post id
+        assertEquals(1, UploadSqlUtils.getMediaUploadModelsForPostId(98).size());
+
+        // Set up a second MediaModel with a different post ID
+        long testId2 = Math.abs(mRandom.nextLong());
+        MediaModel testMedia2 = UploadTestUtils.getTestMedia(testId2);
+        testMedia2.setLocalPostId(97);
+        assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testMedia2));
+
+        // Results for the first post ID should be unchanged
+        assertEquals(1, UploadSqlUtils.getMediaUploadModelsForPostId(98).size());
+        // Expect empty result since we haven't created a MediaUploadModel for this yet
+        assertEquals(0, UploadSqlUtils.getMediaUploadModelsForPostId(97).size());
+
+        // Store a MediaUploadModel corresponding to the second MediaModel
+        MediaUploadModel mediaUploadModel2 = new MediaUploadModel(testMedia2.getId());
+        mediaUploadModel2.setProgress(0.66F);
+        UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel2);
+
+        assertEquals(1, UploadSqlUtils.getMediaUploadModelsForPostId(98).size());
+        assertEquals(1, UploadSqlUtils.getMediaUploadModelsForPostId(97).size());
+
+        // Set up a third MediaModel, with the same post ID as the second
+        long testId3 = Math.abs(mRandom.nextLong());
+        MediaModel testMedia3 = UploadTestUtils.getTestMedia(testId3);
+        testMedia3.setLocalPostId(97);
+        assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testMedia3));
+
+        // Store a MediaUploadModel corresponding to the third MediaModel
+        MediaUploadModel mediaUploadModel3 = new MediaUploadModel(testMedia3.getId());
+        mediaUploadModel3.setProgress(0.67F);
+        UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel3);
+
+        assertEquals(1, UploadSqlUtils.getMediaUploadModelsForPostId(98).size());
+        assertEquals(2, UploadSqlUtils.getMediaUploadModelsForPostId(97).size());
+
+        // Delete two MediaModels and verify the results
+        MediaSqlUtils.deleteMedia(testMedia);
+        MediaSqlUtils.deleteMedia(testMedia2);
+
+        assertEquals(0, UploadSqlUtils.getMediaUploadModelsForPostId(98).size());
+        assertEquals(1, UploadSqlUtils.getMediaUploadModelsForPostId(97).size());
+    }
 }

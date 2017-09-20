@@ -4,12 +4,15 @@ import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.wellsql.generated.MediaModelTable;
 import com.wellsql.generated.MediaUploadModelTable;
 import com.wellsql.generated.PostModelTable;
 import com.wellsql.generated.PostUploadModelTable;
+import com.yarolegovich.wellsql.WellCursor;
 import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.mapper.InsertMapper;
 
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
@@ -78,6 +81,26 @@ public class UploadSqlUtils {
         } else {
             return result.get(0);
         }
+    }
+
+    public static Set<MediaUploadModel> getMediaUploadModelsForPostId(int localPostId) {
+        WellCursor<MediaModel> mediaModelCursor = WellSql.select(MediaModel.class)
+                .columns(MediaModelTable.ID)
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_POST_ID, localPostId)
+                .endGroup().endWhere()
+                .getAsCursor();
+
+        Set<MediaUploadModel> mediaUploadModels = new HashSet<>();
+        while (mediaModelCursor.moveToNext()) {
+            MediaUploadModel mediaUploadModel = getMediaUploadModelForLocalId(mediaModelCursor.getInt(0));
+            if (mediaUploadModel != null) {
+                mediaUploadModels.add(mediaUploadModel);
+            }
+        }
+        mediaModelCursor.close();
+
+        return mediaUploadModels;
     }
 
     public static int deleteMediaUploadModelWithLocalId(int localMediaId) {
