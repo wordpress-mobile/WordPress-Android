@@ -198,11 +198,26 @@ public class UploadStore extends Store {
         return postUploadModel != null && postUploadModel.getUploadState() == PostUploadModel.CANCELLED;
     }
 
+    /**
+     * If the {@code postModel} has been registered as uploading with the UploadStore, this will return the associated
+     * {@link PostError}, if any.
+     * Otherwise, whether or not the {@code postModel} has been registered as uploading with the UploadStore, this
+     * will check all media attached to the {@code postModel} and will return the first error it finds.
+     */
     public @Nullable UploadError getUploadErrorForPost(PostModel postModel) {
         if (postModel == null) return null;
 
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId());
-        if (postUploadModel == null) return null;
+        if (postUploadModel == null) {
+            // If there's no matching PostUploadModel, we might still have associated MediaUploadModels that have errors
+            Set<MediaUploadModel> mediaUploadModels = UploadSqlUtils.getMediaUploadModelsForPostId(postModel.getId());
+            for (MediaUploadModel mediaUploadModel : mediaUploadModels) {
+                if (mediaUploadModel.getMediaError() != null) {
+                    return new UploadError(mediaUploadModel.getMediaError());
+                }
+            }
+            return null;
+        }
 
         if (postUploadModel.getPostError() != null) {
             return new UploadError(postUploadModel.getPostError());
