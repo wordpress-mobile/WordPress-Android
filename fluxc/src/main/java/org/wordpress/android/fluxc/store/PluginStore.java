@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
@@ -23,7 +24,7 @@ import javax.inject.Inject;
 
 public class PluginStore extends Store {
     // Payloads
-    public static class UpdatePluginPayload extends Payload {
+    public static class UpdatePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public PluginModel plugin;
 
@@ -33,10 +34,9 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class FetchedPluginsPayload extends Payload {
+    public static class FetchedPluginsPayload extends Payload<FetchPluginsError> {
         public SiteModel site;
         public List<PluginModel> plugins;
-        public FetchPluginsError error;
 
         public FetchedPluginsPayload(FetchPluginsError error) {
             this.error = error;
@@ -48,9 +48,8 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class FetchedPluginInfoPayload extends Payload {
+    public static class FetchedPluginInfoPayload extends Payload<FetchPluginInfoError> {
         public PluginInfoModel pluginInfo;
-        public FetchPluginInfoError error;
 
         public FetchedPluginInfoPayload(FetchPluginInfoError error) {
             this.error = error;
@@ -61,10 +60,9 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class UpdatedPluginPayload extends Payload {
+    public static class UpdatedPluginPayload extends Payload<UpdatePluginError> {
         public SiteModel site;
         public PluginModel plugin;
-        public UpdatePluginError error;
 
         public UpdatedPluginPayload(SiteModel site, PluginModel plugin) {
             this.site = site;
