@@ -117,7 +117,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
                                      @NonNull MediaModel media,
-                                     View sourceView) {
+                                     @NonNull View sourceView) {
         // go directly to preview for local images, videos and audio (do nothing for local documents)
         if (MediaUtils.isLocalFile(media.getUploadState())) {
             if (MediaUtils.isValidImage(media.getUrl())
@@ -132,15 +132,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         intent.putExtra(ARG_MEDIA_LOCAL_ID, media.getId());
         intent.putExtra(WordPress.SITE, site);
 
-        ActivityOptionsCompat options;
-        if (sourceView != null) {
-            options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sourceView, "preview");
-        } else {
-            options = ActivityOptionsCompat.makeCustomAnimation(
-                    activity,
-                    R.anim.activity_slide_up_from_bottom,
-                    R.anim.do_nothing);
-        }
+        String sharedElementName = activity.getString(R.string.shared_element_media);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sourceView, sharedElementName);
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.MEDIA_SETTINGS, options.toBundle());
     }
 
@@ -365,7 +358,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            supportFinishAfterTransition();
             return true;
         } else if (item.getItemId() == R.id.menu_save) {
             saveMediaToDevice();
