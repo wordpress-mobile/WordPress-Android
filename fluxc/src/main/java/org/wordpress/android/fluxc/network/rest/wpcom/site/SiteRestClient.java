@@ -68,38 +68,31 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     private final AppSecrets mAppSecrets;
 
-    public static class NewSiteResponsePayload extends Payload {
-        public NewSiteResponsePayload() {
-        }
+    public static class NewSiteResponsePayload extends Payload<NewSiteError> {
+        public NewSiteResponsePayload() {}
         public long newSiteRemoteId;
-        public NewSiteError error;
         public boolean dryRun;
     }
 
-    public static class DeleteSiteResponsePayload extends Payload {
-        public DeleteSiteResponsePayload() {
-        }
+    public static class DeleteSiteResponsePayload extends Payload<DeleteSiteError> {
+        public DeleteSiteResponsePayload() {}
         public SiteModel site;
-        public DeleteSiteError error;
     }
 
-    public static class ExportSiteResponsePayload extends Payload {
-        public ExportSiteResponsePayload() {
-        }
+    public static class ExportSiteResponsePayload extends Payload<BaseNetworkError> {
+        public ExportSiteResponsePayload() {}
     }
 
-    public static class IsWPComResponsePayload extends Payload {
-        public IsWPComResponsePayload() {
-        }
+    public static class IsWPComResponsePayload extends Payload<BaseNetworkError> {
+        public IsWPComResponsePayload() {}
         public String url;
         public boolean isWPCom;
     }
 
-    public static class FetchWPComSiteResponsePayload extends Payload {
+    public static class FetchWPComSiteResponsePayload extends Payload<SiteError> {
         public FetchWPComSiteResponsePayload() {}
         public String checkedUrl;
         public SiteModel site;
-        public SiteError error;
     }
 
     @Inject
