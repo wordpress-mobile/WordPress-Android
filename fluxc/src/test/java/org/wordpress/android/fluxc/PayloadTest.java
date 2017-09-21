@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.fluxc.network.BaseRequest;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -12,7 +13,7 @@ import static org.junit.Assert.assertNull;
 
 @RunWith(RobolectricTestRunner.class)
 public class PayloadTest {
-    private class CloneablePayload extends Payload implements Cloneable {
+    private class CloneablePayload extends Payload<BaseNetworkError> implements Cloneable {
         @Override
         public CloneablePayload clone() {
             try {
@@ -37,7 +38,7 @@ public class PayloadTest {
         // Cloning payload with error field
         CloneablePayload errorPayload = new CloneablePayload();
 
-        errorPayload.error = new BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.SERVER_ERROR);
+        errorPayload.error = new BaseNetworkError(BaseRequest.GenericErrorType.SERVER_ERROR);
 
         CloneablePayload errorClone = errorPayload.clone();
 

@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.model.post.PostLocation;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
@@ -23,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Table
-public class PostModel extends Payload implements Cloneable, Identifiable, Serializable {
+public class PostModel extends Payload<BaseNetworkError> implements Cloneable, Identifiable, Serializable {
     private static final long LATITUDE_REMOVED_VALUE = 8888;
     private static final long LONGITUDE_REMOVED_VALUE = 8888;
 
