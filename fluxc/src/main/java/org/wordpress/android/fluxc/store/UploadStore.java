@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
@@ -41,7 +42,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class UploadStore extends Store {
-    public static class ClearMediaPayload extends Payload {
+    public static class ClearMediaPayload extends Payload<BaseNetworkError> {
         public PostModel post;
         public Set<MediaModel> media;
         public ClearMediaPayload(PostModel post, Set<MediaModel> media) {
