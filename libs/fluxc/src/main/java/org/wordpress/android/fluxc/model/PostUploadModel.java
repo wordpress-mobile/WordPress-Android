@@ -12,6 +12,7 @@ import com.yarolegovich.wellsql.core.annotation.RawConstraints;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.util.StringUtils;
@@ -28,7 +29,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 @Table
 @RawConstraints({"FOREIGN KEY(_id) REFERENCES PostModel(_id) ON DELETE CASCADE"})
-public class PostUploadModel extends Payload implements Identifiable, Serializable {
+public class PostUploadModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
     @Retention(SOURCE)
     @IntDef({PENDING, FAILED, CANCELLED})
     public @interface UploadState {}
