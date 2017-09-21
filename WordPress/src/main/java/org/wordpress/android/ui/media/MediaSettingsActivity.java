@@ -205,6 +205,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             params.setMargins(0, topMargin, rightMargin, 0);
         }
 
+        // position progress in middle of image
+        View progressView = findViewById(R.id.progress);
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) progressView.getLayoutParams();
+        int topMargin = (imageHeight / 2) - (progressView.getHeight() / 2);
+        params.setMargins(0, topMargin, 0, 0);
+
         // set the height of the gradient scrim that appears atop the image
         int toolbarHeight = DisplayUtils.getActionBarHeight(this);
         ImageView imgScrim = (ImageView) findViewById(R.id.image_gradient_scrim);
