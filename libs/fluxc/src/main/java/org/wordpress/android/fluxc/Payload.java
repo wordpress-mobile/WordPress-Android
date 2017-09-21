@@ -1,20 +1,12 @@
 package org.wordpress.android.fluxc;
 
-import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 
-import java.lang.reflect.Field;
-
-public abstract class Payload {
-    public BaseNetworkError error;
+public abstract class Payload<T extends FluxCError> {
+    public T error;
 
     public boolean isError() {
-        try {
-            Field field = getClass().getField("error");
-            return field.get(this) != null;
-        } catch (Exception e) {
-            return true;
-        }
+        return error != null;
     }
 
     @Override
@@ -26,8 +18,8 @@ public abstract class Payload {
         Payload clonedPayload = (Payload) super.clone();
 
         // Clone non-primitive, mutable fields
-        if (this.error != null) {
-            clonedPayload.error = new BaseRequest.BaseNetworkError(this.error);
+        if (error != null && error instanceof BaseNetworkError) {
+            clonedPayload.error = new BaseNetworkError((BaseNetworkError) error);
         }
 
         return clonedPayload;
