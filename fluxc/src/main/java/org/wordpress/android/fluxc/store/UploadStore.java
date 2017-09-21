@@ -304,17 +304,22 @@ public class UploadStore extends Store {
     }
 
     private void handleCancelMedia(@NonNull CancelMediaPayload payload) {
-        if (payload.media == null || payload.delete) {
-            // If the cancel action has the delete flag, the corresponding MediaModel will be deleted anyway - ignore
+        if (payload.media == null) {
             return;
         }
-        MediaUploadModel mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(payload.media.getId());
-        if (mediaUploadModel == null) {
-            mediaUploadModel = new MediaUploadModel(payload.media.getId());
-        }
 
-        mediaUploadModel.setUploadState(MediaUploadModel.FAILED);
-        UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+        // If the cancel action has the delete flag, the corresponding MediaModel will be deleted once this action
+        // reaches the MediaStore, along with the MediaUploadModel (because of the FOREIGN KEY association)
+        // Otherwise, we should mark the MediaUploadModel as FAILED
+        if (!payload.delete) {
+            MediaUploadModel mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(payload.media.getId());
+            if (mediaUploadModel == null) {
+                mediaUploadModel = new MediaUploadModel(payload.media.getId());
+            }
+
+            mediaUploadModel.setUploadState(MediaUploadModel.FAILED);
+            UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
+        }
 
         if (payload.media.getLocalPostId() > 0) {
             cancelPost(payload.media.getLocalPostId());
