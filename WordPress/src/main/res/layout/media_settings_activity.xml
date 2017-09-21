@@ -35,7 +35,7 @@
                             android:id="@+id/image_preview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/grey_light"
+                            android:background="@drawable/media_settings_background"
                             android:scaleType="centerCrop"
                             tools:layout_height="224dp"
                             tools:src="@drawable/ic_gridicons_audio"/>
@@ -324,7 +324,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:background="@drawable/media_settings_gradient"
+        android:background="@drawable/media_settings_gradient_scrim"
         tools:layout_height="74dp"/>
 
     <ProgressBar
