@@ -164,8 +164,8 @@
                     <ImageView
                         android:id="@+id/my_site_blog_posts_icon"
                         style="@style/MySiteListRowIcon"
-                        android:contentDescription="@string/my_site_btn_blog_posts"
-                        app:srcCompat="@drawable/ic_posts_grey_24dp" />
+                        app:srcCompat="@drawable/ic_posts_grey_24dp"
+                        android:importantForAccessibility="no"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_blog_posts_text_view"
