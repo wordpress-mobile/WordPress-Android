@@ -245,8 +245,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             mImageView.setPadding(padding, padding * 2, padding, padding);
             mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             mImageView.setImageResource(imageRes);
-            //noinspection deprecation
-            mImageView.setBackground(getResources().getDrawable(R.drawable.media_settings_background));
         } else {
             loadImage();
         }
