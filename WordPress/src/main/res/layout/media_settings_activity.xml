@@ -37,6 +37,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/media_settings_background"
                             android:scaleType="centerCrop"
+                            android:transitionName="preview"
                             tools:layout_height="224dp"
                             tools:src="@drawable/ic_gridicons_audio"/>
 

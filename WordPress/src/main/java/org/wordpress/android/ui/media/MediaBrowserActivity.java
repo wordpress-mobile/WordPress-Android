@@ -566,12 +566,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             setResult(RESULT_OK, intent);
             finish();
         } else {
-            showMediaSettings(media);
+            showMediaSettings(media, sourceView);
         }
     }
 
-    private void showMediaSettings(@NonNull MediaModel media) {
-        MediaSettingsActivity.showForResult(this, mSite, media);
+    private void showMediaSettings(@NonNull MediaModel media, View sourceView) {
+        MediaSettingsActivity.showForResult(this, mSite, media, sourceView);
     }
 
     @Override
