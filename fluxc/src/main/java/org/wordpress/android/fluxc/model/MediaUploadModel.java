@@ -12,6 +12,7 @@ import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 
@@ -22,7 +23,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 @Table
 @RawConstraints({"FOREIGN KEY(_id) REFERENCES MediaModel(_id) ON DELETE CASCADE"})
-public class MediaUploadModel extends Payload implements Identifiable, Serializable {
+public class MediaUploadModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
     @Retention(SOURCE)
     @IntDef({UPLOADING, COMPLETED, FAILED})
     public @interface UploadState {}
