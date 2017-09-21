@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.BaseRequest;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
@@ -46,9 +46,8 @@ public class MediaStore extends Store {
     /**
      * Actions: FETCH(ED)_MEDIA, PUSH(ED)_MEDIA, UPLOAD(ED)_MEDIA, DELETE(D)_MEDIA, UPDATE_MEDIA, and REMOVE_MEDIA
      */
-    public static class MediaPayload extends Payload {
+    public static class MediaPayload extends Payload<MediaError> {
         public SiteModel site;
-        public MediaError error;
         public MediaModel media;
         public MediaPayload(SiteModel site, MediaModel media) {
             this(site, media, null);
@@ -63,7 +62,7 @@ public class MediaStore extends Store {
     /**
      * Actions: FETCH_MEDIA_LIST
      */
-    public static class FetchMediaListPayload extends Payload {
+    public static class FetchMediaListPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public boolean loadMore;
         public String mimeType;
@@ -90,9 +89,8 @@ public class MediaStore extends Store {
     /**
      * Actions: FETCHED_MEDIA_LIST
      */
-    public static class FetchMediaListResponsePayload extends Payload {
+    public static class FetchMediaListResponsePayload extends Payload<MediaError> {
         public SiteModel site;
-        public MediaError error;
         public List<MediaModel> mediaList;
         public boolean loadedMore;
         public boolean canLoadMore;
@@ -109,9 +107,7 @@ public class MediaStore extends Store {
             this.mimeType = mimeType;
         }
 
-        public FetchMediaListResponsePayload(SiteModel site,
-                                             MediaError error,
-                                             String mimeType) {
+        public FetchMediaListResponsePayload(SiteModel site, MediaError error, String mimeType) {
             this.mediaList = new ArrayList<>();
             this.site = site;
             this.error = error;
@@ -122,12 +118,11 @@ public class MediaStore extends Store {
     /**
      * Actions: UPLOADED_MEDIA, CANCELED_MEDIA_UPLOAD
      */
-    public static class ProgressPayload extends Payload {
+    public static class ProgressPayload extends Payload<MediaError> {
         public MediaModel media;
         public float progress;
         public boolean completed;
         public boolean canceled;
-        public MediaError error;
         public ProgressPayload(MediaModel media, float progress, boolean completed, boolean canceled) {
             this(media, progress, completed, null);
             this.canceled = canceled;
@@ -143,7 +138,7 @@ public class MediaStore extends Store {
     /**
      * Actions: CANCEL_MEDIA_UPLOAD
      */
-    public static class CancelMediaPayload extends Payload {
+    public static class CancelMediaPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public MediaModel media;
         public boolean delete;
@@ -278,7 +273,7 @@ public class MediaStore extends Store {
         // unknown/unspecified
         GENERIC_ERROR;
 
-        public static MediaErrorType fromBaseNetworkError(BaseRequest.BaseNetworkError baseError) {
+        public static MediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
             switch (baseError.type) {
                 case NOT_FOUND:
                     return MediaErrorType.NOT_FOUND;

@@ -22,8 +22,8 @@ public class WPOrgAPIEndpoint {
     }
 
     public String getUrl() {
-        if (mEndpoint.contains("plugins/info/")) {
-            // For the plugins-info endpoint specifically, we want to request JSON data
+        if (mEndpoint.contains("plugins/info/1.0")) {
+            // For the plugins-info endpoint for 1.0 specifically, we want to request JSON data
             // All other WP.org endpoints either return JSON by default, or their newest endpoint version does
             return WPORG_API_PREFIX + mEndpoint.substring(0, mEndpoint.length() - 1) + ".json";
         }
