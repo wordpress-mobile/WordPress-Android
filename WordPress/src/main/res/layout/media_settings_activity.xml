@@ -42,8 +42,8 @@
 
                         <ImageView
                             android:id="@+id/image_play"
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_gravity="center"
                             android:visibility="gone"
                             app:srcCompat="@drawable/play_video_selector"
