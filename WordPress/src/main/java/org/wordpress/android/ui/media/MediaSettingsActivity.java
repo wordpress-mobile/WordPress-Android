@@ -117,7 +117,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
                                      @NonNull MediaModel media,
-                                     @NonNull View sourceView) {
+                                     View sourceView) {
         // go directly to preview for local images, videos and audio (do nothing for local documents)
         if (MediaUtils.isLocalFile(media.getUploadState())) {
             if (MediaUtils.isValidImage(media.getUrl())
@@ -132,8 +132,17 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         intent.putExtra(ARG_MEDIA_LOCAL_ID, media.getId());
         intent.putExtra(WordPress.SITE, site);
 
-        String sharedElementName = activity.getString(R.string.shared_element_media);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sourceView, sharedElementName);
+        ActivityOptionsCompat options;
+
+        if (sourceView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String sharedElementName = activity.getString(R.string.shared_element_media);
+            options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sourceView, sharedElementName);
+        } else {
+            options = ActivityOptionsCompat.makeCustomAnimation(
+                            activity,
+                            R.anim.activity_slide_up_from_bottom,
+                            R.anim.do_nothing);
+        }
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.MEDIA_SETTINGS, options.toBundle());
     }
 
@@ -311,6 +320,16 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(toolbarColor));
             }
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        // on Lollipop and above we use a shared element transition set in the intent, otherwise use a
+        // slide out transition
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_bottom);
         }
     }
 
