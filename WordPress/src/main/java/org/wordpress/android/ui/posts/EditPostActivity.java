@@ -140,6 +140,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -190,6 +191,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private List<String> mPendingVideoPressInfoRequests;
     private List<String> mAztecBackspaceDeletedMediaItemIds = new ArrayList<>();
+    private List<String> mMediaMarkedUploadingOnStartIds = new ArrayList<>();
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -410,6 +412,9 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mPost != null) {
             mOriginalPost = mPost.clone();
             mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
+            mMediaMarkedUploadingOnStartIds =
+                    AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
+            Collections.sort(mMediaMarkedUploadingOnStartIds);
             mIsPage = mPost.isPage();
         }
     }
@@ -1068,6 +1073,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // update the original post object, so we'll know of new changes
         mOriginalPost = mPost.clone();
+
+        // update the list of uploading ids
+        mMediaMarkedUploadingOnStartIds =
+                AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
     }
 
     @Override
@@ -1776,18 +1785,16 @@ public class EditPostActivity extends AppCompatActivity implements
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
         boolean contentChanged;
-        if (mEditorFragment instanceof AztecEditorFragment) {
-            contentChanged = ((AztecEditorFragment)mEditorFragment).hasHistory();
-            if (contentChanged) {
-                mPost.setContent(content);
-            } else if (!((AztecEditorFragment)mEditorFragment).isHistoryEnabled()){
-                // if history is not enabled, then we can only confirm whether there's been a content change
-                // by comparing content
-                contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
-            }
+        if (compareCurrentMediaMarkedUploadingToOriginal(content)) {
+            contentChanged = true;
+        } else if (mEditorFragment instanceof AztecEditorFragment
+                && ((AztecEditorFragment) mEditorFragment).isHistoryEnabled()) {
+            contentChanged = ((AztecEditorFragment) mEditorFragment).hasHistory();
         } else {
-            // not Aztec, compare content to look for changes
-            contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
+            contentChanged = mPost.getContent().compareTo(content) != 0;
+        }
+        if (contentChanged) {
+            mPost.setContent(content);
         }
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
@@ -1796,6 +1803,18 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         return titleChanged || contentChanged;
+    }
+
+    /*
+      * for as long as the user is in the Editor, we check whether there are any differences in media items
+      * being uploaded since they opened the Editor for this Post. If some items have finished, the current list
+      * won't be equal and thus we'll know we need to save the Post content as it's changed, given the local
+      * URLs will have been replaced with the remote ones.
+     */
+    private boolean compareCurrentMediaMarkedUploadingToOriginal(String newContent) {
+        List<String> currentUploadingMedia = AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, newContent);
+        Collections.sort(currentUploadingMedia);
+        return !mMediaMarkedUploadingOnStartIds.equals(currentUploadingMedia);
     }
 
     private void updateMediaFileOnServer(MediaFile mediaFile) {
