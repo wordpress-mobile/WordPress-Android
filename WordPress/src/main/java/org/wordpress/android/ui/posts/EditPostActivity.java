@@ -1780,23 +1780,17 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
-        boolean contentChanged = compareCurrentMediaMarkedUploadingToOriginal(content);
+        boolean contentChanged;
+        if (compareCurrentMediaMarkedUploadingToOriginal(content)) {
+            contentChanged = true;
+        } else if (mEditorFragment instanceof AztecEditorFragment
+                && ((AztecEditorFragment) mEditorFragment).isHistoryEnabled()) {
+            contentChanged = ((AztecEditorFragment) mEditorFragment).hasHistory();
+        } else {
+            contentChanged = mPost.getContent().compareTo(content) != 0;
+        }
         if (contentChanged) {
             mPost.setContent(content);
-        } else {
-            if (mEditorFragment instanceof AztecEditorFragment) {
-                contentChanged = ((AztecEditorFragment)mEditorFragment).hasHistory();
-                if (contentChanged) {
-                    mPost.setContent(content);
-                } else if (!((AztecEditorFragment)mEditorFragment).isHistoryEnabled()){
-                    // if history is not enabled, then we can only confirm whether there's been a content change
-                    // by comparing content
-                    contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
-                }
-            } else {
-                // not Aztec, compare content to look for changes
-                contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
-            }
         }
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
