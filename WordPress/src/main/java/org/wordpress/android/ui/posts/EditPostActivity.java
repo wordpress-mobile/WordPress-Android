@@ -1073,6 +1073,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // update the original post object, so we'll know of new changes
         mOriginalPost = mPost.clone();
+
+        // update the list of uploading ids
+        mMediaMarkedUploadingOnStartIds =
+                AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
     }
 
     @Override
