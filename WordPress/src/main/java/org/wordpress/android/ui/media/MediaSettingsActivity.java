@@ -345,7 +345,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public void onBackPressed() {
         saveChanges();
-        invalidateOptionsMenu();
         super.onBackPressed();
     }
 
