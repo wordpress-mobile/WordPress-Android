@@ -376,6 +376,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            saveChanges();
             supportFinishAfterTransition();
             return true;
         } else if (item.getItemId() == R.id.menu_save) {
