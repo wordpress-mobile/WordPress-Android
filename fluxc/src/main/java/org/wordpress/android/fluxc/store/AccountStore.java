@@ -259,7 +259,9 @@ public class AccountStore extends Store {
     }
 
     public enum AccountSocialErrorType {
-        NO_MATCHING_ACCOUNT,
+        INVALID_TOKEN,
+        UNKNOWN_USER,
+        USER_EXISTS,
         GENERIC_ERROR;
 
         public static AccountSocialErrorType fromString(String string) {
