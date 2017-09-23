@@ -447,8 +447,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mSearchView.setQuery(mQuery, true);
         }
 
-        // hide "add media" if the user doesn't have upload permission
-        if (!WPMediaUtils.currentUserCanUploadMedia(mSite)) {
+        // hide "add media" if the user doesn't have upload permission or this is a multiselect picker
+        if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER
+                || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
         }
 
@@ -780,7 +781,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
     private void createAddMediaPopup() {
         String[] items;
-        if (mBrowserType.isPicker()) {
+        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
             items = new String[]{
                     getString(R.string.photo_picker_capture_photo),
                     getString(R.string.photo_picker_choose_photo)
@@ -848,7 +849,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private static final int ITEM_CHOOSE_VIDEO  = 3;
 
     private int getAddMenuItemFromPosition(int position) {
-        if (mBrowserType.isPicker() && position > 0) {
+        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER && position > 0) {
             return ITEM_CHOOSE_PHOTO;
         }
         return position;
