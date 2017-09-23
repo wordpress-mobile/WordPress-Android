@@ -7,7 +7,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -32,7 +31,6 @@ import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -236,20 +234,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
-
-                        try {
-                            String responseBody = new String(error.volleyError.networkResponse.data, "UTF-8");
-                            JSONObject object = new JSONObject(responseBody);
-                            JSONObject data = object.getJSONObject("data");
-                            JSONArray errors = data.getJSONArray("errors");
-                            payload.error = new AccountSocialError(
-                                    errors.getJSONObject(0).getString("code"),
-                                    errors.getJSONObject(0).getString("message")
-                            );
-                        } catch (UnsupportedEncodingException | JSONException exception) {
-                            AppLog.e(T.API, "Unable to parse error response: " + exception.getMessage());
-                        }
-
+                        payload.error = new AccountSocialError(error.volleyError.networkResponse.data);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
