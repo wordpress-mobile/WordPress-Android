@@ -7,6 +7,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.rest.FormRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
@@ -30,6 +32,7 @@ import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -197,7 +200,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     /**
-     * Performs an HTTP POST call to the v1.1 /users/social/new endpoint. Upon receiving a response
+     * Performs an HTTP POST call to https://wordpress.com/wp-login.php.  Upon receiving a response
      * (success or error) a {@link AccountAction#PUSHED_SOCIAL} action is dispatched with a payload
      * of type {@link AccountPushSocialResponsePayload}.
      *
@@ -210,16 +213,17 @@ public class AccountRestClient extends BaseWPComRestClient {
      * @param service       Slug representing the service for the given token (e.g. google).
      */
     public void pushSocialLogin(@NonNull String idToken, @NonNull String service) {
-        String url = WPCOMREST.users.social.new_.getUrlV1_1();
+        String url = "https://wordpress.com/wp-login.php";
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("id_token", idToken);
-        body.put("service", service);
-        body.put("skip_signup", true);
-        body.put("client_id", mAppSecrets.getAppId());
-        body.put("client_secret", mAppSecrets.getAppSecret());
+        Map<String, String> params = new HashMap<>();
+        params.put("action", "social-login-endpoint");
+        params.put("id_token", idToken);
+        params.put("service", service);
+        params.put("get_bearer_token", "true");
+        params.put("client_id", mAppSecrets.getAppId());
+        params.put("client_secret", mAppSecrets.getAppSecret());
 
-        add(WPComGsonRequest.buildPostRequest(url, body, AccountSocialResponse.class,
+        add(new FormRequest(url, params,
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
@@ -232,7 +236,20 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
-                        payload.error = new AccountSocialError(((WPComGsonNetworkError) error).apiError, error.message);
+
+                        try {
+                            String responseBody = new String(error.volleyError.networkResponse.data, "UTF-8");
+                            JSONObject object = new JSONObject(responseBody);
+                            JSONObject data = object.getJSONObject("data");
+                            JSONArray errors = data.getJSONArray("errors");
+                            payload.error = new AccountSocialError(
+                                    errors.getJSONObject(0).getString("code"),
+                                    errors.getJSONObject(0).getString("message")
+                            );
+                        } catch (UnsupportedEncodingException | JSONException exception) {
+                            AppLog.e(T.API, "Unable to parse error response: " + exception.getMessage());
+                        }
+
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
