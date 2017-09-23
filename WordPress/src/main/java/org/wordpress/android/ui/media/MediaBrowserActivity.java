@@ -552,9 +552,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             return;
         }
 
+        boolean isLocalFile = MediaUtils.isLocalFile(media.getUploadState());
+
         // if this is being used as a media picker return the selected item and finish, otherwise
         // preview the selected item
         if (mBrowserType.isPicker()) {
+            if (isLocalFile) {
+                return;
+            }
             Intent intent = new Intent();
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
             remoteMediaIds.add(media.getMediaId());
@@ -565,8 +570,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             // TODO: right now only images & videos are supported
             String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
             if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
-                if (media.getUploadState() != null &&
-                        MediaUtils.isLocalFile(media.getUploadState().toLowerCase())) {
+                if (isLocalFile) {
                     // Show the simple preview in case of uploading items. i.e: No metadata info, and other options only available
                     // for files already on the remote site.
                     MediaPreviewActivity.showPreview(this, sourceView, media.getFilePath(), mimeType.startsWith("video"));
