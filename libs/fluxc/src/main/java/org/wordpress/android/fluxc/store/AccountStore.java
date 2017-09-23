@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.action.AuthenticationAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
@@ -47,7 +48,7 @@ import javax.inject.Singleton;
 @Singleton
 public class AccountStore extends Store {
     // Payloads
-    public static class AuthenticatePayload extends Payload {
+    public static class AuthenticatePayload extends Payload<BaseNetworkError> {
         public String username;
         public String password;
         public String twoStepCode;
@@ -59,8 +60,7 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class AuthenticateErrorPayload extends Payload {
-        public AuthenticationError error;
+    public static class AuthenticateErrorPayload extends Payload<AuthenticationError> {
         public AuthenticateErrorPayload(@NonNull AuthenticationError error) {
             this.error = error;
         }
@@ -69,7 +69,7 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class PushAccountSettingsPayload extends Payload {
+    public static class PushAccountSettingsPayload extends Payload<BaseNetworkError> {
         public Map<String, Object> params;
         public PushAccountSettingsPayload() {
         }
@@ -84,7 +84,7 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class NewAccountPayload extends Payload {
+    public static class NewAccountPayload extends Payload<BaseNetworkError> {
         public String username;
         public String password;
         public String email;
@@ -98,7 +98,7 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class UpdateTokenPayload extends Payload {
+    public static class UpdateTokenPayload extends Payload<BaseNetworkError> {
         public UpdateTokenPayload(String token) {
             this.token = token;
         }
@@ -112,8 +112,7 @@ public class AccountStore extends Store {
         public AccountAction causeOfChange;
     }
 
-    public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {
-    }
+    public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {}
 
     public static class OnSocialChanged extends OnChanged<AccountSocialError> {
     }
@@ -491,10 +490,7 @@ public class AccountStore extends Store {
     private void discoveryResult(DiscoveryResultPayload payload) {
         OnDiscoveryResponse discoveryResponse = new OnDiscoveryResponse();
         if (payload.isError()) {
-            discoveryResponse.error = DiscoveryError.GENERIC_ERROR;
-            discoveryResponse.failedEndpoint = payload.failedEndpoint;
-        } else if (payload.isDiscoveryError()) {
-            discoveryResponse.error = payload.discoveryError;
+            discoveryResponse.error = payload.error;
             discoveryResponse.failedEndpoint = payload.failedEndpoint;
         } else {
             discoveryResponse.xmlRpcEndpoint = payload.xmlRpcEndpoint;
