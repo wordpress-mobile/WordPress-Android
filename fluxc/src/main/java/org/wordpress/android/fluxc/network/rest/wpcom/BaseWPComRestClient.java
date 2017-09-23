@@ -7,6 +7,7 @@ import com.android.volley.RequestQueue;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
+import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.OnAuthFailedListener;
 import org.wordpress.android.fluxc.network.BaseRequest.OnParseErrorListener;
 import org.wordpress.android.fluxc.network.UserAgent;
@@ -46,12 +47,12 @@ public abstract class BaseWPComRestClient {
         };
     }
 
-    protected Request add(WPComGsonRequest request) {
+    protected Request add(BaseRequest request) {
         // Add "locale=xx_XX" query parameter to all request by default
         return add(request, true);
     }
 
-    protected Request add(WPComGsonRequest request, boolean addLocaleParameter) {
+    protected Request add(BaseRequest request, boolean addLocaleParameter) {
         if (addLocaleParameter) {
             request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
         }
@@ -75,11 +76,15 @@ public abstract class BaseWPComRestClient {
         return mAccessToken;
     }
 
-    private WPComGsonRequest setRequestAuthParams(WPComGsonRequest request, boolean shouldAuth) {
+    private BaseRequest setRequestAuthParams(BaseRequest request, boolean shouldAuth) {
         request.setOnAuthFailedListener(mOnAuthFailedListener);
         request.setOnParseErrorListener(mOnParseErrorListener);
         request.setUserAgent(mUserAgent.getUserAgent());
-        request.setAccessToken(shouldAuth ? mAccessToken.get() : null);
+
+        if (request instanceof WPComGsonRequest) {
+            ((WPComGsonRequest) request).setAccessToken(shouldAuth ? mAccessToken.get() : null);
+        }
+
         return request;
     }
 }
