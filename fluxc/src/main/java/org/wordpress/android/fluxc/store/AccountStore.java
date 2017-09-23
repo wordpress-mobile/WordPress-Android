@@ -6,6 +6,9 @@ import com.android.volley.VolleyError;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.AccountAction;
@@ -31,6 +34,7 @@ import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -241,6 +245,21 @@ public class AccountStore extends Store {
         public AccountSocialError(@NonNull String type, @NonNull String message) {
             this.type = AccountSocialErrorType.fromString(type);
             this.message = message;
+        }
+
+        public AccountSocialError(@NonNull byte[] response) {
+            try {
+                String responseBody = new String(response, "UTF-8");
+                JSONObject object = new JSONObject(responseBody);
+                JSONObject data = object.getJSONObject("data");
+                JSONArray errors = data.getJSONArray("errors");
+                new AccountSocialError(
+                        errors.getJSONObject(0).getString("code"),
+                        errors.getJSONObject(0).getString("message")
+                );
+            } catch (UnsupportedEncodingException | JSONException exception) {
+                AppLog.e(T.API, "Unable to parse social error response: " + exception.getMessage());
+            }
         }
     }
 
