@@ -779,12 +779,20 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
     private void createAddMediaPopup() {
-        String[] items = new String[]{
-                getString(R.string.photo_picker_capture_photo),
-                getString(R.string.photo_picker_capture_video),
-                getString(R.string.photo_picker_choose_photo),
-                getString(R.string.photo_picker_choose_video)
-        };
+        String[] items;
+        if (mBrowserType.isPicker()) {
+            items = new String[]{
+                    getString(R.string.photo_picker_capture_photo),
+                    getString(R.string.photo_picker_choose_photo)
+            };
+        } else {
+            items = new String[]{
+                    getString(R.string.photo_picker_capture_photo),
+                    getString(R.string.photo_picker_capture_video),
+                    getString(R.string.photo_picker_choose_photo),
+                    getString(R.string.photo_picker_choose_video)
+            };
+        }
 
         @SuppressLint("InflateParams")
         View menuView = getLayoutInflater().inflate(R.layout.actionbar_add_media, null, false);
@@ -839,18 +847,26 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private static final int ITEM_CHOOSE_PHOTO  = 2;
     private static final int ITEM_CHOOSE_VIDEO  = 3;
 
+    private int getAddMenuItemFromPosition(int position) {
+        if (mBrowserType.isPicker() && position > 0) {
+            return ITEM_CHOOSE_PHOTO;
+        }
+        return position;
+    }
+
     private void doAddMediaItemClicked(int position) {
         mLastAddMediaItemClickedPosition = position;
+        int menuItem = getAddMenuItemFromPosition(position);
 
         String[] permissions;
-        if (position == ITEM_CAPTURE_PHOTO || position == ITEM_CAPTURE_VIDEO) {
+        if (menuItem == ITEM_CAPTURE_PHOTO || menuItem == ITEM_CAPTURE_VIDEO) {
             permissions = new String[]{ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
         } else {
             permissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
         }
         if (PermissionUtils.checkAndRequestPermissions(
                 this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
-            switch (position) {
+            switch (menuItem) {
                 case ITEM_CAPTURE_PHOTO:
                     WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
                     break;
