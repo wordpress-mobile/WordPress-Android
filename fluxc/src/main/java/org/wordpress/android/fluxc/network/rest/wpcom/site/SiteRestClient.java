@@ -9,6 +9,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -38,12 +39,12 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.UserRolesError;
-import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.UserRolesError;
+import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -67,38 +68,31 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     private final AppSecrets mAppSecrets;
 
-    public static class NewSiteResponsePayload extends Payload {
-        public NewSiteResponsePayload() {
-        }
+    public static class NewSiteResponsePayload extends Payload<NewSiteError> {
+        public NewSiteResponsePayload() {}
         public long newSiteRemoteId;
-        public NewSiteError error;
         public boolean dryRun;
     }
 
-    public static class DeleteSiteResponsePayload extends Payload {
-        public DeleteSiteResponsePayload() {
-        }
+    public static class DeleteSiteResponsePayload extends Payload<DeleteSiteError> {
+        public DeleteSiteResponsePayload() {}
         public SiteModel site;
-        public DeleteSiteError error;
     }
 
-    public static class ExportSiteResponsePayload extends Payload {
-        public ExportSiteResponsePayload() {
-        }
+    public static class ExportSiteResponsePayload extends Payload<BaseNetworkError> {
+        public ExportSiteResponsePayload() {}
     }
 
-    public static class IsWPComResponsePayload extends Payload {
-        public IsWPComResponsePayload() {
-        }
+    public static class IsWPComResponsePayload extends Payload<BaseNetworkError> {
+        public IsWPComResponsePayload() {}
         public String url;
         public boolean isWPCom;
     }
 
-    public static class FetchWPComSiteResponsePayload extends Payload {
+    public static class FetchWPComSiteResponsePayload extends Payload<SiteError> {
         public FetchWPComSiteResponsePayload() {}
         public String checkedUrl;
         public SiteModel site;
-        public SiteError error;
     }
 
     @Inject
@@ -500,8 +494,8 @@ public class SiteRestClient extends BaseWPComRestClient {
         SiteModel site = new SiteModel();
         site.setSiteId(from.ID);
         site.setUrl(from.URL);
-        site.setName(from.name);
-        site.setDescription(from.description);
+        site.setName(StringEscapeUtils.unescapeHtml4(from.name));
+        site.setDescription(StringEscapeUtils.unescapeHtml4(from.description));
         site.setIsJetpackConnected(from.jetpack);
         site.setIsJetpackInstalled(from.jetpack);
         site.setIsVisible(from.visible);
