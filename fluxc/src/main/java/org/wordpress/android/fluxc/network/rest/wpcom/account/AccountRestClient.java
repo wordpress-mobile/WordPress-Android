@@ -59,7 +59,6 @@ public class AccountRestClient extends BaseWPComRestClient {
     public static class AccountPushSocialResponsePayload extends Payload {
         public AccountSocialError error;
         public String bearerToken;
-        public String username;
         public AccountPushSocialResponsePayload() {
         }
     }
@@ -226,7 +225,6 @@ public class AccountRestClient extends BaseWPComRestClient {
                     public void onResponse(AccountSocialResponse response) {
                         AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
                         payload.bearerToken = response.bearer_token;
-                        payload.username = response.username;
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 },
