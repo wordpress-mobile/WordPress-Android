@@ -35,6 +35,8 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 /**
  * A fragment display the themes on a grid view.
  */
@@ -187,7 +189,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     protected void configureSwipeToRefresh(View view) {
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
             (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
             new RefreshListener() {
                 @Override
@@ -202,8 +204,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
                     }
                     mThemeBrowserActivity.fetchThemes();
                 }
-            },
-            R.color.color_primary, R.color.color_accent
+            }
         );
         mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
     }

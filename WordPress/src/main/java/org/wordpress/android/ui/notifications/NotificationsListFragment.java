@@ -47,6 +47,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 import static android.app.Activity.RESULT_OK;
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class NotificationsListFragment extends Fragment implements WPMainActivity.OnScrollToTopListener,
         RadioGroup.OnCheckedChangeListener, NotesAdapter.DataLoadedListener {
@@ -106,7 +107,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
             (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_notifications),
             new SwipeToRefreshHelper.RefreshListener() {
                 @Override
@@ -114,8 +115,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                     hideNewNotificationsBar();
                     fetchNotesFromRemote();
                 }
-            },
-            R.color.color_primary, R.color.color_accent
+            }
         );
 
 

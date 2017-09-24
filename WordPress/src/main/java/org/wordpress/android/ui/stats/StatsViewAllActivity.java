@@ -28,6 +28,8 @@ import java.util.Date;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 /**
  *  Single item details activity.
  */
@@ -66,7 +68,7 @@ public class StatsViewAllActivity extends AppCompatActivity {
         mOuterScrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
 
         // pull to refresh setup
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
             (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
             new SwipeToRefreshHelper.RefreshListener() {
                 @Override
@@ -84,8 +86,7 @@ public class StatsViewAllActivity extends AppCompatActivity {
 
                     refreshStats();
                 }
-            },
-            R.color.color_primary, R.color.color_accent
+            }
         );
 
         if (savedInstanceState != null) {

@@ -68,6 +68,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
         PostsListAdapter.OnLoadMoreListener,
@@ -231,7 +233,7 @@ public class PostsListFragment extends Fragment
     }
 
     private void initSwipeToRefreshHelper(View view) {
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
             (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
             new RefreshListener() {
                 @Override
@@ -246,8 +248,7 @@ public class PostsListFragment extends Fragment
                     }
                     requestPosts(false);
                 }
-            },
-            R.color.color_primary, R.color.color_accent
+            }
         );
     }
 

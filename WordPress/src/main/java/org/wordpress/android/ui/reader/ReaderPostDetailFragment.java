@@ -78,6 +78,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 public class ReaderPostDetailFragment extends Fragment
         implements WPMainActivity.OnActivityBackPressedListener,
                    ScrollDirectionListener,
@@ -211,7 +213,7 @@ public class ReaderPostDetailFragment extends Fragment
         int swipeToRefreshOffset = getResources().getDimensionPixelSize(R.dimen.toolbar_content_offset);
         swipeRefreshLayout.setProgressViewOffset(false, 0, swipeToRefreshOffset);
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
             swipeRefreshLayout,
             new SwipeToRefreshHelper.RefreshListener() {
                 @Override
@@ -222,8 +224,7 @@ public class ReaderPostDetailFragment extends Fragment
 
                     updatePost();
                 }
-            },
-            R.color.color_primary, R.color.color_accent
+            }
         );
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);

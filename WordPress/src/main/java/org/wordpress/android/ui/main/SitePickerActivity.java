@@ -62,6 +62,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 public class SitePickerActivity extends AppCompatActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener,
@@ -249,7 +251,7 @@ public class SitePickerActivity extends AppCompatActivity
         if (view == null) {
             return;
         }
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
             (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
             new SwipeToRefreshHelper.RefreshListener() {
                 @Override
@@ -263,8 +265,7 @@ public class SitePickerActivity extends AppCompatActivity
                     }
                     mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
                 }
-            },
-            R.color.color_primary, R.color.color_accent
+            }
         );
     }
 

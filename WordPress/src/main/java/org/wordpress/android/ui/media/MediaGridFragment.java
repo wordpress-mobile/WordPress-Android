@@ -57,6 +57,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 /**
  * The grid displaying the media items.
@@ -242,7 +243,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mEmptyView = (TextView) view.findViewById(R.id.empty_view);
 
         // swipe to refresh setup
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
             (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout), new RefreshListener() {
                 @Override
                 public void onRefreshStarted() {
@@ -256,8 +257,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     }
                     fetchMediaList(false);
                 }
-            },
-            R.color.color_primary, R.color.color_accent
+            }
         );
 
         if (savedInstanceState != null) {
