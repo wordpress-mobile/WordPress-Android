@@ -1,10 +1,8 @@
 package org.wordpress.android.util.helpers;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.annotation.ColorRes;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.util.TypedValue;
 
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
@@ -99,12 +97,5 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
 
     public void setEnabled(boolean enabled) {
         mSwipeRefreshLayout.setEnabled(enabled);
-    }
-
-    public static TypedArray obtainStyledAttrsFromThemeAttr(Context context, int themeAttr, int[] styleAttrs) {
-        TypedValue outValue = new TypedValue();
-        context.getTheme().resolveAttribute(themeAttr, outValue, true);
-        int styleResId = outValue.resourceId;
-        return context.obtainStyledAttributes(styleResId, styleAttrs);
     }
 }
