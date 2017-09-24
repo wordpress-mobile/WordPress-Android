@@ -55,7 +55,8 @@ public class FormRequest extends BaseRequest<AccountSocialResponse> {
             AccountSocialResponse parsed = new AccountSocialResponse();
             String responseBody = new String(response.data);
             JSONObject object = new JSONObject(responseBody);
-            parsed.bearer_token = object.optString("bearer_token");
+            JSONObject data = object.getJSONObject("data");
+            parsed.bearer_token = data.optString("bearer_token");
             return Response.success(parsed, null);
         } catch (JSONException exception) {
             AppLog.e(T.API, "Unable to parse network response: " + exception.getMessage());
