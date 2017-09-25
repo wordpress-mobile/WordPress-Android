@@ -58,7 +58,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         public Map<String, Object> settings;
     }
 
-    public static class AccountPushSocialResponsePayload extends Payload {
+    public static class AccountPushSocialResponsePayload extends Payload<AccountSocialError> {
         public AccountSocialError error;
         public String bearerToken;
         public AccountPushSocialResponsePayload() {
