@@ -266,8 +266,13 @@
             android:label="@string/wp_media_title" />
         <activity
             android:name=".ui.media.MediaPreviewActivity"
-            android:windowSoftInputMode="adjustNothing"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".ui.media.MediaSettingsActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:label="@string/media"
+            android:theme="@style/WordPress" />
 
         <!-- Theme Activities -->
         <activity

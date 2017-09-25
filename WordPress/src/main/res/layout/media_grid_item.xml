@@ -139,7 +139,7 @@
             android:layout_width="@dimen/photo_picker_preview_icon"
             android:layout_height="@dimen/photo_picker_preview_icon"
             android:padding="@dimen/margin_extra_small"
-            android:src="@drawable/reader_video_overlay"/>
+            app:srcCompat="@drawable/ic_play_video"/>
 
     </FrameLayout>
 
