@@ -416,6 +416,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                             PushSocialLoginPayload payload = new PushSocialLoginPayload(account.getIdToken(), SERVICE_TYPE_GOOGLE);
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
                         } catch (NullPointerException exception) {
+                            disconnectGoogleClient();
                             AppLog.e(AppLog.T.NUX, "Cannot get ID token from Google sign-in account.", exception);
                             // TODO: Show error screen.
                         }
@@ -430,6 +431,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(AccountStore.OnAuthenticationChanged event) {
         if (event.isError()) {
+            disconnectGoogleClient();
             AppLog.e(T.API, "LoginEmailFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
@@ -444,6 +446,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSocialChanged(OnSocialChanged event) {
         if (event.isError()) {
+            disconnectGoogleClient();
             AppLog.e(T.API, "LoginEmailFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
