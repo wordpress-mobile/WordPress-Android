@@ -59,6 +59,9 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     public static class AccountPushSocialResponsePayload extends Payload<AccountSocialError> {
+        public AccountPushSocialResponsePayload(AccountSocialResponse response) {
+            this.bearerToken = response.bearer_token;
+        }
         public AccountPushSocialResponsePayload(BaseNetworkError error) {
             this.error = new AccountSocialError(error.volleyError.networkResponse.data);
         }
@@ -224,8 +227,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(null);
-                        payload.bearerToken = response.bearer_token;
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 },
