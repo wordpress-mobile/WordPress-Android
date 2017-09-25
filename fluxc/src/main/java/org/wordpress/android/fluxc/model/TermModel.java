@@ -6,12 +6,13 @@ import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
 
 @Table
-public class TermModel extends Payload implements Identifiable, Serializable {
+public class TermModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
     @PrimaryKey
     @Column private int mId;
     @Column private int mLocalSiteId;

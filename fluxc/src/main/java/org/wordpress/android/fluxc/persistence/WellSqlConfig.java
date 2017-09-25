@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 
 import com.yarolegovich.wellsql.DefaultWellConfig;
 import com.yarolegovich.wellsql.WellSql;
@@ -13,8 +14,12 @@ import com.yarolegovich.wellsql.mapper.SQLiteMapper;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaUploadModel;
+import org.wordpress.android.fluxc.model.PluginInfoModel;
+import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TaxonomyModel;
@@ -38,8 +43,13 @@ public class WellSqlConfig extends DefaultWellConfig {
         add(CommentModel.class);
         add(HTTPAuthModel.class);
         add(MediaModel.class);
+        add(MediaUploadModel.class);
+        add(PluginInfoModel.class);
+        add(PluginModel.class);
         add(PostFormatModel.class);
         add(PostModel.class);
+        add(PostUploadModel.class);
+        add(RoleModel.class);
         add(SiteModel.class);
         add(TaxonomyModel.class);
         add(TermModel.class);
@@ -49,7 +59,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 12;
+        return 15;
     }
 
     @Override
@@ -118,9 +128,37 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("CREATE TABLE RoleModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,SITE_ID INTEGER,"
                         + "NAME TEXT,DISPLAY_NAME TEXT)");
                 oldVersion++;
+            case 12:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE PluginModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "NAME TEXT,DISPLAY_NAME TEXT,PLUGIN_URL TEXT,VERSION TEXT,SLUG TEXT,DESCRIPTION TEXT,"
+                        + "AUTHOR_NAME TEXT,AUTHOR_URL TEXT,IS_ACTIVE INTEGER,IS_AUTO_UPDATE_ENABLED INTEGER)");
+                oldVersion++;
+            case 13:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE PluginInfoModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        + "NAME TEXT,SLUG TEXT,VERSION TEXT,RATING TEXT,ICON TEXT)");
+                oldVersion++;
+            case 14:
+                db.execSQL("CREATE TABLE MediaUploadModel (_id INTEGER PRIMARY KEY,UPLOAD_STATE INTEGER,"
+                        + "PROGRESS REAL,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,FOREIGN KEY(_id) REFERENCES "
+                        + "MediaModel(_id) ON DELETE CASCADE)");
+                db.execSQL("CREATE TABLE PostUploadModel (_id INTEGER PRIMARY KEY,UPLOAD_STATE INTEGER,"
+                        + "ASSOCIATED_MEDIA_IDS TEXT,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,FOREIGN KEY(_id) REFERENCES "
+                        + "PostModel(_id) ON DELETE CASCADE)");
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
+    }
+
+    @Override
+    public void onConfigure(SQLiteDatabase db, WellTableManager helper) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            db.setForeignKeyConstraintsEnabled(true);
+        } else {
+            db.execSQL("PRAGMA foreign_keys=ON;");
+        }
     }
 
     @Override
