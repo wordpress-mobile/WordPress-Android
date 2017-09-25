@@ -462,7 +462,14 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
             AppLog.e(T.API, "LoginEmailFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
-            // TODO: Show error screen.
+
+            switch (event.error.type) {
+                case UNKNOWN_USER:
+                    showErrorDialog(getString(R.string.login_error_email_not_found, mGoogleEmail));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
