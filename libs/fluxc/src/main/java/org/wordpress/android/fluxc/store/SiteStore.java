@@ -49,14 +49,14 @@ import javax.inject.Singleton;
 @Singleton
 public class SiteStore extends Store {
     // Payloads
-    public static class RefreshSitesXMLRPCPayload extends Payload {
+    public static class RefreshSitesXMLRPCPayload extends Payload<BaseNetworkError> {
         public RefreshSitesXMLRPCPayload() {}
         public String username;
         public String password;
         public String url;
     }
 
-    public static class NewSitePayload extends Payload {
+    public static class NewSitePayload extends Payload<BaseNetworkError> {
         public String siteName;
         public String siteTitle;
         public String language;
@@ -72,27 +72,25 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class FetchedPostFormatsPayload extends Payload {
+    public static class FetchedPostFormatsPayload extends Payload<PostFormatsError> {
         public SiteModel site;
         public List<PostFormatModel> postFormats;
-        public PostFormatsError error;
         public FetchedPostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
             this.site = site;
             this.postFormats = postFormats;
         }
     }
 
-    public static class FetchedUserRolesPayload extends Payload {
+    public static class FetchedUserRolesPayload extends Payload<UserRolesError> {
         public SiteModel site;
         public List<RoleModel> roles;
-        public UserRolesError error;
         public FetchedUserRolesPayload(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
             this.site = site;
             this.roles = roles;
         }
     }
 
-    public static class SuggestDomainsPayload extends Payload {
+    public static class SuggestDomainsPayload extends Payload<BaseNetworkError> {
         public String query;
         public boolean includeWordpressCom;
         public boolean includeDotBlogSubdomain;
@@ -106,7 +104,7 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class SuggestDomainsResponsePayload extends Payload {
+    public static class SuggestDomainsResponsePayload extends Payload<BaseNetworkError> {
         public String query;
         public List<DomainSuggestionResponse> suggestions;
         public SuggestDomainsResponsePayload(@NonNull String query, BaseNetworkError error) {
@@ -121,7 +119,7 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class ConnectSiteInfoPayload extends Payload {
+    public static class ConnectSiteInfoPayload extends Payload<SiteError> {
         public String url;
         public boolean exists;
         public boolean isWordPress;
@@ -129,7 +127,6 @@ public class SiteStore extends Store {
         public boolean isJetpackActive;
         public boolean isJetpackConnected;
         public boolean isWPCom;
-        public SiteError error;
 
         public ConnectSiteInfoPayload(@NonNull String url, SiteError error) {
             this.url = url;
