@@ -774,7 +774,6 @@ Language: ru
 	<string name="error_refresh_notifications">Уведомление не могут быть обновлены в данный момент</string>
 	<string name="error_refresh_pages">Страница не может быть обновлена в данный момент</string>
 	<string name="error_refresh_posts">Пост не может быть обновлен в данный момент</string>
-	<string name="error_delete_post">Произошла ошибка при удалении %s</string>
 	<string name="notifications_empty_list">Нет уведомлений</string>
 	<string name="reply_failed">Ошибочный ответ</string>
 	<string name="invalid_url_message">Убедитесь, что введен допустимый URL-адрес</string>
@@ -791,7 +790,6 @@ Language: ru
 	<string name="theme_auth_error_message">Убедитесь, что у вас достаточно прав для установки темы</string>
 	<string name="theme_set_failed">Невозможно установить тему</string>
 	<string name="theme_fetch_failed">Ошибка выбора темы.</string>
-	<string name="wait_until_upload_completes">Подождите конца загрузки</string>
 	<string name="blog_not_found">Ошибка при попытке подключиться к блогу</string>
 	<string name="gallery_error">Медиа-файл не может быть восстановлен</string>
 	<string name="could_not_remove_account">Невозможно удалить сайт</string>

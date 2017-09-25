@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-22 10:07:36+0000
+Translation-Revision-Date: 2017-09-04 08:16:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+	<string name="error_media_recover_post">We kunnen de media van dit bericht niet uploaden. Bewerk het bericht en probeer het opnieuw.</string>
+	<string name="error_page_does_not_exist">Deze pagina bestaat niet meer</string>
+	<string name="error_upload_post_media_param">Er is een fout opgetreden bij het uploaden van een media-bestand bij dit bericht: %s.</string>
+	<string name="error_upload_post_param">Er is een fout opgetreden bij het uploaden dit bericht: %s.</string>
+	<string name="add_media_progress">Toevoegen media</string>
+	<string name="reader_excerpt_link">Bezoek %s voor meer</string>
+	<string name="login_site_address_help_image">Het adres van de site kan worden gevonden in de navigatiebalk van je webbrowser</string>
+	<string name="error_unknown_page">Kan de pagina niet vinden op de server</string>
+	<string name="error_publish_empty_page">Kan een lege pagina niet publiceren</string>
+	<string name="upload_failed_param">Upload van "%s" is niet gelukt</string>
+	<string name="cannot_retry_deleted_media_item">Media is verwijderd. Wil je het verwijderen uit dit bericht?</string>
+	<string name="error_please_choose_browser">Fout bij het openen van de standaard webbrowser. Kies een andere app:</string>
+	<string name="cant_open_url">De link kan niet worden geopend</string>
 	<string name="error_unknown_post">Bericht niet gevonden op server</string>
 	<string name="error_post_does_not_exist">Dit bericht bestaat niet meer</string>
-	<string name="error_media_recover">We kunnen de media van dit bericht niet uploaden. Bewerk het bericht en probeer het opnieuw.</string>
+	<string name="error_media_recover_page">We kunnen de media van deze pagina niet uploaden. Bewerk de pagina en probeer het opnieuw.</string>
 	<string name="error_media_canceled">Het uploaden van media is geannuleerd</string>
-	<string name="error_upload_post_media_params">Er is een fout opgetreden bij het uploaden van media in deze %1$s: %2$s.</string>
-	<string name="error_upload_post_params">Er is een fout opgetreden bij het uploaden van deze %1$s: %2$s.</string>
+	<string name="error_upload_page_media_param">Er is een fout opgetreden bij het uploaden van media in deze pagina: %s.</string>
+	<string name="error_upload_page_param">Er is een fout opgetreden bij het uploaden van deze pagina: %s.</string>
 	<string name="async_promo_link">Hoe werkt het?</string>
 	<string name="async_promo_description">Je kunt de editor nu afsluiten; je bericht wordt automatisch opgeslagen en gepubliceerd! Probeer het ook eens!</string>
 	<string name="async_promo_title">Vol vertrouwen publiceren</string>
@@ -72,7 +85,6 @@ Language: nl
 	<string name="login_promo_text_onthego">Publiceren in het park. Bloggen in de bus. Reageren in het restaurant. WordPress gaat altijd met je mee.</string>
 	<string name="create_wordpress_site">Een WordPress-site maken</string>
 	<string name="email_not_found">We konden geen WordPress.com-gebruiker met dat e-mailadres vinden</string>
-	<string name="login_site_address_help_image">Afbeelding site-adres positioneren</string>
 	<string name="image_optimization_promo_desc">Afbeeldingoptimalisatie maakt afbeeldingen kleiner, zodat ze sneller geüpload kunnen worden.\n\nJe kunt deze optie op elk moment wijzigen in de site-instellingen.</string>
 	<string name="image_optimization_promo_title">Afbeeldingoptimalisatie aanzetten?</string>
 	<string name="leave_off">Uit laten staan</string>
@@ -321,7 +333,6 @@ Language: nl
 	<string name="reader_label_visit">Bezoek</string>
 	<string name="all_your_sites">Al mijn sites</string>
 	<string name="pending_draft_more">Je hebt %d berichten als concept opgeslagen, maar ze nooit gepubliceerd. Tik om ze te controleren.</string>
-	<string name="no_default_app_available_to_open_link">Kan de link niet openen</string>
 	<string name="notification_pending_drafts">Geef me een melding van openstaande concepten</string>
 	<string name="invalid_verification_code_format">Moet een zescijferig nummer zijn</string>
 	<string name="confirm_discard_changes">Niet-opgeslagen wijzigingen verwijderen?</string>
@@ -1112,7 +1123,7 @@ Language: nl
 	<string name="error_refresh_notifications">Notificaties kunnen momenteel niet worden ververst</string>
 	<string name="error_refresh_pages">Pagina\'s kunnen momenteel niet worden ververst</string>
 	<string name="error_refresh_posts">Berichten kunnen momenteel niet worden ververst</string>
-	<string name="error_delete_post">Er heeft zich een fout voorgedaan bij het verwijderen van %s</string>
+	<string name="error_deleting_post">Er heeft zich een fout voorgedaan bij het verwijderen van het bericht</string>
 	<string name="notifications_empty_list">Geen notificaties</string>
 	<string name="reply_failed">Reactie mislukt</string>
 	<string name="invalid_url_message">Controleer of de ingevoerde URL geldig is</string>
@@ -1129,7 +1140,6 @@ Language: nl
 	<string name="theme_auth_error_message">Controleer of je rechten hebt om thema\'s in te stellen</string>
 	<string name="theme_set_failed">Fout bij het instellen van het thema</string>
 	<string name="theme_fetch_failed">Fout bij het ophalen van thema\'s</string>
-	<string name="wait_until_upload_completes">Wacht tot de upload is voltooid</string>
 	<string name="blog_not_found">Er heeft zich een fout voorgedaan tijdens het openen van dit blog</string>
 	<string name="gallery_error">Media-item kan niet worden opgehaald</string>
 	<string name="could_not_remove_account">Kon site niet verwijderen</string>
@@ -1150,6 +1160,7 @@ Language: nl
 	<string name="fatal_db_error">Er heeft zich een fout voorgedaan bij het aanmaken van de database van de app. Probeer de app opnieuw te installeren.</string>
 	<string name="error_blog_hidden">Dit blog is verborgen en kan niet worden geladen. Schakel het blog in instellingen in en probeer het opnieuw.</string>
 	<string name="error_refresh_media">Media konden op dit moment niet worden vernieuwd</string>
+	<string name="error_deleting_page">Er is een fout opgetreden bij het verwijderen van de pagina</string>
 	<string name="wordpress_blog">WordPress-blog</string>
 	<string name="add_account_blog_url">Blogadres</string>
 	<string name="image_settings">Afbeeldingsinstellingen</string>
