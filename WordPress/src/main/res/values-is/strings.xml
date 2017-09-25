@@ -84,7 +84,6 @@ Language: is
 	<string name="reader_label_visit">Heimsækja</string>
 	<string name="all_your_sites">Allir mínir vefir</string>
 	<string name="pending_draft_more">Þú hefur skrifað %d drög en aldrei birt þau. Ýttu til þess að skoða.</string>
-	<string name="no_default_app_available_to_open_link">Gat ekki opnað tengilinn</string>
 	<string name="notification_pending_drafts">Láta mig vita ef drög bíða</string>
 	<string name="invalid_verification_code_format">Verður að vera sex stafa tala</string>
 	<string name="confirm_discard_changes">Hætta við óvistaðar breytingar?</string>
@@ -864,7 +863,6 @@ Language: is
 	<string name="error_refresh_notifications">Ekki var hægt að endurfríska tilkynningar í þetta sinn</string>
 	<string name="error_refresh_pages">Ekki var hægt að endurfríska síðu í þetta sinn</string>
 	<string name="error_refresh_posts">Ekki var hægt að endurfríska færslur í þetta sinn</string>
-	<string name="error_delete_post">Villa kom upp við að eyða %s</string>
 	<string name="notifications_empty_list">Engar tilkynningar</string>
 	<string name="reply_failed">Tókst ekki að svara</string>
 	<string name="invalid_url_message">Athugaðu hvort að uppgefin vefslóð (URL) bloggs sé gild</string>
@@ -881,7 +879,6 @@ Language: is
 	<string name="theme_auth_error_message">Gakktu úr skugga um að þú hafir réttindi til þess að skilgreina þemu</string>
 	<string name="theme_set_failed">Tókst ekki að skilgreina þema</string>
 	<string name="theme_fetch_failed">Tókst ekki að sækja þemu</string>
-	<string name="wait_until_upload_completes">Biða uns upphleðslu er lokið</string>
 	<string name="blog_not_found">Villa kom upp við að tengjast við þetta blogg</string>
 	<string name="gallery_error">Ekki var hægt að sækja skrá</string>
 	<string name="could_not_remove_account">Gat ekki fjarlægt þennan vef</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-02 13:43:05+0000
+Translation-Revision-Date: 2017-09-14 16:38:40+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
@@ -87,6 +87,7 @@ Language: fr
 	<string name="connected">Connecté</string>
 	<string name="twitter">Twitter</string>
 	<string name="sharing_comment_likes_description">Permettre à tous les commentaires d\'être aimés par vous et vos lecteurs</string>
+	<string name="visual">Visuel</string>
 	<string name="buttons">Boutons</string>
 	<string name="sharing_sharing_buttons_description">Choisissez quels boutons seront affichés sous vos articles</string>
 	<string name="twitter_username">Nom d’utilisateur Twitter</string>
@@ -124,6 +125,7 @@ Language: fr
 	<string name="fab_content_description_write">Écrire</string>
 	<string name="my_site_btn_sharing">Partage</string>
 	<string name="button_not_now">Pas maintenant</string>
+	<string name="media_error_internal_server_error">Erreur de mise en ligne. Essayez de changer l\'option « Optimiser les images » dans les réglages de votre site.</string>
 	<string name="media_downloading">Enregistrement du fichier sur cet appareil</string>
 	<string name="error_media_save">Impossible d’enregistrer les médias</string>
 	<string name="editor_scheduled_post_saved_online">Article programmé</string>
@@ -159,6 +161,7 @@ Language: fr
 	<string name="start_over_email_body">Je souhaite recommencer avec le site %s</string>
 	<string name="start_over_email_subject">Recommencer avec le site %s</string>
 	<string name="site_picker_remove_site_error">Erreur lors de la suppression du site, réessayez</string>
+	<string name="editor_post_saved_locally_failed_media">Cet article a des fichiers joints dont la mise en ligne a échoué. Il a été enregistré localement</string>
 	<string name="sure_to_remove_account">Supprimer ce site de l\'application ?</string>
 	<string name="photo_picker_title">Choisir une photo</string>
 	<string name="error_publish_no_network">L’appareil est hors ligne. Les modifications ont été sauvegardées localement.</string>
@@ -196,6 +199,7 @@ Language: fr
 	<string name="error_media_refresh_no_connection">Connexion obligatoire pour actualiser la bibliothèque</string>
 	<string name="error_media_unauthorized">Vous n’avez pas le droit de voir ni de modifier le média</string>
 	<string name="error_media_not_found">Média introuvable</string>
+	<string name="error_media_insufficient_fs_permissions">Vous n\'avez pas les droits de lecture pour les fichiers médias de cet appareil</string>
 	<string name="site_settings_optimize_images">Optimiser les images</string>
 	<string name="no_site_error">Impossible de se connecter au site WordPress. Aucun site WordPress valide \nn’est présent à cette adresse. Vérifier l’adresse du site (URL) saisie.</string>
 	<string name="media_generic_error">Une erreur de média s’est produite</string>
@@ -223,7 +227,6 @@ Language: fr
 	<string name="reader_label_visit">Visitez</string>
 	<string name="all_your_sites">Tous Mes Sites</string>
 	<string name="pending_draft_more">Vous avez rédigé %d articles, mais vous ne les avez jamais publiés. Appuyez pour les vérifier.</string>
-	<string name="no_default_app_available_to_open_link">Impossible d’ouvrir le lien</string>
 	<string name="notification_pending_drafts">Me notifier quand des brouillons sont en attente</string>
 	<string name="invalid_verification_code_format">Doit être un nombre à six chiffres</string>
 	<string name="confirm_discard_changes">Annuler les modifications non sauvegardées ?</string>
@@ -299,6 +302,7 @@ Language: fr
 	<string name="format_bar_description_html">HTML</string>
 	<string name="format_bar_description_ol">Liste ordonnée</string>
 	<string name="format_bar_description_ul">Liste non-ordonnée</string>
+	<string name="format_bar_description_more">Insérer séparateur More</string>
 	<string name="format_bar_description_quote">Bloc de citation</string>
 	<string name="format_bar_description_strike">Barré</string>
 	<string name="format_bar_description_underline">Souligné</string>
@@ -483,6 +487,8 @@ Language: fr
 	<string name="pending_email_change_snackbar">Cliquez sur le lien de vérification de l\'e-mail envoyé à %1$s pour confirmer votre nouvelle adresse.</string>
 	<string name="editor_toast_uploading_please_wait">Vous êtes actuellement en train de mettre en ligne un média. Veuillez patienter jusqu\'à ce que soit terminé.</string>
 	<string name="error_refresh_comments_showing_older">Les commentaires ne peuvent pas être actualisés en ce moment - affichage des commentaires plus anciens</string>
+	<string name="post_settings_set_featured_image">Définir une image mise à la une</string>
+	<string name="post_settings_featured_image">Image à la une</string>
 	<string name="visual_editor_enabled">Éditeur visuel activé</string>
 	<string name="editor_content_placeholder">Partagez ici votre histoire...</string>
 	<string name="editor_page_title_placeholder">Titre de la page</string>
@@ -688,6 +694,7 @@ Language: fr
 	<string name="stats_widget_loading_data">Chargement des données…</string>
 	<string name="stats_widget_name_for_blog">Stats du jour pour %1$s</string>
 	<string name="stats_widget_name">Stats du jour WordPress</string>
+	<string name="post_settings_add_location_permission_required">Permission nécessaire pour ajouter la géolocalisation</string>
 	<string name="add_media_permission_required">Droits requis pour ajouter du contenu multimédia</string>
 	<string name="access_media_permission_required">Droits requis pour accéder au contenu multimédia</string>
 	<string name="stats_enable_rest_api_in_jetpack">Pour voir vos stats, vous devez d\'abord activer le module Jetpack nommé JSON API.</string>
@@ -833,6 +840,7 @@ Language: fr
 	<string name="stats_period">Période</string>
 	<string name="stats_overall">Global</string>
 	<string name="stats_total">Total</string>
+	<string name="post_uploading">Article en cours d\'envoi</string>
 	<string name="stats_visitors">Visiteurs</string>
 	<string name="stats_views">Visites</string>
 	<string name="stats_timeframe_years">Années</string>
@@ -906,6 +914,7 @@ Language: fr
 	<string name="comment">Commentaire</string>
 	<string name="mnu_comment_liked">Aimé</string>
 	<string name="uploading_total">Upload %1$d sur %2$d</string>
+	<string name="sending_content">Mise en ligne du contenu : %s...</string>
 	<string name="select_a_blog">Sélectionnez un site WordPress</string>
 	<string name="stats_no_blog">Les statistiques ne peuvent pas être chargée pour ce blog</string>
 	<string name="older_last_week">Plus d\'une semaine</string>
@@ -1008,7 +1017,7 @@ Language: fr
 	<string name="error_refresh_notifications">Les notifications ne peuvent être actualisées pour l\'instant</string>
 	<string name="error_refresh_pages">Les pages ne peuvent pas être actualisées pour l\'instant </string>
 	<string name="error_refresh_posts">Les articles ne peuvent pas être actualisés pour l\'instant</string>
-	<string name="error_delete_post">Une erreur s\'est produite lors de la suppression de %s</string>
+	<string name="error_deleting_post">Une erreur s\'est produite lors de la suppression de l\'article</string>
 	<string name="notifications_empty_list">Aucune notifications</string>
 	<string name="reply_failed">Échec de la réponse</string>
 	<string name="invalid_url_message">Vérifiez que l\'URL du blog est valide</string>
@@ -1025,7 +1034,6 @@ Language: fr
 	<string name="theme_auth_error_message">Vérifiez que vous disposez des droits pour définir les thèmes</string>
 	<string name="theme_set_failed">Échec de définition du thème</string>
 	<string name="theme_fetch_failed">Échec de chargement des thèmes</string>
-	<string name="wait_until_upload_completes">Patientez jusqu\'au chargement complet</string>
 	<string name="blog_not_found">Une erreur s\'est produite en accédant à ce blog</string>
 	<string name="gallery_error">Le média ne peut pas être récupéré</string>
 	<string name="could_not_remove_account">Impossible de supprimer le site</string>
@@ -1247,6 +1255,7 @@ Language: fr
 	<string name="publish_date">Publié le</string>
 	<string name="post_content">Contenu (touchez pour ajouter du texte et des médias)</string>
 	<string name="incorrect_credentials">Le nom d\'utilisateur ou le mot de passe ne sont pas valides.</string>
+	<string name="log_in">Connexion</string>
 	<string name="username">Identifiant</string>
 	<string name="password">Mot de passe</string>
 	<string name="reader">Lecteur</string>
@@ -1284,6 +1293,7 @@ Language: fr
 	<string name="quickpress_window_title">Sélectionner le blog pour le raccourci QuickPress</string>
 	<string name="upload_full_size_image">Envoyer l\'image et ajouter un lien vers la taille originale</string>
 	<string name="categories">Catégories</string>
+	<string name="tags_separate_with_commas">Séparez les étiquettes par des virgules</string>
 	<string name="title">Titre</string>
 	<string name="dlg_deleting_comments">Effacement de commentaires en cours</string>
 	<string name="notification_vibrate">Vibrer</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-21 11:13:24+0000
+Translation-Revision-Date: 2017-09-03 08:34:36+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -499,7 +499,6 @@ Language: hr
 	<string name="no_network_message">Mreža nedostupna</string>
 	<string name="gallery_error">Nije moguće dohvatiti medijski zapis.</string>
 	<string name="blog_not_found">Dogodila se greška prilikom pristupa ovom blogu</string>
-	<string name="wait_until_upload_completes">Pričekajte dok se prijenos završi</string>
 	<string name="theme_fetch_failed">Neuspjelo dohvaćanje tema</string>
 	<string name="theme_set_failed">Neuspjelo postavljanje teme</string>
 	<string name="theme_auth_error_message">Provjerite je li imate dopuštenje za postavljanje tema</string>
@@ -513,7 +512,6 @@ Language: hr
 	<string name="sdcard_message">Za prijenos medijskih zapisa potrebna je montirana SD kartica</string>
 	<string name="stats_empty_comments">Još nema komentara</string>
 	<string name="stats_bar_graph_empty">Nema dostupne statistike</string>
-	<string name="error_delete_post">Dogodila se greška prilikom brisanja %s</string>
 	<string name="error_refresh_posts">Trenutno nije moguće osvježiti objave</string>
 	<string name="error_refresh_notifications">Trenutno nije moguće osvježiti obavijesti</string>
 	<string name="error_refresh_pages">Trenutno nije moguće osvježiti stranice</string>
@@ -543,6 +541,7 @@ Language: hr
 	<string name="blog_name_must_be_at_least_four_characters">Adresa web-stranice mora sadržavati najmanje 4 znaka</string>
 	<string name="blog_name_not_allowed">Adresa web-stranice nije dozvoljena</string>
 	<string name="blog_name_required">Unesite adresu web-stranice</string>
+	<string name="error_deleting_post">Dogodila se greška prilikom brisanja posta</string>
 	<string name="view_site">Pogledaj stranicu</string>
 	<string name="add_new_category">Dodaj novu kategoriju</string>
 	<string name="category_name">Ime kategorije</string>

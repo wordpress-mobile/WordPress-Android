@@ -472,7 +472,6 @@ Language: th
 	<string name="invalid_password_message">รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร</string>
 	<string name="invalid_username_too_short">ชื่อผู้ใช้ต้องยาวกว่า 4 ตัวอักษร</string>
 	<string name="invalid_username_too_long">ชื่อผู้ใช้ต้องสั้นกว่า 61 ตัวอักษร</string>
-	<string name="error_delete_post">มีความผิดพลาดเกิดขึ้นขณะกำลังลบ %s</string>
 	<string name="theme_auth_error_message">โปรดแน่ใจว่าคุณมีสิทธิการตั้งค่า themes</string>
 	<string name="comments_empty_list">ไม่มีความเห็น</string>
 	<string name="stats_empty_comments">ยังไม่มีความเห็น</string>
@@ -481,7 +480,6 @@ Language: th
 	<string name="notifications_empty_list">ไม่มีการเตือน</string>
 	<string name="gallery_error">ไม่สามารถรับไฟล์สื่อ</string>
 	<string name="blog_not_found">มีความผิดพลาดเกิดขึ้นเมื่อทำการเข้าบล็อกนี้</string>
-	<string name="wait_until_upload_completes">รอจนกระทั่งการอัปโหลดเสร็จสิ้น</string>
 	<string name="theme_set_failed">ล้มเหลวในการตั้งค่า theme</string>
 	<string name="error_refresh_stats">ไม่สามารถโหลดใหม่สถิติในตอนนี้</string>
 	<string name="error_generic">มีความผิดพลาดเกิดขึ้น</string>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-05 17:45:25+0000
+Translation-Revision-Date: 2017-09-08 10:13:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: bg
 -->
 <resources>
+	<string name="permission_camera">Камера</string>
+	<string name="media_gallery_column_count_multi">%d  колони</string>
+	<string name="media_gallery_column_count_single">1 колона</string>
+	<string name="all_your_sites">Всички мои сайтове</string>
 	<string name="confirm_discard_changes">Отмяна на незапазените промени?</string>
 	<string name="invalid_verification_code_format">Трябва да бъде шестцифрено число</string>
 	<string name="swipe_for_more">Плъзнете за повече</string>
@@ -747,7 +751,6 @@ Language: bg
 	<string name="ssl_certificate_ask_trust">Ако обикновено се свързвате с този сайт без проблеми, тази грешка може да означава, че някой се опитва да имитира този сайт и не трябва да продължавате. Искате ли да се доверите на този сертификат въпреки това?</string>
 	<string name="mnu_comment_unspam">Не е спам</string>
 	<string name="comments_empty_list">Няма коментари</string>
-	<string name="wait_until_upload_completes">Изчакай трансфера да завърши</string>
 	<string name="category_automatically_renamed">Категорията %1$s не е валидна. Преименувана е на %2$s,</string>
 	<string name="stats_empty_comments">Няма коментари</string>
 	<string name="error_refresh_pages">Страниците не могат да бъдат обновени в момента</string>
@@ -793,7 +796,6 @@ Language: bg
 	<string name="sdcard_message">Трябва да имате поставена SD карта, за да качите файлове</string>
 	<string name="reply_failed">Неуспешен отговор</string>
 	<string name="notifications_empty_list">Нямате нови известявания</string>
-	<string name="error_delete_post">Грешка при изтриване на %s</string>
 	<string name="error_refresh_posts">Публикациите не могат да бъдат обновени в момента</string>
 	<string name="error_moderate_comment">Възникна грешка по време на модерирането</string>
 	<string name="invalid_email_message">Адресът на електронната поща не е валиден</string>

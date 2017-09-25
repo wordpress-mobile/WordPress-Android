@@ -282,13 +282,11 @@ Language: da_DK
 	<string name="stats_bar_graph_empty">Ingen statistik er tilgængelig</string>
 	<string name="stats_empty_comments">Ingen kommentarer endnu</string>
 	<string name="reply_failed">Svar fejlede</string>
-	<string name="error_delete_post">Der skete en fejl mens %s blev slettet</string>
 	<string name="error_refresh_posts">Indlæg kunne ikke genindlæses </string>
 	<string name="error_refresh_pages">Sider kunne ikke genindlæses</string>
 	<string name="error_refresh_notifications">Beskeder kunne ikke genindlæses</string>
 	<string name="error_refresh_comments">Kommentarer kunne ikke genindlæses</string>
 	<string name="blog_not_found">Der skete en fejl ved tilgangen til denne blog</string>
-	<string name="wait_until_upload_completes">Vent venligst til overførslen er færdig</string>
 	<string name="blog_name_exists">Webstedet eksisterer allerede</string>
 	<string name="error_generic">Der opstod en fejl</string>
 	<string name="adding_cat_success">Kategori tilføjet</string>
