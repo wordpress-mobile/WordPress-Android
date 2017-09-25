@@ -42,11 +42,11 @@
 
                         <ImageView
                             android:id="@+id/image_play"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:visibility="gone"
-                            app:srcCompat="@drawable/play_video_selector"
+                            app:srcCompat="@drawable/play_video_selector_large"
                             tools:visibility="visible"/>
                     </FrameLayout>
 
