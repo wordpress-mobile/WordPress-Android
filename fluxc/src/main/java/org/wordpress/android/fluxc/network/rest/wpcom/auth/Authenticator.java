@@ -66,8 +66,7 @@ public class Authenticator {
     public interface ErrorListener extends Response.ErrorListener {
     }
 
-    public static class AuthEmailResponsePayload extends Payload {
-        public AuthEmailError error;
+    public static class AuthEmailResponsePayload extends Payload<AuthEmailError> {
         public AuthEmailResponsePayload() {}
     }
 

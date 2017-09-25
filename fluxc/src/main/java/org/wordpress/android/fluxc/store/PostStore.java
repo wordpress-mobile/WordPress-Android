@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
@@ -40,7 +41,7 @@ public class PostStore extends Store {
             PostStatus.PUBLISHED,
             PostStatus.SCHEDULED));
 
-    public static class FetchPostsPayload extends Payload {
+    public static class FetchPostsPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public boolean loadMore;
 
@@ -54,7 +55,7 @@ public class PostStore extends Store {
         }
     }
 
-    public static class SearchPostsPayload extends Payload {
+    public static class SearchPostsPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public String searchTerm;
         public int offset;
@@ -70,8 +71,7 @@ public class PostStore extends Store {
         }
     }
 
-    public static class SearchPostsResponsePayload extends Payload {
-        public PostError error;
+    public static class SearchPostsResponsePayload extends Payload<PostError> {
         public PostsModel posts;
         public SiteModel site;
         public String searchTerm;
@@ -97,8 +97,7 @@ public class PostStore extends Store {
         }
     }
 
-    public static class FetchPostsResponsePayload extends Payload {
-        public PostError error;
+    public static class FetchPostsResponsePayload extends Payload<PostError> {
         public PostsModel posts;
         public SiteModel site;
         public boolean isPages;
@@ -119,8 +118,7 @@ public class PostStore extends Store {
         }
     }
 
-    public static class RemotePostPayload extends Payload {
-        public PostError error;
+    public static class RemotePostPayload extends Payload<PostError> {
         public PostModel post;
         public SiteModel site;
 
@@ -215,12 +213,18 @@ public class PostStore extends Store {
 
     private final PostRestClient mPostRestClient;
     private final PostXMLRPCClient mPostXMLRPCClient;
+    // Ensures that the UploadStore is initialized whenever the PostStore is,
+    // to ensure actions are shadowed and repeated by the UploadStore
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
+    private final UploadStore mUploadStore;
 
     @Inject
-    public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient) {
+    public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient,
+                     UploadStore uploadStore) {
         super(dispatcher);
         mPostRestClient = postRestClient;
         mPostXMLRPCClient = postXMLRPCClient;
+        mUploadStore = uploadStore;
     }
 
     @Override
