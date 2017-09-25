@@ -36,6 +36,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
+import org.wordpress.android.fluxc.store.AccountStore.PushSocialLoginPayload;
 import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -54,6 +55,7 @@ import static android.app.Activity.RESULT_OK;
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         implements TextWatcher, OnEditorCommitListener, ConnectionCallbacks, OnConnectionFailedListener {
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
+    private static final String SERVICE_TYPE_GOOGLE = "google";
     private static final String STATE_RESOLVING_ERROR = "STATE_RESOLVING_ERROR";
     private static final int REQUEST_CONNECT = 1000;
     private static final int REQUEST_LOGIN = 1001;
@@ -412,8 +414,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                         try {
                             GoogleSignInAccount account = signInResult.getSignInAccount();
                             mGoogleEmail = account.getEmail();
-                            String token = account.getIdToken();
-                            // TODO: Validate token with server.
+                            PushSocialLoginPayload payload = new PushSocialLoginPayload(account.getIdToken(), SERVICE_TYPE_GOOGLE);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
                         } catch (NullPointerException exception) {
                             AppLog.e(AppLog.T.NUX, "Cannot get ID token from Google sign-in account.", exception);
                             // TODO: Show error screen.
