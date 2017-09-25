@@ -39,10 +39,10 @@ import android.view.ViewTreeObserver;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.SimpleAdapter;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -83,6 +83,7 @@ import org.wordpress.android.util.WPPermissionUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -131,7 +132,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private String mQuery;
     private String mMediaCapturePath;
     private MediaBrowserType mBrowserType;
-    private int mLastAddMediaItemClickedPosition;
+    private AddMenuItem mLastAddMediaItemClicked;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -424,7 +425,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 this, requestCode, permissions, results, true);
 
         if (allGranted && requestCode == WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE) {
-            doAddMediaItemClicked(mLastAddMediaItemClickedPosition);
+            doAddMediaItemClicked(mLastAddMediaItemClicked);
         }
     }
 
@@ -781,28 +782,25 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
     private void createAddMediaPopup() {
-        String[] items;
-        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
-            items = new String[]{
-                    getString(R.string.photo_picker_capture_photo),
-                    getString(R.string.photo_picker_choose_photo)
-            };
-        } else {
-            items = new String[]{
-                    getString(R.string.photo_picker_capture_photo),
-                    getString(R.string.photo_picker_capture_video),
-                    getString(R.string.photo_picker_choose_photo),
-                    getString(R.string.photo_picker_choose_video)
-            };
-        }
+        SimpleAdapter adapter = mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
+                ? getAddMenuSimpleAdapter(
+                AddMenuItem.ITEM_CAPTURE_PHOTO,
+                AddMenuItem.ITEM_CHOOSE_PHOTO)
+                : getAddMenuSimpleAdapter(
+                AddMenuItem.ITEM_CAPTURE_PHOTO,
+                AddMenuItem.ITEM_CAPTURE_VIDEO,
+                AddMenuItem.ITEM_CHOOSE_PHOTO,
+                AddMenuItem.ITEM_CHOOSE_VIDEO);
 
         @SuppressLint("InflateParams")
         View menuView = getLayoutInflater().inflate(R.layout.actionbar_add_media, null, false);
         ListView listView = (ListView) menuView.findViewById(R.id.actionbar_add_media_listview);
-        listView.setAdapter(new ArrayAdapter<>(this, R.layout.actionbar_add_media_cell, items));
+        listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                doAddMediaItemClicked(position);
+                @SuppressWarnings("unchecked")
+                HashMap<String, Object> map = (HashMap<String, Object>) parent.getAdapter().getItem(position);
+                doAddMediaItemClicked((AddMenuItem) map.get(ITEM));
                 mAddMediaPopup.dismiss();
             }
         });
@@ -844,31 +842,47 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private static final int ITEM_CAPTURE_PHOTO = 0;
-    private static final int ITEM_CAPTURE_VIDEO = 1;
-    private static final int ITEM_CHOOSE_PHOTO  = 2;
-    private static final int ITEM_CHOOSE_VIDEO  = 3;
+    private enum AddMenuItem {
+        ITEM_CAPTURE_PHOTO(R.string.photo_picker_capture_photo),
+        ITEM_CAPTURE_VIDEO(R.string.photo_picker_capture_video),
+        ITEM_CHOOSE_PHOTO(R.string.photo_picker_choose_photo),
+        ITEM_CHOOSE_VIDEO(R.string.photo_picker_choose_video);
 
-    private int getAddMenuItemFromPosition(int position) {
-        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER && position > 0) {
-            return ITEM_CHOOSE_PHOTO;
+        @StringRes private final int resource;
+
+        AddMenuItem(@StringRes int resource) {
+            this.resource = resource;
         }
-        return position;
     }
 
-    private void doAddMediaItemClicked(int position) {
-        mLastAddMediaItemClickedPosition = position;
-        int menuItem = getAddMenuItemFromPosition(position);
+    private static final String ITEM = "item";
+
+    private SimpleAdapter getAddMenuSimpleAdapter(AddMenuItem... addMenuItems) {
+        ArrayList<HashMap<String, Object>> itemsList = new ArrayList<>();
+
+        for (AddMenuItem addMenuItem : addMenuItems) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("text", getString(addMenuItem.resource));
+            hashMap.put(ITEM, addMenuItem);
+            itemsList.add(hashMap);
+        }
+
+        return new SimpleAdapter(this, itemsList, R.layout.actionbar_add_media_cell, new String[]{"text"},
+                new int[]{R.id.text});
+    }
+
+    private void doAddMediaItemClicked(@NonNull AddMenuItem item) {
+        mLastAddMediaItemClicked = item;
 
         String[] permissions;
-        if (menuItem == ITEM_CAPTURE_PHOTO || menuItem == ITEM_CAPTURE_VIDEO) {
+        if (item == AddMenuItem.ITEM_CAPTURE_PHOTO || item == AddMenuItem.ITEM_CAPTURE_VIDEO) {
             permissions = new String[]{ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
         } else {
             permissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
         }
         if (PermissionUtils.checkAndRequestPermissions(
                 this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
-            switch (menuItem) {
+            switch (item) {
                 case ITEM_CAPTURE_PHOTO:
                     WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
                     break;
