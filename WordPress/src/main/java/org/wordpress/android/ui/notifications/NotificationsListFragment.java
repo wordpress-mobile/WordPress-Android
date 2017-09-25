@@ -108,16 +108,15 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-            (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_notifications),
-            new SwipeToRefreshHelper.RefreshListener() {
-                @Override
-                public void onRefreshStarted() {
-                    hideNewNotificationsBar();
-                    fetchNotesFromRemote();
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_notifications),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        hideNewNotificationsBar();
+                        fetchNotesFromRemote();
+                    }
                 }
-            }
         );
-
 
         // bar that appears at bottom after new notes are received and the user is on this screen
         mNewNotificationsBar = view.findViewById(R.id.layout_new_notificatons);

@@ -69,24 +69,24 @@ public class StatsViewAllActivity extends AppCompatActivity {
 
         // pull to refresh setup
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-            (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
-            new SwipeToRefreshHelper.RefreshListener() {
-                @Override
-                public void onRefreshStarted() {
-                    if (!NetworkUtils.checkConnection(getBaseContext())) {
-                        mSwipeToRefreshHelper.setRefreshing(false);
-                        mIsUpdatingStats = false;
-                        return;
-                    }
+                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!NetworkUtils.checkConnection(getBaseContext())) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            mIsUpdatingStats = false;
+                            return;
+                        }
 
-                    if (mIsUpdatingStats) {
-                        AppLog.w(AppLog.T.STATS, "stats are already updating, refresh cancelled");
-                        return;
-                    }
+                        if (mIsUpdatingStats) {
+                            AppLog.w(AppLog.T.STATS, "stats are already updating, refresh cancelled");
+                            return;
+                        }
 
-                    refreshStats();
+                        refreshStats();
+                    }
                 }
-            }
         );
 
         if (savedInstanceState != null) {

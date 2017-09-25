@@ -132,13 +132,13 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-            (CustomSwipeRefreshLayout) findViewById(R.id.swipe_to_refresh),
-            new SwipeToRefreshHelper.RefreshListener() {
-                @Override
-                public void onRefreshStarted() {
-                    updatePostAndComments();
+                (CustomSwipeRefreshLayout) findViewById(R.id.swipe_to_refresh),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        updatePostAndComments();
+                    }
                 }
-            }
         );
 
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);

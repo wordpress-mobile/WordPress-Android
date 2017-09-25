@@ -214,17 +214,17 @@ public class ReaderPostDetailFragment extends Fragment
         swipeRefreshLayout.setProgressViewOffset(false, 0, swipeToRefreshOffset);
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-            swipeRefreshLayout,
-            new SwipeToRefreshHelper.RefreshListener() {
-                @Override
-                public void onRefreshStarted() {
-                    if (!isAdded()) {
-                        return;
-                    }
+                swipeRefreshLayout,
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!isAdded()) {
+                            return;
+                        }
 
-                    updatePost();
+                        updatePost();
+                    }
                 }
-            }
         );
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);

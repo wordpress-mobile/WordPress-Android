@@ -117,17 +117,17 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         // pull to refresh setup
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-            (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
-            new SwipeToRefreshHelper.RefreshListener() {
-                @Override
-                public void onRefreshStarted() {
-                    if (!NetworkUtils.checkConnection(getBaseContext())) {
-                        mSwipeToRefreshHelper.setRefreshing(false);
-                        return;
+                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!NetworkUtils.checkConnection(getBaseContext())) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        refreshStats();
                     }
-                    refreshStats();
                 }
-            }
         );
 
         TextView mStatsForLabel = (TextView) findViewById(R.id.stats_summary_title);

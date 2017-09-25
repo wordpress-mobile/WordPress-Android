@@ -252,20 +252,20 @@ public class SitePickerActivity extends AppCompatActivity
             return;
         }
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-            (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
-            new SwipeToRefreshHelper.RefreshListener() {
-                @Override
-                public void onRefreshStarted() {
-                    if (isFinishing()) {
-                        return;
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (isFinishing()) {
+                            return;
+                        }
+                        if (!NetworkUtils.checkConnection(SitePickerActivity.this)) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
                     }
-                    if (!NetworkUtils.checkConnection(SitePickerActivity.this)) {
-                        mSwipeToRefreshHelper.setRefreshing(false);
-                        return;
-                    }
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
                 }
-            }
         );
     }
 

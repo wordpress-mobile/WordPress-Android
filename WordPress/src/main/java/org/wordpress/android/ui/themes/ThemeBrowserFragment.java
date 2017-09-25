@@ -190,21 +190,21 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     protected void configureSwipeToRefresh(View view) {
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-            (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
-            new RefreshListener() {
-                @Override
-                public void onRefreshStarted() {
-                    if (!isAdded()) {
-                        return;
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!isAdded()) {
+                            return;
+                        }
+                        if (!NetworkUtils.checkConnection(mThemeBrowserActivity)) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            mEmptyTextView.setText(R.string.no_network_title);
+                            return;
+                        }
+                        mThemeBrowserActivity.fetchThemes();
                     }
-                    if (!NetworkUtils.checkConnection(mThemeBrowserActivity)) {
-                        mSwipeToRefreshHelper.setRefreshing(false);
-                        mEmptyTextView.setText(R.string.no_network_title);
-                        return;
-                    }
-                    mThemeBrowserActivity.fetchThemes();
                 }
-            }
         );
         mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
     }

@@ -136,25 +136,25 @@ public class FilteredRecyclerView extends RelativeLayout {
         mProgressLoadMore.setVisibility(View.GONE);
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-            (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
-            new SwipeToRefreshHelper.RefreshListener() {
-                @Override
-                public void onRefreshStarted() {
-                    post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!NetworkUtils.checkConnection(getContext())) {
-                                mSwipeToRefreshHelper.setRefreshing(false);
-                                updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-                                return;
+                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!NetworkUtils.checkConnection(getContext())) {
+                                    mSwipeToRefreshHelper.setRefreshing(false);
+                                    updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+                                    return;
+                                }
+                                if (mFilterListener != null){
+                                    mFilterListener.onLoadData();
+                                }
                             }
-                            if (mFilterListener != null){
-                                mFilterListener.onLoadData();
-                            }
-                        }
-                    });
+                        });
+                    }
                 }
-            }
         );
 
         if (mSpinner == null) {

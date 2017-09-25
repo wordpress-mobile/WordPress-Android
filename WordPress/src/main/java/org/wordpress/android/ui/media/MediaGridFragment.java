@@ -244,20 +244,20 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-            (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout), new RefreshListener() {
-                @Override
-                public void onRefreshStarted() {
-                    if (!isAdded()) {
-                        return;
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout), new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!isAdded()) {
+                            return;
+                        }
+                        if (!NetworkUtils.checkConnection(getActivity())) {
+                            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+                            setRefreshing(false);
+                            return;
+                        }
+                        fetchMediaList(false);
                     }
-                    if (!NetworkUtils.checkConnection(getActivity())) {
-                        updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-                        setRefreshing(false);
-                        return;
-                    }
-                    fetchMediaList(false);
                 }
-            }
         );
 
         if (savedInstanceState != null) {

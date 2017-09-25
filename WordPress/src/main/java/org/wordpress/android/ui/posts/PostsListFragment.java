@@ -234,21 +234,21 @@ public class PostsListFragment extends Fragment
 
     private void initSwipeToRefreshHelper(View view) {
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-            (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
-            new RefreshListener() {
-                @Override
-                public void onRefreshStarted() {
-                    if (!isAdded()) {
-                        return;
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!isAdded()) {
+                            return;
+                        }
+                        if (!NetworkUtils.checkConnection(getActivity())) {
+                            setRefreshing(false);
+                            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+                            return;
+                        }
+                        requestPosts(false);
                     }
-                    if (!NetworkUtils.checkConnection(getActivity())) {
-                        setRefreshing(false);
-                        updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-                        return;
-                    }
-                    requestPosts(false);
                 }
-            }
         );
     }
 
