@@ -75,7 +75,7 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class PushSocialLoginPayload extends Payload {
+    public static class PushSocialLoginPayload extends Payload<BaseNetworkError> {
         public String idToken;
         public String service;
         public PushSocialLoginPayload(@NonNull String idToken, @NonNull String service) {
