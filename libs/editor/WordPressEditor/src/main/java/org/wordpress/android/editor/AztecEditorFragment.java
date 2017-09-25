@@ -868,7 +868,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
-            AppLog.e(T.MEDIA, "onMediaUploadSucceeded - Remote URL: " + remoteUrl + ", Filename: "
+            AppLog.i(T.MEDIA, "onMediaUploadSucceeded - Remote URL: " + remoteUrl + ", Filename: "
                     + mediaFile.getFileName());
 
             // we still need to refresh the screen visually, no matter whether the service already
