@@ -241,11 +241,6 @@ public class AccountStore extends Store {
             this.message = message;
         }
 
-        public AccountSocialError(@NonNull String type, @NonNull String message) {
-            this.type = AccountSocialErrorType.fromString(type);
-            this.message = message;
-        }
-
         public AccountSocialError(@NonNull byte[] response) {
             try {
                 String responseBody = new String(response, "UTF-8");
