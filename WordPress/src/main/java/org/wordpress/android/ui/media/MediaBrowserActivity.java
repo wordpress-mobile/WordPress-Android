@@ -559,6 +559,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         // preview the selected item
         if (mBrowserType.isPicker()) {
             if (isLocalFile) {
+                ToastUtils.showToast(this, R.string.error_media_still_uploading);
                 return;
             }
             Intent intent = new Intent();
