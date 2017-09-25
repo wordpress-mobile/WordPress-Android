@@ -756,7 +756,6 @@ Language: gl_ES
 	<string name="stats_bar_graph_empty">Non hai estatísticas dispoñibles</string>
 	<string name="invalid_url_message">Comproba se a URL introducida é válida</string>
 	<string name="notifications_empty_list">Sen notificacións</string>
-	<string name="error_delete_post">Houbo un erro mentres se eliminaba o %s</string>
 	<string name="error_generic">Houbo un erro</string>
 	<string name="passcode_wrong_passcode">PIN incorrecto</string>
 	<string name="invalid_password_message">O contrasinal debe conter como mínimo 4 caracteres</string>
@@ -786,7 +785,6 @@ Language: gl_ES
 	<string name="username_or_password_incorrect">O nome de usuario ou o contrasinal introducido é incorrecto</string>
 	<string name="nux_cannot_log_in">Non foi posible conectar</string>
 	<string name="gallery_error">Non foi posible obter o elemento multimedia</string>
-	<string name="wait_until_upload_completes">Agarda até que se complete a carga</string>
 	<string name="could_not_remove_account">Non foi posible borrar o sitio</string>
 	<string name="error_refresh_posts">Non foi posible actualizar os artigos neste momento</string>
 	<string name="error_refresh_pages">Non foi posible actualizar as páxinas neste momento</string>

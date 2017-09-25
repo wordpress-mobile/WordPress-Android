@@ -549,7 +549,6 @@ Language: sk
 	<string name="username_not_allowed">Používateľské meno nie je povolené</string>
 	<string name="blog_name_exists">Stránka už existuje</string>
 	<string name="nux_cannot_log_in">Prihlásenie nie je možné</string>
-	<string name="error_delete_post">Počas mazania %s nastala chyba</string>
 	<string name="blog_name_reserved">Táto adresa je obsadená</string>
 	<string name="out_of_memory">Nedostatok voľného miesta v pamäti</string>
 	<string name="blog_not_found">Počas prístupu k blogu sa vyskytla chyba</string>
@@ -586,7 +585,6 @@ Language: sk
 	<string name="comments_empty_list">Žiadne komentáre</string>
 	<string name="mnu_comment_unspam">Žiadny spam</string>
 	<string name="theme_set_failed">Nepodarilo sa nastaviť tému</string>
-	<string name="wait_until_upload_completes">Čakajte, kým bude nahrávanie dokončené</string>
 	<string name="no_network_message">Nie sú k dispozícii žiadne siete</string>
 	<string name="blog_name_required">Vložte adresu stránky</string>
 	<string name="username_must_include_letters">Používatelské meno musí obsahovať min. 1 písmeno (a-z)</string>

@@ -103,7 +103,6 @@ Language: zh_TW
 	<string name="reader_label_visit">造訪</string>
 	<string name="all_your_sites">我所有的網站</string>
 	<string name="pending_draft_more">你有 %d 份草稿，卻從未發表。點選以查看。</string>
-	<string name="no_default_app_available_to_open_link">無法開啟連結</string>
 	<string name="notification_pending_drafts">有待確認的草稿時通知我</string>
 	<string name="invalid_verification_code_format">必須是六位數字</string>
 	<string name="confirm_discard_changes">要捨棄未儲存的變更嗎？</string>
@@ -851,7 +850,6 @@ Language: zh_TW
 	<string name="no_network_message">沒有可用的網路</string>
 	<string name="gallery_error">無法擷取媒體項目</string>
 	<string name="blog_not_found">存取此網誌時發生錯誤</string>
-	<string name="wait_until_upload_completes">請等候上傳完成</string>
 	<string name="theme_fetch_failed">無法擷取佈景主題</string>
 	<string name="theme_set_failed">無法設定佈景主題</string>
 	<string name="theme_auth_error_message">確認你有設定佈景主題的權限</string>
@@ -867,7 +865,6 @@ Language: zh_TW
 	<string name="stats_bar_graph_empty">沒有可用的統計</string>
 	<string name="reply_failed">回覆失敗</string>
 	<string name="notifications_empty_list">沒有通知</string>
-	<string name="error_delete_post">刪除 %s 時發生錯誤</string>
 	<string name="error_refresh_posts">目前無法重新整理文章</string>
 	<string name="error_refresh_pages">目前無法重新整理頁面</string>
 	<string name="error_refresh_notifications">目前無法重新整理通知</string>

@@ -255,6 +255,35 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="MediaSettings" />
+    <style name="MediaSettings.TextInputStyle">
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+    </style>
+    <style name="MediaSettings.TextInputTheme" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/grey_500</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlNormal">@color/grey_500</item>
+        <item name="colorControlActivated">@color/blue_wordpress</item>
+    </style>
+    <style name="MediaSettings.Divider">
+        <item name="android:background">@color/divider_grey</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+    </style>
+    <style name="MediaSettings.Label">
+        <item name="android:layout_marginLeft">@dimen/media_settings_margin</item>
+        <item name="android:layout_marginRight">@dimen/media_settings_margin</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+    <style name="MediaSettings.Value">
+        <item name="android:layout_marginLeft">@dimen/media_settings_margin</item>
+        <item name="android:layout_marginRight">@dimen/media_settings_margin</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
     <style name="EmptyListText">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>

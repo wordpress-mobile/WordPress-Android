@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-05 02:03:38+0000
+Translation-Revision-Date: 2017-09-13 04:16:22+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: vi_VN
 -->
 <resources>
+	<string name="retry">Thử lại</string>
+	<string name="like">Thích</string>
 	<string name="editor_failed_uploads_switch_html">Một số media tải lên đã bị lỗi. Bạn không thể chuyển sang chế độ HTML \n        trong tình huống này. Loại bỏ tất cả tải lên bị lỗi và tiếp tục?</string>
 	<string name="image_thumbnail">Hình thu nhỏ Ảnh</string>
 	<string name="visual_editor">Trình biên tập trực quan</string>
@@ -713,7 +715,6 @@ Language: vi_VN
 	<string name="error_refresh_notifications">Thông báo không thể được làm mới tại thời điểm này</string>
 	<string name="error_refresh_pages">Trang không thể được làm mới tại thời điểm này</string>
 	<string name="error_refresh_posts">Bài viết không thể được làm mới tại thời điểm này</string>
-	<string name="error_delete_post">Một lỗi đã xảy ra trong khi xóa %s</string>
 	<string name="notifications_empty_list">Không có thông báo</string>
 	<string name="reply_failed">Trả lời bị lỗi</string>
 	<string name="invalid_url_message">Kiểm tra URL đã nhập là hợp lệ</string>
@@ -730,7 +731,6 @@ Language: vi_VN
 	<string name="theme_auth_error_message">Hãy đảm bảo bạn có đặc quyền để thiết đặt chủ đề</string>
 	<string name="theme_set_failed">Không thể thiết đặt chủ đề</string>
 	<string name="theme_fetch_failed">Không thể lấy chủ đề</string>
-	<string name="wait_until_upload_completes">Chờ đến khi tải lên hoàn tất</string>
 	<string name="blog_not_found">Một lỗi đã xảy ra khi truy cập blog này</string>
 	<string name="gallery_error">Các mục media không thể được lấy ra</string>
 	<string name="could_not_remove_account">Không thể loại bỏ site</string>

@@ -54,7 +54,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
-import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
@@ -76,7 +75,6 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
@@ -393,6 +391,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     trackAddMediaFromDeviceEvents(true, true, uri);
                 }
                 break;
+            case RequestCodes.MEDIA_SETTINGS:
+                if (resultCode == MediaSettingsActivity.RESULT_MEDIA_DELETED) {
+                    reloadMediaGrid();
+                }
+                break;
         }
     }
 
@@ -570,18 +573,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             setResult(RESULT_OK, intent);
             finish();
         } else {
-            // TODO: right now only images & videos are supported
-            String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-            if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
-                if (isLocalFile) {
-                    // Show the simple preview in case of uploading items. i.e: No metadata info, and other options only available
-                    // for files already on the remote site.
-                    MediaPreviewActivity.showPreview(this, sourceView, media.getFilePath(), mimeType.startsWith("video"));
-                } else {
-                    MediaPreviewActivity.showPreview(this, sourceView, mSite, localMediaId);
-                }
-            }
+            showMediaSettings(media);
         }
+    }
+
+    private void showMediaSettings(@NonNull MediaModel media) {
+        MediaSettingsActivity.showForResult(this, mSite, media);
     }
 
     @Override
@@ -694,14 +691,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             if (UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
                 MediaStore.CancelMediaPayload payload = new MediaStore.CancelMediaPayload(mSite, mediaModel, false);
                 mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
-
-                // check if media item was inserted into a Post - if that is the case, then
-                // mark it in the error list so it can be shown properly in the  Posts list, and
-                // also can be accessible from the Error Notification that will be shown.
-                PostModel post = UploadService.isMediaBeingUploadedForAPost(mediaModel);
-                if (post != null) {
-                    UploadService.markPostAsError(post);
-                }
             }
 
             if (mediaModel.getUploadState() != null &&

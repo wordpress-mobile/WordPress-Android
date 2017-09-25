@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black">
-
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black">
 
     <ImageView
         android:id="@+id/image_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar" />
+        android:layout_height="match_parent"/>
 
     <FrameLayout
         android:id="@+id/frame_video"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
+        android:clickable="true"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -28,8 +24,41 @@
             android:id="@+id/video_preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"/>
     </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/frame_audio"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/media_settings_background"
+        android:clickable="true"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/text_audio_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/image_audio"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_double_extra_large"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:text="text_audio_title"
+            tools:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/image_audio"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_centerInParent="true"
+            app:srcCompat="@drawable/ic_gridicons_audio"/>
+
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/progress"
@@ -38,89 +67,10 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible"/>
 
-    <FrameLayout
-        android:id="@+id/layout_metadata"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/black_translucent_50"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_large"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/content_margin"
-            android:layout_marginRight="@dimen/content_margin"
-            android:orientation="vertical">
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/media_details_file_name_or_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/blue_medium"
-                android:textSize="@dimen/text_sz_large"
-                android:textStyle="bold"
-                tools:text="media_details_file_name_or_title" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/media_details_caption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_large"
-                android:visibility="gone"
-                tools:text="media_details_caption"
-                tools:visibility="visible" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/media_details_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_large"
-                android:visibility="gone"
-                tools:text="media_details_description"
-                tools:visibility="visible" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/media_details_file_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_medium"
-                tools:text="media_details_file_type" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/media_details_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_extra_large"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_medium"
-                tools:text="media_details_date" />
-
-        </LinearLayout>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
 
 </RelativeLayout>
