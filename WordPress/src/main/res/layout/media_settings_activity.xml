@@ -191,7 +191,7 @@
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@+id/text_copy_url"
                             android:ellipsize="end"
-                            android:maxLines="1"
+                            android:singleLine="true"
                             tools:text="text_url"/>
 
                         <TextView
