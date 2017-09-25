@@ -35,9 +35,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
+import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialLoginPayload;
 import org.wordpress.android.ui.accounts.LoginMode;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -420,6 +423,31 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                 }
 
                 break;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAuthenticationChanged(AccountStore.OnAuthenticationChanged event) {
+        if (event.isError()) {
+            AppLog.e(T.API, "LoginEmailFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+                    event.error.type.toString(), event.error.message);
+            // TODO: Show error screen.
+        } else if (mAccountStore.hasAccessToken()) {
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+            NotificationsUpdateService.startService(getActivity().getApplicationContext());
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSocialChanged(OnSocialChanged event) {
+        if (event.isError()) {
+            AppLog.e(T.API, "LoginEmailFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+                    event.error.type.toString(), event.error.message);
+            // TODO: Show error screen.
         }
     }
 }
