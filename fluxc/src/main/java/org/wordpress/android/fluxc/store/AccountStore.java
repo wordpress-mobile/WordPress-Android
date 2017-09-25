@@ -252,10 +252,8 @@ public class AccountStore extends Store {
                 JSONObject object = new JSONObject(responseBody);
                 JSONObject data = object.getJSONObject("data");
                 JSONArray errors = data.getJSONArray("errors");
-                new AccountSocialError(
-                        errors.getJSONObject(0).getString("code"),
-                        errors.getJSONObject(0).getString("message")
-                );
+                this.type = AccountSocialErrorType.fromString(errors.getJSONObject(0).getString("code"));
+                this.message = errors.getJSONObject(0).getString("message");
             } catch (UnsupportedEncodingException | JSONException exception) {
                 AppLog.e(T.API, "Unable to parse social error response: " + exception.getMessage());
             }
