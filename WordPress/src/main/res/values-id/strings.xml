@@ -63,7 +63,6 @@ Language: id
 	<string name="reader_label_visit">Kunjungi</string>
 	<string name="pending_draft_more">Anda mengonsep %d pos namun belum menerbitkannya. Sentuh untuk melihatnya.</string>
 	<string name="all_your_sites">Semua Situs Saya</string>
-	<string name="no_default_app_available_to_open_link">Tak bisa membuka tautan</string>
 	<string name="notification_pending_drafts">Beritahu saya tentang konsep yang tertunda</string>
 	<string name="invalid_verification_code_format">Harus angka enam digit</string>
 	<string name="confirm_discard_changes">Buang perubahan yang belum tersimpan?</string>
@@ -806,7 +805,6 @@ Language: id
 	<string name="ssl_certificate_ask_trust">Jika biasanya Anda bisa terhubung dengan situs ini tanpa masalah, galat ini bisa berarti seseorang sedang mencoba meniru situs, dan Anda sebaiknya tidak melanjutkannya. Apakah Anda ingin mempercayai sertifikat ini?</string>
 	<string name="no_network_message">Tidak ada jaringan yang tersedia</string>
 	<string name="blog_not_found">Terjadi kekeliruan ketika mengakses blog ini</string>
-	<string name="wait_until_upload_completes">Tunggu sampai pengunggahan lengkap</string>
 	<string name="out_of_memory">Perangkat kehabisan memori.</string>
 	<string name="gallery_error">Item media gagal diambil</string>
 	<string name="theme_fetch_failed">Gagal mengunduh tema</string>
@@ -824,7 +822,6 @@ Language: id
 	<string name="stats_bar_graph_empty">Belum ada statistik</string>
 	<string name="reply_failed">Gagal mengirim balasan</string>
 	<string name="notifications_empty_list">Tak ada pemberitahuan</string>
-	<string name="error_delete_post">Terjadi galat saat menghapus %s</string>
 	<string name="error_refresh_posts">Pos tidak bisa disegarkan saat ini</string>
 	<string name="error_refresh_pages">Laman tidak bisa disegarkan saat ini</string>
 	<string name="error_refresh_notifications">Pemberitahuan tidak bisa disegarkan saat ini</string>

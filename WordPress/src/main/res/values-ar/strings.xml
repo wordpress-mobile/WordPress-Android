@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-16 10:48:28+0000
+Translation-Revision-Date: 2017-09-08 13:03:23+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+	<string name="error_unknown_post">تعذر العثور على المقالة على الخادم</string>
+	<string name="error_post_does_not_exist">لم تعد هذه المقالة موجودة</string>
+	<string name="error_media_recover_page">تعذر علينا رفع الوسائط الخاصة بهذه المقالة. يرجى تحرير المقالة للمحاولة مجددًا.</string>
+	<string name="error_media_canceled">تم إلغاء رفع الوسائط</string>
+	<string name="async_promo_title">النشر مع التمتع بالثقة</string>
+	<string name="editor_uploading_post">يجري رفع مقالتك</string>
+	<string name="uploading_post_media">جارٍ رفع الوسائط…</string>
+	<string name="dialog_confirm_cancel_post_media_uploading">هل أنت متأكد من ذلك؟ سيؤدي حذف هذه المقالة إلى إلغاء رفع الوسائط كذلك.</string>
+	<string name="page_scheduled">تمت جدولة الصفحة</string>
+	<string name="post_scheduled">تمت جدولة المقالة</string>
+	<string name="post_draft_param">تم حفظ "%s" كمسودة!</string>
+	<string name="post_scheduled_param">تمت جدولة "%s"!</string>
+	<string name="post_updated_param">تم تحديث "%s"!</string>
+	<string name="post_published_param">تم نشر "%s"!</string>
+	<string name="button_retry">إعادة المحاولة</string>
 	<string name="smart_toast_comments_long_press">اضغط مع الاستمرار لتحديد العديد من التعليقات</string>
 	<string name="smart_toast_photo_long_press">اضغط مع الاستمرار لتحديد العديد من الصور</string>
 	<string name="photo_picker_choose_video">اختيار مقطع فيديو من الجهاز</string>
@@ -807,7 +822,6 @@ Language: ar
 	<string name="stats_bar_graph_empty">الإحصائيات غير متوفرة</string>
 	<string name="cat_name_required">حقل اسم التصنيف مطلوب</string>
 	<string name="blog_not_found">حدث خطأ أثناء دخول هذه المدونة </string>
-	<string name="wait_until_upload_completes">انتظر حتى يتم الرفع</string>
 	<string name="error_refresh_stats">الإحصائيات لا يمكن تحديثها في هذا الوقت</string>
 	<string name="error_moderate_comment">حدث خطأ أثناء الإدارة</string>
 	<string name="error_edit_comment">حدث خطأ أثناء تعديل التعليق </string>
@@ -821,7 +835,6 @@ Language: ar
 	<string name="theme_auth_error_message">تاكد من أن لديك صلاحيات لتعيين القوالب</string>
 	<string name="category_automatically_renamed">اسم التصنيف %1$s  ليس صالحًا . تم اعادة تسميته لـ %2$s.</string>
 	<string name="sdcard_message">بطاقة ذاكرة SD  مطلوبة لرفع ملفات الوسائط</string>
-	<string name="error_delete_post">حدث خطأ أثناء حذف الـ  %s</string>
 	<string name="error_refresh_posts">المقالات لايمكن تحديثها في الوقت الحاضر</string>
 	<string name="error_refresh_pages">الصفحات لايمكن تحديثها في الوقت الحاضر</string>
 	<string name="error_refresh_notifications">التنبيهات لايمكن تحديثها في الوقت الحاضر</string>

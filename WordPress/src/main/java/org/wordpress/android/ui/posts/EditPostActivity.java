@@ -102,7 +102,6 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
-import org.wordpress.android.ui.uploads.MediaUploadHandler;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
@@ -140,11 +139,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -190,6 +191,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private List<String> mPendingVideoPressInfoRequests;
     private List<String> mAztecBackspaceDeletedMediaItemIds = new ArrayList<>();
+    private List<String> mMediaMarkedUploadingOnStartIds = new ArrayList<>();
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -410,6 +412,9 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mPost != null) {
             mOriginalPost = mPost.clone();
             mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
+            mMediaMarkedUploadingOnStartIds =
+                    AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
+            Collections.sort(mMediaMarkedUploadingOnStartIds);
             mIsPage = mPost.isPage();
         }
     }
@@ -431,11 +436,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         String newContent = AztecEditorFragment.resetUploadingMediaToFailed(this, oldContent);
 
-        // now check if the newcontent still has items marked as failed. If it does,
-        // then hook this post up to our error list, so it can be queried by the Posts List later
-        // and be shown properly to the user
-        updateUploadServiceErrorForPost(newContent);
-
         if (!TextUtils.isEmpty(oldContent) && newContent != null && oldContent.compareTo(newContent) != 0) {
             mPost.setContent(newContent);
 
@@ -446,15 +446,6 @@ public class EditPostActivity extends AppCompatActivity implements
             mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
     }
-
-    private void updateUploadServiceErrorForPost(String postContent) {
-        if (AztecEditorFragment.hasMediaItemsMarkedFailed(this, postContent)) {
-            UploadService.markPostAsError(mPost);
-        } else {
-            UploadService.removeUploadErrorForPost(mPost);
-        }
-    }
-
 
     private Runnable mAutoSave = new Runnable() {
         @Override
@@ -489,12 +480,12 @@ public class EditPostActivity extends AppCompatActivity implements
             // UploadService.getPendingMediaForPost will be populated only when the user exits the editor
             // But if the user doesn't exit the editor and sends the app to the background, a reattachment
             // for the media within this Post is needed as soon as the app comes back to foreground,
-            // so we get the list of progressing media for this Post from the MediaUploadHandler
+            // so we get the list of progressing media for this Post from the UploadService
             List<MediaModel> allUploadingMediaInPost = new ArrayList<>();
-            List<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
+            Set<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
             allUploadingMediaInPost.addAll(uploadingMediaInPost);
             // add them to the array only if they are not in there yet
-            for (MediaModel media1 : MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(mPost)) {
+            for (MediaModel media1 : UploadService.getPendingOrInProgressMediaUploadsForPost(mPost)) {
                 boolean found = false;
                 for (MediaModel media2 : uploadingMediaInPost) {
                     if (media1.getId() == media2.getId()) {
@@ -1068,6 +1059,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // update the original post object, so we'll know of new changes
         mOriginalPost = mPost.clone();
+
+        // update the list of uploading ids
+        mMediaMarkedUploadingOnStartIds =
+                AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
     }
 
     @Override
@@ -1307,7 +1302,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 saveResult(shouldSave && shouldSync, false);
 
                 definitelyDeleteBackspaceDeletedMediaItems();
-                updateUploadServiceErrorForPost(mPost.getContent());
 
                 if (shouldSave) {
                     if (isNewPost()) {
@@ -1776,18 +1770,16 @@ public class EditPostActivity extends AppCompatActivity implements
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
         boolean contentChanged;
-        if (mEditorFragment instanceof AztecEditorFragment) {
-            contentChanged = ((AztecEditorFragment)mEditorFragment).hasHistory();
-            if (contentChanged) {
-                mPost.setContent(content);
-            } else if (!((AztecEditorFragment)mEditorFragment).isHistoryEnabled()){
-                // if history is not enabled, then we can only confirm whether there's been a content change
-                // by comparing content
-                contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
-            }
+        if (compareCurrentMediaMarkedUploadingToOriginal(content)) {
+            contentChanged = true;
+        } else if (mEditorFragment instanceof AztecEditorFragment
+                && ((AztecEditorFragment) mEditorFragment).isHistoryEnabled()) {
+            contentChanged = ((AztecEditorFragment) mEditorFragment).hasHistory();
         } else {
-            // not Aztec, compare content to look for changes
-            contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
+            contentChanged = mPost.getContent().compareTo(content) != 0;
+        }
+        if (contentChanged) {
+            mPost.setContent(content);
         }
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
@@ -1796,6 +1788,18 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         return titleChanged || contentChanged;
+    }
+
+    /*
+      * for as long as the user is in the Editor, we check whether there are any differences in media items
+      * being uploaded since they opened the Editor for this Post. If some items have finished, the current list
+      * won't be equal and thus we'll know we need to save the Post content as it's changed, given the local
+      * URLs will have been replaced with the remote ones.
+     */
+    private boolean compareCurrentMediaMarkedUploadingToOriginal(String newContent) {
+        List<String> currentUploadingMedia = AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, newContent);
+        Collections.sort(currentUploadingMedia);
+        return !mMediaMarkedUploadingOnStartIds.equals(currentUploadingMedia);
     }
 
     private void updateMediaFileOnServer(MediaFile mediaFile) {

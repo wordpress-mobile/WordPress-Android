@@ -309,13 +309,11 @@ Language: sr_RS
 	<string name="error_generic">Дошло је до грешке</string>
 	<string name="error_refresh_comments">Коментари тренутно не могу бити освежени</string>
 	<string name="error_refresh_notifications">Обавештења тренутно не могу бити освежена</string>
-	<string name="error_delete_post">Дошло је до грешке током брисања %s</string>
 	<string name="error_refresh_pages">Стране тренутно не могу бити освежене</string>
 	<string name="comments_empty_list">Нема коментара</string>
 	<string name="theme_auth_error_message">Потврдите да имате дозволу да постављате теме</string>
 	<string name="theme_set_failed">Неуспешно постављање теме</string>
 	<string name="theme_fetch_failed">Неуспешно добављање тема</string>
-	<string name="wait_until_upload_completes">Сачекајте да се отпремање заврши</string>
 	<string name="blog_not_found">Дошло је до грешке током приступања овом блогу</string>
 	<string name="gallery_error">Медијска ставка не може бити повраћена</string>
 	<string name="no_network_message">Нема доступне мреже</string>

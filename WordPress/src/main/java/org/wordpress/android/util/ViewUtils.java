@@ -1,5 +1,11 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
+import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
+import android.support.annotation.AttrRes;
+import android.support.annotation.StyleRes;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -41,4 +47,11 @@ public class ViewUtils {
         }
     }
 
+    public static void setButtonBackgroundColor(Context context, View button, @StyleRes int styleId,
+            @AttrRes int colorAttribute) {
+        TypedArray a = context.obtainStyledAttributes(styleId, new int[] { colorAttribute } );
+        ColorStateList color = a.getColorStateList(0);
+        a.recycle();
+        ViewCompat.setBackgroundTintList(button, color);
+    }
 }

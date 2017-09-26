@@ -44,6 +44,7 @@ import java.util.HashSet;
 import javax.inject.Inject;
 
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class SelectCategoriesActivity extends AppCompatActivity {
     public static final String KEY_SELECTED_CATEGORY_IDS = "KEY_SELECTED_CATEGORY_IDS";
@@ -112,7 +113,8 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         }
 
         // swipe to refresh setup
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -122,7 +124,8 @@ public class SelectCategoriesActivity extends AppCompatActivity {
                         }
                         refreshCategories();
                     }
-                });
+                }
+        );
 
         populateCategoryList();
 

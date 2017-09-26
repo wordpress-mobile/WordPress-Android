@@ -1193,6 +1193,7 @@
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_media_load">Unable to load media</string>
+    <string name="error_media_still_uploading">Please wait for the upload to finish</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
     <string name="error_media_recover_post">We were unable to upload this post\'s media. Please edit the post to try again.</string>
@@ -1914,6 +1915,7 @@
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="connect_more">Connect Another Site</string>
+    <string name="connect_site">Connect Site</string>
     <string name="login_continue">Continue</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="login_username_at">\@%s</string>

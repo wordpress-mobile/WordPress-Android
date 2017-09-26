@@ -60,6 +60,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 public class ReaderCommentListActivity extends AppCompatActivity {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
@@ -129,14 +131,15 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
         }
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this,
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 (CustomSwipeRefreshLayout) findViewById(R.id.swipe_to_refresh),
                 new SwipeToRefreshHelper.RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
                         updatePostAndComments();
                     }
-                });
+                }
+        );
 
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
         int spacingHorizontal = 0;

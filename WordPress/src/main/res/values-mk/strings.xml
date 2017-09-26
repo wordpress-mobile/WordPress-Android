@@ -153,7 +153,6 @@ Language: mk
 	<string name="passcode_wrong_passcode">Погрешен PIN</string>
 	<string name="out_of_memory">Уредот е остана без меморија</string>
 	<string name="no_network_message">Нема досптана мрежа</string>
-	<string name="wait_until_upload_completes">Почекај додека заврши испраќањето</string>
 	<string name="theme_fetch_failed">Неможе да ги прикаже темите</string>
 	<string name="theme_set_failed">Неможе да промени тема</string>
 	<string name="theme_auth_error_message">Осигурете се дека имате привилегија за поставување на теми</string>
@@ -186,7 +185,6 @@ Language: mk
 	<string name="username_only_lowercase_letters_and_numbers">Корисничкото име може да содржи само мали буви (a-z) или бројки</string>
 	<string name="reply_failed">Не успешен одговор</string>
 	<string name="stats_bar_graph_empty">Нема статистика</string>
-	<string name="error_delete_post">Се појави грешка додека се бришаше %s</string>
 	<string name="sdcard_message">Сврзана SD карта е потребна за качување на медиа</string>
 	<string name="error_load_comment">Неможе да се покаже коментар</string>
 	<string name="nux_cannot_log_in">Неможе да ве најавиме</string>

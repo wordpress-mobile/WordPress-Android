@@ -94,7 +94,6 @@ Language: de
 	<string name="reader_label_visit">Besuche</string>
 	<string name="all_your_sites">Alle meine Websites</string>
 	<string name="pending_draft_more">Du hast %d Beiträge geschrieben, aber nie veröffentlicht. Tippe, um sie zu prüfen.</string>
-	<string name="no_default_app_available_to_open_link">Der Link konnte nicht geöffnet werden.</string>
 	<string name="notification_pending_drafts">Benachrichtige mich bei wartenden Entwürfen</string>
 	<string name="invalid_verification_code_format">Muss eine 6-stellige Zahl sein</string>
 	<string name="confirm_discard_changes">Nicht gespeicherte Änderungen verwerfen?</string>
@@ -873,7 +872,6 @@ Language: de
 	<string name="error_refresh_notifications">Benachrichtigungen konnten nicht aktualisiert werden</string>
 	<string name="error_refresh_pages">Seiten konnten nicht aktualisiert werden</string>
 	<string name="error_refresh_posts">Beiträge konnten nicht aktualisiert werden</string>
-	<string name="error_delete_post">Beim Löschen von %s trat ein Fehler auf</string>
 	<string name="notifications_empty_list">Keine Benachrichtigungen</string>
 	<string name="reply_failed">Antwort fehlgeschlagen</string>
 	<string name="invalid_url_message">Überprüfe ob die eingegebene Blog-URL gültig ist</string>
@@ -890,7 +888,6 @@ Language: de
 	<string name="theme_auth_error_message">Stelle sicher, dass du die Berechtigung hast Themes festzulegen</string>
 	<string name="theme_set_failed">Theme festlegen fehlgeschlagen</string>
 	<string name="theme_fetch_failed">Abrufen der Themes fehlgeschlagen</string>
-	<string name="wait_until_upload_completes">Warte bis der Upload fertig ist</string>
 	<string name="blog_not_found">Beim Aufrufen des Blogs ist ein Fehler aufgetreten</string>
 	<string name="gallery_error">Das Medien-Objekt konnte nicht abgerufen werden</string>
 	<string name="could_not_remove_account">Website konnte nicht entfernt werden</string>
