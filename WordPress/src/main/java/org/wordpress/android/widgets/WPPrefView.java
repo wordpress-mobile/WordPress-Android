@@ -177,7 +177,7 @@ public class WPPrefView extends LinearLayout implements
             return mList;
         }
 
-         PrefListItemsWrapper(PrefListItems mList) {
+        PrefListItemsWrapper(PrefListItems mList) {
             this.mList = mList;
         }
     }
