@@ -211,12 +211,14 @@ public class AccountRestClient extends BaseWPComRestClient {
      * @param idToken       OpenID Connect Token (JWT) from the service the user is using to
      *                      authenticate their account.
      * @param service       Slug representing the service for the given token (e.g. google).
+     * @param version       Version of the API endpoint to use.
      */
-    public void pushSocialLogin(@NonNull String idToken, @NonNull String service) {
+    public void pushSocialLogin(@NonNull String idToken, @NonNull String service, @NonNull String version) {
         String url = "https://wordpress.com/wp-login.php";
 
         Map<String, String> params = new HashMap<>();
         params.put("action", "social-login-endpoint");
+        params.put("version", version);
         params.put("id_token", idToken);
         params.put("service", service);
         params.put("get_bearer_token", "true");
