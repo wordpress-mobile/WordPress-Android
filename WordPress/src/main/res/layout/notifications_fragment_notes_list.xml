@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/swipe_refresh_notifications"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,7 +22,7 @@
             android:scrollbars="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/layout_new_notificatons"

@@ -30,7 +30,6 @@
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
         <item name="windowActionModeOverlay">true</item>
-        <item name="swipeToRefreshStyle">@style/WordPress.SwipeToRefresh</item>
         <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
     </style>
 
@@ -403,10 +402,6 @@
 
     <style name="WordPress.BorderedBackground">
         <item name="android:background">@color/white</item>
-    </style>
-
-    <style name="WordPress.SwipeToRefresh">
-        <item name="refreshIndicatorColor">@color/blue_medium</item>
     </style>
 
     <!--My Site Styles-->
