@@ -78,9 +78,11 @@ public class AccountStore extends Store {
     public static class PushSocialLoginPayload extends Payload<BaseNetworkError> {
         public String idToken;
         public String service;
-        public PushSocialLoginPayload(@NonNull String idToken, @NonNull String service) {
+        public String version;
+        public PushSocialLoginPayload(@NonNull String idToken, @NonNull String service, @NonNull String version) {
             this.idToken = idToken;
             this.service = service;
+            this.version = version;
         }
     }
 
@@ -586,7 +588,7 @@ public class AccountStore extends Store {
     }
 
     private void createPushSocialLogin(PushSocialLoginPayload payload) {
-        mAccountRestClient.pushSocialLogin(payload.idToken, payload.service);
+        mAccountRestClient.pushSocialLogin(payload.idToken, payload.service, payload.version);
     }
 
     private void signOut() {
