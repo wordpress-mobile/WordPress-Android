@@ -136,6 +136,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         if (sourceView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String sharedElementName = activity.getString(R.string.shared_element_media);
+            sourceView.setTransitionName(sharedElementName);
             options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sourceView, sharedElementName);
         } else {
             options = ActivityOptionsCompat.makeCustomAnimation(
