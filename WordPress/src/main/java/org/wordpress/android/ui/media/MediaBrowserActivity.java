@@ -773,13 +773,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void createAddMediaPopup() {
         SimpleAdapter adapter = mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
                 ? getAddMenuSimpleAdapter(
-                AddMenuItem.ITEM_CAPTURE_PHOTO,
-                AddMenuItem.ITEM_CHOOSE_PHOTO)
+                        AddMenuItem.ITEM_CAPTURE_PHOTO,
+                        AddMenuItem.ITEM_CHOOSE_PHOTO)
                 : getAddMenuSimpleAdapter(
-                AddMenuItem.ITEM_CAPTURE_PHOTO,
-                AddMenuItem.ITEM_CAPTURE_VIDEO,
-                AddMenuItem.ITEM_CHOOSE_PHOTO,
-                AddMenuItem.ITEM_CHOOSE_VIDEO);
+                        AddMenuItem.ITEM_CAPTURE_PHOTO,
+                        AddMenuItem.ITEM_CAPTURE_VIDEO,
+                        AddMenuItem.ITEM_CHOOSE_PHOTO,
+                        AddMenuItem.ITEM_CHOOSE_VIDEO);
 
         @SuppressLint("InflateParams")
         View menuView = getLayoutInflater().inflate(R.layout.actionbar_add_media, null, false);
