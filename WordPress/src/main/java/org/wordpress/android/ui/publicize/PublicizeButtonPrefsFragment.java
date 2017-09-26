@@ -98,7 +98,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE,mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
