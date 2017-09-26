@@ -51,17 +51,51 @@ public class ThemeStore extends Store {
         }
     }
 
+    public static class ActivateThemePayload extends Payload {
+        public SiteModel site;
+        public ThemeModel theme;
+        public ActivateThemeError error;
+
+        public ActivateThemePayload(SiteModel site, ThemeModel theme) {
+            this.site = site;
+            this.theme = theme;
+        }
+    }
+
     public enum ThemeErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
-        NOT_AVAILABLE
+        NOT_AVAILABLE,
+        THEME_NOT_FOUND,
+        MISSING_THEME;
+
+        public static ThemeErrorType fromString(String type) {
+            if (type != null) {
+                for (ThemeErrorType v : ThemeErrorType.values()) {
+                    if (type.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public static class FetchThemesError implements OnChangedError {
         public ThemeErrorType type;
         public String message;
-        public FetchThemesError(ThemeErrorType type, String message) {
-            this.type = type;
+        public FetchThemesError(String type, String message) {
+            this.type = ThemeErrorType.fromString(type);
+            this.message = message;
+        }
+    }
+
+    public static class ActivateThemeError implements OnChangedError {
+        public ThemeErrorType type;
+        public String message;
+
+        public ActivateThemeError(String type, String message) {
+            this.type = ThemeErrorType.fromString(type);
             this.message = message;
         }
     }
@@ -79,6 +113,16 @@ public class ThemeStore extends Store {
         public ThemeModel theme;
 
         public OnCurrentThemeFetched(SiteModel site, ThemeModel theme) {
+            this.site = site;
+            this.theme = theme;
+        }
+    }
+
+    public static class OnThemeActivated extends OnChanged<ActivateThemeError> {
+        public SiteModel site;
+        public ThemeModel theme;
+
+        public OnThemeActivated(SiteModel site, ThemeModel theme) {
             this.site = site;
             this.theme = theme;
         }
@@ -118,6 +162,12 @@ public class ThemeStore extends Store {
             case FETCHED_CURRENT_THEME:
                 handleCurrentThemeFetched((FetchedCurrentThemePayload) action.getPayload());
                 break;
+            case ACTIVATE_THEME:
+                activateTheme((ActivateThemePayload) action.getPayload());
+                break;
+            case ACTIVATED_THEME:
+                handleThemeActivated((ActivateThemePayload) action.getPayload());
+                break;
         }
     }
 
@@ -152,7 +202,7 @@ public class ThemeStore extends Store {
         if (site.isJetpackConnected() && site.isUsingWpComRestApi()) {
             mThemeRestClient.fetchJetpackInstalledThemes(site);
         } else {
-            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE, null);
+            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE.name(), null);
             FetchedThemesPayload payload = new FetchedThemesPayload(error);
             handleInstalledThemesFetched(payload);
         }
@@ -172,7 +222,7 @@ public class ThemeStore extends Store {
         if (site.isUsingWpComRestApi()) {
             mThemeRestClient.fetchCurrentTheme(site);
         } else {
-            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE, null);
+            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE.name(), null);
             FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(error);
             handleCurrentThemeFetched(payload);
         }
@@ -184,6 +234,23 @@ public class ThemeStore extends Store {
             event.error = payload.error;
         } else {
             ThemeSqlUtils.insertOrUpdateTheme(payload.theme);
+        }
+        emitChange(event);
+    }
+
+    private void activateTheme(@NonNull ActivateThemePayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mThemeRestClient.activateTheme(payload.site, payload.theme);
+        } else {
+            payload.error = new ActivateThemeError(ThemeErrorType.NOT_AVAILABLE.name(), null);
+            handleThemeActivated(payload);
+        }
+    }
+
+    private void handleThemeActivated(@NonNull ActivateThemePayload payload) {
+        OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
+        if (payload.isError()) {
+            event.error = payload.error;
         }
         emitChange(event);
     }
