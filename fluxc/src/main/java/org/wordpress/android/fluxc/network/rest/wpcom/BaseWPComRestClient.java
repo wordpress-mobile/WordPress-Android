@@ -10,7 +10,7 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.network.BaseRequest.OnAuthFailedListener;
 import org.wordpress.android.fluxc.network.BaseRequest.OnParseErrorListener;
 import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.fluxc.network.rest.FormRequest;
+import org.wordpress.android.fluxc.network.rest.AccountSocialRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
@@ -60,12 +60,12 @@ public abstract class BaseWPComRestClient {
         return mRequestQueue.add(setRequestAuthParams(request, true));
     }
 
-    protected Request addUnauthedRequest(FormRequest request) {
+    protected Request addUnauthedRequest(AccountSocialRequest request) {
         // Add "locale=xx_XX" query parameter to all request by default
         return addUnauthedRequest(request, true);
     }
 
-    protected Request addUnauthedRequest(FormRequest request, boolean addLocaleParameter) {
+    protected Request addUnauthedRequest(AccountSocialRequest request, boolean addLocaleParameter) {
         if (addLocaleParameter) {
             request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
             request.setOnParseErrorListener(mOnParseErrorListener);

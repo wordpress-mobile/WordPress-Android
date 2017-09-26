@@ -15,15 +15,15 @@ import org.wordpress.android.util.AppLog.T;
 
 import java.util.Map;
 
-public class FormRequest extends BaseRequest<AccountSocialResponse> {
+public class AccountSocialRequest extends BaseRequest<AccountSocialResponse> {
     private static final String PROTOCOL_CHARSET = "utf-8";
     private static final String PROTOCOL_CONTENT = "application/x-www-form-urlencoded";
 
     private final Map<String, String> mParams;
     private final Response.Listener<AccountSocialResponse> mListener;
 
-    public FormRequest(String url, Map<String, String> params, Response.Listener<AccountSocialResponse> listener,
-                       BaseErrorListener errorListener) {
+    public AccountSocialRequest(String url, Map<String, String> params,
+                                Response.Listener<AccountSocialResponse> listener, BaseErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         mParams = params;
         mListener = listener;
