@@ -173,21 +173,6 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:contentDescription="@string/fab_content_description_preview"
-                android:visibility="gone"
-                app:backgroundTint="@color/blue_wordpress"
-                app:elevation="8dp"
-                app:fabSize="normal"
-                app:srcCompat="@drawable/ic_fullscreen_white_24dp"
-                tools:visibility="visible"/>
-
             <android.support.v7.widget.CardView
                 android:id="@+id/card2"
                 android:layout_width="match_parent"
@@ -352,6 +337,21 @@
 
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:contentDescription="@string/fab_content_description_preview"
+        android:visibility="gone"
+        app:backgroundTint="@color/blue_wordpress"
+        app:elevation="8dp"
+        app:fabSize="normal"
+        app:layout_anchor="@id/app_bar_layout"
+        app:layout_anchorGravity="bottom|right|end"
+        app:srcCompat="@drawable/ic_fullscreen_white_24dp"
+        tools:visibility="visible"/>
 
     <ImageView
         android:id="@+id/image_gradient_scrim"

@@ -214,15 +214,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         int imageHeight = (int) (displayHeight * 0.4);
         mImageView.getLayoutParams().height = imageHeight;
 
-        // position the fab so it overlaps the image
-        if (shouldShowFab()) {
-            int fabHeight = DisplayUtils.dpToPx(this, 56);
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mFabView.getLayoutParams();
-            int topMargin = imageHeight - (fabHeight / 2);
-            int rightMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
-            params.setMargins(0, topMargin, rightMargin, 0);
-        }
-
         // position progress in middle of image
         View progressView = findViewById(R.id.progress);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) progressView.getLayoutParams();
@@ -605,10 +596,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void showFullScreen() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
-
         hideFab();
 
         // show fullscreen preview after a brief delay so fab & actionBar animations don't stutter
