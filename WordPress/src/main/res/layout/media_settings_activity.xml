@@ -40,6 +40,14 @@
                     tools:src="@drawable/ic_gridicons_audio"/>
 
                 <ImageView
+                    android:id="@+id/image_gradient_scrim"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:background="@drawable/media_settings_gradient_scrim"
+                    tools:layout_height="74dp"/>
+
+                <ImageView
                     android:id="@+id/image_play"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
@@ -352,14 +360,6 @@
         app:layout_anchorGravity="bottom|right|end"
         app:srcCompat="@drawable/ic_fullscreen_white_24dp"
         tools:visibility="visible"/>
-
-    <ImageView
-        android:id="@+id/image_gradient_scrim"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="@drawable/media_settings_gradient_scrim"
-        tools:layout_height="74dp"/>
 
     <ProgressBar
         android:id="@+id/progress"

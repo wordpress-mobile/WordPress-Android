@@ -16,7 +16,6 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -30,7 +29,6 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -154,22 +152,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_settings_activity);
-
-        /*ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-            makeStatusAndToolbarTransparent();
-            //noinspection RestrictedApi
-            actionBar.setShowHideAnimationEnabled(true);
-        }*/
+        makeStatusTransparent();
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
@@ -313,12 +303,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void makeStatusAndToolbarTransparent() {
+    private void makeStatusTransparent() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (getSupportActionBar() != null) {
-                int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
-                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(toolbarColor));
-            }
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
