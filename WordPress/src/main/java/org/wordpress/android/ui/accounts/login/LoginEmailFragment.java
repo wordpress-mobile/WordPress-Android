@@ -437,31 +437,31 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                         switch (signInResult.getStatus().getStatusCode()) {
                             // Internal error.
                             case GoogleSignInStatusCodes.INTERNAL_ERROR:
-                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: internal error.");
+                                AppLog.e(T.NUX, "Google Sign-in Failed: internal error.");
                                 showErrorDialog(getString(R.string.login_error_generic)
                                         + getString(R.string.login_error_suffix_internal));
                                 break;
                             // Attempted to connect with an invalid account name specified.
                             case GoogleSignInStatusCodes.INVALID_ACCOUNT:
-                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: invalid account name.");
+                                AppLog.e(T.NUX, "Google Sign-in Failed: invalid account name.");
                                 showErrorDialog(getString(R.string.login_error_generic)
                                         + getString(R.string.login_error_suffix_invalid));
                                 break;
                             // Network error.
                             case GoogleSignInStatusCodes.NETWORK_ERROR:
-                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: network error.");
+                                AppLog.e(T.NUX, "Google Sign-in Failed: network error.");
                                 showErrorDialog(getString(R.string.error_generic_network));
                                 break;
                             // Cancelled by the user.
                             case GoogleSignInStatusCodes.SIGN_IN_CANCELLED:
-                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: cancelled by user.");
+                                AppLog.e(T.NUX, "Google Sign-in Failed: cancelled by user.");
                                 break;
                             // Attempt didn't succeed with the current account.
                             case GoogleSignInStatusCodes.SIGN_IN_FAILED:
-                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: current account failed.");
+                                AppLog.e(T.NUX, "Google Sign-in Failed: current account failed.");
                             // Attempted to connect, but the user is not signed in.
                             case GoogleSignInStatusCodes.SIGN_IN_REQUIRED:
-                                AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: user is not signed in.");
+                                AppLog.e(T.NUX, "Google Sign-in Failed: user is not signed in.");
                             // Unknown error.
                             default:
                                 showErrorDialog(getString(R.string.login_error_generic));
@@ -469,7 +469,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                         }
                     }
                 } else {
-                    AppLog.e(AppLog.T.NUX, "Google Sign-in Failed: result was not RESULT_OK.");
+                    AppLog.e(T.NUX, "Google Sign-in Failed: result was not RESULT_OK.");
                     showErrorDialog(getString(R.string.login_error_generic));
                 }
 
