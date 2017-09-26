@@ -225,7 +225,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         params.put("client_id", mAppSecrets.getAppId());
         params.put("client_secret", mAppSecrets.getAppSecret());
 
-        add(new FormRequest(url, params,
+        addUnauthedRequest(new FormRequest(url, params,
                 new Listener<AccountSocialResponse>() {
                     @Override
                     public void onResponse(AccountSocialResponse response) {
