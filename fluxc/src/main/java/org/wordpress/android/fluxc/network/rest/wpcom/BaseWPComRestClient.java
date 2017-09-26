@@ -10,7 +10,7 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.network.BaseRequest.OnAuthFailedListener;
 import org.wordpress.android.fluxc.network.BaseRequest.OnParseErrorListener;
 import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.fluxc.network.rest.AccountSocialRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountSocialRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
