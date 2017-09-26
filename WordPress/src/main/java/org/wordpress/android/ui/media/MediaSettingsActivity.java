@@ -33,6 +33,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.Menu;
@@ -154,7 +155,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         setContentView(R.layout.media_settings_activity);
 
-        ActionBar actionBar = getSupportActionBar();
+        /*ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -162,6 +163,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             makeStatusAndToolbarTransparent();
             //noinspection RestrictedApi
             actionBar.setShowHideAnimationEnabled(true);
+        }*/
+
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
