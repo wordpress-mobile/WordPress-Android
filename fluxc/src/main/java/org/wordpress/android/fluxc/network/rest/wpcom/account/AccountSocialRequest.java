@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest;
+package org.wordpress.android.fluxc.network.rest.wpcom.account;
 
 import android.support.annotation.NonNull;
 
@@ -9,7 +9,6 @@ import com.android.volley.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.network.BaseRequest;
-import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountSocialResponse;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
