@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -38,7 +37,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -152,7 +150,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_settings_activity);
-        makeStatusTransparent();
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
@@ -300,13 +297,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 supportFinishAfterTransition();
             }
         }, 1500);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void makeStatusTransparent() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
     }
 
     @Override
