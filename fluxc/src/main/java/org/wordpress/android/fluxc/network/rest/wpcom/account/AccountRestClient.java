@@ -41,6 +41,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class AccountRestClient extends BaseWPComRestClient {
+    private static final String SOCIAL_LOGIN_ENDPOINT_VERSION = "1";
+
     private final AppSecrets mAppSecrets;
 
     public static class AccountRestPayload extends Payload<BaseNetworkError> {
@@ -217,6 +219,7 @@ public class AccountRestClient extends BaseWPComRestClient {
 
         Map<String, String> params = new HashMap<>();
         params.put("action", "social-login-endpoint");
+        params.put("version", SOCIAL_LOGIN_ENDPOINT_VERSION);
         params.put("id_token", idToken);
         params.put("service", service);
         params.put("get_bearer_token", "true");
