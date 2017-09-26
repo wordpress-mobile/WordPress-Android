@@ -60,6 +60,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
     private static final String SERVICE_TYPE_GOOGLE = "google";
     private static final String STATE_RESOLVING_ERROR = "STATE_RESOLVING_ERROR";
+    private static final String VERSION_ENDPOINT_LOGIN = "1";
     private static final int REQUEST_CONNECT = 1000;
     private static final int REQUEST_LOGIN = 1001;
 
@@ -413,7 +414,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                         try {
                             GoogleSignInAccount account = signInResult.getSignInAccount();
                             mGoogleEmail = account.getEmail();
-                            PushSocialLoginPayload payload = new PushSocialLoginPayload(account.getIdToken(), SERVICE_TYPE_GOOGLE);
+                            PushSocialLoginPayload payload = new PushSocialLoginPayload(account.getIdToken(),
+                                    SERVICE_TYPE_GOOGLE, VERSION_ENDPOINT_LOGIN);
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
                         } catch (NullPointerException exception) {
                             disconnectGoogleClient();
