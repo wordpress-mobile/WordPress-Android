@@ -73,8 +73,6 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        setRetainInstance(true);
-
         if (!NetworkUtils.checkConnection(getActivity())) {
             getActivity().finish();
             return;
@@ -95,6 +93,12 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         // this creates a default site settings interface - the actual settings will
         // be retrieved when getSiteSettings() is called
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE,mSite);
     }
 
     @Override
