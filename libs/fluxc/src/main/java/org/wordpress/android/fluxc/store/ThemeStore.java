@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 public class ThemeStore extends Store {
     // Payloads
-    public static class FetchedCurrentThemePayload extends Payload {
+    public static class FetchedCurrentThemePayload extends Payload<FetchThemesError> {
         public SiteModel site;
         public ThemeModel theme;
         public FetchThemesError error;
@@ -36,7 +36,7 @@ public class ThemeStore extends Store {
         }
     }
 
-    public static class FetchedThemesPayload extends Payload {
+    public static class FetchedThemesPayload extends Payload<FetchThemesError> {
         public SiteModel site;
         public List<ThemeModel> themes;
         public FetchThemesError error;
@@ -51,7 +51,7 @@ public class ThemeStore extends Store {
         }
     }
 
-    public static class ActivateThemePayload extends Payload {
+    public static class ActivateThemePayload extends Payload<ActivateThemeError> {
         public SiteModel site;
         public ThemeModel theme;
         public ActivateThemeError error;
@@ -156,6 +156,10 @@ public class ThemeStore extends Store {
             case FETCHED_INSTALLED_THEMES:
                 handleInstalledThemesFetched((FetchedThemesPayload) action.getPayload());
                 break;
+            case FETCH_PURCHASED_THEMES:
+                break;
+            case FETCHED_PURCHASED_THEMES:
+                break;
             case FETCH_CURRENT_THEME:
                 fetchCurrentTheme((SiteModel) action.getPayload());
                 break;
@@ -248,7 +252,7 @@ public class ThemeStore extends Store {
         if (payload.site.isJetpackConnected()) {
             mThemeRestClient.installTheme(payload.site, payload.theme);
         } else {
-            payload.error = new ActivateThemeError("not_available", null);
+            payload.error = new ActivateThemeError(ThemeErrorType.NOT_AVAILABLE.name(), null);
             handleThemeInstalled(payload);
         }
     }
