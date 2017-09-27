@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.network.BaseRequest.OnAuthFailedListener;
 import org.wordpress.android.fluxc.network.BaseRequest.OnParseErrorListener;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountSocialRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
@@ -57,6 +58,20 @@ public abstract class BaseWPComRestClient {
         }
         // TODO: If !mAccountToken.exists() then trigger the mOnAuthFailedListener
         return mRequestQueue.add(setRequestAuthParams(request, true));
+    }
+
+    protected Request addUnauthedRequest(AccountSocialRequest request) {
+        // Add "locale=xx_XX" query parameter to all request by default
+        return addUnauthedRequest(request, true);
+    }
+
+    protected Request addUnauthedRequest(AccountSocialRequest request, boolean addLocaleParameter) {
+        if (addLocaleParameter) {
+            request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
+            request.setOnParseErrorListener(mOnParseErrorListener);
+            request.setUserAgent(mUserAgent.getUserAgent());
+        }
+        return mRequestQueue.add(request);
     }
 
     protected Request addUnauthedRequest(WPComGsonRequest request) {
