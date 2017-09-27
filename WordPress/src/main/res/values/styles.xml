@@ -31,6 +31,8 @@
 
         <item name="windowActionModeOverlay">true</item>
         <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
+
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->

@@ -116,7 +116,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
-                                     @NonNull MediaModel media) {
+                                     @NonNull MediaModel media,
+                                     View sourceView) {
         // go directly to preview for local images, videos and audio (do nothing for local documents)
         if (MediaUtils.isLocalFile(media.getUploadState())) {
             if (MediaUtils.isValidImage(media.getUrl())
@@ -130,10 +131,19 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         Intent intent = new Intent(activity, MediaSettingsActivity.class);
         intent.putExtra(ARG_MEDIA_LOCAL_ID, media.getId());
         intent.putExtra(WordPress.SITE, site);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.activity_slide_up_from_bottom,
-                R.anim.do_nothing);
+
+        ActivityOptionsCompat options;
+
+        if (sourceView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String sharedElementName = activity.getString(R.string.shared_element_media);
+            sourceView.setTransitionName(sharedElementName);
+            options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sourceView, sharedElementName);
+        } else {
+            options = ActivityOptionsCompat.makeCustomAnimation(
+                            activity,
+                            R.anim.activity_slide_up_from_bottom,
+                            R.anim.do_nothing);
+        }
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.MEDIA_SETTINGS, options.toBundle());
     }
 
@@ -293,18 +303,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         super.onStop();
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_bottom);
-    }
-
     private void delayedFinishWithError() {
         ToastUtils.showToast(this, R.string.error_media_not_found);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                finish();
+                supportFinishAfterTransition();
             }
         }, 1500);
     }
@@ -320,6 +324,16 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        // on Lollipop and above we use a shared element transition set in the intent, otherwise use a
+        // slide out transition
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_bottom);
+        }
+    }
+
     private boolean shouldShowFab() {
         // fab only shows for images
         return mMedia != null && isImage();
@@ -332,7 +346,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public void onBackPressed() {
         saveChanges();
-        invalidateOptionsMenu();
         super.onBackPressed();
     }
 
@@ -364,7 +377,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            saveChanges();
+            supportFinishAfterTransition();
             return true;
         } else if (item.getItemId() == R.id.menu_save) {
             saveMediaToDevice();
@@ -506,7 +520,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                     if (!isFinishing() && response.getBitmap() != null) {
                         showProgress(false);
-                        fadeInBitmap(response.getBitmap());
+                        mImageView.setImageBitmap(response.getBitmap());
                     }
                 }
 
@@ -575,16 +589,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 return;
             }
             if (bitmap != null) {
-                fadeInBitmap(bitmap);
+                mImageView.setImageBitmap(bitmap);
             } else {
                 delayedFinishWithError();
             }
         }
-    }
-
-    private void fadeInBitmap(@NonNull Bitmap bitmap) {
-        mImageView.setImageBitmap(bitmap);
-        AniUtils.fadeIn(mImageView, AniUtils.Duration.LONG);
     }
 
     private void showFullScreen() {
@@ -768,7 +777,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 ToastUtils.showToast(this, R.string.error_generic);
             } else {
                 setResult(RESULT_MEDIA_DELETED);
-                finish();
+                supportFinishAfterTransition();
             }
         } else if (!event.isError()) {
             MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());

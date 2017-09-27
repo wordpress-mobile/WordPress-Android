@@ -37,13 +37,14 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/media_settings_background"
                             android:scaleType="centerCrop"
+                            android:transitionName="@string/shared_element_media"
                             tools:layout_height="224dp"
                             tools:src="@drawable/ic_gridicons_audio"/>
 
                         <ImageView
                             android:id="@+id/image_play"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_gravity="center"
                             android:visibility="gone"
                             app:srcCompat="@drawable/play_video_selector_large"

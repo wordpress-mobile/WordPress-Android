@@ -1935,4 +1935,7 @@
     <string name="login_logged_in_as">Logged in as</string>
     <string name="login_epilogue_mysites_one">My site</string>
     <string name="login_epilogue_mysites_other">My sites</string>
+
+    <!-- shared element names -->
+    <string name="shared_element_media" translatable="false">media</string>
 </resources>
