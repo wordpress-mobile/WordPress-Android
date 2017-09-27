@@ -6,6 +6,9 @@ import com.android.volley.VolleyError;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.AccountAction;
@@ -19,6 +22,7 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.Di
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
@@ -31,6 +35,7 @@ import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +75,15 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class PushSocialLoginPayload extends Payload<BaseNetworkError> {
+        public String idToken;
+        public String service;
+        public PushSocialLoginPayload(@NonNull String idToken, @NonNull String service) {
+            this.idToken = idToken;
+            this.service = service;
+        }
+    }
+
     public static class NewAccountPayload extends Payload<BaseNetworkError> {
         public String username;
         public String password;
@@ -99,6 +113,9 @@ public class AccountStore extends Store {
     }
 
     public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {}
+
+    public static class OnSocialChanged extends OnChanged<AccountSocialError> {
+    }
 
     public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
         public String xmlRpcEndpoint;
@@ -211,6 +228,48 @@ public class AccountStore extends Store {
                     }
                 }
             }
+            return GENERIC_ERROR;
+        }
+    }
+
+    public static class AccountSocialError implements OnChangedError {
+        public AccountSocialErrorType type;
+        public String message;
+
+        public AccountSocialError(AccountSocialErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+
+        public AccountSocialError(@NonNull byte[] response) {
+            try {
+                String responseBody = new String(response, "UTF-8");
+                JSONObject object = new JSONObject(responseBody);
+                JSONObject data = object.getJSONObject("data");
+                JSONArray errors = data.getJSONArray("errors");
+                this.type = AccountSocialErrorType.fromString(errors.getJSONObject(0).getString("code"));
+                this.message = errors.getJSONObject(0).getString("message");
+            } catch (UnsupportedEncodingException | JSONException exception) {
+                AppLog.e(T.API, "Unable to parse social error response: " + exception.getMessage());
+            }
+        }
+    }
+
+    public enum AccountSocialErrorType {
+        INVALID_TOKEN,
+        UNKNOWN_USER,
+        USER_EXISTS,
+        GENERIC_ERROR;
+
+        public static AccountSocialErrorType fromString(String string) {
+            if (string != null) {
+                for (AccountSocialErrorType type : AccountSocialErrorType.values()) {
+                    if (string.equalsIgnoreCase(type.name())) {
+                        return type;
+                    }
+                }
+            }
+
             return GENERIC_ERROR;
         }
     }
@@ -337,6 +396,9 @@ public class AccountStore extends Store {
             case PUSH_SETTINGS:
                 mAccountRestClient.pushAccountSettings(((PushAccountSettingsPayload) payload).params);
                 break;
+            case PUSH_SOCIAL_LOGIN:
+                createPushSocialLogin((PushSocialLoginPayload) payload);
+                break;
             case UPDATE_ACCOUNT:
                 updateDefaultAccount((AccountModel) payload, AccountAction.UPDATE_ACCOUNT);
                 break;
@@ -354,6 +416,9 @@ public class AccountStore extends Store {
                 break;
             case PUSHED_SETTINGS:
                 handlePushSettingsCompleted((AccountPushSettingsResponsePayload) payload);
+                break;
+            case PUSHED_SOCIAL:
+                handlePushSocialCompleted((AccountPushSocialResponsePayload) payload);
                 break;
             case FETCHED_SETTINGS:
                 handleFetchSettingsCompleted((AccountRestPayload) payload);
@@ -482,6 +547,16 @@ public class AccountStore extends Store {
         }
     }
 
+    private void handlePushSocialCompleted(AccountPushSocialResponsePayload payload) {
+        if (payload.isError()) {
+            OnSocialChanged event = new OnSocialChanged();
+            event.error = new AccountSocialError(payload.error.type, payload.error.message);
+            emitChange(event);
+        } else {
+            updateToken(new UpdateTokenPayload(payload.bearerToken));
+        }
+    }
+
     private void handleNewAccountCreated(NewAccountResponsePayload payload) {
         OnNewUserCreated onNewUserCreated = new OnNewUserCreated();
         onNewUserCreated.error = payload.error;
@@ -508,6 +583,10 @@ public class AccountStore extends Store {
 
     private void createNewAccount(NewAccountPayload payload) {
         mAccountRestClient.newAccount(payload.username, payload.password, payload.email, payload.dryRun);
+    }
+
+    private void createPushSocialLogin(PushSocialLoginPayload payload) {
+        mAccountRestClient.pushSocialLogin(payload.idToken, payload.service);
     }
 
     private void signOut() {

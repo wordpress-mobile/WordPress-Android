@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
+import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
@@ -39,6 +40,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class AccountRestClient extends BaseWPComRestClient {
+    private static final String SOCIAL_LOGIN_ENDPOINT_VERSION = "1";
+
     private final AppSecrets mAppSecrets;
 
     public static class AccountRestPayload extends Payload<BaseNetworkError> {
@@ -54,6 +57,16 @@ public class AccountRestClient extends BaseWPComRestClient {
             this.error = error;
         }
         public Map<String, Object> settings;
+    }
+
+    public static class AccountPushSocialResponsePayload extends Payload<AccountSocialError> {
+        public AccountPushSocialResponsePayload(AccountSocialResponse response) {
+            this.bearerToken = response.bearer_token;
+        }
+        public AccountPushSocialResponsePayload(BaseNetworkError error) {
+            this.error = new AccountSocialError(error.volleyError.networkResponse.data);
+        }
+        public String bearerToken;
     }
 
     public static class NewAccountResponsePayload extends Payload<NewUserError> {
@@ -182,6 +195,49 @@ public class AccountRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountPushSettingsResponsePayload payload = new AccountPushSettingsResponsePayload(error);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSettingsAction(payload));
+                    }
+                }
+        ));
+    }
+
+    /**
+     * Performs an HTTP POST call to https://wordpress.com/wp-login.php.  Upon receiving a response
+     * (success or error) a {@link AccountAction#PUSHED_SOCIAL} action is dispatched with a payload
+     * of type {@link AccountPushSocialResponsePayload}.
+     *
+     * {@link AccountPushSocialResponsePayload#isError()} can be used to check the request result.
+     *
+     * No HTTP POST call is made if the given parameter map is null or contains no entries.
+     *
+     * @param idToken       OpenID Connect Token (JWT) from the service the user is using to
+     *                      authenticate their account.
+     * @param service       Slug representing the service for the given token (e.g. google).
+     */
+    public void pushSocialLogin(@NonNull String idToken, @NonNull String service) {
+        String url = "https://wordpress.com/wp-login.php";
+
+        Map<String, String> params = new HashMap<>();
+        params.put("action", "social-login-endpoint");
+        params.put("version", SOCIAL_LOGIN_ENDPOINT_VERSION);
+        params.put("id_token", idToken);
+        params.put("service", service);
+        params.put("get_bearer_token", "true");
+        params.put("client_id", mAppSecrets.getAppId());
+        params.put("client_secret", mAppSecrets.getAppSecret());
+
+        addUnauthedRequest(new AccountSocialRequest(url, params,
+                new Listener<AccountSocialResponse>() {
+                    @Override
+                    public void onResponse(AccountSocialResponse response) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(error);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
         ));
