@@ -59,7 +59,7 @@ public class AztecImageLoader implements Html.ImageGetter {
                 if (bitmap == null && !isImmediate) {
                     // isImmediate is true as soon as the request starts.
                     callbacks.onImageFailed();
-                } else {
+                } else if (bitmap != null) {
                     BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
                     callbacks.onImageLoaded(bitmapDrawable);
                 }

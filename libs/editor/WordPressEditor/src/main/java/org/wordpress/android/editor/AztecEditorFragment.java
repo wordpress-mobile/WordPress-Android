@@ -43,6 +43,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.editor.MetadataUtils.AttributesWithClass;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.JSONUtils;
@@ -312,6 +313,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         super.onPrepareOptionsMenu(menu);
     }
 
+    public boolean hasHistory() {
+        return (content.history.getHistoryEnabled() && !content.history.getHistoryList().isEmpty());
+    }
+
+    public boolean isHistoryEnabled() {
+        return content.history.getHistoryEnabled();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -370,11 +379,26 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setTitle(CharSequence text) {
+        if (text == null) {
+            text = "";
+        }
+
+        if (title == null) {
+            return;
+        }
         title.setText(text);
     }
 
     @Override
     public void setContent(CharSequence text) {
+        if (text == null) {
+            text = "";
+        }
+
+        if (content == null) {
+            return;
+        }
+
         content.fromHtml(text.toString());
 
         updateFailedMediaList();
@@ -569,17 +593,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private void overlayProgressingMedia() {
         for (String localMediaId : mUploadingMediaProgressMax.keySet()) {
-            MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-            overlayProgressingMedia(predicate);
-            // here check if this is a video uploading in progress or not; if it is, show the video play icon
-            for (Attributes attrs : content.getAllElementAttributes(predicate)) {
-                AttributesWithClass attributesWithClass = getAttributesWithClass(attrs);
-                if (attributesWithClass.hasClass(TEMP_VIDEO_UPLOADING_CLASS)) {
-                    overlayVideoIcon(2, predicate);
-                }
+            overlayProgressingMediaForMediaId(localMediaId);
+        }
+    }
+
+    private void overlayProgressingMediaForMediaId(String localMediaId) {
+        MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
+        overlayProgressingMedia(predicate);
+        // here check if this is a video uploading in progress or not; if it is, show the video play icon
+        for (Attributes attrs : content.getAllElementAttributes(predicate)) {
+            AttributesWithClass attributesWithClass = getAttributesWithClass(attrs);
+            if (attributesWithClass.hasClass(TEMP_VIDEO_UPLOADING_CLASS)) {
+                overlayVideoIcon(2, predicate);
             }
         }
     }
+
 
     private void overlayVideoIcon(int overlayLevel, AztecText.AttributePredicate predicate) {
         Drawable videoDrawable = getResources().getDrawable(R.drawable.ic_overlay_video);
@@ -828,16 +857,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onMediaUploadReattached(String localId, float currentProgress) {
         mUploadingMediaProgressMax.put(localId, currentProgress);
+        overlayProgressingMediaForMediaId(localId);
     }
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
-        if(!isAdded() || content == null || !mAztecReady) {
+        if (!isAdded() || content == null || !mAztecReady) {
             return;
         }
 
         if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            AppLog.e(T.MEDIA, "onMediaUploadSucceeded - Remote URL: " + remoteUrl + ", Filename: "
+                    + mediaFile.getFileName());
 
             // we still need to refresh the screen visually, no matter whether the service already
             // saved the post to Db or not
@@ -1213,7 +1245,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.stop_upload_dialog_button_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         if (mUploadingMediaProgressMax.containsKey(localMediaId)) {
@@ -1235,7 +1267,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
                 });
 
-                builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.stop_upload_dialog_button_no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                     }

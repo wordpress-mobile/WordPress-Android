@@ -767,7 +767,6 @@ Language: ko_KR
 	<string name="username_or_password_incorrect">입력된 사용자 이름이나 암호가 잘못되었습니다.</string>
 	<string name="invalid_username_too_long">사용자 이름에는 최대 64 자 이하로 되어야 함.</string>
 	<string name="invalid_username_too_short">사용자 이름은 4자 이상입니다.</string>
-	<string name="wait_until_upload_completes">업로드가 완료 될 때까지 기다리십시오.</string>
 	<string name="blog_name_reserved_but_may_be_available">이 사이트 이름은 예약 중입니다만, 며칠 동안 사용 가능하게 될지도 모릅니다.</string>
 	<string name="comments_empty_list">댓글이 없습니다.</string>
 	<string name="notifications_empty_list">알림이 없습니다.</string>
@@ -814,7 +813,6 @@ Language: ko_KR
 	<string name="cat_name_required">카테고리 이름은 필수 항목입니다.</string>
 	<string name="adding_cat_success">카테고리를 추가했습니다.</string>
 	<string name="adding_cat_failed">카테고리 추가에 실패했습니다.</string>
-	<string name="error_delete_post">%s를 삭제하는 동안 에러가 발생했습니다.</string>
 	<string name="error_moderate_comment">진행중에 에러가 발생했습니다.</string>
 	<string name="could_not_remove_account">사이트를 제거할 수 없습니다.</string>
 	<string name="error_refresh_stats">통계를 다시 로드 할 수 없습니다.</string>

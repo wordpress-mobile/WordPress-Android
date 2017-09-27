@@ -42,7 +42,6 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.EnumSet;
@@ -284,7 +283,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         // mUsername and mPassword are null when the user log in with a magic link
         if (smartLockHelper != null) {
             smartLockHelper.saveCredentialsInSmartLock(username, password,
-                    HtmlUtils.fastUnescapeHtml(mAccountStore.getAccount().getDisplayName()),
+                    mAccountStore.getAccount().getDisplayName(),
                     Uri.parse(mAccountStore.getAccount().getAvatarUrl()));
         }
     }

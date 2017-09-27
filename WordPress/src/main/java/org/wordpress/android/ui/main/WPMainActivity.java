@@ -301,20 +301,18 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
-    private void showNewEditorPromoDialogIfNeeded() {
-        if (AppPrefs.isNewEditorPromoRequired()) {
-            AppCompatDialogFragment newFragment = new PromoDialogEditor.Builder(
-                    R.drawable.img_promo_editor,
-                    R.string.new_editor_promo_title,
-                    R.string.new_editor_promo_description,
-                    R.string.new_editor_promo_button_positive)
-                    .setLinkText(R.string.new_editor_promo_link)
-                    .setNegativeButtonText(R.string.new_editor_promo_button_negative)
-                    .setTitleBetaText(R.string.new_editor_promo_title_beta)
-                    .build();
-            newFragment.show(getSupportFragmentManager(), "new-editor-promo");
-            AppPrefs.setNewEditorPromoRequired(false);
-        }
+    private void showNewEditorPromoDialog() {
+        AppCompatDialogFragment newFragment = new PromoDialogEditor.Builder(
+                R.drawable.img_promo_editor,
+                R.string.new_editor_promo_title,
+                R.string.new_editor_promo_description,
+                R.string.new_editor_promo_button_positive)
+                .setLinkText(R.string.new_editor_promo_link)
+                .setNegativeButtonText(R.string.new_editor_promo_button_negative)
+                .setTitleBetaText(R.string.new_editor_promo_title_beta)
+                .build();
+        newFragment.show(getSupportFragmentManager(), "new-editor-promo");
+        AppPrefs.setNewEditorPromoRequired(false);
     }
 
     @Override
@@ -499,13 +497,18 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
-        if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
-                && position == WPMainTabAdapter.TAB_MY_SITE) {
-            showNewEditorPromoDialogIfNeeded();
-        }
-
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
+                // show the new editor promo if the user is logged in and this is at least the second time
+                // the my site tab has been visited
+                if (AppPrefs.isNewEditorPromoRequired()
+                        && !AppPrefs.isAztecEditorEnabled()
+                        && FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+                    int count = AppPrefs.bumpAndReturnAztecPromoCounter();
+                    if (count >= 2)  {
+                        showNewEditorPromoDialog();
+                    }
+                }
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,

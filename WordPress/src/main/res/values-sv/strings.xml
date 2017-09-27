@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-15 19:35:26+0000
+Translation-Revision-Date: 2017-09-01 19:25:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="error_media_recover_post">Vi lyckades inte ladda upp inläggets media. Redigera inlägget och försök igen.</string>
+	<string name="error_page_does_not_exist">Denna sida finns inte längre</string>
+	<string name="error_upload_post_media_param">Ett fel inträffade vid uppladdning av media för följande inlägg: %s.</string>
+	<string name="error_upload_post_param">Ett fel inträffade vid uppladdning av följande inlägg: %s.</string>
+	<string name="add_media_progress">Lägger till media</string>
+	<string name="reader_excerpt_link">Besök %s för mera</string>
+	<string name="login_site_address_help_image">Webbplatsens adress finns i din webbläsares navigationslist</string>
+	<string name="error_unknown_page">Kunde inte hitta sidan på servern</string>
+	<string name="error_publish_empty_page">Det går inte att publicera en tom sida</string>
+	<string name="upload_failed_param">Uppladdning misslyckades för ”%s”</string>
+	<string name="cannot_retry_deleted_media_item">Mediafilen har tagits bort. Ska den raderas från detta inlägg?</string>
+	<string name="error_please_choose_browser">Ett fel inträffade när standardwebbläsaren skulle öppnas. Välj en annan app:</string>
+	<string name="cant_open_url">Kan inte öppna länken</string>
 	<string name="error_unknown_post">Hittade inte inlägget på servern</string>
 	<string name="error_post_does_not_exist">Detta inlägg finns inte kvar</string>
-	<string name="error_media_recover">Det gick inte att ladda upp mediafilerna för detta inlägg. Redigera inlägget och försök igen.</string>
+	<string name="error_media_recover_page">Det gick inte att ladda upp mediafilerna för denna sida. Redigera sidan och försök igen.</string>
 	<string name="error_media_canceled">Uppladdningen av media avbröts</string>
-	<string name="error_upload_post_media_params">Ett fel inträffade vid uppladdning av media med detta %1$s: %2$s.</string>
-	<string name="error_upload_post_params">Ett fel inträffade vid uppladdning av %1$s: %2$s.</string>
+	<string name="error_upload_page_media_param">Ett fel inträffade vid uppladdning av media för sidan %s.</string>
+	<string name="error_upload_page_param">Ett fel inträffade vid uppladdning av sidan %s.</string>
 	<string name="async_promo_link">Hur fungerar det?</string>
 	<string name="async_promo_description">Nu kan du gå ur redigeraren. Inlägget kommer att sparas och publiceras automatiskt! Prova!</string>
 	<string name="async_promo_title">Publicera utan oro</string>
@@ -72,7 +85,6 @@ Language: sv_SE
 	<string name="login_promo_text_onthego">Publicera från parkbänken. Blogga från bussen. Kommentera när du dricker kaffe. WordPress finns där du är.</string>
 	<string name="create_wordpress_site">Skapa WordPress-webbplats</string>
 	<string name="email_not_found">Vi kunde inte hitta någon användare på WordPress.com med den e-postadressen</string>
-	<string name="login_site_address_help_image">Bild som visar var webbplatsadressen syns</string>
 	<string name="image_optimization_promo_desc">Bildoptimering minskar storleken på blder för snabbare uppladdning.\n\nDu kan när som helst ändra detta i webbplatsinställningarna.</string>
 	<string name="image_optimization_promo_title">Aktivera bildoptimering?</string>
 	<string name="leave_off">Behåll avstängt</string>
@@ -321,7 +333,6 @@ Language: sv_SE
 	<string name="reader_label_visit">Gå till</string>
 	<string name="all_your_sites">Alla mina webbplatser</string>
 	<string name="pending_draft_more">Du har skrivit %d utkast till inlägg som inte är publicerade. Peka för att undersöka.</string>
-	<string name="no_default_app_available_to_open_link">Det går inte att öppna länken</string>
 	<string name="notification_pending_drafts">Informera mig om opublicerade utkast</string>
 	<string name="invalid_verification_code_format">Måste vara ett sexsiffrigt nummer</string>
 	<string name="confirm_discard_changes">Kasta bort osparade ändringar?</string>
@@ -1112,7 +1123,7 @@ Language: sv_SE
 	<string name="error_refresh_notifications">Notifieringar kunde inte uppdateras just nu</string>
 	<string name="error_refresh_pages">Sidorna kunde inte uppdateras just nu</string>
 	<string name="error_refresh_posts">Inläggen kunde inte uppdateras just nu</string>
-	<string name="error_delete_post">Ett fel uppstod vid raderande av %s</string>
+	<string name="error_deleting_post">Ett fel uppstod när inlägget skulle raderas</string>
 	<string name="notifications_empty_list">Inga notifieringar</string>
 	<string name="reply_failed">Svara misslyckades</string>
 	<string name="invalid_url_message">Kontrollera att URL:en är giltig</string>
@@ -1129,7 +1140,6 @@ Language: sv_SE
 	<string name="theme_auth_error_message">Se till att du har behörighet att ställa in teman</string>
 	<string name="theme_set_failed">Kunde inte ställa in tema</string>
 	<string name="theme_fetch_failed">Misslyckades hämta teman</string>
-	<string name="wait_until_upload_completes">Vänta tills uppladdningen är klar</string>
 	<string name="blog_not_found">Ett fel uppstod vid anslutning till bloggen</string>
 	<string name="gallery_error">Medieobjektet kunde inte hämtas</string>
 	<string name="could_not_remove_account">Det gick inte att ta bort webbplatsen</string>
@@ -1150,6 +1160,7 @@ Language: sv_SE
 	<string name="fatal_db_error">Ett fel uppstod vid skapandet av app-databasen. Försök återinstallera appen.</string>
 	<string name="error_blog_hidden">Den här bloggen är dold och kunde inte laddas. Aktivera den igen i inställningarna och försök igen.</string>
 	<string name="error_refresh_media">Det gick inte att förnya medialistan just nu</string>
+	<string name="error_deleting_page">Ett fel inträffade när sidan skulle raderas</string>
 	<string name="wordpress_blog">WordPress-blogg</string>
 	<string name="add_account_blog_url">Bloggadress</string>
 	<string name="image_settings">Bildinställningar</string>
@@ -1374,7 +1385,7 @@ Language: sv_SE
 	<string name="app_title">WordPress for Android</string>
 	<string name="tos">Allmänna villkor</string>
 	<string name="version">Version</string>
-	<string name="max_thumbnail_px_width">Förvald bildbredd</string>
+	<string name="max_thumbnail_px_size">Förvald bildbredd</string>
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Uppdatera</string>
 	<string name="untitled">Utan titel</string>

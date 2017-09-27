@@ -1,0 +1,14 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/master_switch"
+        android:checkable="true"
+        android:enabled="true"
+        android:title=""
+        app:actionLayout="@layout/toolbar_switch"
+        app:showAsAction="always" >
+    </item>
+
+</menu>

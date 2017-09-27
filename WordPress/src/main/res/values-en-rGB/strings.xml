@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-15 18:59:51+0000
+Translation-Revision-Date: 2017-09-01 20:30:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="error_media_recover_post">We were unable to upload this post\'s media. Please edit the post to try again.</string>
+	<string name="error_page_does_not_exist">This page no longer exists</string>
+	<string name="error_upload_post_media_param">There was an error uploading the media in this post: %s.</string>
+	<string name="error_upload_post_param">There was an error uploading this post: %s.</string>
+	<string name="add_media_progress">Adding media</string>
+	<string name="reader_excerpt_link">Visit %s for more</string>
+	<string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
+	<string name="error_unknown_page">Could not find the page on the server</string>
+	<string name="error_publish_empty_page">Can\'t publish an empty page</string>
+	<string name="upload_failed_param">Upload failed for "%s"</string>
+	<string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
+	<string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
+	<string name="cant_open_url">Unable to open the link</string>
 	<string name="error_unknown_post">Could not find the post on the server</string>
 	<string name="error_post_does_not_exist">This post no longer exists</string>
-	<string name="error_media_recover">We were unable to upload this post\'s media. Please edit the post to try again.</string>
+	<string name="error_media_recover_page">We were unable to upload this page\'s media. Please edit the page to try again.</string>
 	<string name="error_media_canceled">Uploading media were canceled</string>
-	<string name="error_upload_post_media_params">There was an error uploading the media in this %1$s: %2$s.</string>
-	<string name="error_upload_post_params">There was an error uploading this %1$s: %2$s.</string>
+	<string name="error_upload_page_media_param">There was an error uploading the media in this page: %s.</string>
+	<string name="error_upload_page_param">There was an error uploading this page: %s.</string>
 	<string name="async_promo_link">How does it work?</string>
 	<string name="async_promo_description">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
 	<string name="async_promo_title">Publish with Confidence</string>
@@ -72,7 +85,6 @@ Language: en_GB
 	<string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
 	<string name="create_wordpress_site">Create a WordPress site</string>
 	<string name="email_not_found">We didn\'t find a WordPress.com user with that email address</string>
-	<string name="login_site_address_help_image">Site address positioning image</string>
 	<string name="image_optimization_promo_desc">Image optimisation shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
 	<string name="image_optimization_promo_title">Turn on image optimisation?</string>
 	<string name="leave_off">Leave off</string>
@@ -321,7 +333,6 @@ Language: en_GB
 	<string name="reader_label_visit">Visit</string>
 	<string name="all_your_sites">All My Sites</string>
 	<string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
-	<string name="no_default_app_available_to_open_link">Unable to open the link</string>
 	<string name="notification_pending_drafts">Notify me on pending drafts</string>
 	<string name="invalid_verification_code_format">Must be a six-digit number</string>
 	<string name="confirm_discard_changes">Discard unsaved changes?</string>
@@ -1112,7 +1123,7 @@ Language: en_GB
 	<string name="error_refresh_notifications">Notifications couldn\'t be refreshed at this time</string>
 	<string name="error_refresh_pages">Pages couldn\'t be refreshed at this time</string>
 	<string name="error_refresh_posts">Posts couldn\'t be refreshed at this time</string>
-	<string name="error_delete_post">An error occurred while deleting the %s</string>
+	<string name="error_deleting_post">An error occurred while deleting the post</string>
 	<string name="notifications_empty_list">No notifications</string>
 	<string name="reply_failed">Reply failed</string>
 	<string name="invalid_url_message">Check that the URL entered is valid</string>
@@ -1129,7 +1140,6 @@ Language: en_GB
 	<string name="theme_auth_error_message">Ensure you have the privilege to set themes</string>
 	<string name="theme_set_failed">Failed to set theme</string>
 	<string name="theme_fetch_failed">Failed to fetch themes</string>
-	<string name="wait_until_upload_completes">Wait until upload completes</string>
 	<string name="blog_not_found">An error occurred when accessing this blog</string>
 	<string name="gallery_error">The media item couldn\'t be retrieved</string>
 	<string name="could_not_remove_account">Couldn\'t remove site</string>
@@ -1150,6 +1160,7 @@ Language: en_GB
 	<string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
 	<string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
 	<string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
+	<string name="error_deleting_page">An error occurred while deleting the page</string>
 	<string name="wordpress_blog">WordPress blog</string>
 	<string name="add_account_blog_url">Blog address</string>
 	<string name="image_settings">Image settings</string>
@@ -1374,7 +1385,7 @@ Language: en_GB
 	<string name="app_title">WordPress for Android</string>
 	<string name="tos">Terms of Service</string>
 	<string name="version">Version</string>
-	<string name="max_thumbnail_px_width">Default Image Width</string>
+	<string name="max_thumbnail_px_size">Default Image Width</string>
 	<string name="image_alignment">Alignment</string>
 	<string name="refresh">Refresh</string>
 	<string name="untitled">Untitled</string>
