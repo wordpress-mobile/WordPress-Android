@@ -208,7 +208,7 @@ public class ThemeStore extends Store {
         if (site.isJetpackConnected() && site.isUsingWpComRestApi()) {
             mThemeRestClient.fetchJetpackInstalledThemes(site);
         } else {
-            FetchThemesError error = new FetchThemesError("not_available", null);
+            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE.name(), null);
             FetchedThemesPayload payload = new FetchedThemesPayload(error);
             handleInstalledThemesFetched(payload);
         }
@@ -228,7 +228,7 @@ public class ThemeStore extends Store {
         if (site.isUsingWpComRestApi()) {
             mThemeRestClient.fetchCurrentTheme(site);
         } else {
-            FetchThemesError error = new FetchThemesError("not_available", null);
+            FetchThemesError error = new FetchThemesError(ThemeErrorType.NOT_AVAILABLE.name(), null);
             FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(error);
             handleCurrentThemeFetched(payload);
         }
@@ -265,7 +265,7 @@ public class ThemeStore extends Store {
         if (payload.site.isUsingWpComRestApi()) {
             mThemeRestClient.activateTheme(payload.site, payload.theme);
         } else {
-            payload.error = new ActivateThemeError("not_available", null);
+            payload.error = new ActivateThemeError(ThemeErrorType.NOT_AVAILABLE.name(), null);
             handleThemeActivated(payload);
         }
     }

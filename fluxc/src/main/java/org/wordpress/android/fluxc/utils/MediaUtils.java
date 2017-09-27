@@ -1,6 +1,10 @@
 package org.wordpress.android.fluxc.utils;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
 
 import java.io.File;
 
@@ -102,6 +106,10 @@ public class MediaUtils {
     //
     // File operations
     //
+
+    public static String getMediaValidationError(@NonNull MediaModel media) {
+        return BaseUploadRequestBody.hasRequiredData(media);
+    }
 
     /**
      * Queries filesystem to determine if a given file can be read.
