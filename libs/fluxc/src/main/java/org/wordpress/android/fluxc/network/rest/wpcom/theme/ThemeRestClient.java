@@ -45,8 +45,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
 
     /** Endpoint: v1.1/site/$siteId/themes/$themeId/delete */
     public void deleteTheme(@NonNull final SiteModel site, @NonNull final ThemeModel theme) {
-        String themeIdWIthSuffix = getThemeIdWithWpComSuffix(theme);
-        String url = WPCOMREST.sites.site(site.getSiteId()).themes.theme(themeIdWIthSuffix).delete.getUrlV1_1();
+        String url = WPCOMREST.sites.site(site.getSiteId()).themes.theme(theme.getThemeId()).delete.getUrlV1_1();
         add(WPComGsonRequest.buildPostRequest(url, null, ThemeJetpackResponse.class,
                 new Response.Listener<ThemeJetpackResponse>() {
                     @Override
