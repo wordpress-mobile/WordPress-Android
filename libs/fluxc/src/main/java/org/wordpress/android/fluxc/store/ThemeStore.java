@@ -302,9 +302,7 @@ public class ThemeStore extends Store {
 
     private void handleThemeDeleted(@NonNull ActivateThemePayload payload) {
         OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
-        if (payload.isError()) {
-            event.error = payload.error;
-        }
+        event.error = payload.error;
         emitChange(event);
     }
 }
