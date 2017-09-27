@@ -34,6 +34,11 @@ public class ThemeStore extends Store {
             this.site = site;
             this.theme = theme;
         }
+
+        @Override
+        public boolean isError() {
+            return this.error != null;
+        }
     }
 
     public static class FetchedThemesPayload extends Payload<FetchThemesError> {
@@ -259,9 +264,7 @@ public class ThemeStore extends Store {
 
     private void handleThemeInstalled(@NonNull ActivateThemePayload payload) {
         OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
-        if (payload.isError()) {
-            event.error = payload.error;
-        }
+        event.error = payload.error;
         emitChange(event);
     }
 
@@ -276,9 +279,7 @@ public class ThemeStore extends Store {
 
     private void handleThemeActivated(@NonNull ActivateThemePayload payload) {
         OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
-        if (payload.isError()) {
-            event.error = payload.error;
-        }
+        event.error = payload.error;
         emitChange(event);
     }
 }
