@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
@@ -418,7 +419,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
     private void notifyMediaProgress(MediaModel media, float progress, MediaError error) {
         ProgressPayload payload = new ProgressPayload(media, progress, false, error);
-        mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
+        mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload));
     }
 
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
@@ -428,7 +429,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
 
         ProgressPayload payload = new ProgressPayload(media, 1.f, error == null, error);
-        mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
+        mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload));
     }
 
     private void notifyMediaListFetched(SiteModel site,

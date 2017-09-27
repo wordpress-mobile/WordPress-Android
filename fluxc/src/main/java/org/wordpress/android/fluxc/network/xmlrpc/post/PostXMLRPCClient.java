@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
@@ -202,7 +203,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         post.setIsLocallyChanged(false);
 
                         RemotePostPayload payload = new RemotePostPayload(post, site);
-                        mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
+                        mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
                     }
                 },
                 new BaseErrorListener() {
@@ -225,7 +226,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                                 postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
                         }
                         payload.error = postError;
-                        mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
+                        mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
                     }
                 });
 
