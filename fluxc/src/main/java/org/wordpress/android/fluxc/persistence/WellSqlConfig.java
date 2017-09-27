@@ -53,7 +53,6 @@ public class WellSqlConfig extends DefaultWellConfig {
         add(SiteModel.class);
         add(TaxonomyModel.class);
         add(TermModel.class);
-        add(RoleModel.class);
         add(ThemeModel.class);
     }};
 
