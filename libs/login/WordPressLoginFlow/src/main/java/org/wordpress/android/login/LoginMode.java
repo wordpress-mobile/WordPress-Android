@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts;
+package org.wordpress.android.login;
 
 import android.content.Intent;
 

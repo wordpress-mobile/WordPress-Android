@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.accounts.login;
 
-import org.wordpress.android.ui.accounts.LoginMode;
+import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.SmartLockHelper;
 
 import java.util.ArrayList;
