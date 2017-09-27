@@ -73,6 +73,7 @@ public class ThemeStore extends Store {
         NOT_AVAILABLE,
         THEME_NOT_FOUND,
         THEME_ALREADY_INSTALLED,
+        UNKNOWN_THEME,
         MISSING_THEME;
 
         public static ThemeErrorType fromString(String type) {
