@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.CommentSqlUtils;
@@ -35,7 +36,7 @@ public class CommentStore extends Store {
 
     // Payloads
 
-    public static class FetchCommentsPayload extends Payload {
+    public static class FetchCommentsPayload extends Payload<BaseNetworkError> {
         @NonNull public final SiteModel site;
         @NonNull public final CommentStatus status;
         public final int number;
@@ -56,7 +57,7 @@ public class CommentStore extends Store {
         }
     }
 
-    public static class RemoteCommentPayload extends Payload {
+    public static class RemoteCommentPayload extends Payload<BaseNetworkError> {
         @NonNull public final SiteModel site;
         @Nullable public final CommentModel comment;
         public final long remoteCommentId;
@@ -87,12 +88,11 @@ public class CommentStore extends Store {
         }
     }
 
-    public static class FetchCommentsResponsePayload extends Payload {
+    public static class FetchCommentsResponsePayload extends Payload<CommentError> {
         @NonNull public final List<CommentModel> comments;
         @NonNull public final SiteModel site;
         public final int number;
         public final int offset;
-        public CommentError error;
 
         public FetchCommentsResponsePayload(@NonNull List<CommentModel> comments, @NonNull SiteModel site, int number,
                                             int offset) {
@@ -103,21 +103,19 @@ public class CommentStore extends Store {
         }
     }
 
-    public static class RemoteCommentResponsePayload extends Payload {
+    public static class RemoteCommentResponsePayload extends Payload<CommentError> {
         @Nullable public final CommentModel comment;
-        public CommentError error;
         public RemoteCommentResponsePayload(@Nullable CommentModel comment) {
             this.comment = comment;
         }
     }
 
-    public static class RemoteCreateCommentPayload extends Payload {
+    public static class RemoteCreateCommentPayload extends Payload<CommentError> {
         public final SiteModel site;
         public final CommentModel comment;
         public final CommentModel reply;
         public final PostModel post;
 
-        public CommentError error;
         public RemoteCreateCommentPayload(@NonNull SiteModel site, @NonNull PostModel post,
                                           @NonNull CommentModel comment) {
             this.site = site;

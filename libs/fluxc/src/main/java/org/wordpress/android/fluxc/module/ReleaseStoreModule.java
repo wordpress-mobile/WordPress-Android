@@ -7,10 +7,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
+import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
@@ -19,10 +21,12 @@ import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.ThemeStore;
+import org.wordpress.android.fluxc.store.UploadStore;
 
 import javax.inject.Singleton;
 
@@ -41,8 +45,8 @@ public class ReleaseStoreModule {
     @Provides
     @Singleton
     public MediaStore provideMediaStore(Dispatcher dispatcher, MediaRestClient mediaRestClient,
-                                        MediaXMLRPCClient mediaXMLRPCClient) {
-        return new MediaStore(dispatcher, mediaRestClient, mediaXMLRPCClient);
+                                        MediaXMLRPCClient mediaXMLRPCClient, UploadStore uploadStore) {
+        return new MediaStore(dispatcher, mediaRestClient, mediaXMLRPCClient, uploadStore);
     }
 
     @Provides
@@ -56,8 +60,8 @@ public class ReleaseStoreModule {
     @Provides
     @Singleton
     public PostStore providePostStore(Dispatcher dispatcher, PostRestClient postRestClient,
-                                      PostXMLRPCClient postXMLRPCClient) {
-        return new PostStore(dispatcher, postRestClient, postXMLRPCClient);
+                                      PostXMLRPCClient postXMLRPCClient, UploadStore uploadStore) {
+        return new PostStore(dispatcher, postRestClient, postXMLRPCClient, uploadStore);
     }
 
     @Provides
@@ -78,5 +82,18 @@ public class ReleaseStoreModule {
     @Singleton
     public ThemeStore provideThemeStore(Dispatcher dispatcher, ThemeRestClient taxonomyRestClient) {
         return new ThemeStore(dispatcher, taxonomyRestClient);
+    }
+
+    @Provides
+    @Singleton
+    public PluginStore providePluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient,
+                                          PluginWPOrgClient pluginWPOrgClient) {
+        return new PluginStore(dispatcher, pluginRestClient, pluginWPOrgClient);
+    }
+
+    @Provides
+    @Singleton
+    public UploadStore provideUploadStore(Dispatcher dispatcher) {
+        return new UploadStore(dispatcher);
     }
 }

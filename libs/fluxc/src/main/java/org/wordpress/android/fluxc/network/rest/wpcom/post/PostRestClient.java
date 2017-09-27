@@ -9,6 +9,7 @@ import com.android.volley.Response.Listener;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
@@ -161,7 +162,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         uploadedPost.setLocalSiteId(site.getId());
 
                         RemotePostPayload payload = new RemotePostPayload(uploadedPost, site);
-                        mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
+                        mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
                     }
                 },
                 new BaseErrorListener() {
@@ -172,7 +173,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         // ignores it and creates/updates the post normally
                         RemotePostPayload payload = new RemotePostPayload(post, site);
                         payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
-                        mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
+                        mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
                     }
                 }
         );

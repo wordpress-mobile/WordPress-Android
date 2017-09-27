@@ -33,7 +33,7 @@ public class Dispatcher {
 
     public void dispatch(Action action) {
         AppLog.d(T.API, "Dispatching action: " + action.getType().getClass().getSimpleName()
-                + "-" + action.getType().name());
+                + "-" + action.getType().toString());
         post(action);
     }
 

@@ -3,11 +3,12 @@ package org.wordpress.android.fluxc.model;
 import android.support.annotation.NonNull;
 
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SitesModel extends Payload {
+public class SitesModel extends Payload<BaseNetworkError> {
     private List<SiteModel> mSites;
 
     public SitesModel() {
