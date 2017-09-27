@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
@@ -429,7 +430,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
     private void notifyMediaProgress(MediaModel media, float progress, MediaError error) {
         ProgressPayload payload = new ProgressPayload(media, progress, false, error);
-        mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
+        mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload));
     }
 
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
@@ -439,7 +440,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
 
         ProgressPayload payload = new ProgressPayload(media, 1.f, error == null, error);
-        mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
+        mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload));
     }
 
     private void notifyMediaListFetched(SiteModel site,

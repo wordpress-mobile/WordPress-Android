@@ -1,0 +1,2 @@
+/plugins/info/{version}#String/
+/plugins/info/{version}#String/{slug}#String

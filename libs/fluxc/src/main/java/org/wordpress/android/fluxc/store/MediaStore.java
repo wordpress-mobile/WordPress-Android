@@ -17,11 +17,11 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.BaseRequest;
-import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
+import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.io.IOException;
@@ -46,9 +46,8 @@ public class MediaStore extends Store {
     /**
      * Actions: FETCH(ED)_MEDIA, PUSH(ED)_MEDIA, UPLOAD(ED)_MEDIA, DELETE(D)_MEDIA, UPDATE_MEDIA, and REMOVE_MEDIA
      */
-    public static class MediaPayload extends Payload {
+    public static class MediaPayload extends Payload<MediaError> {
         public SiteModel site;
-        public MediaError error;
         public MediaModel media;
         public MediaPayload(SiteModel site, MediaModel media) {
             this(site, media, null);
@@ -63,7 +62,7 @@ public class MediaStore extends Store {
     /**
      * Actions: FETCH_MEDIA_LIST
      */
-    public static class FetchMediaListPayload extends Payload {
+    public static class FetchMediaListPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public boolean loadMore;
         public String mimeType;
@@ -90,9 +89,8 @@ public class MediaStore extends Store {
     /**
      * Actions: FETCHED_MEDIA_LIST
      */
-    public static class FetchMediaListResponsePayload extends Payload {
+    public static class FetchMediaListResponsePayload extends Payload<MediaError> {
         public SiteModel site;
-        public MediaError error;
         public List<MediaModel> mediaList;
         public boolean loadedMore;
         public boolean canLoadMore;
@@ -109,9 +107,7 @@ public class MediaStore extends Store {
             this.mimeType = mimeType;
         }
 
-        public FetchMediaListResponsePayload(SiteModel site,
-                                             MediaError error,
-                                             String mimeType) {
+        public FetchMediaListResponsePayload(SiteModel site, MediaError error, String mimeType) {
             this.mediaList = new ArrayList<>();
             this.site = site;
             this.error = error;
@@ -122,12 +118,11 @@ public class MediaStore extends Store {
     /**
      * Actions: UPLOADED_MEDIA, CANCELED_MEDIA_UPLOAD
      */
-    public static class ProgressPayload extends Payload {
+    public static class ProgressPayload extends Payload<MediaError> {
         public MediaModel media;
         public float progress;
         public boolean completed;
         public boolean canceled;
-        public MediaError error;
         public ProgressPayload(MediaModel media, float progress, boolean completed, boolean canceled) {
             this(media, progress, completed, null);
             this.canceled = canceled;
@@ -143,7 +138,7 @@ public class MediaStore extends Store {
     /**
      * Actions: CANCEL_MEDIA_UPLOAD
      */
-    public static class CancelMediaPayload extends Payload {
+    public static class CancelMediaPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public MediaModel media;
         public boolean delete;
@@ -278,7 +273,7 @@ public class MediaStore extends Store {
         // unknown/unspecified
         GENERIC_ERROR;
 
-        public static MediaErrorType fromBaseNetworkError(BaseRequest.BaseNetworkError baseError) {
+        public static MediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
             switch (baseError.type) {
                 case NOT_FOUND:
                     return MediaErrorType.NOT_FOUND;
@@ -311,16 +306,33 @@ public class MediaStore extends Store {
                     return MediaErrorType.GENERIC_ERROR;
             }
         }
+
+        public static MediaErrorType fromString(String string) {
+            if (string != null) {
+                for (MediaErrorType v : MediaErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
-    private MediaRestClient mMediaRestClient;
-    private MediaXMLRPCClient mMediaXmlrpcClient;
+    private final MediaRestClient mMediaRestClient;
+    private final MediaXMLRPCClient mMediaXmlrpcClient;
+    // Ensures that the UploadStore is initialized whenever the MediaStore is,
+    // to ensure actions are shadowed and repeated by the UploadStore
+    @SuppressWarnings({"unused", "FieldCanBeLocal"})
+    private final UploadStore mUploadStore;
 
     @Inject
-    public MediaStore(Dispatcher dispatcher, MediaRestClient restClient, MediaXMLRPCClient xmlrpcClient) {
+    public MediaStore(Dispatcher dispatcher, MediaRestClient restClient, MediaXMLRPCClient xmlrpcClient,
+                      UploadStore uploadStore) {
         super(dispatcher);
         mMediaRestClient = restClient;
         mMediaXmlrpcClient = xmlrpcClient;
+        mUploadStore = uploadStore;
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -619,8 +631,9 @@ public class MediaStore extends Store {
     }
 
     private void performUploadMedia(MediaPayload payload) {
-        String errorMessage = isWellFormedForUpload(payload.media);
+        String errorMessage = MediaUtils.getMediaValidationError(payload.media);
         if (errorMessage != null) {
+            AppLog.e(AppLog.T.MEDIA, "Media doesn't have required data: " + errorMessage);
             payload.media.setUploadState(MediaUploadState.FAILED);
             MediaSqlUtils.insertOrUpdateMedia(payload.media);
             notifyMediaUploadError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, payload.media);
@@ -713,15 +726,12 @@ public class MediaStore extends Store {
     }
 
     private void handleMediaUploaded(@NonNull ProgressPayload payload) {
-        if (!payload.isError() && payload.completed) {
+        if (payload.isError() || payload.canceled || payload.completed) {
             updateMedia(payload.media, false);
         }
         OnMediaUploaded onMediaUploaded =
                 new OnMediaUploaded(payload.media, payload.progress, payload.completed, payload.canceled);
         onMediaUploaded.error = payload.error;
-        if (payload.media != null) {
-            MediaSqlUtils.insertOrUpdateMedia(payload.media);
-        }
         emitChange(onMediaUploaded);
     }
 
@@ -798,14 +808,6 @@ public class MediaStore extends Store {
             onMediaChanged.mediaList.add(payload.media);
         }
         emitChange(onMediaChanged);
-    }
-
-    private String isWellFormedForUpload(@NonNull MediaModel media) {
-        String error = BaseUploadRequestBody.hasRequiredData(media);
-        if (error != null) {
-            AppLog.e(AppLog.T.MEDIA, "Media doesn't have required data: " + error);
-        }
-        return error;
     }
 
     private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause,

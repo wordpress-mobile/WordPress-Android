@@ -35,6 +35,11 @@
 /sites/$site/media/$media_ID/delete/
 /sites/$site/media/new/
 
+/sites/$site/plugins
+/sites/$site/plugins/$name#String
+/sites/$site/plugins/$name#String/delete
+/sites/$site/plugins/$name#String/install
+
 /sites/$site/posts/
 /sites/$site/posts/$post_ID/
 /sites/$site/posts/$post_ID/delete/
@@ -55,3 +60,4 @@
 /sites/$siteUrl#String
 
 /users/new/
+/users/social/new
