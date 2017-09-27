@@ -20,6 +20,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
+import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -31,7 +32,8 @@ import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher, OnEditorCommitListener {
+public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
+        OnEditorCommitListener {
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
 
     public static final String TAG = "login_email_fragment_tag";

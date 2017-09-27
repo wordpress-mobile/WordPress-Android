@@ -24,6 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -39,7 +40,8 @@ import java.util.regex.Pattern;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
-public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher, OnEditorCommitListener {
+public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
+        OnEditorCommitListener {
     private static final String KEY_IN_PROGRESS_MESSAGE_ID = "KEY_IN_PROGRESS_MESSAGE_ID";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
 

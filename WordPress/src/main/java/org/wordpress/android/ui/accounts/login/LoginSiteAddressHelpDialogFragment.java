@@ -13,6 +13,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.util.HelpshiftHelper;
 
 import javax.inject.Inject;

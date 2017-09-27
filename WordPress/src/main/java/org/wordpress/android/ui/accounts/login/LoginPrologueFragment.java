@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.widgets.WPViewPager;
 
 public class LoginPrologueFragment extends Fragment {

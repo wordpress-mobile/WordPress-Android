@@ -1,10 +1,8 @@
-package org.wordpress.android.ui.accounts.login;
+package org.wordpress.android.login;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import org.wordpress.android.login.LoginMode;
 
 import java.util.ArrayList;
 
