@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.accounts.login;
 
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.wordpress.android.login.LoginMode;
-import org.wordpress.android.ui.accounts.SmartLockHelper;
 
 import java.util.ArrayList;
 
@@ -42,7 +45,8 @@ public interface LoginListener {
     void helpSiteAddress(String url);
 
     // Login username password callbacks
-    SmartLockHelper getSmartLockHelper();
+    void saveCredentials(@NonNull final String username, @NonNull final String password,
+                         @NonNull final String displayName, @Nullable final Uri profilePicture);
     void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds);
     void helpUsernamePassword(String url, String username, boolean isWpcom);
 

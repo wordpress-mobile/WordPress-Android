@@ -201,7 +201,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 break;
             case NEEDS_2FA:
                 // login credentials were correct anyway so, offer to save to SmartLock
-                saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mPassword);
+                saveCredentialsInSmartLock(mLoginListener, mEmailAddress, mPassword);
 
                 mLoginListener.needs2fa(mEmailAddress, mRequestedPassword);
                 break;
@@ -237,7 +237,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
-        saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mRequestedPassword);
+        saveCredentialsInSmartLock(mLoginListener, mEmailAddress, mRequestedPassword);
 
         doFinishLogin();
     }

@@ -279,11 +279,10 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         NotificationsUpdateService.startService(getActivity().getApplicationContext());
     }
 
-    protected void saveCredentialsInSmartLock(SmartLockHelper smartLockHelper, String username, String password) {
+    protected void saveCredentialsInSmartLock(LoginListener loginListener, String username, String password) {
         // mUsername and mPassword are null when the user log in with a magic link
-        if (smartLockHelper != null) {
-            smartLockHelper.saveCredentialsInSmartLock(username, password,
-                    mAccountStore.getAccount().getDisplayName(),
+        if (loginListener != null) {
+            loginListener.saveCredentials(username, password, mAccountStore.getAccount().getDisplayName(),
                     Uri.parse(mAccountStore.getAccount().getAvatarUrl()));
         }
     }

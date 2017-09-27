@@ -438,7 +438,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
         if (mLoginListener != null) {
             if (mIsWpcom) {
-                saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mRequestedUsername, mRequestedPassword);
+                saveCredentialsInSmartLock(mLoginListener, mRequestedUsername, mRequestedPassword);
             }
 
             mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);

@@ -2,8 +2,10 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -386,8 +388,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     // SmartLock
 
     @Override
-    public SmartLockHelper getSmartLockHelper() {
-        return mSmartLockHelper;
+    public void saveCredentials(@NonNull final String username, @NonNull final String password,
+                                @NonNull final String displayName, @Nullable final Uri profilePicture) {
+        mSmartLockHelper.saveCredentialsInSmartLock(username, password, displayName, profilePicture);
     }
 
     @Override
