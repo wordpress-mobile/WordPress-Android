@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 public class ThemeStore extends Store {
     // Payloads
-    public static class FetchedCurrentThemePayload extends Payload {
+    public static class FetchedCurrentThemePayload extends Payload<FetchThemesError> {
         public SiteModel site;
         public ThemeModel theme;
         public FetchThemesError error;
@@ -34,9 +34,14 @@ public class ThemeStore extends Store {
             this.site = site;
             this.theme = theme;
         }
+
+        @Override
+        public boolean isError() {
+            return this.error != null;
+        }
     }
 
-    public static class FetchedThemesPayload extends Payload {
+    public static class FetchedThemesPayload extends Payload<FetchThemesError> {
         public SiteModel site;
         public List<ThemeModel> themes;
         public FetchThemesError error;
@@ -51,7 +56,7 @@ public class ThemeStore extends Store {
         }
     }
 
-    public static class ActivateThemePayload extends Payload {
+    public static class ActivateThemePayload extends Payload<ActivateThemeError> {
         public SiteModel site;
         public ThemeModel theme;
         public ActivateThemeError error;
@@ -67,6 +72,7 @@ public class ThemeStore extends Store {
         UNAUTHORIZED,
         NOT_AVAILABLE,
         THEME_NOT_FOUND,
+        THEME_ALREADY_INSTALLED,
         MISSING_THEME;
 
         public static ThemeErrorType fromString(String type) {
@@ -155,6 +161,10 @@ public class ThemeStore extends Store {
                 break;
             case FETCHED_INSTALLED_THEMES:
                 handleInstalledThemesFetched((FetchedThemesPayload) action.getPayload());
+                break;
+            case FETCH_PURCHASED_THEMES:
+                break;
+            case FETCHED_PURCHASED_THEMES:
                 break;
             case FETCH_CURRENT_THEME:
                 fetchCurrentTheme((SiteModel) action.getPayload());
@@ -254,16 +264,14 @@ public class ThemeStore extends Store {
         if (payload.site.isJetpackConnected()) {
             mThemeRestClient.installTheme(payload.site, payload.theme);
         } else {
-            payload.error = new ActivateThemeError("not_available", null);
+            payload.error = new ActivateThemeError(ThemeErrorType.NOT_AVAILABLE.name(), null);
             handleThemeInstalled(payload);
         }
     }
 
     private void handleThemeInstalled(@NonNull ActivateThemePayload payload) {
         OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
-        if (payload.isError()) {
-            event.error = payload.error;
-        }
+        event.error = payload.error;
         emitChange(event);
     }
 
@@ -278,9 +286,7 @@ public class ThemeStore extends Store {
 
     private void handleThemeActivated(@NonNull ActivateThemePayload payload) {
         OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
-        if (payload.isError()) {
-            event.error = payload.error;
-        }
+        event.error = payload.error;
         emitChange(event);
     }
 
