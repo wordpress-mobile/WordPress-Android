@@ -142,6 +142,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private EditorBetaClickListener mEditorBetaClickListener;
 
+    public Drawable loadingImagePlaceholder;
+    public Drawable loadingVideoPlaceholder;
+
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -163,6 +166,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
+
+        loadingImagePlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
+        loadingImagePlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+        loadingVideoPlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
+        loadingVideoPlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
 
         // request dependency injection
         if (getActivity() instanceof EditorFragmentActivity) {
@@ -673,24 +681,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         final int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            // We're download the image/video from the network. Show the placeholder immediately since it could require time.
-            final Drawable placeholder;
-            if(mediaFile.isVideo()) {
-                placeholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
-            } else {
-                placeholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
-            }
-            placeholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+
 
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
             setAttributeValuesIfNotDefault(attributes, mediaFile);
             if(mediaFile.isVideo()) {
                 addVideoUploadingClassIfMissing(attributes);
-                content.insertVideo(placeholder, attributes);
+                content.insertVideo(loadingVideoPlaceholder, attributes);
                 overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
             } else {
-                content.insertImage(placeholder, attributes);
+                content.insertImage(loadingImagePlaceholder, attributes);
             }
 
             final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;

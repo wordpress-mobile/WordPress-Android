@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -1044,15 +1043,10 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void initializeEditorFragment() {
         if (mEditorFragment instanceof AztecEditorFragment) {
-            Drawable loadingDrawable = getResources().getDrawable(R.drawable.ic_gridicons_image);
-            loadingDrawable.setBounds(0, 0,
-                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
-                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
-
             AztecEditorFragment aztecEditorFragment = (AztecEditorFragment)mEditorFragment;
             aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
-            aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext(), loadingDrawable));
-            aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingDrawable));
+            aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext(), aztecEditorFragment.loadingImagePlaceholder));
+            aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), aztecEditorFragment.loadingVideoPlaceholder));
         }
     }
 

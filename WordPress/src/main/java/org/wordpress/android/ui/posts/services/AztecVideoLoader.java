@@ -9,8 +9,6 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
-import org.wordpress.android.R;
-import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.aztec.Html;
 
