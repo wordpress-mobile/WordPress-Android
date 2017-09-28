@@ -1052,7 +1052,7 @@ public class EditPostActivity extends AppCompatActivity implements
             AztecEditorFragment aztecEditorFragment = (AztecEditorFragment)mEditorFragment;
             aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
             aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext(), loadingDrawable));
-            aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext()));
+            aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingDrawable));
         }
     }
 

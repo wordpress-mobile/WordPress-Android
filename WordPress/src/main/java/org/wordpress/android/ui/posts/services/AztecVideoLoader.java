@@ -19,9 +19,11 @@ import java.io.File;
 public class AztecVideoLoader implements Html.VideoThumbnailGetter {
 
     private Context context;
+    private final Drawable loadingInProgress;
 
-    public AztecVideoLoader(Context context) {
+    public AztecVideoLoader(Context context, Drawable loadingInProgressDrawable) {
         this.context = context;
+        this.loadingInProgress = loadingInProgressDrawable;
     }
 
     public void loadVideoThumbnail(final String url, final Html.VideoThumbnailGetter.Callbacks callbacks, final int maxWidth) {
@@ -32,11 +34,7 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
             return;
         }
 
-        Drawable drawable = context.getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
-        drawable.setBounds(0, 0,
-                AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
-                AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
-        callbacks.onThumbnailLoading(drawable);
+        callbacks.onThumbnailLoading(loadingInProgress);
 
         new AsyncTask<Void, Void, Bitmap>() {
             protected Bitmap doInBackground(Void... params) {
