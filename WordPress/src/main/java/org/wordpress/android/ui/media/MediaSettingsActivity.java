@@ -237,6 +237,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         imagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
         findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() || isAudio() || isDocument() ? View.GONE : View.VISIBLE);
 
+        adjustToolbar();
+
         // tap to show full screen view (not supported for documents)
         if (!isDocument()) {
             View.OnClickListener listener = new View.OnClickListener() {
@@ -327,6 +329,21 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         // slide out transition
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_bottom);
+        }
+    }
+
+    /*
+     * adjust the toolbar so it doesn't overlap the status bar
+     */
+    private void adjustToolbar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                int statusHeight = getResources().getDimensionPixelSize(resourceId);
+                View toolbar = findViewById(R.id.toolbar);
+                toolbar.getLayoutParams().height += statusHeight;
+                toolbar.setPadding(0, statusHeight, 0, 0);
+            }
         }
     }
 
