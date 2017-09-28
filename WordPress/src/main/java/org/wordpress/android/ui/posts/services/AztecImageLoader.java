@@ -18,12 +18,12 @@ import java.io.File;
 
 public class AztecImageLoader implements Html.ImageGetter {
 
-    private final Drawable loadingInProgess;
+    private final Drawable loadingInProgress;
     private Context context;
 
     public AztecImageLoader(Context context, Drawable loadingInProgressDrawable) {
         this.context = context;
-        this.loadingInProgess = loadingInProgressDrawable;
+        this.loadingInProgress = loadingInProgressDrawable;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class AztecImageLoader implements Html.ImageGetter {
             return;
         }
 
-        callbacks.onImageLoading(loadingInProgess);
+        callbacks.onImageLoading(loadingInProgress);
 
         WordPress.sImageLoader.get(url, new ImageLoader.ImageListener() {
             @Override
