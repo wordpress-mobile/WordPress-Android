@@ -1,4 +1,4 @@
-package org.wordpress.android.widgets;
+package org.wordpress.android.login.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.wordpress.android.R;
-import org.wordpress.android.util.ViewUtils;
+import org.wordpress.android.login.R;
+import org.wordpress.android.login.util.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -22,12 +22,12 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.login.widgets.WPLoginInputRow;
+import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.widgets.WPLoginInputRow;
-import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

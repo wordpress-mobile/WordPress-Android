@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.login.util;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -10,6 +10,7 @@ import android.view.View;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+// TODO Move to utils lib
 public class ViewUtils {
     /**
      * Generate a value suitable for use in {@link View#setId(int)}.

@@ -30,6 +30,8 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.Di
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginListener;
+import org.wordpress.android.login.widgets.WPLoginInputRow;
+import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -38,8 +40,6 @@ import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.WPLoginInputRow;
-import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
 import java.util.ArrayList;
 

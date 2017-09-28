@@ -1,4 +1,4 @@
-package org.wordpress.android.widgets;
+package org.wordpress.android.login.widgets;
 
 import android.content.Context;
 import android.support.design.widget.TextInputLayout;
@@ -6,11 +6,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
 
-import org.wordpress.android.R;
+import org.wordpress.android.login.R;
 
 /**
  * Custom TextInputLayout to provide a usable getBaseline() and error view padding
  */
+// TODO Move to utils lib
 public class WPTextInputLayout extends TextInputLayout {
     public WPTextInputLayout(Context context) {
         super(context);
@@ -27,7 +28,8 @@ public class WPTextInputLayout extends TextInputLayout {
     @Override
     public int getBaseline() {
         EditText editText = getEditText();
-        return editText != null ? editText.getBaseline() - editText.getPaddingBottom() + getResources().getDimensionPixelSize(R.dimen.textinputlayout_baseline_correction) : 0;
+        return editText != null ? editText.getBaseline() - editText.getPaddingBottom() +
+                getResources().getDimensionPixelSize(R.dimen.textinputlayout_baseline_correction) : 0;
     }
 
     @Override

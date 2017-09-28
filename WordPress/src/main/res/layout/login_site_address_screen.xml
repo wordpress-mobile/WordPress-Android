@@ -20,7 +20,7 @@
         android:layout_marginBottom="@dimen/margin_extra_large"
         tools:text="@string/enter_site_address" />
 
-    <org.wordpress.android.widgets.WPLoginInputRow
+    <org.wordpress.android.login.widgets.WPLoginInputRow
         android:id="@+id/login_site_address_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
