@@ -502,6 +502,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                     event.error.type.toString(), event.error.message);
 
             switch (event.error.type) {
+                // WordPress account exists with input email address, but not connected.
+                case USER_EXISTS:
+                    mLoginListener.loginViaSocialAccount(mGoogleEmail, true);
+                    break;
                 // WordPress account does not exist with input email address.
                 case UNKNOWN_USER:
                     showErrorDialog(getString(R.string.login_error_email_not_found, mGoogleEmail));
