@@ -24,7 +24,6 @@ public class ThemeStore extends Store {
     public static class FetchedCurrentThemePayload extends Payload<FetchThemesError> {
         public SiteModel site;
         public ThemeModel theme;
-        public FetchThemesError error;
 
         public FetchedCurrentThemePayload(FetchThemesError error) {
             this.error = error;
@@ -34,17 +33,11 @@ public class ThemeStore extends Store {
             this.site = site;
             this.theme = theme;
         }
-
-        @Override
-        public boolean isError() {
-            return this.error != null;
-        }
     }
 
     public static class FetchedThemesPayload extends Payload<FetchThemesError> {
         public SiteModel site;
         public List<ThemeModel> themes;
-        public FetchThemesError error;
 
         public FetchedThemesPayload(FetchThemesError error) {
             this.error = error;
@@ -59,7 +52,6 @@ public class ThemeStore extends Store {
     public static class ActivateThemePayload extends Payload<ActivateThemeError> {
         public SiteModel site;
         public ThemeModel theme;
-        public ActivateThemeError error;
 
         public ActivateThemePayload(SiteModel site, ThemeModel theme) {
             this.site = site;
