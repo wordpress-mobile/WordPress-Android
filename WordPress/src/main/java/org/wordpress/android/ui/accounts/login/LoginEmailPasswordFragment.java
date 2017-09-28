@@ -241,7 +241,9 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
-        saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mRequestedPassword);
+        if (!isSocialLogin) {
+            saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mRequestedPassword);
+        }
 
         doFinishLogin();
     }
