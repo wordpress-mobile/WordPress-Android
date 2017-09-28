@@ -40,6 +40,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
+    private static final String ARG_SOCIAL_LOGIN = "ARG_SOCIAL_LOGIN";
 
     private static final String FORGOT_PASSWORD_URL_WPCOM = "https://wordpress.com/";
 
@@ -52,12 +53,14 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     private String mEmailAddress;
     private String mPassword;
+    private boolean isSocialLogin;
 
-    public static LoginEmailPasswordFragment newInstance(String emailAddress, String password) {
+    public static LoginEmailPasswordFragment newInstance(String emailAddress, String password, boolean isSocialLogin) {
         LoginEmailPasswordFragment fragment = new LoginEmailPasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
         args.putString(ARG_PASSWORD, password);
+        args.putBoolean(ARG_SOCIAL_LOGIN, isSocialLogin);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,6 +72,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
         mPassword = getArguments().getString(ARG_PASSWORD);
+        isSocialLogin = getArguments().getBoolean(ARG_SOCIAL_LOGIN);
 
         if (savedInstanceState != null) {
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
