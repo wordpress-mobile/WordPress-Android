@@ -167,9 +167,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
 
-        loadingImagePlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
+        loadingImagePlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
         loadingImagePlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
-        loadingVideoPlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
+        loadingVideoPlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
         loadingVideoPlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
 
         // request dependency injection
