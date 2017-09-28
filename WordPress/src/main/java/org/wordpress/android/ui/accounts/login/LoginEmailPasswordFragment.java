@@ -92,7 +92,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     @Override
     protected void setupLabel(TextView label) {
-        label.setText(R.string.enter_wpcom_password);
+        label.setText(isSocialLogin ? R.string.enter_wpcom_password_google : R.string.enter_wpcom_password);
     }
 
     @Override
