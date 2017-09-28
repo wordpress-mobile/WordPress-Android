@@ -261,6 +261,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
+    public void loginViaSocialAccount(String email, boolean isPasswordRequired) {
+    }
+
+    @Override
     public void loginViaWpcomUsernameInstead() {
         jumpToUsernamePassword(null, null);
     }
