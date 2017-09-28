@@ -378,13 +378,12 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     private MediaError parseUploadError(Response response, SiteModel siteModel) {
         MediaError mediaError = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
 
-        if (response.code() == 403) {
-            mediaError.type = MediaErrorType.AUTHORIZATION_REQUIRED;
-        } else if (response.code() == 413) {
-            mediaError.type = MediaErrorType.REQUEST_TOO_LARGE;
+        if (mediaError.type == MediaErrorType.REQUEST_TOO_LARGE) {
+            // 413 (Request too large) errors are coming from the web server and are not an API response like the rest
             mediaError.message = response.message();
             return mediaError;
         }
+
         try {
             ResponseBody responseBody = response.body();
             if (responseBody == null) {
