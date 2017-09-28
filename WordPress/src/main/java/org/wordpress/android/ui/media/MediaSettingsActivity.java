@@ -25,6 +25,8 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -154,7 +156,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         }
@@ -182,19 +184,38 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         // determine media type up front, default to DOCUMENT if we can't detect it's an image, video, or audio file
+        final String title;
         if (MediaUtils.isValidImage(mMedia.getUrl())) {
             mMediaType = MediaType.IMAGE;
-            setTitle(R.string.media_title_image_details);
+            title = getString(R.string.media_title_image_details);
         } else if (mMedia.isVideo()) {
             mMediaType = MediaType.VIDEO;
-            setTitle(R.string.media_title_video_details);
+            title = getString(R.string.media_title_video_details);
         } else if (MediaUtils.isAudio(mMedia.getUrl())) {
             mMediaType = MediaType.AUDIO;
-            setTitle(R.string.media_title_audio_details);
+            title = getString(R.string.media_title_audio_details);
         } else {
             mMediaType = MediaType.DOCUMENT;
-            setTitle(R.string.media_title_document_details);
+            title = getString(R.string.media_title_document_details);
         }
+
+        // only show title when toolbar is collapsed
+        final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            int scrollRange = -1;
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbar.setTitle(title);
+                } else {
+                    collapsingToolbar.setTitle(" "); // space between double quotes is on purpose
+                }
+            }
+        });
 
         // make image 40% of screen height
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
