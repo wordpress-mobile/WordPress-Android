@@ -73,6 +73,8 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
+        setRetainInstance(true);
+
         if (!NetworkUtils.checkConnection(getActivity())) {
             getActivity().finish();
             return;
