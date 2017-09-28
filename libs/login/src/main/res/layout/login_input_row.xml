@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/input_layout"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:importantForAccessibility="no"
+        android:tint="@color/grey_lighten_10"
+        app:srcCompat="@drawable/ic_user_grey_24dp"/>
+
+    <org.wordpress.android.login.widgets.WPTextInputLayout
+        app:theme="@style/LoginTheme.EditText"
+        android:id="@+id/input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/icon"
+        android:layout_toEndOf="@+id/icon">
+
+        <android.support.design.widget.TextInputEditText
+            app:theme="@style/LoginTheme.EditText"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:id="@+id/input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/textinputlayout_correction_margin_right"
+            android:layout_marginEnd="@dimen/textinputlayout_correction_margin_right"
+            android:hint="@string/email_address"/>
+    </org.wordpress.android.login.widgets.WPTextInputLayout>
+</RelativeLayout>
