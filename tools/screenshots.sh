@@ -102,6 +102,25 @@ function wait() {
   echo Done
 }
 
+function screenshot() {
+  echo -n Taking screenshot with name $1...
+  adb $ADB_PARAMS shell screencap -p /sdcard/$1.png &>/dev/null
+  echo -n  pulling the file...
+  adb $ADB_PARAMS pull /sdcard/$1.png ./$1.png &>/dev/null
+  echo Done
+}
+
+function locale() {
+  echo -n Preparing to set locale...
+  adb $ADB_PARAMS root &>/dev/null
+  echo Done
+  echo -n Setting locale to $1...
+  adb $ADB_PARAMS shell "setprop ro.product.locale $1; setprop persist.sys.locale $1; stop; sleep 5; start" &>/dev/null
+	wait 10
+	wait_emu
+	wait 10
+}
+
 start_emu
 wait_emu
 uninstall
@@ -115,18 +134,31 @@ start_app
 wait 5 # wait for app to finish start up
 
 kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
-start_app
 
-tap_on $COORDS_MY_SITES
-wait 5
+for loc in en-US el-GR
+do
+  PREFIX=wpandroid_"$loc"
 
-tap_on $COORDS_READER
-wait 5
+  locale $loc
 
-tap_on $COORDS_ME
-wait 2
-tap_on $COORDS_ME_GRAVATAR_POPUP # dismiss the Gravatar change popup
-wait 5
+  start_app
+  wait 3
 
-tap_on $COORDS_NOTIFS
-wait 5
+  tap_on $COORDS_MY_SITE
+  wait 2
+  screenshot "$PREFIX"_mysites
+
+  tap_on $COORDS_READER
+  wait 10 # wait for reader to refresh
+  screenshot "$PREFIX"_reader
+
+  tap_on $COORDS_ME
+  wait 2
+  tap_on $COORDS_ME_GRAVATAR_POPUP # dismiss the Gravatar change popup
+  wait 5
+  screenshot "$PREFIX"_me
+
+  tap_on $COORDS_NOTIFS
+  wait 5
+  screenshot "$PREFIX"_notifs
+done
