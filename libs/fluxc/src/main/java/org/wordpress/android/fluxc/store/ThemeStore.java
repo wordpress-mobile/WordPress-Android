@@ -249,6 +249,13 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getThemesForSite(site);
     }
 
+    public ThemeModel getThemeWithId(String themeId) {
+        if (themeId == null || themeId.isEmpty()) {
+            return null;
+        }
+        return ThemeSqlUtils.getThemeWithId(themeId);
+    }
+
     private void fetchWpThemes() {
         mThemeRestClient.fetchWpComThemes();
     }
