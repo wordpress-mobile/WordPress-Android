@@ -272,7 +272,7 @@
             android:name=".ui.media.MediaSettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:label="@string/media"
-            android:theme="@style/WordPress" />
+            android:theme="@style/MediaSettings.Activity" />
 
         <!-- Theme Activities -->
         <activity

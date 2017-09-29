@@ -257,6 +257,11 @@
     </style>
 
     <style name="MediaSettings" />
+    <style name="MediaSettings.Activity" parent="WordPress">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
     <style name="MediaSettings.TextInputStyle">
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
     </style>
@@ -672,4 +677,5 @@
         <item name="android:minHeight">8dip</item>
         <item name="android:maxHeight">8dip</item>
     </style>
+
 </resources>

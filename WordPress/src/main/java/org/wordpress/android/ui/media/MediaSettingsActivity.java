@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -16,7 +15,6 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -27,19 +25,20 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -154,14 +153,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         setContentView(R.layout.media_settings_activity);
 
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-            makeStatusAndToolbarTransparent();
-            //noinspection RestrictedApi
-            actionBar.setShowHideAnimationEnabled(true);
         }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
@@ -187,33 +184,43 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         // determine media type up front, default to DOCUMENT if we can't detect it's an image, video, or audio file
+        final String title;
         if (MediaUtils.isValidImage(mMedia.getUrl())) {
             mMediaType = MediaType.IMAGE;
-            setTitle(R.string.media_title_image_details);
+            title = getString(R.string.media_title_image_details);
         } else if (mMedia.isVideo()) {
             mMediaType = MediaType.VIDEO;
-            setTitle(R.string.media_title_video_details);
+            title = getString(R.string.media_title_video_details);
         } else if (MediaUtils.isAudio(mMedia.getUrl())) {
             mMediaType = MediaType.AUDIO;
-            setTitle(R.string.media_title_audio_details);
+            title = getString(R.string.media_title_audio_details);
         } else {
             mMediaType = MediaType.DOCUMENT;
-            setTitle(R.string.media_title_document_details);
+            title = getString(R.string.media_title_document_details);
         }
+
+        // only show title when toolbar is collapsed
+        final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            int scrollRange = -1;
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbar.setTitle(title);
+                } else {
+                    collapsingToolbar.setTitle(" "); // space between double quotes is on purpose
+                }
+            }
+        });
 
         // make image 40% of screen height
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
         int imageHeight = (int) (displayHeight * 0.4);
         mImageView.getLayoutParams().height = imageHeight;
-
-        // position the fab so it overlaps the image
-        if (shouldShowFab()) {
-            int fabHeight = DisplayUtils.dpToPx(this, 56);
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mFabView.getLayoutParams();
-            int topMargin = imageHeight - (fabHeight / 2);
-            int rightMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
-            params.setMargins(0, topMargin, rightMargin, 0);
-        }
 
         // position progress in middle of image
         View progressView = findViewById(R.id.progress);
@@ -229,6 +236,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         ImageView imagePlay = (ImageView) findViewById(R.id.image_play);
         imagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
         findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() || isAudio() || isDocument() ? View.GONE : View.VISIBLE);
+
+        adjustToolbar();
 
         // tap to show full screen view (not supported for documents)
         if (!isDocument()) {
@@ -313,17 +322,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }, 1500);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void makeStatusAndToolbarTransparent() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (getSupportActionBar() != null) {
-                int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
-                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(toolbarColor));
-            }
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-    }
-
     @Override
     public void finish() {
         super.finish();
@@ -331,6 +329,21 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         // slide out transition
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_bottom);
+        }
+    }
+
+    /*
+     * adjust the toolbar so it doesn't overlap the status bar
+     */
+    private void adjustToolbar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                int statusHeight = getResources().getDimensionPixelSize(resourceId);
+                View toolbar = findViewById(R.id.toolbar);
+                toolbar.getLayoutParams().height += statusHeight;
+                toolbar.setPadding(0, statusHeight, 0, 0);
+            }
         }
     }
 
@@ -597,10 +610,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void showFullScreen() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
-
         hideFab();
 
         // show fullscreen preview after a brief delay so fab & actionBar animations don't stutter
