@@ -148,8 +148,12 @@ dependencies {
     debugCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'debug')
     releaseCompile project(path:':libs:editor:WordPressEditor', configuration: 'release')
     debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
-    releaseCompile project(path:':libs:login:WordPressLoginFlow', configuration: 'release')
-    debugCompile project(path:':libs:login:WordPressLoginFlow', configuration: 'debug')
+    releaseCompile (project(path:':libs:login:WordPressLoginFlow', configuration: 'release')) {
+        exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc";
+    }
+    debugCompile (project(path:':libs:login:WordPressLoginFlow', configuration: 'debug')) {
+        exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc";
+    }
 
     // Debug
     debugCompile 'com.facebook.stetho:stetho:1.4.2'
