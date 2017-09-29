@@ -67,6 +67,22 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
+    /**
+     * @return the first theme that matches a given theme ID; null if none found
+     */
+    public static ThemeModel getThemeWithId(@NonNull String themeId) {
+        List<ThemeModel> matches = WellSql.select(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.THEME_ID, themeId)
+                .endWhere().getAsModel();
+
+        if (matches == null || matches.isEmpty()) {
+            return null;
+        }
+
+        return matches.get(0);
+    }
+
     public static void removeThemes(@NonNull SiteModel site) {
         removeThemes(site.getId());
     }
