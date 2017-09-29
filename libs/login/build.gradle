@@ -11,6 +11,7 @@ apply plugin: 'com.android.library'
 
 repositories {
     jcenter()
+    maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/wordpress-mobile/maven" } // Drop once analytics lib is added to jcenter
 }
 
@@ -34,4 +35,8 @@ dependencies {
 
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
+
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:77e383f3e65ce1cee3f9ebad2eac522f29b4e3b8') {
+        exclude group: "com.android.volley";
+    }
 }
