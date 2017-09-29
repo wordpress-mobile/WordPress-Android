@@ -47,6 +47,8 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class MediaPreviewFragment extends Fragment implements MediaController.MediaPlayerControl {
 
+    public static final String TAG = "media_preview_fragment";
+
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_IS_VIDEO = "is_video";
     private static final String ARG_IS_AUDIO = "is_audio";
@@ -57,6 +59,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     private String mTitle;
     private boolean mIsVideo;
     private boolean mIsAudio;
+    private boolean mWasPaused;
     private int mPosition;
 
     private SiteModel mSite;
@@ -159,38 +162,49 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         mVideoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
         mAudioFrame.setVisibility(mIsAudio ? View.VISIBLE : View.GONE);
 
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showToolbar();
-                if (mControls != null) {
-                    mControls.show();
-                }
-            }
-        };
-
-        if (mIsVideo) {
-            mVideoFrame.setOnClickListener(listener);
-            playVideo(mContentUri, mPosition);
-        } else if (mIsAudio) {
-            mAudioFrame.setOnClickListener(listener);
-            if (!TextUtils.isEmpty(mTitle)) {
-                TextView txtAudioTitle = (TextView) view.findViewById(R.id.text_audio_title);
-                txtAudioTitle.setText(mTitle);
-                txtAudioTitle.setVisibility(View.VISIBLE);
-            }
-            playAudio(mContentUri, mPosition);
-        } else {
-            loadImage(mContentUri);
-        }
-
-        mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
-
         return view;
     }
 
     @Override
-    public void onStop() {
+    public void onResume() {
+        super.onResume();
+
+        if (!mWasPaused) {
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showToolbar();
+                    if (mControls != null) {
+                        mControls.show();
+                    }
+                }
+            };
+
+            if (mIsVideo) {
+                mVideoFrame.setOnClickListener(listener);
+                playVideo(mContentUri, mPosition);
+            } else if (mIsAudio) {
+                mAudioFrame.setOnClickListener(listener);
+                if (!TextUtils.isEmpty(mTitle)) {
+                    TextView txtAudioTitle = (TextView) getView().findViewById(R.id.text_audio_title);
+                    txtAudioTitle.setText(mTitle);
+                    txtAudioTitle.setVisibility(View.VISIBLE);
+                }
+                playAudio(mContentUri, mPosition);
+            } else {
+                loadImage(mContentUri);
+            }
+
+            mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
+        } else {
+            mWasPaused = false;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        mWasPaused = true;
+
         if (mControls != null) {
             mControls.hide();
         }
@@ -200,7 +214,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         if (mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
         }
-        super.onStop();
+        super.onPause();
     }
 
     @Override
