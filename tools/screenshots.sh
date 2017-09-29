@@ -91,7 +91,7 @@ function kill_app {
 }
 
 function tap_on {
-  echo -n Tapping on the $1x$2...
+  echo -n Tapping on $1x$2...
   adb $ADB_PARAMS shell input tap $1 $2 &>/dev/null
   echo Done
 }
