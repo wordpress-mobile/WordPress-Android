@@ -39,6 +39,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener {
@@ -391,6 +392,23 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void saveCredentials(@NonNull final String username, @NonNull final String password,
                                 @NonNull final String displayName, @Nullable final Uri profilePicture) {
         mSmartLockHelper.saveCredentialsInSmartLock(username, password, displayName, profilePicture);
+    }
+
+    // Analytics
+
+    @Override
+    public void track(AnalyticsTracker.Stat stat) {
+        AnalyticsTracker.track(stat);
+    }
+
+    @Override
+    public void track(AnalyticsTracker.Stat stat, Map<String, ?> properties) {
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    @Override
+    public void track(AnalyticsTracker.Stat stat, String errorContext, String errorType, String errorDescription) {
+        AnalyticsTracker.track(stat, errorContext, errorType, errorDescription);
     }
 
     @Override

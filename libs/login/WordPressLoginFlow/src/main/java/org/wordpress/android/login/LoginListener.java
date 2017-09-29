@@ -4,7 +4,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.wordpress.android.analytics.AnalyticsTracker;
+
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface LoginListener {
     LoginMode getLoginMode();
@@ -52,4 +55,8 @@ public interface LoginListener {
     void help2FaScreen(String email);
 
     void setHelpContext(String faqId, String faqSection);
+
+    void track(AnalyticsTracker.Stat stat);
+    void track(AnalyticsTracker.Stat stat, Map<String, ?> properties);
+    void track(AnalyticsTracker.Stat stat, String errorContext, String errorType, String errorDescription);
 }
