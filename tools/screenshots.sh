@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# TODO: check for adb
+# TODO: check for AVD
+# TODO: check for imagemagick
+
 . tokendeeplink.sh
 
 if [ -z "$TOKEN_DEEPLINK" ]; then
@@ -14,9 +18,10 @@ fi;
 
 AVD=Nexus_5X_API_25
 
+APP_HEIGHT=1388
 NAV_HEIGHT=96
 SKIN_WIDTH=840
-SKIN_HEIGHT=$((1388+$NAV_HEIGHT))
+SKIN_HEIGHT=$(($APP_HEIGHT+$NAV_HEIGHT))
 SKIN=$SKIN_WIDTH'x'$SKIN_HEIGHT
 LCD_DPI=320
 
@@ -32,6 +37,13 @@ COORDS_ME_GRAVATAR_POPUP="650 300"
 COORDS_NOTIFS="700 100"
 
 ADB_PARAMS="-e"
+
+PHONE_TEMPLATE=android-phone-template2.png
+PHONE_OFFSET="+121+532"
+TAB7_TEMPLATE=android-tab7-template2.png
+TAB7_OFFSET="+145+552"
+TAB10_TEMPLATE=android-tab10-template2.png
+TAB10_OFFSET="+148+622"
 
 #echo $AVD
 #echo '\n'
@@ -110,6 +122,14 @@ function screenshot() {
   echo Done
 }
 
+function produce() {
+  screenshot $1
+  magick $1.png -crop 0x$APP_HEIGHT+0+0 $1_cropped.png
+  template=$2_TEMPLATE
+  offset=$2_OFFSET
+  magick ${!template} $1_cropped.png -geometry ${!offset} -composite $1_comp1.png
+}
+
 function locale() {
   echo -n Preparing to set locale...
   adb $ADB_PARAMS root &>/dev/null
@@ -135,30 +155,34 @@ wait 5 # wait for app to finish start up
 
 kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
 
-for loc in en-US el-GR
+for device in PHONE #TAB7 TAB10
 do
-  PREFIX=wpandroid_"$loc"
+  for loc in en-US #el-GR it-IT
+  do
+    PREFIX=wpandroid_"$device"_"$loc"
 
-  locale $loc
+    locale $loc
 
-  start_app
-  wait 3
+    start_app
+    wait 3
 
-  tap_on $COORDS_MY_SITE
-  wait 2
-  screenshot "$PREFIX"_mysites
+    tap_on $COORDS_MY_SITE
+    wait 2
+    produce "$PREFIX"_mysites $device
+  
+    tap_on $COORDS_READER
+    wait 10 # wait for reader to refresh
+    screenshot "$PREFIX"_reader
 
-  tap_on $COORDS_READER
-  wait 10 # wait for reader to refresh
-  screenshot "$PREFIX"_reader
+    tap_on $COORDS_ME
+    wait 2
+    tap_on $COORDS_ME_GRAVATAR_POPUP # dismiss the Gravatar change popup
+    wait 5
+    screenshot "$PREFIX"_me
 
-  tap_on $COORDS_ME
-  wait 2
-  tap_on $COORDS_ME_GRAVATAR_POPUP # dismiss the Gravatar change popup
-  wait 5
-  screenshot "$PREFIX"_me
-
-  tap_on $COORDS_NOTIFS
-  wait 5
-  screenshot "$PREFIX"_notifs
+    tap_on $COORDS_NOTIFS
+    wait 5
+    screenshot "$PREFIX"_notifs
+  done
 done
+
