@@ -268,19 +268,23 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     private MediaPagerAdapter mPagerAdapter;
     private MediaPagerAdapter getPagerAdapter() {
         if (mPagerAdapter == null) {
-            List<MediaModel> mediaList = mMediaStore.getAllSiteMedia(mSite);
-            int initialPos = 0;
-            for (int i = 0; i < mediaList.size(); i++) {
-                if (mediaList.get(i).getId() == mMediaId) {
-                    initialPos = i;
-                    break;
-                }
-            }
-
+            final List<MediaModel> mediaList = mMediaStore.getAllSiteMedia(mSite);
             mPagerAdapter = new MediaPagerAdapter(getFragmentManager());
             mPagerAdapter.setMediaList(mediaList);
 
-            mViewPager.setCurrentItem(initialPos);
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    int initialPos = 0;
+                    for (int i = 0; i < mediaList.size(); i++) {
+                        if (mediaList.get(i).getId() == mMediaId) {
+                            initialPos = i;
+                            break;
+                        }
+                    }
+                    mViewPager.setCurrentItem(initialPos);
+                }
+            });
         }
         return mPagerAdapter;
     }
