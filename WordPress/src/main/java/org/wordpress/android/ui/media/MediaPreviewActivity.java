@@ -32,6 +32,8 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPViewPagerTransformer;
+import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,6 +161,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         if (mSite != null && mMediaId != 0) {
             fragmentContainer.setVisibility(View.GONE);
             mViewPager.setVisibility(View.VISIBLE);
+            mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
             mViewPager.setAdapter(getPagerAdapter());
         } else {
             fragmentContainer.setVisibility(View.VISIBLE);
