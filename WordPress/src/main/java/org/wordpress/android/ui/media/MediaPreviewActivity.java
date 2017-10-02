@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
@@ -43,6 +44,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
     static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     static final String ARG_IS_VIDEO = "is_video";
+    static final String ARG_IS_AUDIO = "is_audio";
     static final String ARG_TITLE = "title";
     static final String ARG_MEDIA_ID = "media_id";
 
@@ -50,6 +52,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     private String mContentUri;
     private String mTitle;
     private boolean mIsVideo;
+    private boolean mIsAudio;
 
     private SiteModel mSite;
 
@@ -96,6 +99,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         intent.putExtra(ARG_TITLE, media.getTitle());
         intent.putExtra(ARG_IS_VIDEO, media.isVideo());
 
+        String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
+        intent.putExtra(ARG_IS_AUDIO, mimeType.startsWith("audio"));
+
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
         }
@@ -124,12 +130,14 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             mContentUri = savedInstanceState.getString(ARG_MEDIA_CONTENT_URI);
             mTitle = savedInstanceState.getString(ARG_TITLE);
             mIsVideo = savedInstanceState.getBoolean(ARG_IS_VIDEO);
+            mIsAudio = savedInstanceState.getBoolean(ARG_IS_AUDIO);
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mMediaId = getIntent().getIntExtra(ARG_MEDIA_ID, 0);
             mContentUri = getIntent().getStringExtra(ARG_MEDIA_CONTENT_URI);
             mTitle = getIntent().getStringExtra(ARG_TITLE);
             mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
+            mIsAudio = getIntent().getBooleanExtra(ARG_IS_AUDIO, false);
         }
 
         if (TextUtils.isEmpty(mContentUri)) {
@@ -185,6 +193,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         outState.putString(ARG_MEDIA_CONTENT_URI, mContentUri);
         outState.putString(ARG_TITLE, mTitle);
         outState.putBoolean(ARG_IS_VIDEO, mIsVideo);
+        outState.putBoolean(ARG_IS_AUDIO, mIsAudio);
     }
 
     private void delayedFinish(boolean showError) {
@@ -263,7 +272,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             mPagerAdapter = new MediaPagerAdapter(getFragmentManager());
             mPagerAdapter.setMediaList(mediaList);
 
-            // make the originally passed media the selected item
             new Handler().post(new Runnable() {
                 @Override
                 public void run() {
