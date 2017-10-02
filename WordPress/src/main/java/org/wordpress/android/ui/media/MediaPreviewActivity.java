@@ -204,6 +204,8 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
                 .commit();
+
+        // show toolbar when user taps the media item
         fragment.setOnMediaTappedListener(new MediaPreviewFragment.OnMediaTappedListener() {
             @Override
             public void onMediaTapped() {

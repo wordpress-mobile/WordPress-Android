@@ -165,6 +165,9 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                     if (mControls != null) {
                         mControls.show();
                     }
+                    if (mMediaTapListener != null) {
+                        mMediaTapListener.onMediaTapped();
+                    }
                 }
             };
 
