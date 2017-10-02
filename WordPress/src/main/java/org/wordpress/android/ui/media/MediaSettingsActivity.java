@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -140,9 +139,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sourceView, sharedElementName);
         } else {
             options = ActivityOptionsCompat.makeCustomAnimation(
-                            activity,
-                            R.anim.activity_slide_up_from_bottom,
-                            R.anim.do_nothing);
+                    activity,
+                    R.anim.activity_slide_up_from_bottom,
+                    R.anim.do_nothing);
         }
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.MEDIA_SETTINGS, options.toBundle());
     }
@@ -359,12 +358,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     @Override
     public void onBackPressed() {
-        if (isPreviewShowing()) {
-            closePreview();
-        } else {
-            saveChanges();
-            super.onBackPressed();
-        }
+        saveChanges();
+        super.onBackPressed();
     }
 
     @Override
@@ -621,31 +616,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                MediaPreviewFragment fragment = MediaPreviewFragment.newInstance(
-                        MediaSettingsActivity.this,
-                        mSite,
-                        mMedia);
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, fragment, MediaPreviewFragment.TAG)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .addToBackStack(null)
-                        .commit();
+                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia);
             }
         }, 200);
-    }
-
-    private MediaPreviewFragment getPreviewFragment() {
-        return (MediaPreviewFragment) getFragmentManager().findFragmentByTag(MediaPreviewFragment.TAG);
-    }
-
-    private boolean isPreviewShowing() {
-        return getPreviewFragment() != null;
-    }
-
-    private void closePreview() {
-        if (isPreviewShowing()) {
-            getFragmentManager().popBackStack();
-        }
     }
 
     private void showFab() {

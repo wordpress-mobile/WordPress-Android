@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.media;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
@@ -9,15 +8,12 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
@@ -32,7 +28,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -48,12 +43,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class MediaPreviewFragment extends Fragment implements MediaController.MediaPlayerControl {
 
     public static final String TAG = "media_preview_fragment";
-
-    private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
-    private static final String ARG_IS_VIDEO = "is_video";
-    private static final String ARG_IS_AUDIO = "is_audio";
     private static final String ARG_POSITION = "position";
-    private static final String ARG_TITLE = "title";
 
     private String mContentUri;
     private String mTitle;
@@ -64,7 +54,6 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
     private SiteModel mSite;
 
-    private Toolbar mToolbar;
     private ImageView mImageView;
     private VideoView mVideoView;
     private ViewGroup mVideoFrame;
@@ -73,26 +62,21 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     private MediaPlayer mAudioPlayer;
     private MediaController mControls;
 
-    private static final long FADE_DELAY_MS = 3000;
-    private final Handler mFadeHandler = new Handler();
-
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
 
     /**
-     * @param context     self explanatory
      * @param site        optional site this media is associated with
      * @param contentUri  URI of media - can be local or remote
      * @param isVideo     whether the passed media is a video - assumed to be an image otherwise
      */
     public static MediaPreviewFragment newInstance(
-            Context context,
             SiteModel site,
             String contentUri,
             boolean isVideo) {
         Bundle args = new Bundle();
-        args.putString(ARG_MEDIA_CONTENT_URI, contentUri);
-        args.putBoolean(ARG_IS_VIDEO, isVideo);
+        args.putString(MediaPreviewActivity.ARG_MEDIA_CONTENT_URI, contentUri);
+        args.putBoolean(MediaPreviewActivity.ARG_IS_VIDEO, isVideo);
         if (site != null) {
             args.putSerializable(WordPress.SITE, site);
         }
@@ -103,21 +87,19 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     }
 
     /**
-     * @param context     self explanatory
      * @param site        optional site this media is associated with
      * @param media       media model
      */
     public static MediaPreviewFragment newInstance(
-            Context context,
             SiteModel site,
             MediaModel media) {
         Bundle args = new Bundle();
-        args.putString(ARG_MEDIA_CONTENT_URI, media.getUrl());
-        args.putString(ARG_TITLE, media.getTitle());
-        args.putBoolean(ARG_IS_VIDEO, media.isVideo());
+        args.putString(MediaPreviewActivity.ARG_MEDIA_CONTENT_URI, media.getUrl());
+        args.putString(MediaPreviewActivity.ARG_TITLE, media.getTitle());
+        args.putBoolean(MediaPreviewActivity.ARG_IS_VIDEO, media.isVideo());
 
         String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-        args.putBoolean(ARG_IS_AUDIO, mimeType.startsWith("audio"));
+        args.putBoolean(MediaPreviewActivity.ARG_IS_AUDIO, mimeType.startsWith("audio"));
 
         if (site != null) {
             args.putSerializable(WordPress.SITE, site);
@@ -135,10 +117,10 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
         Bundle args = getArguments();
         mSite = (SiteModel) args.getSerializable(WordPress.SITE);
-        mContentUri = args.getString(ARG_MEDIA_CONTENT_URI);
-        mTitle = args.getString(ARG_TITLE);
-        mIsVideo = args.getBoolean(ARG_IS_VIDEO);
-        mIsAudio = args.getBoolean(ARG_IS_AUDIO);
+        mContentUri = args.getString(MediaPreviewActivity.ARG_MEDIA_CONTENT_URI);
+        mTitle = args.getString(MediaPreviewActivity.ARG_TITLE);
+        mIsVideo = args.getBoolean(MediaPreviewActivity.ARG_IS_VIDEO);
+        mIsAudio = args.getBoolean(MediaPreviewActivity.ARG_IS_AUDIO);
 
         if (savedInstanceState != null) {
             mPosition = savedInstanceState.getInt(ARG_POSITION, 0);
@@ -151,7 +133,6 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
         View view = inflater.inflate(R.layout.media_preview_fragment, container, false);
 
-        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         mImageView = (ImageView) view.findViewById(R.id.image_preview);
         mVideoView = (VideoView) view.findViewById(R.id.video_preview);
 
@@ -169,11 +150,12 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     public void onResume() {
         super.onResume();
 
-        if (!mWasPaused) {
+        if (mWasPaused) {
+            mWasPaused = false;
+        } else {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showToolbar();
                     if (mControls != null) {
                         mControls.show();
                     }
@@ -194,10 +176,6 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             } else {
                 loadImage(mContentUri);
             }
-
-            mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
-        } else {
-            mWasPaused = false;
         }
     }
 
@@ -322,7 +300,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float x, float y) {
-                showToolbar();
+                // TODO:
+                //showToolbar();
             }
         });
         mImageView.setImageBitmap(bmp);
@@ -403,43 +382,6 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         initControls();
         showProgress(true);
         mAudioPlayer.prepareAsync();
-    }
-
-    private final Runnable fadeOutRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (isAdded() && mToolbar.getVisibility() == View.VISIBLE) {
-                AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_out_and_up, new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) { }
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        mToolbar.setVisibility(View.GONE);
-                    }
-                    @Override
-                    public void onAnimationRepeat(Animation animation) { }
-                });
-            }
-        }
-    };
-
-    private void showToolbar() {
-        if (isAdded()) {
-            mFadeHandler.removeCallbacks(fadeOutRunnable);
-            mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
-            if (mToolbar.getVisibility() != View.VISIBLE) {
-                AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_in_and_down, new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        mToolbar.setVisibility(View.VISIBLE);
-                    }
-                    @Override
-                    public void onAnimationEnd(Animation animation) { }
-                    @Override
-                    public void onAnimationRepeat(Animation animation) { }
-                });
-            }
-        }
     }
 
     /*
