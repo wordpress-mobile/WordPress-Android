@@ -154,7 +154,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -202,7 +202,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment, MediaPreviewFragment.TAG)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .addToBackStack(null)
                 .commit();
 
         // show toolbar when user taps the media item
