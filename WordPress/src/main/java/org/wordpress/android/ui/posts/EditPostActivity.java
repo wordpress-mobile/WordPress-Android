@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -1045,8 +1046,20 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditorFragment instanceof AztecEditorFragment) {
             AztecEditorFragment aztecEditorFragment = (AztecEditorFragment)mEditorFragment;
             aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
-            aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext()));
-            aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext()));
+
+            Drawable loadingImagePlaceholder = getResources().getDrawable(org.wordpress.android.editor.R.drawable.ic_gridicons_image);
+            loadingImagePlaceholder.setBounds(0, 0,
+                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
+                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+            aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext(), loadingImagePlaceholder));
+            aztecEditorFragment.setLoadingImagePlaceholder(loadingImagePlaceholder);
+
+            Drawable loadingVideoPlaceholder = getResources().getDrawable(org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera);
+            loadingVideoPlaceholder.setBounds(0, 0,
+                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
+                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+            aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
+            aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);
         }
     }
 
