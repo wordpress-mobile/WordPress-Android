@@ -204,6 +204,12 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
                 .commit();
+        fragment.setOnMediaTappedListener(new MediaPreviewFragment.OnMediaTappedListener() {
+            @Override
+            public void onMediaTapped() {
+                showToolbar();
+            }
+        });
     }
 
     private final Runnable fadeOutRunnable = new Runnable() {

@@ -45,6 +45,10 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     public static final String TAG = "media_preview_fragment";
     private static final String ARG_POSITION = "position";
 
+    interface OnMediaTappedListener {
+        void onMediaTapped();
+    }
+
     private String mContentUri;
     private String mTitle;
     private boolean mIsVideo;
@@ -61,6 +65,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
     private MediaPlayer mAudioPlayer;
     private MediaController mControls;
+
+    private OnMediaTappedListener mMediaTapListener;
 
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
@@ -219,6 +225,10 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         }
     }
 
+    void setOnMediaTappedListener(OnMediaTappedListener listener) {
+        mMediaTapListener = listener;
+    }
+
     private void showProgress(boolean show) {
         if (isAdded()) {
             getView().findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
@@ -300,8 +310,9 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float x, float y) {
-                // TODO:
-                //showToolbar();
+                if (mMediaTapListener != null) {
+                    mMediaTapListener.onMediaTapped();
+                }
             }
         });
         mImageView.setImageBitmap(bmp);
