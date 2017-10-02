@@ -45,7 +45,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     public static final String TAG = "media_preview_fragment";
     private static final String ARG_POSITION = "position";
 
-    interface OnMediaTappedListener {
+    public interface OnMediaTappedListener {
         void onMediaTapped();
     }
 

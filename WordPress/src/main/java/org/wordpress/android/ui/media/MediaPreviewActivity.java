@@ -40,7 +40,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class MediaPreviewActivity extends AppCompatActivity {
+public class MediaPreviewActivity extends AppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
 
     static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     static final String ARG_IS_VIDEO = "is_video";
@@ -225,13 +225,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
 
-        // show toolbar when user taps the media item
-        fragment.setOnMediaTappedListener(new MediaPreviewFragment.OnMediaTappedListener() {
-            @Override
-            public void onMediaTapped() {
-                showToolbar();
-            }
-        });
+        fragment.setOnMediaTappedListener(this);
     }
 
     private final Runnable fadeOutRunnable = new Runnable() {
@@ -271,9 +265,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
         }
     }
 
-    private void setupPager() {
-
-    }
     private MediaPagerAdapter mPagerAdapter;
     private MediaPagerAdapter getPagerAdapter() {
         if (mPagerAdapter == null) {
@@ -294,6 +285,11 @@ public class MediaPreviewActivity extends AppCompatActivity {
         return mPagerAdapter;
     }
 
+    @Override
+    public void onMediaTapped() {
+        showToolbar();
+    }
+
     private class MediaPagerAdapter extends FragmentStatePagerAdapter {
         private List<MediaModel> mMediaList = new ArrayList<>();
 
@@ -309,7 +305,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return MediaPreviewFragment.newInstance(mSite, mMediaList.get(position));
+            MediaPreviewFragment fragment = MediaPreviewFragment.newInstance(mSite, mMediaList.get(position));
+            fragment.setOnMediaTappedListener(MediaPreviewActivity.this);
+            return fragment;
         }
 
         @Override
