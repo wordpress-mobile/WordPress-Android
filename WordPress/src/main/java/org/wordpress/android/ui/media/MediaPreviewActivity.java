@@ -1,15 +1,20 @@
 package org.wordpress.android.ui.media;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +32,9 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -47,6 +55,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private SiteModel mSite;
 
     private Toolbar mToolbar;
+    private ViewPager mViewPager;
 
     private static final long FADE_DELAY_MS = 3000;
     private final Handler mFadeHandler = new Handler();
@@ -144,11 +153,20 @@ public class MediaPreviewActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
+        View fragmentContainer = findViewById(R.id.fragment_container);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        if (getPreviewFragment() == null) {
+        if (mSite != null && mMediaId != 0) {
+            fragmentContainer.setVisibility(View.GONE);
+            mViewPager.setVisibility(View.VISIBLE);
+            mViewPager.setAdapter(getPagerAdapter());
+        } else {
+            fragmentContainer.setVisibility(View.VISIBLE);
+            mViewPager.setVisibility(View.GONE);
             showPreviewFragment();
         }
+
+        mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
     }
 
     @Override
@@ -247,6 +265,53 @@ public class MediaPreviewActivity extends AppCompatActivity {
                     public void onAnimationRepeat(Animation animation) { }
                 });
             }
+        }
+    }
+
+    private void setupPager() {
+
+    }
+    private MediaPagerAdapter mPagerAdapter;
+    private MediaPagerAdapter getPagerAdapter() {
+        if (mPagerAdapter == null) {
+            List<MediaModel> mediaList = mMediaStore.getAllSiteMedia(mSite);
+            int initialPos = 0;
+            for (int i = 0; i < mediaList.size(); i++) {
+                if (mediaList.get(i).getId() == mMediaId) {
+                    initialPos = i;
+                    break;
+                }
+            }
+
+            mPagerAdapter = new MediaPagerAdapter(getFragmentManager());
+            mPagerAdapter.setMediaList(mediaList);
+
+            mViewPager.setCurrentItem(initialPos);
+        }
+        return mPagerAdapter;
+    }
+
+    private class MediaPagerAdapter extends FragmentStatePagerAdapter {
+        private List<MediaModel> mMediaList = new ArrayList<>();
+
+        public MediaPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        void setMediaList(@NonNull List<MediaModel> mediaList) {
+            mMediaList.clear();
+            mMediaList.addAll(mediaList);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return MediaPreviewFragment.newInstance(mSite, mMediaList.get(position));
+        }
+
+        @Override
+        public int getCount() {
+            return mMediaList.size();
         }
     }
 }
