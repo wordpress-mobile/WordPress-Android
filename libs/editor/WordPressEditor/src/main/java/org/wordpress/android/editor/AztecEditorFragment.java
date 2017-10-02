@@ -142,8 +142,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private EditorBetaClickListener mEditorBetaClickListener;
 
-    public Drawable loadingImagePlaceholder;
-    public Drawable loadingVideoPlaceholder;
+    private Drawable loadingImagePlaceholder;
+    private Drawable loadingVideoPlaceholder;
 
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
@@ -166,11 +166,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
-
-        loadingImagePlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
-        loadingImagePlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
-        loadingVideoPlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
-        loadingVideoPlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
 
         // request dependency injection
         if (getActivity() instanceof EditorFragmentActivity) {
@@ -688,10 +683,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             setAttributeValuesIfNotDefault(attributes, mediaFile);
             if(mediaFile.isVideo()) {
                 addVideoUploadingClassIfMissing(attributes);
-                content.insertVideo(loadingVideoPlaceholder, attributes);
+                content.insertVideo(getLoadingVideoPlaceholder(), attributes);
                 overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
             } else {
-                content.insertImage(loadingImagePlaceholder, attributes);
+                content.insertImage(getLoadingImagePlaceholder(), attributes);
             }
 
             final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
@@ -1749,5 +1744,35 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         plugins.add(new VideoShortcodePlugin());
         plugins.add(new AudioShortcodePlugin());
         return new AztecParser(plugins);
+    }
+
+    private Drawable getLoadingImagePlaceholder() {
+        if (loadingImagePlaceholder != null) {
+            return  loadingImagePlaceholder;
+        }
+
+        // Use default loading placeholder if none was set by the host activity
+        Drawable defaultLoadingImagePlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
+        defaultLoadingImagePlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+        return defaultLoadingImagePlaceholder;
+    }
+
+    private Drawable getLoadingVideoPlaceholder() {
+        if (loadingVideoPlaceholder != null) {
+            return  loadingVideoPlaceholder;
+        }
+
+        // Use default loading placeholder if none was set by the host activity
+        Drawable defaultLoadingImagePlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
+        defaultLoadingImagePlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+        return defaultLoadingImagePlaceholder;
+    }
+
+    public void setLoadingImagePlaceholder(Drawable loadingImagePlaceholder) {
+        this.loadingImagePlaceholder = loadingImagePlaceholder;
+    }
+
+    public void setLoadingVideoPlaceholder(Drawable loadingVideoPlaceholder) {
+        this.loadingVideoPlaceholder = loadingVideoPlaceholder;
     }
 }
