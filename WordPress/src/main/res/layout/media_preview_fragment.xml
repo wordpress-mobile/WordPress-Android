@@ -60,6 +60,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <TextView
+        android:id="@+id/text_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/error_media_load"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_extra_large"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
     <ProgressBar
         android:id="@+id/progress"
         style="?android:attr/progressBarStyle"

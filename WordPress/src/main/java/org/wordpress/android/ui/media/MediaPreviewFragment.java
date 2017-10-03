@@ -34,7 +34,6 @@ import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
@@ -241,12 +240,10 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             mControls.hide();
         }
         if (mAudioPlayer != null && mAudioPlayer.isPlaying()) {
-            mPosition = mAudioPlayer.getCurrentPosition();
-            mAudioPlayer.stop();
+            mAudioPlayer.pause();
         }
         if (mVideoView.isPlaying()) {
-            mPosition = mVideoView.getCurrentPosition();
-            mVideoView.stopPlayback();
+            mVideoView.pause();
         }
     }
 
@@ -257,6 +254,12 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     private void showProgress(boolean show) {
         if (isAdded()) {
             getView().findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void showLoadingError() {
+        if (isAdded()) {
+            getView().findViewById(R.id.text_error).setVisibility(View.VISIBLE);
         }
     }
 
@@ -289,7 +292,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                     AppLog.e(AppLog.T.MEDIA, error);
                     if (isAdded()) {
                         showProgress(false);
-                        ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                        showLoadingError();
                     }
                 }
             }, size, 0);
@@ -324,7 +327,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                 if (bitmap != null) {
                     setBitmap(bitmap);
                 } else {
-                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                    showLoadingError();
                 }
             }
         }
@@ -395,7 +398,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             mAudioPlayer.setDataSource(getActivity(), Uri.parse(mediaUri));
         } catch (Exception e) {
             AppLog.e(AppLog.T.MEDIA, e);
-            ToastUtils.showToast(getActivity(), R.string.error_media_load);
+            showLoadingError();
+            return;
         }
 
         mAudioPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
