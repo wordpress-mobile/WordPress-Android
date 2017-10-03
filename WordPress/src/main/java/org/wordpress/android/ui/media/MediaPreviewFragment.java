@@ -162,6 +162,22 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             txtAudioTitle.setVisibility(View.VISIBLE);
         }
 
+        if (mIsVideo || mIsAudio) {
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mControls != null) {
+                        mControls.show();
+                    }
+                    if (mMediaTapListener != null) {
+                        mMediaTapListener.onMediaTapped();
+                    }
+                }
+            };
+            mVideoFrame.setOnClickListener(listener);
+            mAudioFrame.setOnClickListener(listener);
+        }
+
         return view;
     }
 
@@ -240,9 +256,11 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             mControls.hide();
         }
         if (mAudioPlayer != null && mAudioPlayer.isPlaying()) {
+            mPosition = mAudioPlayer.getCurrentPosition();
             mAudioPlayer.pause();
         }
         if (mVideoView.isPlaying()) {
+            mPosition = mVideoView.getCurrentPosition();
             mVideoView.pause();
         }
     }
