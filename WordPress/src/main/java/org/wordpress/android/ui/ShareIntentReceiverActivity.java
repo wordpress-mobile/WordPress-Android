@@ -291,6 +291,15 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             }
         }
         analyticsProperties.put("number_of_media_shared", mediaShared);
+
+        String target = "unknown";
+        if (mActionIndex == ADD_TO_NEW_POST) {
+            target = "new_post";
+        } else if (mActionIndex == ADD_TO_MEDIA_LIBRARY) {
+            target = "media_library";
+        }
+        analyticsProperties.put("share_to", target);
+
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SHARE_TO_WP_SUCCEEDED,
                 mSiteStore.getSiteByLocalId(mSelectedSiteLocalId),
                 analyticsProperties);
