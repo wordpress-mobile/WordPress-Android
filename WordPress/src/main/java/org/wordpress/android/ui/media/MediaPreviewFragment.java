@@ -233,7 +233,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         if (mControls != null) {
             mControls.hide();
         }
-        if (mAudioPlayer != null) {
+        if (mAudioPlayer != null && mAudioPlayer.isPlaying()) {
             mPosition = mAudioPlayer.getCurrentPosition();
             mAudioPlayer.stop();
         }

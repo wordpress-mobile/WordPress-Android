@@ -256,8 +256,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     }
 
     private void setupViewPager() {
+        mPagerAdapter = new MediaPagerAdapter(getFragmentManager());
+        mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
-        mViewPager.setAdapter(getPagerAdapter());
 
         int initialPos = 0;
         for (int i = 0; i < mMediaIdList.size(); i++) {
@@ -268,34 +269,28 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             }
         }
         mViewPager.setCurrentItem(initialPos);
+        mPagerAdapter.unpauseFragment(initialPos);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                // noop
-            }
             @Override
             public void onPageSelected(int position) {
                 // pause the outgoing fragment and unpause the incoming one - this prevents audio/video from
                 // playing in inactive fragments
                 if (mLastPosition > -1 && mLastPosition != position) {
-                    getPagerAdapter().pauseFragment(mLastPosition);
+                    mPagerAdapter.pauseFragment(mLastPosition);
                 }
-                getPagerAdapter().unpauseFragment(position);
+                mPagerAdapter.unpauseFragment(position);
                 mLastPosition = position;
+            }
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // noop
             }
             @Override
             public void onPageScrollStateChanged(int state) {
                 // noop
             }
         });
-    }
-
-    private MediaPagerAdapter getPagerAdapter() {
-        if (mPagerAdapter == null) {
-            mPagerAdapter = new MediaPagerAdapter(getFragmentManager());
-        }
-        return mPagerAdapter;
     }
 
     @Override
@@ -305,6 +300,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
     private class MediaPagerAdapter extends FragmentStatePagerAdapter {
         private final SparseArray<Fragment> mFragmentMap = new SparseArray<>();
+        private boolean mDidAutoPlay;
 
         public MediaPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -314,7 +310,17 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         public Fragment getItem(int position) {
             int id = Integer.valueOf(mMediaIdList.get(position));
             MediaModel media = mMediaStore.getMediaWithLocalId(id);
-            MediaPreviewFragment fragment = MediaPreviewFragment.newInstance(mSite, media, false);
+
+            // make sure we autoplay the initial item
+            boolean autoPlay;
+            if (id == mMediaId && !mDidAutoPlay) {
+                mDidAutoPlay = true;
+                autoPlay = true;
+            } else {
+                autoPlay = false;
+            }
+
+            MediaPreviewFragment fragment = MediaPreviewFragment.newInstance(mSite, media, autoPlay);
             fragment.setOnMediaTappedListener(MediaPreviewActivity.this);
             return fragment;
         }
