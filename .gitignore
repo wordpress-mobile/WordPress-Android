@@ -52,3 +52,7 @@ WordPress/src/androidTest/monkeys/*.png
 
 # Windows Backup
 *.bak
+
+# Automatic Screenshots token file
+tools/tokendeeplink.sh
+
