@@ -13,16 +13,8 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -38,9 +30,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPAlertDialogFragment;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,7 +86,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             addBrowserFragment();
         }
 
-        setCurrentThemeFromDB();
         showToolbar();
     }
 
@@ -108,7 +97,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         ActivityId.trackLastActivity(ActivityId.THEMES);
 
         fetchThemesIfNoneAvailable();
-        fetchPurchasedThemes();
     }
 
     @Override
@@ -281,16 +269,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
     }
 
-    private void fetchThemesIfNoneAvailable() {
-        if (NetworkUtils.isNetworkAvailable(this) && mThemeStore.getWpThemes().size() == 0) {
-            fetchThemes();
-            //do not interact with theme browser fragment if we are in search mode
-            if (!mIsInSearchMode) {
-                mThemeBrowserFragment.setRefreshing(true);
-            }
-        }
-    }
-
     private void showCorrectToolbar() {
         if (mIsInSearchMode) {
             showSearchToolbar();
@@ -390,5 +368,22 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
 
         ToastUtils.showToast(this, toastText, ToastUtils.Duration.SHORT);
+    }
+
+    private void fetchThemesIfNoneAvailable() {
+        if (NetworkUtils.isNetworkAvailable(this) && mThemeStore.getWpThemes().size() == 0) {
+            fetchThemes();
+            //do not interact with theme browser fragment if we are in search mode
+            if (!mIsInSearchMode) {
+                mThemeBrowserFragment.setRefreshing(true);
+            }
+        }
+    }
+
+    private void activateTheme(String themeId) {
+        ThemeModel theme = new ThemeModel();
+        theme.setThemeId(themeId);
+        ThemeStore.ActivateThemePayload payload = new ThemeStore.ActivateThemePayload(mSite, theme);
+        mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(payload));
     }
 }
