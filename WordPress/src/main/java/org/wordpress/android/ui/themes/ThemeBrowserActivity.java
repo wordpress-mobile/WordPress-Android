@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -203,8 +202,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemesChanged(ThemeStore.OnThemesChanged event) {
+        mFetchingThemes = false;
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error fetching themes: " + event.error.message);
+            ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
         } else {
             AppLog.d(T.THEMES, "Theme fetch successful!");
         }
@@ -215,6 +216,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     public void onCurrentThemeFetched(ThemeStore.OnCurrentThemeFetched event) {
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error fetching current theme: " + event.error.message);
+            ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
         } else {
             AppLog.d(T.THEMES, "Current Theme fetch successful!");
         }
@@ -225,6 +227,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     public void onThemeActivated(ThemeStore.OnThemeActivated event) {
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error activating theme: " + event.error.message);
+            ToastUtils.showToast(this, R.string.theme_activation_error, ToastUtils.Duration.SHORT);
         } else {
             AppLog.d(T.THEMES, "Theme activation successful! New theme: " + event.theme.getName());
         }
@@ -276,10 +279,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
             findViewById(R.id.toolbar_search).setVisibility(View.GONE);
         }
-    }
-
-    private void setCurrentThemeFromDB() {
-        mCurrentTheme = ThemeTable.getCurrentTheme(WordPress.wpDB.getDatabase(), String.valueOf(mSite.getSiteId()));
     }
 
     private void fetchThemesIfNoneAvailable() {
@@ -338,8 +337,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
         String thanksMessage = String.format(getString(R.string.theme_prompt), newTheme.getName());
-        if (!newTheme.getAuthor().isEmpty()) {
-            String append = String.format(getString(R.string.theme_by_author_prompt_append), newTheme.getAuthor());
+        if (!newTheme.getAuthorName().isEmpty()) {
+            String append = String.format(getString(R.string.theme_by_author_prompt_append), newTheme.getAuthorName());
             thanksMessage = thanksMessage + " " + append;
         }
 
@@ -361,7 +360,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
         if (NetworkUtils.isNetworkAvailable(this)) {
             if (mCurrentTheme != null && !TextUtils.isEmpty(themeId)) {
-                boolean isCurrentTheme = mCurrentTheme.getId().equals(themeId);
+                boolean isCurrentTheme = mCurrentTheme.getThemeId().equals(themeId);
                 Map<String, Object> themeProperties = new HashMap<>();
                 themeProperties.put(THEME_ID, themeId);
 
