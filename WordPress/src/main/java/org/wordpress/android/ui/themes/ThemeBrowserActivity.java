@@ -25,9 +25,10 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.ThemeTable;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.models.Theme;
+import org.wordpress.android.fluxc.model.ThemeModel;
+import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -41,9 +42,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * The theme browser.
- */
+import javax.inject.Inject;
+
 public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback {
     public static final int THEME_FETCH_MAX = 100;
     public static final int ACTIVATE_THEME = 1;
@@ -55,9 +55,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private boolean mIsRunning;
     private ThemeBrowserFragment mThemeBrowserFragment;
     private ThemeSearchFragment mThemeSearchFragment;
-    private Theme mCurrentTheme;
+    private ThemeModel mCurrentTheme;
     private boolean mIsInSearchMode;
-
     private SiteModel mSite;
 
     public static boolean isAccessible(SiteModel site) {
@@ -65,10 +64,14 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         // TODO: Support themes for Jetpack and AT sites (and use SiteUtils.isAccessedViaWPComRest(site))
         return site != null && site.isWPCom() && site.getHasCapabilityEditThemeOptions();
     }
+    @Inject ThemeStore mThemeStore;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -154,6 +157,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 activateTheme(themeId);
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDispatcher.unregister(this);
     }
 
     @Override
