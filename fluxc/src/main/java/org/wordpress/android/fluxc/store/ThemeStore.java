@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store;
 
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -243,6 +244,10 @@ public class ThemeStore extends Store {
 
     public List<ThemeModel> getWpThemes() {
         return ThemeSqlUtils.getThemesWithNoSite();
+    }
+
+    public Cursor getWpThemesCursor() {
+        return ThemeSqlUtils.getThemesWithNoSiteAsCursor();
     }
 
     public List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
