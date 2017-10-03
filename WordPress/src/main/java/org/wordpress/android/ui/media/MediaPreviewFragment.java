@@ -154,9 +154,14 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         mVideoFrame = (ViewGroup) view.findViewById(R.id.frame_video);
         mAudioFrame = (ViewGroup) view.findViewById(R.id.frame_audio);
 
-        //mImageView.setVisibility(mIsVideo || mIsAudio ? View.GONE : View.VISIBLE);
         mVideoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
         mAudioFrame.setVisibility(mIsAudio ? View.VISIBLE : View.GONE);
+
+        if (mIsAudio && !TextUtils.isEmpty(mTitle)) {
+            TextView txtAudioTitle = (TextView) view.findViewById(R.id.text_audio_title);
+            txtAudioTitle.setText(mTitle);
+            txtAudioTitle.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }
@@ -196,11 +201,6 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             playVideo(mContentUri, mPosition);
         } else if (mIsAudio) {
             mAudioFrame.setOnClickListener(listener);
-            if (!TextUtils.isEmpty(mTitle)) {
-                TextView txtAudioTitle = (TextView) getView().findViewById(R.id.text_audio_title);
-                txtAudioTitle.setText(mTitle);
-                txtAudioTitle.setVisibility(View.VISIBLE);
-            }
             playAudio(mContentUri, mPosition);
         }
     }
@@ -264,6 +264,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
      * loads and displays a remote or local image
      */
     private void loadImage(@NonNull String mediaUri) {
+        mImageView.setVisibility(View.VISIBLE);
+
         int width = DisplayUtils.getDisplayPixelWidth(getActivity());
         int height = DisplayUtils.getDisplayPixelHeight(getActivity());
         int size = Math.max(width, height);
@@ -371,6 +373,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             public void onPrepared(MediaPlayer mp) {
                 if (isAdded()) {
                     showProgress(false);
+                    mImageView.setVisibility(View.GONE);
                     mp.start();
                     if (position > 0) {
                         mp.seekTo(position);

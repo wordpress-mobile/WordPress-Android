@@ -7,11 +7,6 @@
                 android:layout_height="match_parent"
                 android:background="@color/black">
 
-    <ImageView
-        android:id="@+id/image_preview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
     <FrameLayout
         android:id="@+id/frame_video"
         android:layout_width="match_parent"
@@ -59,6 +54,11 @@
             app:srcCompat="@drawable/ic_gridicons_audio"/>
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/image_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <ProgressBar
         android:id="@+id/progress"
