@@ -8,7 +8,6 @@ import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
-import org.wordpress.android.datasets.ThemeTable;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -40,7 +39,6 @@ public class WordPressDB {
 
         // Create tables if they don't exist
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
-        ThemeTable.createTables(db);
         SiteSettingsTable.createTable(db);
         SuggestionTable.createTables(db);
         NotificationsTable.createTables(db);
@@ -134,7 +132,6 @@ public class WordPressDB {
                 ctx.deleteDatabase("simperium-store");
                 currentVersion++;
             case 37:
-                ThemeTable.resetTables(db);
                 currentVersion++;
             case 38:
                 currentVersion++;
