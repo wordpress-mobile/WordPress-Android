@@ -34,7 +34,6 @@ import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
@@ -58,7 +57,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     private String mTitle;
     private boolean mIsVideo;
     private boolean mIsAudio;
-    private boolean mWasPaused;
+    private boolean mFragmentWasPaused;
     private int mPosition;
 
     private SiteModel mSite;
@@ -155,8 +154,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     public void onResume() {
         super.onResume();
 
-        if (mWasPaused) {
-            mWasPaused = false;
+        if (mFragmentWasPaused) {
+            mFragmentWasPaused = false;
         } else {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
@@ -189,17 +188,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
     @Override
     public void onPause() {
-        mWasPaused = true;
-
-        if (mControls != null) {
-            mControls.hide();
-        }
-        if (mAudioPlayer != null && mAudioPlayer.isPlaying()) {
-            mAudioPlayer.stop();
-        }
-        if (mVideoView.isPlaying()) {
-            mVideoView.stopPlayback();
-        }
+        mFragmentWasPaused = true;
+        pauseMedia();
         super.onPause();
     }
 
@@ -224,6 +214,18 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             outState.putInt(ARG_POSITION, mVideoView.getCurrentPosition());
         } else if (mIsAudio && mAudioPlayer != null) {
             outState.putInt(ARG_POSITION, mAudioPlayer.getCurrentPosition());
+        }
+    }
+
+    void pauseMedia() {
+        if (mControls != null) {
+            mControls.hide();
+        }
+        if (mAudioPlayer != null && mAudioPlayer.isPlaying()) {
+            mAudioPlayer.stop();
+        }
+        if (mVideoView.isPlaying()) {
+            mVideoView.stopPlayback();
         }
     }
 

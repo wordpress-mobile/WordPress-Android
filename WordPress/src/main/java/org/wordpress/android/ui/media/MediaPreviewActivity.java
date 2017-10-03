@@ -18,8 +18,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 
 import org.wordpress.android.R;
@@ -44,6 +46,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     private int mMediaId;
     private ArrayList<String> mMediaIdList;
     private String mContentUri;
+    private int mLastPosition = -1;
 
     private SiteModel mSite;
 
@@ -150,17 +153,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         if (mMediaIdList != null) {
             fragmentContainer.setVisibility(View.GONE);
             mViewPager.setVisibility(View.VISIBLE);
-            mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
-            mViewPager.setAdapter(getPagerAdapter());
-            int initialPos = 0;
-            for (int i = 0; i < mMediaIdList.size(); i++) {
-                int thisId = Integer.valueOf(mMediaIdList.get(i));
-                if (thisId == mMediaId) {
-                    initialPos = i;
-                    break;
-                }
-            }
-            mViewPager.setCurrentItem(initialPos);
+            setupViewPager();
         } else {
             fragmentContainer.setVisibility(View.VISIBLE);
             mViewPager.setVisibility(View.GONE);
@@ -261,6 +254,39 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         }
     }
 
+    private void setupViewPager() {
+        mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
+        mViewPager.setAdapter(getPagerAdapter());
+
+        int initialPos = 0;
+        for (int i = 0; i < mMediaIdList.size(); i++) {
+            int thisId = Integer.valueOf(mMediaIdList.get(i));
+            if (thisId == mMediaId) {
+                initialPos = i;
+                break;
+            }
+        }
+        mViewPager.setCurrentItem(initialPos);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // noop
+            }
+            @Override
+            public void onPageSelected(int position) {
+                if (mLastPosition > -1 && mLastPosition != position) {
+                    getPagerAdapter().pauseFragment(mLastPosition);
+                }
+                mLastPosition = position;
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // noop
+            }
+        });
+    }
+
     private MediaPagerAdapter getPagerAdapter() {
         if (mPagerAdapter == null) {
             mPagerAdapter = new MediaPagerAdapter(getFragmentManager());
@@ -274,6 +300,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     }
 
     private class MediaPagerAdapter extends FragmentStatePagerAdapter {
+        private final SparseArray<Fragment> mFragmentMap = new SparseArray<>();
+
         public MediaPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -290,6 +318,28 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         @Override
         public int getCount() {
             return mMediaIdList.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Object item = super.instantiateItem(container, position);
+            if (item instanceof Fragment) {
+                mFragmentMap.put(position, (Fragment) item);
+            }
+            return item;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            mFragmentMap.remove(position);
+            super.destroyItem(container, position, object);
+        }
+
+        void pauseFragment(int position) {
+            Fragment fragment = mFragmentMap.get(position);
+            if (fragment != null) {
+                ((MediaPreviewFragment) fragment).pauseMedia();
+            }
         }
     }
 }
