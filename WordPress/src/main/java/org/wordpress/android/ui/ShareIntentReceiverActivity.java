@@ -262,7 +262,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             }
         }
 
-        // bump analytics about usage here. We may wan to track failures in a future iteration.
+        // bump analytics about usage here. We may want to track failures in a future iteration.
         bumpAnalytics();
 
         if (mActionIndex == ADD_TO_NEW_POST) {
