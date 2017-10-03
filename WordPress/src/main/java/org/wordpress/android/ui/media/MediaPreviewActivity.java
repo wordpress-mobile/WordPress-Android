@@ -270,6 +270,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         }
         mViewPager.setCurrentItem(initialPos);
         mPagerAdapter.unpauseFragment(initialPos);
+        mLastPosition = initialPos;
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -293,6 +294,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         });
     }
 
+    /*
+     * make sure toolbar appears when user taps the media in the fragment
+     */
     @Override
     public void onMediaTapped() {
         showToolbar();
@@ -314,8 +318,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             // make sure we autoplay the initial item
             boolean autoPlay;
             if (id == mMediaId && !mDidAutoPlay) {
-                mDidAutoPlay = true;
                 autoPlay = true;
+                mDidAutoPlay = true;
             } else {
                 autoPlay = false;
             }
