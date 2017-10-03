@@ -75,19 +75,23 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
 public class MediaSettingsActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
+    private static final String ARG_ID_LIST = "id_list";
     public static final int RESULT_MEDIA_DELETED = RESULT_FIRST_USER;
 
     private long mDownloadId;
 
     private SiteModel mSite;
     private MediaModel mMedia;
+    private ArrayList<String> mMediaIdList;
 
     private ImageView mImageView;
     private EditText mTitleView;
@@ -116,7 +120,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
                                      @NonNull MediaModel media,
-                                     View sourceView) {
+                                     @Nullable List<MediaModel> mediaList,
+                                     @Nullable View sourceView) {
         // go directly to preview for local images, videos and audio (do nothing for local documents)
         if (MediaUtils.isLocalFile(media.getUploadState())) {
             if (MediaUtils.isValidImage(media.getUrl())
@@ -130,6 +135,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         Intent intent = new Intent(activity, MediaSettingsActivity.class);
         intent.putExtra(ARG_MEDIA_LOCAL_ID, media.getId());
         intent.putExtra(WordPress.SITE, site);
+        if (mediaList != null) {
+            ArrayList<String> idList = new ArrayList<>();
+            for (MediaModel item: mediaList) {
+                idList.add(Integer.toString(item.getId()));
+            }
+            intent.putExtra(ARG_ID_LIST, idList);
+        }
 
         ActivityOptionsCompat options;
 
@@ -172,9 +184,15 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mediaId = savedInstanceState.getInt(ARG_MEDIA_LOCAL_ID);
+            if (savedInstanceState.containsKey(ARG_ID_LIST)) {
+                mMediaIdList = savedInstanceState.getStringArrayList(ARG_ID_LIST);
+            }
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mediaId = getIntent().getIntExtra(ARG_MEDIA_LOCAL_ID, 0);
+            if (getIntent().hasExtra(ARG_ID_LIST)) {
+                mMediaIdList = getIntent().getStringArrayListExtra(ARG_ID_LIST);
+            }
         }
 
         mMedia = mMediaStore.getMediaWithLocalId(mediaId);
@@ -295,6 +313,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         outState.putInt(ARG_MEDIA_LOCAL_ID, mMedia.getId());
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
+        }
+        if (mMediaIdList != null) {
+            outState.putStringArrayList(ARG_ID_LIST, mMediaIdList);
         }
     }
 
@@ -616,7 +637,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia);
+                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia, mMediaIdList);
             }
         }, 200);
     }

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ActivityCompat;
@@ -35,19 +34,22 @@ import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
 public class MediaPreviewActivity extends AppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
 
+    private static final String ARG_ID_LIST = "id_list";
+
     private int mMediaId;
+    private ArrayList<String> mMediaIdList;
     private String mContentUri;
 
     private SiteModel mSite;
 
     private Toolbar mToolbar;
     private ViewPager mViewPager;
+    private MediaPagerAdapter mPagerAdapter;
 
     private static final long FADE_DELAY_MS = 3000;
     private final Handler mFadeHandler = new Handler();
@@ -59,7 +61,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
      * @param context     self explanatory
      * @param site        optional site this media is associated with
      * @param contentUri  URI of media - can be local or remote
-     * @param isVideo     whether the passed media is a video - assumed to be an image otherwise
      */
     public static void showPreview(Context context,
                                    SiteModel site,
@@ -77,16 +78,20 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
      * @param context     self explanatory
      * @param site        optional site this media is associated with
      * @param media       media model
+     * @param mediaIdList optional list of media IDs to page through
      */
     public static void showPreview(Context context,
                                    SiteModel site,
-                                   MediaModel media) {
+                                   MediaModel media,
+                                   ArrayList<String> mediaIdList) {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
         intent.putExtra(MediaPreviewFragment.ARG_MEDIA_ID, media.getId());
         intent.putExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, media.getUrl());
-
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
+        }
+        if (mediaIdList != null) {
+            intent.putStringArrayListExtra(ARG_ID_LIST, mediaIdList);
         }
 
         startIntent(context, intent);
@@ -111,10 +116,16 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mMediaId = savedInstanceState.getInt(MediaPreviewFragment.ARG_MEDIA_ID);
             mContentUri = savedInstanceState.getString(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI);
+            if (savedInstanceState.containsKey(ARG_ID_LIST)) {
+                mMediaIdList = savedInstanceState.getStringArrayList(ARG_ID_LIST);
+            }
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mMediaId = getIntent().getIntExtra(MediaPreviewFragment.ARG_MEDIA_ID, 0);
             mContentUri = getIntent().getStringExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI);
+            if (getIntent().hasExtra(ARG_ID_LIST)) {
+                mMediaIdList = getIntent().getStringArrayListExtra(ARG_ID_LIST);
+            }
         }
 
         if (TextUtils.isEmpty(mContentUri)) {
@@ -135,13 +146,21 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         View fragmentContainer = findViewById(R.id.fragment_container);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        // when we have a site and a media object use a ViewPager so the user can swipe through the library, otherwise
-        // we're previewing a local file so use a single fragment rather than a ViewPager
-        if (mSite != null && mMediaId != 0) {
+        // use a ViewPager if we're passed a list of media, otherwise show a single fragment
+        if (mMediaIdList != null) {
             fragmentContainer.setVisibility(View.GONE);
             mViewPager.setVisibility(View.VISIBLE);
             mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
             mViewPager.setAdapter(getPagerAdapter());
+            int initialPos = 0;
+            for (int i = 0; i < mMediaIdList.size(); i++) {
+                int thisId = Integer.valueOf(mMediaIdList.get(i));
+                if (thisId == mMediaId) {
+                    initialPos = i;
+                    break;
+                }
+            }
+            mViewPager.setCurrentItem(initialPos);
         } else {
             fragmentContainer.setVisibility(View.VISIBLE);
             mViewPager.setVisibility(View.GONE);
@@ -170,6 +189,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, mContentUri);
+        if (mMediaIdList != null) {
+            outState.putStringArrayList(ARG_ID_LIST, mMediaIdList);
+        }
     }
 
     private void delayedFinish() {
@@ -239,26 +261,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         }
     }
 
-    private MediaPagerAdapter mPagerAdapter;
     private MediaPagerAdapter getPagerAdapter() {
         if (mPagerAdapter == null) {
-            final List<MediaModel> mediaList = mMediaStore.getAllSiteMedia(mSite);
             mPagerAdapter = new MediaPagerAdapter(getFragmentManager());
-            mPagerAdapter.setMediaList(mediaList);
-
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    int initialPos = 0;
-                    for (int i = 0; i < mediaList.size(); i++) {
-                        if (mediaList.get(i).getId() == mMediaId) {
-                            initialPos = i;
-                            break;
-                        }
-                    }
-                    mViewPager.setCurrentItem(initialPos);
-                }
-            });
         }
         return mPagerAdapter;
     }
@@ -269,28 +274,22 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     }
 
     private class MediaPagerAdapter extends FragmentStatePagerAdapter {
-        private final List<MediaModel> mMediaList = new ArrayList<>();
-
         public MediaPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
-        void setMediaList(@NonNull List<MediaModel> mediaList) {
-            mMediaList.clear();
-            mMediaList.addAll(mediaList);
-            notifyDataSetChanged();
-        }
-
         @Override
         public Fragment getItem(int position) {
-            MediaPreviewFragment fragment = MediaPreviewFragment.newInstance(mSite, mMediaList.get(position));
+            int id = Integer.valueOf(mMediaIdList.get(position));
+            MediaModel media = mMediaStore.getMediaWithLocalId(id);
+            MediaPreviewFragment fragment = MediaPreviewFragment.newInstance(mSite, media);
             fragment.setOnMediaTappedListener(MediaPreviewActivity.this);
             return fragment;
         }
 
         @Override
         public int getCount() {
-            return mMediaList.size();
+            return mMediaIdList.size();
         }
     }
 }
