@@ -263,7 +263,7 @@ public class ThemeStore extends Store {
     }
 
     private void installTheme(@NonNull ActivateThemePayload payload) {
-        if (payload.site.isJetpackConnected()) {
+        if (payload.site.isJetpackConnected() && payload.site.isUsingWpComRestApi()) {
             mThemeRestClient.installTheme(payload.site, payload.theme);
         } else {
             payload.error = new ActivateThemeError(ThemeErrorType.NOT_AVAILABLE);
