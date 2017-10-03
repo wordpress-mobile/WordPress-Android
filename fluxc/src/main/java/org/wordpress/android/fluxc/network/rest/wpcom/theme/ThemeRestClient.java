@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeWPComResponse.ThemeArrayResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeWPComResponse.MultipleWPComThemesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeJetpackResponse.MultipleJetpackThemesResponse;
+import org.wordpress.android.fluxc.store.ThemeStore.SearchedThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchThemesError;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
@@ -192,16 +193,16 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 }));
     }
 
-    /** v1.2/site/$siteId/themes?search=$term */
-    public void searchThemes(@NonNull final SiteModel site, @NonNull final String searchTerm) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).themes.getUrlV1_2() + "?search=" + searchTerm;
+    /** v1.2/themes?search=$term */
+    public void searchThemes(@NonNull final String searchTerm) {
+        String url = WPCOMREST.themes.getUrlV1_2() + "?search=" + searchTerm;
         add(WPComGsonRequest.buildGetRequest(url, null, ThemeArrayResponse.class,
                 new Response.Listener<ThemeArrayResponse>() {
                     @Override
                     public void onResponse(ThemeArrayResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to search themes request.");
-                        FetchedThemesPayload payload =
-                                new FetchedThemesPayload(site, createThemeListFromArrayResponse(response));
+                        SearchedThemesPayload payload =
+                                new SearchedThemesPayload(searchTerm, createThemeListFromArrayResponse(response));
                         mDispatcher.dispatch(ThemeActionBuilder.newSearchedThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
@@ -210,7 +211,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                         AppLog.e(AppLog.T.API, "Received error response to search themes request.");
                         FetchThemesError themeError = new FetchThemesError(
                                 ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
-                        FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
+                        SearchedThemesPayload payload = new SearchedThemesPayload(themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newSearchedThemesAction(payload));
                     }
                 }));
