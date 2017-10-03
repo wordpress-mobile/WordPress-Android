@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.provider.ContactsContract;
@@ -49,6 +50,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -72,6 +74,7 @@ import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -248,6 +251,15 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     public void addPreferencesFromResource() {
         addPreferencesFromResource(R.xml.site_settings);
+
+        if (BuildConfig.DEBUG && mSite.isJetpackConnected() && mSite.isUsingWpComRestApi()) {
+            PreferenceCategory parent = (PreferenceCategory) findPreference(getString(R.string.pref_key_site_discussion));
+            Preference disconnectPref = new Preference(getActivity());
+            disconnectPref.setTitle("Disconnect from WordPress.com");
+            disconnectPref.setKey(getString(R.string.pref_key_site_disconnect));
+            disconnectPref.setOnPreferenceClickListener(this);
+            parent.addPreference(disconnectPref);
+        }
     }
 
     @Override
@@ -453,11 +465,33 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mDeleteSitePref) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED, mSite);
             requestPurchasesForDeletionCheck();
+        } else if (BuildConfig.DEBUG && mSite.isJetpackConnected() && mSite.isUsingWpComRestApi()) {
+            if (getString(R.string.pref_key_site_disconnect).equals(preference.getKey())) {
+                disconnectFromJetpack();
+            }
         } else {
             return false;
         }
 
         return true;
+    }
+
+    private void disconnectFromJetpack() {
+        String url = String.format(Locale.US, "jetpack-blogs/%d/mine/delete", mSite.getSiteId());
+        WordPress.getRestClientUtilsV1_1().post(url, new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                AppLog.v(AppLog.T.API, "Successfully disconnected Jetpack site");
+                ToastUtils.showToast(getActivity(), "Site disconnected");
+                getActivity().finish();
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                AppLog.e(AppLog.T.API, "Error disconnecting Jetpack site");
+                ToastUtils.showToast(getActivity(), "Error disconnecting site");
+            }
+        });
     }
 
     @Override
