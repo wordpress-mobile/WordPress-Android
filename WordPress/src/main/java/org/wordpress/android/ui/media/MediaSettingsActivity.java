@@ -117,6 +117,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Inject
     Dispatcher mDispatcher;
 
+    /**
+     * @param activity    calling activity
+     * @param site        site this media is associated with
+     * @param media       media model to display
+     * @param mediaList   optional list of media IDs to page through in preview screen
+     * @param sourceView  optional view to use in shared element transition
+     */
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
                                      @NonNull MediaModel media,
@@ -135,10 +142,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         Intent intent = new Intent(activity, MediaSettingsActivity.class);
         intent.putExtra(ARG_MEDIA_LOCAL_ID, media.getId());
         intent.putExtra(WordPress.SITE, site);
+
         if (mediaList != null) {
             ArrayList<String> idList = new ArrayList<>();
-            for (MediaModel item: mediaList) {
-                idList.add(Integer.toString(item.getId()));
+            for (MediaModel thisMedia: mediaList) {
+                idList.add(Integer.toString(thisMedia.getId()));
             }
             intent.putExtra(ARG_ID_LIST, idList);
         }
