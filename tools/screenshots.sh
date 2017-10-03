@@ -17,6 +17,7 @@ if ! [[ "$TOKEN_DEEPLINK" =~ ^wordpress:\/\/magic-login\?token=* ]]; then
 fi;
 
 AVD=Nexus_5X_API_25
+FONTFILE=./Noto_Serif/NotoSerif-Bold.ttf
 
 APP_HEIGHT=1388
 NAV_HEIGHT=96
@@ -25,18 +26,33 @@ SKIN_HEIGHT=$(($APP_HEIGHT+$NAV_HEIGHT))
 SKIN=$SKIN_WIDTH'x'$SKIN_HEIGHT
 LCD_DPI=320
 
+ADB_PARAMS="-e"
+
 APK=../WordPress/build/outputs/apk/WordPress-wasabi-debug.apk
 PKG_RELEASE=org.wordpress.android
 PKG_DEBUG=org.wordpress.android.beta
 ACTIVITY_LAUNCH=org.wordpress.android.ui.WPLaunchActivity
 
-COORDS_MY_SITE="100 100"
+COORDS_MYSITE="100 100"
 COORDS_READER="300 100"
-COORDS_ME="500 100"
-COORDS_ME_GRAVATAR_POPUP="650 300"
 COORDS_NOTIFS="700 100"
 
-ADB_PARAMS="-e"
+TEXT_OFFSET_Y=58
+
+TEXT_SIZE_en_US=80
+TEXT_en_US_MYSITE="Manage your site\neverywhere you go"
+TEXT_en_US_READER="Enjoy you\nfavorite sites"
+TEXT_en_US_NOTIFS="Get notified\nin real-time"
+
+TEXT_SIZE_el_GR=70
+TEXT_el_GR_MYSITE="Έλεγξε τον ιστότοπο σου\nαπ'οπουδήποτε βρίσκεσαι"
+TEXT_el_GR_READER="Απόλαυσε τις\nαγαπημένες σου σελίδες"
+TEXT_el_GR_NOTIFS="Ειδοποιήσεις σε\nπραγματικό χρόνο"
+
+TEXT_SIZE_it_IT=80
+TEXT_it_IT_MYSITE="Gestisci il tuo sito\novunque tu sia"
+TEXT_it_IT_READER="Leggi i tuoi\nsiti preferiti"
+TEXT_it_IT_NOTIFS="Rimani aggiornato\nin tempo reale"
 
 PHONE_TEMPLATE=android-phone-template2.png
 PHONE_OFFSET="+121+532"
@@ -44,14 +60,6 @@ TAB7_TEMPLATE=android-tab7-template2.png
 TAB7_OFFSET="+145+552"
 TAB10_TEMPLATE=android-tab10-template2.png
 TAB10_OFFSET="+148+622"
-
-#echo $AVD
-#echo '\n'
-
-#echo $SKIN
-#echo '\n'
-
-#echo $LCD_DPI
 
 function start_emu {
   echo -n Starting emulator... 
@@ -87,12 +95,14 @@ function install {
 function login {
   echo -n Logging in via magiclink... 
   adb $ADB_PARAMS shell am start -W -a android.intent.action.VIEW -d $TOKEN_DEEPLINK $PKG_DEBUG &>/dev/null
+  wait 5 # wait for app to finish logging in
   echo Done
 }
 
 function start_app {
   echo -n Starting app... 
   adb $ADB_PARAMS shell am start -n $PKG_DEBUG/$ACTIVITY_LAUNCH &>/dev/null
+  wait 5 # wait for app to finish start up
   echo Done
 }
 
@@ -105,13 +115,14 @@ function kill_app {
 function tap_on {
   echo -n Tapping on $1x$2...
   adb $ADB_PARAMS shell input tap $1 $2 &>/dev/null
+  wait 10
   echo Done
 }
 
 function wait() {
-  echo -n Waiting for $1 seconds...
+  #echo -n Waiting for $1 seconds...
   sleep $1
-  echo Done
+  #echo Done
 }
 
 function screenshot() {
@@ -123,11 +134,24 @@ function screenshot() {
 }
 
 function produce() {
-  screenshot $1
-  magick $1.png -crop 0x$APP_HEIGHT+0+0 $1_cropped.png
-  template=$2_TEMPLATE
-  offset=$2_OFFSET
-  magick ${!template} $1_cropped.png -geometry ${!offset} -composite $1_comp1.png
+  echo "Producing image for $1 $2 $3"
+  device=$1
+  loc=${2/-/_} # replace the - with _
+  screen=$3
+  fn=wpandroid_$device\_$loc\_$screen
+  
+  screenshot $fn
+  magick $fn.png -crop 0x$APP_HEIGHT+0+0 $fn\_cropped.png
+  template=$device\_TEMPLATE
+  offset=$device\_OFFSET
+  magick ${!template} $fn\_cropped.png -geometry ${!offset} -composite $fn\_comp1.png
+
+  text=TEXT_$loc\_$screen
+  size=TEXT_SIZE_$loc
+  magick $fn\_comp1.png -gravity north -pointsize ${!size} -font $FONTFILE -draw "fill white text 0,$TEXT_OFFSET_Y \"${!text}\"" $fn\_final.png
+
+  rm $fn.png $fn\_cropped.png $fn\_comp1.png
+  echo Image ready: $fn\_final.png
 }
 
 function locale() {
@@ -147,42 +171,27 @@ uninstall
 install
 login
 
-wait 5 # wait for app to finish logging in
 kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
 
 start_app
-wait 5 # wait for app to finish start up
 
 kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
 
 for device in PHONE #TAB7 TAB10
 do
-  for loc in en-US #el-GR it-IT
+  for loc in en-US el-GR it-IT
   do
-    PREFIX=wpandroid_"$device"_"$loc"
-
     locale $loc
 
     start_app
-    wait 3
 
-    tap_on $COORDS_MY_SITE
-    wait 2
-    produce "$PREFIX"_mysites $device
-  
-    tap_on $COORDS_READER
-    wait 10 # wait for reader to refresh
-    screenshot "$PREFIX"_reader
+    for screen in MYSITE READER NOTIFS
+    do
+      coords=COORDS_$screen
+      tap_on ${!coords}
 
-    tap_on $COORDS_ME
-    wait 2
-    tap_on $COORDS_ME_GRAVATAR_POPUP # dismiss the Gravatar change popup
-    wait 5
-    screenshot "$PREFIX"_me
-
-    tap_on $COORDS_NOTIFS
-    wait 5
-    screenshot "$PREFIX"_notifs
+      produce $device $loc $screen
+    done
   done
 done
 
