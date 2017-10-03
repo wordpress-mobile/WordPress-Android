@@ -151,7 +151,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
         // use a ViewPager if we're passed a list of media, otherwise show a single fragment
-        if (mMediaIdList != null) {
+        if (mMediaIdList != null && mMediaIdList.size() > 1) {
             fragmentContainer.setVisibility(View.GONE);
             mViewPager.setVisibility(View.VISIBLE);
             setupViewPager();
