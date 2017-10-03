@@ -15,27 +15,21 @@ import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-
+import java.util.ArrayList;
+import java.util.List;
+import javax.inject.Inject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.accounts.LoginActivity;
-import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPPermissionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * An activity to handle share intents, since there are multiple actions possible.
@@ -44,6 +38,7 @@ import javax.inject.Inject;
  * along with the content passed in the intent
  */
 public class ShareIntentReceiverActivity extends AppCompatActivity implements OnItemSelectedListener {
+
     public static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     public static final String SHARE_LAST_USED_ADDTO_KEY = "wp-settings-share-last-used-image-addto";
 
@@ -59,6 +54,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private int mSiteIds[];
     private int mSelectedSiteLocalId;
     private int mActionIndex;
+    private TextView mBlogSpinnerTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +63,14 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
         setContentView(R.layout.share_intent_receiver_dialog);
 
-        TextView blogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
+        mBlogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
         mActionGroup = (RadioGroup) findViewById(R.id.share_actions);
 
+        init();
+    }
+
+    private void init() {
         initSiteLists();
 
         if (mSiteNames == null) {
@@ -80,7 +80,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
         if (mSiteNames.length == 1) {
             mBlogSpinner.setVisibility(View.GONE);
-            blogSpinnerTitle.setVisibility(View.GONE);
+            mBlogSpinnerTitle.setVisibility(View.GONE);
         } else {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_menu_dropdown_item, mSiteNames);
             mBlogSpinner.setAdapter(adapter);
@@ -149,12 +149,23 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private void finishIfNoVisibleBlogs() {
         // If not logged in, then ask to log in, else inform the user to set at least one blog visible
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-            ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
-            startActivity(new Intent(this, AppPrefs.isLoginWizardStyleActivated() ? LoginActivity.class : SignInActivity.class));
-            finish();
+            ActivityLauncher.loginForShareIntent(this);
         } else {
             ToastUtils.showToast(getBaseContext(), R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
             finish();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.DO_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                // login successful
+                init();
+            } else {
+                finish();
+            }
         }
     }
 

@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 case JETPACK_STATS:
                 case WPCOM_LOGIN_DEEPLINK:
                 case WPCOM_REAUTHENTICATE:
+                case SHARE_INTENT:
                     checkSmartLockPasswordAndStartLogin();
                     break;
             }
@@ -145,6 +146,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
             case WPCOM_REAUTHENTICATE:
                 ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds);
                 break;
+            case SHARE_INTENT:
+                // skip the epilogue when sharing to WordPress
             case SELFHOSTED_ONLY:
                 // skip the epilogue when only added a selfhosted site
                 setResult(Activity.RESULT_OK);

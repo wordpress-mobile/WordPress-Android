@@ -10,7 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -56,9 +57,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AppLockManager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ActivityLauncher {
 
@@ -350,6 +348,18 @@ public class ActivityLauncher {
         }
 
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+    }
+
+    public static void loginForShareIntent(Activity activity) {
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            Intent intent = new Intent(activity, LoginActivity.class);
+            LoginMode.SHARE_INTENT.putInto(intent);
+            activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+        } else {
+            ToastUtils.showToast(activity, R.string.no_account, ToastUtils.Duration.LONG);
+            activity.startActivity(new Intent(activity, SignInActivity.class));
+            activity.finish();
+        }
     }
 
     public static void loginWithoutMagicLink(Activity activity) {
