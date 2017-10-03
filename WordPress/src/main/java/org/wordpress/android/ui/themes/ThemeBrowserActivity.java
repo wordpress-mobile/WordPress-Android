@@ -205,8 +205,28 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error fetching current theme: " + event.error.message);
             ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
+
+            if (mCurrentTheme != null && mThemeBrowserFragment != null) {
+                if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
+                    mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
+                    mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getThemeId());
+                }
+            }
         } else {
             AppLog.d(T.THEMES, "Current Theme fetch successful!");
+            mCurrentTheme = event.theme;
+
+            if (mThemeBrowserFragment != null) {
+                mThemeBrowserFragment.setRefreshing(false);
+                if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
+                    mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
+                    mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getThemeId());
+                }
+            }
+
+            if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
+                mThemeSearchFragment.setRefreshing(false);
+            }
         }
     }
 
@@ -218,6 +238,15 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             ToastUtils.showToast(this, R.string.theme_activation_error, ToastUtils.Duration.SHORT);
         } else {
             AppLog.d(T.THEMES, "Theme activation successful! New theme: " + event.theme.getName());
+            mCurrentTheme = event.theme;
+
+            Map<String, Object> themeProperties = new HashMap<>();
+            themeProperties.put(THEME_ID, mCurrentTheme.getThemeId());
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_CHANGED_THEME, mSite, themeProperties);
+
+            if (!isFinishing()) {
+                showAlertDialogOnNewSettingNewTheme(mCurrentTheme);
+            }
         }
     }
 
