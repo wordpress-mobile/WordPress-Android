@@ -138,6 +138,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
+        //noinspection deprecation
         mToolbar.setBackgroundDrawable(new ColorDrawable(toolbarColor));
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -205,7 +206,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         MediaPreviewFragment fragment;
         MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
         if (media != null) {
-            fragment = MediaPreviewFragment.newInstance(mSite, media);
+            fragment = MediaPreviewFragment.newInstance(mSite, media, true);
         } else {
             fragment = MediaPreviewFragment.newInstance(mSite, mContentUri);
         }
@@ -275,9 +276,12 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             }
             @Override
             public void onPageSelected(int position) {
+                // pause the outgoing fragment and unpause the incoming one - this prevents audio/video from
+                // playing in inactive fragments
                 if (mLastPosition > -1 && mLastPosition != position) {
                     getPagerAdapter().pauseFragment(mLastPosition);
                 }
+                getPagerAdapter().unpauseFragment(position);
                 mLastPosition = position;
             }
             @Override
@@ -310,7 +314,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         public Fragment getItem(int position) {
             int id = Integer.valueOf(mMediaIdList.get(position));
             MediaModel media = mMediaStore.getMediaWithLocalId(id);
-            MediaPreviewFragment fragment = MediaPreviewFragment.newInstance(mSite, media);
+            MediaPreviewFragment fragment = MediaPreviewFragment.newInstance(mSite, media, false);
             fragment.setOnMediaTappedListener(MediaPreviewActivity.this);
             return fragment;
         }
@@ -339,6 +343,13 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             Fragment fragment = mFragmentMap.get(position);
             if (fragment != null) {
                 ((MediaPreviewFragment) fragment).pauseMedia();
+            }
+        }
+
+        void unpauseFragment(int position) {
+            Fragment fragment = mFragmentMap.get(position);
+            if (fragment != null) {
+                ((MediaPreviewFragment) fragment).playMedia();
             }
         }
     }

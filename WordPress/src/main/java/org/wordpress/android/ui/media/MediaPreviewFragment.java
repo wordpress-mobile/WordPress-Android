@@ -48,6 +48,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     static final String ARG_MEDIA_ID = "media_id";
     private static final String ARG_TITLE = "title";
     private static final String ARG_POSITION = "position";
+    private static final String ARG_AUTOPLAY = "autoplay";
 
     public interface OnMediaTappedListener {
         void onMediaTapped();
@@ -58,6 +59,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     private boolean mIsVideo;
     private boolean mIsAudio;
     private boolean mFragmentWasPaused;
+    private boolean mAutoPlay;
     private int mPosition;
 
     private SiteModel mSite;
@@ -78,7 +80,6 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     /**
      * @param site        optional site this media is associated with
      * @param contentUri  URI of media - can be local or remote
-     * @param isVideo     whether the passed media is a video - assumed to be an image otherwise
      */
     public static MediaPreviewFragment newInstance(
             SiteModel site,
@@ -97,13 +98,16 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     /**
      * @param site        optional site this media is associated with
      * @param media       media model
+     * @param autoPlay    true = play video/audio after fragment is created
      */
     public static MediaPreviewFragment newInstance(
             SiteModel site,
-            MediaModel media) {
+            MediaModel media,
+            boolean autoPlay) {
         Bundle args = new Bundle();
         args.putString(ARG_MEDIA_CONTENT_URI, media.getUrl());
         args.putString(ARG_TITLE, media.getTitle());
+        args.putBoolean(ARG_AUTOPLAY, autoPlay);
 
         if (site != null) {
             args.putSerializable(WordPress.SITE, site);
@@ -123,6 +127,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         mSite = (SiteModel) args.getSerializable(WordPress.SITE);
         mContentUri = args.getString(ARG_MEDIA_CONTENT_URI);
         mTitle = args.getString(ARG_TITLE);
+        mAutoPlay = args.getBoolean(ARG_AUTOPLAY);
+
         mIsVideo = MediaUtils.isVideo(mContentUri);
         mIsAudio = MediaUtils.isAudio(mContentUri);
 
@@ -156,33 +162,39 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
         if (mFragmentWasPaused) {
             mFragmentWasPaused = false;
-        } else {
-            View.OnClickListener listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mControls != null) {
-                        mControls.show();
-                    }
-                    if (mMediaTapListener != null) {
-                        mMediaTapListener.onMediaTapped();
-                    }
-                }
-            };
-
-            if (mIsVideo) {
-                mVideoFrame.setOnClickListener(listener);
-                playVideo(mContentUri, mPosition);
-            } else if (mIsAudio) {
-                mAudioFrame.setOnClickListener(listener);
-                if (!TextUtils.isEmpty(mTitle)) {
-                    TextView txtAudioTitle = (TextView) getView().findViewById(R.id.text_audio_title);
-                    txtAudioTitle.setText(mTitle);
-                    txtAudioTitle.setVisibility(View.VISIBLE);
-                }
-                playAudio(mContentUri, mPosition);
-            } else {
-                loadImage(mContentUri);
+        } else if (mIsAudio || mIsVideo) {
+            if (mAutoPlay) {
+                playMedia();
             }
+        } else {
+            loadImage(mContentUri);
+        }
+    }
+
+    void playMedia() {
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mControls != null) {
+                    mControls.show();
+                }
+                if (mMediaTapListener != null) {
+                    mMediaTapListener.onMediaTapped();
+                }
+            }
+        };
+
+        if (mIsVideo) {
+            mVideoFrame.setOnClickListener(listener);
+            playVideo(mContentUri, mPosition);
+        } else if (mIsAudio) {
+            mAudioFrame.setOnClickListener(listener);
+            if (!TextUtils.isEmpty(mTitle)) {
+                TextView txtAudioTitle = (TextView) getView().findViewById(R.id.text_audio_title);
+                txtAudioTitle.setText(mTitle);
+                txtAudioTitle.setVisibility(View.VISIBLE);
+            }
+            playAudio(mContentUri, mPosition);
         }
     }
 
@@ -221,10 +233,12 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         if (mControls != null) {
             mControls.hide();
         }
-        if (mAudioPlayer != null && mAudioPlayer.isPlaying()) {
+        if (mAudioPlayer != null) {
+            mPosition = mAudioPlayer.getCurrentPosition();
             mAudioPlayer.stop();
         }
         if (mVideoView.isPlaying()) {
+            mPosition = mVideoView.getCurrentPosition();
             mVideoView.stopPlayback();
         }
     }
