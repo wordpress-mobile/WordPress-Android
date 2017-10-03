@@ -118,7 +118,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         }
 
         if (TextUtils.isEmpty(mContentUri)) {
-            delayedFinish(true);
+            delayedFinish();
             return;
         }
 
@@ -172,10 +172,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         outState.putString(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, mContentUri);
     }
 
-    private void delayedFinish(boolean showError) {
-        if (showError) {
-            ToastUtils.showToast(this, R.string.error_media_not_found);
-        }
+    private void delayedFinish() {
+        ToastUtils.showToast(this, R.string.error_media_not_found);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
