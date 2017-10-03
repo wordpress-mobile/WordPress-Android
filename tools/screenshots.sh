@@ -3,6 +3,14 @@
 # TODO: check for adb
 # TODO: check for AVD
 # TODO: check for imagemagick
+# TODO: check for Noto Serif bold font
+
+if [ -z "$ANDROID_SDK_DIR" ]; then
+	echo "ANDROID_SDK_DIR variable is not set correctly. That usually means that the Android sdk is not installed."; 
+	exit 1
+fi
+
+export PATH=$PATH:$ANDROID_SDK_DIR/tools:$ANDROID_SDK_DIR/tools/bin
 
 . tokendeeplink.sh
 
@@ -16,11 +24,23 @@ if ! [[ "$TOKEN_DEEPLINK" =~ ^wordpress:\/\/magic-login\?token=* ]]; then
 	exit 1
 fi;
 
-AVD=Nexus_5X_API_25
+AVD=Nexus_5X_API_25_SCREENSHOTS
+
+avdmanager list avd -c | grep $AVD
+avdmissing=$?
+
+if [ $avdmissing = 1 ]; then
+  echo Creating AVD
+  echo no | avdmanager create avd -n $AVD -k "system-images;android-25;google_apis;x86" &>/dev/null
+fi
+
+#exit 0
+
 FONTFILE=./Noto_Serif/NotoSerif-Bold.ttf
 
 APP_HEIGHT=1388
-NAV_HEIGHT=96
+#NAV_HEIGHT=96
+NAV_HEIGHT=0
 SKIN_WIDTH=840
 SKIN_HEIGHT=$(($APP_HEIGHT+$NAV_HEIGHT))
 SKIN=$SKIN_WIDTH'x'$SKIN_HEIGHT
@@ -63,7 +83,7 @@ TAB10_OFFSET="+148+622"
 
 function start_emu {
   echo -n Starting emulator... 
-  /Applications/android/sdk/tools/emulator -avd $AVD -skin $SKIN -qemu -lcd-density $LCD_DPI &>/dev/null &
+  $ANDROID_SDK_DIR/tools/emulator -verbose -avd $AVD -skin $SKIN -qemu -lcd-density $LCD_DPI &>/dev/null &
   echo Done
 }
 
