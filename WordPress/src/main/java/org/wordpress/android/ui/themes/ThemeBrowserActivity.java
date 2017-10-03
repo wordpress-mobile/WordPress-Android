@@ -45,6 +45,11 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback {
+    public static boolean isAccessible(SiteModel site) {
+        // themes are only accessible to admin wordpress.com users
+        return site != null && site.isUsingWpComRestApi() && site.getHasCapabilityEditThemeOptions();
+    }
+
     public static final int THEME_FETCH_MAX = 100;
     public static final int ACTIVATE_THEME = 1;
     public static final String THEME_ID = "theme_id";
@@ -59,11 +64,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private boolean mIsInSearchMode;
     private SiteModel mSite;
 
-    public static boolean isAccessible(SiteModel site) {
-        // themes are only accessible to admin wordpress.com users
-        // TODO: Support themes for Jetpack and AT sites (and use SiteUtils.isAccessedViaWPComRest(site))
-        return site != null && site.isWPCom() && site.getHasCapabilityEditThemeOptions();
-    }
     @Inject ThemeStore mThemeStore;
     @Inject Dispatcher mDispatcher;
 
