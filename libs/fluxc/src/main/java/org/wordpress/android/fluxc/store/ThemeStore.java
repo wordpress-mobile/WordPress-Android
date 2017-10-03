@@ -296,7 +296,7 @@ public class ThemeStore extends Store {
         if (payload.site.isJetpackConnected() && payload.site.isUsingWpComRestApi()) {
             mThemeRestClient.deleteTheme(payload.site, payload.theme);
         } else {
-            payload.error = new ActivateThemeError("not_available", null);
+            payload.error = new ActivateThemeError(ThemeErrorType.NOT_AVAILABLE);
             handleThemeDeleted(payload);
         }
     }
