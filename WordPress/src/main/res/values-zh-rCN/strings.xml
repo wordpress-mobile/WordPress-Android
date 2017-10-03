@@ -759,7 +759,6 @@ Language: zh_CN
 	<string name="error_refresh_notifications">现在不能刷新通知</string>
 	<string name="error_refresh_pages">现在不能刷新页面</string>
 	<string name="error_refresh_posts">现在不能刷新文章</string>
-	<string name="error_delete_post">在删除 %s 时发生了一个错误</string>
 	<string name="notifications_empty_list">没有通知</string>
 	<string name="reply_failed">回复失败</string>
 	<string name="invalid_url_message">请检查输入的 URL 是否有效</string>
@@ -776,7 +775,6 @@ Language: zh_CN
 	<string name="theme_auth_error_message">确保您有权限设置主题</string>
 	<string name="theme_set_failed">未能设置主题</string>
 	<string name="theme_fetch_failed">未能获取主题</string>
-	<string name="wait_until_upload_completes">等待上传完成</string>
 	<string name="blog_not_found">抱歉，尝试访问该博客时发生错误。</string>
 	<string name="gallery_error">抱歉,无法从图库检索该媒体对象</string>
 	<string name="could_not_remove_account">无法删除站点</string>
@@ -1014,7 +1012,7 @@ Language: zh_CN
 	<string name="app_title">WordPress for Android</string>
 	<string name="tos">服务条款</string>
 	<string name="version">版本</string>
-	<string name="max_thumbnail_px_width">默认图片宽度</string>
+	<string name="max_thumbnail_px_size">默认图片宽度</string>
 	<string name="image_alignment">对齐</string>
 	<string name="refresh">刷新</string>
 	<string name="untitled">无标题</string>

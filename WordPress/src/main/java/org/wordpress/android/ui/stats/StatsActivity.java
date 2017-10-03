@@ -51,6 +51,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 /**
  * The native stats activity
  * <p>
@@ -135,7 +137,8 @@ public class StatsActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -146,7 +149,8 @@ public class StatsActivity extends AppCompatActivity
 
                         refreshStatsFromCurrentDate();
                     }
-                });
+                }
+        );
 
         setTitle(R.string.stats);
 

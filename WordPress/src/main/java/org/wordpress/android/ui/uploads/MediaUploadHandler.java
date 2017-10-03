@@ -36,14 +36,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     private static final List<MediaModel> sPendingUploads = new ArrayList<>();
     private static final List<MediaModel> sInProgressUploads = new ArrayList<>();
 
-    // TODO This should be moved to FluxC, perhaps in a new UploadMediaTable
-    private static final ConcurrentHashMap<Integer, Float> sUploadProgressByMediaId = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<Integer, Float> sOptimizationProgressByMediaId = new ConcurrentHashMap<>();
 
-    @Inject
-    Dispatcher mDispatcher;
-    @Inject
-    SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
+    @Inject SiteStore mSiteStore;
 
     MediaUploadHandler() {
         ((WordPress) WordPress.getContext()).component().inject(this);
@@ -53,7 +49,6 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     }
 
     void unregister() {
-        sUploadProgressByMediaId.clear();
         sOptimizationProgressByMediaId.clear();
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
@@ -161,23 +156,15 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     }
 
     /**
-     * Returns the last recorded progress value for the given {@param media}. If there is no record for that media,
-     * it's assumed to be a completed upload.
+     * Returns an overall progress for the given {@param video}, including the video optimization progress. If there is
+     * no record for that video, it's assumed to be a completed upload.
      */
-    static float getProgressForMedia(MediaModel media) {
-        Float progress = sUploadProgressByMediaId.get(media.getId());
-        float uploadProgress = progress == null ? 0 : progress;
-
-        // if this is a video and video optimization is enabled, include the optimization progress in the outcome
-        if (media.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
-            if (sOptimizationProgressByMediaId.containsKey(media.getId())) {
-                float optimizationProgress = sOptimizationProgressByMediaId.get(media.getId());
-                return optimizationProgress * 0.5F;
-            }
-            return 0.5F + (uploadProgress * 0.5F);
+    static float getOverallProgressForVideo(MediaModel video, float uploadProgress) {
+        if (sOptimizationProgressByMediaId.containsKey(video.getId())) {
+            float optimizationProgress = sOptimizationProgressByMediaId.get(video.getId());
+            return optimizationProgress * 0.5F;
         }
-
-        return uploadProgress;
+        return 0.5F + (uploadProgress * 0.5F);
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
@@ -196,10 +183,6 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
             uploadNextInQueue();
         } else {
             AppLog.i(T.MEDIA, "MediaUploadHandler > " + event.media.getId() + " - progress: " + event.progress);
-            Float previousProgress = sUploadProgressByMediaId.get(event.media.getId());
-            if (previousProgress == null || previousProgress < event.progress) {
-                sUploadProgressByMediaId.put(event.media.getId(), event.progress);
-            }
         }
     }
 
@@ -234,7 +217,6 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         MediaModel media = getMediaFromInProgressQueueById(id);
         if (media != null) {
             sInProgressUploads.remove(media);
-            sUploadProgressByMediaId.put(media.getId(), 1F);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
         }
     }

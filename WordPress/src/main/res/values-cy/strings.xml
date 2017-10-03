@@ -46,7 +46,6 @@ Language: cy_GB
 	<string name="reader_label_visit">Ymweld</string>
 	<string name="all_your_sites">Fy Ngwefannau</string>
 	<string name="pending_draft_more">Rydych wedi drafftio %d cofnod ond heb eu chyhoeddi. Tapiwch i wirio.</string>
-	<string name="no_default_app_available_to_open_link">Methu agor y ddolen</string>
 	<string name="notification_pending_drafts">Rhoi gwybod i mi am ddrafftiau sy\'n disgwyl</string>
 	<string name="invalid_verification_code_format">Rhaid iddo fod yn rif chwe digid</string>
 	<string name="confirm_discard_changes">Hepgor newidiadau heb eu cadw?</string>
@@ -825,7 +824,6 @@ Language: cy_GB
 	<string name="error_refresh_notifications">Nid oedd modd adnewyddu\'r hysbysiadau ar hyn o bryd</string>
 	<string name="error_refresh_pages">Nid oedd modd adnewyddu\'r tudalennau ar hyn o bryd</string>
 	<string name="error_refresh_posts">Nid oedd modd adnewyddu\'r cofnodion ar hyn o bryd</string>
-	<string name="error_delete_post">Digwyddodd gwall wrth ddileu y%s</string>
 	<string name="notifications_empty_list">Dim hysbysiadau</string>
 	<string name="reply_failed">Methodd yr ateb</string>
 	<string name="invalid_url_message">Gwiriwch fod URL y blog yn ddilys</string>
@@ -842,7 +840,6 @@ Language: cy_GB
 	<string name="theme_auth_error_message">Sicrhewch bod gennych breintiau gosod themâu</string>
 	<string name="theme_set_failed">Methu gosod thema</string>
 	<string name="theme_fetch_failed">Methu estyn themâu</string>
-	<string name="wait_until_upload_completes">Arhoswch nes bod y llwytho i fyny wedi cwblhau</string>
 	<string name="blog_not_found">Digwyddodd gwall wrth geisio cael mynediad at y blog</string>
 	<string name="gallery_error">Methu estyn y cyfrwng</string>
 	<string name="could_not_remove_account">Methu tynnu\'r blog</string>

@@ -31,6 +31,8 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 
 public class FilteredRecyclerView extends RelativeLayout {
 
@@ -133,7 +135,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         mProgressLoadMore = (ProgressBar) findViewById(R.id.progress_loading);
         mProgressLoadMore.setVisibility(View.GONE);
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getContext(),
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new SwipeToRefreshHelper.RefreshListener() {
                     @Override
@@ -152,8 +154,8 @@ public class FilteredRecyclerView extends RelativeLayout {
                             }
                         });
                     }
-                });
-
+                }
+        );
 
         if (mSpinner == null) {
             mSpinner = (Spinner) findViewById(R.id.filter_spinner);

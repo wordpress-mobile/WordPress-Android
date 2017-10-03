@@ -43,6 +43,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.editor.MetadataUtils.AttributesWithClass;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.JSONUtils;
@@ -140,6 +141,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private MediaPredicate mTappedMediaPredicate;
 
     private EditorBetaClickListener mEditorBetaClickListener;
+
+    private Drawable loadingImagePlaceholder;
+    private Drawable loadingVideoPlaceholder;
 
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
@@ -310,6 +314,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         super.onPrepareOptionsMenu(menu);
+    }
+
+    public boolean hasHistory() {
+        return (content.history.getHistoryEnabled() && !content.history.getHistoryList().isEmpty());
+    }
+
+    public boolean isHistoryEnabled() {
+        return content.history.getHistoryEnabled();
     }
 
     @Override
@@ -664,24 +676,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         final int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            // We're download the image/video from the network. Show the placeholder immediately since it could require time.
-            final Drawable placeholder;
-            if(mediaFile.isVideo()) {
-                placeholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
-            } else {
-                placeholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
-            }
-            placeholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+
 
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
             setAttributeValuesIfNotDefault(attributes, mediaFile);
             if(mediaFile.isVideo()) {
                 addVideoUploadingClassIfMissing(attributes);
-                content.insertVideo(placeholder, attributes);
+                content.insertVideo(getLoadingVideoPlaceholder(), attributes);
                 overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
             } else {
-                content.insertImage(placeholder, attributes);
+                content.insertImage(getLoadingImagePlaceholder(), attributes);
             }
 
             final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
@@ -853,12 +858,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
-        if(!isAdded() || content == null || !mAztecReady) {
+        if (!isAdded() || content == null || !mAztecReady) {
             return;
         }
 
         if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            AppLog.i(T.MEDIA, "onMediaUploadSucceeded - Remote URL: " + remoteUrl + ", Filename: "
+                    + mediaFile.getFileName());
 
             // we still need to refresh the screen visually, no matter whether the service already
             // saved the post to Db or not
@@ -1234,7 +1241,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.stop_upload_dialog_button_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         if (mUploadingMediaProgressMax.containsKey(localMediaId)) {
@@ -1256,7 +1263,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
                 });
 
-                builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.stop_upload_dialog_button_no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                     }
@@ -1737,5 +1744,35 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         plugins.add(new VideoShortcodePlugin());
         plugins.add(new AudioShortcodePlugin());
         return new AztecParser(plugins);
+    }
+
+    private Drawable getLoadingImagePlaceholder() {
+        if (loadingImagePlaceholder != null) {
+            return  loadingImagePlaceholder;
+        }
+
+        // Use default loading placeholder if none was set by the host activity
+        Drawable defaultLoadingImagePlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
+        defaultLoadingImagePlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+        return defaultLoadingImagePlaceholder;
+    }
+
+    private Drawable getLoadingVideoPlaceholder() {
+        if (loadingVideoPlaceholder != null) {
+            return  loadingVideoPlaceholder;
+        }
+
+        // Use default loading placeholder if none was set by the host activity
+        Drawable defaultLoadingImagePlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
+        defaultLoadingImagePlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+        return defaultLoadingImagePlaceholder;
+    }
+
+    public void setLoadingImagePlaceholder(Drawable loadingImagePlaceholder) {
+        this.loadingImagePlaceholder = loadingImagePlaceholder;
+    }
+
+    public void setLoadingVideoPlaceholder(Drawable loadingVideoPlaceholder) {
+        this.loadingVideoPlaceholder = loadingVideoPlaceholder;
     }
 }

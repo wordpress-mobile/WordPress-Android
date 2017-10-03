@@ -288,23 +288,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             imageView.setErrorImageResId(R.drawable.media_item_background);
             imageView.setDefaultImageResId(R.drawable.media_item_background);
 
-            View.OnClickListener previewListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (isValidPosition(position)) {
-                        MediaModel media = mMediaList.get(position);
-                        MediaPreviewActivity.showPreview(
-                                v.getContext(),
-                                previewContainer,
-                                mSite,
-                                media.getId());
-                    }
-                }
-            };
-            previewContainer.setOnClickListener(previewListener);
-            videoOverlayContainer.setOnClickListener(previewListener);
-
             // make the progress bar white
             progressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
 

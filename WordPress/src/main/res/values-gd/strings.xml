@@ -297,7 +297,6 @@ Language: gd_GB
 	<string name="error_moderate_comment">Thachair mearachd fhad \'s a bha sinn ri modarataireachd</string>
 	<string name="error_edit_comment">Thachair mearachd rè deasachadh a’ bheachd</string>
 	<string name="notifications_empty_list">Gun bhrathan</string>
-	<string name="error_delete_post">Thachair mearachd fhad ’s a bhathar a’ sguabadh às %s</string>
 	<string name="error_refresh_posts">Cha b’ urrainn dhuinn na puist ath-nuadhachadh aig an àm seo</string>
 	<string name="error_refresh_pages">Cha b’ urrainn dhuinn na duilleagan ath-nuadhachadh aig an àm seo</string>
 	<string name="error_refresh_notifications">Cha b’ urrainn dhuinn na brathan ath-nuadhachadh aig an àm seo</string>
@@ -316,7 +315,6 @@ Language: gd_GB
 	<string name="mnu_comment_unspam">Beachd còir</string>
 	<string name="gallery_error">Cha b’ urrainn dhuinn am meadhan fhaighinn</string>
 	<string name="blog_not_found">Thachair mearachd fhad ’s a bha sinn ag inntrigeadh a’ bhloga seo</string>
-	<string name="wait_until_upload_completes">Fuirich ort gus an deach a luchdadh suas</string>
 	<string name="theme_fetch_failed">Cha b’ urrainn dhuinn na h-ùrlaran fhaighinn dhut</string>
 	<string name="out_of_memory">Chan eil cuimhne air fhàgail air an uidheam</string>
 	<string name="no_network_message">Chan eil lìonra ri làimh</string>
@@ -554,7 +552,7 @@ Language: gd_GB
 	<string name="version">Tionndadh</string>
 	<string name="tos">Teirmichean na seirbheise</string>
 	<string name="app_title">WordPress airson Android</string>
-	<string name="max_thumbnail_px_width">Leud bunaiteach an deilbh</string>
+	<string name="max_thumbnail_px_size">Leud bunaiteach an deilbh</string>
 	<string name="image_alignment">Co-thaobhadh</string>
 	<string name="refresh">Ath-nuadhaich</string>
 	<string name="untitled">Gun tiotal</string>

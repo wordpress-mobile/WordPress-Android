@@ -359,7 +359,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                         trackOpenPreviewScreenEvent(item);
                         MediaPreviewActivity.showPreview(
                                 mContext,
-                                v,
+                                null,
                                 item.uri.toString(),
                                 item.isVideo);
                     }

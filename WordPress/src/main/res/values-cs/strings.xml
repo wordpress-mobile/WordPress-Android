@@ -39,7 +39,6 @@ Language: cs_CZ
 	<string name="reader_label_visit">Návštěva</string>
 	<string name="all_your_sites">Všechny moje stránky</string>
 	<string name="pending_draft_more">Váš koncept příspěvku %d nebude nikdy publikován. Klepnutím to zkontrolujete.</string>
-	<string name="no_default_app_available_to_open_link">Nelze otevřít odkaz</string>
 	<string name="notification_pending_drafts">Upozornit na čekající koncepty</string>
 	<string name="invalid_verification_code_format">Musí být šestimístné číslo</string>
 	<string name="confirm_discard_changes">Zahodit neuložené změny?</string>
@@ -789,7 +788,6 @@ Language: cs_CZ
 	<string name="out_of_memory">Nedostatek paměti v zařízení</string>
 	<string name="no_network_message">Není dostupná žádná síť</string>
 	<string name="gallery_error">Multimediální položka nemohla být stažena</string>
-	<string name="wait_until_upload_completes">Čekej dokud neskončí nahrávání</string>
 	<string name="theme_fetch_failed">Chyba při získávání motivů</string>
 	<string name="theme_set_failed">Chyba při nastavení motivu</string>
 	<string name="theme_auth_error_message">Ujisti se, že máš práva k nastavení motivu</string>
@@ -801,7 +799,6 @@ Language: cs_CZ
 	<string name="stats_bar_graph_empty">Statistika není dostupná</string>
 	<string name="reply_failed">Odpověď se nezdařila</string>
 	<string name="notifications_empty_list">Žádná oznámení</string>
-	<string name="error_delete_post">Nastala chyba při mazání %s</string>
 	<string name="error_refresh_posts">Články momentálně nemohly být obnoveny</string>
 	<string name="error_refresh_pages">Stránky momentálně nemohly být obnoveny</string>
 	<string name="error_refresh_notifications">Oznámení momentálně nemohla být obnovena</string>

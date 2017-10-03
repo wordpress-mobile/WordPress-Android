@@ -30,8 +30,9 @@
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
         <item name="windowActionModeOverlay">true</item>
-        <item name="swipeToRefreshStyle">@style/WordPress.SwipeToRefresh</item>
         <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
+
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
@@ -181,6 +182,20 @@
         <item name="android:listDivider">@null</item>
     </style>
 
+    <style name="Toolbar.Primary" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/color_primary</item>
+        <item name="android:theme">@style/Toolbar.Theme</item>
+    </style>
+
+    <style name="Toolbar.Secondary" parent="@style/Toolbar.Primary">
+        <item name="android:background">@color/blue_medium</item>
+        <item name="contentInsetStart">@dimen/toolbar_content_offset</item>
+    </style>
+
+    <style name="Toolbar.Theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:listDivider">@null</item>
+    </style>
+
     <style name="ProgressBar.WordPress" parent="android:Widget.Holo.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_wordpress</item>
     </style>
@@ -239,6 +254,40 @@
         <item name="android:textSize">14sp</item>
         <item name="android:button">@null</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="MediaSettings" />
+    <style name="MediaSettings.Activity" parent="WordPress">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+    <style name="MediaSettings.TextInputStyle">
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+    </style>
+    <style name="MediaSettings.TextInputTheme" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/grey_500</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlNormal">@color/grey_500</item>
+        <item name="colorControlActivated">@color/blue_wordpress</item>
+    </style>
+    <style name="MediaSettings.Divider">
+        <item name="android:background">@color/divider_grey</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+    </style>
+    <style name="MediaSettings.Label">
+        <item name="android:layout_marginLeft">@dimen/media_settings_margin</item>
+        <item name="android:layout_marginRight">@dimen/media_settings_margin</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+    <style name="MediaSettings.Value">
+        <item name="android:layout_marginLeft">@dimen/media_settings_margin</item>
+        <item name="android:layout_marginRight">@dimen/media_settings_margin</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
     <style name="EmptyListText">
@@ -360,10 +409,6 @@
 
     <style name="WordPress.BorderedBackground">
         <item name="android:background">@color/white</item>
-    </style>
-
-    <style name="WordPress.SwipeToRefresh">
-        <item name="refreshIndicatorColor">@color/blue_medium</item>
     </style>
 
     <!--My Site Styles-->
@@ -632,4 +677,5 @@
         <item name="android:minHeight">8dip</item>
         <item name="android:maxHeight">8dip</item>
     </style>
+
 </resources>

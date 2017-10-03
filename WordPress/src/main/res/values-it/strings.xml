@@ -7,11 +7,7 @@ Language: it
 -->
 <resources>
 	<string name="error_unknown_post">Non è stato possibile trovare l\'articolo sul server</string>
-	<string name="error_post_does_not_exist">L\'articolo non esiste più</string>
-	<string name="error_media_recover">Non abbiamo potuto caricare l\'immagine dell\'articolo. Modifica l\'articolo di nuovo</string>
 	<string name="error_media_canceled">Caricamento file multimediali annullato</string>
-	<string name="error_upload_post_media_params">C\'è stato un errore caricando il file multimediale in questo %1$s: %2$s.</string>
-	<string name="error_upload_post_params">C\'è stato un errore caricando questo %1$s: %2$s. </string>
 	<string name="async_promo_link">Come funziona?</string>
 	<string name="async_promo_description">Ora puoi lasciare che l\'editor e il tuo articolo salvino e pubblichino da soli! Provaci!</string>
 	<string name="async_promo_title">Pubblica con Confidence</string>
@@ -72,7 +68,6 @@ Language: it
 	<string name="login_promo_text_onthego">Pubblica dal parco. Lavora al blog sull\'autobus. Commenta dal bar. WordPress si sposta con te.</string>
 	<string name="create_wordpress_site">Crea un sito WordPress</string>
 	<string name="email_not_found">Non è stato trovato nessun utente WordPress.com con questo indirizzo e-mail</string>
-	<string name="login_site_address_help_image">Immagine posizione indirizzo sito</string>
 	<string name="image_optimization_promo_desc">L\'ottimizzazione dell\'immagine restringe l\'immagine per un caricamento più veloce.\n\nPuoi modificare questa opzione in qualsiasi momento nelle impostazioni del sito.</string>
 	<string name="image_optimization_promo_title">Attivare l\'ottimizzazione dell\'immagine?</string>
 	<string name="leave_off">Escludi</string>
@@ -321,7 +316,6 @@ Language: it
 	<string name="reader_label_visit">Visita</string>
 	<string name="all_your_sites">Tutti i miei siti</string>
 	<string name="pending_draft_more">Hai abbozzato %d articoli ma non li hai mai pubblicati. Clicca per verificare.</string>
-	<string name="no_default_app_available_to_open_link">Impossibile aprire il link</string>
 	<string name="notification_pending_drafts">Avvisami su gli articoli abbozzati</string>
 	<string name="invalid_verification_code_format">Deve essere un numero a sei cifre</string>
 	<string name="confirm_discard_changes">Scartare le modifiche non salvate?</string>
@@ -1112,7 +1106,6 @@ Language: it
 	<string name="error_refresh_notifications">Impossibile aggiornare le notifiche al momento</string>
 	<string name="error_refresh_pages">Impossibile aggiornare le pagine al momento</string>
 	<string name="error_refresh_posts">Impossibile aggiornare gli articoli al momento</string>
-	<string name="error_delete_post">Si è verificato un errore durante l\'eliminazione di %s</string>
 	<string name="notifications_empty_list">Nessuna notifica</string>
 	<string name="reply_failed">Impossibile rispondere</string>
 	<string name="invalid_url_message">Verifica la validità dell\'URL inserita</string>
@@ -1129,7 +1122,6 @@ Language: it
 	<string name="theme_auth_error_message">Assicurati di disporre dei privilegi per impostare i temi</string>
 	<string name="theme_set_failed">Impossibile impostare il tema</string>
 	<string name="theme_fetch_failed">Impossibile recuperare i temi</string>
-	<string name="wait_until_upload_completes">Attendi la fine del caricamento</string>
 	<string name="blog_not_found">Si è verificato un errore durante l\'accesso a questo blog</string>
 	<string name="gallery_error">Impossibile recuperare il file</string>
 	<string name="could_not_remove_account">Impossibile rimuovere il sito</string>
@@ -1374,7 +1366,7 @@ Language: it
 	<string name="app_title">WordPress per Android</string>
 	<string name="tos">Condizioni del servizio</string>
 	<string name="version">Versione</string>
-	<string name="max_thumbnail_px_width">Larghezza predefinita immagine</string>
+	<string name="max_thumbnail_px_size">Larghezza predefinita immagine</string>
 	<string name="image_alignment">Allineamento</string>
 	<string name="refresh">Aggiorna</string>
 	<string name="untitled">Senza titolo</string>

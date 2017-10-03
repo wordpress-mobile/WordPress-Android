@@ -1,35 +1,46 @@
 package org.wordpress.android.ui.prefs.notifications;
 
 import android.app.FragmentManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 
 import de.greenrobot.event.EventBus;
 
 // Simple wrapper activity for NotificationsSettingsFragment
 public class NotificationsSettingsActivity extends AppCompatActivity {
-    private View mMessageContainer;
     private TextView mMessageTextView;
+    private View mMessageContainer;
+
+    protected SharedPreferences mSharedPreferences;
+    protected SwitchCompat mMasterSwitch;
+    protected Toolbar mToolbarSwitch;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
         setContentView(R.layout.notifications_settings_activity);
 
-        setTitle(R.string.notification_settings);
+        // Get shared preferences for master switch.
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(NotificationsSettingsActivity.this);
+
+        // Set up primary and secondary toolbars for master switch.
+        setUpToolbars();
 
         FragmentManager fragmentManager = getFragmentManager();
         if (savedInstanceState == null) {
@@ -72,5 +83,74 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
             mMessageContainer.setVisibility(View.VISIBLE);
             mMessageTextView.setText(event.getMessage());
         }
+    }
+
+    /**
+     * Set up both primary toolbar for navigation and search, and secondary toolbar for master switch.
+     */
+    private void setUpToolbars() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_with_search);
+
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.notification_settings);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
+
+        mToolbarSwitch = (Toolbar) findViewById(R.id.toolbar_with_switch);
+        mToolbarSwitch.setTitle("Off");
+        mToolbarSwitch.inflateMenu(R.menu.notifications_settings_secondary);
+        MenuItem menuItem = mToolbarSwitch.getMenu().findItem(R.id.master_switch);
+        mMasterSwitch = (SwitchCompat) menuItem.getActionView();
+        mMasterSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                hideDisabledView(isChecked);
+                mToolbarSwitch.setTitle(isChecked ?
+                        getString(R.string.notification_settings_master_status_on) :
+                        getString(R.string.notification_settings_master_status_off));
+                mSharedPreferences.edit().putBoolean(getString(R.string.wp_pref_notifications_master), isChecked).apply();
+
+                if (isChecked) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED);
+                } else {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED);
+                }
+            }
+        });
+        mMasterSwitch.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(NotificationsSettingsActivity.this, mMasterSwitch.isChecked() ?
+                        getString(R.string.notification_settings_master_hint_on) :
+                        getString(R.string.notification_settings_master_hint_off),
+                        Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        // Set secondary toolbar title and master switch state from shared preferences.
+        boolean isMasterChecked = mSharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_master), true);
+        mToolbarSwitch.setTitle(isMasterChecked ?
+                getString(R.string.notification_settings_master_status_on) :
+                getString(R.string.notification_settings_master_status_off));
+        mMasterSwitch.setChecked(isMasterChecked);
+
+    }
+
+    /**
+     * Hide view when Notification Settings are disabled by toggling the master switch off.
+     *
+     * @param isMasterChecked   TRUE to hide disabled view, FALSE to show disabled view
+     */
+    protected void hideDisabledView(boolean isMasterChecked) {
+        LinearLayout notificationsDisabledView = (LinearLayout) findViewById(R.id.notification_settings_disabled_view);
+        notificationsDisabledView.setVisibility(isMasterChecked ? View.INVISIBLE : View.VISIBLE);
     }
 }
