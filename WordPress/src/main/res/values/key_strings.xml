@@ -95,7 +95,6 @@
 
     <string name="wp_pref_notifications_root" translatable="false">wp_pref_notifications_root</string>
     <string name="wp_pref_notifications_master" translatable="false">wp_pref_notifications_master</string>
-    <string name="wp_pref_notification_receive" translatable="false">wp_pref_notification_receive</string>
     <string name="wp_pref_custom_notification_sound" translatable="false">wp_pref_custom_notification_sound</string>
     <string name="wp_pref_notification_vibrate" translatable="false">wp_pref_notification_vibrate</string>
     <string name="wp_pref_notification_light" translatable="false">wp_pref_notification_light</string>
