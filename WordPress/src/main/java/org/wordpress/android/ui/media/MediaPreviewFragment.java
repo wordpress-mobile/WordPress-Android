@@ -182,6 +182,15 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     }
 
     @Override
+    public void onPause() {
+        mFragmentWasPaused = true;
+        if (mIsAudio || mIsVideo) {
+            pauseMedia();
+        }
+        super.onPause();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
@@ -199,32 +208,11 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     }
 
     void playMedia() {
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mControls != null) {
-                    mControls.show();
-                }
-                if (mMediaTapListener != null) {
-                    mMediaTapListener.onMediaTapped();
-                }
-            }
-        };
-
         if (mIsVideo) {
-            mVideoFrame.setOnClickListener(listener);
             playVideo(mContentUri, mPosition);
         } else if (mIsAudio) {
-            mAudioFrame.setOnClickListener(listener);
             playAudio(mContentUri, mPosition);
         }
-    }
-
-    @Override
-    public void onPause() {
-        mFragmentWasPaused = true;
-        pauseMedia();
-        super.onPause();
     }
 
     @Override
