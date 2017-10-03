@@ -277,7 +277,8 @@ public final class AnalyticsTracker {
         MEDIA_UPLOAD_SUCCESS,
         MEDIA_UPLOAD_CANCELED,
         APP_PERMISSION_GRANTED,
-        APP_PERMISSION_DENIED
+        APP_PERMISSION_DENIED,
+        SHARE_TO_WP_SUCCEEDED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
