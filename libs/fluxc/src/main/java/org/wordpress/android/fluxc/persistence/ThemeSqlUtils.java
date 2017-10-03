@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.persistence;
 
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.wellsql.generated.ThemeModelTable;
@@ -47,6 +48,13 @@ public class ThemeSqlUtils {
         WellSql.insert(themes).asSingleTransaction(true).execute();
 
         return themes.size();
+    }
+
+    public static Cursor getThemesWithNoSiteAsCursor() {
+        return WellSql.select(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.LOCAL_SITE_ID, 0)
+                .endWhere().getAsCursor();
     }
 
     public static List<ThemeModel> getThemesWithNoSite() {
