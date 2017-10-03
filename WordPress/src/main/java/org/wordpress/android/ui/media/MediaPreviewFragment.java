@@ -49,12 +49,14 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     private static final String ARG_TITLE = "title";
     private static final String ARG_POSITION = "position";
     private static final String ARG_AUTOPLAY = "autoplay";
+    private static final String ARG_VIDEO_THUMB ="video_thumb";
 
     public interface OnMediaTappedListener {
         void onMediaTapped();
     }
 
     private String mContentUri;
+    private String mVideoThumbnailUrl;
     private String mTitle;
     private boolean mIsVideo;
     private boolean mIsAudio;
@@ -108,9 +110,11 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         args.putString(ARG_MEDIA_CONTENT_URI, media.getUrl());
         args.putString(ARG_TITLE, media.getTitle());
         args.putBoolean(ARG_AUTOPLAY, autoPlay);
-
         if (site != null) {
             args.putSerializable(WordPress.SITE, site);
+        }
+        if (media.isVideo() && !TextUtils.isEmpty(media.getThumbnailUrl())) {
+            args.putString(ARG_VIDEO_THUMB, media.getThumbnailUrl());
         }
 
         MediaPreviewFragment fragment = new MediaPreviewFragment();
@@ -128,6 +132,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         mContentUri = args.getString(ARG_MEDIA_CONTENT_URI);
         mTitle = args.getString(ARG_TITLE);
         mAutoPlay = args.getBoolean(ARG_AUTOPLAY);
+        mVideoThumbnailUrl = args.getString(ARG_VIDEO_THUMB);
 
         mIsVideo = MediaUtils.isVideo(mContentUri);
         mIsAudio = MediaUtils.isAudio(mContentUri);
@@ -149,7 +154,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         mVideoFrame = (ViewGroup) view.findViewById(R.id.frame_video);
         mAudioFrame = (ViewGroup) view.findViewById(R.id.frame_audio);
 
-        mImageView.setVisibility(mIsVideo || mIsAudio ? View.GONE : View.VISIBLE);
+        //mImageView.setVisibility(mIsVideo || mIsAudio ? View.GONE : View.VISIBLE);
         mVideoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
         mAudioFrame.setVisibility(mIsAudio ? View.VISIBLE : View.GONE);
 
@@ -165,6 +170,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         } else if (mIsAudio || mIsVideo) {
             if (mAutoPlay) {
                 playMedia();
+            } else if (mIsVideo && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
+                loadImage(mVideoThumbnailUrl);
             }
         } else {
             loadImage(mContentUri);
