@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ActivityCompat;
@@ -46,7 +47,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     private int mMediaId;
     private ArrayList<String> mMediaIdList;
     private String mContentUri;
-    private int mLastPosition = -1;
+    private int mLastPosition;
 
     private SiteModel mSite;
 
@@ -65,9 +66,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
      * @param site        optional site this media is associated with
      * @param contentUri  URI of media - can be local or remote
      */
-    public static void showPreview(Context context,
-                                   SiteModel site,
-                                   String contentUri) {
+    public static void showPreview(@NonNull Context context,
+                                   @Nullable SiteModel site,
+                                   @NonNull String contentUri) {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
         intent.putExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, contentUri);
         if (site != null) {
@@ -83,10 +84,10 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
      * @param media       media model
      * @param mediaIdList optional list of media IDs to page through
      */
-    public static void showPreview(Context context,
-                                   SiteModel site,
-                                   MediaModel media,
-                                   ArrayList<String> mediaIdList) {
+    public static void showPreview(@NonNull Context context,
+                                   @Nullable SiteModel site,
+                                   @NonNull MediaModel media,
+                                   @Nullable ArrayList<String> mediaIdList) {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
         intent.putExtra(MediaPreviewFragment.ARG_MEDIA_ID, media.getId());
         intent.putExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, media.getUrl());
@@ -260,6 +261,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
 
+        // determine the position of the original media item so we can page to it immediately
         int initialPos = 0;
         for (int i = 0; i < mMediaIdList.size(); i++) {
             int thisId = Integer.valueOf(mMediaIdList.get(i));
@@ -277,7 +279,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             public void onPageSelected(int position) {
                 // pause the outgoing fragment and unpause the incoming one - this prevents audio/video from
                 // playing in inactive fragments
-                if (mLastPosition > -1 && mLastPosition != position) {
+                if (mLastPosition != position) {
                     mPagerAdapter.pauseFragment(mLastPosition);
                 }
                 mPagerAdapter.unpauseFragment(position);
@@ -315,7 +317,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             int id = Integer.valueOf(mMediaIdList.get(position));
             MediaModel media = mMediaStore.getMediaWithLocalId(id);
 
-            // make sure we autoplay the initial item
+            // make sure we autoplay the initial item (relevant only for audio/video)
             boolean autoPlay;
             if (id == mMediaId && !mDidAutoPlay) {
                 autoPlay = true;
@@ -349,14 +351,14 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             super.destroyItem(container, position, object);
         }
 
-        void pauseFragment(int position) {
+        private void pauseFragment(int position) {
             Fragment fragment = mFragmentMap.get(position);
             if (fragment != null) {
                 ((MediaPreviewFragment) fragment).pauseMedia();
             }
         }
 
-        void unpauseFragment(int position) {
+        private void unpauseFragment(int position) {
             Fragment fragment = mFragmentMap.get(position);
             if (fragment != null) {
                 ((MediaPreviewFragment) fragment).playMedia();
