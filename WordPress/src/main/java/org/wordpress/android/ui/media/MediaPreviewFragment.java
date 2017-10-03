@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -43,6 +44,10 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class MediaPreviewFragment extends Fragment implements MediaController.MediaPlayerControl {
 
     public static final String TAG = "media_preview_fragment";
+
+    static final String ARG_MEDIA_CONTENT_URI = "content_uri";
+    static final String ARG_MEDIA_ID = "media_id";
+    private static final String ARG_TITLE = "title";
     private static final String ARG_POSITION = "position";
 
     public interface OnMediaTappedListener {
@@ -78,11 +83,9 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
      */
     public static MediaPreviewFragment newInstance(
             SiteModel site,
-            String contentUri,
-            boolean isVideo) {
+            String contentUri) {
         Bundle args = new Bundle();
-        args.putString(MediaPreviewActivity.ARG_MEDIA_CONTENT_URI, contentUri);
-        args.putBoolean(MediaPreviewActivity.ARG_IS_VIDEO, isVideo);
+        args.putString(ARG_MEDIA_CONTENT_URI, contentUri);
         if (site != null) {
             args.putSerializable(WordPress.SITE, site);
         }
@@ -100,12 +103,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             SiteModel site,
             MediaModel media) {
         Bundle args = new Bundle();
-        args.putString(MediaPreviewActivity.ARG_MEDIA_CONTENT_URI, media.getUrl());
-        args.putString(MediaPreviewActivity.ARG_TITLE, media.getTitle());
-        args.putBoolean(MediaPreviewActivity.ARG_IS_VIDEO, media.isVideo());
-
-        String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-        args.putBoolean(MediaPreviewActivity.ARG_IS_AUDIO, mimeType.startsWith("audio"));
+        args.putString(ARG_MEDIA_CONTENT_URI, media.getUrl());
+        args.putString(ARG_TITLE, media.getTitle());
 
         if (site != null) {
             args.putSerializable(WordPress.SITE, site);
@@ -123,10 +122,10 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
         Bundle args = getArguments();
         mSite = (SiteModel) args.getSerializable(WordPress.SITE);
-        mContentUri = args.getString(MediaPreviewActivity.ARG_MEDIA_CONTENT_URI);
-        mTitle = args.getString(MediaPreviewActivity.ARG_TITLE);
-        mIsVideo = args.getBoolean(MediaPreviewActivity.ARG_IS_VIDEO);
-        mIsAudio = args.getBoolean(MediaPreviewActivity.ARG_IS_AUDIO);
+        mContentUri = args.getString(ARG_MEDIA_CONTENT_URI);
+        mTitle = args.getString(ARG_TITLE);
+        mIsVideo = MediaUtils.isVideo(mContentUri);
+        mIsAudio = MediaUtils.isAudio(mContentUri);
 
         if (savedInstanceState != null) {
             mPosition = savedInstanceState.getInt(ARG_POSITION, 0);

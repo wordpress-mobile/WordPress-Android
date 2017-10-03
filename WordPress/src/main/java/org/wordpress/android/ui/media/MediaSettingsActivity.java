@@ -122,7 +122,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             if (MediaUtils.isValidImage(media.getUrl())
                     || MediaUtils.isAudio(media.getUrl())
                     || media.isVideo()) {
-                MediaPreviewActivity.showPreview(activity, site, media.getFilePath(), media.isVideo());
+                MediaPreviewActivity.showPreview(activity, site, media.getFilePath());
             }
             return;
         }

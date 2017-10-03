@@ -30,7 +30,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
@@ -42,17 +41,8 @@ import javax.inject.Inject;
 
 public class MediaPreviewActivity extends AppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
 
-    static final String ARG_MEDIA_CONTENT_URI = "content_uri";
-    static final String ARG_IS_VIDEO = "is_video";
-    static final String ARG_IS_AUDIO = "is_audio";
-    static final String ARG_TITLE = "title";
-    static final String ARG_MEDIA_ID = "media_id";
-
     private int mMediaId;
     private String mContentUri;
-    private String mTitle;
-    private boolean mIsVideo;
-    private boolean mIsAudio;
 
     private SiteModel mSite;
 
@@ -73,11 +63,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
      */
     public static void showPreview(Context context,
                                    SiteModel site,
-                                   String contentUri,
-                                   boolean isVideo) {
+                                   String contentUri) {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
-        intent.putExtra(ARG_MEDIA_CONTENT_URI, contentUri);
-        intent.putExtra(ARG_IS_VIDEO, isVideo);
+        intent.putExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, contentUri);
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
         }
@@ -94,13 +82,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
                                    SiteModel site,
                                    MediaModel media) {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
-        intent.putExtra(ARG_MEDIA_ID, media.getId());
-        intent.putExtra(ARG_MEDIA_CONTENT_URI, media.getUrl());
-        intent.putExtra(ARG_TITLE, media.getTitle());
-        intent.putExtra(ARG_IS_VIDEO, media.isVideo());
-
-        String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-        intent.putExtra(ARG_IS_AUDIO, mimeType.startsWith("audio"));
+        intent.putExtra(MediaPreviewFragment.ARG_MEDIA_ID, media.getId());
+        intent.putExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, media.getUrl());
 
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
@@ -126,18 +109,12 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mMediaId = savedInstanceState.getInt(ARG_MEDIA_ID);
-            mContentUri = savedInstanceState.getString(ARG_MEDIA_CONTENT_URI);
-            mTitle = savedInstanceState.getString(ARG_TITLE);
-            mIsVideo = savedInstanceState.getBoolean(ARG_IS_VIDEO);
-            mIsAudio = savedInstanceState.getBoolean(ARG_IS_AUDIO);
+            mMediaId = savedInstanceState.getInt(MediaPreviewFragment.ARG_MEDIA_ID);
+            mContentUri = savedInstanceState.getString(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI);
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            mMediaId = getIntent().getIntExtra(ARG_MEDIA_ID, 0);
-            mContentUri = getIntent().getStringExtra(ARG_MEDIA_CONTENT_URI);
-            mTitle = getIntent().getStringExtra(ARG_TITLE);
-            mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
-            mIsAudio = getIntent().getBooleanExtra(ARG_IS_AUDIO, false);
+            mMediaId = getIntent().getIntExtra(MediaPreviewFragment.ARG_MEDIA_ID, 0);
+            mContentUri = getIntent().getStringExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI);
         }
 
         if (TextUtils.isEmpty(mContentUri)) {
@@ -158,6 +135,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         View fragmentContainer = findViewById(R.id.fragment_container);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
+        // when we have a site and a media object use a ViewPager so the user can swipe through the library, otherwise
+        // we're previewing a local file so use a single fragment rather than a ViewPager
         if (mSite != null && mMediaId != 0) {
             fragmentContainer.setVisibility(View.GONE);
             mViewPager.setVisibility(View.VISIBLE);
@@ -190,10 +169,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(ARG_MEDIA_CONTENT_URI, mContentUri);
-        outState.putString(ARG_TITLE, mTitle);
-        outState.putBoolean(ARG_IS_VIDEO, mIsVideo);
-        outState.putBoolean(ARG_IS_AUDIO, mIsAudio);
+        outState.putString(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, mContentUri);
     }
 
     private void delayedFinish(boolean showError) {
@@ -208,17 +184,17 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         }, 1500);
     }
 
-    private MediaPreviewFragment getPreviewFragment() {
-        return (MediaPreviewFragment) getFragmentManager().findFragmentByTag(MediaPreviewFragment.TAG);
-    }
-
+    /*
+     * shows a single preview fragment within this activity - called when we can't use a ViewPager to swipe
+     * between media (ie: we're previewing a local file)
+     */
     private void showPreviewFragment() {
         MediaPreviewFragment fragment;
         MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
         if (media != null) {
             fragment = MediaPreviewFragment.newInstance(mSite, media);
         } else {
-            fragment = MediaPreviewFragment.newInstance(mSite, mContentUri, mIsVideo);
+            fragment = MediaPreviewFragment.newInstance(mSite, mContentUri);
         }
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment, MediaPreviewFragment.TAG)
@@ -295,7 +271,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     }
 
     private class MediaPagerAdapter extends FragmentStatePagerAdapter {
-        private List<MediaModel> mMediaList = new ArrayList<>();
+        private final List<MediaModel> mMediaList = new ArrayList<>();
 
         public MediaPagerAdapter(FragmentManager fm) {
             super(fm);
