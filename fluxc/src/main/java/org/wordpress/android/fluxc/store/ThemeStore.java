@@ -49,6 +49,20 @@ public class ThemeStore extends Store {
         }
     }
 
+    public static class SearchThemesPayload extends Payload<FetchThemesError> {
+        public SiteModel site;
+        public String searchTerm;
+
+        public SearchThemesPayload(@NonNull SiteModel site, @NonNull String searchTerm) {
+            this.site = site;
+            this.searchTerm = searchTerm;
+        }
+
+        public SearchThemesPayload(FetchThemesError error) {
+            this.error = error;
+        }
+    }
+
     public static class ActivateThemePayload extends Payload<ActivateThemeError> {
         public SiteModel site;
         public ThemeModel theme;
