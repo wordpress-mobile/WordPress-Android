@@ -54,8 +54,8 @@
 /themes
 /sites/$site/themes
 /sites/$site/themes/mine
-/sites/$site/themes/$theme_ID#String/install
 /sites/$site/themes/$theme_ID#String/delete
+/sites/$site/themes/$theme_ID#String/install
 
 /sites/$siteUrl#String
 
