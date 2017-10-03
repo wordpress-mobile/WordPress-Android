@@ -139,6 +139,16 @@ public class ThemeStore extends Store {
         }
     }
 
+    public static class OnThemesSearched extends OnChanged<FetchThemesError> {
+        public SiteModel site;
+        public List<ThemeModel> searchResults;
+
+        public OnThemesSearched(SiteModel site, List<ThemeModel> searchResults) {
+            this.site = site;
+            this.searchResults = searchResults;
+        }
+    }
+
     public static class OnThemeActivated extends OnChanged<ActivateThemeError> {
         public SiteModel site;
         public ThemeModel theme;
