@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeWPComResponse.ThemeArrayResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeWPComResponse.MultipleWPComThemesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeJetpackResponse.MultipleJetpackThemesResponse;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchThemesError;
@@ -151,8 +152,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(MultipleWPComThemesResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to themes fetch request for WP.com site.");
-                        FetchedThemesPayload payload = new FetchedThemesPayload(null);
-                        payload.themes = createThemeListFromWPComResponse(response);
+                        FetchedThemesPayload payload =
+                                new FetchedThemesPayload(site, createThemeListFromWPComResponse(response));
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
@@ -187,6 +188,30 @@ public class ThemeRestClient extends BaseWPComRestClient {
                                 ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
                         FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedCurrentThemeAction(payload));
+                    }
+                }));
+    }
+
+    /** v1.2/site/$siteId/themes?search=$term */
+    public void searchThemes(@NonNull final SiteModel site, @NonNull final String searchTerm) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).themes.getUrlV1_2() + "?search=" + searchTerm;
+        add(WPComGsonRequest.buildGetRequest(url, null, ThemeArrayResponse.class,
+                new Response.Listener<ThemeArrayResponse>() {
+                    @Override
+                    public void onResponse(ThemeArrayResponse response) {
+                        AppLog.d(AppLog.T.API, "Received response to search themes request.");
+                        FetchedThemesPayload payload =
+                                new FetchedThemesPayload(site, createThemeListFromArrayResponse(response));
+                        mDispatcher.dispatch(ThemeActionBuilder.newSearchedThemesAction(payload));
+                    }
+                }, new BaseRequest.BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AppLog.e(AppLog.T.API, "Received error response to search themes request.");
+                        FetchThemesError themeError = new FetchThemesError(
+                                ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
+                        FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
+                        mDispatcher.dispatch(ThemeActionBuilder.newSearchedThemesAction(payload));
                     }
                 }));
     }
@@ -235,6 +260,14 @@ public class ThemeRestClient extends BaseWPComRestClient {
     private static List<ThemeModel> createThemeListFromWPComResponse(MultipleWPComThemesResponse response) {
         List<ThemeModel> themeList = new ArrayList<>();
         for (ThemeWPComResponse item : response.themes.values()) {
+            themeList.add(createThemeFromWPComResponse(item));
+        }
+        return themeList;
+    }
+
+    private static List<ThemeModel> createThemeListFromArrayResponse(ThemeArrayResponse response) {
+        List<ThemeModel> themeList = new ArrayList<>();
+        for (ThemeWPComResponse item : response.themes) {
             themeList.add(createThemeFromWPComResponse(item));
         }
         return themeList;
