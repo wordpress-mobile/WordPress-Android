@@ -350,7 +350,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return mMediaStore.getSiteImages(mSite);
         }
 
-
         switch (mFilter) {
             case FILTER_IMAGES:
                 return mMediaStore.getSiteImages(mSite);

@@ -77,7 +77,6 @@ import org.wordpress.android.util.WPPermissionUtils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -121,13 +120,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
      * @param activity    calling activity
      * @param site        site this media is associated with
      * @param media       media model to display
-     * @param mediaList   optional list of media IDs to page through in preview screen
+     * @param mediaIdList optional list of media IDs to page through in preview screen
      * @param sourceView  optional view to use in shared element transition
      */
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
                                      @NonNull MediaModel media,
-                                     @Nullable List<MediaModel> mediaList,
+                                     @Nullable ArrayList<String> mediaIdList,
                                      @Nullable View sourceView) {
         // go directly to preview for local images, videos and audio (do nothing for local documents)
         if (MediaUtils.isLocalFile(media.getUploadState())) {
@@ -143,12 +142,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         intent.putExtra(ARG_MEDIA_LOCAL_ID, media.getId());
         intent.putExtra(WordPress.SITE, site);
 
-        if (mediaList != null) {
-            ArrayList<String> idList = new ArrayList<>();
-            for (MediaModel thisMedia: mediaList) {
-                idList.add(Integer.toString(thisMedia.getId()));
-            }
-            intent.putExtra(ARG_ID_LIST, idList);
+        if (mediaIdList != null) {
+            intent.putExtra(ARG_ID_LIST, mediaIdList);
         }
 
         ActivityOptionsCompat options;
