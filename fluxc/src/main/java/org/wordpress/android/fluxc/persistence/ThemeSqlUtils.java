@@ -95,7 +95,7 @@ public class ThemeSqlUtils {
         removeThemes(site.getId());
     }
 
-    private static void removeThemesWithNoSite() {
+    public static void removeThemesWithNoSite() {
         // Remove themes whose localSiteId is 0
         removeThemes(0);
     }
