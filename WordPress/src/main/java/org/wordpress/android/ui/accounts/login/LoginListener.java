@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts.login;
 
 import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.accounts.SmartLockHelper;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 
 import java.util.ArrayList;
 
@@ -19,7 +18,8 @@ public interface LoginListener {
     void gotWpcomEmail(String email);
     void loginViaSiteAddress();
     void loginViaWpcomUsernameInstead();
-    void helpEmailScreen(String email, Tag origin);
+    void helpEmailScreen(String email);
+    void helpSocialEmailScreen(String email);
 
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
