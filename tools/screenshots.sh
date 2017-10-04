@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# TODO: check for adb
-# TODO: check for imagemagick
-
 AVD=Nexus_5X_API_25_SCREENSHOTS
 
 WORKING_DIR=./autoscreenshot
