@@ -3,18 +3,6 @@
 # TODO: check for adb
 # TODO: check for imagemagick
 
-. tokendeeplink.sh
-
-if [ -z "$TOKEN_DEEPLINK" ]; then
-	echo "TOKEN_DEEPLINK variable is not set correctly. Make sure the file tokendeeplink.sh is present and properly sets the variable."; 
-	exit 1
-fi
-
-if ! [[ "$TOKEN_DEEPLINK" =~ ^wordpress:\/\/magic-login\?token=* ]]; then
-	echo "TOKEN_DEEPLINK format is invalid.";
-	exit 1
-fi;
-
 AVD=Nexus_5X_API_25_SCREENSHOTS
 
 WORKING_DIR=./autoscreenshot
@@ -136,6 +124,25 @@ function require_emu {
   fi
 }
 
+function require_deeplink {
+  if [ -f "tokendeeplink.sh" ]; then
+    . tokendeeplink.sh
+  fi
+
+  if [ -z "$TOKEN_DEEPLINK" ]; then
+    echo 'TOKEN_DEEPLINK variable is not set correctly. Make sure the file tokendeeplink.sh is present and looks like this:'
+    echo 
+    echo '#!/bin/sh'
+    echo 'TOKEN_DEEPLINK=wordpress://magic-login?token=<secret login token>' 
+    exit 1
+  fi
+
+  if ! [[ "$TOKEN_DEEPLINK" =~ ^wordpress:\/\/magic-login\?token=* ]]; then
+    echo "TOKEN_DEEPLINK format is invalid.";
+    exit 1
+  fi;
+}
+
 function start_emu {
   echo -n Starting emulator... 
   $ANDROID_SDK_DIR/tools/emulator -verbose -avd $AVD -skin $SKIN -qemu -lcd-density $LCD_DPI &>/dev/null &
@@ -240,6 +247,7 @@ function locale() {
 	wait 10
 }
 
+require_deeplink
 require_font
 require_imagemagick
 require_sdk
