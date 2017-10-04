@@ -1,10 +1,10 @@
 #!/bin/bash
 
+APK=../WordPress/build/outputs/apk/WordPress-wasabi-debug.apk
+
 AVD=Nexus_5X_API_25_SCREENSHOTS
 
 WORKING_DIR=./autoscreenshot
-
-APK=../WordPress/build/outputs/apk/WordPress-wasabi-debug.apk
 
 FONT_DIR=noto
 FONT_FILE=$WORKING_DIR/$FONT_DIR/NotoSerif-Bold.ttf
