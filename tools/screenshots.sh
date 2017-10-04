@@ -19,9 +19,13 @@ AVD=Nexus_5X_API_25_SCREENSHOTS
 
 WORKING_DIR=./autoscreenshot
 
+APK=../WordPress/build/outputs/apk/WordPress-wasabi-debug.apk
+
 FONT_DIR=noto
 FONT_FILE=$WORKING_DIR/$FONT_DIR/NotoSerif-Bold.ttf
 FONT_ZIP_URL='https://fonts.google.com/download?family=Noto%20Serif'
+
+SDK_ZIP_URL='https://dl.google.com/android/repository/sdk-tools-darwin-3859397.zip'
 
 APP_HEIGHT=1388
 #NAV_HEIGHT=96
@@ -33,7 +37,6 @@ LCD_DPI=320
 
 ADB_PARAMS="-e"
 
-APK=../WordPress/build/outputs/apk/WordPress-wasabi-debug.apk
 PKG_RELEASE=org.wordpress.android
 PKG_DEBUG=org.wordpress.android.beta
 ACTIVITY_LAUNCH=org.wordpress.android.ui.WPLaunchActivity
@@ -66,18 +69,8 @@ TAB7_OFFSET="+145+552"
 TAB10_TEMPLATE=android-tab10-template2.png
 TAB10_OFFSET="+148+622"
 
-function require_emu {
-  avdmanager list avd -c | grep $AVD
-  avdmissing=$?
-
-  if [ $avdmissing = 1 ]; then
-    echo Creating AVD
-    echo no | avdmanager create avd -n $AVD -k "system-images;android-25;google_apis;x86" &>/dev/null
-  fi
-}
-
 function require_dirs {
-  if [ ! -d "$WORDKING_DIR" ]; then
+  if [ ! -d "$WORKING_DIR" ]; then
     echo -n Creating working directory...
     mkdir "$WORKING_DIR"
     echo Done
@@ -111,11 +104,36 @@ function require_imagemagick {
 
 function require_sdk {
   if [ -z "$ANDROID_SDK_DIR" ]; then
-    echo "ANDROID_SDK_DIR variable is not set correctly. That usually means that the Android sdk is not installed."; 
-    exit 1
+    require_dirs
+
+    if [ ! -d "$WORKING_DIR/sdk/tools" ]; then
+      echo -n Downloading the Android SDK...
+      mkdir -p "$WORKING_DIR/sdk"
+      wget -qO- $SDK_ZIP_URL | tar xf - -C "$WORKING_DIR/sdk" #&>/dev/null
+      echo Done
+
+      echo 'Downloading the Android platform (over 2GB so, this might take a while)'
+      yes y | sdkmanager "platform-tools" "platforms;android-26" "system-images;android-25;google_apis;x86" "emulator" &>/dev/null
+      echo Done
+    fi
+
+    echo Setting up SDK...
+    export ANDROID_SDK_DIR="$WORKING_DIR/sdk"
+    export PATH=$PATH:"$WORKING_DIR/sdk/tools":"$WORKING_DIR/sdk/tools/bin":"$WORKING_DIR/sdk/platform-tools/"
+    echo Done
   fi
 
   export PATH=$PATH:$ANDROID_SDK_DIR/tools:$ANDROID_SDK_DIR/tools/bin
+}
+
+function require_emu {
+  avdmanager list avd -c | grep $AVD
+  avdmissing=$?
+
+  if [ $avdmissing = 1 ]; then
+    echo Creating AVD
+    echo no | avdmanager create avd -n $AVD -k "system-images;android-25;google_apis;x86" --tag "google_apis" &>/dev/null
+  fi
 }
 
 function start_emu {
