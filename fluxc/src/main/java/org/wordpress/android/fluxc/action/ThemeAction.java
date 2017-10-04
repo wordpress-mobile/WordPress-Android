@@ -27,6 +27,8 @@ public enum ThemeAction implements IAction {
     ACTIVATE_THEME,
     @Action(payloadType = ActivateThemePayload.class)
     INSTALL_THEME,
+    @Action(payloadType = ActivateThemePayload.class)
+    DELETE_THEME,
 
     // Remote responses
     @Action(payloadType = FetchedThemesPayload.class)
@@ -42,5 +44,7 @@ public enum ThemeAction implements IAction {
     @Action(payloadType = ActivateThemePayload.class)
     ACTIVATED_THEME,
     @Action(payloadType = ActivateThemePayload.class)
-    INSTALLED_THEME
+    INSTALLED_THEME,
+    @Action(payloadType = ActivateThemePayload.class)
+    DELETED_THEME
 }
