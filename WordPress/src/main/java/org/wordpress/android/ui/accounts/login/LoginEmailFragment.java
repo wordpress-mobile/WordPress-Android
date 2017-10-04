@@ -40,7 +40,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialLoginPayload;
 import org.wordpress.android.ui.accounts.LoginMode;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -439,9 +438,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
             // TODO: Show error screen.
-        } else if (mAccountStore.hasAccessToken()) {
-            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-            NotificationsUpdateService.startService(getActivity().getApplicationContext());
+        } else {
+            doFinishLogin();
         }
     }
 
