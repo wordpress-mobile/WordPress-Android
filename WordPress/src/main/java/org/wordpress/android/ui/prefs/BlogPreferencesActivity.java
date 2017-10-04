@@ -33,6 +33,8 @@ public class BlogPreferencesActivity extends AppCompatActivity {
 
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
 
+    private SiteModel mSite;
+
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
@@ -42,14 +44,13 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
-        final SiteModel site;
         if (savedInstanceState == null) {
-            site = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
-            site = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
-        if (site == null) {
+        if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
             return;
@@ -59,7 +60,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(site)));
+            actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
         }
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -86,6 +87,12 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
