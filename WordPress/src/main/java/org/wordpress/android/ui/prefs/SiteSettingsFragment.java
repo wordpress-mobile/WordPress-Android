@@ -743,7 +743,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     public void setEditingEnabled(boolean enabled) {
-        // excludes mAddressPref, mMorePreference
+        // excludes mAddressPref, mMorePreference, mJpSecuritySettings
         final Preference[] editablePreference = {
                 mTitlePref , mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
                 mPasswordPref, mCategoryPref, mFormatPref, mAllowCommentsPref,
@@ -751,7 +751,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref,
-                mDeleteSitePref, mJpSecuritySettings, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
+                mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref
         };
 
