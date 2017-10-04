@@ -26,17 +26,10 @@ fi;
 
 AVD=Nexus_5X_API_25_SCREENSHOTS
 
-avdmanager list avd -c | grep $AVD
-avdmissing=$?
-
-if [ $avdmissing = 1 ]; then
-  echo Creating AVD
-  echo no | avdmanager create avd -n $AVD -k "system-images;android-25;google_apis;x86" &>/dev/null
-fi
-
-#exit 0
-
-FONTFILE=./Noto_Serif/NotoSerif-Bold.ttf
+WORKING_DIR=./autoscreenshot
+FONT_DIR=noto
+FONT_FILE=$WORKING_DIR/$FONT_DIR/NotoSerif-Bold.ttf
+FONT_ZIP_URL='https://fonts.google.com/download?family=Noto%20Serif'
 
 APP_HEIGHT=1388
 #NAV_HEIGHT=96
@@ -80,6 +73,39 @@ TAB7_TEMPLATE=android-tab7-template2.png
 TAB7_OFFSET="+145+552"
 TAB10_TEMPLATE=android-tab10-template2.png
 TAB10_OFFSET="+148+622"
+
+function require_emu {
+  avdmanager list avd -c | grep $AVD
+  avdmissing=$?
+
+  if [ $avdmissing = 1 ]; then
+    echo Creating AVD
+    echo no | avdmanager create avd -n $AVD -k "system-images;android-25;google_apis;x86" &>/dev/null
+  fi
+}
+
+function require_dirs {
+  if [ ! -d "$WORDKING_DIR" ]; then
+    echo -n Creating working directory...
+    mkdir "$WORKING_DIR"
+    echo Done
+  fi 
+}
+
+function require_font {
+  if [ ! -f "$FONT_FILE" ]; then
+    echo Font file is missing.
+    require_dirs
+
+    echo -n Downloading...
+    wget $FONT_ZIP_URL -O "$WORKING_DIR/noto.zip" &>/dev/null
+    echo Done
+
+    echo -n Unzipping...
+    unzip "$WORKING_DIR/noto.zip" -d "$WORKING_DIR/$FONT_DIR/" &>/dev/null
+    echo Done
+  fi
+}
 
 function start_emu {
   echo -n Starting emulator... 
@@ -168,7 +194,7 @@ function produce() {
 
   text=TEXT_$loc\_$screen
   size=TEXT_SIZE_$loc
-  magick $fn\_comp1.png -gravity north -pointsize ${!size} -font $FONTFILE -draw "fill white text 0,$TEXT_OFFSET_Y \"${!text}\"" $fn\_final.png
+  magick $fn\_comp1.png -gravity north -pointsize ${!size} -font $FONT_FILE -draw "fill white text 0,$TEXT_OFFSET_Y \"${!text}\"" $fn\_final.png
 
   rm $fn.png $fn\_cropped.png $fn\_comp1.png
   echo Image ready: $fn\_final.png
@@ -185,6 +211,8 @@ function locale() {
 	wait 10
 }
 
+require_font
+require_emu
 start_emu
 wait_emu
 uninstall
