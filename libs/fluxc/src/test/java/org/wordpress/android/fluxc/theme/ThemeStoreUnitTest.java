@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)
 public class ThemeStoreUnitTest {
@@ -38,7 +39,29 @@ public class ThemeStoreUnitTest {
     }
 
     @Test
-    public void testInsertAndReplaceWpThemes() {
+    public void testInsertOrUpdateTheme() {
+        final String testThemeId = "fluxc-ftw";
+        final String testThemeName = "FluxC FTW";
+        final String testUpdatedName = testThemeName + " v2";
+        final ThemeModel insertTheme = generateTestTheme(12345, testThemeId, testThemeName);
+
+        // verify theme doesn't already exist
+        assertEquals(null, mThemeStore.getThemeByThemeId(testThemeId));
+
+        // insert new theme and verify it exists
+        ThemeSqlUtils.insertOrUpdateThemeForSite(insertTheme);
+        assertNotNull(mThemeStore.getThemeByThemeId(testThemeId));
+        assertEquals(testThemeName, mThemeStore.getThemeByThemeId(testThemeId).getName());
+
+        // update the theme and verify the updated attributes
+        insertTheme.setName(testUpdatedName);
+        ThemeSqlUtils.insertOrUpdateThemeForSite(insertTheme);
+        assertNotNull(mThemeStore.getThemeByThemeId(testThemeId));
+        assertEquals(testUpdatedName, mThemeStore.getThemeByThemeId(testThemeId).getName());
+    }
+
+    @Test
+    public void testInsertOrReplaceWpThemes() {
         final List<ThemeModel> firstTestThemes = generateThemesTestList(20);
         final List<ThemeModel> secondTestThemes = generateThemesTestList(30);
         final List<ThemeModel> thirdTestThemes = generateThemesTestList(10);
@@ -57,7 +80,7 @@ public class ThemeStoreUnitTest {
     }
 
     @Test
-    public void testInsertAndReplaceInstalledThemes() throws SiteSqlUtils.DuplicateSiteException {
+    public void testInsertOrReplaceInstalledThemes() throws SiteSqlUtils.DuplicateSiteException {
         final SiteModel site = SiteUtils.generateJetpackSiteOverRestOnly();
         SiteSqlUtils.insertOrUpdateSite(site);
 
@@ -67,25 +90,74 @@ public class ThemeStoreUnitTest {
 
         // first add 5 installed themes
         ThemeSqlUtils.insertOrReplaceInstalledThemes(site, firstTestThemes);
-        assertEquals(5, mThemeStore.getThemesForSite(site).size());
+        assertEquals(firstTestThemes.size(), mThemeStore.getThemesForSite(site).size());
 
         // then replace them all with a new list of 10
         ThemeSqlUtils.insertOrReplaceInstalledThemes(site, secondTestThemes);
-        assertEquals(10, mThemeStore.getThemesForSite(site).size());
+        assertEquals(secondTestThemes.size(), mThemeStore.getThemesForSite(site).size());
 
         // then replace them all with a single theme
         ThemeSqlUtils.insertOrReplaceInstalledThemes(site, thirdTestThemes);
-        assertEquals(1, mThemeStore.getThemesForSite(site).size());
+        assertEquals(thirdTestThemes.size(), mThemeStore.getThemesForSite(site).size());
+    }
+
+    @Test
+    public void testGetWpThemesAsCursor() {
+        final List<ThemeModel> firstTestThemes = generateThemesTestList(20);
+        final List<ThemeModel> secondTestThemes = generateThemesTestList(30);
+
+        // insert themes and verify count
+        assertEquals(0, mThemeStore.getWpComThemesCursor().getCount());
+        ThemeSqlUtils.insertOrReplaceWpComThemes(firstTestThemes);
+        assertEquals(firstTestThemes.size(), mThemeStore.getWpComThemesCursor().getCount());
+
+        // insert new themes list and verify count
+        ThemeSqlUtils.insertOrReplaceWpComThemes(secondTestThemes);
+        assertEquals(secondTestThemes.size(), mThemeStore.getWpComThemesCursor().getCount());
+    }
+
+    @Test
+    public void testRemoveThemesWithNoSite() {
+        final List<ThemeModel> testThemes = generateThemesTestList(20);
+
+        // insert and verify count
+        assertEquals(0, mThemeStore.getWpComThemesCursor().getCount());
+        ThemeSqlUtils.insertOrReplaceWpComThemes(testThemes);
+        assertEquals(testThemes.size(), mThemeStore.getWpComThemes().size());
+
+        // remove and verify count
+        ThemeSqlUtils.removeWpComThemes();
+        assertEquals(0, mThemeStore.getWpComThemes().size());
+    }
+
+    @Test
+    public void testRemoveSiteThemes() throws SiteSqlUtils.DuplicateSiteException {
+        final SiteModel site = SiteUtils.generateJetpackSiteOverRestOnly();
+        SiteSqlUtils.insertOrUpdateSite(site);
+
+        final List<ThemeModel> testThemes = generateThemesTestList(5);
+
+        // add site themes and verify count
+        ThemeSqlUtils.insertOrReplaceInstalledThemes(site, testThemes);
+        assertEquals(testThemes.size(), mThemeStore.getThemesForSite(site).size());
+
+        // remove and verify count
+        ThemeSqlUtils.removeThemes(site);
+        assertEquals(0, mThemeStore.getThemesForSite(site).size());
+    }
+
+    private ThemeModel generateTestTheme(int siteId, String themeId, String themeName) {
+        ThemeModel theme = new ThemeModel();
+        theme.setLocalSiteId(siteId);
+        theme.setThemeId(themeId);
+        theme.setName(themeName);
+        return theme;
     }
 
     private List<ThemeModel> generateThemesTestList(int num) {
         List<ThemeModel> testThemes = new ArrayList<>();
         for (int i = 0; i < num; ++i) {
-            ThemeModel theme = new ThemeModel();
-            theme.setLocalSiteId(0);
-            theme.setThemeId("themeid" + i);
-            theme.setName("themename" + i);
-            testThemes.add(theme);
+            testThemes.add(generateTestTheme(0, "themeid" + i, "themename" + i));
         }
         return testThemes;
     }
