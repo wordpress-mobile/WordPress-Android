@@ -24,6 +24,8 @@ ADB_PARAMS="-e"
 
 PKG_RELEASE=org.wordpress.android
 PKG_DEBUG=org.wordpress.android.beta
+PKG=$PKG_DEBUG
+
 ACTIVITY_LAUNCH=org.wordpress.android.ui.WPLaunchActivity
 
 COORDS_MYSITE="100 100"
@@ -161,7 +163,7 @@ function wait_emu {
 
 function uninstall {
   echo -n Uninstalling any previous app instances... 
-  adb $ADB_PARAMS shell pm uninstall $PKG_DEBUG &>/dev/null
+  adb $ADB_PARAMS shell pm uninstall $PKG &>/dev/null
   echo Done
 }
 
@@ -173,21 +175,21 @@ function install {
 
 function login {
   echo -n Logging in via magiclink... 
-  adb $ADB_PARAMS shell am start -W -a android.intent.action.VIEW -d $TOKEN_DEEPLINK $PKG_DEBUG &>/dev/null
+  adb $ADB_PARAMS shell am start -W -a android.intent.action.VIEW -d $TOKEN_DEEPLINK $PKG &>/dev/null
   wait 5 # wait for app to finish logging in
   echo Done
 }
 
 function start_app {
   echo -n Starting app... 
-  adb $ADB_PARAMS shell am start -n $PKG_DEBUG/$ACTIVITY_LAUNCH &>/dev/null
+  adb $ADB_PARAMS shell am start -n $PKG/$ACTIVITY_LAUNCH &>/dev/null
   wait 5 # wait for app to finish start up
   echo Done
 }
 
 function kill_app {
   echo -n Killing the app...
-  adb $ADB_PARAMS shell am force-stop $PKG_DEBUG &>/dev/null
+  adb $ADB_PARAMS shell am force-stop $PKG &>/dev/null
   echo Done
 }
 
