@@ -65,6 +65,14 @@ account.
 
 Read more about [OAuth2][6] and the [WordPress.com REST endpoint][7].
 
+## Google Configuration ##
+
+Google Sign-In is only available for WordPress.com accounts through the [official app][1].
+Contributors can build and run the app without issue, but Google Sign-In will
+fail silently. Google Sign-In requires configuration files which contain client
+and server information that can't be shared publicly. More documentation and
+guides can be found on the [Google Identity Platform website][8].
+
 ## How we work ##
 
 You can read more about [Code Style Guidelines](CODESTYLE.md) we adopted, and
@@ -94,4 +102,4 @@ be covered by a different license compatible with the GPLv2.
 [5]: https://developer.wordpress.com/apps/
 [6]: https://developer.wordpress.com/docs/oauth2/
 [7]: https://developer.wordpress.com/docs/api/
-[9]: https://facebook.github.io/watchman/docs/install.html
+[8]: https://developers.google.com/identity/

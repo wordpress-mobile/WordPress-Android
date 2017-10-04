@@ -7,6 +7,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.google.gms:google-services:3.1.0'
     }
 }
 
@@ -140,7 +141,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:156b375bd13409f7fca092c39c7e35a9272022ff') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:85609c69a1a057cd79a8583e9560d406f7f1c7f0') {
         exclude group: "com.android.volley";
     }
 
@@ -166,6 +167,13 @@ configurations.all {
     exclude group: 'org.wordpress', module: 'analytics'
 }
 
+task copyGoogleServicesExampleFile(type: Copy) {
+    from('.')
+    into('.')
+    include('google-services.json-example')
+    rename('google-services.json-example', 'google-services.json')
+}
+
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
     def inputFile = checkGradlePropertiesFile()
@@ -186,8 +194,8 @@ android.applicationVariants.all { variant ->
     variant.generateBuildConfig.dependsOn(generateCrashlyticsConfig)
 }
 
-// Add properties named "wp.xxx" to our BuildConfig
 android.buildTypes.all { buildType ->
+    // Add properties named "wp.xxx" to our BuildConfig
     def inputFile = checkGradlePropertiesFile()
     def properties = loadPropertiesFromFile(inputFile)
     properties.any { property ->
@@ -199,6 +207,11 @@ android.buildTypes.all { buildType ->
             buildType.resValue "string", property.key.replace("wp.res.", "").replace(".", "_").toLowerCase(),
                     "${property.value}"
         }
+    }
+
+    // Copy example if Google services file doesn't exist
+    if (!file("google-services.json").exists()) {
+        tasks.copyGoogleServicesExampleFile.execute()
     }
 }
 
@@ -236,3 +249,6 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
 }
+
+// Keep this at the bottom (https://stackoverflow.com/a/37565535)
+apply plugin: 'com.google.gms.google-services'
