@@ -1,16 +1,7 @@
 #!/bin/bash
 
 # TODO: check for adb
-# TODO: check for AVD
 # TODO: check for imagemagick
-# TODO: check for Noto Serif bold font
-
-if [ -z "$ANDROID_SDK_DIR" ]; then
-	echo "ANDROID_SDK_DIR variable is not set correctly. That usually means that the Android sdk is not installed."; 
-	exit 1
-fi
-
-export PATH=$PATH:$ANDROID_SDK_DIR/tools:$ANDROID_SDK_DIR/tools/bin
 
 . tokendeeplink.sh
 
@@ -27,6 +18,7 @@ fi;
 AVD=Nexus_5X_API_25_SCREENSHOTS
 
 WORKING_DIR=./autoscreenshot
+
 FONT_DIR=noto
 FONT_FILE=$WORKING_DIR/$FONT_DIR/NotoSerif-Bold.ttf
 FONT_ZIP_URL='https://fonts.google.com/download?family=Noto%20Serif'
@@ -105,6 +97,25 @@ function require_font {
     unzip "$WORKING_DIR/noto.zip" -d "$WORKING_DIR/$FONT_DIR/" &>/dev/null
     echo Done
   fi
+}
+
+function require_imagemagick {
+  which magick &>/dev/null
+  immissing=$?
+
+  if [ $immissing = 1 ]; then
+    echo Installing ImageMagick...
+    exec brew install imagemagick
+  fi
+}
+
+function require_sdk {
+  if [ -z "$ANDROID_SDK_DIR" ]; then
+    echo "ANDROID_SDK_DIR variable is not set correctly. That usually means that the Android sdk is not installed."; 
+    exit 1
+  fi
+
+  export PATH=$PATH:$ANDROID_SDK_DIR/tools:$ANDROID_SDK_DIR/tools/bin
 }
 
 function start_emu {
@@ -212,6 +223,8 @@ function locale() {
 }
 
 require_font
+require_imagemagick
+require_sdk
 require_emu
 start_emu
 wait_emu
