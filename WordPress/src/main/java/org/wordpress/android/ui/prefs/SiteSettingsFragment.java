@@ -298,6 +298,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onDestroyView() {
         removeMoreScreenToolbar();
+        removeJetpackSecurityScreenToolbar();
         super.onDestroyView();
     }
 
@@ -375,15 +376,20 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         removeMoreScreenToolbar();
+        removeJetpackSecurityScreenToolbar();
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         setupMorePreferenceScreen();
+        setupJetpackSecurityScreen();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) setupMorePreferenceScreen();
+        if (savedInstanceState != null) {
+            setupMorePreferenceScreen();
+            setupJetpackSecurityScreen();
+        }
     }
 
     @Override
@@ -1354,6 +1360,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mMorePreference == null || !isAdded()) return;
         Dialog moreDialog = mMorePreference.getDialog();
         WPActivityUtils.removeToolbarFromDialog(this, moreDialog);
+    }
+
+    private void removeJetpackSecurityScreenToolbar() {
+        if (mJpSecuritySettings == null || !isAdded()) return;
+        Dialog securityDialog = mJpSecuritySettings.getDialog();
+        WPActivityUtils.removeToolbarFromDialog(this, securityDialog);
     }
 
     private void hideAdminRequiredPreferences() {
