@@ -350,8 +350,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void helpEmailScreen(String email, Tag origin) {
-        launchHelpshift(null, email, true, origin);
+    public void helpEmailScreen(String email) {
+        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_EMAIL);
+    }
+
+    @Override
+    public void helpSocialEmailScreen(String email) {
+        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_THIRD_PARTY);
     }
 
     @Override
