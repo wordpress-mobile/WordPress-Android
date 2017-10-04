@@ -91,6 +91,7 @@ public class ThemeStore extends Store {
         NOT_AVAILABLE,
         THEME_NOT_FOUND,
         THEME_ALREADY_INSTALLED,
+        UNKNOWN_THEME,
         MISSING_THEME;
 
         public static ThemeErrorType fromString(String type) {
@@ -226,6 +227,12 @@ public class ThemeStore extends Store {
             case INSTALLED_THEME:
                 handleThemeInstalled((ActivateThemePayload) action.getPayload());
                 break;
+            case DELETE_THEME:
+                deleteTheme((ActivateThemePayload) action.getPayload());
+                break;
+            case DELETED_THEME:
+                handleThemeDeleted((ActivateThemePayload) action.getPayload());
+                break;
         }
     }
 
@@ -313,7 +320,7 @@ public class ThemeStore extends Store {
     }
 
     private void installTheme(@NonNull ActivateThemePayload payload) {
-        if (payload.site.isJetpackConnected()) {
+        if (payload.site.isJetpackConnected() && payload.site.isUsingWpComRestApi()) {
             mThemeRestClient.installTheme(payload.site, payload.theme);
         } else {
             payload.error = new ActivateThemeError(ThemeErrorType.NOT_AVAILABLE);
@@ -337,6 +344,21 @@ public class ThemeStore extends Store {
     }
 
     private void handleThemeActivated(@NonNull ActivateThemePayload payload) {
+        OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
+        event.error = payload.error;
+        emitChange(event);
+    }
+
+    private void deleteTheme(@NonNull ActivateThemePayload payload) {
+        if (payload.site.isJetpackConnected() && payload.site.isUsingWpComRestApi()) {
+            mThemeRestClient.deleteTheme(payload.site, payload.theme);
+        } else {
+            payload.error = new ActivateThemeError(ThemeErrorType.NOT_AVAILABLE);
+            handleThemeDeleted(payload);
+        }
+    }
+
+    private void handleThemeDeleted(@NonNull ActivateThemePayload payload) {
         OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
         event.error = payload.error;
         emitChange(event);
