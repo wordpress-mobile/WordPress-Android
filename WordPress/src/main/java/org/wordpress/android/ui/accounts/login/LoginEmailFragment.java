@@ -435,6 +435,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                     event.error.type.toString(), event.error.message);
             // TODO: Show error screen.
         } else {
+            AppLog.i(T.NUX, "LoginEmailFragment.onAuthenticationChanged: " + event.toString());
             doFinishLogin();
         }
     }
