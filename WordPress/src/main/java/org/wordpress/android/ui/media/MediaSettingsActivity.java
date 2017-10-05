@@ -91,6 +91,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private long mDownloadId;
     private String mTitle;
     private boolean mDidRegisterEventBus;
+    private boolean mOverrideClosingTransition;
 
     private SiteModel mSite;
     private MediaModel mMedia;
@@ -180,6 +181,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         }
+
+        // on Lollipop and above we close with a shared element transition set in the intent, otherwise use a
+        // slide out transition when the activity finishes
+        mOverrideClosingTransition = Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mImagePlay = (ImageView) findViewById(R.id.image_play);
@@ -382,9 +387,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public void finish() {
         super.finish();
-        // on Lollipop and above we use a shared element transition set in the intent, otherwise use a
-        // slide out transition
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (mOverrideClosingTransition) {
             overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_bottom);
         }
     }
@@ -416,7 +419,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public void onBackPressed() {
         saveChanges();
-        super.onBackPressed();
+        finish();
+        //super.onBackPressed();
     }
 
     @Override
@@ -448,7 +452,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             saveChanges();
-            supportFinishAfterTransition();
+            if (mOverrideClosingTransition) {
+                onBackPressed();
+            } else {
+                supportFinishAfterTransition();
+            }
             return true;
         } else if (item.getItemId() == R.id.menu_save) {
             saveMediaToDevice();
@@ -859,6 +867,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public void onMediaPreviewSwiped(MediaPreviewSwiped event) {
         if (event.mediaId != mMedia.getId()) {
             loadMediaId(event.mediaId);
+            // set the flag to prevent the shared element transition when exiting this activity - otherwise the
+            // user will see a shared element transition back to the original image selected in the media browser
+            mOverrideClosingTransition = true;
         }
     }
 
