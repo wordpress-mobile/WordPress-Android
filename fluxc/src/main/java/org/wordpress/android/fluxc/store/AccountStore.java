@@ -235,10 +235,12 @@ public class AccountStore extends Store {
     public static class AccountSocialError implements OnChangedError {
         public AccountSocialErrorType type;
         public String message;
+        public String nonce;
 
-        public AccountSocialError(AccountSocialErrorType type, @NonNull String message) {
+        public AccountSocialError(AccountSocialErrorType type, @NonNull String message, String nonce) {
             this.type = type;
             this.message = message;
+            this.nonce = nonce;
         }
 
         public AccountSocialError(@NonNull byte[] response) {
@@ -246,6 +248,7 @@ public class AccountStore extends Store {
                 String responseBody = new String(response, "UTF-8");
                 JSONObject object = new JSONObject(responseBody);
                 JSONObject data = object.getJSONObject("data");
+                this.nonce = data.optString("two_step_nonce");
                 JSONArray errors = data.getJSONArray("errors");
                 this.type = AccountSocialErrorType.fromString(errors.getJSONObject(0).getString("code"));
                 this.message = errors.getJSONObject(0).getString("message");
@@ -257,6 +260,7 @@ public class AccountStore extends Store {
 
     public enum AccountSocialErrorType {
         INVALID_TOKEN,
+        INVALID_TWO_STEP_CODE,
         UNKNOWN_USER,
         USER_EXISTS,
         GENERIC_ERROR;
@@ -550,7 +554,7 @@ public class AccountStore extends Store {
     private void handlePushSocialCompleted(AccountPushSocialResponsePayload payload) {
         if (payload.isError()) {
             OnSocialChanged event = new OnSocialChanged();
-            event.error = new AccountSocialError(payload.error.type, payload.error.message);
+            event.error = new AccountSocialError(payload.error.type, payload.error.message, payload.error.nonce);
             emitChange(event);
         } else {
             updateToken(new UpdateTokenPayload(payload.bearerToken));
