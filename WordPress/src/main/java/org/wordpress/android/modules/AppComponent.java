@@ -125,7 +125,6 @@ public interface AppComponent {
     void inject(SignInFragment object);
     void inject(NewBlogFragment object);
     void inject(SignInDialogFragment object);
-    void inject(LoginEpilogueFragment object);
     void inject(NewUserFragment object);
 
     void inject(UploadService object);
@@ -141,6 +140,7 @@ public interface AppComponent {
     void inject(LoginSiteAddressHelpDialogFragment object);
     void inject(LoginUsernamePasswordFragment object);
     void inject(LoginEpilogueActivity object);
+    void inject(LoginEpilogueFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsWidgetConfigureAdapter object);

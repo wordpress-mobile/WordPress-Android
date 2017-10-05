@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -385,6 +387,14 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         startActivityForResult(signInIntent, REQUEST_LOGIN);
     }
 
+    private void showErrorDialog(String message) {
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+                .setMessage(message)
+                .setPositiveButton(R.string.login_error_button, null)
+                .create();
+        dialog.show();
+    }
+
     @Override
     public void onActivityResult(int request, int result, Intent data) {
         super.onActivityResult(request, result, data);
@@ -448,7 +458,14 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
             AppLog.e(T.API, "LoginEmailFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
-            // TODO: Show error screen.
+
+            switch (event.error.type) {
+                case UNKNOWN_USER:
+                    showErrorDialog(getString(R.string.login_error_email_not_found, mGoogleEmail));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
