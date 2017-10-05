@@ -455,9 +455,13 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                             // Attempt didn't succeed with the current account.
                             case GoogleSignInStatusCodes.SIGN_IN_FAILED:
                                 AppLog.e(T.NUX, "Google Sign-in Failed: current account failed.");
+                                showErrorDialog(getString(R.string.login_error_generic));
+                                break;
                             // Attempted to connect, but the user is not signed in.
                             case GoogleSignInStatusCodes.SIGN_IN_REQUIRED:
                                 AppLog.e(T.NUX, "Google Sign-in Failed: user is not signed in.");
+                                showErrorDialog(getString(R.string.login_error_generic));
+                                break;
                             // Unknown error.
                             default:
                                 showErrorDialog(getString(R.string.login_error_generic));
