@@ -444,7 +444,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                             case GoogleSignInStatusCodes.INVALID_ACCOUNT:
                                 AppLog.e(T.NUX, "Google Sign-in Failed: invalid account name.");
                                 showErrorDialog(getString(R.string.login_error_generic)
-                                        + getString(R.string.login_error_suffix_invalid));
+                                        + getString(R.string.login_error_suffix));
                                 break;
                             // Network error.
                             case GoogleSignInStatusCodes.NETWORK_ERROR:
