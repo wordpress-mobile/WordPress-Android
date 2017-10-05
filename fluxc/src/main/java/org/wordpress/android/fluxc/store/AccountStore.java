@@ -129,6 +129,24 @@ public class AccountStore extends Store {
     public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {}
 
     public static class OnSocialChanged extends OnChanged<AccountSocialError> {
+        public String nonceAuthenticator;
+        public String nonceBackup;
+        public String nonceSms;
+        public String notificationSent;
+        public String twoStepType;
+        public String userId;
+
+        public OnSocialChanged() {
+        }
+
+        public OnSocialChanged(@NonNull AccountPushSocialResponsePayload payload) {
+            this.nonceAuthenticator = payload.twoStepNonceAuthenticator;
+            this.nonceBackup = payload.twoStepNonceBackup;
+            this.nonceSms = payload.twoStepNonceSms;
+            this.notificationSent = payload.twoStepNotificationSent;
+            this.twoStepType = payload.twoStepType;
+            this.userId = payload.userId;
+        }
     }
 
     public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
