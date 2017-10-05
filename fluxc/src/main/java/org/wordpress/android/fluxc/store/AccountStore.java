@@ -84,6 +84,20 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class PushSocialAuthPayload extends Payload<BaseNetworkError> {
+        public String code;
+        public String nonce;
+        public String type;
+        public String userId;
+        public PushSocialAuthPayload(@NonNull String userId, @NonNull String type, @NonNull String nonce,
+                                     @NonNull String code) {
+            this.userId = userId;
+            this.type = type;
+            this.nonce = nonce;
+            this.code = code;
+        }
+    }
+
     public static class NewAccountPayload extends Payload<BaseNetworkError> {
         public String username;
         public String password;
