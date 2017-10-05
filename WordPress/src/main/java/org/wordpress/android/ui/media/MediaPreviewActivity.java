@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -60,6 +61,13 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
+
+    public static class MediaPreviewSwiped {
+        final int mediaId;
+        public MediaPreviewSwiped(int mediaId) {
+            this.mediaId = mediaId;
+        }
+    }
 
     /**
      * @param context     self explanatory
@@ -183,6 +191,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt(MediaPreviewFragment.ARG_MEDIA_ID, mMediaId);
         outState.putString(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, mContentUri);
         if (mMediaIdList != null) {
             outState.putStringArrayList(ARG_ID_LIST, mMediaIdList);
@@ -284,6 +293,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
                 }
                 mPagerAdapter.unpauseFragment(position);
                 mLastPosition = position;
+                mMediaId = Integer.valueOf(mMediaIdList.get(position));
+                // fire event so settings activity shows the same media as this activity (user may have swiped)
+                EventBus.getDefault().post(new MediaPreviewSwiped(mMediaId));
             }
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

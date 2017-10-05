@@ -46,6 +46,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -58,6 +59,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.media.MediaPreviewActivity.MediaPreviewSwiped;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -87,12 +89,15 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public static final int RESULT_MEDIA_DELETED = RESULT_FIRST_USER;
 
     private long mDownloadId;
+    private String mTitle;
+    private boolean mDidRegisterEventBus;
 
     private SiteModel mSite;
     private MediaModel mMedia;
     private ArrayList<String> mMediaIdList;
 
     private ImageView mImageView;
+    private ImageView mImagePlay;
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mAltTextView;
@@ -177,6 +182,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
+        mImagePlay = (ImageView) findViewById(R.id.image_play);
         mTitleView = (EditText) findViewById(R.id.edit_title);
         mCaptionView = (EditText) findViewById(R.id.edit_caption);
         mAltTextView = (EditText) findViewById(R.id.edit_alt_text);
@@ -198,26 +204,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             }
         }
 
-        mMedia = mMediaStore.getMediaWithLocalId(mediaId);
-        if (mMedia == null) {
+        if (!loadMediaId(mediaId)) {
             delayedFinishWithError();
             return;
-        }
-
-        // determine media type up front, default to DOCUMENT if we can't detect it's an image, video, or audio file
-        final String title;
-        if (MediaUtils.isValidImage(mMedia.getUrl())) {
-            mMediaType = MediaType.IMAGE;
-            title = getString(R.string.media_title_image_details);
-        } else if (mMedia.isVideo()) {
-            mMediaType = MediaType.VIDEO;
-            title = getString(R.string.media_title_video_details);
-        } else if (MediaUtils.isAudio(mMedia.getUrl())) {
-            mMediaType = MediaType.AUDIO;
-            title = getString(R.string.media_title_audio_details);
-        } else {
-            mMediaType = MediaType.DOCUMENT;
-            title = getString(R.string.media_title_document_details);
         }
 
         // only show title when toolbar is collapsed
@@ -231,7 +220,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(title);
+                    collapsingToolbar.setTitle(mTitle);
                 } else {
                     collapsingToolbar.setTitle(" "); // space between double quotes is on purpose
                 }
@@ -254,10 +243,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         ImageView imgScrim = (ImageView) findViewById(R.id.image_gradient_scrim);
         imgScrim.getLayoutParams().height = toolbarHeight * 3;
 
-        ImageView imagePlay = (ImageView) findViewById(R.id.image_play);
-        imagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
-        findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() || isAudio() || isDocument() ? View.GONE : View.VISIBLE);
-
         adjustToolbar();
 
         // tap to show full screen view (not supported for documents)
@@ -270,8 +255,39 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             };
             mFabView.setOnClickListener(listener);
             mImageView.setOnClickListener(listener);
-            imagePlay.setOnClickListener(listener);
+            mImagePlay.setOnClickListener(listener);
         }
+    }
+
+    private void reloadMedia() {
+        loadMediaId(mMedia.getId());
+    }
+
+    private boolean loadMediaId(int mediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(mediaId);
+        if (media == null) {
+            return false;
+        }
+
+        mMedia = media;
+
+        // determine media type up front, default to DOCUMENT if we can't detect it's an image, video, or audio file
+        if (MediaUtils.isValidImage(mMedia.getUrl())) {
+            mMediaType = MediaType.IMAGE;
+            mTitle = getString(R.string.media_title_image_details);
+        } else if (mMedia.isVideo()) {
+            mMediaType = MediaType.VIDEO;
+            mTitle = getString(R.string.media_title_video_details);
+        } else if (MediaUtils.isAudio(mMedia.getUrl())) {
+            mMediaType = MediaType.AUDIO;
+            mTitle = getString(R.string.media_title_audio_details);
+        } else {
+            mMediaType = MediaType.DOCUMENT;
+            mTitle = getString(R.string.media_title_document_details);
+        }
+
+        mImagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() || isAudio() || isDocument() ? View.GONE : View.VISIBLE);
 
         showMetaData();
 
@@ -288,6 +304,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         } else {
             loadImage();
         }
+
+        return true;
     }
 
     @Override
@@ -327,6 +345,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         super.onStart();
         registerReceiver(mDownloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         mDispatcher.register(this);
+
+        // we only register with EventBus the first time - necessary since we don't unregister in onStop()
+        // because we want to keep receiving events while the preview is showing
+        if (!mDidRegisterEventBus) {
+            EventBus.getDefault().register(this);
+            mDidRegisterEventBus = true;
+        }
     }
 
     @Override
@@ -334,6 +359,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         unregisterReceiver(mDownloadReceiver);
         mDispatcher.unregister(this);
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mDidRegisterEventBus) {
+            EventBus.getDefault().unregister(this);
+        }
+        super.onDestroy();
     }
 
     private void delayedFinishWithError() {
@@ -634,6 +667,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void showFullScreen() {
+        saveChanges();
         hideFab();
 
         // show fullscreen preview after a brief delay so fab & actionBar animations don't stutter
@@ -813,11 +847,18 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 supportFinishAfterTransition();
             }
         } else if (!event.isError()) {
-            MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());
-            if (media != null) {
-                mMedia = media;
-                showMetaData();
-            }
+            reloadMedia();
+        }
+    }
+
+    /*
+     * user swiped to another media item in the preview activity, so update this one to show the same media
+     */
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaPreviewSwiped(MediaPreviewSwiped event) {
+        if (event.mediaId != mMedia.getId()) {
+            loadMediaId(event.mediaId);
         }
     }
 
