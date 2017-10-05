@@ -120,7 +120,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                 WPActivityUtils.hideKeyboard(getActivity().getCurrentFocus());
 
                 // Start login process.
-                if (!isResolvingError) {
+                if (NetworkUtils.checkConnection(getActivity()) && !isResolvingError) {
                     connectGoogleClient();
                     isThirdParty = true;
                 }
