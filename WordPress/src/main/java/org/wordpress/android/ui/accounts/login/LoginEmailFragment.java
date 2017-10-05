@@ -434,8 +434,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                             // Internal error.
                             case GoogleSignInStatusCodes.INTERNAL_ERROR:
                                 AppLog.e(T.NUX, "Google Sign-in Failed: internal error.");
-                                showErrorDialog(getString(R.string.login_error_generic)
-                                        + getString(R.string.login_error_suffix_internal));
+                                showErrorDialog(getString(R.string.login_error_generic));
                                 break;
                             // Attempted to connect with an invalid account name specified.
                             case GoogleSignInStatusCodes.INVALID_ACCOUNT:
