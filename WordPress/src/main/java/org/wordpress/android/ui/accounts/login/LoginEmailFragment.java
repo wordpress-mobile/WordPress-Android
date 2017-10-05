@@ -464,6 +464,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                                 break;
                             // Unknown error.
                             default:
+                                AppLog.e(T.NUX, "Google Sign-in Failed: unknown error.");
                                 showErrorDialog(getString(R.string.login_error_generic));
                                 break;
                         }
