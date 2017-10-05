@@ -36,7 +36,7 @@ TEXT_OFFSET_Y=58
 
 TEXT_SIZE_en_US=80
 TEXT_en_US_MYSITE="Manage your site\neverywhere you go"
-TEXT_en_US_READER="Enjoy you\nfavorite sites"
+TEXT_en_US_READER="Enjoy your\nfavourite sites"
 TEXT_en_US_NOTIFS="Get notified\nin real-time"
 
 TEXT_SIZE_el_GR=70
