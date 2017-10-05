@@ -62,11 +62,23 @@ public class AccountRestClient extends BaseWPComRestClient {
     public static class AccountPushSocialResponsePayload extends Payload<AccountSocialError> {
         public AccountPushSocialResponsePayload(AccountSocialResponse response) {
             this.bearerToken = response.bearer_token;
+            this.twoStepNonceAuthenticator = response.two_step_nonce_authenticator;
+            this.twoStepNonceBackup = response.two_step_nonce_backup;
+            this.twoStepNonceSms = response.two_step_nonce_sms;
+            this.twoStepNotificationSent = response.two_step_notification_sent;
+            this.twoStepType = response.two_step_type;
+            this.userId = response.user_id;
         }
         public AccountPushSocialResponsePayload(BaseNetworkError error) {
             this.error = new AccountSocialError(error.volleyError.networkResponse.data);
         }
         public String bearerToken;
+        public String twoStepNonceAuthenticator;
+        public String twoStepNonceBackup;
+        public String twoStepNonceSms;
+        public String twoStepNotificationSent;
+        public String twoStepType;
+        public String userId;
     }
 
     public static class NewAccountResponsePayload extends Payload<NewUserError> {
