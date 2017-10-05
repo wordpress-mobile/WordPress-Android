@@ -419,8 +419,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public void onBackPressed() {
         saveChanges();
+        // call finish() rather than super.onBackPressed() to enable skipping shared element transition
         finish();
-        //super.onBackPressed();
     }
 
     @Override
