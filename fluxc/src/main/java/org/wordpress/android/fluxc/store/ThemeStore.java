@@ -213,7 +213,7 @@ public class ThemeStore extends Store {
                 searchThemes(searchPayload.searchTerm);
                 break;
             case SEARCHED_THEMES:
-                handleThemesSearched((SearchedThemesPayload) action.getPayload());
+                handleSearchedThemes((SearchedThemesPayload) action.getPayload());
                 break;
             case ACTIVATE_THEME:
                 activateTheme((ActivateThemePayload) action.getPayload());
@@ -307,7 +307,7 @@ public class ThemeStore extends Store {
         mThemeRestClient.searchThemes(searchTerm);
     }
 
-    private void handleThemesSearched(@NonNull SearchedThemesPayload payload) {
+    private void handleSearchedThemes(@NonNull SearchedThemesPayload payload) {
         OnThemesSearched event = new OnThemesSearched(payload.themes);
         if (event.isError()) {
             event.error = payload.error;
