@@ -303,7 +303,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
         } else {
-            holder.layoutContainer.setOnClickListener(null);
             if(holder.selectedRadioButton != null) {
                 holder.selectedRadioButton.setVisibility(View.GONE);
             }
