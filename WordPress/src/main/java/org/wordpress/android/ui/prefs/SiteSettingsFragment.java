@@ -255,7 +255,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (BuildConfig.DEBUG && mSite.isJetpackConnected() && mSite.isUsingWpComRestApi()) {
             PreferenceCategory parent = (PreferenceCategory) findPreference(getString(R.string.pref_key_site_discussion));
             Preference disconnectPref = new Preference(getActivity());
-            disconnectPref.setTitle("Disconnect from WordPress.com");
+            disconnectPref.setTitle(getString(R.string.jetpack_disconnect_pref_title));
             disconnectPref.setKey(getString(R.string.pref_key_site_disconnect));
             disconnectPref.setOnPreferenceClickListener(this);
             parent.addPreference(disconnectPref);
@@ -478,8 +478,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void disconnectFromJetpack() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Are you sure you want to disconnect Jetpack from the site?");
-        builder.setPositiveButton("Disconnect", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.jetpack_disconnect_confirmation_message);
+        builder.setPositiveButton(R.string.jetpack_disconnect_confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String url = String.format(Locale.US, "jetpack-blogs/%d/mine/delete", mSite.getSiteId());
@@ -487,19 +487,19 @@ public class SiteSettingsFragment extends PreferenceFragment
                             @Override
                             public void onResponse(JSONObject response) {
                                 AppLog.v(AppLog.T.API, "Successfully disconnected Jetpack site");
-                                ToastUtils.showToast(getActivity(), "Site disconnected");
+                                ToastUtils.showToast(getActivity(), R.string.jetpack_disconnect_success_toast);
                                 getActivity().finish();
                             }
                         }, new RestRequest.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 AppLog.e(AppLog.T.API, "Error disconnecting Jetpack site");
-                                ToastUtils.showToast(getActivity(), "Error disconnecting site");
+                                ToastUtils.showToast(getActivity(), R.string.jetpack_disconnect_error_toast);
                             }
                         });
                     }
                 });
-        builder.setNegativeButton("Cancel", null);
+        builder.setNegativeButton(android.R.string.cancel, null);
         builder.show();
     }
 
