@@ -120,7 +120,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                 WPActivityUtils.hideKeyboard(getActivity().getCurrentFocus());
 
                 // Start login process.
-                if (!isResolvingError) {
+                if (NetworkUtils.checkConnection(getActivity()) && !isResolvingError) {
                     connectGoogleClient();
                     isThirdParty = true;
                 }
@@ -276,7 +276,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
             } else {
                 isResolvingError = false;
                 AppLog.e(T.NUX, GoogleApiAvailability.getInstance().getErrorString(connectionResult.getErrorCode()));
-                // TODO: Show error screen.
+                showErrorDialog(getString(R.string.login_error_generic));
             }
         }
     }
@@ -426,9 +426,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                         } catch (NullPointerException exception) {
                             disconnectGoogleClient();
                             AppLog.e(T.NUX, "Cannot get ID token from Google sign-in account.", exception);
-                            // TODO: Show error screen.
+                            showErrorDialog(getString(R.string.login_error_generic));
                         }
                     }
+                } else {
+                    showErrorDialog(getString(R.string.login_error_generic));
                 }
 
                 break;
@@ -443,7 +445,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
             AppLog.e(T.API, "LoginEmailFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
-            // TODO: Show error screen.
+            showErrorDialog(getString(R.string.login_error_generic));
         } else {
             AppLog.i(T.NUX, "LoginEmailFragment.onAuthenticationChanged: " + event.toString());
             doFinishLogin();
@@ -460,10 +462,15 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                     event.error.type.toString(), event.error.message);
 
             switch (event.error.type) {
+                // WordPress account does not exist with input email address.
                 case UNKNOWN_USER:
                     showErrorDialog(getString(R.string.login_error_email_not_found, mGoogleEmail));
                     break;
+                // Unknown error.
+                case GENERIC_ERROR:
+                    // Do nothing for now (included to show all error types) and just fall through to 'default'
                 default:
+                    showErrorDialog(getString(R.string.login_error_generic));
                     break;
             }
         }
