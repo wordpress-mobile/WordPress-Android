@@ -309,7 +309,7 @@ public class ThemeStore extends Store {
 
     private void handleSearchedThemes(@NonNull SearchedThemesPayload payload) {
         OnThemesSearched event = new OnThemesSearched(payload.themes);
-        if (event.isError()) {
+        if (payload.isError()) {
             event.error = payload.error;
         } else {
             for (ThemeModel theme : payload.themes) {
