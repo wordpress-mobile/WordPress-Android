@@ -10,19 +10,25 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
-import java.util.ArrayList;
-import javax.inject.Inject;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ShareIntentReceiverFragment.ShareAction;
 import org.wordpress.android.ui.ShareIntentReceiverFragment.ShareIntentFragmentListener;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.WPPermissionUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import javax.inject.Inject;
 
 /**
  * An activity to handle share intents, since there are multiple actions possible.
@@ -118,6 +124,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
     @Override
     public void share(ShareAction shareAction, int selectedSiteLocalId) {
         if (checkAndRequestPermissions()) {
+            bumpAnalytics(shareAction, selectedSiteLocalId);
             Intent intent = new Intent(this, shareAction.targetClass);
             startActivityAndFinish(intent, selectedSiteLocalId);
         } else {
@@ -176,4 +183,34 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         parentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         TaskStackBuilder.create(this).addNextIntent(parentIntent).addNextIntent(intent).startActivities();
     }
+
+    private void bumpAnalytics(ShareAction shareAction, int selectedSiteLocalId) {
+        Map<String, Object> analyticsProperties = new HashMap<>();
+        analyticsProperties.put("number_of_media_shared", countMedia());
+        analyticsProperties.put("share_to", shareAction.analyticsName);
+
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SHARE_TO_WP_SUCCEEDED,
+            mSiteStore.getSiteByLocalId(selectedSiteLocalId),
+            analyticsProperties);
+
+    }
+
+    private int countMedia() {
+        int mediaShared = 0;
+        if (!isSharingText()) {
+            String action = getIntent().getAction();
+            if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                // Multiple pictures share to WP
+                ArrayList<Uri> mediaUrls = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+                if (mediaUrls != null) {
+                    mediaShared = mediaUrls.size();
+                }
+            } else {
+                mediaShared = 1;
+            }
+        }
+        return mediaShared;
+    }
+
+
 }

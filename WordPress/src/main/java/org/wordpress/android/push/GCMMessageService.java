@@ -693,7 +693,7 @@ public class GCMMessageService extends GcmListenerService {
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean shouldReceiveNotifications = prefs.getBoolean(context.getString(R.string.wp_pref_notification_receive), true);
+            boolean shouldReceiveNotifications = prefs.getBoolean(context.getString(R.string.wp_pref_notifications_master), true);
 
             if (shouldReceiveNotifications) {
                 if (notifyUser) {

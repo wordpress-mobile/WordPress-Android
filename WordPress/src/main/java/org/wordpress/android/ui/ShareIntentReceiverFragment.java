@@ -15,7 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import javax.inject.Inject;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.AccountModel;
@@ -29,6 +29,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import javax.inject.Inject;
 
 public class ShareIntentReceiverFragment extends Fragment {
 
@@ -209,15 +211,18 @@ public class ShareIntentReceiverFragment extends Fragment {
     }
 
     enum ShareAction {
-        SHARE_TO_POST(1, EditPostActivity.class), SHARE_TO_MEDIA_LIBRARY(2, MediaBrowserActivity.class);
+        SHARE_TO_POST(1, "new_post", EditPostActivity.class), SHARE_TO_MEDIA_LIBRARY(2, "media_library",
+            MediaBrowserActivity.class);
 
         public final Class targetClass;
         public final int id;
+        public final String analyticsName;
 
 
-        ShareAction(int id, Class targetClass) {
+        ShareAction(int id, String analyticsName, Class targetClass) {
             this.targetClass = targetClass;
             this.id = id;
+            this.analyticsName = analyticsName;
         }
 
         public static ShareAction fromId(int id) {
