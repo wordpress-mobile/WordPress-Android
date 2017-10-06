@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/layout_container"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginLeft="@dimen/margin_extra_large"
+  android:layout_marginStart="@dimen/margin_extra_large"
+  android:layout_marginRight="@dimen/margin_extra_large"
+  android:layout_marginEnd="@dimen/margin_extra_large"
+  android:layout_marginTop="@dimen/margin_medium"
+  android:layout_marginBottom="@dimen/margin_medium">
+
+  <org.wordpress.android.widgets.WPNetworkImageView
+    android:id="@+id/image_blavatar"
+    android:layout_width="@dimen/blavatar_sz"
+    android:layout_height="@dimen/blavatar_sz"
+    android:layout_marginRight="@dimen/margin_extra_large"
+    android:layout_marginEnd="@dimen/margin_extra_large"
+    android:gravity="center_vertical"
+    android:layout_centerVertical="true"
+    android:background="@drawable/blavatar_border"
+    app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_toRightOf="@+id/image_blavatar"
+    android:orientation="vertical">
+
+    <org.wordpress.android.widgets.WPTextView
+      style="@style/TextAppearance.AppCompat.Subhead"
+      android:id="@+id/text_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/margin_small"
+      android:ellipsize="end"
+      android:maxLines="1"
+      tools:text="text_title" />
+
+    <org.wordpress.android.widgets.WPTextView
+      style="@style/TextAppearance.AppCompat.Caption"
+      android:id="@+id/text_domain"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:ellipsize="end"
+      android:maxLines="1"
+      tools:text="text_domain" />
+  </LinearLayout>
+
+  <RadioButton
+    android:id="@+id/radio_selected"
+    android:layout_width="wrap_content"
+    android:layout_alignParentRight="true"
+    android:visibility="gone"
+    android:clickable="false"
+    android:focusableInTouchMode="false"
+    android:layout_centerVertical="true"
+    android:layout_height="wrap_content" />
+</RelativeLayout>

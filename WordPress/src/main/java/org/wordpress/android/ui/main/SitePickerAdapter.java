@@ -10,7 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -34,6 +36,8 @@ import java.util.Set;
 import javax.inject.Inject;
 
 public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int NOT_DEF = -1;
 
     interface OnSiteClickListener {
         void onSiteClick(SiteRecord site);
@@ -81,6 +85,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private OnSelectedCountChangedListener mSelectedCountListener;
     private OnDataLoadedListener mDataLoadedListener;
 
+    private boolean mIsSingleItemSelectionEnabled;
+    private int mSelectedItemPos = NOT_DEF;
+    private int mSelectedItemLocalId = NOT_DEF;
+
     // show recently picked first if there are at least this many blogs
     private static final int RECENTLY_PICKED_THRESHOLD = 15;
 
@@ -97,6 +105,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final WPNetworkImageView imgBlavatar;
         private final View divider;
         private Boolean isSiteHidden;
+        private final RadioButton selectedRadioButton;
 
         public SiteViewHolder(View view) {
             super(view);
@@ -106,6 +115,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
             divider = view.findViewById(R.id.divider);
             isSiteHidden = null;
+            selectedRadioButton = (RadioButton) view.findViewById(R.id.radio_selected);
         }
     }
 
@@ -177,8 +187,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private SiteRecord getItem(int position) {
-        int offset = (mHeaderHandler == null ? 0 : 1);
-        return mSites.get(position - offset);
+        return mSites.get(position - getPositionOffset());
+    }
+
+    private int getPositionOffset(){
+        return (mHeaderHandler == null ? 0 : 1);
     }
 
     void setOnSelectedCountChangedListener(OnSelectedCountChangedListener listener) {
@@ -276,6 +289,55 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
         }
+
+        if (mIsSingleItemSelectionEnabled) {
+            if (mSelectedItemPos == NOT_DEF) {
+                updateSelectedItemPosition(position);
+            }
+            holder.selectedRadioButton.setVisibility(View.VISIBLE);
+            holder.selectedRadioButton.setChecked(mSelectedItemPos == position);
+            holder.layoutContainer.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectSingleItem(holder.getAdapterPosition());
+                }
+            });
+        } else {
+            holder.layoutContainer.setOnClickListener(null);
+            if(holder.selectedRadioButton != null) {
+                holder.selectedRadioButton.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void selectSingleItem(final int newItemPosition) {
+        // clear last selected item
+        notifyItemChanged(mSelectedItemPos);
+        updateSelectedItemPosition(newItemPosition);
+        // select new item
+        notifyItemChanged(mSelectedItemPos);
+    }
+
+    private void updateSelectedItemPosition(final int newItemPosition){
+        mSelectedItemPos = newItemPosition;
+        mSelectedItemLocalId = getItem(newItemPosition).localId;
+    }
+
+    public void setSingleItemSelectionEnabled(final boolean enabled){
+        if (enabled != mIsSingleItemSelectionEnabled) {
+            mIsSingleItemSelectionEnabled = enabled;
+            notifyDataSetChanged();
+        }
+    }
+    public void findAndSelect(final int lastUsedBlogLocalId) {
+        int positionInSitesArray = mSites.indexOfSiteId(lastUsedBlogLocalId);
+        if(positionInSitesArray != NOT_DEF){
+            selectSingleItem(positionInSitesArray + getPositionOffset());
+        }
+    }
+
+    public int getSelectedItemLocalId(){
+        return mSelectedItemLocalId;
     }
 
     public String getLastSearch() {
@@ -513,7 +575,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public int compare(SiteRecord site1, SiteRecord site2) {
                     if (primaryBlogId > 0 && !mIsInSearchMode) {
                         if (site1.siteId == primaryBlogId) {
-                            return -1;
+                            return NOT_DEF;
                         } else if (site2.siteId == primaryBlogId) {
                             return 1;
                         }
@@ -626,7 +688,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             int i;
             for (SiteRecord site: sites) {
                 i = indexOfSite(site);
-                if (i == -1
+                if (i == NOT_DEF
                         || this.get(i).isHidden != site.isHidden
                         || this.get(i).isRecentPick != site.isRecentPick) {
                     return false;
@@ -643,7 +705,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
             }
-            return -1;
+            return NOT_DEF;
         }
 
         int indexOfSiteId(int localId) {
@@ -652,7 +714,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     return i;
                 }
             }
-            return -1;
+            return NOT_DEF;
         }
     }
 }

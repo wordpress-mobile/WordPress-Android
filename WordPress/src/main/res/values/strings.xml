@@ -147,6 +147,7 @@
     <string name="media_error_timeout">Server took too long to respond</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
+    <string name="share_media_permission_required">Permissions required in order to share images or videos</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="media_file_type">File type: %s</string>
     <string name="media_file_name">File name: %s</string>
@@ -452,8 +453,9 @@
     <!-- action from share intents -->
     <string name="select_a_blog">Choose a WordPress site</string>
     <string name="share_action_title">Add to</string>
-    <string name="share_action_post">New post</string>
-    <string name="share_action_media">Media library</string>
+    <string name="share_action_post">Add to new post</string>
+    <string name="share_action_media">Add to media library</string>
+    <string name="share_intent_pick_site">Pick site</string>
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="cant_share_unknown_action">Unrecognized action requested, ignoring</string>
