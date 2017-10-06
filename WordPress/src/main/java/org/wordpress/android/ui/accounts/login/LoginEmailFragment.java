@@ -472,7 +472,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                     break;
                 // Unknown error.
                 case GENERIC_ERROR:
-                    // Do nothing for now (included to show all error types).
+                    // Do nothing for now (included to show all error types) and just fall through to 'default'
                 default:
                     showErrorDialog(getString(R.string.login_error_generic));
                     break;
