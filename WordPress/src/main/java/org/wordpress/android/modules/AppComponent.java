@@ -97,6 +97,7 @@ import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.themes.ThemeWebActivity;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
 import org.wordpress.android.ui.uploads.PostUploadHandler;
@@ -228,6 +229,7 @@ public interface AppComponent {
 
     void inject(ThemeWebActivity object);
     void inject(ThemeBrowserActivity object);
+    void inject(ThemeBrowserFragment object);
 
     void inject(MediaDeleteService object);
 

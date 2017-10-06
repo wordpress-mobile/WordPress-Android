@@ -25,6 +25,7 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -32,6 +33,8 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import javax.inject.Inject;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
@@ -68,7 +71,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private boolean mShouldRefreshOnStart;
     private TextView mEmptyTextView;
     private ProgressBar mProgressBar;
-
     private SiteModel mSite;
 
     public static ThemeBrowserFragment newInstance(SiteModel site) {
@@ -78,10 +80,12 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         fragment.setArguments(bundle);
         return fragment;
     }
+    @Inject ThemeStore mThemeStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
