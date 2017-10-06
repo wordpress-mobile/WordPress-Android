@@ -252,12 +252,19 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void addPreferencesFromResource() {
         addPreferencesFromResource(R.xml.site_settings);
 
-        if (BuildConfig.DEBUG && mSite.isJetpackConnected() && mSite.isUsingWpComRestApi()) {
+        // add Disconnect option for Jetpack sites when running a debug build
+        if (shouldShowDisconnect()) {
             PreferenceCategory parent = (PreferenceCategory) findPreference(getString(R.string.pref_key_site_discussion));
             Preference disconnectPref = new Preference(getActivity());
             disconnectPref.setTitle(getString(R.string.jetpack_disconnect_pref_title));
             disconnectPref.setKey(getString(R.string.pref_key_site_disconnect));
-            disconnectPref.setOnPreferenceClickListener(this);
+            disconnectPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    disconnectFromJetpack();
+                    return true;
+                }
+            });
             parent.addPreference(disconnectPref);
         }
     }
@@ -465,10 +472,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mDeleteSitePref) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED, mSite);
             requestPurchasesForDeletionCheck();
-        } else if (BuildConfig.DEBUG && mSite.isJetpackConnected() && mSite.isUsingWpComRestApi()) {
-            if (getString(R.string.pref_key_site_disconnect).equals(preference.getKey())) {
-                disconnectFromJetpack();
-            }
         } else {
             return false;
         }
@@ -1483,5 +1486,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             );
             return true;
         }
+    }
+
+    /** Show Disconnect button for development purposes. Only available in debug builds on Jetpack sites. */
+    private boolean shouldShowDisconnect() {
+        return BuildConfig.DEBUG && mSite.isJetpackConnected() && mSite.isUsingWpComRestApi();
     }
 }
