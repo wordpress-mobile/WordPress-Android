@@ -43,6 +43,14 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
  */
 public class ThemeBrowserFragment extends Fragment implements RecyclerListener, AdapterView.OnItemSelectedListener,
         AbsListView.OnScrollListener {
+    public static ThemeBrowserFragment newInstance(SiteModel site) {
+        ThemeBrowserFragment fragment = new ThemeBrowserFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(WordPress.SITE, site);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     public interface ThemeBrowserFragmentCallback {
         void onActivateSelected(String themeId);
         void onTryAndCustomizeSelected(String themeId);
@@ -73,13 +81,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private ProgressBar mProgressBar;
     private SiteModel mSite;
 
-    public static ThemeBrowserFragment newInstance(SiteModel site) {
-        ThemeBrowserFragment fragment = new ThemeBrowserFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(WordPress.SITE, site);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
     @Inject ThemeStore mThemeStore;
 
     @Override
@@ -401,12 +402,10 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-
     }
 
     @Override

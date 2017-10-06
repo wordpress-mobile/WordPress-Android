@@ -45,6 +45,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     public static final int THEME_FETCH_MAX = 100;
     public static final int ACTIVATE_THEME = 1;
     public static final String THEME_ID = "theme_id";
+
     private static final String IS_IN_SEARCH_MODE = "is_in_search_mode";
     private static final String ALERT_TAB = "alert";
 
@@ -103,12 +104,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     protected void onPause() {
         super.onPause();
         mIsRunning = false;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mIsInSearchMode = savedInstanceState.getBoolean(IS_IN_SEARCH_MODE);
     }
 
     @Override
