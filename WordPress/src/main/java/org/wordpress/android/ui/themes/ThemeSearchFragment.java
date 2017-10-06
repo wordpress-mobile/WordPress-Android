@@ -59,11 +59,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(BUNDLE_LAST_SEARCH, mLastSearch);
@@ -82,25 +77,9 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         configureSearchView();
     }
 
-    public void configureSearchView() {
-        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setQuery(mLastSearch, true);
-        mSearchView.setMaxWidth(SEARCH_VIEW_MAX_WIDTH);
-    }
-
-    private void clearFocus(View view) {
-        if (view != null) {
-            view.clearFocus();
-        }
-    }
-
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        if (item.getItemId() == R.id.menu_theme_search) {
-            return true;
-        }
-        return false;
+        return item.getItemId() == R.id.menu_theme_search;
     }
 
     @Override
@@ -153,8 +132,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     protected Cursor fetchThemes(int position) {
-        String blogId = String.valueOf(mSite.getSiteId());
-        return ThemeTable.getThemes(WordPress.wpDB.getDatabase(), blogId, mLastSearch);
+        return mThemeStore.getWpThemesCursor();
     }
 
     public void search(String searchTerm) {
@@ -164,6 +142,19 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
             mThemeBrowserActivity.searchThemes(searchTerm);
         } else {
             refreshView(getSpinnerPosition());
+        }
+    }
+
+    public void configureSearchView() {
+        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setQuery(mLastSearch, true);
+        mSearchView.setMaxWidth(SEARCH_VIEW_MAX_WIDTH);
+    }
+
+    private void clearFocus(View view) {
+        if (view != null) {
+            view.clearFocus();
         }
     }
 }
