@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.themes;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -100,14 +100,14 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         try {
-            mCallback = (ThemeBrowserFragmentCallback) activity;
-            mThemeBrowserActivity = (ThemeBrowserActivity) activity;
+            mCallback = (ThemeBrowserFragmentCallback) context;
+            mThemeBrowserActivity = (ThemeBrowserActivity) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement ThemeBrowserFragmentCallback");
+            throw new ClassCastException(context.toString() + " must implement ThemeBrowserFragmentCallback");
         }
     }
 
