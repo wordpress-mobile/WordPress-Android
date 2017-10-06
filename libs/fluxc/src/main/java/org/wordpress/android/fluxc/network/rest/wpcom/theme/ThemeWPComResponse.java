@@ -1,11 +1,16 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.theme;
 
+import java.util.List;
 import java.util.Map;
 
 public class ThemeWPComResponse {
     public class MultipleWPComThemesResponse {
         public Map<String, ThemeWPComResponse> themes;
         public int count;
+    }
+
+    public class ThemeArrayResponse {
+        public List<ThemeWPComResponse> themes;
     }
 
     public String id;
