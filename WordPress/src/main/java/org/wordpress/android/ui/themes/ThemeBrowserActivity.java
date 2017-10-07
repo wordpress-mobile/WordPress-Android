@@ -32,6 +32,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPAlertDialogFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -248,6 +249,29 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onThemesSearched(ThemeStore.OnThemesSearched event) {
+        if (event.isError()) {
+            AppLog.e(T.THEMES, "Error searching themes: " + event.error.message);
+            if (event.error.type == ThemeStore.ThemeErrorType.UNAUTHORIZED) {
+                AppLog.d(T.THEMES, getString(R.string.theme_auth_error_authenticate));
+                String errorTitle = getString(R.string.theme_auth_error_title);
+                String errorMsg = getString(R.string.theme_auth_error_message);
+
+                if (mIsRunning) {
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg,
+                            errorTitle);
+                    ft.add(fragment, ALERT_TAB);
+                    ft.commitAllowingStateLoss();
+                }
+            }
+        } else {
+            AppLog.d(T.THEMES, "Themes search successful!");
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemeActivated(ThemeStore.OnThemeActivated event) {
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error activating theme: " + event.error.message);
@@ -279,9 +303,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     public void searchThemes(String searchTerm) {
-        if (mFetchingThemes) {
+        if (TextUtils.isEmpty(searchTerm)) {
             return;
         }
+        ThemeStore.SearchThemesPayload payload = new ThemeStore.SearchThemesPayload(searchTerm);
+        mDispatcher.dispatch(ThemeActionBuilder.newSearchThemesAction(payload));
     }
 
     public void fetchCurrentTheme() {
