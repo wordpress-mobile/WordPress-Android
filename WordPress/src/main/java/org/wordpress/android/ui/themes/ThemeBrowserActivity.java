@@ -95,6 +95,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
         // fetch most recent themes data
         if (!mIsInSearchMode) {
+            fetchInstalledThemesIfJetpackSite();
             fetchWpComThemesIfSyncTimedOut();
         }
 
@@ -291,6 +292,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         long currentTime = System.currentTimeMillis();
         if (currentTime - AppPrefs.getLastWpComThemeSync() > WP_COM_THEMES_SYNC_TIMEOUT) {
             mDispatcher.dispatch(ThemeActionBuilder.newFetchWpComThemesAction());
+        }
+    }
+
+    public void fetchInstalledThemesIfJetpackSite() {
+        if (mSite.isJetpackConnected() && mSite.isUsingWpComRestApi()) {
+            mDispatcher.dispatch(ThemeActionBuilder.newFetchInstalledThemesAction(mSite));
         }
     }
 
