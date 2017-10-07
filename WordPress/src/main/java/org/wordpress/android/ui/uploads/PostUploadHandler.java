@@ -193,7 +193,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             if (!pushActionWasDispatched) {
                 // This block only runs if the PUSH_POST action was never dispatched - if it was dispatched, any error
                 // will be handled in OnPostChanged instead of here
-                mPostUploadNotifier.cancelNotification(mPost);
+                mPostUploadNotifier.removePostInfoFromNotification(mPost);
                 mPostUploadNotifier.updateNotificationError(mPost, mSite, mErrorMessage);
                 finishUpload();
             }
@@ -204,13 +204,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             mContext = WordPress.getContext();
             mPost = posts[0];
 
-            String uploadingPostMessage = String.format(
-                    mContext.getString(R.string.sending_content),
-                    mPost.isPage() ? mContext.getString(R.string.page).toLowerCase()
-                            : mContext.getString(R.string.post).toLowerCase()
-            );
-
-            mPostUploadNotifier.showForegroundNotificationForPost(mPost, uploadingPostMessage);
+            mPostUploadNotifier.addPostInfoToForegroundNotification(mPost, null);
 
             mSite = mSiteStore.getSiteByLocalId(mPost.getLocalSiteId());
             if (mSite == null) {
@@ -565,10 +559,10 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
             mPostUploadNotifier.updateNotificationError(event.post, site, notificationMessage);
-            mPostUploadNotifier.cancelNotification(event.post);
+            mPostUploadNotifier.removePostInfoFromNotification(event.post);
             sFirstPublishPosts.remove(event.post.getId());
         } else {
-            mPostUploadNotifier.cancelNotification(event.post);
+            mPostUploadNotifier.removePostInfoFromNotification(event.post);
             boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
             mPostUploadNotifier.updateNotificationSuccess(event.post, site, isFirstTimePublish);
             if (isFirstTimePublish) {
@@ -614,7 +608,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String errorMessage = UploadUtils.getErrorMessageFromMediaError(context, event.media, event.error);
             String notificationMessage =
                     UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage, true);
-            mPostUploadNotifier.cancelNotification(sCurrentUploadingPost);
+            mPostUploadNotifier.removePostInfoFromNotification(sCurrentUploadingPost);
             mPostUploadNotifier.updateNotificationError(sCurrentUploadingPost, site, notificationMessage);
             sFirstPublishPosts.remove(sCurrentUploadingPost.getId());
             finishUpload();

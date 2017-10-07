@@ -184,7 +184,7 @@ public class UploadService extends Service {
                 // If the post is already registered, the new media will be added to its list
                 List<MediaModel> activeMedia = MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
                 mUploadStore.registerPostModel(post, activeMedia);
-                showNotificationForPostWithPendingMedia(post);
+                showNotificationForPostWithPendingMedia(post, activeMedia);
             }
         }
     }
@@ -389,8 +389,9 @@ public class UploadService extends Service {
         }
     }
 
-    private void showNotificationForPostWithPendingMedia(PostModel post) {
-        mPostUploadNotifier.showForegroundNotificationForPost(post, getString(R.string.uploading_post_media));
+    private void showNotificationForPostWithPendingMedia(PostModel post, List<MediaModel> mediaList) {
+        mPostUploadNotifier.addPostInfoToForegroundNotification(post, mediaList);
+        // mPostUploadNotifier.showForegroundNotificationForPost(post, getString(R.string.uploading_post_media));
     }
 
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
@@ -472,7 +473,7 @@ public class UploadService extends Service {
         if (postToCancel == null) return;
 
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
-        mPostUploadNotifier.cancelNotification(postToCancel);
+        mPostUploadNotifier.removePostInfoFromNotification(postToCancel);
 
         if (mUploadStore.isPendingPost(postToCancel) || mUploadStore.isCancelledPost(postToCancel)) {
             // Only show the media upload error notification if the post is registered in the UploadStore

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -37,14 +38,18 @@ class PostUploadNotifier {
 
     private static final SparseArray<NotificationData> sPostIdToNotificationData = new SparseArray<>();
 
-    // used to hold notification data for media being uploaded from the Media Browser (i.e. not belonging to a Post)
-    private static NotificationData sStandAloneMediaNotificationData;
+    // used to hold notification data for everything (only one outstanding foreground notification
+    // for the live UploadService instance
+    private static NotificationData sNotificationData;
 
     private class NotificationData {
         int notificationId;
         int notificationErrorId;
         int totalMediaItems;
         int currentMediaItem;
+        int totalPostItems;
+        int totalPageItemsIncludedInPostCount;
+        int currentPostItem;
         float itemProgressSize;
         Bitmap latestIcon;
     }
@@ -53,24 +58,66 @@ class PostUploadNotifier {
         // Add the uploader to the notification bar
         mContext = context;
         mService = service;
-        sStandAloneMediaNotificationData = new NotificationData();
+        sNotificationData = new NotificationData();
         mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                 Context.NOTIFICATION_SERVICE);
         mNotificationBuilder = new Notification.Builder(mContext.getApplicationContext());
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
     }
 
-    void showForegroundNotificationForPost(@NonNull PostModel post, String message) {
-        mNotificationBuilder.setContentTitle(buildNotificationTitleForPost(post));
-        if (message != null) {
-            mNotificationBuilder.setContentText(message);
-        }
-        int notificationId = (new Random()).nextInt() + post.getLocalSiteId();
+    void updateForegroundNotification(@Nullable PostModel post) {
 
-        NotificationData notificationData = new NotificationData();
-        notificationData.notificationId = notificationId;
-        sPostIdToNotificationData.put(post.getId(), notificationData);
-        mService.startForeground(notificationId, mNotificationBuilder.build());
+        // set the Notification's title and prepare the Notifications message text, i.e. "1/3 Posts, 4/17 media items"
+        if (sNotificationData.totalMediaItems > 0 && sNotificationData.totalPostItems == 0) {
+            // only media items are being uploaded
+            // check if special case for ONE media item
+            if (sNotificationData.totalMediaItems == 1) {
+                mNotificationBuilder.setContentTitle(buildNotificationTitleForMedia());
+                mNotificationBuilder.setContentText(buildNotificationSubtitleForMedia());
+            } else {
+                mNotificationBuilder.setContentTitle(buildNotificationTitleForMixedContent());
+                mNotificationBuilder.setContentText(buildNotificationSubtitleForMedia());
+            }
+
+        } else if (sNotificationData.totalMediaItems == 0 && sNotificationData.totalPostItems > 0) {
+            // only Post / Pages are being uploaded
+            // check if special case for ONE Post
+            if (sNotificationData.totalPostItems == 1) {
+                mNotificationBuilder.setContentTitle(buildNotificationTitleForPost(post));
+                mNotificationBuilder.setContentText(buildNotificationSubtitleForPost(post));
+            } else {
+                mNotificationBuilder.setContentTitle(buildNotificationTitleForMixedContent());
+                mNotificationBuilder.setContentText(buildNotificationSubtitleForPosts());
+            }
+        } else {
+            // mixed content (Post/Pages and media) is being uploaded
+            mNotificationBuilder.setContentTitle(buildNotificationTitleForMixedContent());
+            mNotificationBuilder.setContentText(buildNotificationSubtitleForMixedContent());
+            //String pagesAndOrPosts = getPagesAndOrPostsString();
+
+        }
+
+        if (sNotificationData.notificationId == 0) {
+            sNotificationData.notificationId = (new Random()).nextInt();
+        }
+        mService.startForeground(sNotificationData.notificationId, mNotificationBuilder.build());
+    }
+
+    // Post could have initial media, or not (nulable)
+    void addPostInfoToForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
+        sNotificationData.totalPostItems++;
+        if (post.isPage()) {
+            sNotificationData.totalPageItemsIncludedInPostCount++;
+        }
+        if (media != null) {
+            addMediaInfoToForegroundNotification(media);
+        }
+        updateForegroundNotification(post);
+    }
+
+    void addMediaInfoToForegroundNotification(@NonNull List<MediaModel> media) {
+        sNotificationData.totalMediaItems += media.size();
+        updateForegroundNotification(null);
     }
 
     void showForegroundNotificationForMedia(@NonNull List<MediaModel> media, String message) {
@@ -86,7 +133,7 @@ class PostUploadNotifier {
 
         NotificationData notificationData = new NotificationData();
         notificationData.notificationId = notificationId;
-        sStandAloneMediaNotificationData.notificationId;
+        //sStandAloneMediaNotificationData.notificationId;
         mService.startForeground(notificationId, mNotificationBuilder.build());
     }
 
@@ -100,12 +147,27 @@ class PostUploadNotifier {
         doNotify(sPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
     }
 
-    void cancelNotification(PostModel post) {
-        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
-        if (notificationData != null) {
-            mNotificationManager.cancel(notificationData.notificationId);
+    void removePostInfoFromNotification(PostModel post) {
+        sNotificationData.totalPostItems--;
+        if (post.isPage()) {
+            sNotificationData.totalPageItemsIncludedInPostCount--;
         }
-        mService.stopForeground(true);
+
+        if (sNotificationData.totalPostItems == 0 && sNotificationData.totalMediaItems == 0) {
+            removeNotificationAndStopForegroundService();
+        }
+    }
+
+    void removeMediaInfoFromNotification(MediaModel media) {
+        sNotificationData.totalMediaItems--;
+        removeNotificationAndStopForegroundService();
+    }
+
+    void removeNotificationAndStopForegroundService() {
+        if (sNotificationData.totalPostItems == 0 && sNotificationData.totalMediaItems == 0) {
+            mNotificationManager.cancel(sNotificationData.notificationId);
+            mService.stopForeground(true);
+        }
     }
 
     void cancelErrorNotification(PostModel post) {
@@ -284,5 +346,73 @@ class PostUploadNotifier {
     private String buildNotificationTitleForPost(PostModel post) {
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
         return String.format(mContext.getString(R.string.uploading_post), postTitle);
+    }
+
+    private String buildNotificationTitleForMedia() {
+        return mContext.getString(R.string.uploading_post_media);
+    }
+
+    private String buildNotificationTitleForMixedContent() {
+        return mContext.getString(R.string.uploading_title);
+    }
+
+    private String buildNotificationSubtitleForPost(PostModel post){
+        String uploadingMessage = String.format(
+                mContext.getString(R.string.uploading_subtitle_posts_only),
+                sNotificationData.currentPostItem,
+                sNotificationData.totalPostItems,
+                post.isPage() ? mContext.getString(R.string.page).toLowerCase()
+                        : mContext.getString(R.string.post).toLowerCase()
+        );
+        return uploadingMessage;
+    }
+
+    private String buildNotificationSubtitleForPosts(){
+        String pagesAndOrPosts = getPagesAndOrPostsString();
+        String uploadingMessage = String.format(
+                mContext.getString(R.string.uploading_subtitle_posts_only),
+                sNotificationData.currentPostItem,
+                sNotificationData.totalPostItems,
+                pagesAndOrPosts
+        );
+        return uploadingMessage;
+    }
+
+    private String getPagesAndOrPostsString() {
+        String pagesAndOrPosts = "";
+        if (sNotificationData.totalPageItemsIncludedInPostCount > 0 && sNotificationData.totalPostItems > 0
+                && sNotificationData.totalPostItems > sNotificationData.totalPageItemsIncludedInPostCount) {
+            // we have both pages and posts
+            pagesAndOrPosts = mContext.getString(R.string.post).toLowerCase() + "/" +
+                    mContext.getString(R.string.page).toLowerCase();
+        } else if (sNotificationData.totalPageItemsIncludedInPostCount > 0) {
+            // we have only pages
+            pagesAndOrPosts = mContext.getString(R.string.page).toLowerCase();
+        } else {
+            // we have only posts
+            pagesAndOrPosts = mContext.getString(R.string.post).toLowerCase();
+        }
+        return pagesAndOrPosts;
+    }
+
+    private String buildNotificationSubtitleForMedia(){
+        String uploadingMessage = String.format(
+                mContext.getString(R.string.uploading_subtitle_media_only),
+                sNotificationData.currentMediaItem,
+                sNotificationData.totalMediaItems
+        );
+        return uploadingMessage;
+    }
+
+    private String buildNotificationSubtitleForMixedContent(){
+        String uploadingMessage = String.format(
+                mContext.getString(R.string.uploading_subtitle_mixed),
+                sNotificationData.currentPostItem,
+                sNotificationData.totalPostItems,
+                getPagesAndOrPostsString(),
+                sNotificationData.currentMediaItem,
+                sNotificationData.totalMediaItems
+        );
+        return uploadingMessage;
     }
 }
