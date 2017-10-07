@@ -16,14 +16,13 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.wellsql.generated.ThemeModelTable;
+
 import org.wordpress.android.R;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-/**
- * Adapter for the {@link ThemeBrowserFragment}'s listview
- */
 public class ThemeBrowserAdapter extends CursorAdapter {
     private static final String THEME_IMAGE_PARAMETER = "?w=";
     private final LayoutInflater mInflater;
@@ -74,11 +73,11 @@ public class ThemeBrowserAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         final ThemeViewHolder themeViewHolder = (ThemeViewHolder) view.getTag();
 
-        final String screenshotURL = cursor.getString(cursor.getColumnIndex(Theme.SCREENSHOT));
-        final String name = cursor.getString(cursor.getColumnIndex(Theme.NAME));
-        final String price = cursor.getString(cursor.getColumnIndex(Theme.PRICE));
-        final String themeId = cursor.getString(cursor.getColumnIndex(Theme.ID));
-        final boolean isCurrent = cursor.getInt(cursor.getColumnIndex(Theme.IS_CURRENT)) == 1;
+        final String screenshotURL = cursor.getString(cursor.getColumnIndex(ThemeModelTable.SCREENSHOT_URL));
+        final String name = cursor.getString(cursor.getColumnIndex(ThemeModelTable.NAME));
+        final String price = cursor.getString(cursor.getColumnIndex(ThemeModelTable.PRICE));
+        final String themeId = cursor.getString(cursor.getColumnIndex(ThemeModelTable.ID));
+        final boolean isCurrent = cursor.getInt(cursor.getColumnIndex(ThemeModelTable.ACTIVE)) == 1;
         final boolean isPremium = !price.isEmpty();
 
         themeViewHolder.nameView.setText(name);
