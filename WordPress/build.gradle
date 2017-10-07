@@ -172,6 +172,11 @@ task copyGoogleServicesExampleFile(type: Copy) {
     rename('google-services.json-example', 'google-services.json')
 }
 
+task copyGoogleServicesBuddybuildFile(type: Copy) {
+    from(file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/google-services.json"))
+    into('.')
+}
+
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
     def inputFile = checkGradlePropertiesFile()
@@ -207,9 +212,15 @@ android.buildTypes.all { buildType ->
         }
     }
 
-    // Copy example if Google services file doesn't exist
+    // If Google services file doesn't exist...
     if (!file("google-services.json").exists()) {
-        tasks.copyGoogleServicesExampleFile.execute()
+        // ... copy example file.
+        if (!file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/google-services.json").exists()) {
+            tasks.copyGoogleServicesExampleFile.execute()
+        // ... copy Buddybuild file.
+        } else {
+            tasks.copyGoogleServicesBuddybuildFile.execute()
+        }
     }
 }
 
