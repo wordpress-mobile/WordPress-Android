@@ -55,7 +55,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private static final String IS_IN_SEARCH_MODE = "is_in_search_mode";
     private static final String ALERT_TAB = "alert";
 
-    private boolean mFetchingThemes = false;
     private boolean mIsRunning;
     private ThemeBrowserFragment mThemeBrowserFragment;
     private ThemeSearchFragment mThemeSearchFragment;
@@ -97,7 +96,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         // fetch most recent themes data
         if (!mIsInSearchMode) {
             fetchInstalledThemesIfJetpackSite();
-            fetchWpComThemesIfSyncTimedOut();
+            fetchWpComThemesIfSyncTimedOut(false);
         }
 
         showToolbar();
@@ -196,7 +195,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemesChanged(ThemeStore.OnThemesChanged event) {
-        mFetchingThemes = false;
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error fetching themes: " + event.error.message);
             ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
@@ -234,7 +232,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             mCurrentTheme = event.theme;
 
             if (mThemeBrowserFragment != null) {
-                mThemeBrowserFragment.setRefreshing(false);
                 if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
                     mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
                     mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getThemeId());
@@ -294,14 +291,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         mIsInSearchMode = isInSearchMode;
     }
 
-    public void fetchThemes() {
-        if (mFetchingThemes) {
-            return;
-        }
-        mFetchingThemes = true;
-        mDispatcher.dispatch(ThemeActionBuilder.newFetchWpComThemesAction());
-    }
-
     public void searchThemes(String searchTerm) {
         if (TextUtils.isEmpty(searchTerm)) {
             return;
@@ -314,9 +303,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         mDispatcher.dispatch(ThemeActionBuilder.newFetchCurrentThemeAction(mSite));
     }
 
-    public void fetchWpComThemesIfSyncTimedOut() {
+    public void fetchWpComThemesIfSyncTimedOut(boolean force) {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - AppPrefs.getLastWpComThemeSync() > WP_COM_THEMES_SYNC_TIMEOUT) {
+        if (force || currentTime - AppPrefs.getLastWpComThemeSync() > WP_COM_THEMES_SYNC_TIMEOUT) {
             mDispatcher.dispatch(ThemeActionBuilder.newFetchWpComThemesAction());
         }
     }

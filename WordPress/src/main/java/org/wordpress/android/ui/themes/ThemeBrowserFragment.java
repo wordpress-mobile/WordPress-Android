@@ -25,6 +25,7 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -205,7 +206,9 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
                             mEmptyTextView.setText(R.string.no_network_title);
                             return;
                         }
-                        mThemeBrowserActivity.fetchThemes();
+                        setRefreshing(true);
+                        mThemeBrowserActivity.fetchInstalledThemesIfJetpackSite();
+                        mThemeBrowserActivity.fetchWpComThemesIfSyncTimedOut(true);
                     }
                 }
         );
@@ -253,7 +256,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     private void setThemeNameIfAlreadyAvailable() {
-        Theme currentTheme = mThemeBrowserActivity.getCurrentTheme();
+        ThemeModel currentTheme = mThemeBrowserActivity.getCurrentTheme();
         if (currentTheme != null) {
             mCurrentThemeTextView.setText(currentTheme.getName());
         }
@@ -313,11 +316,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
     }
 
-    /**
-     * Fetch themes for a given ThemeFilterType.
-     *
-     * @return a db Cursor or null if current blog is null
-     */
     protected Cursor fetchThemes(int position) {
         if (mSite == null) {
             return null;
@@ -326,12 +324,12 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         String blogId = String.valueOf(mSite.getSiteId());
         switch (position) {
             case THEME_FILTER_PREMIUM_INDEX:
-                return ThemeTable.getThemesPremium(WordPress.wpDB.getDatabase(), blogId);
+                return null;
             case THEME_FILTER_ALL_INDEX:
-                return ThemeTable.getThemesAll(WordPress.wpDB.getDatabase(), blogId);
+                return mThemeStore.getWpThemesCursor();
             case THEME_FILTER_FREE_INDEX:
             default:
-                return ThemeTable.getThemesFree(WordPress.wpDB.getDatabase(), blogId);
+                return mThemeStore.getWpThemesCursor();
         }
     }
 
@@ -411,8 +409,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount) && NetworkUtils.isNetworkAvailable(getActivity())) {
-            mPage++;
-            mThemeBrowserActivity.fetchThemes();
             mProgressBar.setVisibility(View.VISIBLE);
         }
     }
