@@ -69,13 +69,7 @@ Language: es_CL
 	<string name="app_notifications">Avisos de la aplicación</string>
 	<string name="notifications_tab">Pestaña de avisos</string>
 	<string name="email">Correo electrónico</string>
-	<string name="notifications_comments_other_blogs">Comentarios en otros sitios</string>
 	<string name="notifications_wpcom_updates">Actualizaciones de WordPress.com</string>
-	<string name="notifications_other">Otras</string>
-	<string name="notifications_account_emails">Correo de WordPress.com</string>
-	<string name="notifications_account_emails_summary">Siempre enviamos correos electrónicos importantes relativos a tu cuenta, pero también obtendrás extras útiles.</string>
-	<string name="notifications_sights_and_sounds">Vistas y sonidos</string>
-	<string name="your_sites">Tus Sitios</string>
 	<string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
 	<string name="stats_insights_latest_post_summary">Sumario de la Última Entrada</string>
 	<string name="button_revert">Deshacer</string>
@@ -591,7 +585,6 @@ Language: es_CL
 	<string name="version">Versión</string>
 	<string name="app_title">WordPress para Android</string>
 	<string name="tos">Términos de Servicio</string>
-	<string name="max_thumbnail_px_size">Ancho de Imagen por Defecto</string>
 	<string name="image_alignment">Alineamiento</string>
 	<string name="refresh">Refrescar</string>
 	<string name="untitled">Sin Título</string>
@@ -607,9 +600,6 @@ Language: es_CL
 	<string name="upload_full_size_image">Subir y enlazar a la imagen completa</string>
 	<string name="title">Título</string>
 	<string name="categories">Categorías</string>
-	<string name="notification_blink">Notificación luminosa</string>
-	<string name="notification_vibrate">Vibrar</string>
-	<string name="notification_sound">Sonido de Notificación</string>
 	<string name="sdcard_title">Requiere tarjeta SD</string>
 	<string name="media">Multimedia</string>
 	<string name="delete">Eliminar</string>

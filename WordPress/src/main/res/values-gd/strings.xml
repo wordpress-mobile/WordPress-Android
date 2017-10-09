@@ -552,7 +552,6 @@ Language: gd_GB
 	<string name="version">Tionndadh</string>
 	<string name="tos">Teirmichean na seirbheise</string>
 	<string name="app_title">WordPress airson Android</string>
-	<string name="max_thumbnail_px_size">Leud bunaiteach an deilbh</string>
 	<string name="image_alignment">Co-thaobhadh</string>
 	<string name="refresh">Ath-nuadhaich</string>
 	<string name="untitled">Gun tiotal</string>
@@ -570,9 +569,6 @@ Language: gd_GB
 	<string name="title">Tiotal</string>
 	<string name="categories">Roinnean-seòrsa</string>
 	<string name="dlg_deleting_comments">A’ sguabadh às nam beachdan</string>
-	<string name="notification_blink">Boillsg solas</string>
-	<string name="notification_vibrate">Crith</string>
-	<string name="notification_sound">Fuaim bhrathan</string>
 	<string name="sdcard_title">Tha feum air cairt SD</string>
 	<string name="media">Meadhan</string>
 	<string name="delete">Sguab às</string>

@@ -103,9 +103,7 @@ Language: el_GR
 	<string name="jetpack_info">Πληροφορίες για το Jetpack</string>
 	<string name="reader_photo_by">Φωτογραφία από %s</string>
 	<string name="reader_label_visit">Επισκεφθείτε</string>
-	<string name="all_your_sites">Όλοι οι ιστότοποί μου</string>
 	<string name="pending_draft_more">Έχετε %d προσχέδια άρθρων αλλά ποτέ δεν τα δημοσιεύσατε. Πατήστε για να τα ελέγξετε.</string>
-	<string name="notification_pending_drafts">Ειδοποιήστε με για εκκρεμή προσχέδια</string>
 	<string name="invalid_verification_code_format">Πρέπει να είναι εξαψήφιος αριθμός</string>
 	<string name="confirm_discard_changes">Απόρριψη μη αποθηκευμένων αλλαγών;</string>
 	<string name="swipe_for_more">Σαρώστε για περισσότερα</string>
@@ -590,13 +588,7 @@ Language: el_GR
 	<string name="email">Email</string>
 	<string name="notifications_tab">Καρτέλα ειδοποιήσεων</string>
 	<string name="app_notifications">Ειδοποιήσεις εφαρμογής</string>
-	<string name="notifications_comments_other_blogs">Σχόλια σε άλλους ιστότοπους</string>
-	<string name="notifications_other">Άλλα</string>
 	<string name="notifications_wpcom_updates">Ενημερώσεις του WordPress.com</string>
-	<string name="notifications_account_emails">Μήνυμα από το WordPress.com</string>
-	<string name="notifications_account_emails_summary">Θα σας στέλνουμε πάντα σημαντικά email σχετικά με το λογαριασμό σας αλλά μπορείτε να λαμβάνετε και μερικά χρήσιμα επιπλέον.</string>
-	<string name="your_sites">Οι ιστότοποί σας</string>
-	<string name="notifications_sights_and_sounds">Εικόνες και Ήχοι</string>
 	<string name="stats_insights_latest_post_trend">Πέρασαν %1$s από τη δημοσίευση του %2$s. Να πως πήγε το άρθρο μέχρι στιγμής...</string>
 	<string name="stats_insights_latest_post_summary">Πιο πρόσφατη σύνοψη άρθρων</string>
 	<string name="button_revert">Επαναφορά</string>
@@ -1121,7 +1113,6 @@ Language: el_GR
 	<string name="app_title">WordPress για Android</string>
 	<string name="tos">Όροι Χρήσης</string>
 	<string name="version">Έκδοση</string>
-	<string name="max_thumbnail_px_size">Προεπιλεγμένο πλάτος εικόνας</string>
 	<string name="image_alignment">Στοίχιση</string>
 	<string name="refresh">Ανανέωση</string>
 	<string name="untitled">Χωρίς τίτλο</string>
@@ -1139,9 +1130,6 @@ Language: el_GR
 	<string name="categories">Κατηγορίες</string>
 	<string name="title">Τίτλος</string>
 	<string name="dlg_deleting_comments">Διαγραφή σχολίων</string>
-	<string name="notification_vibrate">Δόνηση</string>
-	<string name="notification_sound">Ήχος ειδοποιήσης</string>
-	<string name="notification_blink">Να αναβοσβήνει η ένδειξη ενημερώσεων</string>
 	<string name="sdcard_title">Κάρτα SD Είναι Απαραίτητη</string>
 	<string name="media">Πολυμέσα</string>
 	<string name="approve">Έγκριση</string>

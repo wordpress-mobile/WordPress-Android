@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-09-01 19:25:53+0000
+Translation-Revision-Date: 2017-09-27 16:00:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="connect_site">Anslut webbplats</string>
+	<string name="notification_settings_item_sights_and_sounds_blink_light">Blinksignal</string>
+	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrationssignal</string>
+	<string name="notification_settings_item_sights_and_sounds_choose_sound">Välj ljud</string>
+	<string name="notification_settings_category_sights_and_sounds">Visuella signaler och ljud</string>
+	<string name="notification_settings_item_other_account_emails">E-post från WordPress.com</string>
+	<string name="notification_settings_item_other_pending_drafts">Informera mig om väntande utkast</string>
+	<string name="notification_settings_item_other_comments_other_blogs">Kommentarer på andra webbplatser</string>
+	<string name="notification_settings_category_other">Övrigt</string>
+	<string name="notification_settings_item_your_sites_all_your_sites">Alla mina webbplatser</string>
+	<string name="notification_settings_category_your_sites">Dina webbplatser</string>
+	<string name="notification_settings_master_off_message">Om du stänger av notifieringar i inställningarna kommer detta att inaktivera alla notifieringar, oavsett typ, från denna app. Du kan finjustera vilka notifieringar du vill ta emot efter att du åter aktiverat notifieringar i inställningarna.</string>
+	<string name="notification_settings_master_off_title">Aktivera notifieringar för att få notifieringar på denna enhet.</string>
+	<string name="notification_settings_master_hint_off">Aktivera notifieringar</string>
+	<string name="notification_settings_master_hint_on">Inaktivera notifieringar</string>
+	<string name="notification_settings_master_status_off">Av</string>
+	<string name="notification_settings_master_status_on">På</string>
+	<string name="max_video_resolution">Maximal videostorlek</string>
+	<string name="max_thumbnail_px_size">Maximal bildstorlek</string>
 	<string name="error_media_recover_post">Vi lyckades inte ladda upp inläggets media. Redigera inlägget och försök igen.</string>
 	<string name="error_page_does_not_exist">Denna sida finns inte längre</string>
 	<string name="error_upload_post_media_param">Ett fel inträffade vid uppladdning av media för följande inlägg: %s.</string>
@@ -41,7 +60,6 @@ Language: sv_SE
 	<string name="post_queued">Inlägget i kö</string>
 	<string name="uploading_post">Laddar upp ”%s”</string>
 	<string name="connection_to_server_lost">Förbindelsen med servern bröts</string>
-	<string name="max_video_resolution">Maximal upplösning</string>
 	<string name="login_epilogue_mysites_other">Mina webbplatser</string>
 	<string name="login_epilogue_mysites_one">Min webbplats</string>
 	<string name="login_logged_in_as">Inloggad som</string>
@@ -331,9 +349,7 @@ Language: sv_SE
 	<string name="jetpack_info">Jetpack-info</string>
 	<string name="reader_photo_by">Foto: %s</string>
 	<string name="reader_label_visit">Gå till</string>
-	<string name="all_your_sites">Alla mina webbplatser</string>
 	<string name="pending_draft_more">Du har skrivit %d utkast till inlägg som inte är publicerade. Peka för att undersöka.</string>
-	<string name="notification_pending_drafts">Informera mig om opublicerade utkast</string>
 	<string name="invalid_verification_code_format">Måste vara ett sexsiffrigt nummer</string>
 	<string name="confirm_discard_changes">Kasta bort osparade ändringar?</string>
 	<string name="swipe_for_more">Dra för att se mer</string>
@@ -832,13 +848,8 @@ Language: sv_SE
 	<string name="email">E-post</string>
 	<string name="notifications_tab">Fliken Notiser</string>
 	<string name="app_notifications">App-notiser</string>
-	<string name="notifications_comments_other_blogs">Kommentarer på andra webbplatser</string>
-	<string name="notifications_other">Andra</string>
 	<string name="notifications_wpcom_updates">WordPress.com-nyheter</string>
-	<string name="notifications_account_emails">E-post från WordPress.com</string>
-	<string name="notifications_account_emails_summary">Vi skickar dig alltid viktiga e-postmeddelanden om ditt konto, men du kan även få värdefullt extramaterial.</string>
-	<string name="your_sites">Dina webbplatser</string>
-	<string name="notifications_sights_and_sounds">Bilder och ljud</string>
+	<string name="notification_settings_item_other_account_emails_summary">Viktiga e-postmeddelanden om ditt konto kommer vi alltid att sända, men du vill kan du dessutom få en del hjälpsamma ytterligare saker.</string>
 	<string name="stats_insights_latest_post_trend">Det har gått %1$s sedan %2$s publicerades. Så här har det gått för inlägget hittills…</string>
 	<string name="stats_insights_latest_post_summary">Sammanfattning av senaste inlägg</string>
 	<string name="button_revert">Återställ</string>
@@ -1385,7 +1396,6 @@ Language: sv_SE
 	<string name="app_title">WordPress for Android</string>
 	<string name="tos">Allmänna villkor</string>
 	<string name="version">Version</string>
-	<string name="max_thumbnail_px_size">Förvald bildbredd</string>
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Uppdatera</string>
 	<string name="untitled">Utan titel</string>
@@ -1404,9 +1414,6 @@ Language: sv_SE
 	<string name="tags_separate_with_commas">Separera etiketter med kommatecken</string>
 	<string name="title">Titel</string>
 	<string name="dlg_deleting_comments">Raderar kommentarer</string>
-	<string name="notification_vibrate">Vibrera</string>
-	<string name="notification_sound">Notifieringsljud</string>
-	<string name="notification_blink">Blinka notifieringslampa</string>
 	<string name="sdcard_title">SD-kort krävs</string>
 	<string name="media">Media</string>
 	<string name="approve">Godkänn</string>

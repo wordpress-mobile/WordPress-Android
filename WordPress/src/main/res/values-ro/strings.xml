@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-09-02 06:21:09+0000
+Translation-Revision-Date: 2017-09-30 08:53:39+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="connect_site">Conectează situl</string>
+	<string name="notification_settings_item_sights_and_sounds_blink_light">Luminează intermitent</string>
+	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrează dispozitivul</string>
+	<string name="notification_settings_item_sights_and_sounds_choose_sound">Alege sunetul</string>
+	<string name="notification_settings_category_sights_and_sounds">Percepții vizuale și sunete</string>
+	<string name="notification_settings_item_other_account_emails">Email de la WordPress.com</string>
+	<string name="notification_settings_item_other_pending_drafts">Anunță-mă despre ciornele în așteptare</string>
+	<string name="notification_settings_item_other_comments_other_blogs">Comentarii pe alte situri</string>
+	<string name="notification_settings_category_other">Altă</string>
+	<string name="notification_settings_item_your_sites_all_your_sites">Toate siturile mele</string>
+	<string name="notification_settings_category_your_sites">Siturile tale</string>
+	<string name="notification_settings_master_off_message">Oprirea setărilor de notificare va dezactiva toate notificările din această aplicație, indiferent de tipul lor. Poți ajusta ce tip de notificare vrei să primești după pornirea setărilor de notificare.</string>
+	<string name="notification_settings_master_off_title">Pentru a primi notificări pe acest dispozitiv, pornește setările de notificare.</string>
+	<string name="notification_settings_master_hint_off">Activează notificările</string>
+	<string name="notification_settings_master_hint_on">Dezactivează notificările</string>
+	<string name="notification_settings_master_status_off">Oprite</string>
+	<string name="notification_settings_master_status_on">Pornite</string>
+	<string name="max_video_resolution">Dimensiune maximă video</string>
+	<string name="max_thumbnail_px_size">Dimensiune maximă imagine</string>
 	<string name="error_media_recover_post">Nu am putut să încărcăm media în acest articol. Te rog editează articolul pentru a încerca din nou.</string>
 	<string name="error_page_does_not_exist">Această pagină nu mai există</string>
 	<string name="error_upload_post_media_param">A fost o eroare la încărcarea media în acest articol: %s.</string>
@@ -41,7 +60,6 @@ Language: ro
 	<string name="post_queued">Articol în coada de așteptare</string>
 	<string name="uploading_post">Încarc „%s”</string>
 	<string name="connection_to_server_lost">Conexiunea cu serverul s-a pierdut</string>
-	<string name="max_video_resolution">Rezoluție maximă</string>
 	<string name="login_epilogue_mysites_other">Siturile mele</string>
 	<string name="login_epilogue_mysites_one">Situl meu</string>
 	<string name="login_logged_in_as">Autentificat ca</string>
@@ -331,9 +349,7 @@ Language: ro
 	<string name="jetpack_info">Informații Jetpack</string>
 	<string name="reader_photo_by">Fotografie de %s</string>
 	<string name="reader_label_visit">Vizitează</string>
-	<string name="all_your_sites">Toate siturile mele</string>
 	<string name="pending_draft_more">Ai %d articole în ciornă pe care nu le-ai publicat. Atinge pentru a verifica.</string>
-	<string name="notification_pending_drafts">Notifică-mă despre ciorne în așteptare</string>
 	<string name="invalid_verification_code_format">Trebuie să fie un număr din șase cifre</string>
 	<string name="confirm_discard_changes">Renunți la modificările nesalvate?</string>
 	<string name="swipe_for_more">Trage cu degetul pentru mai mult</string>
@@ -826,19 +842,14 @@ Language: ro
 	<string name="notifications_tab_summary">Setările pentru notificările ce apar în fila Notificări.</string>
 	<string name="notifications_disabled">Notificările aplicației au fost dezactivate. Apăsați aici pentru a le activa în Setări.</string>
 	<string name="notification_types">Tipuri notificare</string>
-	<string name="error_loading_notifications">Nu s-au putut încărca setările notificărilor</string>
+	<string name="error_loading_notifications">N-am putut încărca setările de notificare</string>
 	<string name="replies_to_your_comments">Răspunsuri la comentariile tale</string>
 	<string name="comment_likes">Aprecieri comentariu</string>
 	<string name="email">Email</string>
 	<string name="notifications_tab">Filă notificări</string>
 	<string name="app_notifications">Notificări aplicație</string>
-	<string name="notifications_comments_other_blogs">Comentarii pe alte situri</string>
-	<string name="notifications_other">Alte</string>
 	<string name="notifications_wpcom_updates">Actualizări WordPress.com</string>
-	<string name="notifications_account_emails">Email de la WordPress.com</string>
-	<string name="notifications_account_emails_summary">Vom trimite întotdeauna emailuri importante cu privire la contul tău, dar vei putea, de asemenea, să primești și altele utile, în plus.</string>
-	<string name="your_sites">Siturile tale</string>
-	<string name="notifications_sights_and_sounds">Imagini și sunete</string>
+	<string name="notification_settings_item_other_account_emails_summary">Vom trimite întotdeauna emailuri importante cu privire la contul tău, dar poți primi și altele utile, în plus.</string>
 	<string name="stats_insights_latest_post_trend">A trecut %1$s de când %2$s a fost publicat. Iată performanțele articolului  până în prezent ...</string>
 	<string name="stats_insights_latest_post_summary">Rezumatul ultimului articol</string>
 	<string name="button_revert">Revenire</string>
@@ -1328,7 +1339,7 @@ Language: ro
 	<string name="share_action_title">Adaugă la</string>
 	<string name="theme_auth_error_title">Eșec în extragerea temelor</string>
 	<string name="theme_set_success">Temă setată cu succes!</string>
-	<string name="theme_activating_button">Se activează</string>
+	<string name="theme_activating_button">Activez</string>
 	<string name="theme_activate_button">Activare</string>
 	<string name="themes_features_label">Funcționalități</string>
 	<string name="themes_details_label">Detalii</string>
@@ -1385,7 +1396,6 @@ Language: ro
 	<string name="app_title">WordPress pentru Android</string>
 	<string name="tos">Termenii de funcționare a serviciului</string>
 	<string name="version">Versiune</string>
-	<string name="max_thumbnail_px_size">Lățime imagine implicită</string>
 	<string name="image_alignment">Aliniere</string>
 	<string name="refresh">Reîmprospătare</string>
 	<string name="untitled">Fără titlu</string>
@@ -1404,9 +1414,6 @@ Language: ro
 	<string name="tags_separate_with_commas">Separă etichetele cu virgulă</string>
 	<string name="title">Titlu</string>
 	<string name="dlg_deleting_comments">Ștergere comentarii</string>
-	<string name="notification_vibrate">Vibrare</string>
-	<string name="notification_sound">Sunet pentru notificare</string>
-	<string name="notification_blink">Clipește lumina de notificare</string>
 	<string name="sdcard_title">Cardul SD e necesar</string>
 	<string name="media">Media</string>
 	<string name="approve">Aprobă</string>

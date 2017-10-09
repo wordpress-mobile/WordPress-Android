@@ -12,7 +12,6 @@ Language: eu_ES
 	<string name="post_settings_post_format">Bidalketa formatua</string>
 	<string name="sharing">Partekatzea</string>
 	<string name="keep_editing">Jarraitu editatzen</string>
-	<string name="all_your_sites">Nire gune guztiak</string>
 	<string name="reader_label_visit">Bisitatu</string>
 	<string name="reader_toast_err_comment_not_found">Ez da iruzkina aurkitu!</string>
 	<string name="reader_title_post_detail_wpcom">WordPress.com postontzia</string>
@@ -305,7 +304,6 @@ Language: eu_ES
 	<string name="notifications_tab">Jakinarazpenen erlaitza</string>
 	<string name="email">E-posta</string>
 	<string name="notifications_wpcom_updates">WordPress.com eguneraketak</string>
-	<string name="your_sites">Zure guneak</string>
 	<string name="stats_insights_latest_post_summary">Azken bidalketaren laburpena</string>
 	<string name="days_ago">Duela %d egun</string>
 	<string name="yesterday">Atzo</string>
@@ -765,7 +763,6 @@ Language: eu_ES
 	<string name="app_title">WordPress Android-erako</string>
 	<string name="tos">Zerbitzuaren baldintzak</string>
 	<string name="version">Bertsioa:</string>
-	<string name="max_thumbnail_px_size">Lehenetsitako irudi zabalera</string>
 	<string name="image_alignment">Lerrokatzea</string>
 	<string name="refresh">Freskatu</string>
 	<string name="untitled">Izenbururik gabe</string>
@@ -784,9 +781,6 @@ Language: eu_ES
 	<string name="categories">Kategoriak</string>
 	<string name="tags_separate_with_commas">Banandu etiketak komak erabiliz</string>
 	<string name="dlg_deleting_comments">Iruzkinak ezabatzen</string>
-	<string name="notification_vibrate">Bibratu</string>
-	<string name="notification_blink">Jakinarazpen keinukariaren argia</string>
-	<string name="notification_sound">Jakinarazpen soinua</string>
 	<string name="sdcard_title">SD txartela ezinbestekoa</string>
 	<string name="media">Media</string>
 	<string name="delete">Ezabatu</string>
