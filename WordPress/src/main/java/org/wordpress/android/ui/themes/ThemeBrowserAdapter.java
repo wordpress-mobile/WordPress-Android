@@ -76,7 +76,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         final String screenshotURL = cursor.getString(cursor.getColumnIndex(ThemeModelTable.SCREENSHOT_URL));
         final String name = cursor.getString(cursor.getColumnIndex(ThemeModelTable.NAME));
         final String price = cursor.getString(cursor.getColumnIndex(ThemeModelTable.PRICE));
-        final String themeId = cursor.getString(cursor.getColumnIndex(ThemeModelTable.ID));
+        final String themeId = cursor.getString(cursor.getColumnIndex(ThemeModelTable.THEME_ID));
         final boolean isCurrent = cursor.getInt(cursor.getColumnIndex(ThemeModelTable.ACTIVE)) == 1;
         final boolean isPremium = !price.isEmpty();
 
