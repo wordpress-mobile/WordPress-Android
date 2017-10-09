@@ -28,8 +28,6 @@ import de.greenrobot.event.EventBus;
  * Activity for configuring blog specific settings.
  */
 public class BlogPreferencesActivity extends AppCompatActivity {
-    public static final int RESULT_BLOG_REMOVED = RESULT_FIRST_USER;
-
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
 
     @Inject AccountStore mAccountStore;
@@ -125,7 +123,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             }
 
             siteSettingsFragment.handleSiteDeleted();
-            setResult(RESULT_BLOG_REMOVED);
+            setResult(SiteSettingsFragment.RESULT_BLOG_REMOVED);
             finish();
         }
     }
