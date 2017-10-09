@@ -8,29 +8,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
-
+import javax.inject.Inject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.HeaderHandler;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
-
-import javax.inject.Inject;
+import org.wordpress.android.util.ViewUtils;
 
 public class ShareIntentReceiverFragment extends Fragment {
 
@@ -50,6 +45,9 @@ public class ShareIntentReceiverFragment extends Fragment {
     private boolean mSharingMediaFile;
     private int mLastUsedBlogLocalId;
     private boolean mAfterLogin;
+    private RecyclerView mRecyclerView;
+    private View mBottomButtonsContainer;
+    private View mBottomButtonsShadow;
 
     public static ShareIntentReceiverFragment newInstance(boolean sharingMediaFile, int lastUsedBlogLocalId,
         boolean afterLogin) {
@@ -76,13 +74,11 @@ public class ShareIntentReceiverFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
-        ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.share_intent_fragment, container, false);
+        ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.login_epilogue_screen, container, false);
+        initButtonsContainer(layout);
         initShareActionPostButton(layout);
-        if (mSharingMediaFile) {
-            initShareActionMediaButton(layout);
-        }
+        initShareActionMediaButton(layout, mSharingMediaFile);
         initRecyclerView(layout);
-
         return layout;
     }
 
@@ -108,16 +104,23 @@ public class ShareIntentReceiverFragment extends Fragment {
         outState.putInt(ARG_LAST_USED_BLOG_LOCAL_ID, mAdapter.getSelectedItemLocalId());
     }
 
+    private void initButtonsContainer(ViewGroup layout) {
+        mBottomButtonsContainer = layout.findViewById(R.id.bottom_buttons);
+        mBottomButtonsShadow = layout.findViewById(R.id.bottom_shadow);
+    }
+
     private void initShareActionPostButton(final ViewGroup layout) {
         mSharePostBtn = (Button) layout.findViewById(R.id.primary_button);
         addShareActionListener(mSharePostBtn, ShareAction.SHARE_TO_POST);
         mSharePostBtn.setVisibility(View.VISIBLE);
+        mSharePostBtn.setText(R.string.share_action_post);
     }
 
-    private void initShareActionMediaButton(final ViewGroup layout) {
+    private void initShareActionMediaButton(final ViewGroup layout, boolean sharingMediaFile) {
         mShareMediaBtn = (Button) layout.findViewById(R.id.secondary_button);
         addShareActionListener(mShareMediaBtn, ShareAction.SHARE_TO_MEDIA_LIBRARY);
-        mShareMediaBtn.setVisibility(View.VISIBLE);
+        mShareMediaBtn.setVisibility(sharingMediaFile ? View.VISIBLE : View.GONE);
+        mShareMediaBtn.setText(R.string.share_action_media);
     }
 
     private void addShareActionListener(final Button button, final ShareAction shareAction) {
@@ -130,11 +133,11 @@ public class ShareIntentReceiverFragment extends Fragment {
     }
 
     private void initRecyclerView(ViewGroup layout) {
-        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        recyclerView.setItemAnimator(null);
-        recyclerView.setAdapter(createSiteAdapter());
+        mRecyclerView = (RecyclerView) layout.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        mRecyclerView.setItemAnimator(null);
+        mRecyclerView.setAdapter(createSiteAdapter());
     }
 
     private Adapter createSiteAdapter() {
@@ -151,6 +154,24 @@ public class ShareIntentReceiverFragment extends Fragment {
                             .showToast(getContext(), R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
                         getActivity().finish();
                     } else {
+                        mRecyclerView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (mRecyclerView.computeVerticalScrollRange() > mRecyclerView.getHeight()) {
+                                    mBottomButtonsShadow.setVisibility(View.VISIBLE);
+                                    mBottomButtonsContainer.setBackgroundResource(R.color.white);
+                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.blue_wordpress));
+                                    ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
+                                        R.style.WordPress_Button_Grey, R.attr.colorButtonNormal);
+                                } else {
+                                    mBottomButtonsShadow.setVisibility(View.GONE);
+                                    mBottomButtonsContainer.setBackground(null);
+                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.grey_dark));
+                                    ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn, R.style.WordPress_Button,
+                                        R.attr.colorButtonNormal);
+                                }
+                            }
+                        });
                         mAdapter.findAndSelect(mLastUsedBlogLocalId);
                     }
                 }
@@ -167,47 +188,24 @@ public class ShareIntentReceiverFragment extends Fragment {
             @Override
             public ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
                 boolean attachToRoot) {
-                return new HeaderViewHolder(layoutInflater.inflate(R.layout.share_intent_header, parent, false));
+                return new LoginEpilogueFragment.HeaderViewHolder(layoutInflater.inflate(R.layout.login_epilogue_header, parent,
+                    false));
             }
 
             @Override
             public void onBindViewHolder(ViewHolder holder, int numberOfSites) {
-                refreshAccountDetails((HeaderViewHolder) holder);
+                refreshAccountDetails((LoginEpilogueFragment.HeaderViewHolder) holder);
             }
         };
     }
 
-    private void refreshAccountDetails(HeaderViewHolder holder) {
+    private void refreshAccountDetails(LoginEpilogueFragment.HeaderViewHolder holder) {
         if (!isAdded()) {
             return;
         }
-        // we only want to show user details for WordPress.com users
-        if (mAfterLogin && mAccountStore.hasAccessToken()) {
-            holder.mLoggedInAsHeading.setVisibility(View.VISIBLE);
-            holder.mUserDetailsCard.setVisibility(View.VISIBLE);
-
-            AccountModel defaultAccount = mAccountStore.getAccount();
-            final String avatarUrl = constructGravatarUrl(defaultAccount);
-            holder.mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, null);
-            holder.mUsernameTextView.setText(getString(R.string.login_username_at, defaultAccount.getUserName()));
-
-            String displayName = defaultAccount.getDisplayName();
-            if (!TextUtils.isEmpty(displayName)) {
-                holder.mDisplayNameTextView.setText(displayName);
-            } else {
-                holder.mDisplayNameTextView.setText(defaultAccount.getUserName());
-            }
-        } else {
-            holder.mLoggedInAsHeading.setVisibility(View.GONE);
-            holder.mUserDetailsCard.setVisibility(View.GONE);
-        }
-
-        holder.mPickSiteHeadingTextView.setVisibility(View.VISIBLE);
-    }
-
-    private String constructGravatarUrl(AccountModel account) {
-        int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
-        return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
+        holder.update(getContext(), holder, mAfterLogin && mAccountStore.hasAccessToken(), mAccountStore.getAccount());
+        holder.mMySitesHeadingTextView.setText(R.string.share_intent_pick_site);
+        holder.mMySitesHeadingTextView.setVisibility(View.VISIBLE);
     }
 
     enum ShareAction {
@@ -241,23 +239,4 @@ public class ShareIntentReceiverFragment extends Fragment {
         void share(ShareAction shareAction, int selectedSiteLocalId);
     }
 
-    private class HeaderViewHolder extends RecyclerView.ViewHolder {
-
-        private final View mLoggedInAsHeading;
-        private final View mUserDetailsCard;
-        private final WPNetworkImageView mAvatarImageView;
-        private final TextView mDisplayNameTextView;
-        private final TextView mUsernameTextView;
-        private final TextView mPickSiteHeadingTextView;
-
-        HeaderViewHolder(View view) {
-            super(view);
-            mLoggedInAsHeading = view.findViewById(R.id.logged_in_as_heading);
-            mUserDetailsCard = view.findViewById(R.id.user_details_card);
-            mAvatarImageView = (WPNetworkImageView) view.findViewById(R.id.avatar);
-            mDisplayNameTextView = (TextView) view.findViewById(R.id.display_name);
-            mUsernameTextView = (TextView) view.findViewById(R.id.username);
-            mPickSiteHeadingTextView = (TextView) view.findViewById(R.id.pick_site_heading);
-        }
-    }
 }

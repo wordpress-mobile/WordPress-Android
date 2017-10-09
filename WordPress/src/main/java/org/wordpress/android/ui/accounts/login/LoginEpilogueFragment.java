@@ -149,15 +149,15 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         return mAdapter;
     }
 
-    private class HeaderViewHolder extends RecyclerView.ViewHolder {
-        private final View mLoggedInAsHeading;
-        private final View mUserDetailsCard;
-        private final WPNetworkImageView mAvatarImageView;
-        private final TextView mDisplayNameTextView;
-        private final TextView mUsernameTextView;
-        private final TextView mMySitesHeadingTextView;
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public final View mLoggedInAsHeading;
+        public final View mUserDetailsCard;
+        public final WPNetworkImageView mAvatarImageView;
+        public final TextView mDisplayNameTextView;
+        public final TextView mUsernameTextView;
+        public final TextView mMySitesHeadingTextView;
 
-        HeaderViewHolder(View view) {
+        public HeaderViewHolder(View view) {
             super(view);
             mLoggedInAsHeading = view.findViewById(R.id.logged_in_as_heading);
             mUserDetailsCard = view.findViewById(R.id.user_details_card);
@@ -165,6 +165,34 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             mDisplayNameTextView = (TextView) view.findViewById(R.id.display_name);
             mUsernameTextView = (TextView) view.findViewById(R.id.username);
             mMySitesHeadingTextView = (TextView) view.findViewById(R.id.my_sites_heading);
+        }
+
+        public void update(Context context, HeaderViewHolder holder, boolean showHeader, AccountModel defaultAccount) {
+            if (showHeader) {
+                holder.mLoggedInAsHeading.setVisibility(View.VISIBLE);
+                holder.mUserDetailsCard.setVisibility(View.VISIBLE);
+
+                final String avatarUrl = constructGravatarUrl(context, defaultAccount);
+                holder.mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, null);
+
+                holder.mUsernameTextView.setText(context.getString(R.string.login_username_at, defaultAccount
+                    .getUserName()));
+
+                String displayName = defaultAccount.getDisplayName();
+                if (!TextUtils.isEmpty(displayName)) {
+                    holder.mDisplayNameTextView.setText(displayName);
+                } else {
+                    holder.mDisplayNameTextView.setText(defaultAccount.getUserName());
+                }
+            } else {
+                holder.mLoggedInAsHeading.setVisibility(View.GONE);
+                holder.mUserDetailsCard.setVisibility(View.GONE);
+            }
+        }
+
+        private String constructGravatarUrl(Context context,AccountModel account) {
+            int avatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+            return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
         }
     }
 
@@ -230,29 +258,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         if (!isAdded()) {
             return;
         }
-
         // we only want to show user details for WordPress.com users
-        if (mAccountStore.hasAccessToken()) {
-            AccountModel defaultAccount = mAccountStore.getAccount();
-
-            holder.mLoggedInAsHeading.setVisibility(View.VISIBLE);
-            holder.mUserDetailsCard.setVisibility(View.VISIBLE);
-
-            final String avatarUrl = constructGravatarUrl(mAccountStore.getAccount());
-            holder.mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, null);
-
-            holder.mUsernameTextView.setText(getString(R.string.login_username_at, defaultAccount.getUserName()));
-
-            String displayName = defaultAccount.getDisplayName();
-            if (!TextUtils.isEmpty(displayName)) {
-                holder.mDisplayNameTextView.setText(displayName);
-            } else {
-                holder.mDisplayNameTextView.setText(defaultAccount.getUserName());
-            }
-        } else {
-            holder.mLoggedInAsHeading.setVisibility(View.GONE);
-            holder.mUserDetailsCard.setVisibility(View.GONE);
-        }
+        holder.update(getContext(), holder, mAccountStore.hasAccessToken(), mAccountStore.getAccount());
 
         if (numberOfSites == 0) {
             holder.mMySitesHeadingTextView.setVisibility(View.GONE);
@@ -267,11 +274,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
             mConnectMore.setText(R.string.connect_more);
         }
-    }
-
-    private String constructGravatarUrl(AccountModel account) {
-        int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
-        return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
     }
 
     @Override
