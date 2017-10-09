@@ -515,7 +515,6 @@ Language: da_DK
 	<string name="version">Version</string>
 	<string name="app_title">WordPress til Android</string>
 	<string name="tos">Brugskrav</string>
-	<string name="max_thumbnail_px_size">Standard billedbredde</string>
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Genindlæs</string>
 	<string name="untitled">Ikke-navngivet</string>
@@ -533,8 +532,6 @@ Language: da_DK
 	<string name="title">Titel</string>
 	<string name="categories">Kategorier</string>
 	<string name="dlg_deleting_comments">Sletter kommentarer</string>
-	<string name="notification_vibrate">Vibrer</string>
-	<string name="notification_blink">Blink beskedlys</string>
 	<string name="sdcard_title">SD-kort påkrævet</string>
 	<string name="media">Medier</string>
 	<string name="delete">Slet</string>

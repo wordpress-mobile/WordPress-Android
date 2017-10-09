@@ -24,7 +24,6 @@ Language: it
 	<string name="post_queued">Articolo in coda</string>
 	<string name="uploading_post">Caricamento "%s"</string>
 	<string name="connection_to_server_lost">La connessione al server è stata persa</string>
-	<string name="max_video_resolution">Risoluzione massima</string>
 	<string name="login_epilogue_mysites_other">I miei siti</string>
 	<string name="login_epilogue_mysites_one">Il mio sito</string>
 	<string name="login_logged_in_as">Autenticato come</string>
@@ -314,9 +313,7 @@ Language: it
 	<string name="jetpack_info">Informazioni su Jetpack</string>
 	<string name="reader_photo_by">Foto di %s</string>
 	<string name="reader_label_visit">Visita</string>
-	<string name="all_your_sites">Tutti i miei siti</string>
 	<string name="pending_draft_more">Hai abbozzato %d articoli ma non li hai mai pubblicati. Clicca per verificare.</string>
-	<string name="notification_pending_drafts">Avvisami su gli articoli abbozzati</string>
 	<string name="invalid_verification_code_format">Deve essere un numero a sei cifre</string>
 	<string name="confirm_discard_changes">Scartare le modifiche non salvate?</string>
 	<string name="swipe_for_more">Scorri per altre info</string>
@@ -815,13 +812,7 @@ Language: it
 	<string name="email">E-mail</string>
 	<string name="notifications_tab">Scheda Notifiche</string>
 	<string name="app_notifications">Notifiche della app</string>
-	<string name="notifications_comments_other_blogs">Commenti su altri siti</string>
-	<string name="notifications_other">Altro</string>
 	<string name="notifications_wpcom_updates">Aggiornamenti di WordPress.com</string>
-	<string name="notifications_account_emails">Email da WordPress.com</string>
-	<string name="notifications_account_emails_summary">Invieremo sempre e-mail importanti riguardanti il tuo account, ma potrai ricevere anche informazioni extra utili.</string>
-	<string name="your_sites">I tuoi siti</string>
-	<string name="notifications_sights_and_sounds">Immagini e suoni</string>
 	<string name="stats_insights_latest_post_trend">Sono passati %1$s dalla pubblicazione di %2$s. Ecco com\'è andato finora l\'articolo...</string>
 	<string name="stats_insights_latest_post_summary">Riassunto ultimo articolo</string>
 	<string name="button_revert">Riconverti</string>
@@ -1366,7 +1357,6 @@ Language: it
 	<string name="app_title">WordPress per Android</string>
 	<string name="tos">Condizioni del servizio</string>
 	<string name="version">Versione</string>
-	<string name="max_thumbnail_px_size">Larghezza predefinita immagine</string>
 	<string name="image_alignment">Allineamento</string>
 	<string name="refresh">Aggiorna</string>
 	<string name="untitled">Senza titolo</string>
@@ -1385,9 +1375,6 @@ Language: it
 	<string name="tags_separate_with_commas">Separa i tag con una virgola</string>
 	<string name="title">Titolo</string>
 	<string name="dlg_deleting_comments">Eliminazione commenti</string>
-	<string name="notification_vibrate">Vibrazione</string>
-	<string name="notification_sound">Suono di notifica</string>
-	<string name="notification_blink">Esegui notifica visiva</string>
 	<string name="sdcard_title">Scheda SD necessaria</string>
 	<string name="media">Media</string>
 	<string name="approve">Approva</string>
