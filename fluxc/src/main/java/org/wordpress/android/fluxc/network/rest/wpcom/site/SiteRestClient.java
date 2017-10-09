@@ -466,7 +466,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         Map<String, String> params = new HashMap<>(4);
         params.put("query", query);
         // ugly trick to bypass checkstyle and its dot com rule
-        params.put("include_wordpressdot" + "com", String.valueOf(includeWordpressCom));
+        params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
         params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
         params.put("quantity", String.valueOf(quantity));
         final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
