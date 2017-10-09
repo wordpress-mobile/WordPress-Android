@@ -591,7 +591,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         }
 
         if (event.completed) {
-            mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotification(event.media);
+            mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotification();
         }
 
         if (sUseLegacyMode) {

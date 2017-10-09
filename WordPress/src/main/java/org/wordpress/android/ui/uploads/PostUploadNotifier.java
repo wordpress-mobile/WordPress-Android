@@ -153,10 +153,7 @@ class PostUploadNotifier {
         // update Notification now
         updateForegroundNotification(post);
 
-        if (sNotificationData.totalPostItems == sNotificationData.currentPostItem
-                && sNotificationData.totalMediaItems == sNotificationData.currentMediaItem) {
-            removeNotificationAndStopForegroundServiceIfNoItemsInQueue();
-        }
+        removeNotificationAndStopForegroundServiceIfNoItemsInQueue();
     }
 
     void incrementUploadedMediaCountFromProgressNotification() {
@@ -169,7 +166,8 @@ class PostUploadNotifier {
     }
 
     void removeNotificationAndStopForegroundServiceIfNoItemsInQueue() {
-        if (sNotificationData.totalPostItems == 0 && sNotificationData.totalMediaItems == 0) {
+        if (sNotificationData.currentPostItem == sNotificationData.totalPostItems
+                && sNotificationData.currentMediaItem == sNotificationData.totalMediaItems) {
             mNotificationManager.cancel(sNotificationData.notificationId);
             // reset the notification id so a new one is generated next time the service is started
             sNotificationData.notificationId = 0;
