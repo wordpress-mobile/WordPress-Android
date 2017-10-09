@@ -3,31 +3,35 @@
 [![Build Status](https://travis-ci.org/wordpress-mobile/WordPress-Android.svg?branch=develop)](https://travis-ci.org/wordpress-mobile/WordPress-Android)
 
 If you're just looking to install WordPress for Android, you can find
-it on [Google Play][1]. If you're a developer wanting to contribute,
-read on.
+it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.android). If you're a developer wanting to contribute, read on.
+
 
 ## Build Instructions ##
 
-You first need to generate the `local.properties` (replace YOUR_SDK_DIR with
-your actual android SDK directory) file and create the `gradle.properties` file:
+1. Install [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
+2. Install [Android Studio](https://developer.android.com/studio/index.html).
+3. Run Android Studio and do a "Standard setup"
+4. Clone this GitHub repository
+5. Find the Android SDK path (in Android Studio under Preferences → Appearance → System Settings → Android SDK).
+6. Create a new `local.properties` file in your local repository containing `sdk.dir=ANDROID_SDK_PATH`, replacing `ANDROID_SDK_PATH` with your path from the previous point.
+7. Copy `gradle.properties-example` to `gradle.properties`.
+8. Run Android Studio
+9. Import the project from the local repository as a Gradle project.
+9. Configure device with AVD Manager (Tools → Android → AVD Manager)
+10. Run
 
-    $ echo "sdk.dir=YOUR_SDK_DIR" > local.properties
-    $ cp ./gradle.properties-example ./gradle.properties
+Notes:
 
-Note: this is the default `./gradle.properties` file. If you
-want to use WordPress.com features (login to a WordPress.com account,
-access the Reader and Stats for example), you'll have to get a WordPress.com
-OAuth2 ID and secret. Please read the
+* To use WordPress.com features (login to WordPress.com, access Reader and Stats, etc) you need a WordPress.com OAuth2 ID and secret. Please read the
 [OAuth2 Authentication](#oauth2-authentication) section.
 
-You can now build, install and test the project:
+Once installed, you can now build, install and test the project from the command line:
 
     $ ./gradlew assembleVanillaDebug # assemble the debug .apk
     $ ./gradlew installVanillaDebug  # install the debug .apk if you have an
                                      # emulator or an Android device connected
     $ ./gradlew cAT                  # assemble, install and run unit tests
 
-You can use [Android Studio][3] by importing the project as a Gradle project.
 
 ## Directory structure ##
 
@@ -88,8 +92,6 @@ WordPress for Android is an Open Source project covered by the
 in the `libs/` directory comes from external libraries, which might
 be covered by a different license compatible with the GPLv2.
 
-[1]: https://play.google.com/store/apps/details?id=org.wordpress.android
-[3]: http://developer.android.com/sdk/installing/studio.html
 [4]: https://make.wordpress.org/chat/
 [5]: https://developer.wordpress.com/apps/
 [6]: https://developer.wordpress.com/docs/oauth2/
