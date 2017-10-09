@@ -602,7 +602,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         info.isJetpackActive = response.isJetpackActive;
         info.isJetpackConnected = response.isJetpackConnected;
         info.isWordPress = response.isWordPress;
-        info.isWPCom = response.isWordPressDotCom;
+        info.isWPCom = response.isWordPressDotCom; // CHECKSTYLE IGNORE
         return info;
     }
 }
