@@ -901,11 +901,6 @@ public class EditPostActivity extends AppCompatActivity implements
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                     FluxCUtils.mediaFileFromMediaModel(media));
         }
-        removeMediaFromPendingList(media);
-    }
-
-    private void onUploadCanceled(MediaModel media) {
-        removeMediaFromPendingList(media);
     }
 
     private void onUploadError(MediaModel media, MediaStore.MediaError error) {
@@ -929,8 +924,6 @@ public class EditPostActivity extends AppCompatActivity implements
             mEditorMediaUploadListener.onMediaUploadFailed(localMediaId,
                     EditorFragmentAbstract.getEditorMimeType(mf), errorMessage);
         }
-
-        removeMediaFromPendingList(media);
     }
 
     private void onUploadProgress(MediaModel media, float progress) {
@@ -938,13 +931,6 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditorMediaUploadListener != null) {
             mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
         }
-    }
-
-    private void removeMediaFromPendingList(MediaModel mediaToClear) {
-        if (mediaToClear == null) {
-            return;
-        }
-        mPendingUploads.remove(mediaToClear.getId());
     }
 
     private void launchPictureLibrary() {
@@ -2137,8 +2123,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private HashMap<Integer, MediaModel> mPendingUploads = new HashMap<>();
-
     /*
      * called before we add media to make sure we have access to any media shared from another app (Google Photos, etc.)
      */
@@ -2294,26 +2278,22 @@ public class EditPostActivity extends AppCompatActivity implements
     /**
      * Starts the upload service to upload selected media.
      */
-    private void startUploadService() {
-        if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
-            final ArrayList<MediaModel> mediaList = new ArrayList<>();
-            for (MediaModel media : mPendingUploads.values()) {
-                if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
-                    mediaList.add(media);
+    private void startUploadService(MediaModel media) {
+        final ArrayList<MediaModel> mediaList = new ArrayList<>();
+        if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
+            mediaList.add(media);
+        }
+
+        if (!mediaList.isEmpty()) {
+            // before starting the service, we need to update the posts' contents so we are sure the service
+            // can retrieve it from there on
+            savePostAsync(new AfterSavePostListener() {
+                @Override
+                public void onPostSave() {
+                    UploadService.uploadMedia(EditPostActivity.this, mediaList);
                 }
-            }
+            });
 
-            if (!mediaList.isEmpty()) {
-                // before starting the service, we need to update the posts' contents so we are sure the service
-                // can retrieve it from there on
-                savePostAsync(new AfterSavePostListener() {
-                    @Override
-                    public void onPostSave() {
-                        UploadService.uploadMedia(EditPostActivity.this, mediaList);
-                    }
-                });
-
-            }
         }
     }
 
@@ -2365,10 +2345,7 @@ public class EditPostActivity extends AppCompatActivity implements
         media.setLocalPostId(mPost.getId());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
-        // add this item to the queue - we keep it for visual aid atm
-        mPendingUploads.put(media.getId(), media);
-
-        startUploadService();
+        startUploadService(media);
 
         return media;
     }
@@ -2503,8 +2480,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             media.setUploadState(MediaUploadState.QUEUED);
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-            mPendingUploads.put(media.getId(), media);
-            startUploadService();
+            startUploadService(media);
         }
 
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
@@ -2773,8 +2749,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (event.isError()) {
             onUploadError(event.media, event.error);
-        } else if (event.canceled) {
-            onUploadCanceled(event.media);
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
             if (event.media.getUrl() == null) {
