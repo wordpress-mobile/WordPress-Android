@@ -420,7 +420,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public void onBackPressed() {
         saveChanges();
         // call finish() rather than super.onBackPressed() to enable skipping shared element transition
-        finish();
+        if (mOverrideClosingTransition) {
+            finish();
+        } else {
+            supportFinishAfterTransition();
+        }
     }
 
     @Override
@@ -451,12 +455,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            saveChanges();
-            if (mOverrideClosingTransition) {
-                onBackPressed();
-            } else {
-                supportFinishAfterTransition();
-            }
+            onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.menu_save) {
             saveMediaToDevice();
