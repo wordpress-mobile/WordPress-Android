@@ -221,15 +221,6 @@ class PostUploadNotifier {
         }
 
         notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
-
-//        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
-//        if (notificationData == null || notificationData.latestIcon == null) {
-//            notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(mContext.getApplicationContext()
-//                    .getResources(),
-//                    R.mipmap.app_icon));
-//        } else {
-//            notificationBuilder.setLargeIcon(notificationData.latestIcon);
-//        }
         notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(mContext.getApplicationContext()
                         .getResources(),
                 R.mipmap.app_icon));
