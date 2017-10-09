@@ -944,12 +944,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mediaToClear == null) {
             return;
         }
-        for (MediaModel pendingUpload : mPendingUploads) {
-            if (pendingUpload.getId() == mediaToClear.getId()) {
-                mPendingUploads.remove(pendingUpload);
-                break;
-            }
-        }
+        mPendingUploads.remove(mediaToClear.getId());
     }
 
     private void launchPictureLibrary() {
@@ -2142,7 +2137,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
+    private HashMap<Integer, MediaModel> mPendingUploads = new HashMap<>();
 
     /*
      * called before we add media to make sure we have access to any media shared from another app (Google Photos, etc.)
@@ -2302,7 +2297,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private void startUploadService() {
         if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             final ArrayList<MediaModel> mediaList = new ArrayList<>();
-            for (MediaModel media : mPendingUploads) {
+            for (MediaModel media : mPendingUploads.values()) {
                 if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
                     mediaList.add(media);
                 }
@@ -2371,7 +2366,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
         // add this item to the queue - we keep it for visual aid atm
-        mPendingUploads.add(media);
+        mPendingUploads.put(media.getId(), media);
 
         startUploadService();
 
@@ -2508,7 +2503,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             media.setUploadState(MediaUploadState.QUEUED);
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-            mPendingUploads.add(media);
+            mPendingUploads.put(media.getId(), media);
             startUploadService();
         }
 
