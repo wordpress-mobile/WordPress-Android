@@ -417,8 +417,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         String toastText = getString(R.string.no_network_message);
 
         if (NetworkUtils.isNetworkAvailable(this)) {
-            if (mCurrentTheme != null && !TextUtils.isEmpty(themeId)) {
-                boolean isCurrentTheme = mCurrentTheme.getThemeId().equals(themeId);
+            ThemeModel theme = TextUtils.isEmpty(themeId) ? null : mThemeStore.getThemeWithId(themeId);
+            if (theme != null) {
                 Map<String, Object> themeProperties = new HashMap<>();
                 themeProperties.put(THEME_ID, themeId);
 
@@ -436,7 +436,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                         AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_SUPPORT_ACCESSED, mSite, themeProperties);
                         break;
                 }
-                ThemeWebActivity.openTheme(this, mSite, themeId, type, isCurrentTheme);
+                ThemeWebActivity.openTheme(this, mSite, theme, type);
                 return;
             } else {
                 toastText = getString(R.string.could_not_load_theme);
