@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-09-08 04:49:23+0000
+Translation-Revision-Date: 2017-10-01 06:41:36+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="connect_site">Połącz witrynę</string>
+	<string name="notification_settings_item_sights_and_sounds_blink_light">Zamigaj diodą</string>
+	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Zawibruj urządzeniem</string>
+	<string name="notification_settings_item_sights_and_sounds_choose_sound">Wybierz dźwięk</string>
+	<string name="notification_settings_category_sights_and_sounds">Efekty wizualne i Dźwięki</string>
+	<string name="notification_settings_item_other_account_emails">Email od WordPress.com</string>
+	<string name="notification_settings_item_other_pending_drafts">Powiadom mnie o zalegających szkicach</string>
+	<string name="notification_settings_item_other_comments_other_blogs">Komentarze na innych witrynach</string>
+	<string name="notification_settings_category_other">Inne</string>
+	<string name="notification_settings_item_your_sites_all_your_sites">Wszystkie moje witryny</string>
+	<string name="notification_settings_category_your_sites">Twoje witryny</string>
+	<string name="notification_settings_master_off_message">Zmiana ustawienia na brak powiadomień spowoduje że nie będziesz otrzymywać żadnych powiadomień z tej aplikacji, bez względu na ich typ. Możesz dostosować rodzaj powiadomień, które otrzymujesz po włączeniu ustawienia.</string>
+	<string name="notification_settings_master_off_title">Aby włączyć powiadomienia na tym urządzeniu, włącz ustawienie w sekcji Powiadomień.</string>
+	<string name="notification_settings_master_hint_off">Włącz powiadomienia</string>
+	<string name="notification_settings_master_hint_on">Wyłącz powiadomienia</string>
+	<string name="notification_settings_master_status_off">Wyłączone</string>
+	<string name="notification_settings_master_status_on">Włączone</string>
+	<string name="max_video_resolution">Maksymalny rozmiar filmu</string>
+	<string name="max_thumbnail_px_size">Maksymalny rozmiar obrazka</string>
 	<string name="error_media_recover_post">Nie można było przesłać mediów tego wpisu. Proszę wejść w edycję wpisu i spróbować ponownie.</string>
 	<string name="error_page_does_not_exist">Ta strona już nie istnieje</string>
 	<string name="error_upload_post_media_param">Wystąpił błąd podczas przesyłania mediów w tym wpisie: %s.</string>
@@ -41,7 +60,6 @@ Language: pl
 	<string name="post_queued">Wpis w kolejce</string>
 	<string name="uploading_post">Przesyłanie "%s"</string>
 	<string name="connection_to_server_lost">Połączenie z serwerem zostało utracone</string>
-	<string name="max_video_resolution">Maksymalna rozdzielczość</string>
 	<string name="login_epilogue_mysites_other">Moje witryny</string>
 	<string name="login_epilogue_mysites_one">Moja witryna</string>
 	<string name="login_logged_in_as">Zalogowany jako</string>
@@ -331,9 +349,7 @@ Language: pl
 	<string name="jetpack_info">Informacje o Jetpack</string>
 	<string name="reader_photo_by">Zdjęcie wykonane przez %s</string>
 	<string name="reader_label_visit">Przejdź do witryny</string>
-	<string name="all_your_sites">Wszystkie moje witryny </string>
 	<string name="pending_draft_more">Opracowałeś %d wpis/y/ów,  ale nie został/y przez ciebie  opublikowany/e. Stuknij aby to sprawdzić. </string>
-	<string name="notification_pending_drafts">Powiadom o szkicach do zatw.</string>
 	<string name="invalid_verification_code_format">Musi zawierać 6 cyfr</string>
 	<string name="confirm_discard_changes">Odrzucić niezapisane zmiany?</string>
 	<string name="swipe_for_more">Przeciągnij aby wczytać więcej</string>
@@ -832,13 +848,8 @@ Language: pl
 	<string name="email">Email</string>
 	<string name="notifications_tab">Zakładka powiadomień</string>
 	<string name="app_notifications">Powiadomienia aplikacji</string>
-	<string name="notifications_comments_other_blogs">Komentarze na innych witrynach</string>
-	<string name="notifications_other">Inne</string>
 	<string name="notifications_wpcom_updates">Aktualizacje WordPress.com</string>
-	<string name="notifications_account_emails">Email od WordPress.com</string>
-	<string name="notifications_account_emails_summary">Wysyłamy zawsze istotne wiadomości dotyczące twojego konta, ale czasem wysyłamy również przydatne informacje</string>
-	<string name="your_sites">Twoje witryny</string>
-	<string name="notifications_sights_and_sounds">Ekran i dźwięki</string>
+	<string name="notification_settings_item_other_account_emails_summary">Wysyłamy zawsze istotne wiadomości dotyczące twojego konta, ale czasem wysyłamy również przydatne informacje.</string>
 	<string name="stats_insights_latest_post_trend">Minęło %1$s od czasu kiedy wpis %2$s został opublikowany. Oto informacje o jego  popularności od tego czasu...</string>
 	<string name="stats_insights_latest_post_summary">Podsumowanie ostatniego wpisu</string>
 	<string name="button_revert">Cofnij</string>
@@ -1385,7 +1396,6 @@ Language: pl
 	<string name="app_title">WordPress dla Androida</string>
 	<string name="tos">Warunki korzystania</string>
 	<string name="version">Wersja</string>
-	<string name="max_thumbnail_px_size">Domyślna szerokość obrazka</string>
 	<string name="image_alignment">Wyrównanie</string>
 	<string name="refresh">Odśwież</string>
 	<string name="untitled">Bez tytułu</string>
@@ -1404,9 +1414,6 @@ Language: pl
 	<string name="tags_separate_with_commas">Oddziel tagi przecinkami</string>
 	<string name="title">Tytuł</string>
 	<string name="dlg_deleting_comments">Usuwanie komentarzy</string>
-	<string name="notification_vibrate">Wibracja</string>
-	<string name="notification_sound">Dźwięk powiadomienia</string>
-	<string name="notification_blink">Mruganie diody LED</string>
 	<string name="sdcard_title">Wymagana karta pamięci SD</string>
 	<string name="media">Multimedia</string>
 	<string name="approve">Zaakceptuj</string>

@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-09-04 08:16:29+0000
+Translation-Revision-Date: 2017-09-27 08:54:33+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+	<string name="connect_site">Site koppelen</string>
+	<string name="notification_settings_item_sights_and_sounds_blink_light">Lamp laten knipperen</string>
+	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Apparaat laten trillen</string>
+	<string name="notification_settings_item_sights_and_sounds_choose_sound">Kies geluid</string>
+	<string name="notification_settings_category_sights_and_sounds">Beeld en geluid</string>
+	<string name="notification_settings_item_other_account_emails">E-mail van WordPress.com</string>
+	<string name="notification_settings_item_other_pending_drafts">Meldt me wanneer er concepten in behandeling zijn</string>
+	<string name="notification_settings_item_other_comments_other_blogs">Reacties op andere sites</string>
+	<string name="notification_settings_category_other">Andere</string>
+	<string name="notification_settings_item_your_sites_all_your_sites">Al mijn sites</string>
+	<string name="notification_settings_category_your_sites">Jouw sites</string>
+	<string name="notification_settings_master_off_message">Het uitschakelen van Meldingsinstellingen zal alle meldingen van deze app uitschakelen, ongeacht het type. Je kunt specificeren welke type notificaties je wilt ontvangen nadat je de Meldingsinstellingen hebt ingeschakeld.</string>
+	<string name="notification_settings_master_off_title">Om meldingen te ontvangen op dit apparaat, schakel de Meldingsinstellingen in.</string>
+	<string name="notification_settings_master_hint_off">Meldingen inschakelen</string>
+	<string name="notification_settings_master_hint_on">Meldingen uitschakelen</string>
+	<string name="notification_settings_master_status_off">Uit</string>
+	<string name="notification_settings_master_status_on">Aan</string>
+	<string name="max_video_resolution">Maximale video grootte</string>
+	<string name="max_thumbnail_px_size">Maximale afbeeldingsgrootte</string>
 	<string name="error_media_recover_post">We kunnen de media van dit bericht niet uploaden. Bewerk het bericht en probeer het opnieuw.</string>
 	<string name="error_page_does_not_exist">Deze pagina bestaat niet meer</string>
 	<string name="error_upload_post_media_param">Er is een fout opgetreden bij het uploaden van een media-bestand bij dit bericht: %s.</string>
@@ -41,7 +60,6 @@ Language: nl
 	<string name="post_queued">Bericht in wachtrij</string>
 	<string name="uploading_post">"%s" wordt geüpload</string>
 	<string name="connection_to_server_lost">De verbinding met de server is verbroken</string>
-	<string name="max_video_resolution">Maximale resolutie</string>
 	<string name="login_epilogue_mysites_other">Mijn sites</string>
 	<string name="login_epilogue_mysites_one">Mijn site</string>
 	<string name="login_logged_in_as">Ingelogd als</string>
@@ -331,9 +349,7 @@ Language: nl
 	<string name="jetpack_info">Jetpack info</string>
 	<string name="reader_photo_by">Foto van %s</string>
 	<string name="reader_label_visit">Bezoek</string>
-	<string name="all_your_sites">Al mijn sites</string>
 	<string name="pending_draft_more">Je hebt %d berichten als concept opgeslagen, maar ze nooit gepubliceerd. Tik om ze te controleren.</string>
-	<string name="notification_pending_drafts">Geef me een melding van openstaande concepten</string>
 	<string name="invalid_verification_code_format">Moet een zescijferig nummer zijn</string>
 	<string name="confirm_discard_changes">Niet-opgeslagen wijzigingen verwijderen?</string>
 	<string name="swipe_for_more">Veeg voor meer</string>
@@ -832,13 +848,8 @@ Language: nl
 	<string name="email">E-mailadres</string>
 	<string name="notifications_tab">Tabblad Meldingen</string>
 	<string name="app_notifications">Appmeldingen</string>
-	<string name="notifications_comments_other_blogs">Reacties op andere sites</string>
-	<string name="notifications_other">Anders</string>
 	<string name="notifications_wpcom_updates">Nieuws WordPress.com</string>
-	<string name="notifications_account_emails">E-mail van WordPress.com</string>
-	<string name="notifications_account_emails_summary">We sturen altijd belangrijke e-mails met betrekking tot je account, maar je kunt ook aanvullende nuttige berichten ontvangen.</string>
-	<string name="your_sites">Jouw sites</string>
-	<string name="notifications_sights_and_sounds">Beelden en geluiden</string>
+	<string name="notification_settings_item_other_account_emails_summary">We sturen altijd belangrijke e-mails met betrekking tot je account, maar je kunt ook aanvullende nuttige berichten ontvangen.</string>
 	<string name="stats_insights_latest_post_trend">Het is %1$s geleden sinds %2$s is gepubliceerd. Hier zie je hoe het bericht het tot nu toe heeft gedaan ...</string>
 	<string name="stats_insights_latest_post_summary">Samenvatting laatste bericht</string>
 	<string name="button_revert">Terugzetten</string>
@@ -1385,7 +1396,6 @@ Language: nl
 	<string name="app_title">WordPress voor Android</string>
 	<string name="tos">Eindgebruikersovereenkomst</string>
 	<string name="version">Versie</string>
-	<string name="max_thumbnail_px_size">Standaardbreedte van afbeelding</string>
 	<string name="image_alignment">Uitlijning </string>
 	<string name="refresh">Vernieuw</string>
 	<string name="untitled">Zonder titel</string>
@@ -1404,9 +1414,6 @@ Language: nl
 	<string name="tags_separate_with_commas">Scheid tags met komma\'s</string>
 	<string name="title">Titel</string>
 	<string name="dlg_deleting_comments">Reacties verwijderen</string>
-	<string name="notification_vibrate">Vibreren </string>
-	<string name="notification_sound">Meldingsgeluid</string>
-	<string name="notification_blink">Flikker het notificatie licht</string>
 	<string name="sdcard_title">SD kaart is vereist </string>
 	<string name="media">Media</string>
 	<string name="approve">Goedkeuren</string>

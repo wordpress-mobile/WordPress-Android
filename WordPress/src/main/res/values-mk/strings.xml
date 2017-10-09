@@ -437,8 +437,6 @@ Language: mk
 	<string name="upload_full_size_image">Качи на сервер и додај врска до оригиналната фотографија</string>
 	<string name="title">Наслов</string>
 	<string name="categories">Категории</string>
-	<string name="notification_blink">Известување со трепкачко светло</string>
-	<string name="notification_vibrate">Вибрирај</string>
 	<string name="sdcard_title">Потребна е SD картичка</string>
 	<string name="media">Мултимедија</string>
 	<string name="delete">Бриши</string>

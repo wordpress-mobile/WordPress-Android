@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -212,7 +213,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         mAztecReady = true;
 
-        AppCompatTextView titleBeta = (AppCompatTextView) view.findViewById(R.id.title_beta);
+        ImageButton titleBeta = (ImageButton) view.findViewById(R.id.title_beta);
         titleBeta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -804,7 +805,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendGallery(MediaGallery mediaGallery) {
-        ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
+        String shortcode = "[gallery %s=\"%s\" ids=\"%s\"]";
+        if (TextUtils.isEmpty(mediaGallery.getType())) {
+            shortcode = String.format(shortcode, "columns",
+                    mediaGallery.getNumColumns(),
+                    mediaGallery.getIdsStr());
+        } else {
+            shortcode = String.format(shortcode, "type",
+                    mediaGallery.getType(),
+                    mediaGallery.getIdsStr());
+        }
+        content.getText().insert(content.getSelectionEnd(), shortcode);
     }
 
     @Override

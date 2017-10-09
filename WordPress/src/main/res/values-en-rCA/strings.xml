@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-09-04 15:51:13+0000
+Translation-Revision-Date: 2017-09-28 21:38:00+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_CA
 -->
 <resources>
+	<string name="connect_site">Connect Site</string>
+	<string name="notification_settings_item_sights_and_sounds_blink_light">Blink light</string>
+	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate device</string>
+	<string name="notification_settings_item_sights_and_sounds_choose_sound">Choose sound</string>
+	<string name="notification_settings_category_sights_and_sounds">Sights and Sounds</string>
+	<string name="notification_settings_item_other_account_emails">Email from WordPress.com</string>
+	<string name="notification_settings_item_other_pending_drafts">Notify me on pending drafts</string>
+	<string name="notification_settings_item_other_comments_other_blogs">Comments on other sites</string>
+	<string name="notification_settings_category_other">Other</string>
+	<string name="notification_settings_item_your_sites_all_your_sites">All My Sites</string>
+	<string name="notification_settings_category_your_sites">Your Sites</string>
+	<string name="notification_settings_master_off_message">Turning Notification Settings off will disable all notifications from this app, regardless of type. You can fine-tune which kind of notification you receive after turning Notification Settings on.</string>
+	<string name="notification_settings_master_off_title">To receive notifications on this device, turn Notification Settings on.</string>
+	<string name="notification_settings_master_hint_off">Enable notifications</string>
+	<string name="notification_settings_master_hint_on">Disable notifications</string>
+	<string name="notification_settings_master_status_off">Off</string>
+	<string name="notification_settings_master_status_on">On</string>
+	<string name="max_video_resolution">Maximum Video Size</string>
+	<string name="max_thumbnail_px_size">Maximum Image Size</string>
 	<string name="error_media_recover_post">We were unable to upload this post\'s media. Please edit the post to try again.</string>
 	<string name="error_page_does_not_exist">This page no longer exists</string>
 	<string name="error_upload_post_media_param">There was an error uploading the media in this post: %s.</string>
@@ -41,7 +60,6 @@ Language: en_CA
 	<string name="post_queued">Queued post</string>
 	<string name="uploading_post">Uploading "%s"</string>
 	<string name="connection_to_server_lost">The connection to the server was lost</string>
-	<string name="max_video_resolution">Maximum Resolution</string>
 	<string name="login_epilogue_mysites_other">My sites</string>
 	<string name="login_epilogue_mysites_one">My site</string>
 	<string name="login_logged_in_as">Logged in as</string>
@@ -316,9 +334,9 @@ Language: en_CA
 	<string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs\n        that in order to communicate with your site. Contact your host to solve this problem.</string>
 	<string name="reader_empty_followed_blogs_search_title">No matching sites</string>
 	<string name="reader_hint_search_followed_sites">Search followed sites</string>
-	<string name="preference_editor_legacy">Legacy</string>
 	<string name="visual_editor_disabled">Visual Editor disabled</string>
 	<string name="preference_editor_visual">Visual</string>
+	<string name="preference_editor_legacy">Legacy</string>
 	<string name="preference_editor_type">Set editor type</string>
 	<string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
 	<string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
@@ -331,9 +349,7 @@ Language: en_CA
 	<string name="jetpack_info">Jetpack info</string>
 	<string name="reader_photo_by">Photo by %s</string>
 	<string name="reader_label_visit">Visit</string>
-	<string name="all_your_sites">All My Sites</string>
 	<string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
-	<string name="notification_pending_drafts">Notify me on pending drafts</string>
 	<string name="invalid_verification_code_format">Must be six-digit number</string>
 	<string name="confirm_discard_changes">Discard unsaved changes?</string>
 	<string name="swipe_for_more">Swipe for more</string>
@@ -832,13 +848,8 @@ Language: en_CA
 	<string name="app_notifications">App notifications</string>
 	<string name="notifications_tab">Notifications tab</string>
 	<string name="email">Email</string>
-	<string name="notifications_comments_other_blogs">Comments on other sites</string>
 	<string name="notifications_wpcom_updates">WordPress.com Updates</string>
-	<string name="notifications_other">Other</string>
-	<string name="notifications_account_emails">Email from WordPress.com</string>
-	<string name="notifications_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
-	<string name="notifications_sights_and_sounds">Sights and Sounds</string>
-	<string name="your_sites">Your Sites</string>
+	<string name="notification_settings_item_other_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
 	<string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
 	<string name="stats_insights_latest_post_summary">Latest Post Summary</string>
 	<string name="button_revert">Revert</string>
@@ -1385,7 +1396,6 @@ Language: en_CA
 	<string name="version">Version</string>
 	<string name="tos">Terms of Service</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="max_thumbnail_px_width">Default Image Width</string>
 	<string name="image_alignment">Alignment</string>
 	<string name="refresh">Refresh</string>
 	<string name="untitled">Untitled</string>
@@ -1404,9 +1414,6 @@ Language: en_CA
 	<string name="categories">Categories</string>
 	<string name="tags_separate_with_commas">Separate tags with commas</string>
 	<string name="dlg_deleting_comments">Deleting comments</string>
-	<string name="notification_blink">Blink notification light</string>
-	<string name="notification_vibrate">Vibrate</string>
-	<string name="notification_sound">Notification sound</string>
 	<string name="sdcard_title">SD Card Required</string>
 	<string name="media">Media</string>
 	<string name="delete">Delete</string>

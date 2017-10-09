@@ -21,7 +21,6 @@ Language: az
 	<string name="reader_short_comment_count_one">1 Şərh</string>
 	<string name="reader_short_like_count_multi">%s Bəyənmə</string>
 	<string name="email">E-poçt</string>
-	<string name="notifications_other">Digər</string>
 	<string name="days_ago">%d gün öncə</string>
 	<string name="connectionbar_no_connection">Qoşulma yoxdur</string>
 	<string name="page_trashed">Səhifəni zibil qutusuna göndər</string>
@@ -545,8 +544,6 @@ Language: az
 	<string name="upload_full_size_image">Yüklə və tam təsvirə bağlantı ver</string>
 	<string name="categories">Kateqoriyalar</string>
 	<string name="title">Başlıq</string>
-	<string name="notification_vibrate">Vibrasiya</string>
-	<string name="notification_blink">Məlumatlandırma işığını parlat</string>
 	<string name="sdcard_title">SD Kart Gərəkdir</string>
 	<string name="media">Media</string>
 	<string name="delete">Sil</string>
