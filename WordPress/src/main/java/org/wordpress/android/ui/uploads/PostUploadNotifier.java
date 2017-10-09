@@ -144,8 +144,8 @@ class PostUploadNotifier {
 //        doNotify(sPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
     }
 
-    void removePostInfoFromForegroundNotification(PostModel post) {
-        sNotificationData.totalPostItems--;
+    void incrementUploadedPostCountFromForegroundNotification(PostModel post) {
+        sNotificationData.currentPostItem++;
         if (post.isPage()) {
             sNotificationData.totalPageItemsIncludedInPostCount--;
         }
@@ -153,13 +153,14 @@ class PostUploadNotifier {
         // update Notification now
         updateForegroundNotification(post);
 
-        if (sNotificationData.totalPostItems == 0 && sNotificationData.totalMediaItems == 0) {
+        if (sNotificationData.totalPostItems == sNotificationData.currentPostItem
+                && sNotificationData.totalMediaItems == sNotificationData.currentMediaItem) {
             removeNotificationAndStopForegroundServiceIfNoItemsInQueue();
         }
     }
 
-    void removeMediaInfoFromProgressNotification(MediaModel media) {
-        sNotificationData.totalMediaItems--;
+    void incrementUploadedMediaCountFromProgressNotification() {
+        sNotificationData.currentMediaItem++;
 
         // update Notification now
         updateForegroundNotification(null);

@@ -193,7 +193,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             if (!pushActionWasDispatched) {
                 // This block only runs if the PUSH_POST action was never dispatched - if it was dispatched, any error
                 // will be handled in OnPostChanged instead of here
-                mPostUploadNotifier.removePostInfoFromForegroundNotification(mPost);
+                mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost);
                 mPostUploadNotifier.updateNotificationError(mPost, mSite, mErrorMessage);
                 finishUpload();
             }
@@ -560,10 +560,10 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
             mPostUploadNotifier.updateNotificationError(event.post, site, notificationMessage);
-            mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post);
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             sFirstPublishPosts.remove(event.post.getId());
         } else {
-            mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post);
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
             mPostUploadNotifier.updateNotificationSuccess(event.post, site, isFirstTimePublish);
             if (isFirstTimePublish) {
@@ -591,7 +591,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         }
 
         if (event.completed) {
-            mPostUploadNotifier.removeMediaInfoFromProgressNotification(event.media);
+            mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotification(event.media);
         }
 
         if (sUseLegacyMode) {
@@ -614,7 +614,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String errorMessage = UploadUtils.getErrorMessageFromMediaError(context, event.media, event.error);
             String notificationMessage =
                     UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage, true);
-            mPostUploadNotifier.removePostInfoFromForegroundNotification(sCurrentUploadingPost);
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(sCurrentUploadingPost);
             mPostUploadNotifier.updateNotificationError(sCurrentUploadingPost, site, notificationMessage);
             sFirstPublishPosts.remove(sCurrentUploadingPost.getId());
             finishUpload();
