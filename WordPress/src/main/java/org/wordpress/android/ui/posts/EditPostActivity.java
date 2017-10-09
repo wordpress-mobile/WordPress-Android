@@ -2279,22 +2279,21 @@ public class EditPostActivity extends AppCompatActivity implements
      * Starts the upload service to upload selected media.
      */
     private void startUploadService(MediaModel media) {
+        // make sure we only pass items with the QUEUED state to thee UploadService
+        if (!MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
+            return;
+        }
+
         final ArrayList<MediaModel> mediaList = new ArrayList<>();
-        if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
-            mediaList.add(media);
-        }
-
-        if (!mediaList.isEmpty()) {
-            // before starting the service, we need to update the posts' contents so we are sure the service
-            // can retrieve it from there on
-            savePostAsync(new AfterSavePostListener() {
-                @Override
-                public void onPostSave() {
-                    UploadService.uploadMedia(EditPostActivity.this, mediaList);
-                }
-            });
-
-        }
+        mediaList.add(media);
+        // before starting the service, we need to update the posts' contents so we are sure the service
+        // can retrieve it from there on
+        savePostAsync(new AfterSavePostListener() {
+            @Override
+            public void onPostSave() {
+                UploadService.uploadMedia(EditPostActivity.this, mediaList);
+            }
+        });
     }
 
     private String getVideoThumbnail(String videoPath) {
