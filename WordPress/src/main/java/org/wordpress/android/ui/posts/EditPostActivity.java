@@ -2279,7 +2279,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * Starts the upload service to upload selected media.
      */
     private void startUploadService(MediaModel media) {
-        // make sure we only pass items with the QUEUED state to thee UploadService
+        // make sure we only pass items with the QUEUED state to the UploadService
         if (!MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
             return;
         }
