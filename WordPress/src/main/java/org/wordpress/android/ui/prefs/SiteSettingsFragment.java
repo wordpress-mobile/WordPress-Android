@@ -491,6 +491,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                                 AppLog.v(AppLog.T.API, "Successfully disconnected Jetpack site");
                                 ToastUtils.showToast(getActivity(), R.string.jetpack_disconnect_success_toast);
                                 mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
+                                mSite = null;
                             }
                         }, new RestRequest.ErrorListener() {
                             @Override
