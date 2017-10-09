@@ -496,13 +496,7 @@ Language: es_VE
 	<string name="notifications_tab">Pestaña de avisos</string>
 	<string name="email">Correo electrónico</string>
 	<string name="app_notifications">Avisos de la aplicación</string>
-	<string name="notifications_comments_other_blogs">Comentarios en otros sitios</string>
-	<string name="notifications_other">Otras</string>
 	<string name="notifications_wpcom_updates">Actualizaciones de WordPress.com</string>
-	<string name="notifications_account_emails">Correo de WordPress.com</string>
-	<string name="notifications_account_emails_summary">Siempre mandamos correos electrónicos importantes relativos a tu cuenta, pero también obtendrás extras útiles.</string>
-	<string name="notifications_sights_and_sounds">Vistas y sonidos</string>
-	<string name="your_sites">Tus sitios</string>
 	<string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
 	<string name="stats_insights_latest_post_summary">Sumario de la última entrada</string>
 	<string name="button_revert">Volver</string>
@@ -1039,7 +1033,6 @@ Language: es_VE
 	<string name="version">Versión</string>
 	<string name="tos">Términos del servicio</string>
 	<string name="app_title">WordPress para Android</string>
-	<string name="max_thumbnail_px_size">Ancho predeterminado de la imagen </string>
 	<string name="image_alignment">Alineamiento</string>
 	<string name="refresh">Refrescar</string>
 	<string name="untitled">Sin Título</string>
@@ -1057,9 +1050,6 @@ Language: es_VE
 	<string name="title">Título</string>
 	<string name="categories">Categorías</string>
 	<string name="dlg_deleting_comments">Eliminando comentarios</string>
-	<string name="notification_blink">Notificación luminosa</string>
-	<string name="notification_vibrate">Vibrar</string>
-	<string name="notification_sound">Sonido de aviso</string>
 	<string name="sdcard_title">Requiere tarjeta SD</string>
 	<string name="media">Multimedia</string>
 	<string name="delete">Eliminar</string>

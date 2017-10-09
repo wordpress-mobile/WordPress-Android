@@ -144,8 +144,6 @@ Language: uz
 	<string name="upload_full_size_image">To‘liq hajmda rasm yuklash</string>
 	<string name="title">Sarlavha</string>
 	<string name="categories">Bo‘limlar</string>
-	<string name="notification_vibrate">Vibratsiya</string>
-	<string name="notification_blink">Yonib-o‘chuvchi xabar</string>
 	<string name="sdcard_title">SD karta kerak</string>
 	<string name="media">Media</string>
 	<string name="delete">O‘chir</string>

@@ -228,8 +228,6 @@ Language: hu
 	<string name="upload_full_size_image">Feltöltés és hivatkozás a teljes képhez</string>
 	<string name="categories">Kategóriák</string>
 	<string name="title">Címsor</string>
-	<string name="notification_blink">Figyelmeztető fényjelzés</string>
-	<string name="notification_vibrate">Rezgés</string>
 	<string name="sdcard_title">SD kártya szükséges</string>
 	<string name="media">Média</string>
 	<string name="delete">Törlés</string>

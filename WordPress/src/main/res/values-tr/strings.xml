@@ -41,7 +41,6 @@ Language: tr
 	<string name="post_queued">Gönderi kuyruğa alındı</string>
 	<string name="uploading_post">"%s" yükleniyor</string>
 	<string name="connection_to_server_lost">Sunucuyla bağlantı kesildi</string>
-	<string name="max_video_resolution">Azami çözünürlük</string>
 	<string name="login_epilogue_mysites_other">Sitelerim</string>
 	<string name="login_epilogue_mysites_one">Benim sitem</string>
 	<string name="login_logged_in_as">Giriş yapmış kullanıcı</string>
@@ -331,9 +330,7 @@ Language: tr
 	<string name="jetpack_info">Jetpack bilgisi</string>
 	<string name="reader_photo_by">%s tarafından çekilmiş fotoğraf</string>
 	<string name="reader_label_visit">Ziyaret et</string>
-	<string name="all_your_sites">Tüm sitelerim</string>
 	<string name="pending_draft_more">%d yazı taslağı hazırladınız, ancak yayımlamadınız. Kontrol etmek için dokunun.</string>
-	<string name="notification_pending_drafts">Bekleyen taslaklar hakkında beni bilgilendir</string>
 	<string name="invalid_verification_code_format">Altı haneli numara olmalı</string>
 	<string name="confirm_discard_changes">Kaydedilmemiş verilerden vazgeçilsin mi?</string>
 	<string name="swipe_for_more">Daha fazlası için parmağınızı kaydırın</string>
@@ -832,13 +829,7 @@ Language: tr
 	<string name="email">E-posta</string>
 	<string name="notifications_tab">Bildirimler sekmesi</string>
 	<string name="app_notifications">Uygulama bildirimleri</string>
-	<string name="notifications_comments_other_blogs">Diğer sitelerdeki yorumlar</string>
-	<string name="notifications_other">Diğer</string>
 	<string name="notifications_wpcom_updates">WordPress.com güncellemeleri</string>
-	<string name="notifications_account_emails">WordPress.com tarafından gönderilen e-posta</string>
-	<string name="notifications_account_emails_summary">Hesabınızla ilgili önemli e-postaları her zaman göndereceğiz, ayrıca bazı yardımcı içerikler de alabilirsiniz/</string>
-	<string name="your_sites">Siteleriniz</string>
-	<string name="notifications_sights_and_sounds">Görüntüler ve Sesler</string>
 	<string name="stats_insights_latest_post_trend">%2$s yayımlandığından beri %1$s geçti. İşte yazının bugüne kadarki performansı...</string>
 	<string name="stats_insights_latest_post_summary">Son yazılar özeti</string>
 	<string name="button_revert">Geri Çevir</string>
@@ -1385,7 +1376,6 @@ Language: tr
 	<string name="app_title">Android için WordPress</string>
 	<string name="tos">Hizmet Şartları</string>
 	<string name="version">Sürüm</string>
-	<string name="max_thumbnail_px_size">Varsayılan Görsel Genişliği</string>
 	<string name="image_alignment">Konumlandırma</string>
 	<string name="refresh">Yenile</string>
 	<string name="untitled">Başlıksız</string>
@@ -1404,9 +1394,6 @@ Language: tr
 	<string name="tags_separate_with_commas">Etiketleri virgül ile ayırın</string>
 	<string name="title">Başlık</string>
 	<string name="dlg_deleting_comments">Yorumlar siliniyor</string>
-	<string name="notification_vibrate">Titre</string>
-	<string name="notification_sound">Bilgilendirme sesi</string>
-	<string name="notification_blink">Bilgilendirme ışığını parlat</string>
 	<string name="sdcard_title">SD kart gerekli</string>
 	<string name="media">Ortam</string>
 	<string name="approve">Onayla</string>
