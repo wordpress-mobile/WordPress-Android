@@ -50,6 +50,31 @@ public class ThemeSqlUtils {
         return themes.size();
     }
 
+    public static void insertOrReplaceActiveThemeForSite(@NonNull SiteModel site, @NonNull ThemeModel theme) {
+        // find any existing active theme for the site and unset active flag
+        List<ThemeModel> existing = getActiveThemeForSite(site);
+        if (!existing.isEmpty()) {
+            for (ThemeModel activeTheme : existing) {
+                activeTheme.setActive(false);
+                WellSql.update(ThemeModel.class)
+                        .whereId(activeTheme.getId())
+                        .put(activeTheme).execute();
+            }
+        }
+
+        // make sure active flag is set then add to db
+        theme.setActive(true);
+        insertOrUpdateTheme(theme);
+    }
+
+    public static List<ThemeModel> getActiveThemeForSite(@NonNull SiteModel site) {
+        return WellSql.select(ThemeModel.class)
+                .where().beginGroup()
+                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(ThemeModelTable.ACTIVE, true)
+                .endGroup().endWhere().getAsModel();
+    }
+
     public static Cursor getThemesWithNoSiteAsCursor() {
         return WellSql.select(ThemeModel.class)
                 .where()
