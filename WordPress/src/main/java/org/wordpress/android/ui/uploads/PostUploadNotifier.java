@@ -51,8 +51,6 @@ class PostUploadNotifier {
         int totalPostItems;
         int totalPageItemsIncludedInPostCount;
         int currentPostItem;
-        float itemProgressSize;
-        Bitmap latestIcon;
     }
 
     PostUploadNotifier(Context context, UploadService service) {
