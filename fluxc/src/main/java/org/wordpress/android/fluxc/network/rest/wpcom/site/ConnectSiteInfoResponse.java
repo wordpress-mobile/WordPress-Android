@@ -8,5 +8,5 @@ public class ConnectSiteInfoResponse implements Response {
     public boolean hasJetpack;
     public boolean isJetpackActive;
     public boolean isJetpackConnected;
-    public boolean isWordPressDotCom;
+    public boolean isWordPressDotCom; // CHECKSTYLE IGNORE
 }
