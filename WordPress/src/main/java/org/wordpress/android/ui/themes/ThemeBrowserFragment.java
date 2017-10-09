@@ -158,7 +158,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     @Override
     public void onResume() {
         super.onResume();
-
         mThemeBrowserActivity.fetchCurrentTheme();
     }
 
@@ -227,7 +226,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         mCurrentThemeTextView = (TextView) header.findViewById(R.id.header_theme_text);
 
         setThemeNameIfAlreadyAvailable();
-        mThemeBrowserActivity.fetchCurrentTheme();
         LinearLayout customize = (LinearLayout) header.findViewById(R.id.customize);
         customize.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -18,6 +18,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     public static final String IS_CURRENT_THEME = "is_current_theme";
     public static final String IS_PREMIUM_THEME = "is_premium_theme";
     public static final String THEME_NAME = "theme_name";
+
     private static final String THEME_DOMAIN_PUBLIC = "pub";
     private static final String THEME_DOMAIN_PREMIUM = "premium";
     private static final String THEME_URL_PREVIEW = "%s/wp-admin/customize.php?theme=%s/%s&hide_close=true";
@@ -26,7 +27,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     private static final String THEME_URL_DEMO_PARAMETER = "demo=true&iframe=true&theme_preview=true";
     private static final String THEME_HTTPS_PREFIX = "https://";
 
-    public enum ThemeWebActivityType {
+    enum ThemeWebActivityType {
         PREVIEW,
         DEMO,
         DETAILS,
@@ -73,12 +74,10 @@ public class ThemeWebActivity extends WPWebViewActivity {
     private static void openWPCOMURL(Activity activity, String url, ThemeModel currentTheme, SiteModel site, Boolean
             isCurrentTheme) {
         if (activity == null) {
-            AppLog.e(AppLog.T.UTILS, "Context is null");
+            AppLog.e(AppLog.T.UTILS, "ThemeWebActivity requires a non-null activity");
             return;
-        }
-
-        if (TextUtils.isEmpty(url)) {
-            AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openWPCOMURL");
+        } else if (TextUtils.isEmpty(url)) {
+            AppLog.e(AppLog.T.UTILS, "ThemeWebActivity requires non-empty URL");
             ToastUtils.showToast(activity, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
             return;
         }
@@ -98,34 +97,27 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     public static String getUrl(SiteModel site, ThemeModel theme, ThemeWebActivityType type, boolean isPremium) {
-        String url = "";
         String homeURL = site.getUrl();
         String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
 
         switch (type) {
             case PREVIEW:
-                url = String.format(THEME_URL_PREVIEW, homeURL, domain, theme.getId());
-                break;
+                return String.format(THEME_URL_PREVIEW, homeURL, domain, theme.getId());
             case DEMO:
-                url = theme.getDemoUrl();
+                String url = theme.getDemoUrl();
                 if (url.contains("?")) {
-                    url = url + "&" + THEME_URL_DEMO_PARAMETER;
+                    return url + "&" + THEME_URL_DEMO_PARAMETER;
                 } else {
-                    url = url + "?" + THEME_URL_DEMO_PARAMETER;
+                    return url + "?" + THEME_URL_DEMO_PARAMETER;
                 }
-                break;
             case DETAILS:
                 String currentURL = homeURL.replaceFirst(THEME_HTTPS_PREFIX, "");
-                url = String.format(THEME_URL_DETAILS, currentURL, theme.getId());
-                break;
+                return String.format(THEME_URL_DETAILS, currentURL, theme.getId());
             case SUPPORT:
-                url = String.format(THEME_URL_SUPPORT, theme.getId());
-                break;
+                return String.format(THEME_URL_SUPPORT, theme.getId());
             default:
-                break;
+                return "";
         }
-
-        return url;
     }
 
     @Override

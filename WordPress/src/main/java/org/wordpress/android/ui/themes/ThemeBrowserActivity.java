@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.ThemeAction;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
@@ -87,7 +87,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         setContentView(R.layout.theme_browser_activity);
 
         if (savedInstanceState == null) {
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, mSite);
+            AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_ACCESSED_THEMES_BROWSER, mSite);
             mThemeBrowserFragment = ThemeBrowserFragment.newInstance(mSite);
             mThemeSearchFragment = ThemeSearchFragment.newInstance(mSite);
             addBrowserFragment();
@@ -188,7 +188,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @Override
     public void onSearchClicked() {
         mIsInSearchMode = true;
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, mSite);
+        AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_ACCESSED_SEARCH, mSite);
         addSearchFragment();
     }
 
@@ -279,7 +279,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
             Map<String, Object> themeProperties = new HashMap<>();
             themeProperties.put(THEME_ID, mCurrentTheme.getThemeId());
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_CHANGED_THEME, mSite, themeProperties);
+            AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_CHANGED_THEME, mSite, themeProperties);
 
             if (!isFinishing()) {
                 showAlertDialogOnNewSettingNewTheme(mCurrentTheme);
@@ -424,20 +424,16 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
                 switch (type) {
                     case PREVIEW:
-                        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE,
-                                mSite, themeProperties);
+                        AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_PREVIEWED_SITE, mSite, themeProperties);
                         break;
                     case DEMO:
-                        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_DEMO_ACCESSED,
-                                mSite, themeProperties);
+                        AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_DEMO_ACCESSED, mSite, themeProperties);
                         break;
                     case DETAILS:
-                        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_DETAILS_ACCESSED,
-                                mSite, themeProperties);
+                        AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_DETAILS_ACCESSED, mSite, themeProperties);
                         break;
                     case SUPPORT:
-                        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_SUPPORT_ACCESSED,
-                                mSite, themeProperties);
+                        AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_SUPPORT_ACCESSED, mSite, themeProperties);
                         break;
                 }
                 ThemeWebActivity.openTheme(this, mSite, themeId, type, isCurrentTheme);
