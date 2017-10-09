@@ -98,7 +98,6 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     public static final int RESULT_BLOG_REMOVED = Activity.RESULT_FIRST_USER;
 
-
     /**
      * Provides the regex to identify domain HTTP(S) protocol and/or 'www' sub-domain.
      *
@@ -491,7 +490,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                             public void onResponse(JSONObject response) {
                                 AppLog.v(AppLog.T.API, "Successfully disconnected Jetpack site");
                                 ToastUtils.showToast(getActivity(), R.string.jetpack_disconnect_success_toast);
-                                getActivity().finish();
+                                mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
                             }
                         }, new RestRequest.ErrorListener() {
                             @Override
