@@ -65,8 +65,12 @@ class PostUploadNotifier {
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
     }
 
-    void updateForegroundNotification(@Nullable PostModel post) {
+    private void updateForegroundNotification(@Nullable PostModel post) {
+        updateNotificationBuilder(post);
+        doNotify(sNotificationData.notificationId, mNotificationBuilder.build());
+    }
 
+    private void updateNotificationBuilder(@Nullable PostModel post) {
         // set the Notification's title and prepare the Notifications message text, i.e. "1/3 Posts, 4/17 media items"
         if (sNotificationData.totalMediaItems > 0 && sNotificationData.totalPostItems == 0) {
             // only media items are being uploaded
@@ -93,14 +97,18 @@ class PostUploadNotifier {
             // mixed content (Post/Pages and media) is being uploaded
             mNotificationBuilder.setContentTitle(buildNotificationTitleForMixedContent());
             mNotificationBuilder.setContentText(buildNotificationSubtitleForMixedContent());
-            //String pagesAndOrPosts = getPagesAndOrPostsString();
-
         }
+    }
 
+    private synchronized void startOrUpdateForegroundNotification(@Nullable PostModel post) {
+        updateNotificationBuilder(post);
         if (sNotificationData.notificationId == 0) {
             sNotificationData.notificationId = (new Random()).nextInt();
+            mService.startForeground(sNotificationData.notificationId, mNotificationBuilder.build());
+        } else {
+            // service was already started, let's just modify the notification
+            doNotify(sNotificationData.notificationId, mNotificationBuilder.build());
         }
-        mService.startForeground(sNotificationData.notificationId, mNotificationBuilder.build());
     }
 
     // Post could have initial media, or not (nulable)
@@ -112,29 +120,12 @@ class PostUploadNotifier {
         if (media != null) {
             addMediaInfoToForegroundNotification(media);
         }
-        updateForegroundNotification(post);
+        startOrUpdateForegroundNotification(post);
     }
 
     void addMediaInfoToForegroundNotification(@NonNull List<MediaModel> media) {
         sNotificationData.totalMediaItems += media.size();
-        updateForegroundNotification(null);
-    }
-
-    void showForegroundNotificationForMedia(@NonNull List<MediaModel> media, String message) {
-        if (media.isEmpty()) {
-            return;
-        }
-
-        mNotificationBuilder.setContentTitle(mContext.getString(R.string.uploading_media));
-        if (message != null) {
-            mNotificationBuilder.setContentText(message);
-        }
-        int notificationId = (new Random()).nextInt() + media.get(0).getId();
-
-        NotificationData notificationData = new NotificationData();
-        notificationData.notificationId = notificationId;
-        //sStandAloneMediaNotificationData.notificationId;
-        mService.startForeground(notificationId, mNotificationBuilder.build());
+        startOrUpdateForegroundNotification(null);
     }
 
     void updateNotificationIcon(PostModel post, Bitmap icon) {
@@ -147,25 +138,34 @@ class PostUploadNotifier {
         doNotify(sPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
     }
 
-    void removePostInfoFromNotification(PostModel post) {
+    void removePostInfoFromForegroundNotification(PostModel post) {
         sNotificationData.totalPostItems--;
         if (post.isPage()) {
             sNotificationData.totalPageItemsIncludedInPostCount--;
         }
 
+        // update Notification now
+        updateForegroundNotification(post);
+
         if (sNotificationData.totalPostItems == 0 && sNotificationData.totalMediaItems == 0) {
-            removeNotificationAndStopForegroundService();
+            removeNotificationAndStopForegroundServiceIfNoItemsInQueue();
         }
     }
 
-    void removeMediaInfoFromNotification(MediaModel media) {
+    void removeMediaInfoFromProgressNotification(MediaModel media) {
         sNotificationData.totalMediaItems--;
-        removeNotificationAndStopForegroundService();
+
+        // update Notification now
+        updateForegroundNotification(null);
+
+        removeNotificationAndStopForegroundServiceIfNoItemsInQueue();
     }
 
-    void removeNotificationAndStopForegroundService() {
+    void removeNotificationAndStopForegroundServiceIfNoItemsInQueue() {
         if (sNotificationData.totalPostItems == 0 && sNotificationData.totalMediaItems == 0) {
             mNotificationManager.cancel(sNotificationData.notificationId);
+            // reset the notification id so a new one is generated next time the service is started
+            sNotificationData.notificationId = 0;
             mService.stopForeground(true);
         }
     }

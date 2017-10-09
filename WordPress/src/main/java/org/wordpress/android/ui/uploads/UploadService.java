@@ -164,6 +164,7 @@ public class UploadService extends Service {
             for (MediaModel media : mediaList) {
                 mMediaUploadHandler.upload(media);
             }
+            mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaList);
         }
     }
 
@@ -473,7 +474,7 @@ public class UploadService extends Service {
         if (postToCancel == null) return;
 
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
-        mPostUploadNotifier.removePostInfoFromNotification(postToCancel);
+        mPostUploadNotifier.removePostInfoFromForegroundNotification(postToCancel);
 
         if (mUploadStore.isPendingPost(postToCancel) || mUploadStore.isCancelledPost(postToCancel)) {
             // Only show the media upload error notification if the post is registered in the UploadStore
