@@ -346,6 +346,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                             mediaItemCount++;
                             mPostUploadNotifier.setCurrentMediaItem(mPost, mediaItemCount);
                             mPostUploadNotifier.updateNotificationIcon(mPost, imageIcon);
+                            mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaModel);
 
                             String mediaUploadOutput;
                             if (mediaFile.isVideo()) {

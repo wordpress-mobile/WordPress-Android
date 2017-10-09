@@ -428,8 +428,8 @@
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content…</string>
     <string name="uploading_title">Uploading…</string>
-    <string name="uploading_subtitle_mixed">%1$d/%2$d %3s, %4$d/%5$d media items</string>
-    <string name="uploading_subtitle_posts_only">%1$d/%2$d %s</string>
+    <string name="uploading_subtitle_mixed">%1$d/%2$d %3$s, %4$d/%5$d media items</string>
+    <string name="uploading_subtitle_posts_only">%1$d/%2$d %3$s</string>
     <string name="uploading_subtitle_media_only">%1$d/%2$d media items</string>
     <string name="uploading_total">Uploading %1$d of %2$d</string>
     <string name="uploading_post_media">Uploading media…</string>
