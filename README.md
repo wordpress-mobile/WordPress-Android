@@ -8,22 +8,17 @@ it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.
 
 ## Build Instructions ##
 
-1. Install [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
-2. Install [Android Studio](https://developer.android.com/studio/index.html).
-3. Run Android Studio and do a "Standard setup"
-4. Clone this GitHub repository.
-5. Find the Android SDK path (in Android Studio under Preferences → Appearance → System Settings → Android SDK).
-6. Create a new `local.properties` file in your local repository containing `sdk.dir=ANDROID_SDK_PATH`, replacing `ANDROID_SDK_PATH` with your path from the previous point.
-7. Copy `gradle.properties-example` to `gradle.properties`.
-8. Run Android Studio.
-9. Import the project from the local repository as a Gradle project.
-9. Configure device with AVD Manager (Tools → Android → AVD Manager).
-10. Run.
+1. Make sure you've installed [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and [Android Studio](https://developer.android.com/studio/index.html), a _Standard Setup_ would work.
+2. Clone this GitHub repository.
+3. Create a new `local.properties` file in your local repository containing `sdk.dir=ANDROID_SDK_PATH`, replacing `ANDROID_SDK_PATH` with your local Android SDK path (in Android Studio under _Preferences → Appearance → System Settings → Android SDK_).
+4. Copy `gradle.properties-example` to `gradle.properties`.
+5. In Android Studio open the project from the local repository as a **Gradle project**.
+6. Make sure you have an emulation device setup in AVD Manager (_Tools → Android → AVD Manager_).
+7. Run.
 
 Notes:
 
-* To use WordPress.com features (login to WordPress.com, access Reader and Stats, etc) you need a WordPress.com OAuth2 ID and secret. Please read the
-[OAuth2 Authentication](#oauth2-authentication) section.
+* To use WordPress.com features (login to WordPress.com, access Reader and Stats, etc) you need a WordPress.com OAuth2 ID and secret. Please read the [OAuth2 Authentication](#oauth2-authentication) section.
 
 Once installed, you can now build, install and test the project from the command line:
 
