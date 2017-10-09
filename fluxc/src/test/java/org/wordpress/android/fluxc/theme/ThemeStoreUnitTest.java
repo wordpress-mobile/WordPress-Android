@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(RobolectricTestRunner.class)
 public class ThemeStoreUnitTest {
@@ -36,6 +37,32 @@ public class ThemeStoreUnitTest {
         WellSqlConfig config = new WellSqlConfig(appContext);
         WellSql.init(config);
         config.reset();
+    }
+
+    @Test
+    public void testActiveTheme() throws SiteSqlUtils.DuplicateSiteException {
+        final SiteModel site = SiteUtils.generateWPComSite();
+        SiteSqlUtils.insertOrUpdateSite(site);
+        assertNull(mThemeStore.getActiveThemeForSite(site));
+
+        final ThemeModel firstTheme = generateTestTheme(site.getId(), "first-active", "First Active");
+        final ThemeModel secondTheme = generateTestTheme(site.getId(), "second-active", "Second Active");
+        firstTheme.setActive(true);
+        secondTheme.setActive(true);
+
+        // set first theme active and verify
+        mThemeStore.setActiveThemeForSite(site, firstTheme);
+        ThemeModel firstStoreTheme = mThemeStore.getActiveThemeForSite(site);
+        assertNotNull(firstStoreTheme);
+        assertEquals(firstTheme.getThemeId(), firstStoreTheme.getThemeId());
+        assertEquals(firstTheme.getName(), firstStoreTheme.getName());
+
+        // set second theme active and verify
+        mThemeStore.setActiveThemeForSite(site, secondTheme);
+        ThemeModel secondStoreTheme = mThemeStore.getActiveThemeForSite(site);
+        assertNotNull(secondStoreTheme);
+        assertEquals(secondTheme.getThemeId(), secondStoreTheme.getThemeId());
+        assertEquals(secondTheme.getName(), secondStoreTheme.getName());
     }
 
     @Test
