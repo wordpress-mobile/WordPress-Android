@@ -6,6 +6,10 @@ AVD=Nexus_5X_API_25_SCREENSHOTS
 
 WORKING_DIR=./autoscreenshot
 
+DEVICES=(PHONE) #TAB7 TAB10)
+LOCALES=(en-US el-GR it-IT)
+SCREENS=(MYSITE READER NOTIFS)
+
 GEEKY_TIME='0830'
 
 FONT_DIR=noto
@@ -272,16 +276,13 @@ start_app
 
 kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
 
-for device in PHONE #TAB7 TAB10
-do
-  for loc in en-US el-GR it-IT
-  do
+for device in ${DEVICES[*]}; do
+  for loc in ${LOCALES[*]}; do
     locale $loc
 
     start_app
 
-    for screen in MYSITE READER NOTIFS
-    do
+    for screen in ${SCREENS[*]}; do
       coords=COORDS_$screen
       tap_on ${!coords}
 
