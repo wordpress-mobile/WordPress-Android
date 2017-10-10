@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.provider.ContactsContract;
@@ -49,6 +50,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -72,6 +74,7 @@ import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -94,7 +97,6 @@ public class SiteSettingsFragment extends PreferenceFragment
      * is set to this value and {@link Activity#finish()} is invoked.
      */
     public static final int RESULT_BLOG_REMOVED = Activity.RESULT_FIRST_USER;
-
 
     /**
      * Provides the regex to identify domain HTTP(S) protocol and/or 'www' sub-domain.
@@ -248,6 +250,22 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     public void addPreferencesFromResource() {
         addPreferencesFromResource(R.xml.site_settings);
+
+        // add Disconnect option for Jetpack sites when running a debug build
+        if (shouldShowDisconnect()) {
+            PreferenceCategory parent = (PreferenceCategory) findPreference(getString(R.string.pref_key_site_discussion));
+            Preference disconnectPref = new Preference(getActivity());
+            disconnectPref.setTitle(getString(R.string.jetpack_disconnect_pref_title));
+            disconnectPref.setKey(getString(R.string.pref_key_site_disconnect));
+            disconnectPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    disconnectFromJetpack();
+                    return true;
+                }
+            });
+            parent.addPreference(disconnectPref);
+        }
     }
 
     @Override
@@ -458,6 +476,34 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return true;
+    }
+
+    private void disconnectFromJetpack() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.jetpack_disconnect_confirmation_message);
+        builder.setPositiveButton(R.string.jetpack_disconnect_confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String url = String.format(Locale.US, "jetpack-blogs/%d/mine/delete", mSite.getSiteId());
+                        WordPress.getRestClientUtilsV1_1().post(url, new RestRequest.Listener() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                AppLog.v(AppLog.T.API, "Successfully disconnected Jetpack site");
+                                ToastUtils.showToast(getActivity(), R.string.jetpack_disconnect_success_toast);
+                                mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
+                                mSite = null;
+                            }
+                        }, new RestRequest.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                AppLog.e(AppLog.T.API, "Error disconnecting Jetpack site");
+                                ToastUtils.showToast(getActivity(), R.string.jetpack_disconnect_error_toast);
+                            }
+                        });
+                    }
+                });
+        builder.setNegativeButton(android.R.string.cancel, null);
+        builder.show();
     }
 
     @Override
@@ -1440,5 +1486,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             );
             return true;
         }
+    }
+
+    /** Show Disconnect button for development purposes. Only available in debug builds on Jetpack sites. */
+    private boolean shouldShowDisconnect() {
+        return BuildConfig.DEBUG && mSite.isJetpackConnected() && mSite.isUsingWpComRestApi();
     }
 }
