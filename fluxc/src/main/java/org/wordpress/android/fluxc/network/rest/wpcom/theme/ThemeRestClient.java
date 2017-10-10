@@ -54,6 +54,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     public void onResponse(ThemeJetpackResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to Jetpack theme deletion request.");
                         ThemeModel responseTheme = createThemeFromJetpackResponse(response);
+                        responseTheme.setId(theme.getId());
                         ActivateThemePayload payload = new ActivateThemePayload(site, responseTheme);
                         mDispatcher.dispatch(ThemeActionBuilder.newDeletedThemeAction(payload));
                     }
