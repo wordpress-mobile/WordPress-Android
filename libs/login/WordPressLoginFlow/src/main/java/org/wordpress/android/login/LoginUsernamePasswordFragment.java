@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login;
+package org.wordpress.android.login;
 
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -17,26 +17,20 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.login.LoginBaseFormFragment;
-import org.wordpress.android.login.LoginListener;
+import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 
@@ -118,8 +112,9 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         rootView.findViewById(R.id.login_blavatar).setVisibility(mIsWpcom ? View.VISIBLE : View.GONE);
 
         if (mSiteIconUrl != null) {
-            ((WPNetworkImageView) rootView.findViewById(R.id.login_blavatar)).setImageUrl(mSiteIconUrl,
-                    WPNetworkImageView.ImageType.BLAVATAR);
+            // TODO Restore Gravatar loading
+//            ((WPNetworkImageView) rootView.findViewById(R.id.login_blavatar)).setImageUrl(mSiteIconUrl,
+//                    WPNetworkImageView.ImageType.BLAVATAR);
         }
 
         TextView siteNameView = ((TextView) rootView.findViewById(R.id.login_site_title));
@@ -189,7 +184,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        mLoginListener.inject(this);
 
         mInputSiteAddress = getArguments().getString(ARG_INPUT_SITE_ADDRESS);
         mEndpointAddress = getArguments().getString(ARG_ENDPOINT_ADDRESS);
@@ -382,7 +377,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
     @Override
     protected void onLoginFinished() {
-        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+        mLoginListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
 
         mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }
@@ -431,7 +426,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         // continue with success, even if the operation was cancelled since the user got logged in regardless. So, go on
         //  with finishing the login process
 
-        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+        mLoginListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
 
         mLoginListener.startPostLoginServices();
 
