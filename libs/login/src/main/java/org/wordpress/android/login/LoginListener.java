@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 
@@ -12,6 +13,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public interface LoginListener {
+    interface SelfSignedSSLCallback {
+        void certificateTrusted();
+    }
+
     LoginMode getLoginMode();
 
     // Login Prologue callbacks
@@ -45,6 +50,7 @@ public interface LoginListener {
     void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds);
     void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl);
     void gotXmlRpcEndpoint(String inputSiteAddress, String endpointAddress);
+    void handleSslCertificateError(MemorizingTrustManager memorizingTrustManager, SelfSignedSSLCallback callback);
     void helpSiteAddress(String url);
     void helpFindingSiteAddress(String username, SiteStore siteStore);
 
