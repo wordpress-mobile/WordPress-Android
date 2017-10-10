@@ -60,6 +60,15 @@
     <string name="logging_in">Logging in</string>
     <string name="forgot_password">Lost your password?</string>
     <string name="error_generic">An error occurred</string>
+    <string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this
+        address. Check the site address (URL) you entered.</string>
+    <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
+    <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
+    <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs
+        that in order to communicate with your site. Contact your host to solve this problem.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
+        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
+        this problem.</string>
 
     <!-- HTTP Authentication -->
     <string name="http_authorization_required">Authorization required</string>

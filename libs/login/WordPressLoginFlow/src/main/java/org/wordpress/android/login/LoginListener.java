@@ -79,6 +79,7 @@ public interface LoginListener {
     void inject(Login2FaFragment object);
     void inject(LoginEmailFragment object);
     void inject(LoginEmailPasswordFragment object);
+    void inject(LoginSiteAddressFragment object);
     void inject(LoginSiteAddressHelpDialogFragment object);
     void inject(LoginUsernamePasswordFragment object);
 }
