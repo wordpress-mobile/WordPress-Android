@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.themes;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
@@ -52,7 +53,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         return fragment;
     }
 
-    public interface ThemeBrowserFragmentCallback {
+    interface ThemeBrowserFragmentCallback {
         void onActivateSelected(String themeId);
         void onTryAndCustomizeSelected(String themeId);
         void onViewSelected(String themeId);
@@ -170,8 +171,49 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
-    public TextView getEmptyTextView() {
-        return mEmptyTextView;
+    @Override
+    public void onMovedToScrapHeap(View view) {
+        // cancel image fetch requests if the view has been moved to recycler.
+        WPNetworkImageView niv = (WPNetworkImageView) view.findViewById(R.id.theme_grid_item_image);
+        if (niv != null) {
+            // this tag is set in the ThemeBrowserAdapter class
+            String requestUrl = (String) niv.getTag();
+            if (requestUrl != null) {
+                // need a listener to cancel request, even if the listener does nothing
+                ImageContainer container = WordPress.sImageLoader.get(requestUrl, new ImageListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+
+                    @Override
+                    public void onResponse(ImageContainer response, boolean isImmediate) {
+                    }
+                });
+                container.cancelRequest();
+            }
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (mSpinner != null) {
+            refreshView(position);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount) && NetworkUtils.isNetworkAvailable(getActivity())) {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     public TextView getCurrentThemeTextView() {
@@ -222,6 +264,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     private void addMainHeader(LayoutInflater inflater) {
+        @SuppressLint("InflateParams")
         View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
         mCurrentThemeTextView = (TextView) header.findViewById(R.id.header_theme_text);
 
@@ -271,6 +314,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     private void configureAndAddSearchHeader(LayoutInflater inflater) {
+        @SuppressLint("InflateParams")
         View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
         headerSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -319,7 +363,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
             return null;
         }
 
-        String blogId = String.valueOf(mSite.getSiteId());
         switch (position) {
             case THEME_FILTER_PREMIUM_INDEX:
                 return null;
@@ -362,52 +405,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
             return mSpinner.getSelectedItemPosition();
         } else {
             return 0;
-        }
-    }
-
-    @Override
-    public void onMovedToScrapHeap(View view) {
-        // cancel image fetch requests if the view has been moved to recycler.
-        WPNetworkImageView niv = (WPNetworkImageView) view.findViewById(R.id.theme_grid_item_image);
-        if (niv != null) {
-            // this tag is set in the ThemeBrowserAdapter class
-            String requestUrl = (String) niv.getTag();
-            if (requestUrl != null) {
-                // need a listener to cancel request, even if the listener does nothing
-                ImageContainer container = WordPress.sImageLoader.get(requestUrl, new ImageListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-
-                    @Override
-                    public void onResponse(ImageContainer response, boolean isImmediate) {
-                    }
-
-                });
-                container.cancelRequest();
-            }
-        }
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (mSpinner != null) {
-            refreshView(position);
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount) && NetworkUtils.isNetworkAvailable(getActivity())) {
-            mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 }
