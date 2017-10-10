@@ -18,7 +18,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.AccountModel;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.login.util.ViewUtils;
 import org.wordpress.android.ui.main.SitePickerAdapter;
@@ -28,8 +27,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
-
-import javax.inject.Inject;
 
 public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueListener> {
     public static final String TAG = "login_epilogue_fragment_tag";
@@ -42,8 +39,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     private View mBottomShadow;
     private View mBottomButtonsContainer;
     private Button mConnectMore;
-
-    @Inject AccountStore mAccountStore;
 
     private SitePickerAdapter mAdapter;
     private boolean mDoLoginUpdate;
