@@ -578,7 +578,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void showMediaSettings(@NonNull MediaModel media, View sourceView) {
-        MediaSettingsActivity.showForResult(this, mSite, media, sourceView);
+        List<MediaModel> mediaList = mMediaGridFragment.getFilteredMedia();
+        ArrayList<String> idList = new ArrayList<>();
+        for (MediaModel thisMedia: mediaList) {
+            idList.add(Integer.toString(thisMedia.getId()));
+        }
+        MediaSettingsActivity.showForResult(this, mSite, media, idList, sourceView);
     }
 
     @Override
