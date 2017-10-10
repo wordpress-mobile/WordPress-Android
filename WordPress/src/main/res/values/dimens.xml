@@ -26,6 +26,10 @@
     <dimen name="tabs_elevation">4dp</dimen>
 
     <dimen name="media_grid_progress_height">24dp</dimen>
+    <dimen name="media_settings_margin_normal">@dimen/margin_extra_large</dimen>
+    <dimen name="media_settings_margin_tablet">48dp</dimen>
+    <dimen name="media_settings_margin_tablet_large">96dp</dimen>
+    <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
 
     <dimen name="theme_details_fragment_width">650dp</dimen>
     <dimen name="theme_details_fragment_height">450dp</dimen>

@@ -191,13 +191,7 @@ Language: th
 	<string name="app_notifications">การเตือนแอพ</string>
 	<string name="notifications_tab">แทบการเตือน</string>
 	<string name="email">อีเมล</string>
-	<string name="notifications_comments_other_blogs">ความเห็นบนเว็บอื่น</string>
 	<string name="notifications_wpcom_updates">การอัปเดตของ WordPress.com</string>
-	<string name="notifications_other">อื่น ๆ</string>
-	<string name="notifications_account_emails">อีเมลจาก WordPress.com</string>
-	<string name="notifications_account_emails_summary">เรามักจะส่งอีเมล์ที่สำคัญไปยังอีเมล์ของคุณเสมอ  แต่คุณสามารถได้อีเมล์ที่มีประโยชน์เพิ่มได้เหมือนกัน</string>
-	<string name="your_sites">เว็บของคุณ</string>
-	<string name="notifications_sights_and_sounds">แบบมองเห็นและเสียง</string>
 	<string name="stats_insights_latest_post_trend">มันเป็นเวลา %1$s ตั้งแต่ %2$s ได้เผยแพร่  นี่เป็นวิธีที่เรื่องจะถูกแสดงจนถึงตอนนี้…</string>
 	<string name="stats_insights_latest_post_summary">สรุปเรื่องล่าสุด</string>
 	<string name="button_revert">คืนกลับ</string>
@@ -734,7 +728,6 @@ Language: th
 	<string name="version">รุ่น</string>
 	<string name="tos">เงื่อนไขบริการ</string>
 	<string name="app_title">เวิร์ดเพรสสำหรับแอนดรอยด์</string>
-	<string name="max_thumbnail_px_width">ความกว้างรูปค่าเริ่มต้น</string>
 	<string name="image_alignment">จัดหน้า</string>
 	<string name="refresh">รีเฟรช</string>
 	<string name="untitled">ไม่มีหัวข้อ</string>
@@ -752,9 +745,6 @@ Language: th
 	<string name="title">หัวข้อ</string>
 	<string name="categories">หมวดหมู่</string>
 	<string name="dlg_deleting_comments">กำลังลบความเห็น</string>
-	<string name="notification_vibrate">สั่น</string>
-	<string name="notification_blink">เปิดไฟกระพริบการแจ้งเตือน</string>
-	<string name="notification_sound">เสียงการแจ้งเตือน </string>
 	<string name="sdcard_title">ต้องการ SD Card</string>
 	<string name="media">ไฟล์สื่อ</string>
 	<string name="delete">ลบ</string>

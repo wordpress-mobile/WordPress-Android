@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-09-03 12:48:19+0000
+Translation-Revision-Date: 2017-09-28 06:41:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+	<string name="connect_site">Conectar el sitio</string>
+	<string name="notification_settings_item_sights_and_sounds_blink_light">Luz parpadeante</string>
+	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibración del dispositivo</string>
+	<string name="notification_settings_item_sights_and_sounds_choose_sound">Elige sonido</string>
+	<string name="notification_settings_category_sights_and_sounds">Vistas y sonidos</string>
+	<string name="notification_settings_item_other_account_emails">Correo electrónico de WordPress.com</string>
+	<string name="notification_settings_item_other_pending_drafts">Avísame de borradores pendientes</string>
+	<string name="notification_settings_item_other_comments_other_blogs">Comentarios en otros sitios</string>
+	<string name="notification_settings_category_other">Otros</string>
+	<string name="notification_settings_item_your_sites_all_your_sites">Todos mis sitios</string>
+	<string name="notification_settings_category_your_sites">Tus sitios</string>
+	<string name="notification_settings_master_off_message">Desactivando los ajustes de avisos desactivará todos los avisos de esta aplicación, da igual el tipo. Puedes ajustar al detalle que tipo de aviso recibir tras activar los ajustes de avisos.</string>
+	<string name="notification_settings_master_off_title">Para recibir avisos en este dispositivo activa los ajustes de avisos.</string>
+	<string name="notification_settings_master_hint_off">Activar avisos</string>
+	<string name="notification_settings_master_hint_on">Desactivar avisos</string>
+	<string name="notification_settings_master_status_off">Inactivos</string>
+	<string name="notification_settings_master_status_on">Activos</string>
+	<string name="max_video_resolution">Tamaño máximo de vídeo</string>
+	<string name="max_thumbnail_px_size">Tamaño máximo de imagen</string>
 	<string name="error_media_recover_post">No nos fue posible subir los medios a esta entrada. Por favor, edita la entrada e inténtalo de nuevo.</string>
 	<string name="error_page_does_not_exist">Esta página ya no existe</string>
 	<string name="error_upload_post_media_param">Hubo un error al subir los medios a esta entrada: %s.</string>
@@ -41,7 +60,6 @@ Language: es
 	<string name="post_queued">Entrada a la espera</string>
 	<string name="uploading_post">Subiendo "%s"</string>
 	<string name="connection_to_server_lost">Se ha perdido la conexión al servidor</string>
-	<string name="max_video_resolution">Resolución máxima</string>
 	<string name="login_epilogue_mysites_other">Mis sitios</string>
 	<string name="login_epilogue_mysites_one">Mi sitio</string>
 	<string name="login_logged_in_as">Conectado como</string>
@@ -331,9 +349,7 @@ Language: es
 	<string name="jetpack_info">Información de Jetpack</string>
 	<string name="reader_photo_by">Foto de %s</string>
 	<string name="reader_label_visit">Visitar</string>
-	<string name="all_your_sites">Todos mis sitios</string>
 	<string name="pending_draft_more">Escribiste %d borradores de entradas, pero nunca las publicaste. Pulsa para revisarlas.</string>
-	<string name="notification_pending_drafts">Notifícame cuando tenga borradores pendientes</string>
 	<string name="invalid_verification_code_format">Debe ser un número de seis dígitos</string>
 	<string name="confirm_discard_changes">Descartar cambios no guardados?</string>
 	<string name="swipe_for_more">Deslizar para ver más</string>
@@ -832,13 +848,8 @@ Language: es
 	<string name="email">Correo electrónico</string>
 	<string name="notifications_tab">Pestaña de avisos</string>
 	<string name="app_notifications">Avisos de la aplicación</string>
-	<string name="notifications_comments_other_blogs">Comentarios en otros sitios</string>
-	<string name="notifications_other">Otras</string>
 	<string name="notifications_wpcom_updates">Actualizaciones de WordPress.com</string>
-	<string name="notifications_account_emails">Correo de WordPress.com</string>
-	<string name="notifications_account_emails_summary">Siempre mandamos correos electrónicos importantes relativos a tu cuenta, pero también obtendrás extras útiles.</string>
-	<string name="your_sites">Tus sitios</string>
-	<string name="notifications_sights_and_sounds">Vistas y sonidos</string>
+	<string name="notification_settings_item_other_account_emails_summary">Siempre mandamos correos electrónicos importantes relativos a tu cuenta, pero también obtendrás extras útiles.</string>
 	<string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
 	<string name="stats_insights_latest_post_summary">Sumario de la última entrada</string>
 	<string name="button_revert">Volver</string>
@@ -1385,7 +1396,6 @@ Language: es
 	<string name="app_title">WordPress para Android</string>
 	<string name="tos">Términos del servicio</string>
 	<string name="version">Versión</string>
-	<string name="max_thumbnail_px_size">Ancho predeterminado de la imagen </string>
 	<string name="image_alignment">Alineamiento</string>
 	<string name="refresh">Refrescar</string>
 	<string name="untitled">Sin Título</string>
@@ -1404,9 +1414,6 @@ Language: es
 	<string name="tags_separate_with_commas">Separa las etiquetas con comas</string>
 	<string name="title">Título</string>
 	<string name="dlg_deleting_comments">Eliminando comentarios</string>
-	<string name="notification_vibrate">Vibrar</string>
-	<string name="notification_sound">Sonido de aviso</string>
-	<string name="notification_blink">Notificación luminosa</string>
 	<string name="sdcard_title">Requiere tarjeta SD</string>
 	<string name="media">Multimedia</string>
 	<string name="approve">Aprobar</string>

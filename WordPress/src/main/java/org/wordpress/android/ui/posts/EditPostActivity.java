@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -102,7 +103,6 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
-import org.wordpress.android.ui.uploads.MediaUploadHandler;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
@@ -146,6 +146,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -436,11 +437,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         String newContent = AztecEditorFragment.resetUploadingMediaToFailed(this, oldContent);
 
-        // now check if the newcontent still has items marked as failed. If it does,
-        // then hook this post up to our error list, so it can be queried by the Posts List later
-        // and be shown properly to the user
-        updateUploadServiceErrorForPost(newContent);
-
         if (!TextUtils.isEmpty(oldContent) && newContent != null && oldContent.compareTo(newContent) != 0) {
             mPost.setContent(newContent);
 
@@ -451,15 +447,6 @@ public class EditPostActivity extends AppCompatActivity implements
             mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
     }
-
-    private void updateUploadServiceErrorForPost(String postContent) {
-        if (AztecEditorFragment.hasMediaItemsMarkedFailed(this, postContent)) {
-            UploadService.markPostAsError(mPost);
-        } else {
-            UploadService.removeUploadErrorForPost(mPost);
-        }
-    }
-
 
     private Runnable mAutoSave = new Runnable() {
         @Override
@@ -494,12 +481,12 @@ public class EditPostActivity extends AppCompatActivity implements
             // UploadService.getPendingMediaForPost will be populated only when the user exits the editor
             // But if the user doesn't exit the editor and sends the app to the background, a reattachment
             // for the media within this Post is needed as soon as the app comes back to foreground,
-            // so we get the list of progressing media for this Post from the MediaUploadHandler
+            // so we get the list of progressing media for this Post from the UploadService
             List<MediaModel> allUploadingMediaInPost = new ArrayList<>();
-            List<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
+            Set<MediaModel> uploadingMediaInPost = UploadService.getPendingMediaForPost(mPost);
             allUploadingMediaInPost.addAll(uploadingMediaInPost);
             // add them to the array only if they are not in there yet
-            for (MediaModel media1 : MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(mPost)) {
+            for (MediaModel media1 : UploadService.getPendingOrInProgressMediaUploadsForPost(mPost)) {
                 boolean found = false;
                 for (MediaModel media2 : uploadingMediaInPost) {
                     if (media1.getId() == media2.getId()) {
@@ -1059,8 +1046,20 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditorFragment instanceof AztecEditorFragment) {
             AztecEditorFragment aztecEditorFragment = (AztecEditorFragment)mEditorFragment;
             aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
-            aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext()));
-            aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext()));
+
+            Drawable loadingImagePlaceholder = getResources().getDrawable(org.wordpress.android.editor.R.drawable.ic_gridicons_image);
+            loadingImagePlaceholder.setBounds(0, 0,
+                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
+                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+            aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext(), loadingImagePlaceholder));
+            aztecEditorFragment.setLoadingImagePlaceholder(loadingImagePlaceholder);
+
+            Drawable loadingVideoPlaceholder = getResources().getDrawable(org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera);
+            loadingVideoPlaceholder.setBounds(0, 0,
+                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
+                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+            aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
+            aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);
         }
     }
 
@@ -1316,7 +1315,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 saveResult(shouldSave && shouldSync, false);
 
                 definitelyDeleteBackspaceDeletedMediaItems();
-                updateUploadServiceErrorForPost(mPost.getContent());
 
                 if (shouldSave) {
                     if (isNewPost()) {

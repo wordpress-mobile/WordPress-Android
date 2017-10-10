@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -142,6 +143,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private EditorBetaClickListener mEditorBetaClickListener;
 
+    private Drawable loadingImagePlaceholder;
+    private Drawable loadingVideoPlaceholder;
+
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -209,7 +213,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         mAztecReady = true;
 
-        AppCompatTextView titleBeta = (AppCompatTextView) view.findViewById(R.id.title_beta);
+        ImageButton titleBeta = (ImageButton) view.findViewById(R.id.title_beta);
         titleBeta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -673,24 +677,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         final int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            // We're download the image/video from the network. Show the placeholder immediately since it could require time.
-            final Drawable placeholder;
-            if(mediaFile.isVideo()) {
-                placeholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
-            } else {
-                placeholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
-            }
-            placeholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+
 
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
             setAttributeValuesIfNotDefault(attributes, mediaFile);
             if(mediaFile.isVideo()) {
                 addVideoUploadingClassIfMissing(attributes);
-                content.insertVideo(placeholder, attributes);
+                content.insertVideo(getLoadingVideoPlaceholder(), attributes);
                 overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
             } else {
-                content.insertImage(placeholder, attributes);
+                content.insertImage(getLoadingImagePlaceholder(), attributes);
             }
 
             final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
@@ -808,7 +805,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendGallery(MediaGallery mediaGallery) {
-        ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
+        String shortcode = "[gallery %s=\"%s\" ids=\"%s\"]";
+        if (TextUtils.isEmpty(mediaGallery.getType())) {
+            shortcode = String.format(shortcode, "columns",
+                    mediaGallery.getNumColumns(),
+                    mediaGallery.getIdsStr());
+        } else {
+            shortcode = String.format(shortcode, "type",
+                    mediaGallery.getType(),
+                    mediaGallery.getIdsStr());
+        }
+        content.getText().insert(content.getSelectionEnd(), shortcode);
     }
 
     @Override
@@ -868,7 +875,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
-            AppLog.e(T.MEDIA, "onMediaUploadSucceeded - Remote URL: " + remoteUrl + ", Filename: "
+            AppLog.i(T.MEDIA, "onMediaUploadSucceeded - Remote URL: " + remoteUrl + ", Filename: "
                     + mediaFile.getFileName());
 
             // we still need to refresh the screen visually, no matter whether the service already
@@ -1748,5 +1755,35 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         plugins.add(new VideoShortcodePlugin());
         plugins.add(new AudioShortcodePlugin());
         return new AztecParser(plugins);
+    }
+
+    private Drawable getLoadingImagePlaceholder() {
+        if (loadingImagePlaceholder != null) {
+            return  loadingImagePlaceholder;
+        }
+
+        // Use default loading placeholder if none was set by the host activity
+        Drawable defaultLoadingImagePlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
+        defaultLoadingImagePlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+        return defaultLoadingImagePlaceholder;
+    }
+
+    private Drawable getLoadingVideoPlaceholder() {
+        if (loadingVideoPlaceholder != null) {
+            return  loadingVideoPlaceholder;
+        }
+
+        // Use default loading placeholder if none was set by the host activity
+        Drawable defaultLoadingImagePlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
+        defaultLoadingImagePlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+        return defaultLoadingImagePlaceholder;
+    }
+
+    public void setLoadingImagePlaceholder(Drawable loadingImagePlaceholder) {
+        this.loadingImagePlaceholder = loadingImagePlaceholder;
+    }
+
+    public void setLoadingVideoPlaceholder(Drawable loadingVideoPlaceholder) {
+        this.loadingVideoPlaceholder = loadingVideoPlaceholder;
     }
 }

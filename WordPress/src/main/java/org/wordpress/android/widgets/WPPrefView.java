@@ -167,6 +167,21 @@ public class WPPrefView extends LinearLayout implements
         }
     }
 
+   /*
+   * Wrapper that will allow us to preserve type of PrefListItems when serializing it
+   */
+    public static class PrefListItemsWrapper implements Serializable {
+        private PrefListItems mList;
+
+        public PrefListItems getList() {
+            return mList;
+        }
+
+        PrefListItemsWrapper(PrefListItems mList) {
+            this.mList = mList;
+        }
+    }
+
     public WPPrefView(Context context) {
         super(context);
         initView(context, null);
@@ -229,7 +244,7 @@ public class WPPrefView extends LinearLayout implements
     @Override
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(KEY_LIST_ITEMS, mListItems);
+        bundle.putSerializable(KEY_LIST_ITEMS, new PrefListItemsWrapper(mListItems));
         bundle.putParcelable(KEY_SUPER_STATE, super.onSaveInstanceState());
         return bundle;
     }
@@ -238,8 +253,11 @@ public class WPPrefView extends LinearLayout implements
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
-            PrefListItems items = (PrefListItems) bundle.getSerializable(KEY_LIST_ITEMS);
-            setListItems(items);
+            PrefListItemsWrapper listWrapper = (PrefListItemsWrapper) bundle.getSerializable(KEY_LIST_ITEMS);
+            if(listWrapper != null){
+                PrefListItems items = listWrapper.getList();
+                setListItems(items);
+            }
             state = bundle.getParcelable(KEY_SUPER_STATE);
         }
         super.onRestoreInstanceState(state);

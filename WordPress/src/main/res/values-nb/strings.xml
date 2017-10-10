@@ -316,8 +316,6 @@ Language: nb_NO
 	<string name="upload_full_size_image">Last opp og lenk til full bildestørrelse</string>
 	<string name="title">Tittel</string>
 	<string name="categories">Kategorier</string>
-	<string name="notification_vibrate">Vibrer</string>
-	<string name="notification_blink">Blinkende varsler</string>
 	<string name="sdcard_title">Krever SD kort</string>
 	<string name="media">Media</string>
 	<string name="delete">Slett</string>

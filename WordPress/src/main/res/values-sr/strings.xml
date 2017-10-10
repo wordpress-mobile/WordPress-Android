@@ -34,13 +34,7 @@ Language: sr_RS
 	<string name="email">Е-пошта</string>
 	<string name="app_notifications">Обавештења апликације</string>
 	<string name="notifications_tab">Језичак обавештења</string>
-	<string name="notifications_comments_other_blogs">Коментари на другим веб местима</string>
 	<string name="notifications_wpcom_updates">WordPress.com ажурирања</string>
-	<string name="notifications_other">Друго</string>
-	<string name="notifications_account_emails">Е-пошта од WordPress.com</string>
-	<string name="notifications_account_emails_summary">Увек ћемо слати важну е-пошту везану за ваш налог, али такође можете да добијете неку додатну помоћ.</string>
-	<string name="your_sites">Ваша веб места</string>
-	<string name="notifications_sights_and_sounds">Слике и звуци</string>
 	<string name="stats_insights_latest_post_trend">Прошло је %1$s од када је %2$s је објављен. Ево какав је учинак чланка до сада…</string>
 	<string name="stats_insights_latest_post_summary">Резиме последњег чланка</string>
 	<string name="button_revert">Врати</string>
@@ -569,8 +563,6 @@ Language: sr_RS
 	<string name="upload_full_size_image">Отпреми и повежи са целокупном сликом</string>
 	<string name="categories">Категорије</string>
 	<string name="title">Наслов</string>
-	<string name="notification_vibrate">Вибрирај</string>
-	<string name="notification_blink">Трепћи светло за обавештење</string>
 	<string name="sdcard_title">SD картица неопходна</string>
 	<string name="media">Медији</string>
 	<string name="delete">Обриши</string>

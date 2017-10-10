@@ -854,6 +854,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_permission_granted";
             case APP_PERMISSION_DENIED:
                 return "app_permission_denied";
+            case SHARE_TO_WP_SUCCEEDED:
+                return "share_to_wp_succeeded";
             default:
                 return null;
         }

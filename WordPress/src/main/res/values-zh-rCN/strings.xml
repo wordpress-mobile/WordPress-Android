@@ -481,13 +481,7 @@ Language: zh_CN
 	<string name="email">电子邮件</string>
 	<string name="notifications_tab">“通知”选项卡</string>
 	<string name="app_notifications">应用程序通知</string>
-	<string name="notifications_comments_other_blogs">其他站点上的评论</string>
-	<string name="notifications_other">其他</string>
 	<string name="notifications_wpcom_updates">WordPress.com 更新</string>
-	<string name="notifications_account_emails">来自 WordPress.com 的电子邮件</string>
-	<string name="notifications_account_emails_summary">我们会将与您的帐户相关的重要电子邮件都发送给您，但是您还可以获得一些其他的有用信息。</string>
-	<string name="your_sites">您的站点</string>
-	<string name="notifications_sights_and_sounds">场景和声音</string>
 	<string name="stats_insights_latest_post_trend">距 %2$s 发布已有 %1$s。以下是该文章到目前为止的效果…</string>
 	<string name="stats_insights_latest_post_summary">最新的文章摘要</string>
 	<string name="button_revert">恢复</string>
@@ -1012,7 +1006,6 @@ Language: zh_CN
 	<string name="app_title">WordPress for Android</string>
 	<string name="tos">服务条款</string>
 	<string name="version">版本</string>
-	<string name="max_thumbnail_px_size">默认图片宽度</string>
 	<string name="image_alignment">对齐</string>
 	<string name="refresh">刷新</string>
 	<string name="untitled">无标题</string>
@@ -1030,9 +1023,6 @@ Language: zh_CN
 	<string name="categories">分类</string>
 	<string name="title">标题</string>
 	<string name="dlg_deleting_comments">删除评论</string>
-	<string name="notification_vibrate">振动</string>
-	<string name="notification_sound">通知声音</string>
-	<string name="notification_blink">闪烁通知灯</string>
 	<string name="sdcard_title">需要 SD 卡</string>
 	<string name="media">媒体</string>
 	<string name="approve">通过</string>

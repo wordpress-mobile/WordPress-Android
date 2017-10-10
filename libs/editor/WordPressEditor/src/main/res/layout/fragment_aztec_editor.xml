@@ -47,15 +47,18 @@
                     aztec:textColorHint="@color/hint_text" >
                 </org.wordpress.aztec.AztecText>
 
-                <android.support.v7.widget.AppCompatTextView
+                <ImageButton
                     android:id="@+id/title_beta"
-                    android:clickable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:text="@string/editor_title_beta"
-                    style="@style/EditorTitleBeta" >
-                </android.support.v7.widget.AppCompatTextView>
+                    android:padding="@dimen/sourceview_side_margin"
+                    android:src="@drawable/ic_gridicons_help"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:contentDescription="@string/editor_title_beta">
+                </ImageButton>
 
             </RelativeLayout>
 

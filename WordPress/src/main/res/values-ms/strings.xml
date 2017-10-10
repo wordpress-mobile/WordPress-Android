@@ -8,9 +8,7 @@ Language: ms
 <resources>
 	<string name="reader_photo_by">Gambar oleh %s</string>
 	<string name="reader_label_visit">Lawat</string>
-	<string name="all_your_sites">Semua Laman Saya</string>
 	<string name="pending_draft_more">Anda telah mendraf %d kiriman tetapi tidak pernah menerbitkannya. Ketik untuk periksa.</string>
-	<string name="notification_pending_drafts">Beritahu saya tentang draf yang belum seleasi</string>
 	<string name="invalid_verification_code_format">Mestilah nombor enam angka</string>
 	<string name="confirm_discard_changes">Buang perubahan yang belum disimpan?</string>
 	<string name="swipe_for_more">Sapu untuk seterusnya</string>
@@ -501,13 +499,7 @@ Language: ms
 	<string name="email">Emel</string>
 	<string name="notifications_tab">Tab pemberitahuan</string>
 	<string name="app_notifications">Pemberitahuan aplikasi</string>
-	<string name="notifications_comments_other_blogs">Ulasan di laman lain</string>
-	<string name="notifications_other">Lain</string>
 	<string name="notifications_wpcom_updates">Pengemas Kinian WordPress.com</string>
-	<string name="notifications_account_emails">Emal dari WordPress.com</string>
-	<string name="notifications_account_emails_summary">Kami akan selalu menghantar emel penting berkenaan akaun anda, tetapi anda juga boleh mendapat beberapa tambahan yang membantu.</string>
-	<string name="your_sites">Laman Anda</string>
-	<string name="notifications_sights_and_sounds">Pandangan dan Bunyian</string>
 	<string name="stats_insights_latest_post_trend">Telah %1$s sejak %2$s diterbitkan. Sini adalah prestasi kiriman ini setakat ini…</string>
 	<string name="stats_insights_latest_post_summary">Ringkasan Kiriman Terkini</string>
 	<string name="button_revert">Berbalik</string>
@@ -1044,7 +1036,6 @@ Language: ms
 	<string name="app_title">WordPress untuk Android</string>
 	<string name="tos">Terma Perkhidmatan</string>
 	<string name="version">Versi</string>
-	<string name="max_thumbnail_px_width">Lebar Lalai Imej</string>
 	<string name="image_alignment">Penjajaran</string>
 	<string name="refresh">Segar semula</string>
 	<string name="untitled">Tiada tajuk</string>
@@ -1062,9 +1053,6 @@ Language: ms
 	<string name="categories">Kategori</string>
 	<string name="title">Tajuk</string>
 	<string name="dlg_deleting_comments">Menghapuskan ulasan</string>
-	<string name="notification_vibrate">Getar</string>
-	<string name="notification_sound">Bunyi pemberitahuan</string>
-	<string name="notification_blink">Kerlipkan lampu pemberitahuan</string>
 	<string name="sdcard_title">Kad SD Diperlukan</string>
 	<string name="media">Media</string>
 	<string name="approve">Lulus</string>
