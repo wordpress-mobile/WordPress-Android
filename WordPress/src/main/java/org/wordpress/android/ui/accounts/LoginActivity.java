@@ -19,6 +19,7 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.Login2FaFragment;
@@ -41,6 +42,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
@@ -333,6 +335,17 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
                 inputSiteAddress, endpointAddress, null, null, null, null, false);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
+    }
+
+    @Override
+    public void handleSslCertificateError(MemorizingTrustManager memorizingTrustManager,
+                                          final SelfSignedSSLCallback callback) {
+        SelfSignedSSLUtils.showSSLWarningDialog(this, memorizingTrustManager, new SelfSignedSSLUtils.Callback() {
+            @Override
+            public void certificateTrusted() {
+                callback.certificateTrusted();
+            }
+        });
     }
 
     private void launchHelpshift(String url, String username, boolean isWpcom, Tag origin) {

@@ -39,8 +39,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.SelfSignedSSLUtils;
-import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -207,8 +205,8 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
     public void handleDiscoveryError(DiscoveryError error, final String failedEndpoint) {
         switch (error) {
             case ERRONEOUS_SSL_CERTIFICATE:
-                SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
-                        new Callback() {
+                mLoginListener.handleSslCertificateError(mMemorizingTrustManager,
+                        new LoginListener.SelfSignedSSLCallback() {
                             @Override
                             public void certificateTrusted() {
                                 if (failedEndpoint == null) {
