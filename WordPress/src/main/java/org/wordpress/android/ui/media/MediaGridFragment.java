@@ -338,8 +338,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         && media.getFilePath() != null) {
                     File file = new File(media.getFilePath());
                     if (!file.exists()) {
+                        AppLog.w(AppLog.T.MEDIA, "removing nonexistent local media " + media.getFilePath());
+                        // remove from the store
+                        mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(media));
+                        // remove from the passed list
                         mediaModels.remove(i);
-                        AppLog.w(AppLog.T.MEDIA, "removed nonexistent local file " + media.getFilePath());
                     }
                 }
             }
