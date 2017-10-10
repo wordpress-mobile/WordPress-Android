@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login;
+package org.wordpress.android.login;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -8,12 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.login.LoginListener;
 
 import javax.inject.Inject;
 
@@ -28,7 +25,7 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        mLoginListener.inject(this);
     }
 
     @Override

@@ -26,6 +26,7 @@ import org.wordpress.android.login.LoginEmailFragment;
 import org.wordpress.android.login.LoginEmailPasswordFragment;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -452,6 +453,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void inject(LoginEmailPasswordFragment object) {
+        ((WordPress) getApplication()).component().inject(object);
+    }
+
+    @Override
+    public void inject(LoginSiteAddressHelpDialogFragment object) {
         ((WordPress) getApplication()).component().inject(object);
     }
 

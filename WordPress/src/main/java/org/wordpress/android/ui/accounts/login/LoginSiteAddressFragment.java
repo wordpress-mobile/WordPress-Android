@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.login.LoginHttpAuthDialogFragment;
 import org.wordpress.android.login.LoginListener;
+import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.util.AppLog;
