@@ -38,13 +38,9 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginListener;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
-import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
-
-import java.util.EnumSet;
 
 import javax.inject.Inject;
 
@@ -268,17 +264,6 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         }
     }
 
-    protected void startPostLoginServices() {
-        // Get reader tags so they're available as soon as the Reader is accessed - done for
-        // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
-        // uses the application context since the activity is finished immediately below
-        ReaderUpdateService.startService(getActivity().getApplicationContext(), EnumSet.of(ReaderUpdateService
-                .UpdateTask.TAGS));
-
-        // Start Notification service
-        NotificationsUpdateService.startService(getActivity().getApplicationContext());
-    }
-
     protected void saveCredentialsInSmartLock(LoginListener loginListener, String username, String password) {
         // mUsername and mPassword are null when the user log in with a magic link
         if (loginListener != null) {
@@ -353,7 +338,9 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
             }
         }
 
-        startPostLoginServices();
+        if (mLoginListener instanceof LoginListener) {
+            ((LoginListener) mLoginListener).startPostLoginServices();
+        }
 
         onLoginFinished(true);
     }

@@ -32,6 +32,8 @@ import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
@@ -39,6 +41,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
@@ -374,6 +377,17 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void help2FaScreen(String email) {
         launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_2FA);
+    }
+
+    @Override
+    public void startPostLoginServices() {
+        // Get reader tags so they're available as soon as the Reader is accessed - done for
+        // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
+        // uses the application context since the activity is finished immediately below
+        ReaderUpdateService.startService(getApplicationContext(), EnumSet.of(ReaderUpdateService.UpdateTask.TAGS));
+
+        // Start Notification service
+        NotificationsUpdateService.startService(getApplicationContext());
     }
 
     @Override

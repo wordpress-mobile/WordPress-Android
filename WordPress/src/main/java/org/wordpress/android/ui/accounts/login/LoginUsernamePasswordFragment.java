@@ -432,7 +432,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
 
-        startPostLoginServices();
+        mLoginListener.startPostLoginServices();
 
         // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
         mLoginFinished = true;
