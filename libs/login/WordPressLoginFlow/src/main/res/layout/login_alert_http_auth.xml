@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
         app:passwordToggleEnabled="true"
-        app:passwordToggleTint="@color/wp_grey">
+        app:passwordToggleTint="@color/grey">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/login_http_password"

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login;
+package org.wordpress.android.login;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.wordpress.android.R;
 import org.wordpress.android.util.EditTextUtils;
 
 public class LoginHttpAuthDialogFragment extends DialogFragment {
@@ -70,7 +69,7 @@ public class LoginHttpAuthDialogFragment extends DialogFragment {
             }
         });
 
-        alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dismiss();

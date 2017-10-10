@@ -62,6 +62,7 @@
     <string name="error_generic">An error occurred</string>
 
     <!-- HTTP Authentication -->
+    <string name="http_authorization_required">Authorization required</string>
     <string name="httpuser">HTTP username</string>
     <string name="httppassword">HTTP password</string>
 
