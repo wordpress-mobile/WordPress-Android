@@ -54,6 +54,10 @@ public interface LoginListener {
     // Login 2FA screen callbacks
     void help2FaScreen(String email);
 
+    // General post-login callbacks
+    // TODO This should have a more generic name, it more or less means any kind of login was finished
+    void startPostLoginServices();
+
     void setHelpContext(String faqId, String faqSection);
 
     void track(AnalyticsTracker.Stat stat);
