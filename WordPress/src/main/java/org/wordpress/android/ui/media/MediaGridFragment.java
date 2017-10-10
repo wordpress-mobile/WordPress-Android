@@ -51,6 +51,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -315,8 +316,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     /*
-     * make sure media that is being deleted still has the right UploadState, as it may have
-     * been overwritten by a refresh while deletion was still in progress
+     * this method has two purposes: (1) make sure media that is being deleted still has the right UploadState,
+     * as it may have been overwritten by a refresh while deletion was still in progress, (2) remove any local
+     * files (ie: media not uploaded yet) that no longer exist (in case user deleted them from the device)
      */
     private void ensureCorrectState(List<MediaModel> mediaModels) {
         if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
@@ -325,6 +327,19 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 for (MediaModel media : mediaModels) {
                     if (service.isMediaBeingDeleted(media)) {
                         media.setUploadState(MediaUploadState.DELETING);
+                    }
+                }
+            }
+
+            // note we count backwards so we can remove from the list
+            for (int i = mediaModels.size() - 1 ; i >= 0; i--) {
+                MediaModel media = mediaModels.get(i);
+                if (org.wordpress.android.util.MediaUtils.isLocalFile(media.getUploadState())
+                        && media.getFilePath() != null) {
+                    File file = new File(media.getFilePath());
+                    if (!file.exists()) {
+                        mediaModels.remove(i);
+                        AppLog.w(AppLog.T.MEDIA, "removed nonexistent local file " + media.getFilePath());
                     }
                 }
             }
