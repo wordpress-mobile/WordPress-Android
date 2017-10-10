@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="toolbar_content_offset">72dp</dimen>
+
     <dimen name="margin_none">0dp</dimen>
     <dimen name="margin_dialog">24dp</dimen>
     <dimen name="margin_extra_extra_small">1dp</dimen>
@@ -13,6 +15,9 @@
     <dimen name="margin_extra_medium_large">24dp</dimen>
     <dimen name="margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
+
+    <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
+    <dimen name="appbar_elevation">4dp</dimen>
 
     <!-- login -->
     <dimen name="margin_text_input_layout_baseline">20dp</dimen>
