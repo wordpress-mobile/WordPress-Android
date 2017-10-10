@@ -19,6 +19,8 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -34,6 +36,7 @@ import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
@@ -423,6 +426,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void track(AnalyticsTracker.Stat stat, String errorContext, String errorType, String errorDescription) {
         AnalyticsTracker.track(stat, errorContext, errorType, errorDescription);
+    }
+
+    @Override
+    public void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin) {
+        AnalyticsUtils.trackAnalyticsSignIn(accountStore, siteStore, isWpcomLogin);
     }
 
     @Override

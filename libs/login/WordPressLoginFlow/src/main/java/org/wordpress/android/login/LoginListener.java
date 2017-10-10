@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -60,7 +62,9 @@ public interface LoginListener {
 
     void setHelpContext(String faqId, String faqSection);
 
+    // Analytics
     void track(AnalyticsTracker.Stat stat);
     void track(AnalyticsTracker.Stat stat, Map<String, ?> properties);
     void track(AnalyticsTracker.Stat stat, String errorContext, String errorType, String errorDescription);
+    void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin);
 }
