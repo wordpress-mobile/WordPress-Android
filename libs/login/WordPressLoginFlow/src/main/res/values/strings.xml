@@ -29,6 +29,7 @@
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
     <string name="login_magic_links_sent_description">Magic link sent illustration</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
+    <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="connect_more">Connect Another Site</string>
     <string name="connect_site">Connect Site</string>

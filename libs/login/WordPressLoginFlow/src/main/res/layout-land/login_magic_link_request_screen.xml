@@ -18,12 +18,10 @@
             android:layout_height="@dimen/avatar_sz_login"
             android:layout_centerHorizontal="true">
 
-            <org.wordpress.android.widgets.WPNetworkImageView
+            <ImageView
                 android:id="@+id/gravatar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
-                app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp"/>
+                android:layout_height="wrap_content"/>
 
             <ProgressBar
                 android:id="@+id/avatar_progress"

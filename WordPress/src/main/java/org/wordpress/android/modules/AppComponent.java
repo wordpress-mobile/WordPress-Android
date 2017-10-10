@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.module.ReleaseToolsModule;
 import org.wordpress.android.login.Login2FaFragment;
 import org.wordpress.android.login.LoginEmailFragment;
 import org.wordpress.android.login.LoginEmailPasswordFragment;
+import org.wordpress.android.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
@@ -28,7 +29,6 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
-import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -133,12 +133,12 @@ public interface AppComponent {
     void inject(PostUploadHandler object);
 
     void inject(LoginActivity object);
-    void inject(LoginMagicLinkRequestFragment object);
     void inject(LoginEpilogueActivity object);
 
     void inject(Login2FaFragment object);
     void inject(LoginEmailFragment object);
     void inject(LoginEmailPasswordFragment object);
+    void inject(LoginMagicLinkRequestFragment object);
     void inject(LoginSiteAddressFragment object);
     void inject(LoginSiteAddressHelpDialogFragment object);
     void inject(LoginUsernamePasswordFragment object);

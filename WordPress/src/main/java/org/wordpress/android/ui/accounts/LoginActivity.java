@@ -26,6 +26,8 @@ import org.wordpress.android.login.Login2FaFragment;
 import org.wordpress.android.login.LoginEmailFragment;
 import org.wordpress.android.login.LoginEmailPasswordFragment;
 import org.wordpress.android.login.LoginListener;
+import org.wordpress.android.login.LoginMagicLinkRequestFragment;
+import org.wordpress.android.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment;
@@ -33,8 +35,6 @@ import org.wordpress.android.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
-import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
-import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -259,7 +259,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void gotWpcomEmail(String email) {
         if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK) {
-            LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(email);
+            LoginMagicLinkRequestFragment loginMagicLinkRequestFragment =
+                    LoginMagicLinkRequestFragment.newInstance(email);
             slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
         } else {
             LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, null);
@@ -466,6 +467,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void inject(LoginEmailPasswordFragment object) {
+        ((WordPress) getApplication()).component().inject(object);
+    }
+
+    @Override
+    public void inject(LoginMagicLinkRequestFragment object) {
         ((WordPress) getApplication()).component().inject(object);
     }
 

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login;
+package org.wordpress.android.login;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,9 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.login.LoginListener;
 
 public class LoginMagicLinkSentFragment extends Fragment {
     public static final String TAG = "login_magic_link_sent_fragment_tag";
@@ -84,7 +82,7 @@ public class LoginMagicLinkSentFragment extends Fragment {
         }
 
         if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED);
+            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED);
         }
     }
 

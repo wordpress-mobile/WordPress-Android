@@ -26,12 +26,10 @@
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_extra_large">
 
-                <org.wordpress.android.widgets.WPNetworkImageView
+                <ImageView
                     android:id="@+id/gravatar"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
-                    app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp"/>
+                    android:layout_height="wrap_content"/>
 
                 <ProgressBar
                     android:id="@+id/avatar_progress"
