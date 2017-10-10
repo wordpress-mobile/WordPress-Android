@@ -1,10 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="email_address">Email address</string>
-    <string name="next">Next</string>
+    <string name="verification_code">Verification code</string>
+    <string name="send_link">Send link</string>
+    <string name="enter_your_password_instead">Enter your password instead</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
     <string name="help">Help</string>
-
+    <string name="log_in">Log In</string>
+    <string name="create_wordpress_site">Create a WordPress site</string>
+    <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
+    <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
+    <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
+    <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
+    <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
+    <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="next">Next</string>
+    <string name="open_mail">Open mail</string>
+    <string name="enter_site_address_instead">Log in to your site by entering your site address instead.</string>
+    <string name="enter_username_instead">Log in with username instead.</string>
+    <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
+    <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
+    <string name="login_text_otp">Text me a code instead.</string>
+    <string name="requesting_otp">Requesting a verification code via SMS.</string>
+    <string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
+    <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
+    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
+    <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
+    <string name="login_magic_links_sent_description">Magic link sent illustration</string>
+    <string name="login_magic_link_email_requesting">Requesting log-in email</string>
+    <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
+    <string name="connect_more">Connect Another Site</string>
+    <string name="connect_site">Connect Site</string>
+    <string name="login_continue">Continue</string>
+    <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
+    <string name="login_username_at">\@%s</string>
+    <string name="enter_site_address">Enter the address of your WordPress site you\'d like to connect.</string>
+    <string name="login_site_address">Site address</string>
+    <string name="login_site_address_help">Need help finding your site address?</string>
+    <string name="login_site_address_help_title">What\'s my site address?</string>
+    <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
+    <string name="login_site_address_more_help">Need more help?</string>
+    <string name="login_checking_site_address">Checking site address</string>
+    <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
+    <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
+    <string name="login_empty_site_url">Please enter a site address</string>
+    <string name="login_empty_username">Please enter a username</string>
+    <string name="login_empty_2fa">Please enter a verification code</string>
+    <string name="login_email_client_not_found">Can\'t detect your email client app</string>
+    <string name="login_logged_in_as">Logged in as</string>
+    <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>
     <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
+    <string name="stats_sign_in_jetpack_different_com_account">To view your stats, log in to the WordPress.com account you used to connect Jetpack.</string>
+    <string name="auth_required">Log in again to continue.</string>
+    <string name="checking_email">Checking email</string>
+    <string name="email_invalid">Enter a valid email address</string>
+    <string name="logging_in">Logging in</string>
+    <string name="forgot_password">Lost your password?</string>
+    <string name="error_generic">An error occurred</string>
+
+    <!-- HTTP Authentication -->
+    <string name="httpuser">HTTP username</string>
+    <string name="httppassword">HTTP password</string>
+
+    <!-- Image Descriptions for Accessibility -->
+    <string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
 </resources>
