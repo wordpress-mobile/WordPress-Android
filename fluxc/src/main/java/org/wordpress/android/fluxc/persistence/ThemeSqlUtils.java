@@ -116,6 +116,13 @@ public class ThemeSqlUtils {
         return matches.get(0);
     }
 
+    public static void removeTheme(@NonNull ThemeModel theme) {
+        WellSql.delete(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.ID, theme.getId())
+                .endWhere().execute();
+    }
+
     public static void removeThemes(@NonNull SiteModel site) {
         removeThemes(site.getId());
     }
