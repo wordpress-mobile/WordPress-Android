@@ -20,6 +20,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
+import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.login.widgets.WPLoginInputRow;

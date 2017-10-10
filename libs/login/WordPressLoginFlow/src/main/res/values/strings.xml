@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="email_address">Email address</string>
+    <string name="next">Next</string>
+    <string name="help">Help</string>
+
+    <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
+    <string name="duplicate_site_detected">A duplicate site has been detected.</string>
+    <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
 </resources>

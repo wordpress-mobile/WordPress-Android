@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;

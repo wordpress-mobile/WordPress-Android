@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;

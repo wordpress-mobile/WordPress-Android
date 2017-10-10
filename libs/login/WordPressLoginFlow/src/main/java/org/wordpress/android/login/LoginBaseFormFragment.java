@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login;
+package org.wordpress.android.login;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,16 +27,15 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.BuildConfig;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.login.LoginListener;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -58,9 +56,9 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     private boolean mInProgress;
     private boolean mLoginFinished;
 
-    @Inject Dispatcher mDispatcher;
-    @Inject SiteStore mSiteStore;
-    @Inject AccountStore mAccountStore;
+    protected @Inject Dispatcher mDispatcher;
+    protected @Inject SiteStore mSiteStore;
+    protected @Inject AccountStore mAccountStore;
 
     protected abstract @LayoutRes int getContentLayout();
     protected abstract void setupLabel(TextView label);
@@ -279,18 +277,19 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     protected void autoFillFromBuildConfig(String configValueName, TextView textView) {
         if (!BuildConfig.DEBUG) return;
 
-        String value = (String) WordPress.getBuildConfigValue(getActivity().getApplication(), configValueName);
-        if (!TextUtils.isEmpty(value)) {
-            textView.setText(value);
-            AppLog.d(AppLog.T.NUX, "Auto-filled from build config: " + configValueName);
-        }
+        // TODO: Restore pre-filled login for development
+//        String value = (String) WordPress.getBuildConfigValue(getActivity().getApplication(), configValueName);
+//        if (!TextUtils.isEmpty(value)) {
+//            textView.setText(value);
+//            AppLog.d(AppLog.T.NUX, "Auto-filled from build config: " + configValueName);
+//        }
     }
 
     // OnChanged events
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAccountChanged(AccountStore.OnAccountChanged event) {
+    public void onAccountChanged(OnAccountChanged event) {
         if (!isAdded() || mLoginFinished) {
             return;
         }
@@ -313,14 +312,14 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSiteChanged(SiteStore.OnSiteChanged event) {
+    public void onSiteChanged(OnSiteChanged event) {
         if (!isAdded() || mLoginFinished) {
             return;
         }
 
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "onSiteChanged has error: " + event.error.type + " - " + event.error.toString());
-            if (!isAdded() || event.error.type != SiteStore.SiteErrorType.DUPLICATE_SITE) {
+            if (!isAdded() || event.error.type != SiteErrorType.DUPLICATE_SITE) {
                 onLoginFinished(false);
                 return;
             }
