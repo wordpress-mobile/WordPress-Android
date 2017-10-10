@@ -12,8 +12,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -112,9 +116,11 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         rootView.findViewById(R.id.login_blavatar).setVisibility(mIsWpcom ? View.VISIBLE : View.GONE);
 
         if (mSiteIconUrl != null) {
-            // TODO Restore Gravatar loading
-//            ((WPNetworkImageView) rootView.findViewById(R.id.login_blavatar)).setImageUrl(mSiteIconUrl,
-//                    WPNetworkImageView.ImageType.BLAVATAR);
+            Glide.with(this)
+                .load(mSiteIconUrl)
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
+                .apply(RequestOptions.errorOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
+                .into(((ImageView) rootView.findViewById(R.id.login_blavatar)));
         }
 
         TextView siteNameView = ((TextView) rootView.findViewById(R.id.login_site_title));
