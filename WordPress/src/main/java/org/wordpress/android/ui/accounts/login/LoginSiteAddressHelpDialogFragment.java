@@ -14,7 +14,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginListener;
-import org.wordpress.android.util.HelpshiftHelper;
 
 import javax.inject.Inject;
 
@@ -57,9 +56,7 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
         alert.setNeutralButton(R.string.login_site_address_more_help, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                HelpshiftHelper.Tag origin = HelpshiftHelper.Tag.ORIGIN_LOGIN_SITE_ADDRESS;
-                String username = mAccountStore.getAccount().getUserName();
-                HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore, origin, username);
+                mLoginListener.helpFindingSiteAddress(mAccountStore.getAccount().getUserName(), mSiteStore);
             }
         });
 

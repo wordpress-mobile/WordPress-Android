@@ -353,6 +353,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
+    public void helpFindingSiteAddress(String username, SiteStore siteStore) {
+        HelpshiftHelper.getInstance().showConversation(this, siteStore, Tag.ORIGIN_LOGIN_SITE_ADDRESS, username);
+    }
+
+    @Override
     public void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds) {
         loggedInAndFinish(oldSitesIds);
     }
