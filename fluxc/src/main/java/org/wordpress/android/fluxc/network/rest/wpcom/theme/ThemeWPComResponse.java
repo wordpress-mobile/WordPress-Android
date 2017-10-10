@@ -13,6 +13,12 @@ public class ThemeWPComResponse {
         public List<ThemeWPComResponse> themes;
     }
 
+    public class Price {
+        public int value;
+        public String currency;
+        public String display;
+    }
+
     public String id;
     public String slug;
     public String stylesheet;
@@ -29,6 +35,7 @@ public class ThemeWPComResponse {
     public String date_updated;
     public String language;
     public String download_uri;
+    public Price price;
     public int rank_popularity;
     public int rank_trending;
 }
