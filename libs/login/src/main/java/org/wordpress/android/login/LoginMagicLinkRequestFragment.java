@@ -3,6 +3,7 @@ package org.wordpress.android.login;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -24,6 +33,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthEmailSent;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -97,22 +107,30 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             }
         });
 
-        // TODO: Re-enable Gravatar
-//        mAvatarProgressBar = view.findViewById(R.id.avatar_progress);
-//        WPNetworkImageView avatarView = (WPNetworkImageView) view.findViewById(R.id.gravatar);
-//        avatarView.setImageUrl(GravatarUtils.gravatarFromEmail(mEmail, getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_login)), WPNetworkImageView.ImageType.AVATAR,
-//                new WPNetworkImageView.ImageLoadListener() {
-//                    @Override
-//                    public void onLoaded() {
-//                        mAvatarProgressBar.setVisibility(View.GONE);
-//                    }
-//
-//                    @Override
-//                    public void onError() {
-//                        mAvatarProgressBar.setVisibility(View.GONE);
-//                    }
-//                });
-//        ImageView avatarView = (ImageView) view.findViewById(R.id.gravatar);
+        mAvatarProgressBar = view.findViewById(R.id.avatar_progress);
+        ImageView avatarView = (ImageView) view.findViewById(R.id.gravatar);
+        Glide.with(this)
+                .load(GravatarUtils.gravatarFromEmail(mEmail,
+                        getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_login)))
+                .apply(RequestOptions.circleCropTransform())
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_gridicons_user_circle_100dp))
+                .apply(RequestOptions.errorOf(R.drawable.ic_gridicons_user_circle_100dp))
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Drawable> target,
+                                                boolean b) {
+                        mAvatarProgressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable drawable, Object o, Target<Drawable> target,
+                                                   DataSource dataSource, boolean b) {
+                        mAvatarProgressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .into(avatarView);
         return view;
     }
 
