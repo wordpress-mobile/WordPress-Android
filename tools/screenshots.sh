@@ -6,7 +6,7 @@ AVD=Nexus_5X_API_25_SCREENSHOTS
 
 WORKING_DIR=./autoscreenshot
 
-DEVICES=(PHONE) #TAB7 TAB10)
+DEVICES=(PHONE TAB7 TAB10)
 LOCALES=(en-US el-GR it-IT)
 SCREENS=(MYSITE READER NOTIFS)
 
@@ -18,12 +18,24 @@ FONT_ZIP_URL='https://fonts.google.com/download?family=Noto%20Serif'
 
 SDK_ZIP_URL='https://dl.google.com/android/repository/sdk-tools-darwin-3859397.zip'
 
-APP_HEIGHT=1388
-#NAV_HEIGHT=96
-NAV_HEIGHT=0
-SKIN_WIDTH=840
-SKIN_HEIGHT=$(($APP_HEIGHT+$NAV_HEIGHT))
-SKIN=$SKIN_WIDTH'x'$SKIN_HEIGHT
+PHONE_APP_HEIGHT=1388
+#PHONE_NAV_HEIGHT=96
+PHONE_NAV_HEIGHT=0
+PHONE_SKIN_WIDTH=840
+
+SKIN_HEIGHT=$(($PHONE_APP_HEIGHT+$PHONE_NAV_HEIGHT))
+SKIN=$PHONE_SKIN_WIDTH'x'$PHONE_SKIN_HEIGHT
+
+TAB7_APP_HEIGHT=1368
+#TAB7_NAV_HEIGHT=96
+TAB7_NAV_HEIGHT=0
+TAB7_SKIN_WIDTH=910
+
+TAB10_APP_HEIGHT=1426
+#TAB10_NAV_HEIGHT=96
+TAB10_NAV_HEIGHT=0
+TAB10_SKIN_WIDTH=1242
+
 LCD_DPI=320
 
 ADB_PARAMS="-e"
@@ -34,9 +46,17 @@ PKG=$PKG_DEBUG
 
 ACTIVITY_LAUNCH=org.wordpress.android.ui.WPLaunchActivity
 
-COORDS_MYSITE="100 100"
-COORDS_READER="300 100"
-COORDS_NOTIFS="700 100"
+PHONE_COORDS_MYSITE="100 100"
+PHONE_COORDS_READER="300 100"
+PHONE_COORDS_NOTIFS="700 100"
+
+TAB7_COORDS_MYSITE="110 100"
+TAB7_COORDS_READER="330 100"
+TAB7_COORDS_NOTIFS="800 100"
+
+TAB10_COORDS_MYSITE="300 100"
+TAB10_COORDS_READER="520 100"
+TAB10_COORDS_NOTIFS="930 100"
 
 TEXT_OFFSET_Y=58
 
@@ -150,7 +170,13 @@ function require_deeplink {
 
 function start_emu {
   echo -n Starting emulator... 
-  $ANDROID_SDK_DIR/tools/emulator -verbose -no-boot-anim -timezone "Europe/UTC" -avd $AVD -skin $SKIN -qemu -lcd-density $LCD_DPI &>/dev/null &
+  device=$1
+  device_app_height=$device\_APP_HEIGHT
+  device_nav_height=$device\_NAV_HEIGHT
+  device_skin_height=$((${!device_app_height}+${!device_nav_height}))
+  device_skin_width=$device\_SKIN_WIDTH
+  device_skin=${!device_skin_width}'x'$device_skin_height
+  $ANDROID_SDK_DIR/tools/emulator -verbose -no-boot-anim -timezone "Europe/UTC" -avd $AVD -skin $device_skin -qemu -lcd-density $LCD_DPI &>/dev/null &
   echo Done
 }
 
@@ -164,6 +190,13 @@ function wait_emu {
     sleep 2
     A=$(adb $ADB_PARAMS shell getprop sys.boot_completed | tr -d '\r')
   done
+  echo Done
+}
+
+function kill_emus {
+  echo -n Killing emulators...
+  adb -e devices | grep emulator | cut -f1 | while read line; do adb -e -s $line emu kill; done
+	wait 10
   echo Done
 }
 
@@ -264,26 +297,28 @@ require_font
 require_imagemagick
 require_sdk
 require_emu
-start_emu
-wait_emu
-uninstall
-install
-login
-
-kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
-
-start_app
-
-kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
 
 for device in ${DEVICES[*]}; do
+  kill_emus
+  start_emu $device
+  wait_emu
+  uninstall
+  install
+  login
+
+  kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
+
+  start_app
+
+  kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
+
   for loc in ${LOCALES[*]}; do
     locale $loc
 
     start_app
 
     for screen in ${SCREENS[*]}; do
-      coords=COORDS_$screen
+      coords=$device\_COORDS_$screen
       tap_on ${!coords}
 
       geekytime
