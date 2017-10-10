@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login;
+package org.wordpress.android.login;
 
 import android.content.ClipboardManager;
 import android.os.Bundle;
@@ -18,21 +18,17 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
-import org.wordpress.android.login.LoginBaseFormFragment;
-import org.wordpress.android.login.LoginListener;
+import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -127,7 +123,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        mLoginListener.inject(this);
 
         mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
         mPassword = getArguments().getString(ARG_PASSWORD);
@@ -141,7 +137,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             mInProgressMessageId = savedInstanceState.getInt(KEY_IN_PROGRESS_MESSAGE_ID, 0);
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_TWO_FACTOR_FORM_VIEWED);
+            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_TWO_FACTOR_FORM_VIEWED);
         }
 
         super.onActivityCreated(savedInstanceState);
@@ -237,7 +233,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mInProgressMessageId = 0;
     }
 
-    private void handleAuthError(AccountStore.AuthenticationErrorType error, String errorMessage) {
+    private void handleAuthError(AuthenticationErrorType error, String errorMessage) {
         switch (error) {
             case INVALID_OTP:
                 show2FaError(errorMessage);
@@ -265,7 +261,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             endProgress();
 
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
             if (isAdded()) {
@@ -282,7 +278,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     @Override
     protected void onLoginFinished() {
-        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+        mLoginListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
         mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }

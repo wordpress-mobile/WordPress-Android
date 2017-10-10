@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login;
+package org.wordpress.android.login;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -15,14 +15,9 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
-import org.wordpress.android.login.LoginBaseFormFragment;
-import org.wordpress.android.login.LoginListener;
-import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.util.AppLog;
@@ -134,7 +129,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        mLoginListener.inject(this);
     }
 
     @Override
@@ -144,7 +139,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         if (savedInstanceState != null) {
             mRequestedEmail = savedInstanceState.getString(KEY_REQUESTED_EMAIL);
         } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
+            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
         }
     }
 

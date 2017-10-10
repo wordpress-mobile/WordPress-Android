@@ -6,6 +6,9 @@ import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseOkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
+import org.wordpress.android.login.Login2FaFragment;
+import org.wordpress.android.login.LoginEmailFragment;
+import org.wordpress.android.login.LoginEmailPasswordFragment;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
@@ -21,9 +24,6 @@ import org.wordpress.android.ui.accounts.NewUserFragment;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
-import org.wordpress.android.ui.accounts.login.Login2FaFragment;
-import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
-import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
@@ -134,13 +134,14 @@ public interface AppComponent {
 
     void inject(LoginActivity object);
     void inject(LoginMagicLinkRequestFragment object);
-    void inject(LoginEmailFragment object);
-    void inject(LoginEmailPasswordFragment object);
-    void inject(Login2FaFragment object);
     void inject(LoginSiteAddressFragment object);
     void inject(LoginSiteAddressHelpDialogFragment object);
     void inject(LoginUsernamePasswordFragment object);
     void inject(LoginEpilogueActivity object);
+
+    void inject(Login2FaFragment object);
+    void inject(LoginEmailFragment object);
+    void inject(LoginEmailPasswordFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsWidgetConfigureAdapter object);

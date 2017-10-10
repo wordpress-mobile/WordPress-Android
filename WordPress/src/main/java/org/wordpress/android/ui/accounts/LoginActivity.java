@@ -21,14 +21,14 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.login.Login2FaFragment;
+import org.wordpress.android.login.LoginEmailFragment;
+import org.wordpress.android.login.LoginEmailPasswordFragment;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
-import org.wordpress.android.ui.accounts.login.Login2FaFragment;
-import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
-import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
@@ -431,6 +431,23 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin) {
         AnalyticsUtils.trackAnalyticsSignIn(accountStore, siteStore, isWpcomLogin);
+    }
+
+    // Injectors
+
+    @Override
+    public void inject(Login2FaFragment object) {
+        ((WordPress) getApplication()).component().inject(object);
+    }
+
+    @Override
+    public void inject(LoginEmailFragment object) {
+        ((WordPress) getApplication()).component().inject(object);
+    }
+
+    @Override
+    public void inject(LoginEmailPasswordFragment object) {
+        ((WordPress) getApplication()).component().inject(object);
     }
 
     @Override
