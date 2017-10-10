@@ -16,6 +16,16 @@
     <dimen name="margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
 
+    <dimen name="avatar_sz_tiny">18dp</dimen>
+    <dimen name="avatar_sz_extra_small">24dp</dimen>
+    <dimen name="avatar_sz_small">32dp</dimen>
+    <dimen name="avatar_sz_medium">38dp</dimen>
+    <dimen name="avatar_sz_large">64dp</dimen>
+    <dimen name="avatar_sz_login">100dp</dimen>
+    <dimen name="avatar_sz_login_epilogue">60dp</dimen>
+    <dimen name="blavatar_sz_small">32dp</dimen>
+    <dimen name="blavatar_sz">40dp</dimen>
+
     <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
     <dimen name="appbar_elevation">4dp</dimen>
 
