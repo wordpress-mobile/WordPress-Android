@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_login" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <FrameLayout
+            android:id="@+id/avatar_container"
+            android:layout_width="@dimen/avatar_sz_login"
+            android:layout_height="@dimen/avatar_sz_login"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/gravatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ProgressBar
+                android:id="@+id/avatar_progress"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/margin_large"
+                android:background="@drawable/shape_oval_translucent"
+                android:indeterminate="true"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/label"
+            style="@style/Base.TextAppearance.AppCompat.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avatar_container"
+            android:gravity="center"
+            android:padding="@dimen/margin_extra_large"
+            android:text="@string/login_magic_links_label"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/login_background_color"
+        android:paddingLeft="@dimen/margin_small_medium"
+        android:paddingStart="@dimen/margin_small_medium"
+        android:paddingRight="@dimen/margin_medium_large"
+        android:paddingEnd="@dimen/margin_medium_large"
+        android:paddingTop="@dimen/margin_medium_large"
+        android:paddingBottom="@dimen/margin_medium_large"
+        android:layout_alignParentBottom="true"
+        android:clipToPadding="false">
+
+        <android.support.v7.widget.AppCompatButton
+            style="@style/WordPress.Button.Secondary"
+            android:id="@+id/login_enter_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/login_request_magic_link"
+            android:layout_toStartOf="@+id/login_request_magic_link"
+            android:paddingLeft="@dimen/margin_medium_large"
+            android:paddingStart="@dimen/margin_medium_large"
+            android:paddingRight="@dimen/margin_medium_large"
+            android:paddingEnd="@dimen/margin_medium_large"
+            android:layout_marginRight="@dimen/margin_extra_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:gravity="start|center_vertical"
+            android:text="@string/enter_your_password_instead"/>
+
+        <android.support.v7.widget.AppCompatButton
+            style="@style/WordPress.Button.Primary"
+            android:id="@+id/login_request_magic_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/send_link" />
+    </RelativeLayout>
+</RelativeLayout>

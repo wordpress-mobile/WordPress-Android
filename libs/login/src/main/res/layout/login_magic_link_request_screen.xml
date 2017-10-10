@@ -1,0 +1,86 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_login"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:overScrollMode="never">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/avatar_container"
+                android:layout_width="@dimen/avatar_sz_login"
+                android:layout_height="@dimen/avatar_sz_login"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_extra_large">
+
+                <ImageView
+                    android:id="@+id/gravatar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ProgressBar
+                    android:id="@+id/avatar_progress"
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_oval_translucent"
+                    android:indeterminate="true"
+                    android:padding="@dimen/margin_large"/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/label"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/avatar_container"
+                android:gravity="center"
+                android:padding="@dimen/margin_extra_large"
+                android:text="@string/login_magic_links_label"/>
+
+            <Button
+                android:id="@+id/login_request_magic_link"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/label"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:text="@string/send_link"
+                android:theme="@style/LoginTheme.Button"/>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/login_enter_password"
+                style="@style/WordPress.Button.Secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/login_request_magic_link"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginRight="@dimen/margin_extra_large"
+                android:gravity="center"
+                android:paddingEnd="@dimen/margin_medium_large"
+                android:paddingLeft="@dimen/margin_medium_large"
+                android:paddingRight="@dimen/margin_medium_large"
+                android:paddingStart="@dimen/margin_medium_large"
+                android:text="@string/enter_your_password_instead"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
