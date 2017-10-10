@@ -146,7 +146,7 @@ function require_deeplink {
 
 function start_emu {
   echo -n Starting emulator... 
-  $ANDROID_SDK_DIR/tools/emulator -verbose -timezone "Europe/UTC" -avd $AVD -skin $SKIN -qemu -lcd-density $LCD_DPI &>/dev/null &
+  $ANDROID_SDK_DIR/tools/emulator -verbose -no-boot-anim -timezone "Europe/UTC" -avd $AVD -skin $SKIN -qemu -lcd-density $LCD_DPI &>/dev/null &
   echo Done
 }
 
