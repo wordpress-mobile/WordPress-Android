@@ -6,6 +6,8 @@ AVD=Nexus_5X_API_25_SCREENSHOTS
 
 WORKING_DIR=./autoscreenshot
 
+GEEKY_TIME='0830'
+
 FONT_DIR=noto
 FONT_FILE=$WORKING_DIR/$FONT_DIR/NotoSerif-Bold.ttf
 FONT_ZIP_URL='https://fonts.google.com/download?family=Noto%20Serif'
@@ -144,7 +146,7 @@ function require_deeplink {
 
 function start_emu {
   echo -n Starting emulator... 
-  $ANDROID_SDK_DIR/tools/emulator -verbose -avd $AVD -skin $SKIN -qemu -lcd-density $LCD_DPI &>/dev/null &
+  $ANDROID_SDK_DIR/tools/emulator -verbose -timezone "Europe/UTC" -avd $AVD -skin $SKIN -qemu -lcd-density $LCD_DPI &>/dev/null &
   echo Done
 }
 
@@ -246,6 +248,13 @@ function locale() {
 	wait 10
 }
 
+function geekytime() {
+  echo Setting geeky time
+  adb $ADB_PARAMS root &>/dev/null
+  adb $ADB_PARAMS shell "date -u 0101$GEEKY_TIME\2017.00 ; am broadcast -a android.intent.action.TIME_SET" &>/dev/null
+  adb $ADB_PARAMS unroot &>/dev/null
+}
+
 require_deeplink
 require_font
 require_imagemagick
@@ -276,6 +285,7 @@ do
       coords=COORDS_$screen
       tap_on ${!coords}
 
+      geekytime
       produce $device $loc $screen
     done
   done
