@@ -46,6 +46,7 @@ public interface LoginListener {
     void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl);
     void gotXmlRpcEndpoint(String inputSiteAddress, String endpointAddress);
     void helpSiteAddress(String url);
+    void helpFindingSiteAddress(String username, SiteStore siteStore);
 
     // Login username password callbacks
     void saveCredentials(@NonNull final String username, @NonNull final String password,
