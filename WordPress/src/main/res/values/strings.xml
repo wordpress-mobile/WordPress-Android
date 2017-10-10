@@ -1263,6 +1263,11 @@
     <string name="jetpack_different_com_account">Jetpack sites belonging to different WordPress.com accounts are not supported</string>
     <string name="jetpack_stats_module_disabled_message">The Jetpack plugin is connected, but the Stats module is not active. Do you want to activate Stats?</string>
     <string name="jetpack_stats_module_disabled_message_not_admin">The Jetpack plugin is connected, but the Stats module is not active. Contact the site administrator.</string>
+    <string name="jetpack_disconnect_pref_title">"Disconnect from WordPress.com"</string>
+    <string name="jetpack_disconnect_confirmation_message">Are you sure you want to disconnect Jetpack from the site?</string>
+    <string name="jetpack_disconnect_confirm">Disconnect</string>
+    <string name="jetpack_disconnect_success_toast">Site disconnected</string>
+    <string name="jetpack_disconnect_error_toast">Error disconnecting site</string>
 
     <!--
       reader strings

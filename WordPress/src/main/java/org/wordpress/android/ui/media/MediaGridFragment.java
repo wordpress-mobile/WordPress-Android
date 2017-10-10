@@ -331,7 +331,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
-    private List<MediaModel> getFilteredMedia() {
+    List<MediaModel> getFilteredMedia() {
         if (!TextUtils.isEmpty(mSearchTerm)) {
             return mMediaStore.searchSiteMedia(mSite, mSearchTerm);
         }
@@ -349,7 +349,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         } else if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
             return mMediaStore.getSiteImages(mSite);
         }
-
 
         switch (mFilter) {
             case FILTER_IMAGES:
