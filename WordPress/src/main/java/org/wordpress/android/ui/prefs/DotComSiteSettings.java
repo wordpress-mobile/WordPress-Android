@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -204,6 +205,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, DEFAULT_SHARING_BUTTON_STYLE);
         mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(SHARING_COMMENT_LIKES_KEY, false);
         mRemoteSettings.twitterUsername = settingsObject.optString(TWITTER_USERNAME_KEY, "");
+        mRemoteSettings.timezone = settingsObject.optString("timezone_string", "");
+        mRemoteSettings.dateFormat = settingsObject.optString("date_format", "");
+        mRemoteSettings.timeFormat = settingsObject.optString("time_format", "");
+        mRemoteSettings.startOfWeek = settingsObject.optString("start_of_week", "");
+        mRemoteSettings.postsPerPage = settingsObject.optInt("posts_per_page", 0);
+        mRemoteSettings.ampSupported = settingsObject.optBoolean("amp_supported", false);
+        mRemoteSettings.ampEnabled = settingsObject.optBoolean("amp_enabled", false);
 
         boolean reblogsDisabled = settingsObject.optBoolean(SHARING_REBLOGS_DISABLED_KEY, false);
         boolean likesDisabled = settingsObject.optBoolean(SHARING_LIKES_DISABLED_KEY, false);
@@ -340,25 +348,41 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.sharingLabel != null && !mSettings.sharingLabel.equals(mRemoteSettings.sharingLabel)) {
             params.put(SHARING_LABEL_KEY, String.valueOf(mSettings.sharingLabel));
         }
-
         if (mSettings.sharingButtonStyle != null && !mSettings.sharingButtonStyle.equals(mRemoteSettings.sharingButtonStyle)) {
             params.put(SHARING_BUTTON_STYLE_KEY, mSettings.sharingButtonStyle);
         }
-
         if (mSettings.allowReblogButton != mRemoteSettings.allowReblogButton) {
             params.put(SHARING_REBLOGS_DISABLED_KEY, String.valueOf(!mSettings.allowReblogButton));
         }
-
         if (mSettings.allowLikeButton != mRemoteSettings.allowLikeButton) {
             params.put(SHARING_LIKES_DISABLED_KEY, String.valueOf(!mSettings.allowLikeButton));
         }
-
         if (mSettings.allowCommentLikes != mRemoteSettings.allowCommentLikes) {
             params.put(SHARING_COMMENT_LIKES_KEY, String.valueOf(mSettings.allowCommentLikes));
         }
-
         if (mSettings.twitterUsername != null && !mSettings.twitterUsername.equals(mRemoteSettings.twitterUsername)) {
             params.put(TWITTER_USERNAME_KEY, mSettings.twitterUsername);
+        }
+        if (!StringUtils.equals(mSettings.timezone, mRemoteSettings.timezone)) {
+            params.put("timezone_string", mSettings.timezone);
+        }
+        if (!StringUtils.equals(mSettings.dateFormat, mRemoteSettings.dateFormat)) {
+            params.put("date_format", mSettings.dateFormat);
+        }
+        if (!StringUtils.equals(mSettings.timeFormat, mRemoteSettings.timeFormat)) {
+            params.put("time_format", mSettings.timeFormat);
+        }
+        if (!StringUtils.equals(mSettings.startOfWeek, mRemoteSettings.startOfWeek)) {
+            params.put("start_of_week", mSettings.startOfWeek);
+        }
+        if (mSettings.postsPerPage != mRemoteSettings.postsPerPage) {
+            params.put("posts_per_page", String.valueOf(mSettings.postsPerPage));
+        }
+        if (mSettings.ampSupported != mRemoteSettings.ampSupported) {
+            params.put("amp_supported", String.valueOf(mSettings.ampSupported));
+        }
+        if (mSettings.ampEnabled != mRemoteSettings.ampEnabled) {
+            params.put("amp_enabled", String.valueOf(mSettings.ampEnabled));
         }
 
         return params;
