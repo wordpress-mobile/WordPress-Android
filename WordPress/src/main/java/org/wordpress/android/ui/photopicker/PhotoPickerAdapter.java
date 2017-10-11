@@ -174,7 +174,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             holder.imgThumbnail.setScaleY(scale);
         }
 
-        holder.imgPreview.setVisibility(item.isVideo ? View.GONE : View.VISIBLE);
         holder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
 
         if (!mDisableImageReset) {
@@ -308,7 +307,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         private final ImageView imgThumbnail;
         private final TextView txtSelectionCount;
         private final ImageView videoOverlay;
-        private final ImageView imgPreview;
 
         public ThumbnailViewHolder(View view) {
             super(view);
@@ -316,7 +314,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             imgThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
             txtSelectionCount = (TextView) view.findViewById(R.id.text_selection_count);
             videoOverlay = (ImageView) view.findViewById(R.id.image_video_overlay);
-            imgPreview = (ImageView) view.findViewById(R.id.image_preview);
 
             imgThumbnail.getLayoutParams().width = mThumbWidth;
             imgThumbnail.getLayoutParams().height = mThumbHeight;
@@ -336,9 +333,9 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 }
             });
 
-            imgThumbnail.setOnLongClickListener(new View.OnLongClickListener() {
+            imgThumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
+                public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position) && mAllowMultiSelect) {
                         if (!mIsMultiSelectEnabled) {
@@ -346,26 +343,35 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                         }
                         toggleSelection(ThumbnailViewHolder.this, position);
                     }
+                }
+            });
+            imgThumbnail.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int position = getAdapterPosition();
+                    showPreview(position);
                     return true;
                 }
             });
 
-            View.OnClickListener previewListener = new View.OnClickListener() {
+            videoOverlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    PhotoPickerItem item = getItemAtPosition(position);
-                    if (item != null) {
-                        trackOpenPreviewScreenEvent(item);
-                        MediaPreviewActivity.showPreview(
-                                mContext,
-                                null,
-                                item.uri.toString());
-                    }
+                    showPreview(position);
                 }
-            };
-            imgPreview.setOnClickListener(previewListener);
-            videoOverlay.setOnClickListener(previewListener);
+            });
+        }
+    }
+
+    private void showPreview(int position) {
+        PhotoPickerItem item = getItemAtPosition(position);
+        if (item != null) {
+            trackOpenPreviewScreenEvent(item);
+            MediaPreviewActivity.showPreview(
+                    mContext,
+                    null,
+                    item.uri.toString());
         }
     }
 
