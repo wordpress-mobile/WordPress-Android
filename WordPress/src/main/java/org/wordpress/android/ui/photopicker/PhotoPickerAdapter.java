@@ -249,11 +249,10 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             isSelected = true;
             holder.txtSelectionCount.setText(Integer.toString(mSelectedUris.size()));
         }
+        holder.txtSelectionCount.setSelected(isSelected);
 
         // animate the count
-        AniUtils.startAnimation(holder.txtSelectionCount,
-                isSelected ? R.anim.cab_select : R.anim.cab_deselect);
-        holder.txtSelectionCount.setSelected(isSelected);
+        AniUtils.startAnimation(holder.txtSelectionCount, R.anim.pop);
 
         // scale the thumbnail
         if (isSelected) {
