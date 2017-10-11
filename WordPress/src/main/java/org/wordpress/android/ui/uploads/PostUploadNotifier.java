@@ -112,6 +112,11 @@ class PostUploadNotifier {
 
     // Post could have initial media, or not (nulable)
     void addPostInfoToForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
+        // if this is the first one, also set the currentItem to 1
+        if (sNotificationData.totalPostItems == 0) {
+            sNotificationData.currentPostItem = 1;
+        }
+
         sNotificationData.totalPostItems++;
         if (post.isPage()) {
             sNotificationData.totalPageItemsIncludedInPostCount++;
@@ -123,13 +128,22 @@ class PostUploadNotifier {
     }
 
     void addMediaInfoToForegroundNotification(@NonNull List<MediaModel> media) {
+        bumpCurrentMediaItemForFirstUpload();
         sNotificationData.totalMediaItems += media.size();
         startOrUpdateForegroundNotification(null);
     }
 
     void addMediaInfoToForegroundNotification(@NonNull MediaModel media) {
+        bumpCurrentMediaItemForFirstUpload();
         sNotificationData.totalMediaItems++;
         startOrUpdateForegroundNotification(null);
+    }
+
+    void bumpCurrentMediaItemForFirstUpload() {
+        // if this is the first one, also set the currentItem to 1
+        if (sNotificationData.totalMediaItems == 0) {
+            sNotificationData.currentMediaItem = 1;
+        }
     }
 
     void updateNotificationIcon(PostModel post, Bitmap icon) {
