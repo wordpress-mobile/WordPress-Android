@@ -147,9 +147,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds);
                 break;
             case SHARE_INTENT:
-                // skip the epilogue when sharing to WordPress
             case SELFHOSTED_ONLY:
-                // skip the epilogue when only added a selfhosted site
+                // skip the epilogue when only added a selfhosted site or sharing to WordPress
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;

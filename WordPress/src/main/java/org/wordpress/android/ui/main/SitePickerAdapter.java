@@ -37,8 +37,6 @@ import javax.inject.Inject;
 
 public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final int NOT_DEF = -1;
-
     interface OnSiteClickListener {
         void onSiteClick(SiteRecord site);
         boolean onSiteLongClick(SiteRecord site);
@@ -86,8 +84,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private OnDataLoadedListener mDataLoadedListener;
 
     private boolean mIsSingleItemSelectionEnabled;
-    private int mSelectedItemPos = NOT_DEF;
-    private int mSelectedItemLocalId = NOT_DEF;
+    private int mSelectedItemPos;
 
     // show recently picked first if there are at least this many blogs
     private static final int RECENTLY_PICKED_THRESHOLD = 15;
@@ -157,6 +154,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.grey_lighten_20_translucent_50));
 
         mHeaderHandler = headerHandler;
+        mSelectedItemPos = getPositionOffset();
 
         mIgnoreSitesIds = ignoreSitesIds;
 
@@ -291,9 +289,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (mIsSingleItemSelectionEnabled) {
-            if (mSelectedItemPos == NOT_DEF) {
-                updateSelectedItemPosition(position);
-            }
             holder.selectedRadioButton.setVisibility(View.VISIBLE);
             holder.selectedRadioButton.setChecked(mSelectedItemPos == position);
             holder.layoutContainer.setOnClickListener(new OnClickListener() {
@@ -312,14 +307,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void selectSingleItem(final int newItemPosition) {
         // clear last selected item
         notifyItemChanged(mSelectedItemPos);
-        updateSelectedItemPosition(newItemPosition);
+        mSelectedItemPos = newItemPosition;
         // select new item
         notifyItemChanged(mSelectedItemPos);
-    }
-
-    private void updateSelectedItemPosition(final int newItemPosition){
-        mSelectedItemPos = newItemPosition;
-        mSelectedItemLocalId = getItem(newItemPosition).localId;
     }
 
     public void setSingleItemSelectionEnabled(final boolean enabled){
@@ -330,13 +320,13 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
     public void findAndSelect(final int lastUsedBlogLocalId) {
         int positionInSitesArray = mSites.indexOfSiteId(lastUsedBlogLocalId);
-        if(positionInSitesArray != NOT_DEF){
+        if(positionInSitesArray != -1){
             selectSingleItem(positionInSitesArray + getPositionOffset());
         }
     }
 
     public int getSelectedItemLocalId(){
-        return mSelectedItemLocalId;
+        return getItem(mSelectedItemPos).localId;
     }
 
     public String getLastSearch() {
@@ -574,7 +564,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public int compare(SiteRecord site1, SiteRecord site2) {
                     if (primaryBlogId > 0 && !mIsInSearchMode) {
                         if (site1.siteId == primaryBlogId) {
-                            return NOT_DEF;
+                            return -1;
                         } else if (site2.siteId == primaryBlogId) {
                             return 1;
                         }
@@ -687,7 +677,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             int i;
             for (SiteRecord site: sites) {
                 i = indexOfSite(site);
-                if (i == NOT_DEF
+                if (i == -1
                         || this.get(i).isHidden != site.isHidden
                         || this.get(i).isRecentPick != site.isRecentPick) {
                     return false;
@@ -704,7 +694,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
             }
-            return NOT_DEF;
+            return -1;
         }
 
         int indexOfSiteId(int localId) {
@@ -713,7 +703,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     return i;
                 }
             }
-            return NOT_DEF;
+            return -1;
         }
     }
 }

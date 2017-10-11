@@ -17,13 +17,11 @@ import javax.inject.Inject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
+import org.wordpress.android.ui.accounts.login.LoginHeaderViewHolder;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.HeaderHandler;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtils;
 
@@ -188,50 +186,38 @@ public class ShareIntentReceiverFragment extends Fragment {
             @Override
             public ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
                 boolean attachToRoot) {
-                return new LoginEpilogueFragment.HeaderViewHolder(layoutInflater.inflate(R.layout.login_epilogue_header, parent,
-                    false));
+                return new LoginHeaderViewHolder(layoutInflater.inflate(R.layout.login_epilogue_header, parent, false));
             }
 
             @Override
             public void onBindViewHolder(ViewHolder holder, int numberOfSites) {
-                refreshAccountDetails((LoginEpilogueFragment.HeaderViewHolder) holder);
+                refreshAccountDetails((LoginHeaderViewHolder) holder);
             }
         };
     }
 
-    private void refreshAccountDetails(LoginEpilogueFragment.HeaderViewHolder holder) {
+    private void refreshAccountDetails(LoginHeaderViewHolder holder) {
         if (!isAdded()) {
             return;
         }
-        holder.update(getContext(), holder, mAfterLogin && mAccountStore.hasAccessToken(), mAccountStore.getAccount());
+        holder.update(getContext(), holder, mAccountStore.hasAccessToken(), mAfterLogin, mAccountStore.getAccount());
         holder.mMySitesHeadingTextView.setText(R.string.share_intent_pick_site);
         holder.mMySitesHeadingTextView.setVisibility(View.VISIBLE);
     }
 
     enum ShareAction {
-        SHARE_TO_POST(1, "new_post", EditPostActivity.class), SHARE_TO_MEDIA_LIBRARY(2, "media_library",
-            MediaBrowserActivity.class);
+        SHARE_TO_POST("new_post", EditPostActivity.class),
+        SHARE_TO_MEDIA_LIBRARY("media_library", MediaBrowserActivity.class);
 
         public final Class targetClass;
-        public final int id;
         public final String analyticsName;
 
 
-        ShareAction(int id, String analyticsName, Class targetClass) {
+        ShareAction(String analyticsName, Class targetClass) {
             this.targetClass = targetClass;
-            this.id = id;
             this.analyticsName = analyticsName;
         }
 
-        public static ShareAction fromId(int id) {
-            for (ShareAction item : ShareAction.values()) {
-                if (item.id == id) {
-                    return item;
-                }
-            }
-            AppLog.w(T.SHARING, "Unknown ShareAction type.");
-            return SHARE_TO_POST;
-        }
     }
 
     interface ShareIntentFragmentListener {

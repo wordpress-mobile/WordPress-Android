@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +16,11 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.util.AnalyticsUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ViewUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 
@@ -149,53 +145,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         return mAdapter;
     }
 
-    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        public final View mLoggedInAsHeading;
-        public final View mUserDetailsCard;
-        public final WPNetworkImageView mAvatarImageView;
-        public final TextView mDisplayNameTextView;
-        public final TextView mUsernameTextView;
-        public final TextView mMySitesHeadingTextView;
-
-        public HeaderViewHolder(View view) {
-            super(view);
-            mLoggedInAsHeading = view.findViewById(R.id.logged_in_as_heading);
-            mUserDetailsCard = view.findViewById(R.id.user_details_card);
-            mAvatarImageView = (WPNetworkImageView) view.findViewById(R.id.avatar);
-            mDisplayNameTextView = (TextView) view.findViewById(R.id.display_name);
-            mUsernameTextView = (TextView) view.findViewById(R.id.username);
-            mMySitesHeadingTextView = (TextView) view.findViewById(R.id.my_sites_heading);
-        }
-
-        public void update(Context context, HeaderViewHolder holder, boolean showHeader, AccountModel defaultAccount) {
-            if (showHeader) {
-                holder.mLoggedInAsHeading.setVisibility(View.VISIBLE);
-                holder.mUserDetailsCard.setVisibility(View.VISIBLE);
-
-                final String avatarUrl = constructGravatarUrl(context, defaultAccount);
-                holder.mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, null);
-
-                holder.mUsernameTextView.setText(context.getString(R.string.login_username_at, defaultAccount
-                    .getUserName()));
-
-                String displayName = defaultAccount.getDisplayName();
-                if (!TextUtils.isEmpty(displayName)) {
-                    holder.mDisplayNameTextView.setText(displayName);
-                } else {
-                    holder.mDisplayNameTextView.setText(defaultAccount.getUserName());
-                }
-            } else {
-                holder.mLoggedInAsHeading.setVisibility(View.GONE);
-                holder.mUserDetailsCard.setVisibility(View.GONE);
-            }
-        }
-
-        private String constructGravatarUrl(Context context,AccountModel account) {
-            int avatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
-            return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
-        }
-    }
-
     private void setNewAdapter() {
         mAdapter = new SitePickerAdapter(getActivity(), R.layout.login_epilogue_sites_listitem, 0, "", false,
                 new SitePickerAdapter.OnDataLoadedListener() {
@@ -224,12 +173,12 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }, new SitePickerAdapter.HeaderHandler() {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent, boolean attachToRoot) {
-                return new HeaderViewHolder(layoutInflater.inflate(R.layout.login_epilogue_header, parent, false));
+                return new LoginHeaderViewHolder(layoutInflater.inflate(R.layout.login_epilogue_header, parent, false));
             }
 
             @Override
             public void onBindViewHolder(RecyclerView.ViewHolder holder, int numberOfSites) {
-                refreshAccountDetails((HeaderViewHolder) holder, numberOfSites);
+                refreshAccountDetails((LoginHeaderViewHolder) holder, numberOfSites);
             }
         }, mOldSitesIds);
     }
@@ -254,12 +203,12 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
     }
 
-    private void refreshAccountDetails(HeaderViewHolder holder, int numberOfSites) {
+    private void refreshAccountDetails(LoginHeaderViewHolder holder, int numberOfSites) {
         if (!isAdded()) {
             return;
         }
         // we only want to show user details for WordPress.com users
-        holder.update(getContext(), holder, mAccountStore.hasAccessToken(), mAccountStore.getAccount());
+        holder.update(getContext(), holder, mAccountStore.hasAccessToken(), true, mAccountStore.getAccount());
 
         if (numberOfSites == 0) {
             holder.mMySitesHeadingTextView.setVisibility(View.GONE);

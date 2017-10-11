@@ -47,7 +47,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
     @Inject SiteStore mSiteStore;
 
     private int mClickedSiteLocalId;
-    private int mShareActionId;
+    private String mShareActionName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,14 +79,14 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
 
     private void loadState(Bundle savedInstanceState) {
         mClickedSiteLocalId = savedInstanceState.getInt(KEY_SELECTED_SITE_LOCAL_ID);
-        mShareActionId = savedInstanceState.getInt(KEY_SHARE_ACTION_ID);
+        mShareActionName = savedInstanceState.getString(KEY_SHARE_ACTION_ID);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
         outState.putInt(KEY_SELECTED_SITE_LOCAL_ID, mClickedSiteLocalId);
-        outState.putInt(KEY_SHARE_ACTION_ID, mShareActionId);
+        outState.putString(KEY_SHARE_ACTION_ID, mShareActionName);
     }
 
     private int loadLastUsedBlogLocalId() {
@@ -115,7 +115,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
             this, requestCode, permissions, grantResults, true);
         if (allGranted && requestCode == WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
             // permissions granted
-            share(ShareAction.fromId(mShareActionId), mClickedSiteLocalId);
+            share(ShareAction.valueOf(mShareActionName), mClickedSiteLocalId);
         } else {
             Toast.makeText(this, R.string.share_media_permission_required, Toast.LENGTH_LONG).show();
         }
@@ -128,7 +128,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
             Intent intent = new Intent(this, shareAction.targetClass);
             startActivityAndFinish(intent, selectedSiteLocalId);
         } else {
-            mShareActionId = shareAction.id;
+            mShareActionName = shareAction.name();
             mClickedSiteLocalId = selectedSiteLocalId;
         }
     }
