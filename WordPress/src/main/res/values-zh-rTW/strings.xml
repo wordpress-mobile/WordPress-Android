@@ -101,9 +101,7 @@ Language: zh_TW
 	<string name="jetpack_info">Jetpack 資訊</string>
 	<string name="reader_photo_by">拍攝者：%s</string>
 	<string name="reader_label_visit">造訪</string>
-	<string name="all_your_sites">我所有的網站</string>
 	<string name="pending_draft_more">你有 %d 份草稿，卻從未發表。點選以查看。</string>
-	<string name="notification_pending_drafts">有待確認的草稿時通知我</string>
 	<string name="invalid_verification_code_format">必須是六位數字</string>
 	<string name="confirm_discard_changes">要捨棄未儲存的變更嗎？</string>
 	<string name="swipe_for_more">撥動以瞭解更多</string>
@@ -594,13 +592,7 @@ Language: zh_TW
 	<string name="app_notifications">應用程式通知</string>
 	<string name="notifications_tab">通知索引標籤</string>
 	<string name="email">電子郵件</string>
-	<string name="notifications_comments_other_blogs">其他網站上的留言</string>
-	<string name="notifications_other">其他</string>
 	<string name="notifications_wpcom_updates">WordPress.com 消息更新</string>
-	<string name="notifications_account_emails">WordPress.com 寄送的電子郵件</string>
-	<string name="notifications_account_emails_summary">我們會隨時傳送與帳號資訊相關的重要電子郵件，除此之外，你也能獲得實用的額外內容。</string>
-	<string name="your_sites">你的網站</string>
-	<string name="notifications_sights_and_sounds">提示與音效</string>
 	<string name="stats_insights_latest_post_trend">自從 %2$s 發表以來已經過了 %1$s。文章截至目前為止獲得的迴響如下…</string>
 	<string name="stats_insights_latest_post_summary">最新文章摘要</string>
 	<string name="button_revert">還原</string>
@@ -1141,7 +1133,6 @@ Language: zh_TW
 	<string name="version">版本</string>
 	<string name="tos">服務條款</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="max_thumbnail_px_width">預設圖片寬度</string>
 	<string name="image_alignment">對齊</string>
 	<string name="refresh">更新</string>
 	<string name="untitled">無標題</string>
@@ -1159,9 +1150,6 @@ Language: zh_TW
 	<string name="title">標題</string>
 	<string name="categories">分類</string>
 	<string name="dlg_deleting_comments">刪除留言</string>
-	<string name="notification_blink">閃爍通知燈</string>
-	<string name="notification_vibrate">振動</string>
-	<string name="notification_sound">通知音效</string>
 	<string name="sdcard_title">需要 SD 卡</string>
 	<string name="media">媒體</string>
 	<string name="delete">刪除</string>
