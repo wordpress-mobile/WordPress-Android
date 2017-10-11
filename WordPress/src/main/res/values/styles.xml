@@ -14,11 +14,13 @@
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
-        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
-        <item name="android:actionModeBackground">@color/color_primary_dark</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
         <item name="android:statusBarColor">@color/status_bar_tint</item>
+
+        <item name="actionModeBackground">@color/grey_dark</item>
+        <item name="actionModeSplitBackground">@color/grey_dark</item>
+        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
 
         <item name="colorButtonNormal">@color/light_gray</item>
 
