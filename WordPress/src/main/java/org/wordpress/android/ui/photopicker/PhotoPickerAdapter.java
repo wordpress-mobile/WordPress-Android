@@ -34,7 +34,7 @@ import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUM
 class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.ThumbnailViewHolder> {
 
     private static final float SCALE_NORMAL = 1.0f;
-    private static final float SCALE_SELECTED = .85f;
+    private static final float SCALE_SELECTED = .9f;
 
     /*
      * used by this adapter to communicate with the owning fragment
