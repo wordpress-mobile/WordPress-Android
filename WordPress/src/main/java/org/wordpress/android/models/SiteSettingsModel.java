@@ -152,6 +152,13 @@ public class SiteSettingsModel {
     public boolean allowLikeButton;
     public boolean allowCommentLikes;
     public String twitterUsername;
+    public String timeZone;
+    public String dateFormat;
+    public String timeFormat;
+    public String startOfWeek;
+    public int postsPerPage;
+    public boolean ampSupported;
+    public boolean ampEnabled;
 
     @Override
     public boolean equals(Object other) {
@@ -165,6 +172,10 @@ public class SiteSettingsModel {
                 equals(title, otherModel.title) &&
                 equals(tagline, otherModel.tagline) &&
                 equals(defaultPostFormat, otherModel.defaultPostFormat) &&
+                equals(startOfWeek, otherModel.startOfWeek) &&
+                equals(timeFormat, otherModel.timeFormat) &&
+                equals(dateFormat, otherModel.dateFormat) &&
+                equals(timeZone, otherModel.timeZone) &&
                 languageId == otherModel.languageId &&
                 privacy == otherModel.privacy &&
                 location == otherModel.location &&
@@ -193,6 +204,9 @@ public class SiteSettingsModel {
                 allowReblogButton == otherModel.allowReblogButton &&
                 allowLikeButton == otherModel.allowLikeButton &&
                 allowCommentLikes == otherModel.allowCommentLikes &&
+                postsPerPage == otherModel.postsPerPage &&
+                ampEnabled == otherModel.ampEnabled &&
+                ampSupported == otherModel.ampSupported &&
                 twitterUsername != null && twitterUsername.equals(otherModel.twitterUsername);
     }
 
@@ -254,6 +268,13 @@ public class SiteSettingsModel {
         if (other.twitterUsername != null) {
             twitterUsername = other.twitterUsername;
         }
+        timeZone = other.timeZone;
+        dateFormat = other.dateFormat;
+        timeFormat = other.timeFormat;
+        startOfWeek = other.startOfWeek;
+        postsPerPage = other.postsPerPage;
+        ampSupported = other.ampSupported;
+        ampEnabled = other.ampEnabled;
     }
 
     /**
@@ -288,6 +309,13 @@ public class SiteSettingsModel {
         commentsRequireIdentity = getBooleanFromCursor(cursor, IDENTITY_REQUIRED_COLUMN_NAME);
         commentsRequireUserAccount = getBooleanFromCursor(cursor, USER_ACCOUNT_REQUIRED_COLUMN_NAME);
         commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, WHITELIST_COLUMN_NAME);
+        timeZone = getStringFromCursor(cursor, "timezone_string");
+        dateFormat = getStringFromCursor(cursor, "date_format");
+        timeFormat = getStringFromCursor(cursor, "time_format");
+        startOfWeek = getStringFromCursor(cursor, "start_of_week");
+        postsPerPage = getIntFromCursor(cursor, "posts_per_page");
+        ampSupported = getBooleanFromCursor(cursor, "amp_supported");
+        ampEnabled = getBooleanFromCursor(cursor, "amp_enabled");
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
@@ -370,6 +398,13 @@ public class SiteSettingsModel {
         values.put(IDENTITY_REQUIRED_COLUMN_NAME, commentsRequireIdentity);
         values.put(USER_ACCOUNT_REQUIRED_COLUMN_NAME, commentsRequireUserAccount);
         values.put(WHITELIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
+        values.put("timezone_string", timeZone);
+        values.put("date_format", dateFormat);
+        values.put("time_format", timeFormat);
+        values.put("start_of_week", startOfWeek);
+        values.put("posts_per_page", postsPerPage);
+        values.put("amp_supported", ampSupported);
+        values.put("amp_enabled", ampEnabled);
 
         String moderationKeys = "";
         if (holdForModeration != null) {
