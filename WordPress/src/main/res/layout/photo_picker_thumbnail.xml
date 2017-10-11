@@ -29,7 +29,7 @@
             android:layout_marginBottom="@dimen/margin_medium"
             android:layout_marginLeft="@dimen/margin_medium"
             android:background="@drawable/photo_picker_circle_selector"
-            android:elevation="@dimen/appbar_elevation"
+            android:elevation="4dp"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="@dimen/text_sz_medium"

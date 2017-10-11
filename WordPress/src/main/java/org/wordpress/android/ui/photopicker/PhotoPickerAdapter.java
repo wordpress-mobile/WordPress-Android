@@ -244,6 +244,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         if (selectedIndex > -1) {
             mSelectedUris.remove(selectedIndex);
             isSelected = false;
+            holder.txtSelectionCount.setText(null);
         } else {
             mSelectedUris.add(item.uri);
             isSelected = true;
