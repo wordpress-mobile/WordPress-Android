@@ -379,7 +379,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                supportFinishAfterTransition();
+                doFinishAfterTransition();
             }
         }, 1500);
     }
@@ -423,8 +423,17 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         if (mOverrideClosingTransition) {
             finish();
         } else {
-            supportFinishAfterTransition();
+            doFinishAfterTransition();
         }
+    }
+
+    /*
+     * wrapper for supportFinishAfterTransition() which first hides the FAB to prevent it flickering
+     * during the shared element transition
+     */
+    private void doFinishAfterTransition() {
+        mFabView.setVisibility(View.GONE);
+        supportFinishAfterTransition();
     }
 
     @Override
@@ -851,7 +860,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 ToastUtils.showToast(this, R.string.error_generic);
             } else {
                 setResult(RESULT_MEDIA_DELETED);
-                supportFinishAfterTransition();
+                doFinishAfterTransition();
             }
         } else if (!event.isError()) {
             reloadMedia();
