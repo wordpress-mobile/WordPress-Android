@@ -11,6 +11,7 @@
 /me/settings/
 /me/sites/
 /me/send-verification-email/
+/me/social-login/connect/
 
 /read/feed/$feed_url_or_id#long,String
 
