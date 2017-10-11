@@ -399,7 +399,7 @@ public class PhotoPickerFragment extends Fragment {
         if (mActionMode == null) return;
 
         int numSelected = getAdapter().getNumSelected();
-        String title = String.format(getString(R.string.cab_selected), numSelected);
+        String title = String.format(getString(R.string.cab_insert), numSelected);
         mActionMode.setTitle(title);
     }
 
