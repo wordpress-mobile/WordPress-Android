@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 58;
+    private static final int DATABASE_VERSION = 59;
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
@@ -192,6 +192,10 @@ public class WordPressDB {
             case 57:
                 // Migrate media optimization settings
                 SiteSettingsTable.migrateMediaOptimizeSettings(db);
+                currentVersion++;
+            case 58:
+                // add new settings columns for various missing settings as part of #betterjetpackxp
+                SiteSettingsTable.addMissingSettingsForBetterJetpackXp(db);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
