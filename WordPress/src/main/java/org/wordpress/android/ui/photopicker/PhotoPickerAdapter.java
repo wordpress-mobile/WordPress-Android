@@ -161,10 +161,11 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
         int selectedIndex = mIsMultiSelectEnabled ? mSelectedUris.indexOfUri(item.uri) : -1;
         if (selectedIndex > -1) {
-            holder.txtSelectionCount.setVisibility(View.VISIBLE);
+            holder.txtSelectionCount.setSelected(true);
             holder.txtSelectionCount.setText(Integer.toString(selectedIndex + 1));
         } else {
-            holder.txtSelectionCount.setVisibility(View.GONE);
+            holder.txtSelectionCount.setSelected(false);
+            holder.txtSelectionCount.setText(null);
         }
 
         // make sure the thumbnail scale reflects its selection state
@@ -252,7 +253,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         // animate the count
         AniUtils.startAnimation(holder.txtSelectionCount,
                 isSelected ? R.anim.cab_select : R.anim.cab_deselect);
-        holder.txtSelectionCount.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+        holder.txtSelectionCount.setSelected(isSelected);
 
         // scale the thumbnail
         if (isSelected) {
