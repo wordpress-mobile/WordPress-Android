@@ -31,7 +31,6 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
@@ -400,7 +399,7 @@ public class PhotoPickerFragment extends Fragment {
         if (mActionMode == null) return;
 
         int numSelected = getAdapter().getNumSelected();
-        String title = String.format(getString(R.string.cab_insert), numSelected);
+        String title = String.format(getString(R.string.cab_selected), numSelected);
         mActionMode.setTitle(title);
     }
 
