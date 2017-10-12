@@ -251,6 +251,10 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getThemesWithNoSiteAsCursor();
     }
 
+    public Cursor getThemesCursorForSite(@NonNull SiteModel site) {
+        return ThemeSqlUtils.getThemesForSiteAsCursor(site);
+    }
+
     public List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
         return ThemeSqlUtils.getThemesForSite(site);
     }
