@@ -112,6 +112,27 @@
             android:entryValues="@array/post_format_display_names"
             app:longClickHint="@string/site_settings_format_hint" />
 
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:id="@+id/pref_date_format"
+            android:key="@string/pref_key_site_date_format"
+            android:title="@string/site_settings_date_format_title"
+            android:entries="@array/date_format_entries"
+            android:entryValues="@array/date_format_values" />
+
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:id="@+id/pref_time_format"
+            android:key="@string/pref_key_site_time_format"
+            android:title="@string/site_settings_time_format_title"
+            android:entries="@array/time_format_entries"
+            android:entryValues="@array/time_format_values" />
+
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:id="@+id/pref_week_starts"
+            android:key="@string/pref_key_site_week_start"
+            android:title="@string/site_settings_week_start_title"
+            android:entries="@array/weekdays"
+            android:entryValues="@array/weekdays" />
+
         <org.wordpress.android.ui.prefs.WPPreference
             android:id="@+id/pref_related_posts"
             android:key="@string/pref_key_site_related_posts"

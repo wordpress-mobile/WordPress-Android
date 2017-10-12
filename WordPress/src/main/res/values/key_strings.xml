@@ -48,6 +48,9 @@
     <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
     <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
+    <string name="pref_key_site_date_format" translatable="false">wp_pref_site_date_format</string>
+    <string name="pref_key_site_time_format" translatable="false">wp_pref_site_time_format</string>
+    <string name="pref_key_site_week_start" translatable="false">wp_pref_site_week_start</string>
     <string name="pref_key_optimize_media" translatable="false">wp_pref_optimize_media</string>
     <string name="pref_key_optimize_image" translatable="false">wp_pref_key_optimize_image</string>
     <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
@@ -145,12 +148,52 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="date_format_entries">
+        <item>F j, Y</item>
+        <item>Y-m-d</item>
+        <item>m/d/Y</item>
+        <item>d/m/Y</item>
+        <item>Custom</item>
+    </string-array>
+
+    <string-array name="date_format_values">
+        <item>F j, Y</item>
+        <item>Y-m-d</item>
+        <item>m/d/Y</item>
+        <item>d/m/Y</item>
+        <item>Custom</item>
+    </string-array>
+
+    <string-array name="time_format_entries">
+        <item>g:i a</item>
+        <item>g:i A</item>
+        <item>H:i</item>
+        <item>Custom</item>
+    </string-array>
+
+    <string-array name="time_format_values">
+        <item>g:i a</item>
+        <item>g:i A</item>
+        <item>H:i</item>
+        <item>Custom</item>
+    </string-array>
+
     <string-array name="timezone_entries">
         <item>TODO</item>
     </string-array>
 
     <string-array name="timezone_values">
         <item>TODO</item>
+    </string-array>
+
+    <string-array name="weekdays">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
     </string-array>
 
     <!-- Used as values to a preference in Site Settings -->
