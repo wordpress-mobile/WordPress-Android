@@ -334,8 +334,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             // note we count backwards so we can remove from the list
             for (int i = mediaModels.size() - 1 ; i >= 0; i--) {
                 MediaModel media = mediaModels.get(i);
-                if (org.wordpress.android.util.MediaUtils.isLocalFile(media.getUploadState())
-                        && media.getFilePath() != null) {
+                if (media.getFilePath() != null
+                        && org.wordpress.android.util.MediaUtils.isLocalFile(media.getUploadState())) {
                     File file = new File(media.getFilePath());
                     if (!file.exists()) {
                         AppLog.w(AppLog.T.MEDIA, "removing nonexistent local media " + media.getFilePath());
