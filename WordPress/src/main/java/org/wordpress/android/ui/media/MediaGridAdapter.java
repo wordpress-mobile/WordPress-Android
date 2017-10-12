@@ -22,6 +22,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -45,9 +46,9 @@ import java.util.concurrent.RejectedExecutionException;
  */
 public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.GridViewHolder> {
     private MediaGridAdapterCallback mCallback;
-    private boolean mHasRetrievedAll;
+    private MediaBrowserType mBrowserType;
 
-    private boolean mAllowMultiselect;
+    private boolean mHasRetrievedAll;
     private boolean mInMultiSelect;
     private boolean mLoadThumbnails = true;
 
@@ -75,12 +76,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     private static final int INVALID_POSITION = -1;
 
-    public MediaGridAdapter(Context context, SiteModel site) {
+    public MediaGridAdapter(@NonNull Context context, @NonNull SiteModel site, @NonNull MediaBrowserType browserType) {
         super();
         setHasStableIds(true);
 
         mContext = context;
         mSite = site;
+        mBrowserType = browserType;
         mInflater = LayoutInflater.from(context);
         mHandler = new Handler();
 
@@ -192,7 +194,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         } else {
             holder.selectionCountTextView.setText(null);
         }
-        holder.selectionCountTextView.setVisibility(mAllowMultiselect && canSelect ? View.VISIBLE : View.GONE);
+        holder.selectionCountTextView.setVisibility(canMultiSelect() && canSelect ? View.VISIBLE : View.GONE);
 
         // make sure the thumbnail scale reflects its selection state
         float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
@@ -295,7 +297,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     if (!isValidPosition(position)) {
                         return;
                     }
-                    if (mAllowMultiselect) {
+                    if (isInMultiSelect() || (mBrowserType.isPicker() && canMultiSelect())) {
                         setInMultiSelect(true);
                         if (canSelectPosition(position)) {
                             toggleItemSelected(GridViewHolder.this, position);
@@ -324,7 +326,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     if (canSelectPosition(position)) {
                         if (isInMultiSelect()) {
                             toggleItemSelected(GridViewHolder.this, position);
-                        } else if (mAllowMultiselect) {
+                        } else if (canMultiSelect()) {
                             setInMultiSelect(true);
                             setItemSelectedByPosition(GridViewHolder.this, position, true);
                         }
@@ -363,8 +365,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
-    public void setAllowMultiselect(boolean allow) {
-        mAllowMultiselect = allow;
+    public boolean canMultiSelect() {
+        return mBrowserType == MediaBrowserType.BROWSER || mBrowserType == MediaBrowserType.EDITOR_PICKER;
     }
 
     public boolean isInMultiSelect() {
@@ -395,7 +397,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
      * for deleted items since the whole purpose of multiselect is to delete multiple items
      */
     private boolean canSelectPosition(int position) {
-        if (!mAllowMultiselect || !isValidPosition(position)) {
+        if (!canMultiSelect() || !isValidPosition(position)) {
             return false;
         }
         MediaUploadState state = MediaUploadState.fromString(mMediaList.get(position).getUploadState());
