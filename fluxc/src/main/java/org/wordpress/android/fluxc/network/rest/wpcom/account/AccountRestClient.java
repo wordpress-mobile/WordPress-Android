@@ -8,6 +8,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -31,6 +32,7 @@ import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,19 +69,33 @@ public class AccountRestClient extends BaseWPComRestClient {
             this.twoStepNonceBackup = response.two_step_nonce_backup;
             this.twoStepNonceSms = response.two_step_nonce_sms;
             this.twoStepNotificationSent = response.two_step_notification_sent;
-            this.twoStepType = response.two_step_type;
+            this.twoStepTypes = convertJsonArrayToStringList(response.two_step_supported_auth_types);
             this.userId = response.user_id;
         }
         public AccountPushSocialResponsePayload(BaseNetworkError error) {
             this.error = new AccountSocialError(error.volleyError.networkResponse.data);
         }
+        public List<String> twoStepTypes;
         public String bearerToken;
         public String twoStepNonceAuthenticator;
         public String twoStepNonceBackup;
         public String twoStepNonceSms;
         public String twoStepNotificationSent;
-        public String twoStepType;
         public String userId;
+
+        private List<String> convertJsonArrayToStringList(JSONArray array) {
+            List<String> list = new ArrayList<>();
+
+            try {
+                for (int i = 0; i < array.length(); i++) {
+                    list.add(array.getString(i));
+                }
+            } catch (JSONException exception) {
+                AppLog.e(T.API, "Unable to parse two step types: " + exception.getMessage());
+            }
+
+            return list;
+        }
     }
 
     public static class NewAccountResponsePayload extends Payload<NewUserError> {
