@@ -322,14 +322,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
      */
     private void ensureCorrectState(List<MediaModel> mediaModels) {
         if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
+            // we only need to check the deletion state if media are currently being deleted
             MediaDeleteService service = ((MediaBrowserActivity)getActivity()).getMediaDeleteService();
-            boolean checkService = service != null && service.isAnyMediaBeingDeleted();
+            boolean checkDeleteState = service != null && service.isAnyMediaBeingDeleted();
 
             // note we count backwards so we can remove from the list
             for (int i = mediaModels.size() - 1 ; i >= 0; i--) {
                 MediaModel media = mediaModels.get(i);
                 // ensure correct upload state for media being deleted
-                if (checkService && service.isMediaBeingDeleted(media)) {
+                if (checkDeleteState && service.isMediaBeingDeleted(media)) {
                     media.setUploadState(MediaUploadState.DELETING);
                 }
 
