@@ -281,6 +281,46 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     /**
+     * Performs an HTTP POST call to the v1.1 /me/social-login/connect/ endpoint.  Upon receiving a
+     * response (success or error) a {@link AccountAction#PUSHED_SOCIAL} action is dispatched with a
+     * payload of type {@link AccountPushSocialResponsePayload}.
+     *
+     * {@link AccountPushSocialResponsePayload#isError()} can be used to check the request result.
+     *
+     * No HTTP POST call is made if the given parameter map is null or contains no entries.
+     *
+     * @param idToken       OpenID Connect Token (JWT) from the service the user is using to
+     *                      authenticate their account.
+     * @param service       Slug representing the service for the given token (e.g. google).
+     */
+    public void pushSocialConnect(@NonNull String idToken, @NonNull String service) {
+        String url = WPCOMREST.me.social_login.connect.getUrlV1_1();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("id_token", idToken);
+        params.put("service", service);
+        params.put("client_id", mAppSecrets.getAppId());
+        params.put("client_secret", mAppSecrets.getAppSecret());
+
+        add(WPComGsonRequest.buildPostRequest(url, params, AccountSocialResponse.class,
+                new Listener<AccountSocialResponse>() {
+                    @Override
+                    public void onResponse(AccountSocialResponse response) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(error);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                }
+        ));
+    }
+
+    /**
      * Performs an HTTP POST call to https://wordpress.com/wp-login.php with social-login-endpoint action.  Upon
      * receiving a response (success or error) a {@link AccountAction#PUSHED_SOCIAL} action is dispatched with a
      * payload of type {@link AccountPushSocialResponsePayload}.
