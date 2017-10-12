@@ -396,7 +396,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
         String thanksMessage = String.format(getString(R.string.theme_prompt), newTheme.getName());
-        if (!newTheme.getAuthorName().isEmpty()) {
+        if (!TextUtils.isEmpty(newTheme.getAuthorName())) {
             String append = String.format(getString(R.string.theme_by_author_prompt_append), newTheme.getAuthorName());
             thanksMessage = thanksMessage + " " + append;
         }
