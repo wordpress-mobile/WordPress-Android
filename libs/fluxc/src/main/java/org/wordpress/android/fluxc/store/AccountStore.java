@@ -267,17 +267,8 @@ public class AccountStore extends Store {
 
     public static class AccountSocialError implements OnChangedError {
         public AccountSocialErrorType type;
-        public List<String> twoStepTypes;
         public String message;
         public String nonce;
-
-        public AccountSocialError(AccountSocialErrorType type, @NonNull String message, String nonce,
-                                  List<String> twoStepTypes) {
-            this.type = type;
-            this.message = message;
-            this.nonce = nonce;
-            this.twoStepTypes = twoStepTypes;
-        }
 
         public AccountSocialError(@NonNull byte[] response) {
             try {
@@ -594,8 +585,7 @@ public class AccountStore extends Store {
         // Error; emit only social change.
         if (payload.isError()) {
             OnSocialChanged event = new OnSocialChanged();
-            event.error = new AccountSocialError(payload.error.type, payload.error.message, payload.error.nonce,
-                    payload.error.twoStepTypes);
+            event.error = payload.error;
             emitChange(event);
         // No error, but two-factor authentication is required; emit only social change.
         } else if (TextUtils.isEmpty(payload.bearerToken)) {
