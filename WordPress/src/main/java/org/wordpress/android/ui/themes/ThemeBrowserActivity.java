@@ -323,7 +323,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(payload));
     }
 
-    protected ThemeModel getCurrentTheme() {
+    @Override
+    public ThemeModel getCurrentTheme() {
         return mCurrentTheme;
     }
 

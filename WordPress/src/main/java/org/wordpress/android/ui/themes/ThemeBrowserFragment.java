@@ -60,6 +60,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         void onDetailsSelected(String themeId);
         void onSupportSelected(String themeId);
         void onSearchClicked();
+        ThemeModel getCurrentTheme();
     }
 
     protected static final String BUNDLE_PAGE = "BUNDLE_PAGE";
