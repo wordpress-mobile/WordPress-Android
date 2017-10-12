@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-05 07:34:09+0000
+Translation-Revision-Date: 2017-10-02 12:00:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+	<string name="error_page_does_not_exist">Diese Seite existiert nicht mehr</string>
+	<string name="error_publish_empty_page">Eine leere Seite kann nicht veröffentlicht werden</string>
+	<string name="cant_open_url">Link konnte nicht geöffnet werden</string>
+	<string name="page_scheduled">Seite geplant</string>
+	<string name="post_scheduled">Beitrag geplant</string>
 	<string name="format_bar_description_page">Seitenumbruch</string>
 	<string name="format_bar_description_heading">Überschrift</string>
 	<string name="new_editor_promo_title_beta">Beta</string>
@@ -92,10 +97,7 @@ Language: de
 	<string name="jetpack_info">Jetpack Info</string>
 	<string name="reader_photo_by">Foto von %s</string>
 	<string name="reader_label_visit">Besuche</string>
-	<string name="all_your_sites">Alle meine Websites</string>
 	<string name="pending_draft_more">Du hast %d Beiträge geschrieben, aber nie veröffentlicht. Tippe, um sie zu prüfen.</string>
-	<string name="no_default_app_available_to_open_link">Der Link konnte nicht geöffnet werden.</string>
-	<string name="notification_pending_drafts">Benachrichtige mich bei wartenden Entwürfen</string>
 	<string name="invalid_verification_code_format">Muss eine 6-stellige Zahl sein</string>
 	<string name="confirm_discard_changes">Nicht gespeicherte Änderungen verwerfen?</string>
 	<string name="swipe_for_more">Wischen für mehr</string>
@@ -586,13 +588,7 @@ Language: de
 	<string name="email">E-Mail</string>
 	<string name="notifications_tab">Registerkarte „Benachrichtigungen“</string>
 	<string name="app_notifications">App-Benachrichtigungen</string>
-	<string name="notifications_comments_other_blogs">Kommentare auf anderen Websites</string>
-	<string name="notifications_other">Andere</string>
 	<string name="notifications_wpcom_updates">WordPress.com-Aktualisierungen</string>
-	<string name="notifications_account_emails">E-Mail von WordPress.com</string>
-	<string name="notifications_account_emails_summary">Wichtige E-Mails zu deinem Konto senden wir dir auf jeden Fall, aber du kannst auch ein paar nützliche Extras dazubekommen.</string>
-	<string name="your_sites">Deine Websites</string>
-	<string name="notifications_sights_and_sounds">Licht und Ton</string>
 	<string name="stats_insights_latest_post_trend">Die Veröffentlichung von %2$s ist %1$s her. Hier siehst du, wie es dem Beitrag bisher ergangen ist ...</string>
 	<string name="stats_insights_latest_post_summary">Übersicht des letzten Beitrags</string>
 	<string name="button_revert">Rückgängig</string>
@@ -873,7 +869,6 @@ Language: de
 	<string name="error_refresh_notifications">Benachrichtigungen konnten nicht aktualisiert werden</string>
 	<string name="error_refresh_pages">Seiten konnten nicht aktualisiert werden</string>
 	<string name="error_refresh_posts">Beiträge konnten nicht aktualisiert werden</string>
-	<string name="error_delete_post">Beim Löschen von %s trat ein Fehler auf</string>
 	<string name="notifications_empty_list">Keine Benachrichtigungen</string>
 	<string name="reply_failed">Antwort fehlgeschlagen</string>
 	<string name="invalid_url_message">Überprüfe ob die eingegebene Blog-URL gültig ist</string>
@@ -890,7 +885,6 @@ Language: de
 	<string name="theme_auth_error_message">Stelle sicher, dass du die Berechtigung hast Themes festzulegen</string>
 	<string name="theme_set_failed">Theme festlegen fehlgeschlagen</string>
 	<string name="theme_fetch_failed">Abrufen der Themes fehlgeschlagen</string>
-	<string name="wait_until_upload_completes">Warte bis der Upload fertig ist</string>
 	<string name="blog_not_found">Beim Aufrufen des Blogs ist ein Fehler aufgetreten</string>
 	<string name="gallery_error">Das Medien-Objekt konnte nicht abgerufen werden</string>
 	<string name="could_not_remove_account">Website konnte nicht entfernt werden</string>
@@ -1132,7 +1126,6 @@ Language: de
 	<string name="app_title">WordPress für Android</string>
 	<string name="tos">Nutzungsbedingungen</string>
 	<string name="version">Version</string>
-	<string name="max_thumbnail_px_width">Standardbreite für Bilder</string>
 	<string name="image_alignment">Ausrichtung</string>
 	<string name="refresh">Aktualisieren</string>
 	<string name="untitled">Unbenannt</string>
@@ -1150,9 +1143,6 @@ Language: de
 	<string name="categories">Kategorien</string>
 	<string name="title">Titel</string>
 	<string name="dlg_deleting_comments">Lösche Kommentare</string>
-	<string name="notification_vibrate">Vibration</string>
-	<string name="notification_sound">Benachrichtigungston</string>
-	<string name="notification_blink">Benachrichtigungslicht blinken</string>
 	<string name="sdcard_title">SD-Karte benötigt</string>
 	<string name="media">Media</string>
 	<string name="approve">Genehmigen</string>

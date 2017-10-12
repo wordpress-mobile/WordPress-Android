@@ -300,13 +300,7 @@ Language: sk
 	<string name="email">E-mail</string>
 	<string name="app_notifications">Upozornenia aplikácie</string>
 	<string name="notifications_tab">Záložka Upozornenia</string>
-	<string name="notifications_comments_other_blogs">Komentáre na ďalších webových stránkach</string>
 	<string name="notifications_wpcom_updates">Aktualizácie WordPress.com</string>
-	<string name="notifications_other">Iné</string>
-	<string name="notifications_account_emails">E-mail od WordPress.com</string>
-	<string name="notifications_account_emails_summary">Budeme vám posielať dôležité e-maily o vašom účte, ale rovnako môžete dostať aj iné, užitočné správy.</string>
-	<string name="your_sites">Vaše webové stránky</string>
-	<string name="notifications_sights_and_sounds">Sights and Sounds</string>
 	<string name="stats_insights_latest_post_trend">Prešlo %1$s od zverejnenia %2$s. Môžete vidieť ako doteraz príspevok obstál...</string>
 	<string name="stats_insights_latest_post_summary">Súhrn najnovších príspevkov</string>
 	<string name="button_revert">Vrátiť</string>
@@ -549,7 +543,6 @@ Language: sk
 	<string name="username_not_allowed">Používateľské meno nie je povolené</string>
 	<string name="blog_name_exists">Stránka už existuje</string>
 	<string name="nux_cannot_log_in">Prihlásenie nie je možné</string>
-	<string name="error_delete_post">Počas mazania %s nastala chyba</string>
 	<string name="blog_name_reserved">Táto adresa je obsadená</string>
 	<string name="out_of_memory">Nedostatok voľného miesta v pamäti</string>
 	<string name="blog_not_found">Počas prístupu k blogu sa vyskytla chyba</string>
@@ -586,7 +579,6 @@ Language: sk
 	<string name="comments_empty_list">Žiadne komentáre</string>
 	<string name="mnu_comment_unspam">Žiadny spam</string>
 	<string name="theme_set_failed">Nepodarilo sa nastaviť tému</string>
-	<string name="wait_until_upload_completes">Čakajte, kým bude nahrávanie dokončené</string>
 	<string name="no_network_message">Nie sú k dispozícii žiadne siete</string>
 	<string name="blog_name_required">Vložte adresu stránky</string>
 	<string name="username_must_include_letters">Používatelské meno musí obsahovať min. 1 písmeno (a-z)</string>
@@ -842,8 +834,6 @@ Language: sk
 	<string name="upload_full_size_image">Nahrať a odkázať na obrázok v plnom rozlíšení</string>
 	<string name="categories">Kategórie</string>
 	<string name="title">Názov</string>
-	<string name="notification_vibrate">Vibrovať</string>
-	<string name="notification_blink">Blikať oznamovacie svetlo</string>
 	<string name="sdcard_title">Vyžadovaná SD karta</string>
 	<string name="media">Súbory</string>
 	<string name="delete">Zmazať</string>

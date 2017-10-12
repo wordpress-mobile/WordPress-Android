@@ -2,11 +2,11 @@ package org.wordpress.android.ui.stats.models;
 
 import android.text.TextUtils;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,7 +113,7 @@ public class VisitsModel extends BaseStatsModel {
     private JSONArray getFieldsJSON() {
         JSONArray jArray;
         try {
-            String categories = StringUtils.unescapeHTML(this.getFields() != null ? this.getFields() : "[]");
+            String categories = StringEscapeUtils.unescapeHtml4(this.getFields() != null ? this.getFields() : "[]");
             if (TextUtils.isEmpty(categories)) {
                 jArray = new JSONArray();
             } else {

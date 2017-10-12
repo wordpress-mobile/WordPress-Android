@@ -34,13 +34,7 @@ Language: sr_RS
 	<string name="email">Е-пошта</string>
 	<string name="app_notifications">Обавештења апликације</string>
 	<string name="notifications_tab">Језичак обавештења</string>
-	<string name="notifications_comments_other_blogs">Коментари на другим веб местима</string>
 	<string name="notifications_wpcom_updates">WordPress.com ажурирања</string>
-	<string name="notifications_other">Друго</string>
-	<string name="notifications_account_emails">Е-пошта од WordPress.com</string>
-	<string name="notifications_account_emails_summary">Увек ћемо слати важну е-пошту везану за ваш налог, али такође можете да добијете неку додатну помоћ.</string>
-	<string name="your_sites">Ваша веб места</string>
-	<string name="notifications_sights_and_sounds">Слике и звуци</string>
 	<string name="stats_insights_latest_post_trend">Прошло је %1$s од када је %2$s је објављен. Ево какав је учинак чланка до сада…</string>
 	<string name="stats_insights_latest_post_summary">Резиме последњег чланка</string>
 	<string name="button_revert">Врати</string>
@@ -309,13 +303,11 @@ Language: sr_RS
 	<string name="error_generic">Дошло је до грешке</string>
 	<string name="error_refresh_comments">Коментари тренутно не могу бити освежени</string>
 	<string name="error_refresh_notifications">Обавештења тренутно не могу бити освежена</string>
-	<string name="error_delete_post">Дошло је до грешке током брисања %s</string>
 	<string name="error_refresh_pages">Стране тренутно не могу бити освежене</string>
 	<string name="comments_empty_list">Нема коментара</string>
 	<string name="theme_auth_error_message">Потврдите да имате дозволу да постављате теме</string>
 	<string name="theme_set_failed">Неуспешно постављање теме</string>
 	<string name="theme_fetch_failed">Неуспешно добављање тема</string>
-	<string name="wait_until_upload_completes">Сачекајте да се отпремање заврши</string>
 	<string name="blog_not_found">Дошло је до грешке током приступања овом блогу</string>
 	<string name="gallery_error">Медијска ставка не може бити повраћена</string>
 	<string name="no_network_message">Нема доступне мреже</string>
@@ -571,8 +563,6 @@ Language: sr_RS
 	<string name="upload_full_size_image">Отпреми и повежи са целокупном сликом</string>
 	<string name="categories">Категорије</string>
 	<string name="title">Наслов</string>
-	<string name="notification_vibrate">Вибрирај</string>
-	<string name="notification_blink">Трепћи светло за обавештење</string>
 	<string name="sdcard_title">SD картица неопходна</string>
 	<string name="media">Медији</string>
 	<string name="delete">Обриши</string>

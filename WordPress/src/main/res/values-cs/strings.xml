@@ -37,10 +37,7 @@ Language: cs_CZ
 	<string name="jetpack_info">Jetpack info</string>
 	<string name="reader_photo_by">Fotka od %s</string>
 	<string name="reader_label_visit">Návštěva</string>
-	<string name="all_your_sites">Všechny moje stránky</string>
 	<string name="pending_draft_more">Váš koncept příspěvku %d nebude nikdy publikován. Klepnutím to zkontrolujete.</string>
-	<string name="no_default_app_available_to_open_link">Nelze otevřít odkaz</string>
-	<string name="notification_pending_drafts">Upozornit na čekající koncepty</string>
 	<string name="invalid_verification_code_format">Musí být šestimístné číslo</string>
 	<string name="confirm_discard_changes">Zahodit neuložené změny?</string>
 	<string name="swipe_for_more">Přejetím více</string>
@@ -535,13 +532,7 @@ Language: cs_CZ
 	<string name="app_notifications">Upozornění aplikace</string>
 	<string name="notifications_tab">Karta oznámení</string>
 	<string name="email">Email</string>
-	<string name="notifications_comments_other_blogs">Komentáře na ostatních webech</string>
 	<string name="notifications_wpcom_updates">Aktualizace WordPress.com</string>
-	<string name="notifications_other">Ostatní</string>
-	<string name="notifications_account_emails">Email od WordPress.com</string>
-	<string name="notifications_account_emails_summary">Budeme vždy odesílat důležité emaily týkající se vašeho účtu, ale můžete také získat některé zajímavé bonusy.</string>
-	<string name="your_sites">Vaše stránky</string>
-	<string name="notifications_sights_and_sounds">Notifikační upozornění</string>
 	<string name="stats_insights_latest_post_trend">Bylo to %1$s od %2$s publikován. Zde je návod, jak byl příspěvek doposud upravován...</string>
 	<string name="stats_insights_latest_post_summary">Přehled posledních příspěvků</string>
 	<string name="button_revert">Vrátit</string>
@@ -789,7 +780,6 @@ Language: cs_CZ
 	<string name="out_of_memory">Nedostatek paměti v zařízení</string>
 	<string name="no_network_message">Není dostupná žádná síť</string>
 	<string name="gallery_error">Multimediální položka nemohla být stažena</string>
-	<string name="wait_until_upload_completes">Čekej dokud neskončí nahrávání</string>
 	<string name="theme_fetch_failed">Chyba při získávání motivů</string>
 	<string name="theme_set_failed">Chyba při nastavení motivu</string>
 	<string name="theme_auth_error_message">Ujisti se, že máš práva k nastavení motivu</string>
@@ -801,7 +791,6 @@ Language: cs_CZ
 	<string name="stats_bar_graph_empty">Statistika není dostupná</string>
 	<string name="reply_failed">Odpověď se nezdařila</string>
 	<string name="notifications_empty_list">Žádná oznámení</string>
-	<string name="error_delete_post">Nastala chyba při mazání %s</string>
 	<string name="error_refresh_posts">Články momentálně nemohly být obnoveny</string>
 	<string name="error_refresh_pages">Stránky momentálně nemohly být obnoveny</string>
 	<string name="error_refresh_notifications">Oznámení momentálně nemohla být obnovena</string>
@@ -1084,7 +1073,6 @@ Language: cs_CZ
 	<string name="app_title">WordPress pro Android</string>
 	<string name="version">Verze</string>
 	<string name="tos">Podmínky služby</string>
-	<string name="max_thumbnail_px_width">Výchozí šířka obrázku</string>
 	<string name="image_alignment">Zarovnání</string>
 	<string name="refresh">Obnovit</string>
 	<string name="untitled">Bez názvu</string>
@@ -1102,9 +1090,6 @@ Language: cs_CZ
 	<string name="title">Název</string>
 	<string name="categories">Rubriky</string>
 	<string name="dlg_deleting_comments">Odstraňování komentářů</string>
-	<string name="notification_sound">Přehrát zvuk oznámení</string>
-	<string name="notification_blink">Blikat při upozornění</string>
-	<string name="notification_vibrate">Vibrovat</string>
 	<string name="sdcard_title">Vyžadována SD karta</string>
 	<string name="media">Média</string>
 	<string name="delete">Vymazat</string>

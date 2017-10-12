@@ -52,7 +52,6 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -335,7 +334,7 @@ public class MeFragment extends Fragment {
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
             mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
 
-            String displayName = StringUtils.unescapeHTML(defaultAccount.getDisplayName());
+            String displayName = defaultAccount.getDisplayName();
             if (!TextUtils.isEmpty(displayName)) {
                 mDisplayNameTextView.setText(displayName);
             } else {

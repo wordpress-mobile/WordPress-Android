@@ -41,12 +41,17 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     public static final String LANGUAGE_PREF_KEY = "language-pref";
     public static final int LANGUAGE_CHANGED = 1000;
 
+    private static final int IDX_LEGACY_EDITOR = 0;
+    private static final int IDX_VISUAL_EDITOR = 1;
+    private static final int IDX_AZTEC_EDITOR = 2;
+
     private DetailListPreference mLanguagePreference;
     private SharedPreferences mSettings;
+    private Preference mEditorFooterPref;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
-    private DetailListPreference mImageWidthPref;
+    private DetailListPreference mImageMaxSizePref;
     private DetailListPreference mImageQualityPref;
     private WPSwitchPreference mOptimizedVideo;
     private DetailListPreference mVideoWidthPref;
@@ -66,6 +71,8 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
 
+        mEditorFooterPref = findPreference(getString(R.string.pref_key_editor_footer));
+
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_device_settings))
@@ -79,7 +86,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         mOptimizedImage =
                 (WPSwitchPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
-        mImageWidthPref = (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_image_width, this);
+        mImageMaxSizePref = (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_image_width, this);
         mImageQualityPref =
                 (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_image_quality, this);
         mOptimizedVideo =
@@ -91,9 +98,9 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
-        setDetailListPreferenceValue(mImageWidthPref,
-                String.valueOf(AppPrefs.getImageOptimizeWidth()),
-                getLabelForImageMaxWidthValue(AppPrefs.getImageOptimizeWidth()));
+        setDetailListPreferenceValue(mImageMaxSizePref,
+                String.valueOf(AppPrefs.getImageOptimizeMaxSize()),
+                getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
         setDetailListPreferenceValue(mImageQualityPref,
                 String.valueOf(AppPrefs.getImageOptimizeQuality()),
                 getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
@@ -149,16 +156,16 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
             return false;
         } else if (preference == mOptimizedImage) {
             AppPrefs.setImageOptimize((Boolean) newValue);
-            mImageWidthPref.setEnabled((Boolean) newValue);
+            mImageMaxSizePref.setEnabled((Boolean) newValue);
             Map<String, Object> properties = new HashMap<>();
             properties.put("enabled", newValue);
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED, properties);
-        } else if (preference == mImageWidthPref) {
+        } else if (preference == mImageMaxSizePref) {
             int newWidth = Integer.parseInt(newValue.toString());
-            AppPrefs.setImageOptimizeWidth(newWidth);
-            setDetailListPreferenceValue(mImageWidthPref,
+            AppPrefs.setImageOptimizeMaxSize(newWidth);
+            setDetailListPreferenceValue(mImageMaxSizePref,
                     newValue.toString(),
-                    getLabelForImageMaxWidthValue(AppPrefs.getImageOptimizeWidth()));
+                    getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
         } else if (preference == mImageQualityPref) {
             AppPrefs.setImageOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mImageQualityPref,
@@ -211,13 +218,14 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                         editorTypePreference.setSummary(entries[index]);
 
                         switch (index) {
-                            case 1:
+                            case IDX_VISUAL_EDITOR:
                                 AppPrefs.setAztecEditorEnabled(false);
                                 AppPrefs.setVisualEditorEnabled(true);
                                 break;
-                            case 2:
+                            case IDX_AZTEC_EDITOR:
                                 AppPrefs.setAztecEditorEnabled(true);
                                 AppPrefs.setVisualEditorEnabled(false);
+                                AppPrefs.setNewEditorPromoRequired(false);
                                 break;
                             default:
                                 AppPrefs.setAztecEditorEnabled(false);
@@ -225,6 +233,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                                 break;
                         }
 
+                        toggleEditorFooterPreference();
                         return true;
                     } else {
                         return false;
@@ -239,6 +248,8 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 CharSequence[] entries = editorTypePreference.getEntries();
                 editorTypePreference.setSummary(entries[Integer.parseInt(editorTypeSetting)]);
             }
+
+            toggleEditorFooterPreference();
         }
     }
 
@@ -305,6 +316,21 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         mLanguagePreference.refreshAdapter();
     }
 
+    /*
+     * only show the editor footer when Aztec is enabled
+     */
+    private void toggleEditorFooterPreference() {
+        PreferenceCategory editorCategory = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_editor));
+        boolean showFooter = AppPrefs.isAztecEditorEnabled();
+        boolean isFooterShowing = editorCategory.findPreference(getString(R.string.pref_key_editor_footer)) != null;
+
+        if (showFooter && !isFooterShowing) {
+            editorCategory.addPreference(mEditorFooterPref);
+        } else if (!showFooter && isFooterShowing) {
+            editorCategory.removePreference(mEditorFooterPref);
+        }
+    }
+
     private boolean handleEditorFooterPreferenceClick() {
         ActivityLauncher.showAztecEditorReleaseNotes(getActivity());
         return true;
@@ -336,9 +362,9 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         return true;
     }
 
-    private String getLabelForImageMaxWidthValue(int newValue) {
-        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_width_values);
-        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_width_entries);
+    private String getLabelForImageMaxSizeValue(int newValue) {
+        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_max_size_values);
+        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_max_size_entries);
         for (int i = 0; i < values.length ; i++) {
             if (values[i].equals(String.valueOf(newValue))) {
                 return entries[i];

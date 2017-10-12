@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-18 14:48:31+0000
+Translation-Revision-Date: 2017-09-01 20:24:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: eu_ES
 -->
 <resources>
-	<string name="all_your_sites">Nire gune guztiak</string>
+	<string name="add_media_progress">Media gehitzen</string>
+	<string name="async_promo_link">Nola dabil?</string>
+	<string name="post_title">Izenburua</string>
+	<string name="post_settings_post_format">Bidalketa formatua</string>
+	<string name="sharing">Partekatzea</string>
+	<string name="keep_editing">Jarraitu editatzen</string>
 	<string name="reader_label_visit">Bisitatu</string>
 	<string name="reader_toast_err_comment_not_found">Ez da iruzkina aurkitu!</string>
 	<string name="reader_title_post_detail_wpcom">WordPress.com postontzia</string>
@@ -44,6 +49,7 @@ Language: eu_ES
 	<string name="people_dropdown_item_viewers">Ikusleak</string>
 	<string name="people_dropdown_item_followers">Jarraitzialeak</string>
 	<string name="people_dropdown_item_team">Taldea</string>
+	<string name="invite_message_usernames_limit">Gonbidatu gehienez 10 e-posta helbide eta WordPress.com erabiltzaile-izen. Erabiltzaile-izena behar dutenek bat sortzeko argibideak jasoko dituzte.</string>
 	<string name="follower_subscribed_since">%1$s-(e)tik</string>
 	<string name="reader_label_view_gallery">Ikusi galeria</string>
 	<string name="reader_label_image_count_multi">%d irudi</string>
@@ -244,6 +250,8 @@ Language: eu_ES
 	<string name="discussion">Eztabaida</string>
 	<string name="privacy">Pribatutasuna</string>
 	<string name="comments">Iruzkinak</string>
+	<string name="oldest_first">Zaharrena lehenago</string>
+	<string name="related_posts">Erlazionatutako bidalketak</string>
 	<string name="never">Inoiz ez</string>
 	<string name="unknown">Ezezaguna</string>
 	<string name="reader_err_get_post_not_found">Bidalketa hau jada ez da existitzen</string>
@@ -296,7 +304,6 @@ Language: eu_ES
 	<string name="notifications_tab">Jakinarazpenen erlaitza</string>
 	<string name="email">E-posta</string>
 	<string name="notifications_wpcom_updates">WordPress.com eguneraketak</string>
-	<string name="your_sites">Zure guneak</string>
 	<string name="stats_insights_latest_post_summary">Azken bidalketaren laburpena</string>
 	<string name="days_ago">Duela %d egun</string>
 	<string name="yesterday">Atzo</string>
@@ -413,6 +420,7 @@ Language: eu_ES
 	<string name="stats_followers_a_year">Urte bat</string>
 	<string name="stats_view">Ikusi</string>
 	<string name="stats_view_all">Ikusi guztiak</string>
+	<string name="stats_comments_by_authors">Egileka</string>
 	<string name="ssl_certificate_details">Xehetasunak</string>
 	<string name="cab_selected">%d aukeratuta</string>
 	<string name="delete_sure_post">Ezabatu bidalketa hau</string>
@@ -481,13 +489,11 @@ Language: eu_ES
 	<string name="cat_name_required">Kategoria izena beharrezkoa da</string>
 	<string name="category_automatically_renamed">%1$s kategoria izena ez da zuzena. %2$s bezala berrizendatua izan da.</string>
 	<string name="no_account">Ez da Wordpress konturik aurkitu, gehitu kontu bat eta saiatu berriz</string>
-	<string name="error_delete_post">%s ezabatzean errore bat gertatu da</string>
 	<string name="error_refresh_notifications">Jakinarazpenak ezin izan dira eguneratu</string>
 	<string name="error_load_comment">Ezin izan da iruzkina kargatu</string>
 	<string name="error_downloading_image">Irudia deskargatzean errorea</string>
 	<string name="stats_empty_comments">Oraindik iruzkin gabe</string>
 	<string name="no_network_message">Ez dago sarerako konexiorik eskuragarri</string>
-	<string name="wait_until_upload_completes">Itxaron karga osatu bitartean</string>
 	<string name="blog_not_found">Blog honetara sartzean errore bat gertatu da</string>
 	<string name="reply_failed">Erantzunak huts egin du</string>
 	<string name="error_refresh_comments">Iruzkinak ezin izan dira une honetan freskatu</string>
@@ -757,7 +763,6 @@ Language: eu_ES
 	<string name="app_title">WordPress Android-erako</string>
 	<string name="tos">Zerbitzuaren baldintzak</string>
 	<string name="version">Bertsioa:</string>
-	<string name="max_thumbnail_px_width">Lehenetsitako irudi zabalera</string>
 	<string name="image_alignment">Lerrokatzea</string>
 	<string name="refresh">Freskatu</string>
 	<string name="untitled">Izenbururik gabe</string>
@@ -776,9 +781,6 @@ Language: eu_ES
 	<string name="categories">Kategoriak</string>
 	<string name="tags_separate_with_commas">Banandu etiketak komak erabiliz</string>
 	<string name="dlg_deleting_comments">Iruzkinak ezabatzen</string>
-	<string name="notification_vibrate">Bibratu</string>
-	<string name="notification_blink">Jakinarazpen keinukariaren argia</string>
-	<string name="notification_sound">Jakinarazpen soinua</string>
 	<string name="sdcard_title">SD txartela ezinbestekoa</string>
 	<string name="media">Media</string>
 	<string name="delete">Ezabatu</string>

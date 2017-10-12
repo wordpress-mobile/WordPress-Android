@@ -16,9 +16,9 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteDeleted;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
@@ -29,8 +29,6 @@ import de.greenrobot.event.EventBus;
  * Activity for configuring blog specific settings.
  */
 public class BlogPreferencesActivity extends AppCompatActivity {
-    public static final int RESULT_BLOG_REMOVED = RESULT_FIRST_USER;
-
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
 
     @Inject AccountStore mAccountStore;
@@ -59,7 +57,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(site)));
+            actionBar.setTitle(SiteUtils.getSiteNameOrHomeURL(site));
         }
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -117,6 +115,15 @@ public class BlogPreferencesActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteRemoved(OnSiteRemoved event) {
+        if (!event.isError()) {
+            setResult(SiteSettingsFragment.RESULT_BLOG_REMOVED);
+            finish();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteDeleted(OnSiteDeleted event) {
         SiteSettingsFragment siteSettingsFragment = getSettingsFragment();
         if (siteSettingsFragment != null) {
@@ -126,7 +133,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             }
 
             siteSettingsFragment.handleSiteDeleted();
-            setResult(RESULT_BLOG_REMOVED);
+            setResult(SiteSettingsFragment.RESULT_BLOG_REMOVED);
             finish();
         }
     }
