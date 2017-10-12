@@ -94,6 +94,13 @@ public class ThemeSqlUtils {
      * Retrieves themes associated with a given site. Installed themes (for Jetpack sites) are the only themes
      * targeted for now.
      */
+    public static Cursor getThemesForSiteAsCursor(@NonNull SiteModel site) {
+        return WellSql.select(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
+                .endWhere().getAsCursor();
+    }
+
     public static List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
         return WellSql.select(ThemeModel.class)
                 .where()
