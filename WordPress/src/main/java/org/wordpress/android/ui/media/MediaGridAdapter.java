@@ -258,6 +258,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final ViewGroup stateContainer;
         private final ViewGroup fileContainer;
         private final ViewGroup videoOverlayContainer;
+        private final ViewGroup selectionCountContainer;
 
         public GridViewHolder(View view) {
             super(view);
@@ -275,6 +276,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
 
             videoOverlayContainer = (ViewGroup) view.findViewById(R.id.frame_video_overlay);
+            selectionCountContainer = (ViewGroup) view.findViewById(R.id.frame_selection_count);
 
             imageView.setErrorImageResId(R.drawable.media_item_background);
             imageView.setDefaultImageResId(R.drawable.media_item_background);
@@ -308,7 +310,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 }
             });
 
-            selectionCountTextView.setOnClickListener(new OnClickListener() {
+            selectionCountContainer.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
@@ -560,7 +562,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         } else {
             holder.selectionCountTextView.setText(null);
         }
-        AniUtils.startAnimation(holder.selectionCountTextView, R.anim.pop);
+        AniUtils.startAnimation(holder.selectionCountContainer, R.anim.pop);
         holder.selectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
 
         // scale the thumbnail

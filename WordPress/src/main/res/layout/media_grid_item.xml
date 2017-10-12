@@ -96,19 +96,23 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/text_selection_count"
-        android:layout_width="21dp"
-        android:layout_height="21dp"
-        android:layout_alignParentBottom="true"
+    <FrameLayout
+        android:id="@+id/frame_selection_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginLeft="@dimen/margin_medium"
-        android:background="@drawable/photo_picker_circle_selector"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_sz_medium"
-        tools:text="5"/>
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/text_selection_count"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:background="@drawable/photo_picker_circle_selector"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="5"/>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/frame_video_overlay"
