@@ -32,9 +32,9 @@ public class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
         mMySitesHeadingTextView = (TextView) view.findViewById(R.id.my_sites_heading);
     }
 
-    public void update(Context context, LoginHeaderViewHolder holder, boolean hasAccessToken, boolean isAfterLogin,
+    public void update(Context context, LoginHeaderViewHolder holder, boolean isLoggedInWpcom, boolean isAfterLogin,
         AccountModel defaultAccount) {
-        if (hasAccessToken && isAfterLogin) {
+        if (isLoggedInWpcom && isAfterLogin) {
             holder.mLoggedInAsHeading.setVisibility(View.VISIBLE);
             holder.mUserDetailsCard.setVisibility(View.VISIBLE);
 

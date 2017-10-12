@@ -207,7 +207,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         if (!isAdded()) {
             return;
         }
-        // we only want to show user details for WordPress.com users
         holder.update(getContext(), holder, mAccountStore.hasAccessToken(), true, mAccountStore.getAccount());
 
         if (numberOfSites == 0) {
