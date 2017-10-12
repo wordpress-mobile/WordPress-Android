@@ -288,7 +288,9 @@ public class AccountStore extends Store {
     public enum AccountSocialErrorType {
         INVALID_TOKEN,
         INVALID_TWO_STEP_CODE,
+        UNABLE_CONNECT,
         UNKNOWN_USER,
+        USER_ALREADY_ASSOCIATED,
         USER_EXISTS,
         GENERIC_ERROR;
 
