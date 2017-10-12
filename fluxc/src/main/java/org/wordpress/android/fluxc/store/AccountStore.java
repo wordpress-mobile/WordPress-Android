@@ -274,11 +274,18 @@ public class AccountStore extends Store {
             try {
                 String responseBody = new String(response, "UTF-8");
                 JSONObject object = new JSONObject(responseBody);
-                JSONObject data = object.getJSONObject("data");
-                this.nonce = data.optString("two_step_nonce");
-                JSONArray errors = data.getJSONArray("errors");
-                this.type = AccountSocialErrorType.fromString(errors.getJSONObject(0).getString("code"));
-                this.message = errors.getJSONObject(0).getString("message");
+                String error = object.optString("error");
+
+                if (TextUtils.isEmpty(error)) {
+                    this.type = AccountSocialErrorType.fromString(error);
+                    this.message = object.optString("message");
+                } else {
+                    JSONObject data = object.getJSONObject("data");
+                    this.nonce = data.optString("two_step_nonce");
+                    JSONArray errors = data.getJSONArray("errors");
+                    this.type = AccountSocialErrorType.fromString(errors.getJSONObject(0).getString("code"));
+                    this.message = errors.getJSONObject(0).getString("message");
+                }
             } catch (UnsupportedEncodingException | JSONException exception) {
                 AppLog.e(T.API, "Unable to parse social error response: " + exception.getMessage());
             }
