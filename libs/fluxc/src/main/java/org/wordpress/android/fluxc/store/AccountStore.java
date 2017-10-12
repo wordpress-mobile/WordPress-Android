@@ -130,22 +130,22 @@ public class AccountStore extends Store {
     public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {}
 
     public static class OnSocialChanged extends OnChanged<AccountSocialError> {
+        public List<String> twoStepTypes;
         public String nonceAuthenticator;
         public String nonceBackup;
         public String nonceSms;
         public String notificationSent;
-        public String twoStepType;
         public String userId;
 
         public OnSocialChanged() {
         }
 
         public OnSocialChanged(@NonNull AccountPushSocialResponsePayload payload) {
+            this.twoStepTypes = payload.twoStepTypes;
             this.nonceAuthenticator = payload.twoStepNonceAuthenticator;
             this.nonceBackup = payload.twoStepNonceBackup;
             this.nonceSms = payload.twoStepNonceSms;
             this.notificationSent = payload.twoStepNotificationSent;
-            this.twoStepType = payload.twoStepType;
             this.userId = payload.userId;
         }
     }
@@ -267,13 +267,16 @@ public class AccountStore extends Store {
 
     public static class AccountSocialError implements OnChangedError {
         public AccountSocialErrorType type;
+        public List<String> twoStepTypes;
         public String message;
         public String nonce;
 
-        public AccountSocialError(AccountSocialErrorType type, @NonNull String message, String nonce) {
+        public AccountSocialError(AccountSocialErrorType type, @NonNull String message, String nonce,
+                                  List<String> twoStepTypes) {
             this.type = type;
             this.message = message;
             this.nonce = nonce;
+            this.twoStepTypes = twoStepTypes;
         }
 
         public AccountSocialError(@NonNull byte[] response) {
@@ -591,7 +594,8 @@ public class AccountStore extends Store {
         // Error; emit only social change.
         if (payload.isError()) {
             OnSocialChanged event = new OnSocialChanged();
-            event.error = new AccountSocialError(payload.error.type, payload.error.message, payload.error.nonce);
+            event.error = new AccountSocialError(payload.error.type, payload.error.message, payload.error.nonce,
+                    payload.error.twoStepTypes);
             emitChange(event);
         // No error, but two-factor authentication is required; emit only social change.
         } else if (TextUtils.isEmpty(payload.bearerToken)) {
