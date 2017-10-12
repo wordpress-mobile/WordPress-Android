@@ -23,8 +23,11 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-class ThemeBrowserAdapter extends CursorAdapter {
+import java.util.Currency;
+
+public class ThemeBrowserAdapter extends CursorAdapter {
     private static final String THEME_IMAGE_PARAMETER = "?w=";
+
     private final LayoutInflater mInflater;
     private final ThemeBrowserFragment.ThemeBrowserFragmentCallback mCallback;
     private int mViewWidth;
@@ -61,27 +64,31 @@ class ThemeBrowserAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         View view = mInflater.inflate(R.layout.theme_grid_item, parent, false);
-
         configureThemeImageSize(parent);
         ThemeViewHolder themeViewHolder = new ThemeViewHolder(view);
         view.setTag(themeViewHolder);
-
         return view;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         final ThemeViewHolder themeViewHolder = (ThemeViewHolder) view.getTag();
-
         final String screenshotURL = cursor.getString(cursor.getColumnIndex(ThemeModelTable.SCREENSHOT_URL));
         final String name = cursor.getString(cursor.getColumnIndex(ThemeModelTable.NAME));
-        final String price = cursor.getString(cursor.getColumnIndex(ThemeModelTable.PRICE));
         final String themeId = cursor.getString(cursor.getColumnIndex(ThemeModelTable.THEME_ID));
-        final boolean isCurrent = cursor.getInt(cursor.getColumnIndex(ThemeModelTable.ACTIVE)) == 1;
-        final boolean isPremium = !price.isEmpty();
+        final String currency = cursor.getString(cursor.getColumnIndex(ThemeModelTable.CURRENCY));
+        final float price = cursor.getFloat(cursor.getColumnIndex(ThemeModelTable.PRICE));
+        final boolean isCurrent = mCallback.getCurrentTheme() != null && mCallback.getCurrentTheme().getThemeId().equals(themeId);
+        final boolean isPremium = price != 0.f;
 
         themeViewHolder.nameView.setText(name);
-        themeViewHolder.priceView.setText(price);
+        if (isPremium) {
+            String priceText = Currency.getInstance(currency).getSymbol() + String.valueOf((int) price);
+            themeViewHolder.priceView.setText(priceText);
+            themeViewHolder.priceView.setVisibility(View.VISIBLE);
+        } else {
+            themeViewHolder.priceView.setVisibility(View.GONE);
+        }
 
         configureImageView(themeViewHolder, screenshotURL, themeId, isCurrent);
         configureImageButton(context, themeViewHolder, themeId, isPremium, isCurrent);
