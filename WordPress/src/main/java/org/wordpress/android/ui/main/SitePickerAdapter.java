@@ -166,6 +166,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return (mHeaderHandler != null ? 1 : 0) + mSites.size();
     }
 
+    public int getSitesCount(){
+        return mSites.size();
+    }
+
     @Override
     public long getItemId(int position) {
         if (mHeaderHandler != null && position == 0) {

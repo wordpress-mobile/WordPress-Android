@@ -147,7 +147,7 @@ public class ShareIntentReceiverFragment extends Fragment {
 
                 @Override
                 public void onAfterLoad() {
-                    if (mAdapter.getItemCount() == 0) {
+                    if (mAdapter.getSitesCount() == 0) {
                         ToastUtils
                             .showToast(getContext(), R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
                         getActivity().finish();
