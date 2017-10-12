@@ -86,12 +86,14 @@ public class AccountRestClient extends BaseWPComRestClient {
         private List<String> convertJsonArrayToStringList(JSONArray array) {
             List<String> list = new ArrayList<>();
 
-            try {
-                for (int i = 0; i < array.length(); i++) {
-                    list.add(array.getString(i));
+            if (array != null) {
+                try {
+                    for (int i = 0; i < array.length(); i++) {
+                        list.add(array.getString(i));
+                    }
+                } catch (JSONException exception) {
+                    AppLog.e(T.API, "Unable to parse two step types: " + exception.getMessage());
                 }
-            } catch (NullPointerException | JSONException exception) {
-                AppLog.e(T.API, "Unable to parse two step types: " + exception.getMessage());
             }
 
             return list;
