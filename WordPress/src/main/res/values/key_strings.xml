@@ -41,6 +41,7 @@
     <string name="pref_key_site_tagline" translatable="false">wp_pref_site_tagline</string>
     <string name="pref_key_site_address" translatable="false">wp_pref_site_address</string>
     <string name="pref_key_site_language" translatable="false">wp_pref_site_language</string>
+    <string name="pref_key_site_timezone" translatable="false">wp_pref_site_timezone</string>
     <string name="pref_key_site_visibility" translatable="false">wp_pref_site_visibility</string>
     <string name="pref_key_site_username" translatable="false">wp_pref_site_username</string>
     <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>
@@ -142,6 +143,14 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+
+    <string-array name="timezone_entries">
+        <item>TODO</item>
+    </string-array>
+
+    <string-array name="timezone_values">
+        <item>TODO</item>
     </string-array>
 
     <!-- Used as values to a preference in Site Settings -->

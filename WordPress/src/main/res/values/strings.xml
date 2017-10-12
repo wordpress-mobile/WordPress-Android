@@ -502,6 +502,7 @@
     <string name="site_settings_address_title">Address</string>
     <string name="site_settings_privacy_title" translatable="false">@string/privacy</string>
     <string name="site_settings_language_title" translatable="false">@string/language</string>
+    <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_username_title" translatable="false">@string/username</string>
     <string name="site_settings_password_title" translatable="false">@string/password</string>
     <string name="site_settings_default_category_title">Default Category</string>

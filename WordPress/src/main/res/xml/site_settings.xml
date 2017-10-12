@@ -54,6 +54,13 @@
             android:entryValues="@array/language_codes"
             app:longClickHint="@string/site_settings_language_hint" />
 
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:id="@+id/pref_site_timezone"
+            android:key="@string/pref_key_site_timezone"
+            android:title="@string/site_settings_timezone_title"
+            android:entries="@array/timezone_entries"
+            android:entryValues="@array/timezone_values" />
+
     </PreferenceCategory>
 
     <!-- Account settings; only used with .org sites -->
