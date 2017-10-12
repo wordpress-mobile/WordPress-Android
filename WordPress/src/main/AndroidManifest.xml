@@ -405,6 +405,7 @@
         <activity
             android:name=".ui.ShareIntentReceiverActivity"
             android:excludeFromRecents="true"
+            android:launchMode="singleTask"
             android:theme="@style/LoginTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

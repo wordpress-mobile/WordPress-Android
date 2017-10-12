@@ -50,21 +50,32 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
     private String mShareActionName;
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        checkIsSignedInAndRedirect();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.share_intent_receiver_activity);
 
         if (savedInstanceState == null) {
-            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-                // display a fragment with list of sites and list of actions the user can perform
-                initShareFragment(false);
-            } else {
-                // start the login flow and wait onActivityResult
-                ActivityLauncher.loginForShareIntent(this);
-            }
+            checkIsSignedInAndRedirect();
         } else {
             loadState(savedInstanceState);
+        }
+    }
+
+    protected void checkIsSignedInAndRedirect(){
+        if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            // display a fragment with list of sites and list of actions the user can perform
+            initShareFragment(false);
+        } else {
+            // start the login flow and wait onActivityResult
+            ActivityLauncher.loginForShareIntent(this);
         }
     }
 
