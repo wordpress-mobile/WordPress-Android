@@ -46,7 +46,7 @@ import java.util.concurrent.RejectedExecutionException;
  */
 public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.GridViewHolder> {
     private MediaGridAdapterCallback mCallback;
-    private MediaBrowserType mBrowserType;
+    private final MediaBrowserType mBrowserType;
 
     private boolean mHasRetrievedAll;
     private boolean mInMultiSelect;
@@ -325,7 +325,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 @Override
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
-                    if (canSelectPosition(position)) {
+                    if (mCallback != null && !isInMultiSelect()) {
+                        mCallback.onAdapterItemSelected(v, position);
+                    } else if (canSelectPosition(position)) {
                         if (isInMultiSelect()) {
                             toggleItemSelected(GridViewHolder.this, position);
                         } else if (canMultiSelect()) {
@@ -367,7 +369,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
-    public boolean canMultiSelect() {
+    private boolean canMultiSelect() {
         return mBrowserType == MediaBrowserType.BROWSER || mBrowserType == MediaBrowserType.EDITOR_PICKER;
     }
 
