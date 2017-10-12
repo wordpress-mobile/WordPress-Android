@@ -147,10 +147,14 @@ public class ShareIntentReceiverFragment extends Fragment {
 
                 @Override
                 public void onAfterLoad() {
+                    boolean sharingTextFile = !mSharingMediaFile;
                     if (mAdapter.getSitesCount() == 0) {
                         ToastUtils
                             .showToast(getContext(), R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
                         getActivity().finish();
+                    } else if (mAdapter.getSitesCount() == 1 && sharingTextFile) {
+                        // if text/plain and only one blog, then don't show the fragment, share it directly to a new post
+                        mShareIntentFragmentListener.share(ShareAction.SHARE_TO_POST, mAdapter.getSelectedItemLocalId());
                     } else {
                         mRecyclerView.post(new Runnable() {
                             @Override

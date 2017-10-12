@@ -192,6 +192,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         Intent parentIntent = new Intent(this, WPMainActivity.class);
         parentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         parentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        parentIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         TaskStackBuilder.create(this).addNextIntent(parentIntent).addNextIntent(intent).startActivities();
     }
 
