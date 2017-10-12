@@ -90,7 +90,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                 for (int i = 0; i < array.length(); i++) {
                     list.add(array.getString(i));
                 }
-            } catch (JSONException exception) {
+            } catch (NullPointerException | JSONException exception) {
                 AppLog.e(T.API, "Unable to parse two step types: " + exception.getMessage());
             }
 
