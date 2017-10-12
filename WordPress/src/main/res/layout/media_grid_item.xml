@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/margin_extra_small">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:padding="@dimen/margin_extra_small">
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/media_grid_item_image"
@@ -101,6 +101,7 @@
         android:layout_width="21dp"
         android:layout_height="21dp"
         android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginLeft="@dimen/margin_medium"
         android:background="@drawable/photo_picker_circle_selector"
@@ -113,7 +114,7 @@
         android:id="@+id/frame_preview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -130,7 +131,7 @@
         android:id="@+id/frame_video_overlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_gravity="center"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -143,4 +144,4 @@
 
     </FrameLayout>
 
-</RelativeLayout>
+</FrameLayout>
