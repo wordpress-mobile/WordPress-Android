@@ -280,7 +280,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             mGridAdapter = new MediaGridAdapter(getActivity(), mSite);
             mGridAdapter.setCallback(this);
             mGridAdapter.setAllowMultiselect(canMultiSelect);
-            mGridAdapter.setShowPreviewIcon(mBrowserType.isPicker());
         }
         return mGridAdapter;
     }

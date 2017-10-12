@@ -49,7 +49,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     private boolean mAllowMultiselect;
     private boolean mInMultiSelect;
-    private boolean mShowPreviewIcon;
     private boolean mLoadThumbnails = true;
 
     private final Handler mHandler;
@@ -88,15 +87,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
         mThumbWidth = displayWidth / getColumnCount(mContext);
         mThumbHeight = (int) (mThumbWidth * 0.75f);
-    }
-
-    public void setShowPreviewIcon(boolean show) {
-        if (show != mShowPreviewIcon) {
-            mShowPreviewIcon = show;
-            if (getItemCount() > 0) {
-                notifyDataSetChanged();
-            }
-        }
     }
 
     @Override
@@ -195,8 +185,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.fileTypeImageView.setImageResource(placeholderResId);
         }
 
-        holder.previewContainer.setVisibility(mShowPreviewIcon && !media.isVideo() ? View.VISIBLE : View.GONE);
-
         holder.selectionCountTextView.setSelected(isSelected);
         if (isSelected) {
             int count = mSelectedItems.indexOf(media.getId()) + 1;
@@ -267,7 +255,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final ProgressBar progressUpload;
         private final ViewGroup stateContainer;
         private final ViewGroup fileContainer;
-        private final ViewGroup previewContainer;
         private final ViewGroup videoOverlayContainer;
 
         public GridViewHolder(View view) {
@@ -285,7 +272,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             fileTypeView = (TextView) fileContainer.findViewById(R.id.media_grid_item_filetype);
             fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
 
-            previewContainer = (ViewGroup) view.findViewById(R.id.frame_preview);
             videoOverlayContainer = (ViewGroup) view.findViewById(R.id.frame_video_overlay);
 
             imageView.setErrorImageResId(R.drawable.media_item_background);
@@ -309,7 +295,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     if (!isValidPosition(position)) {
                         return;
                     }
-                    if (isInMultiSelect()) {
+                    if (mAllowMultiselect) {
+                        setInMultiSelect(true);
                         if (canSelectPosition(position)) {
                             toggleItemSelected(GridViewHolder.this, position);
                         }
