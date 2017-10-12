@@ -26,6 +26,7 @@ public class ThemeModel implements Identifiable, Serializable {
     @Column private String mDemoUrl;
     @Column private String mDownloadUrl;
     @Column private String mStylesheet;
+    @Column private String mCurrency;
     @Column private float mPrice;
     @Column private boolean mActive;
     @Column private boolean mAutoUpdate;
@@ -61,6 +62,7 @@ public class ThemeModel implements Identifiable, Serializable {
                 && StringUtils.equals(getSlug(), otherTheme.getSlug())
                 && StringUtils.equals(getDownloadUrl(), otherTheme.getDownloadUrl())
                 && StringUtils.equals(getStylesheet(), otherTheme.getStylesheet())
+                && StringUtils.equals(getCurrency(), otherTheme.getCurrency())
                 && getPrice() == otherTheme.getPrice()
                 && getActive() == otherTheme.getActive()
                 && getAutoUpdate() == otherTheme.getAutoUpdate()
@@ -169,6 +171,14 @@ public class ThemeModel implements Identifiable, Serializable {
 
     public void setStylesheet(String stylesheet) {
         mStylesheet = stylesheet;
+    }
+
+    public String getCurrency() {
+        return mCurrency;
+    }
+
+    public void setCurrency(String currency) {
+        mCurrency = currency;
     }
 
     public float getPrice() {
