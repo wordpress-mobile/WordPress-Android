@@ -430,6 +430,8 @@ public class AccountStore extends Store {
             case PUSH_SOCIAL_AUTH:
                 createPushSocialAuth((PushSocialAuthPayload) payload);
                 break;
+            case PUSH_SOCIAL_CONNECT:
+                break;
             case PUSH_SOCIAL_LOGIN:
                 createPushSocialLogin((PushSocialLoginPayload) payload);
                 break;
