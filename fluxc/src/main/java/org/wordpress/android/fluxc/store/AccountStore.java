@@ -276,7 +276,7 @@ public class AccountStore extends Store {
                 JSONObject object = new JSONObject(responseBody);
                 String error = object.optString("error");
 
-                if (TextUtils.isEmpty(error)) {
+                if (!TextUtils.isEmpty(error)) {
                     this.type = AccountSocialErrorType.fromString(error);
                     this.message = object.optString("message");
                 } else {
