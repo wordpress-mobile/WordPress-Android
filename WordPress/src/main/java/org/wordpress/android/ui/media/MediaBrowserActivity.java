@@ -95,12 +95,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         WPMediaUtils.LaunchCameraCallback {
 
     public enum MediaBrowserType {
-        BROWSER,                              // browse & manage media
-        MULTI_SELECT_IMAGE_AND_VIDEO_PICKER,  // select multiple images or videos
-        SINGLE_SELECT_IMAGE_PICKER;           // select a single image
+        BROWSER,                   // browse & manage media
+        EDITOR_PICKER,             // select multiple images or videos to insert into a post
+        FEATURED_IMAGE_PICKER;     // select a single image to use as a post's featured image
 
         public boolean isPicker() {
-            return this == MULTI_SELECT_IMAGE_AND_VIDEO_PICKER || this == SINGLE_SELECT_IMAGE_PICKER;
+            return this == EDITOR_PICKER || this == FEATURED_IMAGE_PICKER;
         }
     }
 
@@ -179,7 +179,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         setupTabs();
 
         MediaFilter filter;
-        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+        if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
             filter = MediaFilter.FILTER_IMAGES;
         } else if (savedInstanceState != null) {
             filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
@@ -452,7 +452,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         // hide "add media" if the user doesn't have upload permission or this is a multiselect picker
-        if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER
+        if (mBrowserType == MediaBrowserType.EDITOR_PICKER
                 || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
         }
@@ -776,7 +776,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
     private void createAddMediaPopup() {
-        SimpleAdapter adapter = mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
+        SimpleAdapter adapter = mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER
                 ? getAddMenuSimpleAdapter(
                         AddMenuItem.ITEM_CAPTURE_PHOTO,
                         AddMenuItem.ITEM_CHOOSE_PHOTO)

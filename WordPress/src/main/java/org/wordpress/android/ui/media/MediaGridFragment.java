@@ -182,7 +182,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             getActivity().finish();
         }
 
-        if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+        if (savedInstanceState == null && mBrowserType != MediaBrowserType.FEATURED_IMAGE_PICKER) {
             SmartToast.show(getActivity(), SmartToast.SmartToastType.MEDIA_LONG_PRESS);
         }
     }
@@ -275,7 +275,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private MediaGridAdapter getAdapter() {
         if (!hasAdapter()) {
-            boolean canMultiSelect = mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
+            boolean canMultiSelect = mBrowserType != MediaBrowserType.FEATURED_IMAGE_PICKER
                     && WPMediaUtils.currentUserCanDeleteMedia(mSite);
             mGridAdapter = new MediaGridAdapter(getActivity(), mSite);
             mGridAdapter.setCallback(this);
@@ -335,7 +335,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return mMediaStore.searchSiteMedia(mSite, mSearchTerm);
         }
 
-        if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER) {
+        if (mBrowserType == MediaBrowserType.EDITOR_PICKER) {
             List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
             List<MediaModel> imagesAndVideos = new ArrayList<>();
             for (MediaModel media: allMedia) {
@@ -345,7 +345,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 }
             }
             return imagesAndVideos;
-        } else if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+        } else if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
             return mMediaStore.getSiteImages(mSite);
         }
 
@@ -416,7 +416,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+        if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
             return;
         }
 
