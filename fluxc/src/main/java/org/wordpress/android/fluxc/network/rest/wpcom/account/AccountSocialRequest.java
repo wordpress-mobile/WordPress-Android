@@ -56,6 +56,12 @@ public class AccountSocialRequest extends BaseRequest<AccountSocialResponse> {
             JSONObject object = new JSONObject(responseBody);
             JSONObject data = object.getJSONObject("data");
             parsed.bearer_token = data.optString("bearer_token");
+            parsed.two_step_supported_auth_types = data.optJSONArray("two_step_supported_auth_types");
+            parsed.two_step_nonce_authenticator = data.optString("two_step_nonce_authenticator");
+            parsed.two_step_nonce_backup = data.optString("two_step_nonce_backup");
+            parsed.two_step_nonce_sms = data.optString("two_step_nonce_sms");
+            parsed.two_step_notification_sent = data.optString("two_step_notification_sent");
+            parsed.user_id = data.optString("user_id");
             return Response.success(parsed, null);
         } catch (JSONException exception) {
             AppLog.e(T.API, "Unable to parse network response: " + exception.getMessage());
