@@ -293,14 +293,18 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (mIsSingleItemSelectionEnabled) {
-            holder.selectedRadioButton.setVisibility(View.VISIBLE);
-            holder.selectedRadioButton.setChecked(mSelectedItemPos == position);
-            holder.layoutContainer.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectSingleItem(holder.getAdapterPosition());
-                }
-            });
+            if(getSitesCount() == 1){
+                holder.selectedRadioButton.setVisibility(View.GONE);
+            }else {
+                holder.selectedRadioButton.setVisibility(View.VISIBLE);
+                holder.selectedRadioButton.setChecked(mSelectedItemPos == position);
+                holder.layoutContainer.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectSingleItem(holder.getAdapterPosition());
+                    }
+                });
+            }
         } else {
             if(holder.selectedRadioButton != null) {
                 holder.selectedRadioButton.setVisibility(View.GONE);

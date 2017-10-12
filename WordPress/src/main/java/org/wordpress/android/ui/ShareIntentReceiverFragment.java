@@ -191,17 +191,18 @@ public class ShareIntentReceiverFragment extends Fragment {
 
             @Override
             public void onBindViewHolder(ViewHolder holder, int numberOfSites) {
-                refreshAccountDetails((LoginHeaderViewHolder) holder);
+                refreshAccountDetails((LoginHeaderViewHolder) holder, numberOfSites);
             }
         };
     }
 
-    private void refreshAccountDetails(LoginHeaderViewHolder holder) {
+    private void refreshAccountDetails(LoginHeaderViewHolder holder, int numberOfSites) {
         if (!isAdded()) {
             return;
         }
         holder.update(getContext(), holder, mAccountStore.hasAccessToken(), mAfterLogin, mAccountStore.getAccount());
-        holder.mMySitesHeadingTextView.setText(R.string.share_intent_pick_site);
+        holder.mMySitesHeadingTextView.setText(
+            numberOfSites == 1 ? R.string.share_intent_adding_to : R.string.share_intent_pick_site);
         holder.mMySitesHeadingTextView.setVisibility(View.VISIBLE);
     }
 
