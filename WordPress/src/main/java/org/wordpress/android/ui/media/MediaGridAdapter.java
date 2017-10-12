@@ -65,7 +65,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private final int mThumbHeight;
 
     private static final float SCALE_NORMAL = 1.0f;
-    private static final float SCALE_SELECTED = .85f;
+    private static final float SCALE_SELECTED = .9f;
 
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
@@ -162,6 +162,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         boolean isLocalFile = MediaUtils.isLocalFile(strState) && !TextUtils.isEmpty(media.getFilePath());
         boolean isSelected = isItemSelected(media.getId());
+        boolean canSelect = canSelectPosition(position);
         boolean isImage = media.getMimeType() != null && media.getMimeType().startsWith("image/");
 
         if (!mLoadThumbnails) {
@@ -196,12 +197,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         holder.previewContainer.setVisibility(mShowPreviewIcon && !media.isVideo() ? View.VISIBLE : View.GONE);
 
-        // show selection count when selected
-        holder.selectionCountTextView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+        holder.selectionCountTextView.setSelected(isSelected);
         if (isSelected) {
             int count = mSelectedItems.indexOf(media.getId()) + 1;
             holder.selectionCountTextView.setText(Integer.toString(count));
+        } else {
+            holder.selectionCountTextView.setText(null);
         }
+        holder.selectionCountTextView.setVisibility(mAllowMultiselect && canSelect ? View.VISIBLE : View.GONE);
 
         // make sure the thumbnail scale reflects its selection state
         float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
@@ -312,6 +315,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         }
                     } else if (mCallback != null) {
                         mCallback.onAdapterItemSelected(v, position);
+                    }
+                }
+            });
+
+            selectionCountTextView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (canSelectPosition(position)) {
+                        setInMultiSelect(true);
+                        toggleItemSelected(GridViewHolder.this, position);
                     }
                 }
             });
@@ -554,9 +568,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         // show and animate the count
         if (selected) {
             holder.selectionCountTextView.setText(Integer.toString(mSelectedItems.indexOf(localMediaId) + 1));
+        } else {
+            holder.selectionCountTextView.setText(null);
         }
-        AniUtils.startAnimation(holder.selectionCountTextView,
-                selected ? R.anim.cab_select : R.anim.cab_deselect);
+        AniUtils.startAnimation(holder.selectionCountTextView, R.anim.pop);
         holder.selectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
 
         // scale the thumbnail
