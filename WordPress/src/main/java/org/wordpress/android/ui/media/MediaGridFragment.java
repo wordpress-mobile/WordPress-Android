@@ -323,17 +323,17 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void ensureCorrectState(List<MediaModel> mediaModels) {
         if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
             MediaDeleteService service = ((MediaBrowserActivity)getActivity()).getMediaDeleteService();
-            if (service != null && service.isAnyMediaBeingDeleted()) {
-                for (MediaModel media : mediaModels) {
-                    if (service.isMediaBeingDeleted(media)) {
-                        media.setUploadState(MediaUploadState.DELETING);
-                    }
-                }
-            }
+            boolean checkService = service != null && service.isAnyMediaBeingDeleted();
 
             // note we count backwards so we can remove from the list
             for (int i = mediaModels.size() - 1 ; i >= 0; i--) {
                 MediaModel media = mediaModels.get(i);
+                // ensure correct upload state for media being deleted
+                if (checkService && service.isMediaBeingDeleted(media)) {
+                    media.setUploadState(MediaUploadState.DELETING);
+                }
+
+                // remove local media that no longer exists
                 if (media.getFilePath() != null
                         && org.wordpress.android.util.MediaUtils.isLocalFile(media.getUploadState())) {
                     File file = new File(media.getFilePath());
