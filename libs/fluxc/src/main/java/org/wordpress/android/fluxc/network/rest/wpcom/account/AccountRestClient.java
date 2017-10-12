@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.account;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -38,9 +37,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
-import static org.wordpress.android.fluxc.network.BaseRequest.DEFAULT_REQUEST_TIMEOUT;
 
 @Singleton
 public class AccountRestClient extends BaseWPComRestClient {
@@ -262,7 +258,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     }
                 }
         );
-        request.setRetryPolicy(new DefaultRetryPolicy(DEFAULT_REQUEST_TIMEOUT, 0, DEFAULT_BACKOFF_MULT));
+        request.disableRetries();
         addUnauthedRequest(request);
     }
 
