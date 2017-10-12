@@ -440,6 +440,7 @@ public class AccountStore extends Store {
                 createPushSocialAuth((PushSocialAuthPayload) payload);
                 break;
             case PUSH_SOCIAL_CONNECT:
+                createPushSocialConnect((PushSocialLoginPayload) payload);
                 break;
             case PUSH_SOCIAL_LOGIN:
                 createPushSocialLogin((PushSocialLoginPayload) payload);
@@ -638,6 +639,10 @@ public class AccountStore extends Store {
 
     private void createPushSocialAuth(PushSocialAuthPayload payload) {
         mAccountRestClient.pushSocialAuth(payload.userId, payload.type, payload.nonce, payload.code);
+    }
+
+    private void createPushSocialConnect(PushSocialLoginPayload payload) {
+        mAccountRestClient.pushSocialConnect(payload.idToken, payload.service);
     }
 
     private void createPushSocialLogin(PushSocialLoginPayload payload) {
