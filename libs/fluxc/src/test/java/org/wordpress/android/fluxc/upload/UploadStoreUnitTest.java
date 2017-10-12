@@ -42,7 +42,7 @@ public class UploadStoreUnitTest {
     private Dispatcher mDispatcher = new Dispatcher();
     private UploadStore mUploadStore = new UploadStore(mDispatcher);
     private PostStore mPostStore = new PostStore(mDispatcher, Mockito.mock(PostRestClient.class),
-            Mockito.mock(PostXMLRPCClient.class), mUploadStore);
+            Mockito.mock(PostXMLRPCClient.class));
 
     @Before
     public void setUp() {

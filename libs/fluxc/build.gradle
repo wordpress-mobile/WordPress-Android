@@ -4,11 +4,13 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
 
 repositories {
@@ -56,7 +58,13 @@ android.buildTypes.all { buildType ->
     }
 }
 
+kapt {
+    generateStubs = true
+}
+
 dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
     // WordPress libs
     compile ('org.wordpress:utils:1.16.0') {
         // Using official volley package
@@ -65,11 +73,11 @@ dependencies {
 
     // Custom WellSql version
     compile 'org.wordpress:wellsql:1.2.0'
-    annotationProcessor 'org.wordpress:wellsql-processor:1.2.0'
+    kapt 'org.wordpress:wellsql-processor:1.2.0'
 
     // FluxC annotations
     compile project(':fluxc-annotations')
-    annotationProcessor project(':fluxc-processor')
+    kapt project(':fluxc-processor')
 
     // External libs
     compile 'org.greenrobot:eventbus:3.0.0'
@@ -78,7 +86,7 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.dagger:dagger:2.0.2'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.0.2'
+    kapt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'org.apache.commons:commons-text:1.1'
