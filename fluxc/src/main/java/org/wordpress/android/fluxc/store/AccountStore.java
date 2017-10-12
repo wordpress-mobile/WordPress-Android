@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 
@@ -84,6 +85,20 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class PushSocialAuthPayload extends Payload<BaseNetworkError> {
+        public String code;
+        public String nonce;
+        public String type;
+        public String userId;
+        public PushSocialAuthPayload(@NonNull String userId, @NonNull String type, @NonNull String nonce,
+                                     @NonNull String code) {
+            this.userId = userId;
+            this.type = type;
+            this.nonce = nonce;
+            this.code = code;
+        }
+    }
+
     public static class NewAccountPayload extends Payload<BaseNetworkError> {
         public String username;
         public String password;
@@ -115,6 +130,24 @@ public class AccountStore extends Store {
     public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {}
 
     public static class OnSocialChanged extends OnChanged<AccountSocialError> {
+        public List<String> twoStepTypes;
+        public String nonceAuthenticator;
+        public String nonceBackup;
+        public String nonceSms;
+        public String notificationSent;
+        public String userId;
+
+        public OnSocialChanged() {
+        }
+
+        public OnSocialChanged(@NonNull AccountPushSocialResponsePayload payload) {
+            this.twoStepTypes = payload.twoStepTypes;
+            this.nonceAuthenticator = payload.twoStepNonceAuthenticator;
+            this.nonceBackup = payload.twoStepNonceBackup;
+            this.nonceSms = payload.twoStepNonceSms;
+            this.notificationSent = payload.twoStepNotificationSent;
+            this.userId = payload.userId;
+        }
     }
 
     public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
@@ -235,17 +268,14 @@ public class AccountStore extends Store {
     public static class AccountSocialError implements OnChangedError {
         public AccountSocialErrorType type;
         public String message;
-
-        public AccountSocialError(AccountSocialErrorType type, @NonNull String message) {
-            this.type = type;
-            this.message = message;
-        }
+        public String nonce;
 
         public AccountSocialError(@NonNull byte[] response) {
             try {
                 String responseBody = new String(response, "UTF-8");
                 JSONObject object = new JSONObject(responseBody);
                 JSONObject data = object.getJSONObject("data");
+                this.nonce = data.optString("two_step_nonce");
                 JSONArray errors = data.getJSONArray("errors");
                 this.type = AccountSocialErrorType.fromString(errors.getJSONObject(0).getString("code"));
                 this.message = errors.getJSONObject(0).getString("message");
@@ -257,6 +287,7 @@ public class AccountStore extends Store {
 
     public enum AccountSocialErrorType {
         INVALID_TOKEN,
+        INVALID_TWO_STEP_CODE,
         UNKNOWN_USER,
         USER_EXISTS,
         GENERIC_ERROR;
@@ -395,6 +426,9 @@ public class AccountStore extends Store {
                 break;
             case PUSH_SETTINGS:
                 mAccountRestClient.pushAccountSettings(((PushAccountSettingsPayload) payload).params);
+                break;
+            case PUSH_SOCIAL_AUTH:
+                createPushSocialAuth((PushSocialAuthPayload) payload);
                 break;
             case PUSH_SOCIAL_LOGIN:
                 createPushSocialLogin((PushSocialLoginPayload) payload);
@@ -548,10 +582,16 @@ public class AccountStore extends Store {
     }
 
     private void handlePushSocialCompleted(AccountPushSocialResponsePayload payload) {
+        // Error; emit only social change.
         if (payload.isError()) {
             OnSocialChanged event = new OnSocialChanged();
-            event.error = new AccountSocialError(payload.error.type, payload.error.message);
+            event.error = payload.error;
             emitChange(event);
+        // No error, but two-factor authentication is required; emit only social change.
+        } else if (TextUtils.isEmpty(payload.bearerToken)) {
+            OnSocialChanged event = new OnSocialChanged(payload);
+            emitChange(event);
+        // No error and two-factor authentication is not required; emit only authentication change.
         } else {
             updateToken(new UpdateTokenPayload(payload.bearerToken));
         }
@@ -583,6 +623,10 @@ public class AccountStore extends Store {
 
     private void createNewAccount(NewAccountPayload payload) {
         mAccountRestClient.newAccount(payload.username, payload.password, payload.email, payload.dryRun);
+    }
+
+    private void createPushSocialAuth(PushSocialAuthPayload payload) {
+        mAccountRestClient.pushSocialAuth(payload.userId, payload.type, payload.nonce, payload.code);
     }
 
     private void createPushSocialLogin(PushSocialLoginPayload payload) {

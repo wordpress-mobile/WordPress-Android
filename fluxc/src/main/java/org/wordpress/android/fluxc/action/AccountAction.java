@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
 import org.wordpress.android.fluxc.store.AccountStore.NewAccountPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
+import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialLoginPayload;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 
@@ -25,6 +26,8 @@ public enum AccountAction implements IAction {
     SEND_VERIFICATION_EMAIL, // request verification email for unverified accounts
     @Action(payloadType = PushAccountSettingsPayload.class)
     PUSH_SETTINGS,          // request saving Account Settings remotely
+    @Action(payloadType = PushSocialAuthPayload.class)
+    PUSH_SOCIAL_AUTH,      // request social auth remotely
     @Action(payloadType = PushSocialLoginPayload.class)
     PUSH_SOCIAL_LOGIN,      // request social login remotely
     @Action(payloadType = NewAccountPayload.class)
