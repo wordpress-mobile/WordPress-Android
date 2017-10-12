@@ -10,6 +10,5 @@ public class AccountSocialResponse implements Response {
     public String two_step_nonce_backup;
     public String two_step_nonce_sms;
     public String two_step_notification_sent;
-    public String two_step_type;
     public String user_id;
 }
