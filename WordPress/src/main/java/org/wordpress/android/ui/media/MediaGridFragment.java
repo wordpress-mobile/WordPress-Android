@@ -323,7 +323,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void ensureCorrectState(List<MediaModel> mediaModels) {
         if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
             MediaDeleteService service = ((MediaBrowserActivity)getActivity()).getMediaDeleteService();
-            if (service != null) {
+            if (service != null && service.isAnyMediaBeingDeleted()) {
                 for (MediaModel media : mediaModels) {
                     if (service.isMediaBeingDeleted(media)) {
                         media.setUploadState(MediaUploadState.DELETING);
@@ -350,36 +350,42 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     List<MediaModel> getFilteredMedia() {
+        List<MediaModel> mediaList;
         if (!TextUtils.isEmpty(mSearchTerm)) {
-            return mMediaStore.searchSiteMedia(mSite, mSearchTerm);
-        }
-
-        if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER) {
+            mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);
+        } else if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER) {
             List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
-            List<MediaModel> imagesAndVideos = new ArrayList<>();
+            mediaList = new ArrayList<>();
             for (MediaModel media: allMedia) {
                 String mime = media.getMimeType();
                 if (mime != null && (mime.startsWith("image") || mime.startsWith("video"))) {
-                    imagesAndVideos.add(media);
+                    mediaList.add(media);
                 }
             }
-            return imagesAndVideos;
         } else if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
-            return mMediaStore.getSiteImages(mSite);
+            mediaList = mMediaStore.getSiteImages(mSite);
+        } else {
+            switch (mFilter) {
+                case FILTER_IMAGES:
+                    mediaList = mMediaStore.getSiteImages(mSite);
+                    break;
+                case FILTER_DOCUMENTS:
+                    mediaList = mMediaStore.getSiteDocuments(mSite);
+                    break;
+                case FILTER_VIDEOS:
+                    mediaList = mMediaStore.getSiteVideos(mSite);
+                    break;
+                case FILTER_AUDIO:
+                    mediaList = mMediaStore.getSiteAudio(mSite);
+                    break;
+                default:
+                    mediaList = mMediaStore.getAllSiteMedia(mSite);
+                    break;
+            }
         }
 
-        switch (mFilter) {
-            case FILTER_IMAGES:
-                return mMediaStore.getSiteImages(mSite);
-            case FILTER_DOCUMENTS:
-                return mMediaStore.getSiteDocuments(mSite);
-            case FILTER_VIDEOS:
-                return mMediaStore.getSiteVideos(mSite);
-            case FILTER_AUDIO:
-                return mMediaStore.getSiteAudio(mSite);
-            default:
-                return mMediaStore.getAllSiteMedia(mSite);
-        }
+        ensureCorrectState(mediaList);
+        return mediaList;
     }
 
     void setFilter(@NonNull MediaFilter filter) {
@@ -666,7 +672,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         List<MediaModel> filteredMedia = getFilteredMedia();
-        ensureCorrectState(filteredMedia);
         getAdapter().setMediaList(filteredMedia);
 
         boolean hasRetrievedAll = !event.canLoadMore;
