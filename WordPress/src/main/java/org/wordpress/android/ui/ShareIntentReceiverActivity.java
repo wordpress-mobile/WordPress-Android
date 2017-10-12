@@ -18,12 +18,16 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -31,7 +35,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -148,7 +154,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         // If not logged in, then ask to log in, else inform the user to set at least one blog visible
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
-            startActivity(new Intent(this, SignInActivity.class));
+            startActivity(new Intent(this, AppPrefs.isLoginWizardStyleActivated() ? LoginActivity.class : SignInActivity.class));
             finish();
         } else {
             ToastUtils.showToast(getBaseContext(), R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
@@ -258,6 +264,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             }
         }
 
+        // bump analytics about usage here. We may want to track failures in a future iteration.
+        bumpAnalytics();
+
         if (mActionIndex == ADD_TO_NEW_POST) {
             startActivityAndFinish(new Intent(this, EditPostActivity.class));
         } else if (mActionIndex == ADD_TO_MEDIA_LIBRARY) {
@@ -267,4 +276,36 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             finish();
         }
     }
+
+    private void bumpAnalytics() {
+        Map<String, Object> analyticsProperties = new HashMap<>();
+        int mediaShared = 0;
+        if (!isSharingText()) {
+            String action = getIntent().getAction();
+            if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                // Multiple pictures share to WP
+                ArrayList<Uri> mediaUrls = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+                if (mediaUrls != null) {
+                    mediaShared = mediaUrls.size();
+                }
+            } else {
+                mediaShared = 1;
+            }
+        }
+        analyticsProperties.put("number_of_media_shared", mediaShared);
+
+        String target = "unknown";
+        if (mActionIndex == ADD_TO_NEW_POST) {
+            target = "new_post";
+        } else if (mActionIndex == ADD_TO_MEDIA_LIBRARY) {
+            target = "media_library";
+        }
+        analyticsProperties.put("share_to", target);
+
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SHARE_TO_WP_SUCCEEDED,
+                mSiteStore.getSiteByLocalId(mSelectedSiteLocalId),
+                analyticsProperties);
+
+    }
+
 }

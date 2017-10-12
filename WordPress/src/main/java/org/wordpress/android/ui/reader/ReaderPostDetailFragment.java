@@ -78,6 +78,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 public class ReaderPostDetailFragment extends Fragment
         implements WPMainActivity.OnActivityBackPressedListener,
                    ScrollDirectionListener,
@@ -211,16 +213,19 @@ public class ReaderPostDetailFragment extends Fragment
         int swipeToRefreshOffset = getResources().getDimensionPixelSize(R.dimen.toolbar_content_offset);
         swipeRefreshLayout.setProgressViewOffset(false, 0, swipeToRefreshOffset);
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), swipeRefreshLayout, new SwipeToRefreshHelper.RefreshListener() {
-            @Override
-            public void onRefreshStarted() {
-                if (!isAdded()) {
-                    return;
-                }
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                swipeRefreshLayout,
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!isAdded()) {
+                            return;
+                        }
 
-                updatePost();
-            }
-        });
+                        updatePost();
+                    }
+                }
+        );
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);

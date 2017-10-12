@@ -22,9 +22,9 @@
     <string name="select_categories">Select categories</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
     <string name="post_content">Content (tap to add text and media)</string>
-    <string name="max_thumbnail_px_width">Default Image Width</string>
+    <string name="max_thumbnail_px_size">Maximum Image Size</string>
     <string name="image_quality">Image Quality</string>
-    <string name="max_video_resolution">Maximum Resolution</string>
+    <string name="max_video_resolution">Maximum Video Size</string>
     <string name="video_quality">Video Quality</string>
     <string name="password">Password</string>
     <string name="blogs">Blogs</string>
@@ -55,10 +55,6 @@
     <string name="hide">Hide</string>
     <string name="select_all">Select all</string>
     <string name="deselect_all">Deselect all</string>
-    <string name="notification_sound">Notification sound</string>
-    <string name="notification_vibrate">Vibrate</string>
-    <string name="notification_pending_drafts">Notify me on pending drafts</string>
-    <string name="notification_blink">Blink notification light</string>
     <string name="sure_to_remove_account">Remove this site from the app?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -100,6 +96,7 @@
     <string name="cant_open_url">Unable to open the link</string>
     <string name="retry">Retry</string>
     <string name="invalid_ip_or_range">Invalid IP or IP range</string>
+    <string name="copy">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
 
     <string name="button_skip">Skip</string>
@@ -178,6 +175,7 @@
     <!-- Edit Media -->
     <string name="media_edit_title_text">Title</string>
     <string name="media_edit_caption_text">Caption</string>
+    <string name="media_edit_alttext_text">Alt text</string>
     <string name="media_edit_description_text">Description</string>
     <string name="media_edit_title_hint">Enter a title here</string>
     <string name="media_edit_caption_hint">Enter a caption here</string>
@@ -186,9 +184,24 @@
     <string name="media_edit_failure">Failed to update</string>
     <string name="saving">Saving…</string>
     <string name="confirm_discard_changes">Discard unsaved changes?</string>
+    <string name="media_edit_card_caption">File Details</string>
+    <string name="media_edit_url_caption">URL</string>
+    <string name="media_edit_filename_caption">File Name</string>
+    <string name="media_edit_filetype_caption">File Type</string>
+    <string name="media_edit_image_dimensions_caption">Image Dimensions</string>
+    <string name="media_edit_video_dimensions_caption">Video Dimensions</string>
+    <string name="media_edit_duration_caption">Duration</string>
+    <string name="media_edit_upload_date_caption">Upload Date</string>
+    <string name="media_edit_copy_url_toast">URL copied to clipboard</string>
+    <string name="fab_content_description_preview">Preview</string>
+
+    <!-- Media settings title -->
+    <string name="media_title_image_details">Image details</string>
+    <string name="media_title_video_details">Video details</string>
+    <string name="media_title_audio_details">Audio details</string>
+    <string name="media_title_document_details">Document details</string>
 
     <!-- Delete Media -->
-    <string name="confirm_delete_media">Delete selected item?</string>
     <string name="confirm_delete_multi_media">Delete selected items?</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
@@ -198,14 +211,15 @@
     <string name="media_empty_documents_list">You don\'t have any documents</string>
     <string name="media_empty_audio_list">You don\'t have any audio</string>
     <string name="delete">Delete</string>
+    <string name="confirm_delete_media_image">Delete this image?</string>
+    <string name="confirm_delete_media_video">Delete this video?</string>
+    <string name="deleting_media_dlg">Deleting</string>
 
     <!-- Media details -->
     <string name="media_details_label_date_added">Added</string>
     <string name="media_details_label_date_uploaded">Uploaded</string>
     <string name="media_details_label_file_name">File name</string>
     <string name="media_details_label_file_type">File type</string>
-    <string name="media_details_copy_url">Copy URL</string>
-    <string name="media_details_copy_url_toast">URL copied to clipboard</string>
 
     <!-- themes -->
     <string name="themes_live_preview">Live preview</string>
@@ -492,7 +506,7 @@
     <string name="site_settings_default_format_title">Default Format</string>
     <string name="site_settings_image_original_size">Original Size</string>
     <string name="site_settings_optimize_images">Optimize Images</string>
-    <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_width</string>
+    <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_size</string>
     <string name="site_settings_default_image_quality_title" translatable="false">@string/image_quality</string>
     <string name="site_settings_optimize_videos">Optimize Videos</string>
     <string name="site_settings_default_video_width_title" translatable="false">@string/max_video_resolution</string>
@@ -905,14 +919,24 @@
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
-    <string name="notifications_sights_and_sounds">Sights and Sounds</string>
-    <string name="your_sites">Your Sites</string>
-    <string name="all_your_sites">All My Sites</string>
-    <string name="notifications_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
-    <string name="notifications_account_emails">Email from WordPress.com</string>
+    <string name="notification_settings_master_status_on">On</string>
+    <string name="notification_settings_master_status_off">Off</string>
+    <string name="notification_settings_master_hint_on">Disable notifications</string>
+    <string name="notification_settings_master_hint_off">Enable notifications</string>
+    <string name="notification_settings_master_off_title">To receive notifications on this device, turn Notification Settings on.</string>
+    <string name="notification_settings_master_off_message">Turning Notification Settings off will disable all notifications from this app, regardless of type. You can fine-tune which kind of notification you receive after turning Notification Settings on.</string>
+    <string name="notification_settings_category_your_sites">Your Sites</string>
+    <string name="notification_settings_item_your_sites_all_your_sites">All My Sites</string>
+    <string name="notification_settings_category_other">Other</string>
+    <string name="notification_settings_item_other_comments_other_blogs">Comments on other sites</string>
+    <string name="notification_settings_item_other_pending_drafts">Notify me on pending drafts</string>
+    <string name="notification_settings_item_other_account_emails">Email from WordPress.com</string>
+    <string name="notification_settings_item_other_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
+    <string name="notification_settings_category_sights_and_sounds">Sights and Sounds</string>
+    <string name="notification_settings_item_sights_and_sounds_choose_sound">Choose sound</string>
+    <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate device</string>
+    <string name="notification_settings_item_sights_and_sounds_blink_light">Blink light</string>
     <string name="notifications_wpcom_updates">WordPress.com Updates</string>
-    <string name="notifications_other">Other</string>
-    <string name="notifications_comments_other_blogs">Comments on other sites</string>
     <string name="notifications_tab">Notifications tab</string>
     <string name="email">Email</string>
     <string name="email_address">Email address</string>
@@ -1149,7 +1173,6 @@
     <string name="wordpress_dot_com_capitalized" translatable="false">WordPress.com</string>
 
     <!-- Error Messages -->
-    <string name="error_delete_post">An error occurred while deleting the %s</string>
     <!-- The following messages can\'t be factorized due to i18n -->
     <string name="error_refresh_posts">Posts couldn\'t be refreshed at this time</string>
     <string name="error_refresh_pages">Pages couldn\'t be refreshed at this time</string>
@@ -1158,6 +1181,8 @@
     <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
     <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
+    <string name="error_deleting_post">An error occurred while deleting the post</string>
+    <string name="error_deleting_page">An error occurred while deleting the page</string>
 
     <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
@@ -1184,10 +1209,13 @@
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_media_load">Unable to load media</string>
+    <string name="error_media_still_uploading">Please wait for the upload to finish</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
-    <string name="error_media_recover_params">We were unable to upload this %1$s\'s media. Please edit the %1$s to try again.</string>
-    <string name="error_post_does_not_exist_param">This %s no longer exists</string>
+    <string name="error_media_recover_post">We were unable to upload this post\'s media. Please edit the post to try again.</string>
+    <string name="error_media_recover_page">We were unable to upload this page\'s media. Please edit the page to try again.</string>
+    <string name="error_post_does_not_exist">This post no longer exists</string>
+    <string name="error_page_does_not_exist">This page no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
@@ -1246,6 +1274,11 @@
     <string name="jetpack_different_com_account">Jetpack sites belonging to different WordPress.com accounts are not supported</string>
     <string name="jetpack_stats_module_disabled_message">The Jetpack plugin is connected, but the Stats module is not active. Do you want to activate Stats?</string>
     <string name="jetpack_stats_module_disabled_message_not_admin">The Jetpack plugin is connected, but the Stats module is not active. Contact the site administrator.</string>
+    <string name="jetpack_disconnect_pref_title">"Disconnect from WordPress.com"</string>
+    <string name="jetpack_disconnect_confirmation_message">Are you sure you want to disconnect Jetpack from the site?</string>
+    <string name="jetpack_disconnect_confirm">Disconnect</string>
+    <string name="jetpack_disconnect_success_toast">Site disconnected</string>
+    <string name="jetpack_disconnect_error_toast">Error disconnecting site</string>
 
     <!--
       reader strings
@@ -1903,6 +1936,7 @@
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="connect_more">Connect Another Site</string>
+    <string name="connect_site">Connect Site</string>
     <string name="login_continue">Continue</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="login_username_at">\@%s</string>
@@ -1922,4 +1956,7 @@
     <string name="login_logged_in_as">Logged in as</string>
     <string name="login_epilogue_mysites_one">My site</string>
     <string name="login_epilogue_mysites_other">My sites</string>
+
+    <!-- shared element names -->
+    <string name="shared_element_media" translatable="false">media</string>
 </resources>

@@ -133,7 +133,7 @@ public final class SiteSettingsTable {
             // we're safe to read all the settings now since all the columns must be there
             int optimizeImageOldSettings = cursor.getInt(columnIndex);
             AppPrefs.setImageOptimize(optimizeImageOldSettings == 1);
-            AppPrefs.setImageOptimizeWidth(
+            AppPrefs.setImageOptimizeMaxSize(
                     cursor.getInt(cursor.getColumnIndex("maxImageWidth")));
             AppPrefs.setImageOptimizeQuality(
                     cursor.getInt(cursor.getColumnIndex("imageEncoderQuality")));

@@ -23,6 +23,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ViewUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     private RecyclerView mSitesList;
     private View mBottomShadow;
     private View mBottomButtonsContainer;
+    private Button mConnectMore;
 
     @Inject AccountStore mAccountStore;
 
@@ -90,6 +92,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
 
         mBottomButtonsContainer = rootView.findViewById(R.id.bottom_buttons);
+        mConnectMore = (Button) mBottomButtonsContainer.findViewById(R.id.secondary_button);
 
         mSitesList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mSitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -173,13 +176,22 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
             @Override
             public void onAfterLoad() {
-                if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
-                    mBottomShadow.setVisibility(View.VISIBLE);
-                    mBottomButtonsContainer.setBackgroundResource(R.color.white);
-                } else {
-                    mBottomShadow.setVisibility(View.GONE);
-                    mBottomButtonsContainer.setBackground(null);
-                }
+                mSitesList.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
+                            mBottomShadow.setVisibility(View.VISIBLE);
+                            mBottomButtonsContainer.setBackgroundResource(R.color.white);
+                            ViewUtils.setButtonBackgroundColor(getContext(), mConnectMore,
+                                    R.style.WordPress_Button_Grey, R.attr.colorButtonNormal);
+                        } else {
+                            mBottomShadow.setVisibility(View.GONE);
+                            mBottomButtonsContainer.setBackground(null);
+                            ViewUtils.setButtonBackgroundColor(getContext(), mConnectMore, R.style.WordPress_Button,
+                                    R.attr.colorButtonNormal);
+                        }
+                    }
+                });
             }
         }, new SitePickerAdapter.HeaderHandler() {
             @Override
@@ -231,7 +243,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
             holder.mUsernameTextView.setText(getString(R.string.login_username_at, defaultAccount.getUserName()));
 
-            String displayName = StringUtils.unescapeHTML(defaultAccount.getDisplayName());
+            String displayName = defaultAccount.getDisplayName();
             if (!TextUtils.isEmpty(displayName)) {
                 holder.mDisplayNameTextView.setText(displayName);
             } else {
@@ -244,12 +256,16 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
         if (numberOfSites == 0) {
             holder.mMySitesHeadingTextView.setVisibility(View.GONE);
+
+            mConnectMore.setText(R.string.connect_site);
         } else {
             holder.mMySitesHeadingTextView.setVisibility(View.VISIBLE);
             holder.mMySitesHeadingTextView.setText(
                     StringUtils.getQuantityString(
                             getActivity(), R.string.days_quantity_one, R.string.login_epilogue_mysites_one,
                             R.string.login_epilogue_mysites_other, numberOfSites));
+
+            mConnectMore.setText(R.string.connect_more);
         }
     }
 

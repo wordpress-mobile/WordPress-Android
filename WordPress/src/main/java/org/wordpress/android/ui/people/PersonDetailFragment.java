@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
@@ -21,7 +22,6 @@ import org.wordpress.android.models.Person;
 import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.SimpleDateFormat;
@@ -139,7 +139,7 @@ public class PersonDetailFragment extends Fragment {
             String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
 
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-            mDisplayNameTextView.setText(StringUtils.unescapeHTML(person.getDisplayName()));
+            mDisplayNameTextView.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));
             if (person.getRole() != null) {
                 mRoleTextView.setText(RoleUtils.getDisplayName(person.getRole(), mUserRoles));
             }

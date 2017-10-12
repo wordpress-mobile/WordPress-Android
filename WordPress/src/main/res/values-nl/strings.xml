@@ -1,17 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-22 10:07:36+0000
+Translation-Revision-Date: 2017-09-27 08:54:33+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+	<string name="connect_site">Site koppelen</string>
+	<string name="notification_settings_item_sights_and_sounds_blink_light">Lamp laten knipperen</string>
+	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Apparaat laten trillen</string>
+	<string name="notification_settings_item_sights_and_sounds_choose_sound">Kies geluid</string>
+	<string name="notification_settings_category_sights_and_sounds">Beeld en geluid</string>
+	<string name="notification_settings_item_other_account_emails">E-mail van WordPress.com</string>
+	<string name="notification_settings_item_other_pending_drafts">Meldt me wanneer er concepten in behandeling zijn</string>
+	<string name="notification_settings_item_other_comments_other_blogs">Reacties op andere sites</string>
+	<string name="notification_settings_category_other">Andere</string>
+	<string name="notification_settings_item_your_sites_all_your_sites">Al mijn sites</string>
+	<string name="notification_settings_category_your_sites">Jouw sites</string>
+	<string name="notification_settings_master_off_message">Het uitschakelen van Meldingsinstellingen zal alle meldingen van deze app uitschakelen, ongeacht het type. Je kunt specificeren welke type notificaties je wilt ontvangen nadat je de Meldingsinstellingen hebt ingeschakeld.</string>
+	<string name="notification_settings_master_off_title">Om meldingen te ontvangen op dit apparaat, schakel de Meldingsinstellingen in.</string>
+	<string name="notification_settings_master_hint_off">Meldingen inschakelen</string>
+	<string name="notification_settings_master_hint_on">Meldingen uitschakelen</string>
+	<string name="notification_settings_master_status_off">Uit</string>
+	<string name="notification_settings_master_status_on">Aan</string>
+	<string name="max_video_resolution">Maximale video grootte</string>
+	<string name="max_thumbnail_px_size">Maximale afbeeldingsgrootte</string>
+	<string name="error_media_recover_post">We kunnen de media van dit bericht niet uploaden. Bewerk het bericht en probeer het opnieuw.</string>
+	<string name="error_page_does_not_exist">Deze pagina bestaat niet meer</string>
+	<string name="error_upload_post_media_param">Er is een fout opgetreden bij het uploaden van een media-bestand bij dit bericht: %s.</string>
+	<string name="error_upload_post_param">Er is een fout opgetreden bij het uploaden dit bericht: %s.</string>
+	<string name="add_media_progress">Toevoegen media</string>
+	<string name="reader_excerpt_link">Bezoek %s voor meer</string>
+	<string name="login_site_address_help_image">Het adres van de site kan worden gevonden in de navigatiebalk van je webbrowser</string>
+	<string name="error_unknown_page">Kan de pagina niet vinden op de server</string>
+	<string name="error_publish_empty_page">Kan een lege pagina niet publiceren</string>
+	<string name="upload_failed_param">Upload van "%s" is niet gelukt</string>
+	<string name="cannot_retry_deleted_media_item">Media is verwijderd. Wil je het verwijderen uit dit bericht?</string>
+	<string name="error_please_choose_browser">Fout bij het openen van de standaard webbrowser. Kies een andere app:</string>
+	<string name="cant_open_url">De link kan niet worden geopend</string>
 	<string name="error_unknown_post">Bericht niet gevonden op server</string>
 	<string name="error_post_does_not_exist">Dit bericht bestaat niet meer</string>
-	<string name="error_media_recover">We kunnen de media van dit bericht niet uploaden. Bewerk het bericht en probeer het opnieuw.</string>
+	<string name="error_media_recover_page">We kunnen de media van deze pagina niet uploaden. Bewerk de pagina en probeer het opnieuw.</string>
 	<string name="error_media_canceled">Het uploaden van media is geannuleerd</string>
-	<string name="error_upload_post_media_params">Er is een fout opgetreden bij het uploaden van media in deze %1$s: %2$s.</string>
-	<string name="error_upload_post_params">Er is een fout opgetreden bij het uploaden van deze %1$s: %2$s.</string>
+	<string name="error_upload_page_media_param">Er is een fout opgetreden bij het uploaden van media in deze pagina: %s.</string>
+	<string name="error_upload_page_param">Er is een fout opgetreden bij het uploaden van deze pagina: %s.</string>
 	<string name="async_promo_link">Hoe werkt het?</string>
 	<string name="async_promo_description">Je kunt de editor nu afsluiten; je bericht wordt automatisch opgeslagen en gepubliceerd! Probeer het ook eens!</string>
 	<string name="async_promo_title">Vol vertrouwen publiceren</string>
@@ -28,7 +60,6 @@ Language: nl
 	<string name="post_queued">Bericht in wachtrij</string>
 	<string name="uploading_post">"%s" wordt geüpload</string>
 	<string name="connection_to_server_lost">De verbinding met de server is verbroken</string>
-	<string name="max_video_resolution">Maximale resolutie</string>
 	<string name="login_epilogue_mysites_other">Mijn sites</string>
 	<string name="login_epilogue_mysites_one">Mijn site</string>
 	<string name="login_logged_in_as">Ingelogd als</string>
@@ -72,7 +103,6 @@ Language: nl
 	<string name="login_promo_text_onthego">Publiceren in het park. Bloggen in de bus. Reageren in het restaurant. WordPress gaat altijd met je mee.</string>
 	<string name="create_wordpress_site">Een WordPress-site maken</string>
 	<string name="email_not_found">We konden geen WordPress.com-gebruiker met dat e-mailadres vinden</string>
-	<string name="login_site_address_help_image">Afbeelding site-adres positioneren</string>
 	<string name="image_optimization_promo_desc">Afbeeldingoptimalisatie maakt afbeeldingen kleiner, zodat ze sneller geüpload kunnen worden.\n\nJe kunt deze optie op elk moment wijzigen in de site-instellingen.</string>
 	<string name="image_optimization_promo_title">Afbeeldingoptimalisatie aanzetten?</string>
 	<string name="leave_off">Uit laten staan</string>
@@ -319,10 +349,7 @@ Language: nl
 	<string name="jetpack_info">Jetpack info</string>
 	<string name="reader_photo_by">Foto van %s</string>
 	<string name="reader_label_visit">Bezoek</string>
-	<string name="all_your_sites">Al mijn sites</string>
 	<string name="pending_draft_more">Je hebt %d berichten als concept opgeslagen, maar ze nooit gepubliceerd. Tik om ze te controleren.</string>
-	<string name="no_default_app_available_to_open_link">Kan de link niet openen</string>
-	<string name="notification_pending_drafts">Geef me een melding van openstaande concepten</string>
 	<string name="invalid_verification_code_format">Moet een zescijferig nummer zijn</string>
 	<string name="confirm_discard_changes">Niet-opgeslagen wijzigingen verwijderen?</string>
 	<string name="swipe_for_more">Veeg voor meer</string>
@@ -821,13 +848,8 @@ Language: nl
 	<string name="email">E-mailadres</string>
 	<string name="notifications_tab">Tabblad Meldingen</string>
 	<string name="app_notifications">Appmeldingen</string>
-	<string name="notifications_comments_other_blogs">Reacties op andere sites</string>
-	<string name="notifications_other">Anders</string>
 	<string name="notifications_wpcom_updates">Nieuws WordPress.com</string>
-	<string name="notifications_account_emails">E-mail van WordPress.com</string>
-	<string name="notifications_account_emails_summary">We sturen altijd belangrijke e-mails met betrekking tot je account, maar je kunt ook aanvullende nuttige berichten ontvangen.</string>
-	<string name="your_sites">Jouw sites</string>
-	<string name="notifications_sights_and_sounds">Beelden en geluiden</string>
+	<string name="notification_settings_item_other_account_emails_summary">We sturen altijd belangrijke e-mails met betrekking tot je account, maar je kunt ook aanvullende nuttige berichten ontvangen.</string>
 	<string name="stats_insights_latest_post_trend">Het is %1$s geleden sinds %2$s is gepubliceerd. Hier zie je hoe het bericht het tot nu toe heeft gedaan ...</string>
 	<string name="stats_insights_latest_post_summary">Samenvatting laatste bericht</string>
 	<string name="button_revert">Terugzetten</string>
@@ -1112,7 +1134,7 @@ Language: nl
 	<string name="error_refresh_notifications">Notificaties kunnen momenteel niet worden ververst</string>
 	<string name="error_refresh_pages">Pagina\'s kunnen momenteel niet worden ververst</string>
 	<string name="error_refresh_posts">Berichten kunnen momenteel niet worden ververst</string>
-	<string name="error_delete_post">Er heeft zich een fout voorgedaan bij het verwijderen van %s</string>
+	<string name="error_deleting_post">Er heeft zich een fout voorgedaan bij het verwijderen van het bericht</string>
 	<string name="notifications_empty_list">Geen notificaties</string>
 	<string name="reply_failed">Reactie mislukt</string>
 	<string name="invalid_url_message">Controleer of de ingevoerde URL geldig is</string>
@@ -1129,7 +1151,6 @@ Language: nl
 	<string name="theme_auth_error_message">Controleer of je rechten hebt om thema\'s in te stellen</string>
 	<string name="theme_set_failed">Fout bij het instellen van het thema</string>
 	<string name="theme_fetch_failed">Fout bij het ophalen van thema\'s</string>
-	<string name="wait_until_upload_completes">Wacht tot de upload is voltooid</string>
 	<string name="blog_not_found">Er heeft zich een fout voorgedaan tijdens het openen van dit blog</string>
 	<string name="gallery_error">Media-item kan niet worden opgehaald</string>
 	<string name="could_not_remove_account">Kon site niet verwijderen</string>
@@ -1150,6 +1171,7 @@ Language: nl
 	<string name="fatal_db_error">Er heeft zich een fout voorgedaan bij het aanmaken van de database van de app. Probeer de app opnieuw te installeren.</string>
 	<string name="error_blog_hidden">Dit blog is verborgen en kan niet worden geladen. Schakel het blog in instellingen in en probeer het opnieuw.</string>
 	<string name="error_refresh_media">Media konden op dit moment niet worden vernieuwd</string>
+	<string name="error_deleting_page">Er is een fout opgetreden bij het verwijderen van de pagina</string>
 	<string name="wordpress_blog">WordPress-blog</string>
 	<string name="add_account_blog_url">Blogadres</string>
 	<string name="image_settings">Afbeeldingsinstellingen</string>
@@ -1374,7 +1396,6 @@ Language: nl
 	<string name="app_title">WordPress voor Android</string>
 	<string name="tos">Eindgebruikersovereenkomst</string>
 	<string name="version">Versie</string>
-	<string name="max_thumbnail_px_width">Standaardbreedte van afbeelding</string>
 	<string name="image_alignment">Uitlijning </string>
 	<string name="refresh">Vernieuw</string>
 	<string name="untitled">Zonder titel</string>
@@ -1393,9 +1414,6 @@ Language: nl
 	<string name="tags_separate_with_commas">Scheid tags met komma\'s</string>
 	<string name="title">Titel</string>
 	<string name="dlg_deleting_comments">Reacties verwijderen</string>
-	<string name="notification_vibrate">Vibreren </string>
-	<string name="notification_sound">Meldingsgeluid</string>
-	<string name="notification_blink">Flikker het notificatie licht</string>
 	<string name="sdcard_title">SD kaart is vereist </string>
 	<string name="media">Media</string>
 	<string name="approve">Goedkeuren</string>

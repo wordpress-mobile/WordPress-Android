@@ -39,7 +39,7 @@ public class WPMediaUtils {
     }
 
     // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
-    public static final int OPTIMIZE_IMAGE_MAX_WIDTH = 3000;
+    public static final int OPTIMIZE_IMAGE_MAX_SIZE = 3000;
     public static final int OPTIMIZE_IMAGE_ENCODER_QUALITY = 85;
     public static final int OPTIMIZE_VIDEO_MAX_WIDTH = 1280;
     public static final int OPTIMIZE_VIDEO_ENCODER_BITRATE_KB = 3000;
@@ -51,14 +51,15 @@ public class WPMediaUtils {
         if (!AppPrefs.isImageOptimize()) {
             return null;
         }
-        int resizeWidth = AppPrefs.getImageOptimizeWidth() > 1 ? AppPrefs.getImageOptimizeWidth() : Integer.MAX_VALUE;
+        
+        int resizeDimension = AppPrefs.getImageOptimizeMaxSize() > 1 ? AppPrefs.getImageOptimizeMaxSize() : Integer.MAX_VALUE;
         int quality = AppPrefs.getImageOptimizeQuality();
         // do not optimize if original-size and 100% quality are set.
-        if (resizeWidth == Integer.MAX_VALUE && quality == 100) {
+        if (resizeDimension == Integer.MAX_VALUE && quality == 100) {
             return null;
         }
 
-        String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeWidth, quality);
+        String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeDimension, quality);
         if (optimizedPath == null) {
             AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);

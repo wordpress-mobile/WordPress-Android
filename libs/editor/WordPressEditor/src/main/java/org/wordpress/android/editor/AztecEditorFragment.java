@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -43,6 +44,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.editor.MetadataUtils.AttributesWithClass;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.JSONUtils;
@@ -141,6 +143,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private EditorBetaClickListener mEditorBetaClickListener;
 
+    private Drawable loadingImagePlaceholder;
+    private Drawable loadingVideoPlaceholder;
+
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -208,7 +213,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         mAztecReady = true;
 
-        AppCompatTextView titleBeta = (AppCompatTextView) view.findViewById(R.id.title_beta);
+        ImageButton titleBeta = (ImageButton) view.findViewById(R.id.title_beta);
         titleBeta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -312,6 +317,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         super.onPrepareOptionsMenu(menu);
     }
 
+    public boolean hasHistory() {
+        return (content.history.getHistoryEnabled() && !content.history.getHistoryList().isEmpty());
+    }
+
+    public boolean isHistoryEnabled() {
+        return content.history.getHistoryEnabled();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -370,11 +383,26 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setTitle(CharSequence text) {
+        if (text == null) {
+            text = "";
+        }
+
+        if (title == null) {
+            return;
+        }
         title.setText(text);
     }
 
     @Override
     public void setContent(CharSequence text) {
+        if (text == null) {
+            text = "";
+        }
+
+        if (content == null) {
+            return;
+        }
+
         content.fromHtml(text.toString());
 
         updateFailedMediaList();
@@ -569,17 +597,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private void overlayProgressingMedia() {
         for (String localMediaId : mUploadingMediaProgressMax.keySet()) {
-            MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-            overlayProgressingMedia(predicate);
-            // here check if this is a video uploading in progress or not; if it is, show the video play icon
-            for (Attributes attrs : content.getAllElementAttributes(predicate)) {
-                AttributesWithClass attributesWithClass = getAttributesWithClass(attrs);
-                if (attributesWithClass.hasClass(TEMP_VIDEO_UPLOADING_CLASS)) {
-                    overlayVideoIcon(2, predicate);
-                }
+            overlayProgressingMediaForMediaId(localMediaId);
+        }
+    }
+
+    private void overlayProgressingMediaForMediaId(String localMediaId) {
+        MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
+        overlayProgressingMedia(predicate);
+        // here check if this is a video uploading in progress or not; if it is, show the video play icon
+        for (Attributes attrs : content.getAllElementAttributes(predicate)) {
+            AttributesWithClass attributesWithClass = getAttributesWithClass(attrs);
+            if (attributesWithClass.hasClass(TEMP_VIDEO_UPLOADING_CLASS)) {
+                overlayVideoIcon(2, predicate);
             }
         }
     }
+
 
     private void overlayVideoIcon(int overlayLevel, AztecText.AttributePredicate predicate) {
         Drawable videoDrawable = getResources().getDrawable(R.drawable.ic_overlay_video);
@@ -644,24 +677,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         final int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            // We're download the image/video from the network. Show the placeholder immediately since it could require time.
-            final Drawable placeholder;
-            if(mediaFile.isVideo()) {
-                placeholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
-            } else {
-                placeholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
-            }
-            placeholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+
 
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
             setAttributeValuesIfNotDefault(attributes, mediaFile);
             if(mediaFile.isVideo()) {
                 addVideoUploadingClassIfMissing(attributes);
-                content.insertVideo(placeholder, attributes);
+                content.insertVideo(getLoadingVideoPlaceholder(), attributes);
                 overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
             } else {
-                content.insertImage(placeholder, attributes);
+                content.insertImage(getLoadingImagePlaceholder(), attributes);
             }
 
             final String posterURL = mediaFile.isVideo() ? Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL())) : mediaUrl;
@@ -779,7 +805,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendGallery(MediaGallery mediaGallery) {
-        ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
+        String shortcode = "[gallery %s=\"%s\" ids=\"%s\"]";
+        if (TextUtils.isEmpty(mediaGallery.getType())) {
+            shortcode = String.format(shortcode, "columns",
+                    mediaGallery.getNumColumns(),
+                    mediaGallery.getIdsStr());
+        } else {
+            shortcode = String.format(shortcode, "type",
+                    mediaGallery.getType(),
+                    mediaGallery.getIdsStr());
+        }
+        content.getText().insert(content.getSelectionEnd(), shortcode);
     }
 
     @Override
@@ -828,16 +864,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onMediaUploadReattached(String localId, float currentProgress) {
         mUploadingMediaProgressMax.put(localId, currentProgress);
+        overlayProgressingMediaForMediaId(localId);
     }
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
-        if(!isAdded() || content == null || !mAztecReady) {
+        if (!isAdded() || content == null || !mAztecReady) {
             return;
         }
 
         if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            AppLog.i(T.MEDIA, "onMediaUploadSucceeded - Remote URL: " + remoteUrl + ", Filename: "
+                    + mediaFile.getFileName());
 
             // we still need to refresh the screen visually, no matter whether the service already
             // saved the post to Db or not
@@ -1213,7 +1252,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.stop_upload_dialog_button_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         if (mUploadingMediaProgressMax.containsKey(localMediaId)) {
@@ -1235,7 +1274,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
                 });
 
-                builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.stop_upload_dialog_button_no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                     }
@@ -1716,5 +1755,35 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         plugins.add(new VideoShortcodePlugin());
         plugins.add(new AudioShortcodePlugin());
         return new AztecParser(plugins);
+    }
+
+    private Drawable getLoadingImagePlaceholder() {
+        if (loadingImagePlaceholder != null) {
+            return  loadingImagePlaceholder;
+        }
+
+        // Use default loading placeholder if none was set by the host activity
+        Drawable defaultLoadingImagePlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_image);
+        defaultLoadingImagePlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+        return defaultLoadingImagePlaceholder;
+    }
+
+    private Drawable getLoadingVideoPlaceholder() {
+        if (loadingVideoPlaceholder != null) {
+            return  loadingVideoPlaceholder;
+        }
+
+        // Use default loading placeholder if none was set by the host activity
+        Drawable defaultLoadingImagePlaceholder = getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
+        defaultLoadingImagePlaceholder.setBounds(0, 0, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP, DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+        return defaultLoadingImagePlaceholder;
+    }
+
+    public void setLoadingImagePlaceholder(Drawable loadingImagePlaceholder) {
+        this.loadingImagePlaceholder = loadingImagePlaceholder;
+    }
+
+    public void setLoadingVideoPlaceholder(Drawable loadingVideoPlaceholder) {
+        this.loadingVideoPlaceholder = loadingVideoPlaceholder;
     }
 }

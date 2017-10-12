@@ -7,4 +7,5 @@
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_tablet_large</dimen>
     <dimen name="stats_barchart_height">200dp</dimen>
     <dimen name="postlist_featured_image_height">@dimen/postlist_featured_image_height_tablet_large</dimen>
+    <dimen name="media_settings_margin">@dimen/media_settings_margin_tablet_large</dimen>
 </resources>

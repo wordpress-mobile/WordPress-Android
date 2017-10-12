@@ -98,6 +98,12 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.publicize_button_prefs_fragment, container, false);
 
