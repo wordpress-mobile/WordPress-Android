@@ -363,7 +363,6 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            payload.theme.setLocalSiteId(payload.site.getId());
             ThemeSqlUtils.insertOrUpdateThemeForSite(payload.theme);
         }
         emitChange(event);
@@ -398,7 +397,6 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            payload.theme.setLocalSiteId(payload.site.getId());
             ThemeSqlUtils.removeTheme(payload.theme);
         }
         emitChange(event);
