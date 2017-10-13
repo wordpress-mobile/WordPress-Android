@@ -1,10 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -150,7 +147,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private SiteModel mSite;
 
     public interface MediaGridListener {
-        void onMediaItemSelected(View sourceView, int localMediaId);
+        void onMediaItemSelected(View sourceView, int localMediaId, boolean isLongClick);
         void onRetryUpload(int localMediaId);
     }
 
@@ -402,9 +399,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     @Override
-    public void onAdapterItemSelected(View sourceView, int position) {
+    public void onAdapterItemClicked(View sourceView, int position, boolean isLongPress) {
         int localMediaId = getAdapter().getLocalMediaIdAtPosition(position);
-        mListener.onMediaItemSelected(sourceView, localMediaId);
+        mListener.onMediaItemSelected(sourceView, localMediaId, isLongPress);
     }
 
     @Override
@@ -562,28 +559,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
-    private void handleMultiSelectDelete() {
-        if (!isAdded()) return;
-
-        Builder builder = new AlertDialog.Builder(getActivity()).setMessage(R.string.confirm_delete_multi_media)
-                                                                .setCancelable(true).setPositiveButton(
-                        R.string.delete, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (getActivity() instanceof MediaBrowserActivity) {
-                                    ((MediaBrowserActivity) getActivity()).deleteMedia(
-                                            getAdapter().getSelectedItems());
-                                }
-                                getAdapter().clearSelection();
-                                if (mActionMode != null) {
-                                    mActionMode.finish();
-                                }
-                            }
-                        }).setNegativeButton(R.string.cancel, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
     private void restoreState(@NonNull Bundle savedInstanceState) {
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
         if (isInMultiSelectMode) {
@@ -723,20 +698,14 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            MenuItem mnuTrash = menu.findItem(R.id.media_multiselect_actionbar_trash);
-            mnuTrash.setVisible(!mBrowserType.isPicker());
-
             MenuItem mnuConfirm = menu.findItem(R.id.mnu_confirm_selection);
             mnuConfirm.setVisible(mBrowserType.isPicker());
-
             return true;
         }
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            if (item.getItemId() == R.id.media_multiselect_actionbar_trash) {
-                handleMultiSelectDelete();
-            } else if (item.getItemId() == R.id.mnu_confirm_selection) {
+            if (item.getItemId() == R.id.mnu_confirm_selection) {
                 setResultIdsAndFinish();
             }
             return true;

@@ -201,7 +201,6 @@
     <string name="media_title_document_details">Document details</string>
 
     <!-- Delete Media -->
-    <string name="confirm_delete_multi_media">Delete selected items?</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
     <string name="media_empty_list">No media</string>
@@ -1193,7 +1192,6 @@
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_media_load">Unable to load media</string>
-    <string name="error_media_still_uploading">Please wait for the upload to finish</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
     <string name="error_media_recover_post">We were unable to upload this post\'s media. Please edit the post to try again.</string>

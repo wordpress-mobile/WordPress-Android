@@ -549,31 +549,17 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onMediaItemSelected(View sourceView, int localMediaId) {
-        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
-        if (media == null) {
-            AppLog.w(AppLog.T.MEDIA, "Media browser > unable to load localMediaId = " + localMediaId);
-            ToastUtils.showToast(this, R.string.error_media_load);
-            return;
-        }
-
-        boolean isLocalFile = MediaUtils.isLocalFile(media.getUploadState());
-
-        // if this is being used as a media picker return the selected item and finish, otherwise
-        // preview the selected item
-        if (mBrowserType.isPicker()) {
-            if (isLocalFile) {
-                ToastUtils.showToast(this, R.string.error_media_still_uploading);
-                return;
+    public void onMediaItemSelected(View sourceView, int localMediaId, boolean isLongClick) {
+        // show detail view when tapped if we're browsing media, when used as a picker show detail
+        // when long tapped (to mimic native photo picker)
+        if (mBrowserType == MediaBrowserType.BROWSER && !isLongClick || mBrowserType.isPicker() && isLongClick) {
+            MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
+            if (media != null) {
+                showMediaSettings(media, sourceView);
+            } else {
+                AppLog.w(AppLog.T.MEDIA, "Media browser > unable to load localMediaId = " + localMediaId);
+                ToastUtils.showToast(this, R.string.error_media_load);
             }
-            Intent intent = new Intent();
-            ArrayList<Long> remoteMediaIds = new ArrayList<>();
-            remoteMediaIds.add(media.getMediaId());
-            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
-            setResult(RESULT_OK, intent);
-            finish();
-        } else {
-            showMediaSettings(media, sourceView);
         }
     }
 

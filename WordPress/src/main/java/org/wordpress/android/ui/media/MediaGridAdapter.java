@@ -70,7 +70,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
         void onAdapterRetryUpload(int localMediaId);
-        void onAdapterItemSelected(View sourceView, int position);
+        void onAdapterItemClicked(View sourceView, int position, boolean isLongClick);
         void onAdapterSelectionCountChanged(int count);
     }
 
@@ -296,28 +296,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    if (!isValidPosition(position)) {
-                        return;
-                    }
-                    if (isInMultiSelect() || (mBrowserType.isPicker() && canMultiSelect())) {
-                        setInMultiSelect(true);
-                        if (canSelectPosition(position)) {
-                            toggleItemSelected(GridViewHolder.this, position);
-                        }
-                    } else if (mCallback != null) {
-                        mCallback.onAdapterItemSelected(v, position);
-                    }
-                }
-            });
-
-            selectionCountContainer.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (canSelectPosition(position)) {
-                        setInMultiSelect(true);
-                        toggleItemSelected(GridViewHolder.this, position);
-                    }
+                    doAdapterItemClicked(v, position, false);
                 }
             });
 
@@ -325,16 +304,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 @Override
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
-                    if (mCallback != null && !isInMultiSelect()) {
-                        mCallback.onAdapterItemSelected(v, position);
-                    } else if (canSelectPosition(position)) {
-                        if (isInMultiSelect()) {
-                            toggleItemSelected(GridViewHolder.this, position);
-                        } else if (canMultiSelect()) {
-                            setInMultiSelect(true);
-                            setItemSelectedByPosition(GridViewHolder.this, position, true);
-                        }
-                    }
+                    doAdapterItemClicked(v, position, true);
                     return true;
                 }
             };
@@ -361,16 +331,29 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                                 mCallback.onAdapterRetryUpload(media.getId());
                             }
                         } else if (mCallback != null) {
-                            mCallback.onAdapterItemSelected(v, position);
+                            mCallback.onAdapterItemClicked(v, position, false);
                         }
                     }
                 }
             });
         }
+
+        private void doAdapterItemClicked(View sourceView, int position, boolean isLongClick) {
+            if (!isValidPosition(position)) {
+                return;
+            }
+            if (mCallback != null) {
+                mCallback.onAdapterItemClicked(sourceView, position, isLongClick);
+            }
+            if (canMultiSelect() && canSelectPosition(position) && !isLongClick) {
+                setInMultiSelect(true);
+                toggleItemSelected(GridViewHolder.this, position);
+            }
+        }
     }
 
     private boolean canMultiSelect() {
-        return mBrowserType == MediaBrowserType.BROWSER || mBrowserType == MediaBrowserType.EDITOR_PICKER;
+        return mBrowserType == MediaBrowserType.EDITOR_PICKER;
     }
 
     public boolean isInMultiSelect() {
