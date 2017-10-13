@@ -204,8 +204,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             mContext = WordPress.getContext();
             mPost = posts[0];
 
-            mPostUploadNotifier.addPostInfoToForegroundNotification(mPost, null);
-
             mSite = mSiteStore.getSiteByLocalId(mPost.getLocalSiteId());
             if (mSite == null) {
                 mErrorMessage = mContext.getString(R.string.blog_not_found);
