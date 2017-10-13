@@ -105,6 +105,7 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
 
         // Set secondary toolbar title and master switch state from shared preferences.
         boolean isMasterChecked = mSharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_master), true);
+        hideDisabledView(isMasterChecked);
 
         mToolbarSwitch = (Toolbar) findViewById(R.id.toolbar_with_switch);
         mToolbarSwitch.inflateMenu(R.menu.notifications_settings_secondary);
