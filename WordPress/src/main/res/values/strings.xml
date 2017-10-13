@@ -235,6 +235,8 @@
     <string name="theme_auth_error_message">Ensure you have the privilege to set themes</string>
     <string name="theme_current_theme">Current theme</string>
     <string name="theme_premium_theme">Premium theme</string>
+    <string name="uploaded_themes_header">Uploaded themes</string>
+    <string name="wpcom_themes_header">WordPress.com themes</string>
     <string name="theme_no_search_result_found">Sorry, no themes found.</string>
     <string name="theme_auth_error_authenticate">Failed to fetch themes: failed authenticate user</string>
 

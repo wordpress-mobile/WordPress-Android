@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.MergeCursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,8 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
@@ -65,8 +68,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     protected static final String BUNDLE_PAGE = "BUNDLE_PAGE";
     protected static final int THEME_FILTER_ALL_INDEX = 0;
-    protected static final int THEME_FILTER_FREE_INDEX = 1;
-    protected static final int THEME_FILTER_PREMIUM_INDEX = 2;
 
     protected SwipeToRefreshHelper mSwipeToRefreshHelper;
     protected ThemeBrowserActivity mThemeBrowserActivity;
@@ -364,15 +365,12 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
             return null;
         }
 
-        switch (position) {
-            case THEME_FILTER_PREMIUM_INDEX:
-                return null;
-            case THEME_FILTER_ALL_INDEX:
-                return mThemeStore.getWpThemesCursor();
-            case THEME_FILTER_FREE_INDEX:
-            default:
-                return mThemeStore.getWpThemesCursor();
+        if (mSite.isWPCom()) {
+            return mThemeStore.getWpThemesCursor();
         }
+
+        // this is a Jetpack site, show two sections with headers
+        return getJetpackCursor();
     }
 
     protected void refreshView(int position) {
@@ -407,5 +405,23 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         } else {
             return 0;
         }
+    }
+
+    private Cursor getJetpackCursor() {
+        List<ThemeModel> themes = mThemeStore.getThemesForSite(mSite);
+        Cursor cursor = mThemeStore.getThemesCursorForSite(mSite);
+        cursor.moveToFirst();
+
+        // 1. Uploaded header
+        // 2. Uploaded themes
+        // 3. WP.com header
+        // 4. WP.com themes
+        Cursor[] cursors = new Cursor[4];
+        cursors[0] = ThemeBrowserAdapter.createHeaderCursor(getString(R.string.uploaded_themes_header));
+        cursors[1] = mThemeStore.getThemesCursorForSite(mSite);
+        cursors[2] = ThemeBrowserAdapter.createHeaderCursor(getString(R.string.wpcom_themes_header));
+        cursors[3] = mThemeStore.getWpThemesCursor();
+
+        return new MergeCursor(cursors);
     }
 }

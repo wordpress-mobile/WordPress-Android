@@ -3,6 +3,7 @@ package org.wordpress.android.ui.themes;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,8 +26,16 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.Currency;
 
-public class ThemeBrowserAdapter extends CursorAdapter {
+class ThemeBrowserAdapter extends CursorAdapter {
+    private static final String HEADER_THEME_ID = "HEADER_THEME_ID";
+    private static int HEADER_VIEW_TYPE = 1;
     private static final String THEME_IMAGE_PARAMETER = "?w=";
+
+    public static Cursor createHeaderCursor(String headerText) {
+        MatrixCursor cursor = new MatrixCursor(new String[] {"_id", ThemeModelTable.THEME_ID, ThemeModelTable.NAME});
+        cursor.addRow(new String[]{"0", HEADER_THEME_ID, headerText});
+        return cursor;
+    }
 
     private final LayoutInflater mInflater;
     private final ThemeBrowserFragment.ThemeBrowserFragmentCallback mCallback;
@@ -61,8 +70,23 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         }
     }
 
+    private static class HeaderViewHolder {
+        private final TextView headerText;
+
+        HeaderViewHolder(TextView view) {
+            headerText = view;
+        }
+    }
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        if (getItemViewType(cursor) == HEADER_VIEW_TYPE) {
+            TextView view = new TextView(context);
+            HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
+            view.setTag(headerViewHolder);
+            return view;
+        }
+
         View view = mInflater.inflate(R.layout.theme_grid_item, parent, false);
         configureThemeImageSize(parent);
         ThemeViewHolder themeViewHolder = new ThemeViewHolder(view);
@@ -72,6 +96,13 @@ public class ThemeBrowserAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        if (getItemViewType(cursor) == HEADER_VIEW_TYPE) {
+            final HeaderViewHolder headerViewHolder = (HeaderViewHolder) view.getTag();
+            final String headerText = cursor.getString(cursor.getColumnIndex(ThemeModelTable.NAME));
+            headerViewHolder.headerText.setText(headerText);
+            return;
+        }
+
         final ThemeViewHolder themeViewHolder = (ThemeViewHolder) view.getTag();
         final String screenshotURL = cursor.getString(cursor.getColumnIndex(ThemeModelTable.SCREENSHOT_URL));
         final String name = cursor.getString(cursor.getColumnIndex(ThemeModelTable.NAME));
@@ -93,6 +124,17 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         configureImageView(themeViewHolder, screenshotURL, themeId, isCurrent);
         configureImageButton(context, themeViewHolder, themeId, isPremium, isCurrent);
         configureCardView(context, themeViewHolder, isCurrent);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        Cursor cursor = (Cursor) getItem(position);
+        return getItemViewType(cursor);
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
     }
 
     @SuppressWarnings("deprecation")
@@ -204,5 +246,13 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             mViewWidth = imageWidth;
             AppPrefs.setThemeImageSizeWidth(mViewWidth);
         }
+    }
+
+    private int getItemViewType(Cursor cursor) {
+        String id = cursor.getString(cursor.getColumnIndex(ThemeModelTable.THEME_ID));
+        if (id.equals(HEADER_THEME_ID)) {
+            return HEADER_VIEW_TYPE;
+        }
+        return 0;
     }
 }
