@@ -11,6 +11,7 @@ buildscript {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'com.github.dcendents.android-maven'
 
 repositories {
@@ -56,10 +57,6 @@ android.buildTypes.all { buildType ->
                     "\"${property.value}\""
         }
     }
-}
-
-kapt {
-    generateStubs = true
 }
 
 dependencies {
