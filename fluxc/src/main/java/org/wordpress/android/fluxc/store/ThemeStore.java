@@ -246,11 +246,11 @@ public class ThemeStore extends Store {
     }
 
     public List<ThemeModel> getWpComThemes() {
-        return ThemeSqlUtils.getThemesWithNoSite();
+        return ThemeSqlUtils.getWpComThemes();
     }
 
     public Cursor getWpComThemesCursor() {
-        return ThemeSqlUtils.getThemesWithNoSiteAsCursor();
+        return ThemeSqlUtils.getWpComThemesCursor();
     }
 
     public Cursor getThemesCursorForSite(@NonNull SiteModel site) {

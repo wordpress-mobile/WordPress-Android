@@ -32,6 +32,9 @@ public class ThemeModel implements Identifiable, Serializable {
     @Column private boolean mAutoUpdate;
     @Column private boolean mAutoUpdateTranslation;
 
+    // local use only
+    @Column private boolean mIsWpComTheme;
+
     @Override
     public int getId() {
         return mId;
@@ -66,7 +69,8 @@ public class ThemeModel implements Identifiable, Serializable {
                 && getPrice() == otherTheme.getPrice()
                 && getActive() == otherTheme.getActive()
                 && getAutoUpdate() == otherTheme.getAutoUpdate()
-                && getAutoUpdateTranslation() == otherTheme.getAutoUpdateTranslation();
+                && getAutoUpdateTranslation() == otherTheme.getAutoUpdateTranslation()
+                && isWpComTheme() == otherTheme.isWpComTheme();
     }
 
     public int getLocalSiteId() {
@@ -211,5 +215,13 @@ public class ThemeModel implements Identifiable, Serializable {
 
     public void setAutoUpdateTranslation(boolean autoUpdateTranslation) {
         mAutoUpdateTranslation = autoUpdateTranslation;
+    }
+
+    public boolean isWpComTheme() {
+        return mIsWpComTheme;
+    }
+
+    public void setIsWpComTheme(boolean isWpComTheme) {
+        mIsWpComTheme = isWpComTheme;
     }
 }
