@@ -37,8 +37,6 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
@@ -366,7 +364,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
 
         if (mSite.isWPCom()) {
-            return mThemeStore.getWpThemesCursor();
+            return mThemeStore.getWpComThemesCursor();
         }
 
         // this is a Jetpack site, show two sections with headers
@@ -408,10 +406,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     private Cursor getJetpackCursor() {
-        List<ThemeModel> themes = mThemeStore.getThemesForSite(mSite);
-        Cursor cursor = mThemeStore.getThemesCursorForSite(mSite);
-        cursor.moveToFirst();
-
         // 1. Uploaded header
         // 2. Uploaded themes
         // 3. WP.com header
@@ -420,7 +414,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         cursors[0] = ThemeBrowserAdapter.createHeaderCursor(getString(R.string.uploaded_themes_header));
         cursors[1] = mThemeStore.getThemesCursorForSite(mSite);
         cursors[2] = ThemeBrowserAdapter.createHeaderCursor(getString(R.string.wpcom_themes_header));
-        cursors[3] = mThemeStore.getWpThemesCursor();
+        cursors[3] = mThemeStore.getWpComThemesCursor();
 
         return new MergeCursor(cursors);
     }

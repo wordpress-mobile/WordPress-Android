@@ -132,7 +132,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     protected Cursor fetchThemes(int position) {
-        return mThemeStore.getWpThemesCursor();
+        return mThemeStore.getWpComThemesCursor();
     }
 
     public void search(String searchTerm) {

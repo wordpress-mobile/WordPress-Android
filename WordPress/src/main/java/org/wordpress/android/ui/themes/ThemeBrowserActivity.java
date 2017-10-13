@@ -423,7 +423,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         String toastText = getString(R.string.no_network_message);
 
         if (NetworkUtils.isNetworkAvailable(this)) {
-            ThemeModel theme = TextUtils.isEmpty(themeId) ? null : mThemeStore.getThemeWithId(themeId);
+            ThemeModel theme = TextUtils.isEmpty(themeId) ? null : mThemeStore.getThemeByThemeId(themeId);
             if (theme != null) {
                 Map<String, Object> themeProperties = new HashMap<>();
                 themeProperties.put(THEME_ID, themeId);
