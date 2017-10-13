@@ -333,8 +333,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public int getSelectedItemLocalId(){
-        return getItem(mSelectedItemPos).localId;
+    public int getSelectedItemLocalId() {
+        return mSites.size() != 0 ? getItem(mSelectedItemPos).localId : -1;
     }
 
     public String getLastSearch() {

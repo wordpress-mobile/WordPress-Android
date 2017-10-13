@@ -99,7 +99,10 @@ public class ShareIntentReceiverFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(ARG_LAST_USED_BLOG_LOCAL_ID, mAdapter.getSelectedItemLocalId());
+        int selectedItemLocalId = mAdapter.getSelectedItemLocalId();
+        if (selectedItemLocalId != 1) {
+            outState.putInt(ARG_LAST_USED_BLOG_LOCAL_ID, mAdapter.getSelectedItemLocalId());
+        }
     }
 
     private void initButtonsContainer(ViewGroup layout) {
