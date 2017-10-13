@@ -29,19 +29,21 @@ public class ThemeSqlUtils {
 
     public static void insertOrReplaceWpThemes(@NonNull List<ThemeModel> themes) {
         // remove existing WP.com themes
-        removeThemesWithNoSite();
+        removeWpComThemes();
 
+        // ensure WP.com flag is set before inserting
         for (ThemeModel theme : themes) {
-            theme.setLocalSiteId(0);
+            theme.setIsWpComTheme(true);
         }
 
         WellSql.insert(themes).asSingleTransaction(true).execute();
     }
 
     public static int insertOrReplaceInstalledThemes(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
-        // Remove existing installed themes
+        // remove existing installed themes
         removeThemes(site);
 
+        // ensure site ID is set before inserting
         for (ThemeModel theme : themes) {
             theme.setLocalSiteId(site.getId());
         }
@@ -76,17 +78,17 @@ public class ThemeSqlUtils {
                 .endGroup().endWhere().getAsModel();
     }
 
-    public static Cursor getThemesWithNoSiteAsCursor() {
+    public static Cursor getWpComThemesCursor() {
         return WellSql.select(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, 0)
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
                 .endWhere().getAsCursor();
     }
 
-    public static List<ThemeModel> getThemesWithNoSite() {
+    public static List<ThemeModel> getWpComThemes() {
         return WellSql.select(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, 0)
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
                 .endWhere().getAsModel();
     }
 
@@ -124,6 +126,13 @@ public class ThemeSqlUtils {
         return matches.get(0);
     }
 
+    public static void removeWpComThemes() {
+        WellSql.delete(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
+                .endWhere().execute();
+    }
+
     public static void removeTheme(@NonNull ThemeModel theme) {
         WellSql.delete(ThemeModel.class)
                 .where()
@@ -133,11 +142,6 @@ public class ThemeSqlUtils {
 
     public static void removeThemes(@NonNull SiteModel site) {
         removeThemes(site.getId());
-    }
-
-    public static void removeThemesWithNoSite() {
-        // Remove themes whose localSiteId is 0
-        removeThemes(0);
     }
 
     private static void removeThemes(int localSiteId) {
