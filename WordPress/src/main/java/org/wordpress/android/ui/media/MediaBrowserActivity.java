@@ -71,6 +71,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -564,8 +565,17 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         // show detail view when tapped if we're browsing media, when used as a picker show detail
         // when long tapped (to mimic native photo picker)
-        if (mBrowserType == MediaBrowserType.BROWSER || mBrowserType.isPicker() && isLongClick) {
+        if (mBrowserType == MediaBrowserType.BROWSER && !isLongClick
+                || mBrowserType.isPicker() && isLongClick) {
             showMediaSettings(media, sourceView);
+        } else if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER && !isLongClick) {
+            // if we're picking a featured image, we're done
+            Intent intent = new Intent();
+            ArrayList<Long> remoteMediaIds = new ArrayList<>();
+            remoteMediaIds.add(media.getMediaId());
+            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 

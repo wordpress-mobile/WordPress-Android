@@ -193,7 +193,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         } else {
             holder.selectionCountTextView.setText(null);
         }
-        holder.selectionCountTextView.setVisibility(canMultiSelect() && canSelect ? View.VISIBLE : View.GONE);
+        boolean showCount;
+        if (mBrowserType == MediaBrowserType.BROWSER) {
+            showCount = isSelected;
+        } else {
+            showCount = mBrowserType == MediaBrowserType.EDITOR_PICKER;
+        }
+        holder.selectionCountTextView.setVisibility(showCount ? View.VISIBLE : View.GONE);
 
         // make sure the thumbnail scale reflects its selection state
         float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
@@ -315,6 +321,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     doAdapterItemClicked(v, position, false);
                 }
             });
+
+            selectionCountContainer.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (canSelectPosition(position)) {
+                        setInMultiSelect(true);
+                        toggleItemSelected(GridViewHolder.this, position);
+                    }
+                }
+            });
         }
 
         private void doAdapterItemClicked(View sourceView, int position, boolean isLongClick) {
@@ -326,7 +343,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     toggleItemSelected(GridViewHolder.this, position);
                 }
             } else {
-                if (canMultiSelect() && canSelectPosition(position) && !isLongClick) {
+                if (canMultiSelect() && canSelectPosition(position)) {
                     setInMultiSelect(true);
                     toggleItemSelected(GridViewHolder.this, position);
                 }
@@ -338,7 +355,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     private boolean canMultiSelect() {
-        return mBrowserType == MediaBrowserType.EDITOR_PICKER;
+        return mBrowserType == MediaBrowserType.EDITOR_PICKER || mBrowserType == MediaBrowserType.BROWSER;
     }
 
     public boolean isInMultiSelect() {

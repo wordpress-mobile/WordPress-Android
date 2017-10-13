@@ -3,10 +3,16 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/media_multiselect_actionbar_trash"
+        android:icon="@drawable/ic_trash_white_24dp"
+        app:showAsAction="always"
+        android:title="@string/delete"/>
+
+    <item
         android:id="@+id/mnu_confirm_selection"
         android:enabled="true"
         android:icon="@drawable/ic_checkmark_white_24dp"
         android:title="@string/confirm"
-        android:visible="false"/>
+        android:visible="false" />
 
 </menu>
