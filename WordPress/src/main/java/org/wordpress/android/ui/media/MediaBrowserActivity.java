@@ -690,6 +690,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         enableTabs(true);
     }
 
+    // TODO: in a future PR this and startMediaDeleteService() can be simplified since multiselect delete was dropped
     public void deleteMedia(final ArrayList<Integer> ids) {
         final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
         int processedItemCount = 0;

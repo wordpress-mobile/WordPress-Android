@@ -212,9 +212,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             boolean showProgress = state == MediaUploadState.UPLOADING || state == MediaUploadState.DELETING;
             holder.progressUpload.setVisibility(showProgress ? View.VISIBLE : View.GONE);
 
-            // failed uploads can be retried or deleted
-            if (state == MediaUploadState.FAILED) {
+            // failed uploads can be retried or deleted, queued items can be deleted
+            if (state == MediaUploadState.FAILED || state == MediaUploadState.QUEUED) {
                 holder.retryDeleteContainer.setVisibility(View.VISIBLE);
+                holder.imgRetry.setVisibility(state == MediaUploadState.FAILED ? View.VISIBLE : View.GONE);
             } else {
                 holder.retryDeleteContainer.setVisibility(View.GONE);
             }
