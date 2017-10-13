@@ -29,10 +29,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class CommentStore extends Store {
-    CommentRestClient mCommentRestClient;
-    CommentXMLRPCClient mCommentXMLRPCClient;
+    private final CommentRestClient mCommentRestClient;
+    private final CommentXMLRPCClient mCommentXMLRPCClient;
 
     // Payloads
 
