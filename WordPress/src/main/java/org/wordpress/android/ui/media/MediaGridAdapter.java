@@ -33,6 +33,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.ViewUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -350,9 +351,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     if (isValidPosition(position) && mCallback != null) {
                         mCallback.onAdapterRequestDelete(position);
                     }
-
                 }
             });
+
+            ViewUtils.addCircularShadowOutline(selectionCountTextView);
         }
 
         private void doAdapterItemClicked(View sourceView, int position, boolean isLongClick) {
