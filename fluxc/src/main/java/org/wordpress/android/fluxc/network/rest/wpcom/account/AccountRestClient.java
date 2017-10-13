@@ -75,6 +75,8 @@ public class AccountRestClient extends BaseWPComRestClient {
         public AccountPushSocialResponsePayload(BaseNetworkError error) {
             this.error = new AccountSocialError(error.volleyError.networkResponse.data);
         }
+        public AccountPushSocialResponsePayload() {
+        }
         public List<String> twoStepTypes;
         public String bearerToken;
         public String twoStepNonceAuthenticator;
@@ -313,7 +315,8 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(error);
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                        payload.error = new AccountSocialError(((WPComGsonNetworkError) error).apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
