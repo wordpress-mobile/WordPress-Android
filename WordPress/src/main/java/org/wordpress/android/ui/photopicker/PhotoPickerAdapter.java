@@ -382,7 +382,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                         outline.setOval(0, 0, view.getWidth(), view.getHeight());
                     }
                 });
-                float elevation = view.getResources().getDimensionPixelSize(R.dimen.card_elevation);
+                float elevation = DisplayUtils.dpToPx(view.getContext(), 4);
                 view.setElevation(elevation);
             }
         }
