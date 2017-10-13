@@ -23,15 +23,15 @@
 
         <TextView
             android:id="@+id/text_selection_count"
-            android:layout_width="21dp"
-            android:layout_height="21dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_gravity="bottom|left"
             android:layout_marginBottom="@dimen/margin_medium"
             android:layout_marginLeft="@dimen/margin_medium"
             android:background="@drawable/photo_picker_circle_selector"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_medium"
+            android:textSize="@dimen/text_sz_small"
             tools:text="5"/>
     </FrameLayout>
 
