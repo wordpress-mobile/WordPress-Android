@@ -171,10 +171,19 @@ class PostUploadNotifier {
             mNotificationManager.cancel(sNotificationData.notificationId);
             // reset the notification id so a new one is generated next time the service is started
             sNotificationData.notificationId = 0;
+            resetNotificationCounters();
             mService.stopForeground(true);
             return true;
         }
         return false;
+    }
+
+    void resetNotificationCounters() {
+        sNotificationData.currentPostItem = 0;
+        sNotificationData.currentMediaItem = 0;
+        sNotificationData.totalMediaItems = 0;
+        sNotificationData.totalPostItems = 0;
+        sNotificationData.totalPageItemsIncludedInPostCount = 0;
     }
 
     void cancelErrorNotification(PostModel post) {
@@ -337,10 +346,6 @@ class PostUploadNotifier {
     }
 
     void setTotalMediaItems(PostModel post, int totalMediaItems) {
-        if (totalMediaItems <= 0) {
-            totalMediaItems = 1;
-        }
-
         sNotificationData.totalMediaItems+=totalMediaItems;
 
         // TODO MEDIA REIMPLEMENT OR DELETE THIS
