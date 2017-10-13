@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:padding="@dimen/margin_extra_small">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_extra_small">
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/media_grid_item_image"
@@ -63,72 +63,76 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/media_grid_item_upload_state_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/grey_dark_translucent_50"
-        android:layout_gravity="center"
+        android:orientation="vertical"
         android:visibility="gone"
         tools:visibility="visible">
 
         <LinearLayout
-            android:id="@+id/container_retry_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/image_retry"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="@dimen/margin_large"
-                android:background="@drawable/photo_picker_circle_normal"
-                android:padding="@dimen/margin_small"
-                app:srcCompat="@drawable/media_retry_image"/>
+            <LinearLayout
+                android:id="@+id/container_retry_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
 
-            <ImageView
-                android:id="@+id/image_trash"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="@dimen/margin_large"
-                android:background="@drawable/photo_picker_circle_normal"
-                android:padding="@dimen/margin_small"
-                app:srcCompat="@drawable/ic_trash_white_24dp"/>
+                <ImageView
+                    android:id="@+id/image_retry"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:background="@drawable/photo_picker_circle_normal"
+                    android:padding="@dimen/margin_small"
+                    app:srcCompat="@drawable/media_retry_image"/>
+
+                <ImageView
+                    android:id="@+id/image_trash"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/margin_large"
+                    android:background="@drawable/photo_picker_circle_normal"
+                    android:padding="@dimen/margin_small"
+                    app:srcCompat="@drawable/ic_trash_white_24dp"/>
+            </LinearLayout>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/media_grid_item_upload_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sz_medium"
+                android:textStyle="bold"
+                tools:text="@string/media_upload_state_failed"/>
+
+            <ProgressBar
+                android:id="@+id/media_grid_item_upload_progress"
+                android:layout_width="@dimen/media_grid_progress_height"
+                android:layout_height="@dimen/media_grid_progress_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_small"
+                android:visibility="gone"
+                tools:visibility="visible"/>
         </LinearLayout>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_grid_item_upload_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/container_retry_delete"
-            android:layout_centerInParent="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_medium"
-            android:textStyle="bold"
-            tools:text="@string/media_upload_state_failed"/>
-
-        <ProgressBar
-            android:id="@+id/media_grid_item_upload_progress"
-            android:layout_width="@dimen/media_grid_progress_height"
-            android:layout_height="@dimen/media_grid_progress_height"
-            android:layout_below="@+id/media_grid_item_upload_state"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/margin_small"
-            android:visibility="gone"
-            tools:visibility="visible"/>
-
-    </RelativeLayout>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/frame_selection_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
         android:padding="8dp">
 
         <TextView
@@ -146,7 +150,7 @@
         android:id="@+id/frame_video_overlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_centerInParent="true"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -159,4 +163,4 @@
 
     </FrameLayout>
 
-</FrameLayout>
+</RelativeLayout>
