@@ -148,7 +148,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     public interface MediaGridListener {
         void onMediaItemSelected(View sourceView, int localMediaId, boolean isLongClick);
-        void onRetryUpload(int localMediaId);
     }
 
     public static MediaGridFragment newInstance(@NonNull SiteModel site,
@@ -391,11 +390,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (!hasFetchedAll) {
             fetchMediaList(true);
         }
-    }
-
-    @Override
-    public void onAdapterRetryUpload(int localMediaId) {
-        mListener.onRetryUpload(localMediaId);
     }
 
     @Override

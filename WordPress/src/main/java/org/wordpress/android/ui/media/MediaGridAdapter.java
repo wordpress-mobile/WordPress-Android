@@ -69,7 +69,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
-        void onAdapterRetryUpload(int localMediaId);
         void onAdapterItemClicked(View sourceView, int position, boolean isLongClick);
         void onAdapterSelectionCountChanged(int count);
     }
@@ -300,40 +299,20 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 }
             });
 
-            View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
                     doAdapterItemClicked(v, position, true);
                     return true;
                 }
-            };
-            itemView.setOnLongClickListener(longClickListener);
-            stateTextView.setOnLongClickListener(longClickListener);
+            });
 
             stateTextView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    if (!isValidPosition(position)) {
-                        return;
-                    }
-                    if (isInMultiSelect()) {
-                        if (canSelectPosition(position)) {
-                            toggleItemSelected(GridViewHolder.this, position);
-                        }
-                    } else {
-                        // retry uploading this media item if it previously failed
-                        MediaModel media = mMediaList.get(position);
-                        MediaUploadState state = MediaUploadState.fromString(media.getUploadState());
-                        if (state == MediaUploadState.FAILED) {
-                            if (mCallback != null) {
-                                mCallback.onAdapterRetryUpload(media.getId());
-                            }
-                        } else if (mCallback != null) {
-                            mCallback.onAdapterItemClicked(v, position, false);
-                        }
-                    }
+                    doAdapterItemClicked(v, position, false);
                 }
             });
         }
@@ -387,14 +366,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     /*
      * determines whether the media item at the passed position can be selected - not allowed
-     * for deleted items since the whole purpose of multiselect is to delete multiple items
+     * for deleted items when used as a picker
      */
     private boolean canSelectPosition(int position) {
-        if (!canMultiSelect() || !isValidPosition(position)) {
+        if (!isValidPosition(position)) {
             return false;
         }
-        MediaUploadState state = MediaUploadState.fromString(mMediaList.get(position).getUploadState());
-        return state != MediaUploadState.DELETING && state != MediaUploadState.DELETED;
+        if (mBrowserType.isPicker()) {
+            MediaUploadState state = MediaUploadState.fromString(mMediaList.get(position).getUploadState());
+            return state != MediaUploadState.DELETING && state != MediaUploadState.DELETED;
+        } else {
+            return true;
+        }
     }
 
     private void loadLocalImage(final String filePath, ImageView imageView) {

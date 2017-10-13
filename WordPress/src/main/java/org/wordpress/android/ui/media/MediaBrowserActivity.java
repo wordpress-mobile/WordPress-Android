@@ -71,7 +71,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -550,16 +549,23 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onMediaItemSelected(View sourceView, int localMediaId, boolean isLongClick) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
+        if (media == null) {
+            AppLog.w(AppLog.T.MEDIA, "Media browser > unable to load localMediaId = " + localMediaId);
+            ToastUtils.showToast(this, R.string.error_media_load);
+            return;
+        }
+
+        // retry failed uploads when tapped
+        if (!isLongClick && MediaUploadState.fromString(media.getUploadState()) == MediaUploadState.FAILED) {
+            addMediaToUploadService(media);
+            return;
+        }
+
         // show detail view when tapped if we're browsing media, when used as a picker show detail
         // when long tapped (to mimic native photo picker)
-        if (mBrowserType == MediaBrowserType.BROWSER && !isLongClick || mBrowserType.isPicker() && isLongClick) {
-            MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
-            if (media != null) {
-                showMediaSettings(media, sourceView);
-            } else {
-                AppLog.w(AppLog.T.MEDIA, "Media browser > unable to load localMediaId = " + localMediaId);
-                ToastUtils.showToast(this, R.string.error_media_load);
-            }
+        if (mBrowserType == MediaBrowserType.BROWSER || mBrowserType.isPicker() && isLongClick) {
+            showMediaSettings(media, sourceView);
         }
     }
 
@@ -575,16 +581,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public void onMediaCapturePathReady(String mediaCapturePath) {
         mMediaCapturePath = mediaCapturePath;
-    }
-
-    @Override
-    public void onRetryUpload(int localMediaId) {
-        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
-        if (media == null) {
-            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
-            return;
-        }
-        addMediaToUploadService(media);
     }
 
     private void showMediaToastError(@StringRes int message, @Nullable String messageDetail) {
