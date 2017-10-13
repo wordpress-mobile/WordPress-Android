@@ -420,9 +420,9 @@ class PostUploadNotifier {
     }
 
     private String buildNotificationSubtitleForMixedContent(){
-        int currentPostItem = sNotificationData.currentPostItem >= sNotificationData.totalPostItems ?
+        int currentPostItem = sNotificationData.currentPostItem > sNotificationData.totalPostItems ?
                 sNotificationData.totalPostItems-1 : sNotificationData.currentPostItem;
-        int currentMediaItem = sNotificationData.currentMediaItem >= sNotificationData.totalMediaItems ?
+        int currentMediaItem = sNotificationData.currentMediaItem > sNotificationData.totalMediaItems ?
                 sNotificationData.totalMediaItems-1 : sNotificationData.currentMediaItem;
 
         String uploadingMessage = String.format(
