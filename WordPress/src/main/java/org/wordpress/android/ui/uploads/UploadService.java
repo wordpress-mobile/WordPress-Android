@@ -180,6 +180,7 @@ public class UploadService extends Service {
 
             if (!hasPendingOrInProgressMediaUploadsForPost(post)) {
                 mPostUploadHandler.upload(post);
+                mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
             } else {
                 // Register the post (as PENDING) in the UploadStore, along with all media currently in progress for it
                 // If the post is already registered, the new media will be added to its list
