@@ -7,33 +7,26 @@
              android:layout_height="wrap_content"
              android:layout_margin="@dimen/photo_picker_item_padding">
 
-    <FrameLayout
+    <ImageView
+        android:id="@+id/image_thumbnail"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/photo_picker_item_background"
+        android:scaleType="centerCrop"/>
 
-        <ImageView
-            android:id="@+id/image_thumbnail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/photo_picker_item_background"
-            android:scaleType="centerCrop"
-            tools:layout_height="match_parent"
-            tools:layout_width="match_parent"
-            tools:src="@drawable/gravatar_placeholder"/>
-
-        <TextView
-            android:id="@+id/text_selection_count"
-            android:layout_width="@dimen/media_selection_dot"
-            android:layout_height="@dimen/media_selection_dot"
-            android:layout_gravity="bottom|left"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:background="@drawable/photo_picker_circle_selector"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="5"/>
-    </FrameLayout>
+    <TextView
+        android:id="@+id/text_selection_count"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="bottom|left"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:background="@drawable/photo_picker_circle_selector"
+        android:gravity="center"
+        android:elevation="6dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_small"
+        tools:text="5"/>
 
     <ImageView
         android:id="@+id/image_video_overlay"

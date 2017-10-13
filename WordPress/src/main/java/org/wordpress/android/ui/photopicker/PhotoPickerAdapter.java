@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.photopicker;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Outline;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -11,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,7 +38,7 @@ import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUM
 class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.ThumbnailViewHolder> {
 
     private static final float SCALE_NORMAL = 1.0f;
-    private static final float SCALE_SELECTED = .9f;
+    private static final float SCALE_SELECTED = .8f;
 
     /*
      * used by this adapter to communicate with the owning fragment
@@ -362,6 +366,23 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                     showPreview(position);
                 }
             });
+
+            addShadow(txtSelectionCount);
+        }
+
+        /**
+         * adds an inset circular shadow outline to the selection count (Lollipop+ only)
+         */
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        private void addShadow(@NonNull View view) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                view.setOutlineProvider(new ViewOutlineProvider() {
+                    @Override
+                    public void getOutline(View view, Outline outline) {
+                        outline.setOval(0, 0, view.getWidth(), view.getHeight());
+                    }
+                });
+            }
         }
     }
 
