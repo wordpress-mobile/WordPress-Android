@@ -30,6 +30,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class SiteXMLRPCClient extends BaseXMLRPCClient {
     public SiteXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent,
                             HTTPAuthManager httpAuthManager) {
