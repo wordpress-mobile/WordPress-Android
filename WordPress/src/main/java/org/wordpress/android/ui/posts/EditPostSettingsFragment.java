@@ -39,8 +39,8 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -165,7 +165,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void fetchSiteSettingsAndUpdateDefaultPostFormatIfNecessary() {
         // A format is already set for the post, no need to fetch the default post format
-        if (!TextUtils.isEmpty(getPost().getPostFormat())) {
+        if (getPost() != null && !TextUtils.isEmpty(getPost().getPostFormat())) {
             return;
         }
         // we need to fetch site settings in order to get the latest default post format
