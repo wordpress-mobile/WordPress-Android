@@ -557,9 +557,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             return;
         }
 
-        // retry failed uploads when tapped
-        if (!isLongClick && MediaUploadState.fromString(media.getUploadState()) == MediaUploadState.FAILED) {
-            addMediaToUploadService(media);
+        // do nothing for failed uploads
+        if (MediaUploadState.fromString(media.getUploadState()) == MediaUploadState.FAILED) {
             return;
         }
 
@@ -577,6 +576,23 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             setResult(RESULT_OK, intent);
             finish();
         }
+    }
+
+    @Override
+    public void onMediaRequestRetry(int localMediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
+        if (media != null) {
+            addMediaToUploadService(media);
+        } else {
+            ToastUtils.showToast(this, R.string.error_media_not_found);
+        }
+    }
+
+    @Override
+    public void onMediaRequestDelete(int localMediaId) {
+        ArrayList<Integer> ids = new ArrayList<>();
+        ids.add(localMediaId);
+        deleteMedia(ids);
     }
 
     private void showMediaSettings(@NonNull MediaModel media, View sourceView) {

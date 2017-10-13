@@ -71,6 +71,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         void onAdapterFetchMoreData();
         void onAdapterItemClicked(View sourceView, int position, boolean isLongClick);
         void onAdapterSelectionCountChanged(int count);
+        void onAdapterRequestRetry(int position);
+        void onAdapterRequestDelete(int position);
     }
 
     private static final int INVALID_POSITION = -1;
@@ -216,14 +218,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             boolean showProgress = state == MediaUploadState.UPLOADING || state == MediaUploadState.DELETING;
             holder.progressUpload.setVisibility(showProgress ? View.VISIBLE : View.GONE);
 
-            // failed uploads can be retried
+            // failed uploads can be retried or deleted
             if (state == MediaUploadState.FAILED) {
-                holder.stateTextView.setText(mContext.getString(R.string.retry));
-                holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
+                holder.imgRetry.setVisibility(View.VISIBLE);
+                holder.imgTrash.setVisibility(View.VISIBLE);
             } else {
-                holder.stateTextView.setText(getLabelForMediaUploadState(state));
-                holder.stateTextView.setCompoundDrawables(null, null, null, null);
+                holder.imgRetry.setVisibility(View.GONE);
+                holder.imgTrash.setVisibility(View.GONE);
             }
+            holder.stateTextView.setText(getLabelForMediaUploadState(state));
         } else {
             holder.stateContainer.setVisibility(View.GONE);
             holder.stateContainer.setOnClickListener(null);
@@ -264,6 +267,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final ViewGroup fileContainer;
         private final ViewGroup videoOverlayContainer;
         private final ViewGroup selectionCountContainer;
+        private final ImageView imgRetry;
+        private final ImageView imgTrash;
 
         public GridViewHolder(View view) {
             super(view);
@@ -296,6 +301,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             stateContainer.getLayoutParams().height = mThumbHeight;
             fileContainer.getLayoutParams().width = mThumbWidth;
             fileContainer.getLayoutParams().height = mThumbHeight;
+
+            imgRetry = (ImageView) view.findViewById(R.id.image_retry);
+            imgTrash = (ImageView) view.findViewById(R.id.image_trash);
 
             itemView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -330,6 +338,28 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         setInMultiSelect(true);
                         toggleItemSelected(GridViewHolder.this, position);
                     }
+                }
+            });
+
+            imgRetry.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (isValidPosition(position) && mCallback != null) {
+                        mCallback.onAdapterRequestRetry(position);
+                    }
+
+                }
+            });
+
+            imgTrash.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (isValidPosition(position) && mCallback != null) {
+                        mCallback.onAdapterRequestDelete(position);
+                    }
+
                 }
             });
         }

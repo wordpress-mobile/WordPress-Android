@@ -71,20 +71,37 @@
         android:visibility="gone"
         tools:visibility="visible">
 
+        <ImageView
+            android:id="@+id/image_retry"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="@drawable/photo_picker_circle_normal"
+            android:padding="@dimen/margin_small"
+            app:srcCompat="@drawable/media_retry_image"/>
+
+        <ImageView
+            android:id="@+id/image_trash"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="@drawable/photo_picker_circle_normal"
+            android:padding="@dimen/margin_small"
+            app:srcCompat="@drawable/ic_trash_white_24dp"/>
+
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_upload_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/image_retry"
             android:layout_centerInParent="true"
-            android:shadowColor="@color/grey_dark"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="2"
-            android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_large"
+            android:textSize="@dimen/text_sz_medium"
             android:textStyle="bold"
-            tools:text="@string/upload_failed"/>
+            tools:text="@string/media_upload_state_failed"/>
 
         <ProgressBar
             android:id="@+id/media_grid_item_upload_progress"

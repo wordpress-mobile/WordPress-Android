@@ -159,7 +159,7 @@
     <string name="media_upload_state_uploading">Uploading</string>
     <string name="media_upload_state_deleting">Deleting</string>
     <string name="media_upload_state_deleted">Deleted</string>
-    <string name="media_upload_state_failed">Failed</string>
+    <string name="media_upload_state_failed">Upload Failed</string>
     <string name="media_upload_state_uploaded">Uploaded</string>
 
     <string name="media_encoder_quality_80">Low</string>
