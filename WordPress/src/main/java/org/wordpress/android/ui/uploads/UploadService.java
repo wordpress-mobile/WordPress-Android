@@ -542,7 +542,7 @@ public class UploadService extends Service {
                     }
                 }
             }
-            mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotification();
+            mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotificationOrFinish();
             stopServiceIfUploadsComplete();
         }
     }

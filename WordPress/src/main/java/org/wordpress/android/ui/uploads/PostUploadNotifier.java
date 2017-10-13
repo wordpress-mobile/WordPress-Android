@@ -112,11 +112,6 @@ class PostUploadNotifier {
 
     // Post could have initial media, or not (nulable)
     void addPostInfoToForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
-        // if this is the first one, also set the currentItem to 1
-        if (sNotificationData.totalPostItems == 0) {
-            sNotificationData.currentPostItem = 1;
-        }
-
         sNotificationData.totalPostItems++;
         if (post.isPage()) {
             sNotificationData.totalPageItemsIncludedInPostCount++;
@@ -128,22 +123,13 @@ class PostUploadNotifier {
     }
 
     void addMediaInfoToForegroundNotification(@NonNull List<MediaModel> media) {
-        bumpCurrentMediaItemForFirstUpload();
         sNotificationData.totalMediaItems += media.size();
         startOrUpdateForegroundNotification(null);
     }
 
     void addMediaInfoToForegroundNotification(@NonNull MediaModel media) {
-        bumpCurrentMediaItemForFirstUpload();
         sNotificationData.totalMediaItems++;
         startOrUpdateForegroundNotification(null);
-    }
-
-    void bumpCurrentMediaItemForFirstUpload() {
-        // if this is the first one, also set the currentItem to 1
-        if (sNotificationData.totalMediaItems == 0) {
-            sNotificationData.currentMediaItem = 1;
-        }
     }
 
     void updateNotificationIcon(PostModel post, Bitmap icon) {
@@ -165,28 +151,30 @@ class PostUploadNotifier {
         }
 
         // update Notification now
-        updateForegroundNotification(post);
-
-        removeNotificationAndStopForegroundServiceIfNoItemsInQueue();
+        if (!removeNotificationAndStopForegroundServiceIfNoItemsInQueue()) {
+            updateForegroundNotification(post);
+        }
     }
 
-    void incrementUploadedMediaCountFromProgressNotification() {
+    void incrementUploadedMediaCountFromProgressNotificationOrFinish() {
         sNotificationData.currentMediaItem++;
 
-        // update Notification now
-        updateForegroundNotification(null);
-
-        removeNotificationAndStopForegroundServiceIfNoItemsInQueue();
+        if (!removeNotificationAndStopForegroundServiceIfNoItemsInQueue()) {
+            // update Notification now
+            updateForegroundNotification(null);
+        }
     }
 
-    void removeNotificationAndStopForegroundServiceIfNoItemsInQueue() {
+    boolean removeNotificationAndStopForegroundServiceIfNoItemsInQueue() {
         if (sNotificationData.currentPostItem == sNotificationData.totalPostItems
                 && sNotificationData.currentMediaItem == sNotificationData.totalMediaItems) {
             mNotificationManager.cancel(sNotificationData.notificationId);
             // reset the notification id so a new one is generated next time the service is started
             sNotificationData.notificationId = 0;
             mService.stopForeground(true);
+            return true;
         }
+        return false;
     }
 
     void cancelErrorNotification(PostModel post) {
@@ -381,7 +369,7 @@ class PostUploadNotifier {
     private String buildNotificationSubtitleForPost(PostModel post){
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
-                sNotificationData.currentPostItem,
+                sNotificationData.currentPostItem + 1,
                 sNotificationData.totalPostItems,
                 post.isPage() ? mContext.getString(R.string.page).toLowerCase()
                         : mContext.getString(R.string.post).toLowerCase()
@@ -393,7 +381,7 @@ class PostUploadNotifier {
         String pagesAndOrPosts = getPagesAndOrPostsString();
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
-                sNotificationData.currentPostItem,
+                sNotificationData.currentPostItem + 1,
                 sNotificationData.totalPostItems,
                 pagesAndOrPosts
         );
@@ -420,7 +408,7 @@ class PostUploadNotifier {
     private String buildNotificationSubtitleForMedia(){
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_media_only),
-                sNotificationData.currentMediaItem,
+                sNotificationData.currentMediaItem + 1,
                 sNotificationData.totalMediaItems
         );
         return uploadingMessage;
@@ -429,10 +417,10 @@ class PostUploadNotifier {
     private String buildNotificationSubtitleForMixedContent(){
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_mixed),
-                sNotificationData.currentPostItem,
+                sNotificationData.currentPostItem + 1,
                 sNotificationData.totalPostItems,
                 getPagesAndOrPostsString(),
-                sNotificationData.currentMediaItem,
+                sNotificationData.currentMediaItem + 1,
                 sNotificationData.totalMediaItems
         );
         return uploadingMessage;
