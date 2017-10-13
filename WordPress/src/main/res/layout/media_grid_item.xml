@@ -65,38 +65,47 @@
 
     <RelativeLayout
         android:id="@+id/media_grid_item_upload_state_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@color/grey_dark_translucent_50"
+        android:layout_gravity="center"
         android:visibility="gone"
         tools:visibility="visible">
 
-        <ImageView
-            android:id="@+id/image_retry"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:background="@drawable/photo_picker_circle_normal"
-            android:padding="@dimen/margin_small"
-            app:srcCompat="@drawable/media_retry_image"/>
+        <LinearLayout
+            android:id="@+id/container_retry_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-        <ImageView
-            android:id="@+id/image_trash"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:background="@drawable/photo_picker_circle_normal"
-            android:padding="@dimen/margin_small"
-            app:srcCompat="@drawable/ic_trash_white_24dp"/>
+            <ImageView
+                android:id="@+id/image_retry"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="@dimen/margin_large"
+                android:background="@drawable/photo_picker_circle_normal"
+                android:padding="@dimen/margin_small"
+                app:srcCompat="@drawable/media_retry_image"/>
+
+            <ImageView
+                android:id="@+id/image_trash"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:background="@drawable/photo_picker_circle_normal"
+                android:padding="@dimen/margin_small"
+                app:srcCompat="@drawable/ic_trash_white_24dp"/>
+        </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_upload_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/image_retry"
+            android:layout_below="@+id/container_retry_delete"
             android:layout_centerInParent="true"
             android:textColor="@color/white"
             android:textSize="@dimen/text_sz_medium"
@@ -109,7 +118,9 @@
             android:layout_height="@dimen/media_grid_progress_height"
             android:layout_below="@+id/media_grid_item_upload_state"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/margin_small"/>
+            android:layout_marginTop="@dimen/margin_small"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </RelativeLayout>
 

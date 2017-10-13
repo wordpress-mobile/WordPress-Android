@@ -220,11 +220,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
             // failed uploads can be retried or deleted
             if (state == MediaUploadState.FAILED) {
-                holder.imgRetry.setVisibility(View.VISIBLE);
-                holder.imgTrash.setVisibility(View.VISIBLE);
+                holder.retryDeleteContainer.setVisibility(View.VISIBLE);
             } else {
-                holder.imgRetry.setVisibility(View.GONE);
-                holder.imgTrash.setVisibility(View.GONE);
+                holder.retryDeleteContainer.setVisibility(View.GONE);
             }
             holder.stateTextView.setText(getLabelForMediaUploadState(state));
         } else {
@@ -267,6 +265,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final ViewGroup fileContainer;
         private final ViewGroup videoOverlayContainer;
         private final ViewGroup selectionCountContainer;
+        private final ViewGroup retryDeleteContainer;
         private final ImageView imgRetry;
         private final ImageView imgTrash;
 
@@ -302,6 +301,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             fileContainer.getLayoutParams().width = mThumbWidth;
             fileContainer.getLayoutParams().height = mThumbHeight;
 
+            retryDeleteContainer = (ViewGroup) view.findViewById(R.id.container_retry_delete);
             imgRetry = (ImageView) view.findViewById(R.id.image_retry);
             imgTrash = (ImageView) view.findViewById(R.id.image_trash);
 
