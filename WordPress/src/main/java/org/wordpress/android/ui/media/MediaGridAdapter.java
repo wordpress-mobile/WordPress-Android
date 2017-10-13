@@ -344,7 +344,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 }
             } else {
                 if (canSelectPosition(position)) {
-                    if (mBrowserType == MediaBrowserType.EDITOR_PICKER
+                    if (mBrowserType == MediaBrowserType.EDITOR_PICKER && !isLongClick
                             || mBrowserType == MediaBrowserType.BROWSER && isLongClick) {
                         setInMultiSelect(true);
                         toggleItemSelected(GridViewHolder.this, position);
