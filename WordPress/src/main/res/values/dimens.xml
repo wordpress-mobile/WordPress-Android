@@ -30,6 +30,7 @@
     <dimen name="media_settings_margin_tablet">48dp</dimen>
     <dimen name="media_settings_margin_tablet_large">96dp</dimen>
     <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
+    <dimen name="media_selection_dot">21dp</dimen>
 
     <dimen name="theme_details_fragment_width">650dp</dimen>
     <dimen name="theme_details_fragment_height">450dp</dimen>
