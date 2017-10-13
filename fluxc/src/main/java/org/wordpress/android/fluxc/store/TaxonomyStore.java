@@ -23,7 +23,9 @@ import org.wordpress.android.util.AppLog;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class TaxonomyStore extends Store {
     public static final String DEFAULT_TAXONOMY_CATEGORY = "category";
     public static final String DEFAULT_TAXONOMY_TAG = "post_tag";
