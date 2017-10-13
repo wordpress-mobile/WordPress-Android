@@ -2,7 +2,6 @@ package org.wordpress.android.ui.media;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,9 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -702,28 +698,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         getAdapter().setHasRetrievedAll(true);
     }
 
-    private void handleMultiSelectDelete() {
-        if (!isAdded()) return;
-
-        Builder builder = new AlertDialog.Builder(getActivity()).setMessage(R.string.confirm_delete_multi_media)
-                .setCancelable(true).setPositiveButton(
-                        R.string.delete, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (getActivity() instanceof MediaBrowserActivity) {
-                                    ((MediaBrowserActivity) getActivity()).deleteMedia(
-                                            getAdapter().getSelectedItems());
-                                }
-                                getAdapter().clearSelection();
-                                if (mActionMode != null) {
-                                    mActionMode.finish();
-                                }
-                            }
-                        }).setNegativeButton(R.string.cancel, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
     private void setResultIdsAndFinish() {
         Intent intent = new Intent();
         if (getAdapter().getSelectedItemCount() > 0) {
@@ -759,10 +733,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             MenuItem mnuConfirm = menu.findItem(R.id.mnu_confirm_selection);
             mnuConfirm.setVisible(mBrowserType.isPicker());
-
-            MenuItem mnuTrash = menu.findItem(R.id.media_multiselect_actionbar_trash);
-            mnuTrash.setVisible(mBrowserType == MediaBrowserType.BROWSER);
-
             return true;
         }
 
@@ -770,8 +740,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.mnu_confirm_selection) {
                 setResultIdsAndFinish();
-            } else if (item.getItemId() == R.id.media_multiselect_actionbar_trash) {
-                handleMultiSelectDelete();
             }
             return true;
         }

@@ -106,6 +106,15 @@
                     app:srcCompat="@drawable/ic_trash_white_24dp"/>
             </LinearLayout>
 
+            <ProgressBar
+                android:id="@+id/media_grid_item_upload_progress"
+                android:layout_width="@dimen/media_grid_progress_height"
+                android:layout_height="@dimen/media_grid_progress_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_upload_state"
                 android:layout_width="wrap_content"
@@ -116,14 +125,6 @@
                 android:textStyle="bold"
                 tools:text="@string/media_upload_state_failed"/>
 
-            <ProgressBar
-                android:id="@+id/media_grid_item_upload_progress"
-                android:layout_width="@dimen/media_grid_progress_height"
-                android:layout_height="@dimen/media_grid_progress_height"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_small"
-                android:visibility="gone"
-                tools:visibility="visible"/>
         </LinearLayout>
 
     </FrameLayout>

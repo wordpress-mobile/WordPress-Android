@@ -160,11 +160,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         if (!mLoadThumbnails) {
             holder.fileContainer.setVisibility(View.GONE);
-            holder.videoOverlayContainer.setVisibility(View.GONE);
             holder.imageView.setImageUrl(null, WPNetworkImageView.ImageType.PHOTO);
         } else if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
-            holder.videoOverlayContainer.setVisibility(View.GONE);
             if (isLocalFile) {
                 loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
@@ -172,11 +170,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             }
         } else if (media.isVideo()) {
             holder.fileContainer.setVisibility(View.GONE);
-            holder.videoOverlayContainer.setVisibility(View.VISIBLE);
             loadVideoThumbnail(media, holder.imageView);
         } else {
             // not an image or video, so show file name and file type
-            holder.videoOverlayContainer.setVisibility(View.GONE);
             holder.imageView.setImageDrawable(null);
             String fileName = media.getFileName();
             String title = media.getTitle();
@@ -188,20 +184,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.fileTypeImageView.setImageResource(placeholderResId);
         }
 
-        holder.selectionCountTextView.setSelected(isSelected);
-        if (isSelected) {
-            int count = mSelectedItems.indexOf(media.getId()) + 1;
-            holder.selectionCountTextView.setText(Integer.toString(count));
+        if (canMultiSelect()) {
+            holder.selectionCountTextView.setVisibility(View.VISIBLE);
+            holder.selectionCountTextView.setSelected(isSelected);
+            if (isSelected) {
+                int count = mSelectedItems.indexOf(media.getId()) + 1;
+                holder.selectionCountTextView.setText(Integer.toString(count));
+            } else {
+                holder.selectionCountTextView.setText(null);
+            }
         } else {
-            holder.selectionCountTextView.setText(null);
+            holder.selectionCountTextView.setVisibility(View.GONE);
         }
-        boolean showCount;
-        if (mBrowserType == MediaBrowserType.BROWSER) {
-            showCount = isSelected;
-        } else {
-            showCount = mBrowserType == MediaBrowserType.EDITOR_PICKER;
-        }
-        holder.selectionCountTextView.setVisibility(showCount ? View.VISIBLE : View.GONE);
 
         // make sure the thumbnail scale reflects its selection state
         float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
@@ -225,9 +219,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.retryDeleteContainer.setVisibility(View.GONE);
             }
             holder.stateTextView.setText(getLabelForMediaUploadState(state));
+
+            // hide the video player icon so it doesn't overlap state label
+            holder.videoOverlayContainer.setVisibility(View.GONE);
         } else {
             holder.stateContainer.setVisibility(View.GONE);
             holder.stateContainer.setOnClickListener(null);
+            holder.videoOverlayContainer.setVisibility(media.isVideo() ? View.VISIBLE : View.GONE);
         }
 
         // if we are near the end, make a call to fetch more
@@ -322,14 +320,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 }
             });
 
-            stateTextView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    doAdapterItemClicked(v, position, false);
-                }
-            });
-
             selectionCountContainer.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -373,18 +363,22 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     toggleItemSelected(GridViewHolder.this, position);
                 }
             } else {
-                if (canSelectPosition(position)) {
-                    if (mBrowserType == MediaBrowserType.EDITOR_PICKER && !isLongClick
-                            || mBrowserType == MediaBrowserType.BROWSER && isLongClick) {
-                        setInMultiSelect(true);
-                        toggleItemSelected(GridViewHolder.this, position);
-                    }
+                if (canMultiSelect() && canSelectPosition(position) && !isLongClick) {
+                    setInMultiSelect(true);
+                    toggleItemSelected(GridViewHolder.this, position);
                 }
                 if (mCallback != null) {
                     mCallback.onAdapterItemClicked(sourceView, position, isLongClick);
                 }
             }
         }
+    }
+
+    /*
+     * multiselect is only availble when inserting into the editor
+     */
+    boolean canMultiSelect() {
+        return mBrowserType == MediaBrowserType.EDITOR_PICKER;
     }
 
     public boolean isInMultiSelect() {
