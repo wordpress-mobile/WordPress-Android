@@ -23,6 +23,7 @@
         android:layout_marginLeft="@dimen/margin_medium"
         android:background="@drawable/photo_picker_circle_selector"
         android:gravity="center"
+        android:elevation="6dp"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_small"
         tools:text="5"/>

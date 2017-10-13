@@ -38,7 +38,7 @@ import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUM
 class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.ThumbnailViewHolder> {
 
     private static final float SCALE_NORMAL = 1.0f;
-    private static final float SCALE_SELECTED = .9f;
+    private static final float SCALE_SELECTED = .8f;
 
     /*
      * used by this adapter to communicate with the owning fragment
@@ -382,8 +382,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                         outline.setOval(0, 0, view.getWidth(), view.getHeight());
                     }
                 });
-                float elevation = DisplayUtils.dpToPx(view.getContext(), 4);
-                view.setElevation(elevation);
             }
         }
     }
