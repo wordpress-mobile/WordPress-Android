@@ -342,12 +342,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if (!isValidPosition(position)) {
                 return;
             }
-            if (mCallback != null) {
-                mCallback.onAdapterItemClicked(sourceView, position, isLongClick);
-            }
-            if (canMultiSelect() && canSelectPosition(position) && !isLongClick) {
-                setInMultiSelect(true);
-                toggleItemSelected(GridViewHolder.this, position);
+            if (isInMultiSelect()) {
+                if (canSelectPosition(position)) {
+                    toggleItemSelected(GridViewHolder.this, position);
+                }
+            } else {
+                if (canMultiSelect() && canSelectPosition(position) && !isLongClick) {
+                    setInMultiSelect(true);
+                    toggleItemSelected(GridViewHolder.this, position);
+                }
+                if (mCallback != null) {
+                    mCallback.onAdapterItemClicked(sourceView, position, isLongClick);
+                }
             }
         }
     }
