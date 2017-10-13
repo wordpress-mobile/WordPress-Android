@@ -343,19 +343,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     toggleItemSelected(GridViewHolder.this, position);
                 }
             } else {
-                if (canMultiSelect() && canSelectPosition(position)) {
-                    setInMultiSelect(true);
-                    toggleItemSelected(GridViewHolder.this, position);
+                if (canSelectPosition(position)) {
+                    if (mBrowserType == MediaBrowserType.EDITOR_PICKER
+                            || mBrowserType == MediaBrowserType.BROWSER && isLongClick) {
+                        setInMultiSelect(true);
+                        toggleItemSelected(GridViewHolder.this, position);
+                    }
                 }
                 if (mCallback != null) {
                     mCallback.onAdapterItemClicked(sourceView, position, isLongClick);
                 }
             }
         }
-    }
-
-    private boolean canMultiSelect() {
-        return mBrowserType == MediaBrowserType.EDITOR_PICKER || mBrowserType == MediaBrowserType.BROWSER;
     }
 
     public boolean isInMultiSelect() {
