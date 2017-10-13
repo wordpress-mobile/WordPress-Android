@@ -625,7 +625,11 @@ public class EditPostSettingsFragment extends Fragment {
 
     private EditPostActivityHook getHook() {
         Activity activity = getActivity();
-        if (activity != null && activity instanceof EditPostActivityHook) {
+        if (activity == null) {
+            return null;
+        }
+
+        if (activity instanceof EditPostActivityHook) {
             return (EditPostActivityHook) activity;
         } else {
             throw new RuntimeException(activity.toString() + " must implement EditPostActivityHook");
