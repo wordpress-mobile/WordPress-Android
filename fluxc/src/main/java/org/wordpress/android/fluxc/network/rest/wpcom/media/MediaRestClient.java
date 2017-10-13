@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.inject.Singleton;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -67,6 +69,7 @@ import okhttp3.ResponseBody;
  *     (via {@link #deleteMedia(SiteModel, MediaModel)})</li>
  * </ul>
  */
+@Singleton
 public class MediaRestClient extends BaseWPComRestClient implements ProgressListener {
     private OkHttpClient mOkHttpClient;
     // this will hold which media is being uploaded by which call, in order to be able
