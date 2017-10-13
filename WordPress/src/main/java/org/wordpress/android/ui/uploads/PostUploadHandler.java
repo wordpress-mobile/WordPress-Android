@@ -560,7 +560,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
             mPostUploadNotifier.updateNotificationError(event.post, site, notificationMessage);
-            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             sFirstPublishPosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
