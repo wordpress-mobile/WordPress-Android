@@ -65,7 +65,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private final int mThumbHeight;
 
     private static final float SCALE_NORMAL = 1.0f;
-    private static final float SCALE_SELECTED = .9f;
+    private static final float SCALE_SELECTED = .8f;
 
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
