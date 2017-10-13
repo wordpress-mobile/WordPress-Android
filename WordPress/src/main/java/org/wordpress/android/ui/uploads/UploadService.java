@@ -185,7 +185,7 @@ public class UploadService extends Service {
                 // If the post is already registered, the new media will be added to its list
                 List<MediaModel> activeMedia = MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
                 mUploadStore.registerPostModel(post, activeMedia);
-                showNotificationForPostWithPendingMedia(post, activeMedia);
+                mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
             }
         }
     }
@@ -388,11 +388,6 @@ public class UploadService extends Service {
                 dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             }
         }
-    }
-
-    private void showNotificationForPostWithPendingMedia(PostModel post, List<MediaModel> mediaList) {
-        mPostUploadNotifier.addPostInfoToForegroundNotification(post, mediaList);
-        // mPostUploadNotifier.showForegroundNotificationForPost(post, getString(R.string.uploading_post_media));
     }
 
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
