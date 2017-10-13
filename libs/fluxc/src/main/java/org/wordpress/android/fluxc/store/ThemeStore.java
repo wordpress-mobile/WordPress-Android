@@ -19,7 +19,9 @@ import org.wordpress.android.util.AppLog;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class ThemeStore extends Store {
     // Payloads
     public static class FetchedCurrentThemePayload extends Payload<FetchThemesError> {
