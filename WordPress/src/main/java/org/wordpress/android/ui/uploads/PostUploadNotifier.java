@@ -374,7 +374,7 @@ class PostUploadNotifier {
     private String buildNotificationSubtitleForPost(PostModel post){
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
-                sNotificationData.currentPostItem + 1,
+                getCurrentPostItem() + 1,
                 sNotificationData.totalPostItems,
                 post.isPage() ? mContext.getString(R.string.page).toLowerCase()
                         : mContext.getString(R.string.post).toLowerCase()
@@ -386,7 +386,7 @@ class PostUploadNotifier {
         String pagesAndOrPosts = getPagesAndOrPostsString();
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
-                sNotificationData.currentPostItem + 1,
+                getCurrentPostItem() + 1,
                 sNotificationData.totalPostItems,
                 pagesAndOrPosts
         );
@@ -413,26 +413,33 @@ class PostUploadNotifier {
     private String buildNotificationSubtitleForMedia(){
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_media_only),
-                sNotificationData.currentMediaItem + 1,
+                getCurrentMediaItem() + 1,
                 sNotificationData.totalMediaItems
         );
         return uploadingMessage;
     }
 
     private String buildNotificationSubtitleForMixedContent(){
-        int currentPostItem = sNotificationData.currentPostItem > sNotificationData.totalPostItems ?
-                sNotificationData.totalPostItems-1 : sNotificationData.currentPostItem;
-        int currentMediaItem = sNotificationData.currentMediaItem > sNotificationData.totalMediaItems ?
-                sNotificationData.totalMediaItems-1 : sNotificationData.currentMediaItem;
-
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_mixed),
-                currentPostItem + 1,
+                getCurrentPostItem() + 1,
                 sNotificationData.totalPostItems,
                 getPagesAndOrPostsString(),
-                currentMediaItem + 1,
+                getCurrentMediaItem() + 1,
                 sNotificationData.totalMediaItems
         );
         return uploadingMessage;
+    }
+
+    private int getCurrentPostItem() {
+        int currentPostItem = sNotificationData.currentPostItem >= sNotificationData.totalPostItems ?
+                sNotificationData.totalPostItems-1 : sNotificationData.currentPostItem;
+        return currentPostItem;
+    }
+
+    private int getCurrentMediaItem() {
+        int currentMediaItem = sNotificationData.currentMediaItem >= sNotificationData.totalMediaItems ?
+                sNotificationData.totalMediaItems-1 : sNotificationData.currentMediaItem;
+        return currentMediaItem;
     }
 }
