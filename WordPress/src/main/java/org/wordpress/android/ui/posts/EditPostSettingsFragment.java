@@ -174,7 +174,7 @@ public class EditPostSettingsFragment extends Fragment {
                     @Override
                     public void onSettingsUpdated(Exception error) {
                         // EditPostActivityHook will be null if the fragment is detached
-                        if (error == null && getHook() != null) {
+                        if (error == null && getEditPostActivityHook() != null) {
                             updatePostFormat(mSiteSettings.getDefaultPostFormat());
                         }
                     }
@@ -608,22 +608,22 @@ public class EditPostSettingsFragment extends Fragment {
     // Helpers
 
     private PostModel getPost() {
-        if (getHook() == null) {
+        if (getEditPostActivityHook() == null) {
             // This can only happen during a callback while activity is re-created for some reason (config changes etc)
             return null;
         }
-        return getHook().getPost();
+        return getEditPostActivityHook().getPost();
     }
 
     private SiteModel getSite() {
-        if (getHook() == null) {
+        if (getEditPostActivityHook() == null) {
             // This can only happen during a callback while activity is re-created for some reason (config changes etc)
             return null;
         }
-        return getHook().getSite();
+        return getEditPostActivityHook().getSite();
     }
 
-    private EditPostActivityHook getHook() {
+    private EditPostActivityHook getEditPostActivityHook() {
         Activity activity = getActivity();
         if (activity == null) {
             return null;
