@@ -21,7 +21,9 @@ import org.wordpress.android.util.AppLog;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class PluginStore extends Store {
     // Payloads
     public static class UpdatePluginPayload extends Payload<BaseNetworkError> {
