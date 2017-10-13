@@ -22,7 +22,6 @@ import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.HeaderHandler;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtils;
 
 public class ShareIntentReceiverFragment extends Fragment {
@@ -150,35 +149,26 @@ public class ShareIntentReceiverFragment extends Fragment {
 
                 @Override
                 public void onAfterLoad() {
-                    boolean sharingTextFile = !mSharingMediaFile;
-                    if (mAdapter.getSitesCount() == 0) {
-                        ToastUtils
-                            .showToast(getContext(), R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
-                        getActivity().finish();
-                    } else if (mAdapter.getSitesCount() == 1 && sharingTextFile) {
-                        // if text/plain and only one blog, then don't show the fragment, share it directly to a new post
-                        mShareIntentFragmentListener.share(ShareAction.SHARE_TO_POST, mAdapter.getSelectedItemLocalId());
-                    } else {
-                        mRecyclerView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mRecyclerView.computeVerticalScrollRange() > mRecyclerView.getHeight()) {
-                                    mBottomButtonsShadow.setVisibility(View.VISIBLE);
-                                    mBottomButtonsContainer.setBackgroundResource(R.color.white);
-                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.blue_wordpress));
-                                    ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
-                                        R.style.WordPress_Button_Grey, R.attr.colorButtonNormal);
-                                } else {
-                                    mBottomButtonsShadow.setVisibility(View.GONE);
-                                    mBottomButtonsContainer.setBackground(null);
-                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.grey_dark));
-                                    ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn, R.style.WordPress_Button,
+                    mRecyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mRecyclerView.computeVerticalScrollRange() > mRecyclerView.getHeight()) {
+                                mBottomButtonsShadow.setVisibility(View.VISIBLE);
+                                mBottomButtonsContainer.setBackgroundResource(R.color.white);
+                                mShareMediaBtn.setTextColor(getResources().getColor(R.color.blue_wordpress));
+                                ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
+                                    R.style.WordPress_Button_Grey, R.attr.colorButtonNormal);
+                            } else {
+                                mBottomButtonsShadow.setVisibility(View.GONE);
+                                mBottomButtonsContainer.setBackground(null);
+                                mShareMediaBtn.setTextColor(getResources().getColor(R.color.grey_dark));
+                                ViewUtils
+                                    .setButtonBackgroundColor(getContext(), mShareMediaBtn, R.style.WordPress_Button,
                                         R.attr.colorButtonNormal);
-                                }
                             }
-                        });
-                        mAdapter.findAndSelect(mLastUsedBlogLocalId);
-                    }
+                        }
+                    });
+                    mAdapter.findAndSelect(mLastUsedBlogLocalId);
                 }
             },
             createHeaderHandler(),

@@ -11,9 +11,11 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import java.util.List;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ShareIntentReceiverFragment.ShareAction;
@@ -23,6 +25,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 
 import java.util.ArrayList;
@@ -53,7 +56,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        checkIsSignedInAndRedirect();
+        refreshContent();
     }
 
     @Override
@@ -63,16 +66,33 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         setContentView(R.layout.share_intent_receiver_activity);
 
         if (savedInstanceState == null) {
-            checkIsSignedInAndRedirect();
+            refreshContent();
         } else {
             loadState(savedInstanceState);
         }
     }
 
-    protected void checkIsSignedInAndRedirect(){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // keep setBackground in the onResume, otherwise the transition between activities is visible to the user when
+        // sharing text with an account with one visible site
+        findViewById(R.id.main_view).setBackgroundResource(R.color.login_background_color);
+    }
+
+    protected void refreshContent(){
         if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-            // display a fragment with list of sites and list of actions the user can perform
-            initShareFragment(false);
+            List<SiteModel> visibleSites = mSiteStore.getVisibleSites();
+            if (visibleSites.size() == 0) {
+                ToastUtils.showToast(this, R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
+                finish();
+            } else if (visibleSites.size() == 1 && isSharingText()) {
+                // if text/plain and only one blog, then don't show the fragment, share it directly to a new post
+                share(ShareAction.SHARE_TO_POST, visibleSites.get(0).getId());
+            }else {
+                // display a fragment with list of sites and list of actions the user can perform
+                initShareFragment(false);
+            }
         } else {
             // start the login flow and wait onActivityResult
             ActivityLauncher.loginForShareIntent(this);
@@ -111,7 +131,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         if (requestCode == RequestCodes.DO_LOGIN) {
             if (resultCode == RESULT_OK) {
                 // login successful
-                initShareFragment(true);
+                refreshContent();
             } else {
                 finish();
             }
