@@ -60,6 +60,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private ThemeSearchFragment mThemeSearchFragment;
     private ThemeModel mCurrentTheme;
     private boolean mIsInSearchMode;
+    private boolean mIsFetchingInstalledPlugins;
     private SiteModel mSite;
 
     @Inject ThemeStore mThemeStore;
@@ -195,6 +196,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemesChanged(ThemeStore.OnThemesChanged event) {
+        if (event.origin == ThemeAction.FETCH_INSTALLED_THEMES) {
+            mIsFetchingInstalledPlugins = false;
+        }
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error fetching themes: " + event.error.message);
             ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
@@ -311,8 +315,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     public void fetchInstalledThemesIfJetpackSite() {
-        if (mSite.isJetpackConnected() && mSite.isUsingWpComRestApi()) {
+        if (mSite.isJetpackConnected() && mSite.isUsingWpComRestApi() && !mIsFetchingInstalledPlugins) {
             mDispatcher.dispatch(ThemeActionBuilder.newFetchInstalledThemesAction(mSite));
+            mIsFetchingInstalledPlugins = true;
         }
     }
 
