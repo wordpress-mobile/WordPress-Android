@@ -270,6 +270,11 @@ public class AccountStore extends Store {
         public String message;
         public String nonce;
 
+        public AccountSocialError(@NonNull String type, @NonNull String message) {
+            this.type = AccountSocialErrorType.fromString(type);
+            this.message = message;
+        }
+
         public AccountSocialError(@NonNull byte[] response) {
             try {
                 String responseBody = new String(response, "UTF-8");
