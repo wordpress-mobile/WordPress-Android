@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.util.GravatarUtils;
@@ -33,7 +34,7 @@ public class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void update(Context context, LoginHeaderViewHolder holder, boolean isLoggedInWpcom, boolean isAfterLogin,
-        AccountModel defaultAccount) {
+            AccountModel defaultAccount) {
         if (isLoggedInWpcom && isAfterLogin) {
             holder.mLoggedInAsHeading.setVisibility(View.VISIBLE);
             holder.mUserDetailsCard.setVisibility(View.VISIBLE);
@@ -41,8 +42,8 @@ public class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
             final String avatarUrl = constructGravatarUrl(context, defaultAccount);
             holder.mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, null);
 
-            holder.mUsernameTextView.setText(context.getString(R.string.login_username_at, defaultAccount
-                .getUserName()));
+            holder.mUsernameTextView.setText(
+                    context.getString(R.string.login_username_at, defaultAccount.getUserName()));
 
             String displayName = defaultAccount.getDisplayName();
             if (!TextUtils.isEmpty(displayName)) {

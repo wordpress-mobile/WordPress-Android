@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import javax.inject.Inject;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -23,6 +23,8 @@ import org.wordpress.android.ui.main.SitePickerAdapter.HeaderHandler;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.ViewUtils;
+
+import javax.inject.Inject;
 
 public class ShareIntentReceiverFragment extends Fragment {
 
@@ -47,7 +49,7 @@ public class ShareIntentReceiverFragment extends Fragment {
     private View mBottomButtonsShadow;
 
     public static ShareIntentReceiverFragment newInstance(boolean sharingMediaFile, int lastUsedBlogLocalId,
-        boolean afterLogin) {
+            boolean afterLogin) {
         ShareIntentReceiverFragment fragment = new ShareIntentReceiverFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_SHARING_MEDIA, sharingMediaFile);
@@ -70,7 +72,7 @@ public class ShareIntentReceiverFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-        @Nullable Bundle savedInstanceState) {
+            @Nullable Bundle savedInstanceState) {
         ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.login_epilogue_screen, container, false);
         initButtonsContainer(layout);
         initShareActionPostButton(layout);
@@ -142,37 +144,38 @@ public class ShareIntentReceiverFragment extends Fragment {
 
     private Adapter createSiteAdapter() {
         mAdapter = new SitePickerAdapter(getActivity(), R.layout.share_intent_sites_listitem, 0, "", false,
-            new SitePickerAdapter.OnDataLoadedListener() {
-                @Override
-                public void onBeforeLoad(boolean isEmpty) {
-                }
+                new SitePickerAdapter.OnDataLoadedListener() {
+                    @Override
+                    public void onBeforeLoad(boolean isEmpty) {
+                    }
 
-                @Override
-                public void onAfterLoad() {
-                    mRecyclerView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mRecyclerView.computeVerticalScrollRange() > mRecyclerView.getHeight()) {
-                                mBottomButtonsShadow.setVisibility(View.VISIBLE);
-                                mBottomButtonsContainer.setBackgroundResource(R.color.white);
-                                mShareMediaBtn.setTextColor(getResources().getColor(R.color.blue_wordpress));
-                                ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
-                                    R.style.WordPress_Button_Grey, R.attr.colorButtonNormal);
-                            } else {
-                                mBottomButtonsShadow.setVisibility(View.GONE);
-                                mBottomButtonsContainer.setBackground(null);
-                                mShareMediaBtn.setTextColor(getResources().getColor(R.color.grey_dark));
-                                ViewUtils
-                                    .setButtonBackgroundColor(getContext(), mShareMediaBtn, R.style.WordPress_Button,
-                                        R.attr.colorButtonNormal);
+                    @Override
+                    public void onAfterLoad() {
+                        mRecyclerView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (mRecyclerView.computeVerticalScrollRange() > mRecyclerView.getHeight()) {
+                                    mBottomButtonsShadow.setVisibility(View.VISIBLE);
+                                    mBottomButtonsContainer.setBackgroundResource(R.color.white);
+                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.blue_wordpress));
+                                    ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
+                                            R.style.WordPress_Button_Grey, R.attr.colorButtonNormal);
+                                } else {
+                                    mBottomButtonsShadow.setVisibility(View.GONE);
+                                    mBottomButtonsContainer.setBackground(null);
+                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.grey_dark));
+                                    ViewUtils
+                                            .setButtonBackgroundColor(getContext(), mShareMediaBtn,
+                                                    R.style.WordPress_Button,
+                                                    R.attr.colorButtonNormal);
+                                }
                             }
-                        }
-                    });
-                    mAdapter.findAndSelect(mLastUsedBlogLocalId);
-                }
-            },
-            createHeaderHandler(),
-            null
+                        });
+                        mAdapter.findAndSelect(mLastUsedBlogLocalId);
+                    }
+                },
+                createHeaderHandler(),
+                null
         );
         mAdapter.setSingleItemSelectionEnabled(true);
         return mAdapter;
@@ -182,7 +185,7 @@ public class ShareIntentReceiverFragment extends Fragment {
         return new HeaderHandler() {
             @Override
             public ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                boolean attachToRoot) {
+                    boolean attachToRoot) {
                 return new LoginHeaderViewHolder(layoutInflater.inflate(R.layout.login_epilogue_header, parent, false));
             }
 
@@ -199,7 +202,7 @@ public class ShareIntentReceiverFragment extends Fragment {
         }
         holder.update(getContext(), holder, mAccountStore.hasAccessToken(), mAfterLogin, mAccountStore.getAccount());
         holder.mMySitesHeadingTextView.setText(
-            numberOfSites == 1 ? R.string.share_intent_adding_to : R.string.share_intent_pick_site);
+                numberOfSites == 1 ? R.string.share_intent_adding_to : R.string.share_intent_pick_site);
         holder.mMySitesHeadingTextView.setVisibility(View.VISIBLE);
     }
 

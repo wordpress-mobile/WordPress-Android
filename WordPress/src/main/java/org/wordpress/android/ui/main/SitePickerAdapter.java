@@ -293,9 +293,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (mIsSingleItemSelectionEnabled) {
-            if(getSitesCount() == 1){
+            if (getSitesCount() == 1) {
                 holder.selectedRadioButton.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.selectedRadioButton.setVisibility(View.VISIBLE);
                 holder.selectedRadioButton.setChecked(mSelectedItemPos == position);
                 holder.layoutContainer.setOnClickListener(new OnClickListener() {
@@ -306,7 +306,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
             }
         } else {
-            if(holder.selectedRadioButton != null) {
+            if (holder.selectedRadioButton != null) {
                 holder.selectedRadioButton.setVisibility(View.GONE);
             }
         }
@@ -320,15 +320,16 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyItemChanged(mSelectedItemPos);
     }
 
-    public void setSingleItemSelectionEnabled(final boolean enabled){
+    public void setSingleItemSelectionEnabled(final boolean enabled) {
         if (enabled != mIsSingleItemSelectionEnabled) {
             mIsSingleItemSelectionEnabled = enabled;
             notifyDataSetChanged();
         }
     }
+
     public void findAndSelect(final int lastUsedBlogLocalId) {
         int positionInSitesArray = mSites.indexOfSiteId(lastUsedBlogLocalId);
-        if(positionInSitesArray != -1){
+        if (positionInSitesArray != -1) {
             selectSingleItem(positionInSitesArray + getPositionOffset());
         }
     }

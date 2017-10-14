@@ -11,7 +11,6 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import java.util.List;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -30,7 +29,9 @@ import org.wordpress.android.util.WPPermissionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import javax.inject.Inject;
 
 /**
@@ -80,7 +81,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         findViewById(R.id.main_view).setBackgroundResource(R.color.login_background_color);
     }
 
-    private void refreshContent(){
+    private void refreshContent() {
         if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             List<SiteModel> visibleSites = mSiteStore.getVisibleSites();
             if (visibleSites.size() == 0) {
@@ -89,7 +90,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
             } else if (visibleSites.size() == 1 && isSharingText()) {
                 // if text/plain and only one blog, then don't show the fragment, share it directly to a new post
                 share(ShareAction.SHARE_TO_POST, visibleSites.get(0).getId());
-            }else {
+            } else {
                 // display a fragment with list of sites and list of actions the user can perform
                 initShareFragment(false);
             }
@@ -101,11 +102,11 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
 
     private void initShareFragment(boolean afterLogin) {
         ShareIntentReceiverFragment shareIntentReceiverFragment = ShareIntentReceiverFragment
-            .newInstance(!isSharingText(), loadLastUsedBlogLocalId(), afterLogin);
+                .newInstance(!isSharingText(), loadLastUsedBlogLocalId(), afterLogin);
         getSupportFragmentManager()
-            .beginTransaction()
-            .replace(R.id.fragment_container, shareIntentReceiverFragment, ShareIntentReceiverFragment.TAG)
-            .commit();
+                .beginTransaction()
+                .replace(R.id.fragment_container, shareIntentReceiverFragment, ShareIntentReceiverFragment.TAG)
+                .commit();
     }
 
     private void loadState(Bundle savedInstanceState) {
@@ -140,10 +141,10 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-        @NonNull String permissions[],
-        @NonNull int[] grantResults) {
+            @NonNull String permissions[],
+            @NonNull int[] grantResults) {
         boolean allGranted = WPPermissionUtils.setPermissionListAsked(
-            this, requestCode, permissions, grantResults, true);
+                this, requestCode, permissions, grantResults, true);
         if (allGranted && requestCode == WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
             // permissions granted
             share(ShareAction.valueOf(mShareActionName), mClickedSiteLocalId);
@@ -172,7 +173,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         if (!isSharingText()) {
             // If we're sharing media, we must check we have Storage permission (needed for media upload).
             if (!PermissionUtils
-                .checkAndRequestStoragePermission(this, WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
+                    .checkAndRequestStoragePermission(this, WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
                 return false;
             }
         }
@@ -200,9 +201,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
 
         // save preferences
         PreferenceManager.getDefaultSharedPreferences(this)
-            .edit()
-            .putInt(SHARE_LAST_USED_BLOG_ID_KEY, mSelectedSiteLocalId)
-            .apply();
+                .edit()
+                .putInt(SHARE_LAST_USED_BLOG_ID_KEY, mSelectedSiteLocalId)
+                .apply();
 
         startActivityWithSyntheticBackstack(intent);
         finish();
@@ -222,8 +223,8 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         analyticsProperties.put("share_to", shareAction.analyticsName);
 
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SHARE_TO_WP_SUCCEEDED,
-            mSiteStore.getSiteByLocalId(selectedSiteLocalId),
-            analyticsProperties);
+                mSiteStore.getSiteByLocalId(selectedSiteLocalId),
+                analyticsProperties);
 
     }
 
