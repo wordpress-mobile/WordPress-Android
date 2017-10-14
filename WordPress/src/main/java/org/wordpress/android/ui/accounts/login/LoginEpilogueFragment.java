@@ -210,18 +210,15 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         if (!isAdded()) {
             return;
         }
-        holder.update(getContext(), holder, mAccountStore.hasAccessToken(), true, mAccountStore.getAccount());
+        holder.updateLoggedInAsHeading(getContext(), mAccountStore.hasAccessToken(), true, mAccountStore.getAccount());
 
         if (numberOfSites == 0) {
-            holder.mMySitesHeadingTextView.setVisibility(View.GONE);
-
+            holder.hideSitesHeading();
             mConnectMore.setText(R.string.connect_site);
         } else {
-            holder.mMySitesHeadingTextView.setVisibility(View.VISIBLE);
-            holder.mMySitesHeadingTextView.setText(
-                    StringUtils.getQuantityString(
-                            getActivity(), R.string.days_quantity_one, R.string.login_epilogue_mysites_one,
-                            R.string.login_epilogue_mysites_other, numberOfSites));
+            holder.showSitesHeading(StringUtils.getQuantityString(
+                    getActivity(), R.string.days_quantity_one, R.string.login_epilogue_mysites_one,
+                    R.string.login_epilogue_mysites_other, numberOfSites));
 
             mConnectMore.setText(R.string.connect_more);
         }

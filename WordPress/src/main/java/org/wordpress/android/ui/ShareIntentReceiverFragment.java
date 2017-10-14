@@ -200,10 +200,10 @@ public class ShareIntentReceiverFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        holder.update(getContext(), holder, mAccountStore.hasAccessToken(), mAfterLogin, mAccountStore.getAccount());
-        holder.mMySitesHeadingTextView.setText(
-                numberOfSites == 1 ? R.string.share_intent_adding_to : R.string.share_intent_pick_site);
-        holder.mMySitesHeadingTextView.setVisibility(View.VISIBLE);
+        holder.updateLoggedInAsHeading(getContext(), mAccountStore.hasAccessToken(), mAfterLogin,
+                mAccountStore.getAccount());
+        holder.showSitesHeading(
+                getString(numberOfSites == 1 ? R.string.share_intent_adding_to : R.string.share_intent_pick_site));
     }
 
     enum ShareAction {

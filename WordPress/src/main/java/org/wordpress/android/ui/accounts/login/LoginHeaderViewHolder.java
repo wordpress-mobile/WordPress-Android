@@ -16,12 +16,12 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  */
 public class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
 
-    public final View mLoggedInAsHeading;
-    public final View mUserDetailsCard;
-    public final WPNetworkImageView mAvatarImageView;
-    public final TextView mDisplayNameTextView;
-    public final TextView mUsernameTextView;
-    public final TextView mMySitesHeadingTextView;
+    private final View mLoggedInAsHeading;
+    private final View mUserDetailsCard;
+    private final WPNetworkImageView mAvatarImageView;
+    private final TextView mDisplayNameTextView;
+    private final TextView mUsernameTextView;
+    private final TextView mMySitesHeadingTextView;
 
     public LoginHeaderViewHolder(View view) {
         super(view);
@@ -33,28 +33,37 @@ public class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
         mMySitesHeadingTextView = (TextView) view.findViewById(R.id.my_sites_heading);
     }
 
-    public void update(Context context, LoginHeaderViewHolder holder, boolean isLoggedInWpcom, boolean isAfterLogin,
+    public void updateLoggedInAsHeading(Context context, boolean isLoggedInWpcom, boolean isAfterLogin,
             AccountModel defaultAccount) {
         if (isLoggedInWpcom && isAfterLogin) {
-            holder.mLoggedInAsHeading.setVisibility(View.VISIBLE);
-            holder.mUserDetailsCard.setVisibility(View.VISIBLE);
+            mLoggedInAsHeading.setVisibility(View.VISIBLE);
+            mUserDetailsCard.setVisibility(View.VISIBLE);
 
             final String avatarUrl = constructGravatarUrl(context, defaultAccount);
-            holder.mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, null);
+            mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, null);
 
-            holder.mUsernameTextView.setText(
+            mUsernameTextView.setText(
                     context.getString(R.string.login_username_at, defaultAccount.getUserName()));
 
             String displayName = defaultAccount.getDisplayName();
             if (!TextUtils.isEmpty(displayName)) {
-                holder.mDisplayNameTextView.setText(displayName);
+                mDisplayNameTextView.setText(displayName);
             } else {
-                holder.mDisplayNameTextView.setText(defaultAccount.getUserName());
+                mDisplayNameTextView.setText(defaultAccount.getUserName());
             }
         } else {
-            holder.mLoggedInAsHeading.setVisibility(View.GONE);
-            holder.mUserDetailsCard.setVisibility(View.GONE);
+            mLoggedInAsHeading.setVisibility(View.GONE);
+            mUserDetailsCard.setVisibility(View.GONE);
         }
+    }
+
+    public void showSitesHeading(String text) {
+        mMySitesHeadingTextView.setVisibility(View.VISIBLE);
+        mMySitesHeadingTextView.setText(text);
+    }
+
+    public void hideSitesHeading() {
+        mMySitesHeadingTextView.setVisibility(View.GONE);
     }
 
     private String constructGravatarUrl(Context context, AccountModel account) {
