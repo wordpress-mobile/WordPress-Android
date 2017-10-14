@@ -42,7 +42,7 @@ import javax.inject.Inject;
  */
 public class ShareIntentReceiverActivity extends AppCompatActivity implements ShareIntentFragmentListener {
 
-    public static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
+    private static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     private static final String KEY_SELECTED_SITE_LOCAL_ID = "KEY_SELECTED_SITE_LOCAL_ID";
     private static final String KEY_SHARE_ACTION_ID = "KEY_SHARE_ACTION_ID";
 
@@ -80,7 +80,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         findViewById(R.id.main_view).setBackgroundResource(R.color.login_background_color);
     }
 
-    protected void refreshContent(){
+    private void refreshContent(){
         if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             List<SiteModel> visibleSites = mSiteStore.getVisibleSites();
             if (visibleSites.size() == 0) {
@@ -99,7 +99,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         }
     }
 
-    protected void initShareFragment(boolean afterLogin) {
+    private void initShareFragment(boolean afterLogin) {
         ShareIntentReceiverFragment shareIntentReceiverFragment = ShareIntentReceiverFragment
             .newInstance(!isSharingText(), loadLastUsedBlogLocalId(), afterLogin);
         getSupportFragmentManager()
