@@ -361,7 +361,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if (!isValidPosition(position)) {
                 return;
             }
-            if (isInMultiSelect()) {
+            if (isInMultiSelect() && !isLongClick) {
                 if (canSelectPosition(position)) {
                     toggleItemSelected(GridViewHolder.this, position);
                 }
