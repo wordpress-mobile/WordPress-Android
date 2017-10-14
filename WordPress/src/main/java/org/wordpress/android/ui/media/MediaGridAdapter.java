@@ -185,7 +185,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.fileTypeImageView.setImageResource(placeholderResId);
         }
 
-        if (canMultiSelect()) {
+        if (canMultiSelect() && canSelect) {
             holder.selectionCountTextView.setVisibility(View.VISIBLE);
             holder.selectionCountTextView.setSelected(isSelected);
             if (isSelected) {
@@ -409,14 +409,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     /*
      * determines whether the media item at the passed position can be selected - not allowed
-     * for deleted items when used as a picker
+     * for local files or deleted items when used as a picker
      */
     private boolean canSelectPosition(int position) {
         if (!isValidPosition(position)) {
             return false;
         }
         if (mBrowserType.isPicker()) {
-            MediaUploadState state = MediaUploadState.fromString(mMediaList.get(position).getUploadState());
+            MediaModel media = mMediaList.get(position);
+            if (MediaUtils.isLocalFile(media.getUploadState())) {
+                return false;
+            }
+            MediaUploadState state = MediaUploadState.fromString(media.getUploadState());
             return state != MediaUploadState.DELETING && state != MediaUploadState.DELETED;
         } else {
             return true;
