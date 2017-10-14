@@ -801,7 +801,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         int width = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_width);
         mAddMediaPopup = new PopupWindow(menuView, width, ViewGroup.LayoutParams.WRAP_CONTENT, false);
-        mAddMediaPopup.setFocusable(true);
+        mAddMediaPopup.setFocusable(false);
+        mAddMediaPopup.setOutsideTouchable(true);
     }
 
     private boolean isAddMediaPopupShowing() {
