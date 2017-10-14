@@ -89,20 +89,20 @@
 
                 <ImageView
                     android:id="@+id/image_retry"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="@dimen/margin_large"
-                    android:layout_marginRight="@dimen/margin_large"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:layout_marginRight="@dimen/margin_medium"
                     android:background="@drawable/photo_picker_circle_normal"
                     android:padding="@dimen/margin_small"
                     app:srcCompat="@drawable/media_retry_image" />
 
                 <ImageView
                     android:id="@+id/image_trash"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="@dimen/margin_large"
-                    android:layout_marginRight="@dimen/margin_large"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:layout_marginRight="@dimen/margin_medium"
                     android:background="@drawable/photo_picker_circle_normal"
                     android:padding="@dimen/margin_small"
                     app:srcCompat="@drawable/ic_trash_white_24dp" />
