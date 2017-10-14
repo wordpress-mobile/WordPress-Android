@@ -135,6 +135,7 @@ public class AccountStore extends Store {
         public String nonceSms;
         public String notificationSent;
         public String userId;
+        public boolean requiresTwoStepAuth;
 
         public OnSocialChanged() {
         }
@@ -146,6 +147,7 @@ public class AccountStore extends Store {
             this.nonceSms = payload.twoStepNonceSms;
             this.notificationSent = payload.twoStepNotificationSent;
             this.userId = payload.userId;
+            this.requiresTwoStepAuth = true;
         }
     }
 
@@ -596,7 +598,7 @@ public class AccountStore extends Store {
             OnSocialChanged event = new OnSocialChanged();
             event.error = payload.error;
             emitChange(event);
-        // No error, but two-factor authentication is required; emit only social change.
+        // No error, but either two-factor authentication or social connect is required; emit only social change.
         } else if (!payload.hasToken()) {
             OnSocialChanged event = new OnSocialChanged(payload);
             emitChange(event);
