@@ -99,7 +99,7 @@ public class ShareIntentReceiverFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         int selectedItemLocalId = mAdapter.getSelectedItemLocalId();
-        if (selectedItemLocalId != 1) {
+        if (selectedItemLocalId != -1) {
             outState.putInt(ARG_LAST_USED_BLOG_LOCAL_ID, mAdapter.getSelectedItemLocalId());
         }
     }
