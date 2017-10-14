@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 
@@ -598,7 +597,7 @@ public class AccountStore extends Store {
             event.error = payload.error;
             emitChange(event);
         // No error, but two-factor authentication is required; emit only social change.
-        } else if (TextUtils.isEmpty(payload.bearerToken)) {
+        } else if (!payload.hasToken()) {
             OnSocialChanged event = new OnSocialChanged(payload);
             emitChange(event);
         // No error and two-factor authentication is not required; emit only authentication change.
