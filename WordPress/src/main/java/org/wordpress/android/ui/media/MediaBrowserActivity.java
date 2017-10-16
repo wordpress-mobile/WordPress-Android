@@ -1,23 +1,31 @@
 package org.wordpress.android.ui.media;
 
-import android.app.AlertDialog;
-import android.app.Fragment;
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.FragmentManager;
+import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
+import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
@@ -27,115 +35,272 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.Toast;
+import android.widget.SimpleAdapter;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
-import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
-import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
-import org.wordpress.android.ui.media.services.MediaEvents;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ListUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.passcodelock.AppLockManager;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
+import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
-import de.greenrobot.event.EventBus;
+import javax.inject.Inject;
 
 /**
  * The main activity in which the user can browse their media.
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
-        MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
-        MediaEditFragmentCallback {
+        OnQueryTextListener, OnActionExpandListener,
+        WPMediaUtils.LaunchCameraCallback {
+
+    public enum MediaBrowserType {
+        BROWSER,                              // browse & manage media
+        MULTI_SELECT_IMAGE_AND_VIDEO_PICKER,  // select multiple images or videos
+        SINGLE_SELECT_IMAGE_PICKER;           // select a single image
+
+        public boolean isPicker() {
+            return this == MULTI_SELECT_IMAGE_AND_VIDEO_PICKER || this == SINGLE_SELECT_IMAGE_PICKER;
+        }
+    }
+
+    public static final String ARG_BROWSER_TYPE = "media_browser_type";
+    public static final String ARG_FILTER = "filter";
+    public static final String RESULT_IDS = "result_ids";
+
     private static final String SAVED_QUERY = "SAVED_QUERY";
-    public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
+    private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
+
+    @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
+
+    private SiteModel mSite;
 
     private MediaGridFragment mMediaGridFragment;
-    private MediaItemFragment mMediaItemFragment;
-    private MediaEditFragment mMediaEditFragment;
-    private MediaAddFragment mMediaAddFragment;
     private PopupWindow mAddMediaPopup;
 
-    private Toolbar mToolbar;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
     private Menu mMenu;
-    private FeatureSet mFeatureSet;
-    private String mQuery;
+    private TabLayout mTabLayout;
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
-                // Coming from zero connection. Continue what's pending for delete
-                int blogId = WordPress.getCurrentLocalTableBlogId();
-                if (blogId != -1 && WordPress.wpDB.hasMediaDeleteQueueItems(blogId)) {
-                    startMediaDeleteService();
-                }
-            }
-        }
-    };
+    private MediaDeleteService.MediaDeleteBinder mDeleteService;
+    private boolean mDeleteServiceBound;
+
+    private String mQuery;
+    private String mMediaCapturePath;
+    private MediaBrowserType mBrowserType;
+    private AddMenuItem mLastAddMediaItemClicked;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // This should be removed when #2734 is fixed
-        if (WordPress.getCurrentBlog() == null) {
+
+        ((WordPress) getApplication()).component().inject(this);
+
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(ARG_BROWSER_TYPE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
+            mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
+            mQuery = savedInstanceState.getString(SAVED_QUERY);
+        }
+
+        if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
             return;
         }
 
+        if (mBrowserType == null) {
+            // default to browser mode if missing type
+            AppLog.w(AppLog.T.MEDIA, "MediaBrowserType is null. Defaulting to MediaBrowserType.BROWSER mode.");
+            mBrowserType = MediaBrowserType.BROWSER;
+        }
+
         setContentView(R.layout.media_browser_activity);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.media);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-        FragmentTransaction ft = fm.beginTransaction();
 
-        mMediaAddFragment = (MediaAddFragment) fm.findFragmentById(R.id.mediaAddFragment);
-        mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
+        // if media was shared add it to the library
+        handleSharedMedia();
 
-        mMediaItemFragment = (MediaItemFragment) fm.findFragmentByTag(MediaItemFragment.TAG);
-        if (mMediaItemFragment != null)
-            ft.hide(mMediaGridFragment);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        setupTabs();
 
-        mMediaEditFragment = (MediaEditFragment) fm.findFragmentByTag(MediaEditFragment.TAG);
-        if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout())
-            ft.hide(mMediaItemFragment);
+        MediaFilter filter;
+        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+            filter = MediaFilter.FILTER_IMAGES;
+        } else if (savedInstanceState != null) {
+            filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
+        } else {
+            filter = MediaFilter.FILTER_ALL;
+        }
 
-        ft.commitAllowingStateLoss();
+        mMediaGridFragment = (MediaGridFragment) fm.findFragmentByTag(MediaGridFragment.TAG);
+        if (mMediaGridFragment == null) {
+            mMediaGridFragment = MediaGridFragment.newInstance(mSite, mBrowserType, filter);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.media_browser_container, mMediaGridFragment, MediaGridFragment.TAG)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit();
+        } else {
+            setFilter(filter);
+        }
+    }
 
-        setupAddMenuPopup();
+    public MediaDeleteService getMediaDeleteService() {
+        if (mDeleteService == null) {
+            return null;
+        }
+        return mDeleteService.getService();
+    }
 
-        String action = getIntent().getAction();
-        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            // We arrived here from a share action
-            uploadSharedFiles();
+    /*
+     * only show tabs when being used as a media browser rather than a media picker
+     */
+    private boolean shouldShowTabs() {
+        return mBrowserType == MediaBrowserType.BROWSER;
+    }
+
+    public void enableTabs(boolean enable) {
+        if (!shouldShowTabs()) return;
+
+        if (enable && mTabLayout.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(mTabLayout, AniUtils.Duration.MEDIUM);
+        } else if (!enable && mTabLayout.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(mTabLayout, AniUtils.Duration.MEDIUM, View.INVISIBLE);
+        }
+    }
+
+    private void setupTabs() {
+        if (shouldShowTabs()) {
+            int normalColor = ContextCompat.getColor(this, R.color.blue_light);
+            int selectedColor = ContextCompat.getColor(this, R.color.white);
+            mTabLayout.setTabTextColors(normalColor, selectedColor);
+
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_all));         // FILTER_ALL
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_images));      // FILTER_IMAGES
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_documents));   // FILTER_DOCUMENTS
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_videos));      // FILTER_VIDEOS
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_audio));       // FILTER_AUDIO
+
+            mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    setFilter(getFilterForPosition(tab.getPosition()));
+                }
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    // noop
+                }
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    setFilter(getFilterForPosition(tab.getPosition()));
+                }
+            });
+
+            // tabMode is set to scrollable in layout, set to fixed if there's enough space to show them all
+            mTabLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mTabLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                    if (mTabLayout.getChildCount() > 0) {
+                        int tabLayoutWidth = 0;
+                        LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
+                        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+                            LinearLayout tabView = (LinearLayout) (tabFirstChild.getChildAt(i));
+                            tabLayoutWidth += (tabView.getMeasuredWidth() + tabView.getPaddingLeft() + tabView.getPaddingRight());
+                        }
+
+                        int displayWidth = DisplayUtils.getDisplayPixelWidth(MediaBrowserActivity.this);
+                        if (tabLayoutWidth < displayWidth) {
+                            mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+                            mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                        }
+                    }
+                }
+            });
+        } else {
+            mTabLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private int getPositionForFilter(@NonNull MediaFilter filter) {
+        return filter.getValue();
+    }
+
+    private MediaFilter getFilterForPosition(int position) {
+        for (MediaFilter filter: MediaFilter.values()) {
+            if (filter.getValue() == position) {
+                return filter;
+            }
+        }
+        return MediaFilter.FILTER_ALL;
+    }
+
+    private void setFilter(@NonNull MediaFilter filter) {
+        int position = getPositionForFilter(filter);
+        if (shouldShowTabs()
+                && mTabLayout != null
+                && mTabLayout.getSelectedTabPosition() != position) {
+            mTabLayout.setScrollPosition(position, 0f, true);
+        }
+
+        if (mMediaGridFragment != null &&
+                (mMediaGridFragment.getFilter() != filter || mMediaGridFragment.isEmpty())) {
+            mMediaGridFragment.setFilter(filter);
         }
     }
 
@@ -143,119 +308,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onStart() {
         super.onStart();
         registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        unregisterReceiver(mReceiver);
-        super.onStop();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(SAVED_QUERY, mQuery);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mQuery = savedInstanceState.getString(SAVED_QUERY);
-    }
-
-    private void uploadSharedFiles() {
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        final List<Uri> multi_stream;
-        if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
-        } else {
-            multi_stream = new ArrayList<>();
-            multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
-        }
-        mMediaAddFragment.uploadList(multi_stream);
-
-        // clear the intent's action, so that in case the user rotates, we don't re-upload the same
-        // files
-        getIntent().setAction(null);
-    }
-
-    private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
-        public void onBackStackChanged() {
-            FragmentManager manager = getFragmentManager();
-            MediaGridFragment mediaGridFragment = (MediaGridFragment)manager.findFragmentById(R.id.mediaGridFragment);
-            if (mediaGridFragment.isVisible()) {
-                mediaGridFragment.refreshSpinnerAdapter();
-            }
-            ActivityUtils.hideKeyboard(MediaBrowserActivity.this);
-        }
-    };
-
-    /** Setup the popup that allows you to add new media from camera, video camera or local files **/
-    private void setupAddMenuPopup() {
-        String capturePhoto = getResources().getString(R.string.media_add_popup_capture_photo);
-        String captureVideo = getResources().getString(R.string.media_add_popup_capture_video);
-        String pickPhotoFromGallery = getResources().getString(R.string.select_photo);
-        String pickVideoFromGallery = getResources().getString(R.string.select_video);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(MediaBrowserActivity.this,
-                R.layout.actionbar_add_media_cell,
-                new String[] {
-                        capturePhoto, captureVideo, pickPhotoFromGallery, pickVideoFromGallery
-                });
-
-        View layoutView = getLayoutInflater().inflate(R.layout.actionbar_add_media, null, false);
-        ListView listView = (ListView) layoutView.findViewById(R.id.actionbar_add_media_listview);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                adapter.notifyDataSetChanged();
-
-                if (position == 0) {
-                    mMediaAddFragment.launchCamera();
-                } else if (position == 1) {
-                    mMediaAddFragment.launchVideoCamera();
-                } else if (position == 2) {
-                    mMediaAddFragment.launchPictureLibrary();
-                } else if (position == 3) {
-                    mMediaAddFragment.launchVideoLibrary();
-                }
-
-                mAddMediaPopup.dismiss();
-            }
-        });
-
-        int width = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_width);
-
-        mAddMediaPopup = new PopupWindow(layoutView, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        mAddMediaPopup.setBackgroundDrawable(new ColorDrawable());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        startMediaDeleteService();
-        getFeatureSet();
-        ActivityId.trackLastActivity(ActivityId.MEDIA);
-    }
-
-    /** Get the feature set for a wordpress.com hosted blog **/
-    private void getFeatureSet() {
-        if (WordPress.getCurrentBlog() == null || !WordPress.getCurrentBlog().isDotcomFlag())
-            return;
-
-        ApiHelper.GetFeatures task = new ApiHelper.GetFeatures(new Callback() {
-            @Override
-            public void onResult(FeatureSet featureSet) {
-                mFeatureSet = featureSet;
-            }
-
-        });
-
-        List<Object> apiArgs = new ArrayList<>();
-        apiArgs.add(WordPress.getCurrentBlog());
-        task.execute(apiArgs);
+        mDispatcher.register(this);
     }
 
     @Override
@@ -270,46 +323,127 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onMediaItemSelected(String mediaId) {
-        String tempQuery = mQuery;
-        if (mSearchView != null) {
-            mSearchView.clearFocus();
+    protected void onResume() {
+        super.onResume();
+        startMediaDeleteService(null);
+        ActivityId.trackLastActivity(ActivityId.MEDIA);
+    }
+
+    @Override
+    public void onStop() {
+        unregisterReceiver(mReceiver);
+        mDispatcher.unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        doUnbindDeleteService();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(SAVED_QUERY, mQuery);
+        outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
+        if (mMediaGridFragment != null) {
+            outState.putSerializable(ARG_FILTER, mMediaGridFragment.getFilter());
+        }
+        if (!TextUtils.isEmpty(mMediaCapturePath)) {
+            outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case RequestCodes.PICTURE_LIBRARY:
+            case RequestCodes.VIDEO_LIBRARY:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    Uri imageUri = data.getData();
+                    String mimeType = getContentResolver().getType(imageUri);
+                    fetchMedia(imageUri, mimeType);
+                    trackAddMediaFromDeviceEvents(
+                            false,
+                            requestCode == RequestCodes.VIDEO_LIBRARY,
+                            imageUri
+                    );
+                }
+                break;
+            case RequestCodes.TAKE_PHOTO:
+                if (resultCode == Activity.RESULT_OK) {
+                    WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
+                    Uri uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
+                    mMediaCapturePath = null;
+                    queueFileForUpload(uri, getContentResolver().getType(uri));
+                    trackAddMediaFromDeviceEvents(true, false, uri);
+                }
+                break;
+            case RequestCodes.TAKE_VIDEO:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri = MediaUtils.getLastRecordedVideoUri(this);
+                    queueFileForUpload(uri, getContentResolver().getType(uri));
+                    trackAddMediaFromDeviceEvents(true, true, uri);
+                }
+                break;
+            case RequestCodes.MEDIA_SETTINGS:
+                if (resultCode == MediaSettingsActivity.RESULT_MEDIA_DELETED) {
+                    reloadMediaGrid();
+                }
+                break;
+        }
+    }
+
+    /**
+     * Analytics about new media
+     *
+     * @param isNewMedia Whether is a fresh (just taken) photo/video or not
+     * @param isVideo Whether is a video or not
+     * @param uri The URI of the media on the device, or null
+     */
+    private void trackAddMediaFromDeviceEvents(boolean isNewMedia, boolean isVideo, Uri uri) {
+        if (uri == null) {
+            AppLog.e(AppLog.T.MEDIA, "Cannot track new media event if mediaURI is null!!");
+            return;
         }
 
-        if (mSearchMenuItem != null) {
-            MenuItemCompat.collapseActionView(mSearchMenuItem);
-        }
+        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, null);
+        properties.put("via", isNewMedia ? "device_camera" : "device_library");
 
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() == 0) {
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.hide(mMediaGridFragment);
-            mMediaGridFragment.clearSelectedItems();
-            mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
-            ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
-            ft.addToBackStack(null);
-            ft.commitAllowingStateLoss();
-            mQuery = tempQuery;
+        if (isVideo) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_VIDEO, properties);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO, properties);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] results) {
+        boolean allGranted = WPPermissionUtils.setPermissionListAsked(
+                this, requestCode, permissions, results, true);
+
+        if (allGranted && requestCode == WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE) {
+            doAddMediaItemClicked(mLastAddMediaItemClicked);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
         mMenu = menu;
         getMenuInflater().inflate(R.menu.media_browser, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        mSearchView.setOnQueryTextListener(this);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
 
-        //open search bar if we were searching for something before
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
+        mSearchView.setOnQueryTextListener(this);
+
+        // open search bar if we were searching for something before
         if (!TextUtils.isEmpty(mQuery) && mMediaGridFragment != null && mMediaGridFragment.isVisible()) {
             String tempQuery = mQuery; //temporary hold onto query
             MenuItemCompat.expandActionView(mSearchMenuItem); //this will reset mQuery
@@ -317,97 +451,78 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mSearchView.setQuery(mQuery, true);
         }
 
-        return super.onPrepareOptionsMenu(menu);
+        // hide "add media" if the user doesn't have upload permission or this is a multiselect picker
+        if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER
+                || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
+            menu.findItem(R.id.menu_new_media).setVisible(false);
+        }
 
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MEDIA_PERMISSION_REQUEST_CODE:
-                for (int grantResult : grantResults) {
-                    if (grantResult == PackageManager.PERMISSION_DENIED) {
-                        ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
-                        return;
-                    }
-                }
-                showNewMediaMenu();
-                break;
-            default:
-                break;
+    public void onBackPressed() {
+        if (mAddMediaPopup != null && mAddMediaPopup.isShowing()) {
+            mAddMediaPopup.dismiss();
+        } else {
+            super.onBackPressed();
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == android.R.id.home) {
-            onBackPressed();
-            return true;
-        } else if (i == R.id.menu_new_media) {
-            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-                showNewMediaMenu();
-            } else {
-                AppLockManager.getInstance().setExtendedTimeout();
-            }
-            return true;
-        } else if (i == R.id.menu_search) {
-            mSearchMenuItem = item;
-            MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
-            MenuItemCompat.expandActionView(mSearchMenuItem);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_new_media:
+                if (isAddMediaPopupShowing()) {
+                    hideAddMediaPopup();
+                } else {
+                    showAddMediaPopup();
+                }
+                return true;
+            case R.id.menu_search:
+                mSearchMenuItem = item;
+                MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+                MenuItemCompat.expandActionView(mSearchMenuItem);
 
-            mSearchView = (SearchView) item.getActionView();
-            mSearchView.setOnQueryTextListener(this);
+                mSearchView = (SearchView) item.getActionView();
+                mSearchView.setOnQueryTextListener(this);
 
-            // load last saved query
-            if (!TextUtils.isEmpty(mQuery)) {
-                onQueryTextSubmit(mQuery);
-                mSearchView.setQuery(mQuery, true);
-            }
-            return true;
-        } else if (i == R.id.menu_edit_media) {
-            String mediaId = mMediaItemFragment.getMediaId();
-            FragmentManager fm = getFragmentManager();
-
-            if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
-                // phone layout: hide item details, show and update edit fragment
-                FragmentTransaction ft = fm.beginTransaction();
-
-                if (mMediaItemFragment.isVisible())
-                    ft.hide(mMediaItemFragment);
-
-                mMediaEditFragment = MediaEditFragment.newInstance(mediaId);
-                ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
-                ft.addToBackStack(null);
-                ft.commitAllowingStateLoss();
-            } else {
-                // tablet layout: update edit fragment
-                mMediaEditFragment.loadMedia(mediaId);
-            }
-
-            if (mSearchView != null) {
-                mSearchView.clearFocus();
-            }
-            return true;
+                // load last saved query
+                if (!TextUtils.isEmpty(mQuery)) {
+                    onQueryTextSubmit(mQuery);
+                    mSearchView.setQuery(mQuery, true);
+                }
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onMediaItemListDownloaded() {
-        if (mMediaItemFragment != null) {
-            mMediaGridFragment.setRefreshing(false);
-            if (mMediaItemFragment.isInLayout()) {
-                mMediaItemFragment.loadDefaultMedia();
-            }
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        mMenu.findItem(R.id.menu_new_media).setVisible(false);
+
+        enableTabs(false);
+
+        // load last search query
+        if (!TextUtils.isEmpty(mQuery)) {
+            onQueryTextChange(mQuery);
         }
+
+        return true;
     }
 
     @Override
-    public void onMediaItemListDownloadStart() {
-        mMediaGridFragment.setRefreshing(true);
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        mMenu.findItem(R.id.menu_new_media).setVisible(true);
+        invalidateOptionsMenu();
+
+        enableTabs(true);
+
+        return true;
     }
 
     @Override
@@ -415,8 +530,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mMediaGridFragment != null) {
             mMediaGridFragment.search(query);
         }
+
         mQuery = query;
         mSearchView.clearFocus();
+
         return true;
     }
 
@@ -425,197 +542,523 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mMediaGridFragment != null) {
             mMediaGridFragment.search(newText);
         }
+
         mQuery = newText;
+
         return true;
     }
 
     @Override
-    public void onResume(Fragment fragment) {
-        invalidateOptionsMenu();
-    }
-
-    @Override
-    public void setLookClosable() {
-        mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
-    }
-
-    @Override
-    public void onPause(Fragment fragment) {
-        invalidateOptionsMenu();
-    }
-
-    @Override
-    public boolean onMenuItemActionExpand(MenuItem item) {
-        // currently we don't support searching from within a filter, so hide it
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.setFilterVisibility(View.GONE);
-            mMediaGridFragment.setFilter(Filter.ALL);
-        }
-
-        // load last search query
-        if (!TextUtils.isEmpty(mQuery))
-            onQueryTextChange(mQuery);
-        mMenu.findItem(R.id.menu_new_media).setVisible(false);
-        return true;
-    }
-
-    @Override
-    public boolean onMenuItemActionCollapse(MenuItem item) {
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.setFilterVisibility(View.VISIBLE);
-            mMediaGridFragment.setFilter(Filter.ALL);
-        }
-        mMenu.findItem(R.id.menu_new_media).setVisible(true);
-        return true;
-    }
-
-    public void onSavedEdit(String mediaId, boolean result) {
-        if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
-            doPopBackStack(getFragmentManager());
-
-            // refresh media item details (phone-only)
-            if (mMediaItemFragment != null)
-                mMediaItemFragment.loadMedia(mediaId);
-
-            // refresh grid
-            mMediaGridFragment.refreshMediaFromDB();
-        }
-    }
-
-    private void startMediaDeleteService() {
-        if (NetworkUtils.isNetworkAvailable(this)) {
-           startService(new Intent(this, MediaDeleteService.class));
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-
-            if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && mMediaEditFragment.isDirty()) {
-                // alert the user that there are unsaved changes
-                new AlertDialog.Builder(this)
-                        .setMessage(R.string.confirm_discard_changes)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // make sure the keyboard is dimissed
-                                    WPActivityUtils.hideKeyboard(getCurrentFocus());
-
-                                    // pop the edit fragment
-                                    doPopBackStack(getFragmentManager());
-                                }})
-                        .setNegativeButton(R.string.cancel, null)
-                        .create()
-                        .show();
-            } else {
-                doPopBackStack(fm);
-            }
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    private void doPopBackStack(FragmentManager fm) {
-        fm.popBackStack();
-
-        // reset the button to "back" as it may have been altered by a fragment
-        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaEvents.MediaChanged event) {
-        updateOnMediaChanged(event.mLocalBlogId, event.mMediaId);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaEvents.MediaUploadSucceeded event) {
-        updateOnMediaChanged(event.mLocalBlogId, event.mLocalMediaId);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaEvents.MediaUploadFailed event) {
-        ToastUtils.showToast(this, event.mErrorMessage, ToastUtils.Duration.LONG);
-    }
-
-    public void updateOnMediaChanged(String blogId, String mediaId) {
-        if (mediaId == null) {
+    public void onMediaItemSelected(View sourceView, int localMediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
+        if (media == null) {
+            AppLog.w(AppLog.T.MEDIA, "Media browser > unable to load localMediaId = " + localMediaId);
+            ToastUtils.showToast(this, R.string.error_media_load);
             return;
         }
 
-        // If the media was deleted, remove it from multi select (if it was selected) and hide it from the the detail
-        // view (if it was the one displayed)
-        if (!WordPress.wpDB.mediaFileExists(blogId, mediaId)) {
-            mMediaGridFragment.removeFromMultiSelect(mediaId);
-            if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
-                    && mediaId.equals(mMediaEditFragment.getMediaId())) {
-                if (mMediaEditFragment.isInLayout()) {
-                    mMediaEditFragment.loadMedia(null);
-                } else {
-                    doPopBackStack(getFragmentManager());
-                }
+        boolean isLocalFile = MediaUtils.isLocalFile(media.getUploadState());
+
+        // if this is being used as a media picker return the selected item and finish, otherwise
+        // preview the selected item
+        if (mBrowserType.isPicker()) {
+            if (isLocalFile) {
+                ToastUtils.showToast(this, R.string.error_media_still_uploading);
+                return;
             }
+            Intent intent = new Intent();
+            ArrayList<Long> remoteMediaIds = new ArrayList<>();
+            remoteMediaIds.add(media.getMediaId());
+            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            showMediaSettings(media, sourceView);
         }
+    }
 
-        // Update Grid view
-        mMediaGridFragment.refreshMediaFromDB();
-
-        // Update Spinner views
-        mMediaGridFragment.updateFilterText();
-        mMediaGridFragment.updateSpinnerAdapter();
+    private void showMediaSettings(@NonNull MediaModel media, View sourceView) {
+        List<MediaModel> mediaList = mMediaGridFragment.getFilteredMedia();
+        ArrayList<String> idList = new ArrayList<>();
+        for (MediaModel thisMedia: mediaList) {
+            idList.add(Integer.toString(thisMedia.getId()));
+        }
+        MediaSettingsActivity.showForResult(this, mSite, media, idList, sourceView);
     }
 
     @Override
-    public void onRetryUpload(String mediaId) {
-        mMediaAddFragment.addToQueue(mediaId);
+    public void onMediaCapturePathReady(String mediaCapturePath) {
+        mMediaCapturePath = mediaCapturePath;
     }
 
-    public void deleteMedia(final ArrayList<String> ids) {
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        Set<String> sanitizedIds = new HashSet<>(ids.size());
+    @Override
+    public void onRetryUpload(int localMediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+        addMediaToUploadService(media);
+    }
 
-        // phone layout: pop the item fragment if it's visible
-        doPopBackStack(getFragmentManager());
+    private void showMediaToastError(@StringRes int message, @Nullable String messageDetail) {
+        if (isFinishing()) {
+            return;
+        }
+        String errorMessage = getString(message);
+        if (!TextUtils.isEmpty(messageDetail)) {
+            errorMessage += ". " + messageDetail;
+        }
+        ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
+    }
 
-        // Make sure there are no media in "uploading"
-        for (String currentID : ids) {
-            if (WordPressMediaUtils.canDeleteMedia(blogId, currentID)) {
-                sanitizedIds.add(currentID);
-            }
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaChanged(OnMediaChanged event) {
+        AppLog.d(AppLog.T.MEDIA, "MediaBrowser onMediaChanged > " + event.cause);
+
+        if (event.isError()) {
+            AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.type
+                    + " - " + event.error.message);
+            showMediaToastError(R.string.media_generic_error, event.error.message);
+            return;
         }
 
-        if (sanitizedIds.size() != ids.size()) {
-            if (ids.size() == 1) {
-                Toast.makeText(this, R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
+        switch (event.cause) {
+            case DELETE_MEDIA:
+                if (event.mediaList != null) {
+                    // If the media was deleted, remove it from multi select if it was selected
+                    for (MediaModel mediaModel : event.mediaList) {
+                        int localMediaId = mediaModel.getId();
+                        mMediaGridFragment.removeFromMultiSelect(localMediaId);
+                    }
+                }
+                break;
+        }
+
+        if (event.mediaList != null && event.mediaList.size() == 1) {
+            updateMediaGridItem(event.mediaList.get(0), true);
+        } else {
+            reloadMediaGrid();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaUploaded(OnMediaUploaded event) {
+        if (event.isError()) {
+            AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
+                    + " - " + event.error.message);
+            String errorMessage = WPMediaUtils.getErrorMessage(this, event.media, event.error);
+            if (errorMessage != null) {
+                ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
             } else {
-                Toast.makeText(this, R.string.cannot_delete_multi_media_items, Toast.LENGTH_LONG).show();
+                showMediaToastError(R.string.media_upload_error, event.error.message);
             }
+        } else if (event.completed) {
+            String title = "";
+            if (event.media != null) {
+                title = event.media.getTitle();
+            }
+            AppLog.d(AppLog.T.MEDIA, "<" + title + "> upload complete");
+        }
+
+        if (event.media != null) {
+            updateMediaGridItem(event.media, event.isError());
+        } else {
+            reloadMediaGrid();
+        }
+    }
+
+    @Override
+    public void onSupportActionModeStarted(@NonNull ActionMode mode) {
+        super.onSupportActionModeStarted(mode);
+        enableTabs(false);
+    }
+
+    @Override
+    public void onSupportActionModeFinished(@NonNull ActionMode mode) {
+        super.onSupportActionModeFinished(mode);
+        enableTabs(true);
+    }
+
+    public void deleteMedia(final ArrayList<Integer> ids) {
+        final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
+        int processedItemCount = 0;
+
+        for (int currentId : ids) {
+            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(currentId);
+            if (mediaModel == null) {
+                continue;
+            }
+
+            // if uploading, first issue a cancel upload command
+            if (UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
+                MediaStore.CancelMediaPayload payload = new MediaStore.CancelMediaPayload(mSite, mediaModel, false);
+                mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+            }
+
+            if (mediaModel.getUploadState() != null &&
+                    MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
+                mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
+            } else {
+                mediaToDelete.add(mediaModel);
+                mediaModel.setUploadState(MediaUploadState.DELETING);
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
+            }
+            processedItemCount++;
+        }
+
+        if (processedItemCount != ids.size()) {
+            ToastUtils.showToast(this, R.string.cannot_delete_multi_media_items, ToastUtils.Duration.LONG);
         }
 
         // mark items for delete without actually deleting items yet,
         // and then refresh the grid
-        WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, sanitizedIds);
-        startMediaDeleteService();
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.clearSelectedItems();
-            mMediaGridFragment.refreshMediaFromDB();
+        if (!mediaToDelete.isEmpty()) {
+            startMediaDeleteService(mediaToDelete);
         }
     }
 
-    private void showNewMediaMenu() {
+    private void uploadList(List<Uri> uriList) {
+        if (uriList == null || uriList.size() == 0) {
+            return;
+        }
+        for (Uri uri : uriList) {
+            if (uri != null) {
+                fetchMedia(uri, getContentResolver().getType(uri));
+            }
+        }
+    }
+
+    private final OnBackStackChangedListener mOnBackStackChangedListener = new OnBackStackChangedListener() {
+        @Override
+        public void onBackStackChanged() {
+            ActivityUtils.hideKeyboard(MediaBrowserActivity.this);
+        }
+    };
+
+    private void doBindDeleteService(Intent intent) {
+        mDeleteServiceBound = bindService(intent, mDeleteConnection,
+                Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
+    }
+
+    private void doUnbindDeleteService() {
+        if (mDeleteServiceBound) {
+            unbindService(mDeleteConnection);
+            mDeleteServiceBound = false;
+        }
+    }
+
+    private final ServiceConnection mDeleteConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            mDeleteService = (MediaDeleteService.MediaDeleteBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mDeleteService = null;
+        }
+    };
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
+                // Coming from zero connection. Continue what's pending for delete
+                if (mMediaStore.hasSiteMediaToDelete(mSite)) {
+                    startMediaDeleteService(null);
+                }
+            }
+        }
+    };
+
+    /** Setup the popup that allows you to add new media from camera, video camera or local files **/
+    private void createAddMediaPopup() {
+        SimpleAdapter adapter = mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
+                ? getAddMenuSimpleAdapter(
+                        AddMenuItem.ITEM_CAPTURE_PHOTO,
+                        AddMenuItem.ITEM_CHOOSE_PHOTO)
+                : getAddMenuSimpleAdapter(
+                        AddMenuItem.ITEM_CAPTURE_PHOTO,
+                        AddMenuItem.ITEM_CAPTURE_VIDEO,
+                        AddMenuItem.ITEM_CHOOSE_PHOTO,
+                        AddMenuItem.ITEM_CHOOSE_VIDEO);
+
+        @SuppressLint("InflateParams")
+        View menuView = getLayoutInflater().inflate(R.layout.actionbar_add_media, null, false);
+        ListView listView = (ListView) menuView.findViewById(R.id.actionbar_add_media_listview);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                @SuppressWarnings("unchecked")
+                HashMap<String, Object> map = (HashMap<String, Object>) parent.getAdapter().getItem(position);
+                doAddMediaItemClicked((AddMenuItem) map.get(ITEM));
+                mAddMediaPopup.dismiss();
+            }
+        });
+
+        int width = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_width);
+        mAddMediaPopup = new PopupWindow(menuView, width, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        mAddMediaPopup.setFocusable(false);
+        mAddMediaPopup.setOutsideTouchable(true);
+    }
+
+    private boolean isAddMediaPopupShowing() {
+        return mAddMediaPopup != null && mAddMediaPopup.isShowing();
+    }
+
+    private void hideAddMediaPopup() {
+        if (mAddMediaPopup != null) {
+            mAddMediaPopup.dismiss();
+        }
+    }
+
+    private void showAddMediaPopup() {
+        if (mAddMediaPopup == null) {
+            createAddMediaPopup();
+        }
+
         View view = findViewById(R.id.menu_new_media);
         if (view != null) {
             int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
             int[] loc = new int[2];
             view.getLocationOnScreen(loc);
-            mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.LEFT, loc[0],
+            mAddMediaPopup.showAtLocation(
+                    view,
+                    Gravity.TOP | Gravity.START,
+                    loc[0],
                     loc[1] + view.getHeight() + y_offset);
         } else {
             // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
-            View gridView = findViewById(R.id.media_gridview);
+            View gridView = findViewById(R.id.recycler);
             mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
+        }
+    }
+
+    private enum AddMenuItem {
+        ITEM_CAPTURE_PHOTO(R.string.photo_picker_capture_photo),
+        ITEM_CAPTURE_VIDEO(R.string.photo_picker_capture_video),
+        ITEM_CHOOSE_PHOTO(R.string.photo_picker_choose_photo),
+        ITEM_CHOOSE_VIDEO(R.string.photo_picker_choose_video);
+
+        @StringRes private final int resource;
+
+        AddMenuItem(@StringRes int resource) {
+            this.resource = resource;
+        }
+    }
+
+    private static final String ITEM = "item";
+
+    private SimpleAdapter getAddMenuSimpleAdapter(AddMenuItem... addMenuItems) {
+        ArrayList<HashMap<String, Object>> itemsList = new ArrayList<>();
+
+        for (AddMenuItem addMenuItem : addMenuItems) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("text", getString(addMenuItem.resource));
+            hashMap.put(ITEM, addMenuItem);
+            itemsList.add(hashMap);
+        }
+
+        return new SimpleAdapter(this, itemsList, R.layout.actionbar_add_media_cell, new String[]{"text"},
+                new int[]{R.id.text});
+    }
+
+    private void doAddMediaItemClicked(@NonNull AddMenuItem item) {
+        mLastAddMediaItemClicked = item;
+
+        String[] permissions;
+        if (item == AddMenuItem.ITEM_CAPTURE_PHOTO || item == AddMenuItem.ITEM_CAPTURE_VIDEO) {
+            permissions = new String[]{ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        } else {
+            permissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        }
+        if (PermissionUtils.checkAndRequestPermissions(
+                this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
+            switch (item) {
+                case ITEM_CAPTURE_PHOTO:
+                    WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
+                    break;
+                case ITEM_CAPTURE_VIDEO:
+                    WPMediaUtils.launchVideoCamera(this);
+                    break;
+                case ITEM_CHOOSE_PHOTO:
+                    WPMediaUtils.launchPictureLibrary(this);
+                    break;
+                case ITEM_CHOOSE_VIDEO:
+                    WPMediaUtils.launchVideoLibrary(this);
+                    break;
+            }
+        }
+    }
+
+    private void fetchMedia(Uri mediaUri, final String mimeType) {
+        if (!MediaUtils.isInMediaStore(mediaUri)) {
+            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+            Uri downloadedUri = null;
+            try {
+                downloadedUri = MediaUtils.downloadExternalMedia(MediaBrowserActivity.this, mediaUri);
+            } catch (IllegalStateException e) {
+                // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
+                AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
+                CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString() +
+                        " See issue #5823");
+            }
+            if (downloadedUri != null) {
+                queueFileForUpload(getOptimizedPictureIfNecessary(downloadedUri), mimeType);
+            } else {
+                ToastUtils.showToast(MediaBrowserActivity.this, R.string.error_downloading_image,
+                        ToastUtils.Duration.SHORT);
+            }
+        } else {
+            queueFileForUpload(getOptimizedPictureIfNecessary(mediaUri), mimeType);
+        }
+    }
+
+    private Uri getOptimizedPictureIfNecessary(Uri originalUri) {
+        String filePath = MediaUtils.getRealPathFromURI(this, originalUri);
+        if (TextUtils.isEmpty(filePath)) {
+            return originalUri;
+        }
+        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, filePath, false);
+        if (optimizedMedia != null) {
+            return optimizedMedia;
+        } else {
+            // Optimization is OFF. Make sure the picture is in portrait for .org site
+            // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
+            if (!mSite.isWPCom()) {
+                // If it's not wpcom we must rotate the picture locally
+                Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, filePath, false);
+                if (rotatedMedia != null) {
+                    return rotatedMedia;
+                }
+            }
+        }
+
+        return originalUri;
+    }
+
+    private void addMediaToUploadService(@NonNull MediaModel media) {
+        // Start the upload service if it's not started and fill the media queue
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            AppLog.v(AppLog.T.MEDIA, "Unable to start UploadService, internet connection required.");
+            ToastUtils.showToast(this, R.string.no_network_message, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        ArrayList<MediaModel> mediaList = new ArrayList<>();
+        mediaList.add(media);
+        UploadService.uploadMedia(this, mediaList);
+    }
+
+    private void queueFileForUpload(Uri uri, String mimeType) {
+        // It is a regular local media file
+        String path = MediaUtils.getRealPathFromURI(this,uri);
+
+        if (TextUtils.isEmpty(path)) {
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        File file = new File(path);
+        if (!file.exists()) {
+            return;
+        }
+
+        MediaModel media = mMediaStore.instantiateMediaModel();
+        String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
+        String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
+
+        // Try to get mime type if none was passed to this method
+        if (mimeType == null) {
+            mimeType = getContentResolver().getType(uri);
+            if (mimeType == null) {
+                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+            }
+            if (mimeType == null) {
+                // Default to image jpeg
+                mimeType = "image/jpeg";
+            }
+        }
+        // If file extension is null, upload won't work on wordpress.com
+        if (fileExtension == null) {
+            fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+            filename += "." + fileExtension;
+        }
+
+        media.setFileName(filename);
+        media.setTitle(filename);
+        media.setFilePath(path);
+        media.setLocalSiteId(mSite.getId());
+        media.setFileExtension(fileExtension);
+        media.setMimeType(mimeType);
+        media.setUploadState(MediaUploadState.QUEUED);
+        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+        addMediaToUploadService(media);
+
+        updateMediaGridItem(media, false);
+    }
+
+    private void handleSharedMedia() {
+        Intent intent = getIntent();
+
+        final List<Uri> multi_stream;
+        if (Intent.ACTION_SEND_MULTIPLE.equals(intent.getAction())) {
+            multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+        } else if (Intent.ACTION_SEND.equals(intent.getAction())) {
+            multi_stream = new ArrayList<>();
+            multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+        } else {
+            multi_stream = null;
+        }
+
+        if (multi_stream != null) {
+            uploadList(multi_stream);
+        }
+
+        // clear the intent's action, so that in case the user rotates, we don't re-upload the same files
+        getIntent().setAction(null);
+    }
+
+    private void startMediaDeleteService(ArrayList<MediaModel> mediaToDelete) {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            AppLog.v(AppLog.T.MEDIA, "Unable to start MediaDeleteService, internet connection required.");
+            return;
+        }
+
+        if (mDeleteService != null) {
+            if (mediaToDelete != null && !mediaToDelete.isEmpty()) {
+                for (MediaModel media : mediaToDelete) {
+                    mDeleteService.addMediaToDeleteQueue(media);
+                }
+            }
+        } else {
+            Intent intent = new Intent(this, MediaDeleteService.class);
+            intent.putExtra(MediaDeleteService.SITE_KEY, mSite);
+            if (mediaToDelete != null) {
+                intent.putExtra(MediaDeleteService.MEDIA_LIST_KEY, mediaToDelete);
+                doBindDeleteService(intent);
+            }
+            startService(intent);
+        }
+    }
+
+    private void updateMediaGridItem(@NonNull MediaModel media, boolean forceUpdate) {
+        if (mMediaGridFragment != null) {
+            if (mMediaStore.getMediaWithLocalId(media.getId()) != null) {
+                mMediaGridFragment.updateMediaItem(media, forceUpdate);
+            } else {
+                mMediaGridFragment.removeMediaItem(media);
+            }
+        }
+    }
+
+    private void reloadMediaGrid() {
+        if (mMediaGridFragment != null) {
+            mMediaGridFragment.reload();
         }
     }
 }

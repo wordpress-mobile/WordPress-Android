@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.HelpActivity;
+import org.wordpress.android.ui.accounts.JetpackCallbacks;
 import org.wordpress.android.util.HelpshiftHelper;
 
 public class MagicLinkSentFragment extends Fragment {
@@ -20,6 +21,7 @@ public class MagicLinkSentFragment extends Fragment {
     }
 
     private OnMagicLinkSentInteraction mListener;
+    private JetpackCallbacks mJetpackCallbacks;
 
     public MagicLinkSentFragment() {
     }
@@ -31,6 +33,11 @@ public class MagicLinkSentFragment extends Fragment {
             mListener = (OnMagicLinkSentInteraction) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement OnMagicLinkSentInteraction");
+        }
+        if (context instanceof JetpackCallbacks) {
+            mJetpackCallbacks = (JetpackCallbacks) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement JetpackCallbacks");
         }
     }
 
@@ -66,7 +73,8 @@ public class MagicLinkSentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HelpActivity.class);
-                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.Tag.ORIGIN_LOGIN_SCREEN_HELP);
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
+                        (mJetpackCallbacks.isJetpackAuth(), true));
                 startActivity(intent);
             }
         };

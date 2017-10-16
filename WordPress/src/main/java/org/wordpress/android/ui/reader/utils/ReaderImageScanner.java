@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.utils;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.wordpress.android.ui.reader.models.ReaderImageList;
@@ -105,10 +106,24 @@ public class ReaderImageScanner {
             if (width > currentMaxWidth) {
                 currentImageUrl = imageUrl;
                 currentMaxWidth = width;
+            } else if (currentImageUrl == null && hasSuitableClassForFeaturedImage(imgTag)) {
+                currentImageUrl = imageUrl;
             }
         }
 
         return currentImageUrl;
+    }
+
+    /*
+     * returns true if the passed image tag has a "size-" class attribute which would make it
+     * suitable for use as a featured image
+     */
+    private boolean hasSuitableClassForFeaturedImage(@NonNull String imageTag) {
+        String tagClass = ReaderHtmlUtils.getClassAttrValue(imageTag);
+        return (tagClass != null
+                && (tagClass.contains("size-full")
+                 || tagClass.contains("size-large")
+                 || tagClass.contains("size-medium")));
     }
 
     /*

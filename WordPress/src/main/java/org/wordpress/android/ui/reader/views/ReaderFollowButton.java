@@ -74,9 +74,9 @@ public class ReaderFollowButton extends LinearLayout {
         // blue icon if not followed and there is no caption
         int drawableId;
         if (mIsFollowed) {
-            drawableId = R.drawable.reader_following;
+            drawableId = R.drawable.ic_reader_following_alert_green_24dp;
         } else {
-            drawableId = R.drawable.reader_follow;
+            drawableId = R.drawable.ic_reader_follow_blue_medium_24dp;
         }
         mImageFollow.setImageResource(drawableId);
     }

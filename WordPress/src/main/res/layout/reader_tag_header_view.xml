@@ -16,14 +16,14 @@
         android:id="@+id/view_overlay"
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_tag_header_image_height"
-        android:background="@color/translucent_grey_dark" />
+        android:background="@color/grey_dark_translucent_50" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:drawableLeft="@drawable/ic_genericon_tag_white_24dp"
+        android:drawableLeft="@drawable/ic_tag_white_24dp"
         android:drawablePadding="@dimen/margin_small"
         android:ellipsize="end"
         android:gravity="center_vertical"

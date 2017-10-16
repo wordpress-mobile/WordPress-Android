@@ -11,7 +11,6 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 
 public class WPLaunchActivity extends AppCompatActivity {
-
     /*
      * this the main (default) activity, which does nothing more than launch the
      * previously active activity on startup - note that it's defined in the
@@ -21,9 +20,11 @@ public class WPLaunchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ProfilingUtils.split("WPLaunchActivity.onCreate");
+        launchWPMainActivity();
+    }
 
+    private void launchWPMainActivity() {
         if (WordPress.wpDB == null) {
             ToastUtils.showToast(this, R.string.fatal_db_error, ToastUtils.Duration.LONG);
             finish();

@@ -5,17 +5,17 @@ import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.MultiAutoCompleteTextView;
 
 import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
-public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
+public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextView {
     PersistentEditTextHelper mPersistentEditTextHelper;
     private OnEditTextBackListener mBackListener;
 
@@ -25,21 +25,20 @@ public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
 
     public SuggestionAutoCompleteText(Context context) {
         super(context, null);
-        init(context, null);
+        init(context);
     }
 
     public SuggestionAutoCompleteText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(context);
     }
 
     public SuggestionAutoCompleteText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context, attrs);
+        init(context);
     }
 
-    private void init(Context context, AttributeSet attrs) {
-        TypefaceCache.setCustomTypeface(context, this, attrs);
+    private void init(Context context) {
         setTokenizer(new SuggestionTokenizer());
         setThreshold(1);
         mPersistentEditTextHelper = new PersistentEditTextHelper(context);

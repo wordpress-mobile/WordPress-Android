@@ -21,8 +21,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -44,12 +46,15 @@ import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -68,7 +73,6 @@ import de.greenrobot.event.EventBus;
  */
 public class ReaderPostPagerActivity extends AppCompatActivity
         implements ReaderInterfaces.AutoHideToolbarListener {
-    private static final String KEY_TRACKED_POST = "tracked_post";
 
     /**
      * Type of URL intercepted
@@ -111,11 +115,14 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private boolean mBackFromLogin;
 
     private final HashSet<Integer> mTrackedPositions = new HashSet<>();
-    private boolean mTrackedPost;
+
+    @Inject SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
+
         setContentView(R.layout.reader_activity_post_pager);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -146,8 +153,13 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             if (savedInstanceState.containsKey(ReaderConstants.ARG_TAG)) {
                 mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
             }
-            mTrackedPost = savedInstanceState.getBoolean(KEY_TRACKED_POST);
             mPostSlugsResolutionUnderway = savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY);
+            if (savedInstanceState.containsKey(ReaderConstants.KEY_TRACKED_POSITIONS)) {
+                Serializable positions = savedInstanceState.getSerializable(ReaderConstants.KEY_TRACKED_POSITIONS);
+                if (positions instanceof HashSet) {
+                    mTrackedPositions.addAll((HashSet<Integer>) positions);
+                }
+            }
         } else {
             mIsFeed = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_FEED, false);
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
@@ -173,7 +185,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         // for related posts, show an X in the toolbar which closes the activity - using the
         // back button will navigate through related posts
         if (mIsRelatedPostView) {
-            mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+            mToolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -520,7 +532,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -561,9 +573,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             outState.putLong(ReaderConstants.ARG_POST_ID, id.getPostId());
         }
 
-        outState.putBoolean(KEY_TRACKED_POST, mTrackedPost);
-
         outState.putBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY, mPostSlugsResolutionUnderway);
+
+        if (mTrackedPositions.size() > 0) {
+            outState.putSerializable(ReaderConstants.KEY_TRACKED_POSITIONS, mTrackedPositions);
+        }
 
         super.onSaveInstanceState(outState);
     }
@@ -618,7 +632,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
      */
     private void trackPost(long blogId, long postId) {
         // bump the page view
-        ReaderPostActions.bumpPageViewForPost(blogId, postId);
+        ReaderPostActions.bumpPageViewForPost(mSiteStore, blogId, postId);
 
         // analytics tracking
         AnalyticsUtils.trackWithReaderPostDetails(
@@ -660,6 +674,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (isFinishing()) return;
+
                         AppLog.d(AppLog.T.READER, "reader pager > creating adapter");
                         PostPagerAdapter adapter =
                                 new PostPagerAdapter(getFragmentManager(), idList);

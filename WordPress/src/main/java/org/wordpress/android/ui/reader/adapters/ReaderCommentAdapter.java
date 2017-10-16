@@ -17,6 +17,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
@@ -26,8 +29,8 @@ import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
+import org.wordpress.android.ui.reader.utils.ReaderCommentLeveler;
 import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -39,6 +42,8 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import javax.inject.Inject;
 
 public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ReaderPost mPost;
@@ -65,6 +70,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final long ID_HEADER = -1L;
 
     private static final int NUM_HEADERS = 1;
+
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -119,6 +128,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public ReaderCommentAdapter(Context context, ReaderPost post) {
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         mPost = post;
         mIsPrivatePost = (post != null && post.isPrivate);
 
@@ -220,7 +230,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             String avatarUrl = GravatarUtils.fixGravatarUrl(comment.getAuthorAvatar(), mAvatarSz);
             commentHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
         } else {
-            commentHolder.imgAvatar.showDefaultGravatarImage();
+            commentHolder.imgAvatar.showDefaultGravatarImageAndNullifyUrl();
         }
 
         // tapping avatar or author name opens blog preview
@@ -228,10 +238,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(
-                            view.getContext(),
-                            comment.authorBlogId
-                    );
+                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), comment.authorBlogId);
                 }
             };
             commentHolder.imgAvatar.setOnClickListener(authorListener);
@@ -261,7 +268,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         int maxImageWidth = mContentWidth - indentWidth;
-        CommentUtils.displayHtmlComment(commentHolder.txtText, comment.getText(), maxImageWidth);
+        CommentUtils.displayHtmlComment(commentHolder.txtText, comment.getText(), maxImageWidth, mImageLoader);
 
         // different background for highlighted comment, with optional progress bar
         if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {
@@ -272,7 +279,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.progress.setVisibility(View.GONE);
         }
 
-        if (ReaderUtils.isLoggedOutReader()) {
+        if (!mAccountStore.hasAccessToken()) {
             commentHolder.replyView.setVisibility(View.GONE);
         } else {
             // tapping reply tells activity to show reply box
@@ -323,6 +330,16 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         return position == 0 ? null : mComments.get(position - NUM_HEADERS);
     }
 
+    /*
+     * refresh the post from the database - used to reflect changes to comment counts, etc.
+     */
+    public void refreshPost() {
+        if (mPost != null) {
+            ReaderPost post = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, true);
+            setPost(post);
+        }
+    }
+
     private void showLikeStatus(final CommentHolder holder, int position) {
         ReaderComment comment = getItem(position);
         if (comment == null) {
@@ -334,7 +351,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.countLikes.setSelected(comment.isLikedByCurrentUser);
             holder.countLikes.setCount(comment.numLikes);
 
-            if (ReaderUtils.isLoggedOutReader()) {
+            if (!mAccountStore.hasAccessToken()) {
                 holder.countLikes.setEnabled(false);
             } else {
                 holder.countLikes.setEnabled(true);
@@ -366,7 +383,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         boolean isAskingToLike = !comment.isLikedByCurrentUser;
         ReaderAnim.animateLikeButton(holder.countLikes.getImageView(), isAskingToLike);
 
-        if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike)) {
+        if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike, mAccountStore.getAccount().getUserId())) {
             ToastUtils.showToast(context, R.string.reader_toast_err_generic);
             return;
         }
@@ -515,7 +532,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (result) {
                 // assign the comments with children sorted under their parents and indent levels applied
-                mComments = ReaderCommentList.getLevelList(tmpComments);
+                mComments = new ReaderCommentLeveler(tmpComments).createLevelList();
                 notifyDataSetChanged();
             }
             if (mDataLoadedListener != null) {

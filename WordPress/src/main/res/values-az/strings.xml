@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-12-08 01:00:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: az
 -->
 <resources>
@@ -21,7 +21,6 @@ Language: az
 	<string name="reader_short_comment_count_one">1 Şərh</string>
 	<string name="reader_short_like_count_multi">%s Bəyənmə</string>
 	<string name="email">E-poçt</string>
-	<string name="notifications_other">Digər</string>
 	<string name="days_ago">%d gün öncə</string>
 	<string name="connectionbar_no_connection">Qoşulma yoxdur</string>
 	<string name="page_trashed">Səhifəni zibil qutusuna göndər</string>
@@ -35,7 +34,6 @@ Language: az
 	<string name="button_view">Bax</string>
 	<string name="button_edit">Redaktə et</string>
 	<string name="button_publish">Dərc et</string>
-	<string name="trashed">Zibil qutusuna göndərildi</string>
 	<string name="stats_no_activity_this_period">Bu dövrə aid aktivlik yoxdur</string>
 	<string name="my_site_no_sites_view_subtitle">Bir ədədini əlavə etmək istərdinizmi?</string>
 	<string name="my_site_no_sites_view_title">Hələlik heç bir WordPress saytınız yoxdur.</string>
@@ -43,8 +41,6 @@ Language: az
 	<string name="reader_toast_err_follow_blog_not_authorized">Bu bloqa giriş izniniz yoxdur</string>
 	<string name="reader_toast_err_follow_blog_not_found">Bloq tapılmadı</string>
 	<string name="undo">Geri al</string>
-	<string name="tabbar_accessibility_label_my_site">Saytım</string>
-	<string name="tabbar_accessibility_label_me">Mən</string>
 	<string name="passcodelock_prompt_message">PIN kodunuzu daxil edin</string>
 	<string name="editor_toast_changes_saved">Dəyişikliklər qeyd edildi</string>
 	<string name="stats_insights_best_ever">Bü Günə Qədərki Ən Yaxşı Baxış</string>
@@ -80,33 +76,9 @@ Language: az
 	<string name="show">Göstər</string>
 	<string name="hide">Gizlət</string>
 	<string name="select_all">Tamamını seç</string>
-	<string name="select_from_new_picker">Yeni seçici ilə birdən çox maddə seç</string>
 	<string name="stats_generic_error">Gərəkli statistikalar yüklənmir</string>
-	<string name="no_device_videos">Video yoxdur</string>
-	<string name="no_blog_images">Təsvir yoxdur</string>
-	<string name="no_blog_videos">Video yoxdur</string>
-	<string name="no_device_images">Təsvir yoxdur</string>
-	<string name="error_loading_blog_images">Təsvirlər alınmır</string>
-	<string name="error_loading_blog_videos">Videolar alınmır</string>
-	<string name="error_loading_images">Təsvirlər yüklənərkən bir xəta oldu</string>
-	<string name="error_loading_videos">Videolar yüklənərkən bir xəta oldu</string>
-	<string name="loading_blog_images">Təsvirlər alınır</string>
-	<string name="loading_blog_videos">Videolar alınır</string>
-	<string name="no_media_sources">Media faylı alınmadı</string>
-	<string name="loading_videos">Videolar yüklənir</string>
-	<string name="loading_images">Təsvirlər yüklənir</string>
-	<string name="no_media">Media yoxdur</string>
 	<string name="device">Cihaz</string>
 	<string name="language">Dil</string>
-	<string name="add_to_post">Yazıya əlavə et</string>
-	<string name="media_picker_title">Media seç</string>
-	<string name="take_photo">Foto çək</string>
-	<string name="take_video">Video çək</string>
-	<string name="tab_title_device_images">Cihaz Təsvirləri</string>
-	<string name="tab_title_device_videos">Cihaz Videoları</string>
-	<string name="tab_title_site_images">Sayt Təsvirləri</string>
-	<string name="tab_title_site_videos">Sayt Videoları</string>
-	<string name="error_publish_no_network">Qoşulma olmadığında dərc edilə bilmir. Qaralama olaraq qeyd edildi.</string>
 	<string name="editor_toast_invalid_path">Keçərsiz fayl yolu.</string>
 	<string name="verification_code">Təsdiqləmə kodu</string>
 	<string name="invalid_verification_code">Keçərsiz təsdiqləmə kodu</string>
@@ -130,7 +102,6 @@ Language: az
 	<string name="toast_err_post_uploading">Yazı yüklənərkən açılmır</string>
 	<string name="posts_fetching">Yazılar alınır...</string>
 	<string name="media_fetching">Media faylı alınır...</string>
-	<string name="post_uploading">Yüklənir</string>
 	<string name="stats_total">Cəmi</string>
 	<string name="stats_overall">Əsas</string>
 	<string name="stats_period">Dövr</string>
@@ -206,8 +177,6 @@ Language: az
 	<string name="confirm_delete_multi_media">Seçilmiş maddələr silinsinmi?</string>
 	<string name="confirm_delete_media">Seçilmiş maddə silinsinmi?</string>
 	<string name="cab_selected">%d seçildi</string>
-	<string name="media_gallery_date_range">%1$s və %2$s arası media faylları göstərilir</string>
-	<string name="sure_to_remove_account">Bu sayt silinsinmi?</string>
 	<string name="faq_button">ÇVS</string>
 	<string name="create_new_blog_wpcom">WordPress.com bloqu yarat</string>
 	<string name="new_blog_wpcom_created">WordPress.com blou yaradıldı!</string>
@@ -220,7 +189,6 @@ Language: az
 	<string name="reader_label_comments_on">Şərh</string>
 	<string name="reader_title_photo_viewer">%1$d / %2$d</string>
 	<string name="error_refresh_unauthorized_posts">Yazıya baxmağa və ya onu redaktə etməyə izniniz yoxdur</string>
-	<string name="select_a_blog">WordPress saytı seç</string>
 	<string name="mnu_comment_liked">Bəyənildi</string>
 	<string name="comment">Şərh</string>
 	<string name="comment_trashed">Şərh zibil qutusuna göndərildi</string>
@@ -237,13 +205,10 @@ Language: az
 	<string name="older_two_days">2 gündən əski</string>
 	<string name="older_last_week">1 həftədən əski</string>
 	<string name="stats_no_blog">İstənən bloq üçün statistiklar yüklənmir</string>
-	<string name="sending_content">%s içəriyi yüklənir</string>
 	<string name="uploading_total">%1$d / %2$d yüklənir</string>
 	<string name="posts_empty_list">Hələlik yazı yoxdur. Bir yazı yaratmağa nə deyərsiniz?</string>
 	<string name="comment_reply_to_user">Bunu cavabla: %s</string>
 	<string name="pages_empty_list">Hələlik səhifə yoxdur. Bir səhifə yaratmağa nə deyərsiniz?</string>
-	<string name="media_empty_list_custom_date">Bu zaman aralığında media yoxdur</string>
-	<string name="posting_post">Yazılan: "%s"</string>
 	<string name="reader_empty_followed_blogs_title">Hələki heç bir sayt izləmirsiniz</string>
 	<string name="reader_toast_err_generic">Bu hərəkət həyata keçirilə bilmir</string>
 	<string name="reader_toast_err_block_blog">Bu bloq əngəllənə bilmir</string>
@@ -255,11 +220,6 @@ Language: az
 	<string name="hs__conversation_header">Dəstək söhbəti</string>
 	<string name="hs__username_blank_error">Keçərli bir ad daxil edin</string>
 	<string name="hs__invalid_email_error">Keçərli bir e-poçt ünvanı daxil edin</string>
-	<string name="add_location">Mövqe əlavə edin</string>
-	<string name="current_location">Hazırkı mövqe</string>
-	<string name="search_location">Axtarış</string>
-	<string name="edit_location">Redaktə et</string>
-	<string name="search_current_location">Yerləşdir</string>
 	<string name="preference_send_usage_stats">Statistikaları göndər</string>
 	<string name="preference_send_usage_stats_summary">Android üçün WordPress-i inkişaf etdirməyimizə yardımçı olmaq üçün bizə avtomatik olaraq istifadə statistikalarını göndərin. </string>
 	<string name="update_verb">Yenilə</string>
@@ -290,11 +250,9 @@ Language: az
 	<string name="no_network_message">Uyğun vəziyyətdə şəbəkə yoxdur</string>
 	<string name="gallery_error">Media maddəsi bərpa edilə bilmədi</string>
 	<string name="blog_not_found">Bu bloqla əlaqə qurularkən bir xəta ilə qarşılaşıldı</string>
-	<string name="wait_until_upload_completes">Yükləmə bitənə qədər gözləyin</string>
 	<string name="theme_fetch_failed">Mövzuları qəbul etmək mümkün olmadı</string>
 	<string name="theme_set_failed">Mövzunu qurmaq mümkün olmadı</string>
 	<string name="theme_auth_error_message">Mövzu qurma səlahiyyətinə sahib olduğunuzdan əmin olun</string>
-	<string name="no_site_error">WordPress saytına qoşulma baş tutmadı</string>
 	<string name="adding_cat_failed">Kateqoriya əlavə etmə baş tutmadı</string>
 	<string name="adding_cat_success">Kateqoriya müvəffəqiyyətlə əlavə edildi</string>
 	<string name="cat_name_required">Kateqoriya adı vacibdir</string>
@@ -305,7 +263,6 @@ Language: az
 	<string name="stats_bar_graph_empty">Baxılacaq statistika yoxdur</string>
 	<string name="reply_failed">Caavab yazma baş tutmadı</string>
 	<string name="notifications_empty_list">Bildirş yoxdur</string>
-	<string name="error_delete_post">%s silinərkən xəta ilə qarşılaşıldı</string>
 	<string name="error_refresh_posts">Yazılar hazırda təzələnə bilmir</string>
 	<string name="error_refresh_pages">Səhifələr hazırda təzələnə bilmir</string>
 	<string name="error_refresh_notifications">Bildirişlər hazırda təzələnə bilmir</string>
@@ -313,7 +270,6 @@ Language: az
 	<string name="error_refresh_stats">Statistikalar hazırda təzələnə bilmir</string>
 	<string name="error_generic">Bir xəta baş verdi</string>
 	<string name="error_moderate_comment">Moderasiya sırasında xəta baş verdi</string>
-	<string name="error_upload">%s yüklənərkən xəta baş verdi       </string>
 	<string name="error_load_comment">Şərh yüklənmədi</string>
 	<string name="error_downloading_image">Təsvir endirilərkən xəta baş verdi</string>
 	<string name="passcode_wrong_passcode">Yanlış PIN</string>
@@ -352,7 +308,6 @@ Language: az
 	<string name="add_comment">Şərh əlavə et</string>
 	<string name="connection_error">Qoşulma xətası</string>
 	<string name="cancel_edit">Redaktəni ləğv et</string>
-	<string name="post_format">Yazı formatı</string>
 	<string name="new_post">Yeni yazı</string>
 	<string name="new_media">Yeni media</string>
 	<string name="blog_name_invalid">Keçərsiz sayt ünvanı</string>
@@ -360,9 +315,7 @@ Language: az
 	<string name="email_cant_be_used_to_signup">Bu e-poçt ünvanından qeydiyyat üçün istifadə edə bilməzsiniz. Bəzi e-poçtlarımızın qadağan olması ilə əlaqədar problemlə qarşılaşırıq. Başqa bir e-poçt provayderindən istifadə edin.</string>
 	<string name="email_reserved">Bu e-poçt ünvanından artıq istifadə edilmişdir. Daxil olan poçt qutunuzu aktivasiya e-poçtu üçün yoxlayın. Əgər aktivasiya etməsəniz, bir neçə gün ərzində təkrar yoxlaya bilərsiniz.</string>
 	<string name="blog_name_must_include_letters">Sayt ünvanı ən az bir ədəd hərfə sahib (a-z) olmalıdır</string>
-	<string name="jetpack_message_not_admin">Statistikalar üçün Jetpack plaqininə ehtiyac var. Sayt nəzarətçisi ilə əlaqə qurun.</string>
 	<string name="reader_title_applog">Proqram jurnalı</string>
-	<string name="reader_share_link">Bağlantını paylaş</string>
 	<string name="reader_toast_err_add_tag">Bu etiket əlavə edilə bilmir</string>
 	<string name="reader_toast_err_remove_tag">Bu etiket silinə bilmir</string>
 	<string name="required_field">Gərəkli sahə</string>
@@ -376,19 +329,14 @@ Language: az
 	<string name="wordpress_blog">WordPress bloqu</string>
 	<string name="error_blog_hidden">Bu bloq gizlidir və yüklənmədi. Parametrlərdən yenidən aktivləşdirin və təkrar yoxlayın.</string>
 	<string name="fatal_db_error">Proqram üçün verilənlər bazası yaradılarkən bir xəta baş verdi. Proqramı təkrar qurmağa cəhd edin.</string>
-	<string name="pending_review">Ön baxış üçün gözləyir</string>
 	<string name="http_credentials">HTTP məlumatları (seçimə bağlı)</string>
 	<string name="http_authorization_required">Qeydiyyat gərəklidir</string>
 	<string name="view_in_browser">Brauzerdə bax</string>
 	<string name="add_new_category">Yeni kateqoriya əlavə et</string>
 	<string name="category_name">Kateqoriya adı</string>
-	<string name="category_slug">Kateqoriya yarlığı (seçimə bağlı)</string>
-	<string name="category_desc">Kateqoriya açıqlaması (seçimə bağlı)</string>
-	<string name="category_parent">Valideyin kateqoriya (seçimə bağlı):</string>
 	<string name="share_action_post">Yeni yazı</string>
 	<string name="share_action_media">Media kitabxanası</string>
 	<string name="file_error_create">Müvəqqəti media faylı yaradıla bilmir. Cihazınızda yetərli böş sahə olduğundan əmin olun.</string>
-	<string name="location_not_found">Bilinməyən mövqe</string>
 	<string name="open_source_licenses">Açıq mənbə lisenziyaları</string>
 	<string name="xmlrpc_error">Əlaqə qurula bilmədi. Saytınızdakı xmlrpc.php-nin tam yolunu daxil edib təkrar yoxlayın</string>
 	<string name="hint_comment_content">Şərh</string>
@@ -433,11 +381,7 @@ Language: az
 	<string name="scaled_image_error">Keçərli miqyasda genişlik dəyəri daxil edin</string>
 	<string name="post_not_found">Yazı yüklənərkən xəta baş verdi. Yazını təzələyin və təkrar cəhd edin.</string>
 	<string name="learn_more">Daha ətraflı məlumat</string>
-	<string name="media_gallery_settings_title">Qalereya parametrləri</string>
-	<string name="media_gallery_image_order">Təsvir sırası</string>
-	<string name="media_gallery_num_columns">Sütun miqdarı</string>
 	<string name="media_gallery_type_thumbnail_grid">Miniatür təsvir</string>
-	<string name="media_gallery_edit">Qalereyanı redaktə et</string>
 	<string name="media_error_no_permission">Media kitabxanasına baxma izniniz yoxdur</string>
 	<string name="cannot_delete_multi_media_items">Bəzi media faylları silinmədi. Daha sonra təkrar yoxlayın.</string>
 	<string name="themes_live_preview">Canlı ön izləmə</string>
@@ -455,7 +399,6 @@ Language: az
 	<string name="share_link">Bağlantını paylaş</string>
 	<string name="creating_your_account">Yeni hesabınız yaradılır</string>
 	<string name="creating_your_site">Yeni saytınız yaradılır</string>
-	<string name="error_refresh_media">Media kitabxanasının yenilənməsi zamanı bəzi şeylər tərs getdi. Daha sonra təkrar yoxlayın.</string>
 	<string name="reader_empty_posts_in_tag_updating">Yazılar gətirilir...</string>
 	<string name="reader_label_reply">Cavab</string>
 	<string name="comment_spammed">Şərh spam olaraq işarələnmişdir</string>
@@ -479,16 +422,13 @@ Language: az
 	<string name="password_invalid">Sizə daha etibarlı parol lazımdır. 7 simvoldan artıq böyük və kiçik hərflərin, rəqəm və ya özəl simvolların qarışığından istifadə edin.</string>
 	<string name="nux_add_selfhosted_blog">Öz-xostinq saytını əlavə et</string>
 	<string name="media_add_popup_title">Media kitabxanasına əlavə et</string>
-	<string name="media_add_new_media_gallery">Qalereya yarat</string>
 	<string name="empty_list_default">Bu siyahı boşdur</string>
 	<string name="reader_btn_share">Paylaş</string>
 	<string name="jetpack_not_found">Jetpack plaqini tapılmadı</string>
 	<string name="select_from_media_library">Media kitabxanasından seç</string>
 	<string name="username_invalid">Keçərsiz istifadəçi adı</string>
 	<string name="nux_tutorial_get_started_title">Başlayın!</string>
-	<string name="jetpack_message">Statistikalar üçün Jetpack plaqininə ehtiyac var. Jetpack plaqinini qurmaq istəyirsinizmi?</string>
 	<string name="reader_untitled_post">(adsız)</string>
-	<string name="reader_share_subject">Paylaşılan %s</string>
 	<string name="reader_label_added_tag"> %s əlavə edildi</string>
 	<string name="reader_label_removed_tag">%s silindi</string>
 	<string name="limit_reached">Limit həddini aşdınız. 1 dəqiqə ərzində təkrar yoxlaya bilərsiniz. Bir daha cəhd etsəniz qadağanın ləğv edilməsi üçün bir az gözləməli olacaqsınız. Bunun bir xəta olduğunu düşünürsünüzsə dəstək xidmətinə müraciət edin.</string>
@@ -506,20 +446,12 @@ Language: az
 	<string name="reader_toast_err_url_intent">%s açmaq baş tutmadı</string>
 	<string name="reader_hint_comment_on_comment">Şərhə cavab yaz...</string>
 	<string name="themes">Mövzular</string>
-	<string name="images">Təsvirlər</string>
 	<string name="media_gallery_type_slideshow">Slaydşou</string>
 	<string name="media_edit_description_text">Açıqlama</string>
 	<string name="share_action">Göndər</string>
 	<string name="stats_view_tags_and_categories">Etiketlər və Kateqoriyalar</string>
 	<string name="stats_entry_authors">Müəllif</string>
 	<string name="stats_entry_posts_and_pages">Başlıq</string>
-	<string name="all">Tamamı</string>
-	<string name="custom_date">Özəl tarix</string>
-	<string name="media_gallery_image_order_random">Qarışıq</string>
-	<string name="media_gallery_image_order_reverse">Təkrar</string>
-	<string name="media_add_popup_capture_photo">Foto tut</string>
-	<string name="media_add_popup_capture_video">Video tut</string>
-	<string name="share_action_title">Əlavə et</string>
 	<string name="stats_entry_country">Ölkə</string>
 	<string name="stats_entry_tags_and_categories">Bəhs</string>
 	<string name="stats_entry_referrers">Yönləndirmə</string>
@@ -529,11 +461,9 @@ Language: az
 	<string name="media_edit_title_hint">Buraya bir şüar daxil edin</string>
 	<string name="media_edit_caption_hint">Buraya bir başlıq daxil edin</string>
 	<string name="media_edit_description_hint">Buraya bir açıqlama daxil edin</string>
-	<string name="post_excerpt">Çıxarış</string>
 	<string name="stats">Statistikalar</string>
 	<string name="stats_view_visitors_and_views">Qonaqlar və Baxışlar</string>
 	<string name="stats_view_clicks">Tıklamalar</string>
-	<string name="unattached">Bərkidilməmiş</string>
 	<string name="passcode_change_passcode">PIN kodun idarə edilməsi</string>
 	<string name="passcode_set">PIN kod quruludur</string>
 	<string name="passcode_preference_title">PIN bağlıdır</string>
@@ -564,6 +494,7 @@ Language: az
 	<string name="passcode_enter_old_passcode">Əvvəlki PIN kodunu daxil et</string>
 	<string name="passcode_manage">PIN bloklamasının idarəetməsi</string>
 	<string name="upload">Yüklə</string>
+	<string name="manage">İdarəetmə</string>
 	<string name="discard">Ləğv et</string>
 	<string name="notifications">Bildirişlər</string>
 	<string name="note_reply_successful">Cavab dərc edildi</string>
@@ -591,11 +522,9 @@ Language: az
 	<string name="width">genişlik</string>
 	<string name="featured">Fərdi təsvir olaraq istifadə edin</string>
 	<string name="featured_in_post">Təsviri yazı mətninə əlavə et</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">bloqistifadəçiadı</string>
 	<string name="upload_scaled_image">Ölçüləndirilmiş təsviri yüklə və bağlantı ver</string>
 	<string name="scaled_image">Mütənasib təsvirin genişliyi</string>
-	<string name="scheduled">Ertələndi</string>
 	<string name="link_enter_url">URL</string>
 	<string name="version">Versiya</string>
 	<string name="app_title">Android üçün WordPress</string>
@@ -606,32 +535,21 @@ Language: az
 	<string name="edit">Redaktə</string>
 	<string name="post_id">Yazı</string>
 	<string name="page_id">Səhifə</string>
-	<string name="post_password">Parol(istəyə bağlı)</string>
 	<string name="immediately">Həmən</string>
 	<string name="quickpress_add_alert_title">Qısa yol ismi təyin et</string>
 	<string name="settings">Parametrlər</string>
 	<string name="share_url">URL paylaş</string>
 	<string name="quickpress_window_title">QuickPress qısa yolu üçün bloq seçin</string>
 	<string name="quickpress_add_error">Qısa yol ismi boş ola bilməz</string>
-	<string name="draft">Qaralama</string>
-	<string name="publish_post">Dərc et</string>
-	<string name="post_private">Özəl</string>
 	<string name="upload_full_size_image">Yüklə və tam təsvirə bağlantı ver</string>
 	<string name="categories">Kateqoriyalar</string>
-	<string name="tags_separate_with_commas">Etiketlər(etiketləri vergüllə ayırın)</string>
 	<string name="title">Başlıq</string>
-	<string name="notification_vibrate">Vibrasiya</string>
-	<string name="notification_blink">Məlumatlandırma işığını parlat</string>
-	<string name="status">Status</string>
-	<string name="select_video">Qalereyadan bir video seçin</string>
 	<string name="sdcard_title">SD Kart Gərəkdir</string>
-	<string name="location">Mövqe</string>
 	<string name="media">Media</string>
 	<string name="delete">Sil</string>
 	<string name="approve">Təsdiqlə</string>
 	<string name="none">Heç biri</string>
 	<string name="blogs">Bloqlar</string>
-	<string name="select_photo">Qalereyadan bir foto seçin</string>
 	<string name="no">Xeyr</string>
 	<string name="yes">Bəli</string>
 	<string name="reply">Cavabla</string>

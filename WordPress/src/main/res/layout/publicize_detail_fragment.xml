@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/content_margin"
+    android:layout_marginRight="@dimen/content_margin"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view_connections"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:visibility="gone"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius"
+        tools:targetApi="LOLLIPOP"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:orientation="vertical">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginRight="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:text="@string/connected_accounts_label"
+                android:textColor="@color/blue_wordpress"
+                android:textSize="@dimen/text_sz_medium"
+                android:textStyle="bold" />
+
+            <org.wordpress.android.ui.reader.views.ReaderRecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_large" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius"
+        tools:targetApi="LOLLIPOP">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginRight="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:ellipsize="end"
+                android:textColor="@color/blue_wordpress"
+                android:textSize="@dimen/text_sz_medium"
+                android:textStyle="bold"
+                tools:text="text_service" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginRight="@dimen/margin_extra_large"
+                android:ellipsize="end"
+                android:textColor="@color/grey_darken_20"
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="text_description" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_divider_height"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:background="@color/divider_grey" />
+
+            <org.wordpress.android.ui.publicize.ConnectButton
+                android:id="@+id/button_connect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:layout_marginLeft="@dimen/margin_extra_large" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

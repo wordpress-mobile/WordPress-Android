@@ -22,7 +22,7 @@
         android:orientation="vertical"
         android:background="@color/white">
 
-        <org.wordpress.android.widgets.WPSwitch
+        <Switch
             android:id="@+id/toggle_related_posts_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_small" />
 
-        <org.wordpress.android.widgets.WPCheckBox
+        <CheckBox
             android:id="@+id/show_header_checkbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             android:textSize="@dimen/text_sz_large"
             android:text="@string/site_settings_rp_show_header_title" />
 
-        <org.wordpress.android.widgets.WPCheckBox
+        <CheckBox
             android:id="@+id/show_images_checkbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

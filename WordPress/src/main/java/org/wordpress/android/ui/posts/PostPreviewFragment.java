@@ -9,48 +9,58 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Post;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPWebViewClient;
 
-public class PostPreviewFragment extends Fragment {
+import javax.inject.Inject;
 
-    private int mLocalBlogId;
-    private long mLocalPostId;
+import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
+
+public class PostPreviewFragment extends Fragment {
+    private SiteModel mSite;
+    private PostModel mPost;
     private WebView mWebView;
 
-    public static PostPreviewFragment newInstance(int localBlogId, long localPostId) {
+    @Inject AccountStore mAccountStore;
+    @Inject PostStore mPostStore;
+
+    public static PostPreviewFragment newInstance(SiteModel site, PostModel post) {
         Bundle args = new Bundle();
-        args.putInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID, localBlogId);
-        args.putLong(PostPreviewActivity.ARG_LOCAL_POST_ID, localPostId);
+        args.putSerializable(WordPress.SITE, site);
+        args.putInt(EXTRA_POST_LOCAL_ID, post.getId());
         PostPreviewFragment fragment = new PostPreviewFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-        mLocalBlogId = args.getInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID);
-        mLocalPostId = args.getLong(PostPreviewActivity.ARG_LOCAL_POST_ID);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            mLocalBlogId = savedInstanceState.getInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID);
-            mLocalPostId = savedInstanceState.getLong(PostPreviewActivity.ARG_LOCAL_POST_ID);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+
+        int localPostId;
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+            localPostId = getArguments().getInt(EXTRA_POST_LOCAL_ID);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            localPostId = savedInstanceState.getInt(EXTRA_POST_LOCAL_ID);
         }
+        mPost = mPostStore.getPostByLocalPostId(localPostId);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID, mLocalBlogId);
-        outState.putLong(PostPreviewActivity.ARG_LOCAL_POST_ID, mLocalPostId);
+        outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(EXTRA_POST_LOCAL_ID, mPost.getId());
         super.onSaveInstanceState(outState);
     }
 
@@ -59,7 +69,7 @@ public class PostPreviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.post_preview_fragment, container, false);
 
         mWebView = (WebView) view.findViewById(R.id.webView);
-        WPWebViewClient client = new WPWebViewClient(WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId));
+        WPWebViewClient client = new WPWebViewClient(mSite, mAccountStore.getAccessToken());
         mWebView.setWebViewClient(client);
 
         return view;
@@ -71,14 +81,17 @@ public class PostPreviewFragment extends Fragment {
         refreshPreview();
     }
 
+    public void setPost(PostModel post) {
+        mPost = post;
+    }
+
     void refreshPreview() {
         if (!isAdded()) return;
 
         new Thread() {
             @Override
             public void run() {
-                Post post = WordPress.wpDB.getPostForLocalTablePostId(mLocalPostId);
-                final String htmlContent = formatPostContentForWebView(getActivity(), post);
+                final String htmlContent = formatPostContentForWebView(getActivity(), mPost);
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -101,19 +114,16 @@ public class PostPreviewFragment extends Fragment {
         }.start();
     }
 
-    private String formatPostContentForWebView(Context context, Post post) {
+    private String formatPostContentForWebView(Context context, PostModel post) {
         if (context == null || post == null) {
             return null;
         }
 
         String title = (TextUtils.isEmpty(post.getTitle())
                 ? "(" + getResources().getText(R.string.untitled) + ")"
-                : StringUtils.unescapeHTML(post.getTitle()));
+                : StringEscapeUtils.unescapeHtml4(post.getTitle()));
 
-        String postContent = PostUtils.collapseShortcodes(post.getDescription());
-        if (!TextUtils.isEmpty(post.getMoreText())) {
-            postContent += "\n\n" + post.getMoreText();
-        }
+        String postContent = PostUtils.collapseShortcodes(post.getContent());
 
         // if this is a local draft, remove src="null" from image tags then replace the "android-uri"
         // tag added for local image with a valid "src" tag so local images can be viewed

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-10-27 17:48:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
@@ -28,10 +28,7 @@ Language: nb_NO
 	<string name="page_trashed">Siden er lagt i papirkurven</string>
 	<string name="stats_no_activity_this_period">Ingen aktivitet i denne perioden</string>
 	<string name="post_trashed">Innlegg lagt i papirkurven</string>
-	<string name="trashed">I papirkurven</string>
 	<string name="undo">Angre</string>
-	<string name="tabbar_accessibility_label_my_site">Mitt nettsted</string>
-	<string name="tabbar_accessibility_label_me">Meg</string>
 	<string name="editor_toast_changes_saved">Endringer ble lagret</string>
 	<string name="passcodelock_prompt_message">Skriv inn PIN</string>
 	<string name="ignore">Ignorer</string>
@@ -47,22 +44,6 @@ Language: nb_NO
 	<string name="show">Vis</string>
 	<string name="hide">Skjul</string>
 	<string name="select_all">Velg alle</string>
-	<string name="no_device_videos">Ingen videoer</string>
-	<string name="no_blog_images">Ingen bilder</string>
-	<string name="no_blog_videos">Ingen videoer</string>
-	<string name="no_device_images">Ingen bilder</string>
-	<string name="loading_blog_images">Henter bilder</string>
-	<string name="loading_blog_videos">Henter videoer</string>
-	<string name="no_media_sources">Kunne ikke hente media</string>
-	<string name="loading_videos">Laster filmer</string>
-	<string name="no_media">Ingen media</string>
-	<string name="loading_images">Laster bilder</string>
-	<string name="take_video">Lag en film</string>
-	<string name="add_to_post">Legg til innlegg</string>
-	<string name="tab_title_site_videos">Filmer på nettsted</string>
-	<string name="tab_title_site_images">Bilder på nettsted</string>
-	<string name="tab_title_device_videos">Filmer på enhet</string>
-	<string name="tab_title_device_images">Bilder på enhet</string>
 	<string name="two_step_footer_label">Skriv inn koden fra din autentiseringsapp.</string>
 	<string name="two_step_footer_button">Send kode via tekstmelding.</string>
 	<string name="two_step_sms_sent">Sjekk dine tekstmeldinger for verifikasjonskoden.</string>
@@ -70,10 +51,7 @@ Language: nb_NO
 	<string name="verification_code">Verifikasjonskode</string>
 	<string name="invalid_verification_code">Ugyldig verifikasjonskode</string>
 	<string name="verify">Verifiser</string>
-	<string name="error_publish_no_network">Kan ikke publisere uten tilkobling. Laget som utkast.</string>
 	<string name="language">Språk</string>
-	<string name="media_picker_title">Velg media</string>
-	<string name="take_photo">Ta et bilde</string>
 	<string name="device">Enhet</string>
 	<string name="reader_empty_posts_request_failed">Ute av stand til å hente innlegg</string>
 	<string name="publisher">Skrevet av:</string>
@@ -89,7 +67,6 @@ Language: nb_NO
 	<string name="pages_fetching">Henter sider …</string>
 	<string name="reader_label_new_posts">Nye innlegg</string>
 	<string name="stats_total">Totalt</string>
-	<string name="post_uploading">Laster opp</string>
 	<string name="stats_months_and_years">Måneder og år</string>
 	<string name="stats_view_all">Vis alle</string>
 	<string name="stats_view">Vis</string>
@@ -150,11 +127,6 @@ Language: nb_NO
 	<string name="hs__conversation_header">Support-chat</string>
 	<string name="hs__username_blank_error">Skriv inn et gyldig brukernavn</string>
 	<string name="hs__invalid_email_error">Skriv inn en gyldig epost-adresse</string>
-	<string name="add_location">Legg til bosted</string>
-	<string name="current_location">Nåværende bosted</string>
-	<string name="search_location">Søk</string>
-	<string name="edit_location">Rediger</string>
-	<string name="search_current_location">Finn</string>
 	<string name="preference_send_usage_stats">Send statistikk</string>
 	<string name="preference_send_usage_stats_summary">Send automatisk brukerdata til å forbedre WordPress for Android</string>
 	<string name="update_verb">Oppdater</string>
@@ -171,8 +143,6 @@ Language: nb_NO
 	<string name="comments_empty_list">Ingen kommentarer</string>
 	<string name="stats_bar_graph_empty">Ingen statistikk tilgjengelig</string>
 	<string name="out_of_memory">Enheten er tom for minne</string>
-	<string name="media_gallery_edit">Rediger galleri</string>
-	<string name="media_gallery_num_columns">Antall kolonner</string>
 	<string name="comment_status_unapproved">Ventende</string>
 	<string name="comment_status_approved">Godkjent</string>
 	<string name="delete_page">Slett side</string>
@@ -180,7 +150,6 @@ Language: nb_NO
 	<string name="comment_status_spam">Useriøst</string>
 	<string name="share_action_post">Nytt innlegg</string>
 	<string name="new_post">Nytt innlegg</string>
-	<string name="reader_share_link">Del lenke</string>
 	<string name="mnu_comment_spam">Useriøs</string>
 	<string name="local_changes">Lokale endringer</string>
 	<string name="hint_comment_content">Kommentar</string>
@@ -195,7 +164,6 @@ Language: nb_NO
 	<string name="edit_post">Rediger innlegg</string>
 	<string name="add_comment">Legg til kommentar</string>
 	<string name="dlg_spamming_comments">Marker som useriøs</string>
-	<string name="post_format">Innleggsformat</string>
 	<string name="dlg_confirm_trash_comments">Send til papirkurv?</string>
 	<string name="mnu_comment_approve">Godkjenn</string>
 	<string name="page_settings">Sideinnstillinger</string>
@@ -207,9 +175,7 @@ Language: nb_NO
 	<string name="preview_post">Forhåndsvis innlegg</string>
 	<string name="image_settings">Bildeinnstillinger</string>
 	<string name="preview_page">Forhåndsvis side</string>
-	<string name="media_gallery_settings_title">Galleri-innstillinger</string>
 	<string name="category_name">Kategorinavn</string>
-	<string name="category_slug">Permalenke for kategori (valgfritt)</string>
 	<string name="wordpress_blog">WordPress-blogg</string>
 	<string name="reader_toast_err_add_tag">Kunne ikke legge til dette stikkordet</string>
 	<string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette stikkordet</string>
@@ -243,24 +209,15 @@ Language: nb_NO
 	<string name="nux_tutorial_get_started_title">Kom igang!</string>
 	<string name="username_invalid">Ugyldig brukernavn</string>
 	<string name="create_account_wpcom">Opprett en konto på WordPress.com</string>
-	<string name="media_add_new_media_gallery">Lag nytt galleri</string>
 	<string name="reader_btn_unfollow">Følger</string>
-	<string name="jetpack_message">Jetpack er påkrevd for statistikk. Vil du installere Jetpack?</string>
 	<string name="reader_likes_only_you">Du liker dette</string>
 	<string name="reader_empty_followed_tags">Du følger ingen stikkord</string>
 	<string name="reader_toast_err_url_intent">Klarte ikke å åpne %s</string>
 	<string name="reader_toast_err_view_image">Klarte ikke å vise bilde</string>
 	<string name="reader_likes_one">En person liker dette</string>
-	<string name="reader_share_subject">Delt fra %s</string>
 	<string name="limit_reached">Midlertidig begrenset. Du kan prøve igjen om 1 minutt. Dersom du prøver igjen før dette, vil begrensningsperioden bli utvidet. Dersom du mener dette er en feil, vennligst ta kontakt med brukerstøtte.</string>
 	<string name="themes">Temaer</string>
-	<string name="all">Alle</string>
-	<string name="images">Bilder</string>
-	<string name="custom_date">Egendefinert Dato</string>
-	<string name="media_add_popup_capture_photo">Ta bilde</string>
 	<string name="media_gallery_type">Type</string>
-	<string name="media_gallery_image_order_random">Tilfeldig</string>
-	<string name="media_gallery_image_order_reverse">Omvendt</string>
 	<string name="media_edit_title_text">Tittel</string>
 	<string name="media_edit_description_text">Beskrivelse</string>
 	<string name="media_edit_success">Oppdatert</string>
@@ -279,8 +236,6 @@ Language: nb_NO
 	<string name="media_edit_title_hint">Skriv en tittel her</string>
 	<string name="media_edit_caption_hint">Skriv en bildetekst her</string>
 	<string name="media_gallery_type_circles">Sirkler</string>
-	<string name="post_excerpt">Ingress</string>
-	<string name="share_action_title">Legg til ...</string>
 	<string name="theme_auth_error_title">Kunne ikke hente temaer</string>
 	<string name="theme_set_success">Temaet er lagret!</string>
 	<string name="stats_timeframe_yesterday">I går</string>
@@ -289,8 +244,6 @@ Language: nb_NO
 	<string name="stats_totals_views">Visninger</string>
 	<string name="stats_totals_clicks">Klikk</string>
 	<string name="stats_totals_plays">Avspillinger</string>
-	<string name="unattached">Uten vedlegg</string>
-	<string name="media_add_popup_capture_video">Ta opp video</string>
 	<string name="media_gallery_type_squares">Kvadratisk</string>
 	<string name="media_gallery_type_tiled">Flislagt</string>
 	<string name="media_gallery_type_slideshow">Lysbildevisning</string>
@@ -313,6 +266,7 @@ Language: nb_NO
 	<string name="passcode_turn_on">Slå PIN-lås på</string>
 	<string name="upload">Last opp</string>
 	<string name="discard">Forkast</string>
+	<string name="manage">Håndter</string>
 	<string name="notifications">Varsler</string>
 	<string name="note_reply_successful">Kommentar publisert</string>
 	<string name="follows">Følg</string>
@@ -340,10 +294,8 @@ Language: nb_NO
 	<string name="anonymous">Anonym</string>
 	<string name="page">Side</string>
 	<string name="blogusername">brukernavn</string>
-	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Last og og lenk til det redigerte bildet</string>
 	<string name="scaled_image">Bildebredde</string>
-	<string name="scheduled">Planlagt</string>
 	<string name="link_enter_url">URL</string>
 	<string name="version">Versjon</string>
 	<string name="tos">Lisens</string>
@@ -354,7 +306,6 @@ Language: nb_NO
 	<string name="edit">Redigér</string>
 	<string name="post_id">Innlegg</string>
 	<string name="page_id">Side</string>
-	<string name="post_password">Passord (valgfritt)</string>
 	<string name="immediately">Umiddelbart</string>
 	<string name="quickpress_add_alert_title">Lag et navn for snarvei</string>
 	<string name="today">I dag</string>
@@ -362,25 +313,15 @@ Language: nb_NO
 	<string name="share_url">Del URL</string>
 	<string name="quickpress_window_title">Velg snarvei for Hurtigpublisering</string>
 	<string name="quickpress_add_error">Snarveien kan ikke være tom</string>
-	<string name="publish_post">Publiser</string>
-	<string name="draft">Kladd</string>
-	<string name="post_private">Privat</string>
 	<string name="upload_full_size_image">Last opp og lenk til full bildestørrelse</string>
 	<string name="title">Tittel</string>
-	<string name="tags_separate_with_commas">Stikkord (separer flere stikkord med komma)</string>
 	<string name="categories">Kategorier</string>
-	<string name="notification_vibrate">Vibrer</string>
-	<string name="notification_blink">Blinkende varsler</string>
-	<string name="status">Status</string>
 	<string name="sdcard_title">Krever SD kort</string>
-	<string name="select_video">Velg video fra galleriet</string>
-	<string name="location">Sted</string>
 	<string name="media">Media</string>
 	<string name="delete">Slett</string>
 	<string name="approve">Godkjenn</string>
 	<string name="none">Ingen</string>
 	<string name="blogs">Blogger</string>
-	<string name="select_photo">Velg et foto fra galleriet</string>
 	<string name="yes">Ja</string>
 	<string name="reply">Svar</string>
 	<string name="on">på</string>

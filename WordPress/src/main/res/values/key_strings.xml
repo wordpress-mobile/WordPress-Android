@@ -6,6 +6,9 @@
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
     <string name="fragment_tag_post_preview" translatable="false">fragment_post_preview</string>
+    <string name="fragment_tag_publicize_list" translatable="false">fragment_publicize_list</string>
+    <string name="fragment_tag_publicize_detail" translatable="false">fragment_publicize_detail</string>
+    <string name="fragment_tag_publicize_webview" translatable="false">fragment_publicize_webview</string>
 
     <!-- Preference keys -->
     <string name="pref_key_account_settings_root" translatable="false">wp_pref_root</string>
@@ -19,6 +22,7 @@
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
     <string name="pref_key_editor" translatable="false">wp_pref_editor</string>
+    <string name="pref_key_editor_footer" translatable="false">wp_pref_editor_footer</string>
     <string name="pref_key_editor_type" translatable="false">pref_key_editor_type</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>
@@ -41,12 +45,15 @@
     <string name="pref_key_site_username" translatable="false">wp_pref_site_username</string>
     <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>
     <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
-    <string name="pref_key_site_location" translatable="false">wp_pref_site_location</string>
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
     <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
-    <string name="pref_key_site_this_device" translatable="false">wp_pref_site_default_this_device</string>
+    <string name="pref_key_optimize_media" translatable="false">wp_pref_optimize_media</string>
+    <string name="pref_key_optimize_image" translatable="false">wp_pref_key_optimize_image</string>
     <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
-    <string name="pref_key_site_upload_and_link_image" translatable="false">wp_pref_site_upload_and_link_image</string>
+    <string name="pref_key_site_image_quality" translatable="false">wp_pref_site_default_image_quality</string>
+    <string name="pref_key_optimize_video" translatable="false">wp_pref_key_optimize_video</string>
+    <string name="pref_key_site_video_width" translatable="false">wp_pref_site_default_video_width</string>
+    <string name="pref_key_site_video_encoder_bitrate" translatable="false">wp_pref_site_default_encoder_bitrate</string>
     <string name="pref_key_site_discussion" translatable="false">wp_pref_site_discussion</string>
     <string name="pref_key_site_allow_comments" translatable="false">wp_pref_site_allow_comments</string>
     <string name="pref_key_site_allow_comments_nested" translatable="false">wp_pref_site_allow_comments_nested</string>
@@ -69,16 +76,29 @@
     <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
     <string name="pref_key_site_danger" translatable="false">wp_pref_site_danger</string>
     <string name="pref_key_site_advanced" translatable="false">wp_pref_site_advanced</string>
-    <string name="pref_key_site_delete_site_screen" translatable="false">wp_pref_site_delete_site_screen</string>
+    <string name="pref_key_site_disconnect" translatable="false">wp_pref_site_disconnect</string>
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
     <string name="pref_key_site_export_site" translatable="false">pref_key_site_export_site</string>
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
-    <string name="pref_key_site_remove_site" translatable="false">wp_pref_site_remove_site</string>
     <string name="pref_key_username" translatable="false">wp_pref_key_username</string>
     <string name="pref_key_email" translatable="false">wp_pref_key_email</string>
     <string name="pref_key_primary_site" translatable="false">wp_pref_key_primary_site></string>
     <string name="pref_key_web_address" translatable="false">wp_pref_key_web_address</string>
     <string name="pref_key_site_start_over_screen" translatable="false">wp_pref_key_site_start_over_screen</string>
+    <string name="pref_key_sharing_reblog_and_like" translatable="false">wp_pref_sharing_reblog_and_like</string>
+    <string name="pref_key_sharing_buttons" translatable="false">wp_pref_sharing_buttons</string>
+    <string name="pref_key_reblog" translatable="false">wp_pref_sharing_reblog</string>
+    <string name="pref_key_like" translatable="false">wp_pref_sharing_like</string>
+    <string name="pref_key_twitter_username" translatable="false">wp_pref_twitter_handle</string>
+    <string name="pref_key_comment_likes" translatable="false">wp_pref_comment_likes</string>
+    <string name="pref_key_more_buttons" translatable="false">wp_pref_more_buttons</string>
+    <string name="pref_key_twitter_category" translatable="false">wp_pref_twitter_category</string>
+
+    <string name="wp_pref_notifications_root" translatable="false">wp_pref_notifications_root</string>
+    <string name="wp_pref_notifications_master" translatable="false">wp_pref_notifications_master</string>
+    <string name="wp_pref_custom_notification_sound" translatable="false">wp_pref_custom_notification_sound</string>
+    <string name="wp_pref_notification_vibrate" translatable="false">wp_pref_notification_vibrate</string>
+    <string name="wp_pref_notification_light" translatable="false">wp_pref_notification_light</string>
 
     <!-- Notifications -->
     <string-array name="notifications_blog_settings_values" translatable="false">
@@ -101,31 +121,6 @@
         <item>community</item>
     </string-array>
 
-    <!-- Preference Entries -->
-    <string-array name="site_settings_image_width_entries" translatable="false">
-        <item>@string/site_settings_image_original_size</item>
-        <item>100</item>
-        <item>200</item>
-        <item>300</item>
-        <item>400</item>
-        <item>500</item>
-        <item>600</item>
-        <item>700</item>
-        <item>800</item>
-        <item>900</item>
-        <item>1000</item>
-        <item>1100</item>
-        <item>1200</item>
-        <item>1300</item>
-        <item>1400</item>
-        <item>1500</item>
-        <item>1600</item>
-        <item>1700</item>
-        <item>1800</item>
-        <item>1900</item>
-        <item>2000</item>
-    </string-array>
-
     <!-- Preference Values -->
     <string-array name="site_settings_auto_approve_values" translatable="false">
         <item>-1</item>
@@ -141,32 +136,9 @@
         <item>0</item>
         <item>-1</item>
     </string-array>
-    <string-array name="site_settings_image_width_values" translatable="false">
-        <item>@string/site_settings_image_original_size</item>
-        <item>100</item>
-        <item>200</item>
-        <item>300</item>
-        <item>400</item>
-        <item>500</item>
-        <item>600</item>
-        <item>700</item>
-        <item>800</item>
-        <item>900</item>
-        <item>1000</item>
-        <item>1100</item>
-        <item>1200</item>
-        <item>1300</item>
-        <item>1400</item>
-        <item>1500</item>
-        <item>1600</item>
-        <item>1700</item>
-        <item>1800</item>
-        <item>1900</item>
-        <item>2000</item>
-    </string-array>
 
     <!-- App Settings - Editor -->
-    <string-array name="editor_values">
+    <string-array name="editor_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -257,10 +229,102 @@
         <item>11</item>
     </string-array>
 
+    <string-array name="publicize_button_style_etries">
+        <item>@string/publicize_official_buttons</item>
+        <item>@string/publicize_icon_only</item>
+        <item>@string/publicize_icon_and_text</item>
+        <item>@string/publicize_text_only</item>
+    </string-array>
+
+    <string-array name="publicize_button_style_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
     <!-- Smart Lock for Passwords -->
     <string name="asset_statements" translatable="false">
         [{\"include\": \"https://wordpress.com/.well-known/assetlinks.json\"}]
     </string>
 
+    <string-array name="post_format_keys" translatable="false">
+        <item>standard</item>
+        <item>aside</item>
+        <item>audio</item>
+        <item>chat</item>
+        <item>gallery</item>
+        <item>image</item>
+        <item>link</item>
+        <item>quote</item>
+        <item>status</item>
+        <item>video</item>
+    </string-array>
+
+
     <string name="wordpresscom_sample_post" translatable="false">https://en.blog.wordpress.com/2016/09/26/the-best-of-wordpress-september-2016/</string>
+
+    <!-- Preference Entries -->
+    <string-array name="site_settings_image_max_size_entries" translatable="false">
+        <item>1000 px</item>
+        <item>2000 px</item>
+        <item>2500 px</item>
+        <item>3000 px</item>
+        <item>@string/site_settings_image_original_size</item>
+    </string-array>
+
+    <string-array name="site_settings_image_max_size_values" translatable="false">
+        <item>1000</item>
+        <item>2000</item>
+        <item>2500</item>
+        <item>3000</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="site_settings_image_quality_entries" translatable="false">
+        <item>@string/media_encoder_quality_80</item>
+        <item>@string/media_encoder_quality_85</item>
+        <item>@string/media_encoder_quality_90</item>
+        <item>@string/media_encoder_quality_95</item>
+        <item>@string/media_encoder_quality_100</item>
+    </string-array>
+
+    <string-array name="site_settings_image_quality_values" translatable="false">
+        <item>80</item>
+        <item>85</item>
+        <item>90</item>
+        <item>95</item>
+        <item>100</item>
+    </string-array>
+
+    <string-array name="site_settings_video_width_entries" translatable="false">
+        <item>480p</item>
+        <item>720p</item>
+        <item>1080p</item>
+        <item>4K</item>
+    </string-array>
+
+    <string-array name="site_settings_video_width_values" translatable="false">
+        <item>640</item>
+        <item>1280</item>
+        <item>1920</item>
+        <item>3840</item>
+    </string-array>
+
+    <string-array name="site_settings_video_bitrate_entries" translatable="false">
+        <item>@string/media_encoder_quality_80</item>
+        <item>@string/media_encoder_quality_85</item>
+        <item>@string/media_encoder_quality_90</item>
+        <item>@string/media_encoder_quality_95</item>
+        <item>@string/media_encoder_quality_100</item>
+    </string-array>
+
+    <string-array name="site_settings_video_bitrate_values" translatable="false">
+        <item>1000</item>
+        <item>2000</item>
+        <item>3000</item>
+        <item>4000</item>
+        <item>5000</item>
+    </string-array>
+
 </resources>

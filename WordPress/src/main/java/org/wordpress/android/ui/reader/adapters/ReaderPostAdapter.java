@@ -15,6 +15,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderCardType;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -47,6 +49,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashSet;
+
+import javax.inject.Inject;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ReaderTag mCurrentTag;
@@ -86,17 +90,20 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final long ITEM_ID_HEADER     = -1L;
     private static final long ITEM_ID_GAP_MARKER = -2L;
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     /*
      * cross-post
      */
-    class ReaderXPostViewHolder extends RecyclerView.ViewHolder {
+    private class ReaderXPostViewHolder extends RecyclerView.ViewHolder {
         private final CardView cardView;
         private final WPNetworkImageView imgAvatar;
         private final WPNetworkImageView imgBlavatar;
         private final TextView txtTitle;
         private final TextView txtSubtitle;
 
-        public ReaderXPostViewHolder(View itemView) {
+        ReaderXPostViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.card_view);
             imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
@@ -120,21 +127,20 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * full post
      */
-    class ReaderPostViewHolder extends RecyclerView.ViewHolder {
-        private final CardView cardView;
+    private class ReaderPostViewHolder extends RecyclerView.ViewHolder {
+        final CardView cardView;
 
         private final TextView txtTitle;
         private final TextView txtText;
         private final TextView txtAuthorAndBlogName;
         private final TextView txtDateline;
-        private final TextView txtVisit;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
 
         private final ImageView imgMore;
         private final ImageView imgVideoOverlay;
-        private final ImageView imgVisit;
+        private final LinearLayout visit;
 
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatarOrBlavatar;
@@ -150,7 +156,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final ReaderThumbnailStrip thumbnailStrip;
 
-        public ReaderPostViewHolder(View itemView) {
+        ReaderPostViewHolder(View itemView) {
             super(itemView);
 
             cardView = (CardView) itemView.findViewById(R.id.card_view);
@@ -159,7 +165,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
             txtAuthorAndBlogName = (TextView) itemView.findViewById(R.id.text_author_and_blog_name);
             txtDateline = (TextView) itemView.findViewById(R.id.text_dateline);
-            txtVisit = (TextView) itemView.findViewById(R.id.text_visit);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
@@ -171,7 +176,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             imgAvatarOrBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar_or_blavatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
-            imgVisit = (ImageView) itemView.findViewById(R.id.image_visit_icon);
+            visit = (LinearLayout) itemView.findViewById(R.id.visit);
 
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
             imgDiscoverAvatar = (WPNetworkImageView) layoutDiscover.findViewById(R.id.image_discover_avatar);
@@ -193,20 +198,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
             };
-            txtVisit.setOnClickListener(visitListener);
-            imgVisit.setOnClickListener(visitListener);
+            visit.setOnClickListener(visitListener);
 
-            // show blog preview when post header is tapped
-            postHeaderView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    ReaderPost post = getItem(position);
-                    if (post != null) {
-                        ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+            // show author/blog link as disabled if we're previewing a blog, otherwise show
+            // blog preview when the post header is clicked
+            if (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
+                int color = itemView.getContext().getResources().getColor(R.color.grey_dark);
+                txtAuthorAndBlogName.setTextColor(color);
+                // remove the ripple background
+                postHeaderView.setBackground(null);
+            } else {
+                postHeaderView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int position = getAdapterPosition();
+                        ReaderPost post = getItem(position);
+                        if (post != null) {
+                            ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+                        }
                     }
-                }
-            });
+                });
+            }
 
             // play the featured video when the overlay image is tapped - note that the overlay
             // image only appears when there's a featured video
@@ -225,25 +237,25 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class SiteHeaderViewHolder extends RecyclerView.ViewHolder {
+    private class SiteHeaderViewHolder extends RecyclerView.ViewHolder {
         private final ReaderSiteHeaderView mSiteHeaderView;
-        public SiteHeaderViewHolder(View itemView) {
+        SiteHeaderViewHolder(View itemView) {
             super(itemView);
             mSiteHeaderView = (ReaderSiteHeaderView) itemView;
         }
     }
 
-    class TagHeaderViewHolder extends RecyclerView.ViewHolder {
+    private class TagHeaderViewHolder extends RecyclerView.ViewHolder {
         private final ReaderTagHeaderView mTagHeaderView;
-        public TagHeaderViewHolder(View itemView) {
+        TagHeaderViewHolder(View itemView) {
             super(itemView);
             mTagHeaderView = (ReaderTagHeaderView) itemView;
         }
     }
 
-    class GapMarkerViewHolder extends RecyclerView.ViewHolder {
+    private class GapMarkerViewHolder extends RecyclerView.ViewHolder {
         private final ReaderGapMarkerView mGapMarkerView;
-        public GapMarkerViewHolder(View itemView) {
+        GapMarkerViewHolder(View itemView) {
             super(itemView);
             mGapMarkerView = (ReaderGapMarkerView) itemView;
         }
@@ -259,10 +271,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return VIEW_TYPE_TAG_HEADER;
         } else if (position == mGapMarkerPosition) {
             return VIEW_TYPE_GAP_MARKER;
-        } else if (getItem(position).isXpost()) {
-            return VIEW_TYPE_XPOST;
         } else {
-            return VIEW_TYPE_POST;
+            ReaderPost post = getItem(position);
+            if (post != null && post.isXpost()) {
+                return VIEW_TYPE_XPOST;
+            } else {
+                return VIEW_TYPE_POST;
+            }
         }
     }
 
@@ -314,13 +329,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void renderXPost(int position, ReaderXPostViewHolder holder) {
         final ReaderPost post = getItem(position);
+        if (post == null) {
+            return;
+        }
 
         if (post.hasPostAvatar()) {
             holder.imgAvatar.setImageUrl(
                     GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall),
                     WPNetworkImageView.ImageType.AVATAR);
         } else {
-            holder.imgAvatar.showDefaultGravatarImage();
+            holder.imgAvatar.showDefaultGravatarImageAndNullifyUrl();
         }
 
         if (post.hasBlogImageUrl()) {
@@ -328,7 +346,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall),
                     WPNetworkImageView.ImageType.BLAVATAR);
         } else {
-            holder.imgBlavatar.showDefaultBlavatarImage();
+            holder.imgBlavatar.showDefaultBlavatarImageAndNullifyUrl();
         }
 
         holder.txtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
@@ -340,6 +358,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void renderPost(int position, ReaderPostViewHolder holder) {
         final ReaderPost post = getItem(position);
         ReaderTypes.ReaderPostListType postListType = getPostListType();
+        if (post == null) {
+            return;
+        }
 
         holder.txtDateline.setText(DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext()));
 
@@ -519,7 +540,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (discoverData.hasAvatarUrl()) {
                     postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
                 } else {
-                    postHolder.imgDiscoverAvatar.showDefaultGravatarImage();
+                    postHolder.imgDiscoverAvatar.showDefaultGravatarImageAndNullifyUrl();
                 }
                 // tapping an editor pick opens the source post, which is handled by the existing
                 // post selection handler
@@ -538,7 +559,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     postHolder.imgDiscoverAvatar.setImageUrl(
                             GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.BLAVATAR);
                 } else {
-                    postHolder.imgDiscoverAvatar.showDefaultBlavatarImage();
+                    postHolder.imgDiscoverAvatar.showDefaultBlavatarImageAndNullifyUrl();
                 }
                 // site picks show "Visit [BlogName]" link - tapping opens the blog preview if
                 // we have the blogId, if not show blog in internal webView
@@ -546,9 +567,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         if (discoverData.getBlogId() != 0) {
-                            ReaderActivityLauncher.showReaderBlogPreview(
-                                    v.getContext(),
-                                    discoverData.getBlogId());
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
                         } else if (discoverData.hasBlogUrl()) {
                             ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
                         }
@@ -567,12 +586,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public ReaderPostAdapter(Context context, ReaderTypes.ReaderPostListType postListType) {
         super();
+        ((WordPress) context.getApplicationContext()).component().inject(this);
 
         mPostListType = postListType;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
-        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
+        mIsLoggedOutReader = !mAccountStore.hasAccessToken();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
@@ -725,7 +745,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case VIEW_TYPE_GAP_MARKER :
                 return ITEM_ID_GAP_MARKER;
             default:
-                return getItem(position).getStableId();
+                ReaderPost post = getItem(position);
+                return post != null ? post.getStableId() : 0;
         }
     }
 
@@ -743,6 +764,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.likeCount.setCount(post.numLikes);
             holder.likeCount.setSelected(post.isLikedByCurrentUser);
             holder.likeCount.setVisibility(View.VISIBLE);
+            holder.likeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.cardView.getContext(), post.numLikes, post.isLikedByCurrentUser));
             // can't like when logged out
             if (!mIsLoggedOutReader) {
                 holder.likeCount.setOnClickListener(new View.OnClickListener() {
@@ -795,7 +817,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         boolean isAskingToLike = !isCurrentlyLiked;
         ReaderAnim.animateLikeButton(holder.likeCount.getImageView(), isAskingToLike);
 
-        if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
+        if (!ReaderPostActions.performLikeAction(post, isAskingToLike, mAccountStore.getAccount().getUserId())) {
             ToastUtils.showToast(context, R.string.reader_toast_err_generic);
             return;
         }
@@ -804,7 +826,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, post);
             // Consider a like to be enough to push a page view - solves a long-standing question
             // from folks who ask 'why do I have more likes than page views?'.
-            ReaderPostActions.bumpPageViewForPost(post);
+            ReaderPostActions.bumpPageViewForPost(mSiteStore, post);
         } else {
             AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, post);
         }

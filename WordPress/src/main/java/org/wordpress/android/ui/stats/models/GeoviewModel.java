@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.models;
 
+import org.wordpress.android.ui.stats.StatsUtils;
+
 import java.io.Serializable;
 
 /**
@@ -44,4 +46,7 @@ public class GeoviewModel implements Serializable {
         return mFlatFlagIconURL;
     }
 
+    public String getFlagEmoji() {
+        return StatsUtils.countryCodeToEmoji(mCountryShortName);
+    }
 }

@@ -16,11 +16,11 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.WPPrefUtils;
-import org.wordpress.android.widgets.WPSwitch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class RelatedPostsDialog extends DialogFragment
      */
     public static final String SHOW_IMAGES_KEY = "show-images";
 
-    private WPSwitch mShowRelatedPosts;
+    private Switch mShowRelatedPosts;
     private CheckBox mShowHeader;
     private CheckBox mShowImages;
     private TextView mPreviewHeader;
@@ -64,7 +64,7 @@ public class RelatedPostsDialog extends DialogFragment
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.related_posts_dialog, null, false);
 
-        mShowRelatedPosts = (WPSwitch) v.findViewById(R.id.toggle_related_posts_switch);
+        mShowRelatedPosts = (Switch) v.findViewById(R.id.toggle_related_posts_switch);
         mShowHeader = (CheckBox) v.findViewById(R.id.show_header_checkbox);
         mShowImages = (CheckBox) v.findViewById(R.id.show_images_checkbox);
         mPreviewHeader = (TextView) v.findViewById(R.id.preview_header);
@@ -98,7 +98,7 @@ public class RelatedPostsDialog extends DialogFragment
         titleText.setText(R.string.site_settings_related_posts_title);
         titleText.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
         builder.setCustomTitle(titleView);
-        builder.setPositiveButton(R.string.ok, this);
+        builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
         builder.setView(v);
 

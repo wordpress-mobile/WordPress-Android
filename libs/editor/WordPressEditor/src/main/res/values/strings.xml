@@ -4,7 +4,6 @@
     <string name="post_content">Content</string>
     <string name="post_title">Title</string>
 
-    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="save">Save</string>
@@ -19,7 +18,7 @@
     <string name="alert_error_adding_media">An error occurred while inserting media</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
-    <string name="stop_upload_button">Stop Upload</string>
+    <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
 
     <string name="format_bar_tag_bold" translatable="false">bold</string>
     <string name="format_bar_tag_italic" translatable="false">italic</string>
@@ -47,6 +46,8 @@
     <string name="image_settings_dismiss_dialog_title">Discard unsaved changes?</string>
     <string name="image_settings_save_toast">Changes saved</string>
 
+    <string name="pixel_suffix">%dpx</string>
+
     <string name="image_caption">Caption</string>
     <string name="image_alt_text">Alt text</string>
     <string name="image_link_to">Link to</string>
@@ -72,17 +73,24 @@
     </string-array>
 
     <!-- Accessibility - format bar button descriptions -->
+    <string name="format_bar_description_media">Media</string>
+    <string name="format_bar_description_heading">Heading</string>
+    <string name="format_bar_description_list">List</string>
+    <string name="format_bar_description_ol">Ordered List</string>
+    <string name="format_bar_description_ul">Unordered List</string>
+    <string name="format_bar_description_quote">Block Quote</string>
     <string name="format_bar_description_bold">Bold</string>
     <string name="format_bar_description_italic">Italic</string>
+    <string name="format_bar_description_link">Link</string>
     <string name="format_bar_description_underline">Underline</string>
     <string name="format_bar_description_strike">Strikethrough</string>
-    <string name="format_bar_description_quote">Block quote</string>
-    <string name="format_bar_description_link">Insert link</string>
-    <string name="format_bar_description_more">Insert more</string>
-    <string name="format_bar_description_media">Insert media</string>
-    <string name="format_bar_description_ul">Unordered list</string>
-    <string name="format_bar_description_ol">Ordered list</string>
-    <string name="format_bar_description_html">HTML mode</string>
+    <string name="format_bar_description_horizontal_rule">Horizontal Rule</string>
+    <string name="format_bar_description_more">Read More</string>
+    <string name="format_bar_description_page">Page Break</string>
+    <string name="format_bar_description_html">HTML</string>
+    <string name="format_bar_description_ellipsis_collapse">Collapse Toolbar</string>
+    <string name="format_bar_description_ellipsis_expand">Expand Toolbar</string>
+
     <string name="visual_editor">Visual editor</string>
     <string name="image_thumbnail">Image thumbnail</string>
 
@@ -95,9 +103,10 @@
     <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
     <string name="editor_dropped_unsupported_files">Warning: not all dropped items are supported!</string>
 
-    <!-- AZTEC -->
-    <string name="edit_hint">Tenochtitlan is the hint</string>
-    <string name="source_hint">Codex is the source</string>
+    <!-- Aztec -->
+    <string name="editor_content_hint">Share your story here&#8230;</string>
+
+    <string name="editor_title_beta">Beta</string>
 
     <string name="dialog_title">Insert link</string>
     <string name="dialog_edit_hint">http(s)://</string>
@@ -106,4 +115,12 @@
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
+
+    <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
+    <string name="error_media_load">Unable to load media</string>
+    <string name="error_media_small">Media too small to show</string>
+
+    <string name="stop_upload_dialog_button_yes">Yes</string>
+    <string name="stop_upload_dialog_button_no">No</string>
+
 </resources>

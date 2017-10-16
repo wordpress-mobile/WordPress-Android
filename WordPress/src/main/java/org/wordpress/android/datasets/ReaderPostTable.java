@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -259,10 +260,26 @@ public class ReaderPostTable {
                     args);
     }
 
-    public static void addOrUpdatePost(ReaderPost post) {
-        if (post == null) {
-            return;
-        }
+    public static void updatePost(@NonNull ReaderPost post) {
+        // we need to update a few important fields across all instances of this post - this is
+        // necessary because a post can exist multiple times in the table with different tags
+        ContentValues values = new ContentValues();
+        values.put("title", post.getTitle());
+        values.put("text", post.getText());
+        values.put("num_replies", post.numReplies);
+        values.put("num_likes", post.numLikes);
+        values.put("is_liked", post.isLikedByCurrentUser);
+        values.put("is_followed", post.isFollowedByCurrentUser);
+        values.put("is_comments_open", post.isCommentsOpen);
+        ReaderDatabase.getWritableDb().update(
+                "tbl_posts", values, "pseudo_id=?", new String[]{ post.getPseudoId() });
+
+        ReaderPostList posts = new ReaderPostList();
+        posts.add(post);
+        addOrUpdatePosts(null, posts);
+    }
+
+    public static void addPost(@NonNull ReaderPost post) {
         ReaderPostList posts = new ReaderPostList();
         posts.add(post);
         addOrUpdatePosts(null, posts);
@@ -367,10 +384,33 @@ public class ReaderPostTable {
         if (post == null) {
             return 0;
         }
-        String[] args = new String[] {Long.toString(post.blogId), Long.toString(post.postId)};
+        return getNumCommentsForPost(post.blogId, post.postId);
+    }
+
+    public static int getNumCommentsForPost(long blogId, long postId) {
+        String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT num_replies FROM tbl_posts WHERE blog_id=? AND post_id=?",
                 args);
+    }
+
+    public static void setNumCommentsForPost(long blogId, long postId, int numComments) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+
+        ContentValues values = new ContentValues();
+        values.put("num_replies", numComments);
+
+        ReaderDatabase.getWritableDb().update(
+                "tbl_posts",
+                values,
+                "blog_id=? AND post_id=?",
+                args);
+    }
+
+    public static void incNumCommentsForPost(long blogId, long postId) {
+        int numComments = getNumCommentsForPost(blogId, postId);
+        numComments++;
+        setNumCommentsForPost(blogId, postId, numComments);
     }
 
     /*
@@ -946,7 +986,7 @@ public class ReaderPostTable {
                 } while (cursor.moveToNext());
             }
         } catch (IllegalStateException e) {
-            CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC);
+            CrashlyticsUtils.logException(e);
             AppLog.e(AppLog.T.READER, e);
         }
         return posts;

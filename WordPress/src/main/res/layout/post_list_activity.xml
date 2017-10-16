@@ -8,10 +8,8 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <fragment
-        android:id="@+id/postList"
-        android:name="org.wordpress.android.ui.posts.PostsListFragment"
+    <FrameLayout
+        android:id="@+id/post_list_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="match_parent"/>
 </LinearLayout>

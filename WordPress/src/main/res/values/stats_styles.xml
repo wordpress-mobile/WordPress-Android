@@ -40,7 +40,7 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
-    <style name="StatsModuleTitle">
+    <style name="StatsModuleTitle" parent="WordPress">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/grey_dark</item>

@@ -23,8 +23,8 @@ import de.greenrobot.event.EventBus;
 
 public class SuggestionService extends Service {
     private final IBinder mBinder = new SuggestionBinder();
-    private final List<Integer> mCurrentlyRequestingSuggestionsSiteIds = new ArrayList<Integer>();
-    private final List<Integer> mCurrentlyRequestingTagsSiteIds = new ArrayList<Integer>();
+    private final List<Long> mCurrentlyRequestingSuggestionsSiteIds = new ArrayList<>();
+    private final List<Long> mCurrentlyRequestingTagsSiteIds = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -48,32 +48,35 @@ public class SuggestionService extends Service {
         return mBinder;
     }
 
-    public void updateSuggestions(final int remoteBlogId) {
-        if (mCurrentlyRequestingSuggestionsSiteIds.contains(remoteBlogId)) {
+    // We're still using `siteId` here and not a SiteModel, because suggestions the enpoint works on any site, not only
+    // on sites the user is a member of. Username suggestions are used in the Reader to auto complete usernames
+    // when replying to comments.
+    public void updateSuggestions(final long siteId) {
+        if (mCurrentlyRequestingSuggestionsSiteIds.contains(siteId)) {
             return;
         }
-        mCurrentlyRequestingSuggestionsSiteIds.add(remoteBlogId);
+        mCurrentlyRequestingSuggestionsSiteIds.add(siteId);
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleSuggestionsUpdatedResponse(remoteBlogId, jsonObject);
-                removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(remoteBlogId);
+                handleSuggestionsUpdatedResponse(siteId, jsonObject);
+                removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(siteId);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.SUGGESTION, volleyError);
-                removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(remoteBlogId);
+                removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(siteId);
             }
         };
 
-        AppLog.d(AppLog.T.SUGGESTION, "suggestion service > updating suggestions for siteId: " + remoteBlogId);
-        String path = "/users/suggest" + "?site_id=" + remoteBlogId;
+        AppLog.d(AppLog.T.SUGGESTION, "suggestion service > updating suggestions for siteId: " + siteId);
+        String path = "/users/suggest" + "?site_id=" + siteId;
         WordPress.getRestClientUtils().get(path, listener, errorListener);
     }
 
-    private void handleSuggestionsUpdatedResponse(final int remoteBlogId, final JSONObject jsonObject) {
+    private void handleSuggestionsUpdatedResponse(final long siteId, final JSONObject jsonObject) {
         new Thread() {
             @Override
             public void run() {
@@ -82,17 +85,17 @@ public class SuggestionService extends Service {
                 }
 
                 JSONArray jsonSuggestions = jsonObject.optJSONArray("suggestions");
-                List<Suggestion> suggestions = Suggestion.suggestionListFromJSON(jsonSuggestions, remoteBlogId);
+                List<Suggestion> suggestions = Suggestion.suggestionListFromJSON(jsonSuggestions, siteId);
                 if (suggestions != null) {
-                    SuggestionTable.insertSuggestionsForSite(remoteBlogId, suggestions);
-                    EventBus.getDefault().post(new SuggestionEvents.SuggestionNameListUpdated(remoteBlogId));
+                    SuggestionTable.insertSuggestionsForSite(siteId, suggestions);
+                    EventBus.getDefault().post(new SuggestionEvents.SuggestionNameListUpdated(siteId));
                 }
             }
         }.start();
     }
 
-    private void removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(Integer remoteBlogId) {
-        mCurrentlyRequestingSuggestionsSiteIds.remove(remoteBlogId);
+    private void removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(long siteId) {
+        mCurrentlyRequestingSuggestionsSiteIds.remove(siteId);
 
         // if there are no requests being made, we want to stop the service
         if (mCurrentlyRequestingSuggestionsSiteIds.isEmpty()) {
@@ -101,32 +104,32 @@ public class SuggestionService extends Service {
         }
     }
 
-    public void updateTags(final int remoteBlogId) {
-        if (mCurrentlyRequestingTagsSiteIds.contains(remoteBlogId)) {
+    public void updateTags(final long siteId) {
+        if (mCurrentlyRequestingTagsSiteIds.contains(siteId)) {
             return;
         }
-        mCurrentlyRequestingTagsSiteIds.add(remoteBlogId);
+        mCurrentlyRequestingTagsSiteIds.add(siteId);
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleTagsUpdatedResponse(remoteBlogId, jsonObject);
-                removeSiteIdFromTagRequestsAndStopServiceIfNecessary(remoteBlogId);
+                handleTagsUpdatedResponse(siteId, jsonObject);
+                removeSiteIdFromTagRequestsAndStopServiceIfNecessary(siteId);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.SUGGESTION, volleyError);
-                removeSiteIdFromTagRequestsAndStopServiceIfNecessary(remoteBlogId);
+                removeSiteIdFromTagRequestsAndStopServiceIfNecessary(siteId);
             }
         };
 
-        AppLog.d(AppLog.T.SUGGESTION, "suggestion service > updating tags for siteId: " + remoteBlogId);
-        String path = "/sites/" + remoteBlogId + "/tags";
+        AppLog.d(AppLog.T.SUGGESTION, "suggestion service > updating tags for siteId: " + siteId);
+        String path = "/sites/" + siteId + "/tags";
         WordPress.getRestClientUtils().get(path, listener, errorListener);
     }
 
-    private void handleTagsUpdatedResponse(final int remoteBlogId, final JSONObject jsonObject) {
+    private void handleTagsUpdatedResponse(final long siteId, final JSONObject jsonObject) {
         new Thread() {
             @Override
             public void run() {
@@ -135,17 +138,17 @@ public class SuggestionService extends Service {
                 }
 
                 JSONArray jsonTags = jsonObject.optJSONArray("tags");
-                List<Tag> tags = Tag.tagListFromJSON(jsonTags, remoteBlogId);
+                List<Tag> tags = Tag.tagListFromJSON(jsonTags, siteId);
                 if (tags != null) {
-                    SuggestionTable.insertTagsForSite(remoteBlogId, tags);
-                    EventBus.getDefault().post(new SuggestionEvents.SuggestionTagListUpdated(remoteBlogId));
+                    SuggestionTable.insertTagsForSite(siteId, tags);
+                    EventBus.getDefault().post(new SuggestionEvents.SuggestionTagListUpdated(siteId));
                 }
             }
         }.start();
     }
 
-    private void removeSiteIdFromTagRequestsAndStopServiceIfNecessary(Integer remoteBlogId) {
-        mCurrentlyRequestingTagsSiteIds.remove(remoteBlogId);
+    private void removeSiteIdFromTagRequestsAndStopServiceIfNecessary(long siteId) {
+        mCurrentlyRequestingTagsSiteIds.remove(siteId);
 
         // if there are no requests being made, we want to stop the service
         if (mCurrentlyRequestingTagsSiteIds.isEmpty()) {

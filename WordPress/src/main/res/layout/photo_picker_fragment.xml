@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="@dimen/margin_large"
+        android:drawableTop="@drawable/media_image_placeholder"
+        android:gravity="center"
+        android:text="@string/media_empty_list"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_sz_extra_large"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/container_soft_ask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/image_soft_ask"
+            android:layout_width="175dp"
+            android:layout_height="140dp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/ic_soft_ask_media" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_soft_ask_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/margin_extra_extra_large"
+            android:layout_marginRight="@dimen/margin_extra_extra_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:gravity="center"
+            android:text="@string/photo_picker_soft_ask_label"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_soft_ask_allow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/margin_large"
+            android:text="@string/photo_picker_soft_ask_allow"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_wordpress"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#A0000000"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/icon_picker"
+            android:layout_width="@dimen/photo_picker_icon"
+            android:layout_height="@dimen/photo_picker_icon"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/margin_medium"
+            android:tint="@color/white"
+            app:srcCompat="@drawable/ic_image_white_48dp" />
+
+        <ImageView
+            android:id="@+id/icon_camera"
+            android:layout_width="@dimen/photo_picker_icon"
+            android:layout_height="@dimen/photo_picker_icon"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/margin_medium"
+            android:tint="@color/white"
+            app:srcCompat="@drawable/ic_camera_white_48dp" />
+
+        <ImageView
+            android:id="@+id/icon_wpmedia"
+            android:layout_width="@dimen/photo_picker_icon"
+            android:layout_height="@dimen/photo_picker_icon"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/margin_medium"
+            android:tint="@color/white"
+            app:srcCompat="@drawable/ic_my_sites_white_50dp" />
+    </LinearLayout>
+
+</RelativeLayout>

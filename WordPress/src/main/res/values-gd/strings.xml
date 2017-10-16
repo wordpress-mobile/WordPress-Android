@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-08-23 18:32:37+0000
 Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: gd_GB
 -->
 <resources>
@@ -28,16 +28,9 @@ Language: gd_GB
 	<string name="error_fetch_email_followers_list">Cha b’ urrainn dhuinn na daoine a leanas an làrach slighe puist-d fhaighinn</string>
 	<string name="error_fetch_followers_list">Cha b’ urrainn dhuinn luchd-leantainn na làraich fhaighinn</string>
 	<string name="editor_failed_uploads_switch_html">Cha deach gach meadhan a luchdadh suas. Chan urrainn dhut leum gun mhodh\n        HTML is cùisean mar seo. A bheil thu airson na dh’fhàillig a thoirt air falbh is leantainn air adhart?</string>
-	<string name="format_bar_description_html">Am modh HTML</string>
 	<string name="visual_editor">An deasaiche lèirsinneach</string>
 	<string name="image_thumbnail">Dealbhagan deilbh</string>
-	<string name="format_bar_description_ul">Liosta gun seòrsachadh</string>
-	<string name="format_bar_description_ol">Liosta air a sheòrsachadh</string>
-	<string name="format_bar_description_more">Cuir a-steach barrachd</string>
-	<string name="format_bar_description_media">Am modh cuir a-steach</string>
 	<string name="format_bar_description_strike">Loidhne troimhe</string>
-	<string name="format_bar_description_quote">Bloc-luaidh</string>
-	<string name="format_bar_description_link">Cuir a-steach ceangal</string>
 	<string name="format_bar_description_italic">Eadailteach</string>
 	<string name="format_bar_description_underline">Fo-loidhne</string>
 	<string name="image_settings_save_toast">Chaidh na h-atharraichean a shàbhaladh</string>
@@ -48,7 +41,6 @@ Language: gd_GB
 	<string name="format_bar_description_bold">Trom</string>
 	<string name="image_settings_dismiss_dialog_title">A bheil thu airson na h-atharraichean nach deach a shàbhaladh a thilgeil air falbh?</string>
 	<string name="stop_upload_dialog_title">A bheil thu airson sgur dhen luchdadh suas?</string>
-	<string name="stop_upload_button">Sguir dhen luchdadh suas</string>
 	<string name="alert_error_adding_media">Thachair mearachd fhad ’s a bha sinn a’ cur a-steach a’ mheadhain</string>
 	<string name="alert_action_while_uploading">Tha thu a’ luchdadh suas meadhanan. Fuirich ort gus am bi sin deiseil.</string>
 	<string name="alert_insert_image_html_mode">Chan urrainn dhut meadhanan a chur a-steach mar sin sa mhodh HTML. Cleachd am modh lèirsinneach airson sin.</string>
@@ -60,8 +52,6 @@ Language: gd_GB
 	<string name="invite_error_sending">Thachair mearachd nuair a dh’fheuch sinn ris an cuireadh a chur!</string>
 	<string name="invite_error_invalid_usernames_multiple">Cha ghabh a chur: Tha ainmean no puist-d ann nach eil dligheach</string>
 	<string name="invite_error_invalid_usernames_one">Cha ghabh a chur: Tha ainm no post-d ann nach eil dligheach</string>
-	<string name="tabbar_accessibility_label_my_site">An làrach agam</string>
-	<string name="tabbar_accessibility_label_me">Mise</string>
 	<string name="editor_toast_changes_saved">Chaidh na h-atharraichean a shàbhaladh</string>
 	<string name="passcodelock_prompt_message">Cuir a-steach am PIN agad</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% de sheallaidhean</string>
@@ -98,22 +88,7 @@ Language: gd_GB
 	<string name="hide">Falaich</string>
 	<string name="show">Seall</string>
 	<string name="deselect_all">Dì-thagh na h-uile</string>
-	<string name="select_from_new_picker">Dèan ioma-thaghadh leis an roghnaichear ùr</string>
-	<string name="no_media_sources">Cha b’ urrainn dhuinn na meadhanan fhaighinn</string>
-	<string name="loading_blog_images">A’ faighinn nan dealbhan</string>
-	<string name="loading_blog_videos">A’ faighinn nam videothan</string>
-	<string name="error_loading_videos">Mearachd le luchdadh nan videothan</string>
-	<string name="error_loading_images">Mearachd le luchdadh nan dealbhan</string>
-	<string name="error_loading_blog_videos">Chan urrainn dhuinn na videothan fhaighinn</string>
-	<string name="error_loading_blog_images">Chan urrainn dhuinn na dealbhan fhaighinn</string>
-	<string name="no_blog_videos">Gun videothan</string>
-	<string name="no_device_images">Gun dealbhan</string>
-	<string name="no_device_videos">Gun videothan</string>
-	<string name="no_blog_images">Gun dealbhan</string>
 	<string name="stats_generic_error">Cha b’ urrainn dhuinn na stats a dh’iarr thu a luchdadh</string>
-	<string name="no_media">Chan eil meadhanan ann</string>
-	<string name="loading_images">A’ luchdadh nan dealbhan</string>
-	<string name="loading_videos">A’ luchdadh nan videothan</string>
 	<string name="two_step_sms_sent">Thoir sùil air na teachdaireachdan teacsa agad airson a’ chòd dearbhaidh.</string>
 	<string name="two_step_footer_button">Cuir an còd slighe teachdaireachd teacsa</string>
 	<string name="two_step_footer_label">Cuir a-steach on aplacaid dearbhaidh agad.</string>
@@ -121,15 +96,6 @@ Language: gd_GB
 	<string name="invalid_verification_code">Còd dearbhadh mì-dhligheach</string>
 	<string name="verification_code">Còd dearbhaidh</string>
 	<string name="editor_toast_invalid_path">Tha slighe an fhaidhle mì-dhligheach</string>
-	<string name="error_publish_no_network">Chan urrainn dhut foillseachadh mur eil ceangal ann. Chaidh dreachd dheth a shàbhaladh.</string>
-	<string name="tab_title_site_videos">Videothan na làraich</string>
-	<string name="tab_title_device_videos">Videothan an uidheim</string>
-	<string name="tab_title_site_images">Dealbhan na làraich</string>
-	<string name="take_video">Tog video</string>
-	<string name="tab_title_device_images">Dealbhan an uidheim</string>
-	<string name="take_photo">Tog dealbh</string>
-	<string name="media_picker_title">Tagh meadhan</string>
-	<string name="add_to_post">Cuir ris a’ phost</string>
 	<string name="language">Cànan</string>
 	<string name="device">Uidheam</string>
 	<string name="media_details_label_file_name">Ainm an fhaidhle</string>
@@ -160,7 +126,6 @@ Language: gd_GB
 	<string name="logs_copied_to_clipboard">Chaidh lethbhreac de logaichean na h-aplacaid a chur air an stòr-bhòrd</string>
 	<string name="stats_total">Iomlan</string>
 	<string name="stats_overall">San fharsaingeachd</string>
-	<string name="post_uploading">’Ga luchdadh suas</string>
 	<string name="reader_page_recommended_blogs">Bidh ùidh agad sna leanas is dòcha</string>
 	<string name="stats_comments_total_comments_followers">Puist air fad aig a bheil luchd-leantainn phost: %1$s</string>
 	<string name="stats_visitors">Aoighean</string>
@@ -221,25 +186,19 @@ Language: gd_GB
 	<string name="stats_other_recent_stats_label">Stats ùra eile</string>
 	<string name="themes_fetching">A’ faighinn nan ùrlaran…</string>
 	<string name="ssl_certificate_details">Mion-fhiosrachadh</string>
-	<string name="sure_to_remove_account">A bheil thu airson an làrach seo a thoirt air falbh?</string>
-	<string name="media_gallery_date_range">A’ sealltainn nam meadhanan %1$s gu %2$s</string>
 	<string name="cab_selected">%d air a thaghadh</string>
 	<string name="confirm_delete_media">A bheil thu airson an rud a thagh thu a sguabadh às?</string>
 	<string name="delete_sure">Sguab às an dreachd seo</string>
 	<string name="delete_sure_page">Sguab às an duilleag seo</string>
 	<string name="confirm_delete_multi_media">A bheil thu airson na rudan a thagh thu a sguabadh às?</string>
 	<string name="delete_sure_post">Sguab às am post seo</string>
-	<string name="posting_post">A’ postadh “%s”</string>
-	<string name="media_empty_list_custom_date">Cha robh meadhan ann san eadaramh ùine seo</string>
 	<string name="comment_trashed">Chaidh am beachd a chur dhan sgudal</string>
 	<string name="posts_empty_list">Chan eil post agad fhathast. Carson nach cruthaich thu fear?</string>
 	<string name="comment_reply_to_user">Freagair %s</string>
 	<string name="pages_empty_list">Chan eil duilleag agad fhathast. Carson nach cruthaich thu tè?</string>
 	<string name="mnu_comment_liked">’S toil leat seo</string>
 	<string name="comment">Beachd</string>
-	<string name="sending_content">A’ luchdadh suas susbaint %s</string>
 	<string name="uploading_total">A’ luchdadh suas %1$d de %2$d</string>
-	<string name="select_a_blog">Tagh làrach WordPress</string>
 	<string name="stats_no_blog">Cha b’ urrainn dhuinn na stats aig a’ bhloga sin a luchdadh</string>
 	<string name="older_last_week">Nas sine na seachdain</string>
 	<string name="older_two_days">Nas sine na dà latha</string>
@@ -276,11 +235,6 @@ Language: gd_GB
 	<string name="hs__new_conversation_header">Cabadaich taice</string>
 	<string name="hs__conversation_detail_error">Mìnich dè an duilgheadas a tha thu a’ faicinn</string>
 	<string name="contact_us">Cuir fios thugainn</string>
-	<string name="current_location">An t-ionad làithreach</string>
-	<string name="add_location">Cuir ionad ris</string>
-	<string name="search_current_location">Lorg</string>
-	<string name="edit_location">Deasaich</string>
-	<string name="search_location">Lorg</string>
 	<string name="preference_send_usage_stats_summary">Cuir stats cleachdaidh thugainn ach an urrainn dhuinn WordPress airson Android a leasachadh</string>
 	<string name="preference_send_usage_stats">Cuir na stats</string>
 	<string name="schedule_verb">Cuir air an sgeideal</string>
@@ -342,9 +296,7 @@ Language: gd_GB
 	<string name="error_generic">Thachair mearachd</string>
 	<string name="error_moderate_comment">Thachair mearachd fhad \'s a bha sinn ri modarataireachd</string>
 	<string name="error_edit_comment">Thachair mearachd rè deasachadh a’ bheachd</string>
-	<string name="error_upload">Thachair mearachd fhad ’s a bha sinn a’ luchdadh suas %s</string>
 	<string name="notifications_empty_list">Gun bhrathan</string>
-	<string name="error_delete_post">Thachair mearachd fhad ’s a bhathar a’ sguabadh às %s</string>
 	<string name="error_refresh_posts">Cha b’ urrainn dhuinn na puist ath-nuadhachadh aig an àm seo</string>
 	<string name="error_refresh_pages">Cha b’ urrainn dhuinn na duilleagan ath-nuadhachadh aig an àm seo</string>
 	<string name="error_refresh_notifications">Cha b’ urrainn dhuinn na brathan ath-nuadhachadh aig an àm seo</string>
@@ -357,14 +309,12 @@ Language: gd_GB
 	<string name="cat_name_required">Tha feum air raon ainm na roinn-seòrsa</string>
 	<string name="adding_cat_success">Chaidh an roinn-seòrsa a chur ris</string>
 	<string name="adding_cat_failed">Dh’fhàillig cur ris na roinn-seòrsa</string>
-	<string name="no_site_error">Cha b’ urrainn dhuinn ceangal ri làrach WordPress</string>
 	<string name="theme_set_failed">Cha b’ urrainn dhuinn an t-ùrlar a shuidheachadh</string>
 	<string name="theme_auth_error_message">Dèan cinnteach gu bheil cead agad ùrlaran a shuidheachadh</string>
 	<string name="comments_empty_list">Gun bheachdan</string>
 	<string name="mnu_comment_unspam">Beachd còir</string>
 	<string name="gallery_error">Cha b’ urrainn dhuinn am meadhan fhaighinn</string>
 	<string name="blog_not_found">Thachair mearachd fhad ’s a bha sinn ag inntrigeadh a’ bhloga seo</string>
-	<string name="wait_until_upload_completes">Fuirich ort gus an deach a luchdadh suas</string>
 	<string name="theme_fetch_failed">Cha b’ urrainn dhuinn na h-ùrlaran fhaighinn dhut</string>
 	<string name="out_of_memory">Chan eil cuimhne air fhàgail air an uidheam</string>
 	<string name="no_network_message">Chan eil lìonra ri làimh</string>
@@ -380,8 +330,6 @@ Language: gd_GB
 	<string name="required_field">Raon air a bheil feum</string>
 	<string name="reader_toast_err_add_tag">Cha ghabh an taga seo a chur ris</string>
 	<string name="reader_toast_err_remove_tag">Cha ghabh an taga seo a thoirt air falbh</string>
-	<string name="reader_share_link">Co-roinn an ceangal</string>
-	<string name="jetpack_message_not_admin">Tha feum air plugan Jetpack mu choinneamh nan stats. Cuir fios gu rianaire na làraich.</string>
 	<string name="reader_title_applog">Loga na h-aplacaid</string>
 	<string name="fatal_db_error">Thachair mearachd fhad ’s a bha sinn a’ cruthachadh stòr-dàta nan aplacaidean. Feuch is stàlaich an aplacaid às ùr.</string>
 	<string name="error_blog_hidden">’S e bloga falaichte a tha ann is cha b’ urrainn dhuinn a luchdadh. Cuir an comas e sna roghainnean is feuch ris a-rithist.</string>
@@ -393,18 +341,12 @@ Language: gd_GB
 	<string name="view_site">Seall an làrach agam</string>
 	<string name="new_media">Meadhan ùr</string>
 	<string name="new_post">Post ùr</string>
-	<string name="post_format">Fòrmat a’ phuist</string>
 	<string name="http_authorization_required">Tha feum air ùghdarrasadh</string>
-	<string name="pending_review">Ri lèirmheasadh</string>
 	<string name="http_credentials">Ainm ’s facal-faire HTTP (roghainneil)</string>
 	<string name="open_source_licenses">Ceadachasan Open Source</string>
-	<string name="location_not_found">Seòladh neo-aithnichte</string>
 	<string name="file_error_create">Cha b’ urrainn dhuinn am faidhle sealach a chruthachadh gus meadhan a luchdadh suas. Dèan cinnteach gu bheil rum gu leòr air an uidheam agad.</string>
 	<string name="share_action_post">Post ùr</string>
 	<string name="share_action_media">Leabhar-lann nam meadhanan</string>
-	<string name="category_parent">Pàrant na roinn-seòrsa (roghainneil):</string>
-	<string name="category_desc">Tuairisgeul na roinn-seòrsa (roghainneil)</string>
-	<string name="category_slug">Sluga na roinn-seòrsa (roghainneil)</string>
 	<string name="category_name">Ainm na roinne-seòrsa</string>
 	<string name="add_new_category">Cuir roinn-seòrsa ùr ris</string>
 	<string name="view_in_browser">Seall sa bhrabhsair</string>
@@ -457,10 +399,6 @@ Language: gd_GB
 	<string name="cannot_delete_multi_media_items">Tha meadhanan ann ach gabh an sguabadh às an-dràsta fhèin. Feuch ris a-rithist an ceann greis.</string>
 	<string name="media_error_no_permission">Chan eil cead agad coimhead air leabhar-lann nam meadhanan</string>
 	<string name="media_gallery_type_thumbnail_grid">Griod nan dealbhagan</string>
-	<string name="media_gallery_edit">Deasaich an gailearaidh</string>
-	<string name="media_gallery_settings_title">Roghainnean a’ ghailearaidh</string>
-	<string name="media_gallery_image_order">Òrdugh nan dealbhan</string>
-	<string name="media_gallery_num_columns">Àireamh de cholbhan</string>
 	<string name="post_not_found">Thachair mearachd rè luchdadh a’ phuist. Ath-nuadhaich na puist is feuch ris a-rithist.</string>
 	<string name="learn_more">Barrachd fiosrachaidh</string>
 	<string name="scaled_image_error">Cuir a-steach luach sgèileadh leud dligheach</string>
@@ -481,7 +419,6 @@ Language: gd_GB
 	<string name="creating_your_account">A\' cruthachadh a\' chunntais agad</string>
 	<string name="creating_your_site">A\' cruthachadh na làraich agad</string>
 	<string name="reader_empty_posts_in_tag_updating">A\' faighinn nam post...</string>
-	<string name="error_refresh_media">Chaidh rudeigin cearr fhad \'s a bha sinn ag ath-nuadhachadh leabhar-lann nam meadhanan. Feuch ris a-rithist an ceann greis.</string>
 	<string name="reader_likes_you_and_multi">Thuirt thusa agus %,d eile gur toigh leibh seo</string>
 	<string name="reader_likes_multi">\'S toigh le %,d daoine seo</string>
 	<string name="reader_toast_err_get_comment">Chan urrainn dhuinn am beachd seo fhaighinn dhut</string>
@@ -505,12 +442,9 @@ Language: gd_GB
 	<string name="nux_welcome_create_account">Cruthaich cunntas</string>
 	<string name="nux_add_selfhosted_blog">Cuir làrach air fèin-òstaireachd ris</string>
 	<string name="media_add_popup_title">Cuir ri leabharlann nam meadhanan</string>
-	<string name="media_add_new_media_gallery">Cruthaich gailearaidh</string>
 	<string name="select_from_media_library">Tagh o leabhar-lann nam meadhanan</string>
-	<string name="jetpack_message">Tha feum air plugan Jetpack mus fhaigh thu na stats. A bheil thu airson Jetpack a stàladh?</string>
 	<string name="jetpack_not_found">Cha deach am plugan Jetpack a lorg</string>
 	<string name="reader_untitled_post">(Gun tiotal)</string>
-	<string name="reader_share_subject">Air a cho-roinneadh o %s</string>
 	<string name="reader_btn_share">Co-roinn</string>
 	<string name="reader_btn_follow">Lean</string>
 	<string name="reader_btn_unfollow">A\' leanntainn</string>
@@ -533,14 +467,6 @@ Language: gd_GB
 	<string name="reader_hint_comment_on_comment">Freagair am beachd…</string>
 	<string name="button_next">Air adhart</string>
 	<string name="themes">Ùrlaran</string>
-	<string name="all">Na h-uile</string>
-	<string name="images">Dealbhan</string>
-	<string name="unattached">Gun cheangal ris</string>
-	<string name="custom_date">Ceann-là gnàthaichte</string>
-	<string name="media_add_popup_capture_photo">Tog dealbh</string>
-	<string name="media_add_popup_capture_video">Tog video</string>
-	<string name="media_gallery_image_order_random">Air thuaiream</string>
-	<string name="media_gallery_image_order_reverse">Òrdugh contrarra</string>
 	<string name="media_gallery_type">Seòrsa</string>
 	<string name="media_gallery_type_squares">Ceàrnagan</string>
 	<string name="media_gallery_type_tiled">Mar leacan</string>
@@ -560,8 +486,6 @@ Language: gd_GB
 	<string name="theme_activating_button">\'Ga ghnìomhachadh</string>
 	<string name="theme_set_success">Chaidh an t-ùrlar a shuidheachadh!</string>
 	<string name="theme_auth_error_title">Cha b\' urrainn dhuinn na h-ùrlaran fhaighinn dhut</string>
-	<string name="post_excerpt">Às-earrann</string>
-	<string name="share_action_title">Cuir ri ...</string>
 	<string name="share_action">Co-roinn</string>
 	<string name="stats">Stats</string>
 	<string name="stats_view_clicks">Briogaidhean</string>
@@ -591,6 +515,7 @@ Language: gd_GB
 	<string name="passcode_turn_off">Cuir glas a\' PIN dheth</string>
 	<string name="passcode_turn_on">Cuir glas a\' PIN air</string>
 	<string name="upload">Luchdadh suas</string>
+	<string name="manage">Stiùirich</string>
 	<string name="discard">Tilg air falbh</string>
 	<string name="notifications">Brathan</string>
 	<string name="note_reply_successful">Chaidh an fhreagairt fhoillseachadh</string>
@@ -607,6 +532,7 @@ Language: gd_GB
 	<string name="incorrect_credentials">Ainm-cleachdaiche no facal-faire cearr.</string>
 	<string name="password">Facal-faire</string>
 	<string name="username">Ainm-cleachdaiche</string>
+	<string name="log_in">Clàraich a-steach</string>
 	<string name="reader">Leughadair</string>
 	<string name="featured">Cleachd mar dhealbh brosnaichte</string>
 	<string name="featured_in_post">Gabh a-steach an dealbh ann an susbaint a\' phuist</string>
@@ -619,23 +545,19 @@ Language: gd_GB
 	<string name="page">Duilleag</string>
 	<string name="post">Post</string>
 	<string name="blogusername">ainm cleachdaiche a\' bhloga</string>
-	<string name="ok">Ceart ma-thà</string>
 	<string name="upload_scaled_image">Luchdaich suas is dèan ceangal ris an dealbh sgèilichte</string>
 	<string name="scaled_image">Leud an deilbh sgèilichte</string>
-	<string name="scheduled">Air an sgeideal</string>
 	<string name="link_enter_url">URL</string>
 	<string name="uploading">’Ga luchdadh suas…</string>
 	<string name="version">Tionndadh</string>
 	<string name="tos">Teirmichean na seirbheise</string>
 	<string name="app_title">WordPress airson Android</string>
-	<string name="max_thumbnail_px_width">Leud bunaiteach an deilbh</string>
 	<string name="image_alignment">Co-thaobhadh</string>
 	<string name="refresh">Ath-nuadhaich</string>
 	<string name="untitled">Gun tiotal</string>
 	<string name="edit">Deasaich</string>
 	<string name="post_id">Post</string>
 	<string name="page_id">Duilleag</string>
-	<string name="post_password">Facal-faire (roghainneil)</string>
 	<string name="immediately">Sa bhad</string>
 	<string name="quickpress_add_alert_title">Suidhich ainm na h-ath-ghoirid</string>
 	<string name="today">An-diugh</string>
@@ -643,27 +565,16 @@ Language: gd_GB
 	<string name="share_url">Co-roinn an URL</string>
 	<string name="quickpress_window_title">Tagh bloga airson ath-ghoirid QuickPress</string>
 	<string name="quickpress_add_error">Chan fhaod ainm na h-ath-ghoirid a bhith bàn</string>
-	<string name="publish_post">Foillsich</string>
-	<string name="draft">Dreachd</string>
-	<string name="post_private">Prìobhaideach</string>
 	<string name="upload_full_size_image">Luchdaich suas is dèan ceangal ris an dealbh slàn</string>
 	<string name="title">Tiotal</string>
-	<string name="tags_separate_with_commas">Tagaichean (sgar na tagaichean le cromagan)</string>
 	<string name="categories">Roinnean-seòrsa</string>
 	<string name="dlg_deleting_comments">A’ sguabadh às nam beachdan</string>
-	<string name="notification_blink">Boillsg solas</string>
-	<string name="notification_vibrate">Crith</string>
-	<string name="notification_sound">Fuaim bhrathan</string>
-	<string name="status">Staid</string>
-	<string name="location">Ionad</string>
 	<string name="sdcard_title">Tha feum air cairt SD</string>
-	<string name="select_video">Tagh video on ghailearaidh</string>
 	<string name="media">Meadhan</string>
 	<string name="delete">Sguab às</string>
 	<string name="approve">Thoir aonta ris</string>
 	<string name="none">Chan eil gin</string>
 	<string name="blogs">Blogaichean</string>
-	<string name="select_photo">Tagh dealbh on ghailearaidh</string>
 	<string name="error">Mearachd</string>
 	<string name="cancel">Sguir dheth</string>
 	<string name="save">Sàbhail</string>

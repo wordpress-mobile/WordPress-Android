@@ -14,7 +14,7 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginRight="@dimen/margin_extra_small"
-        tools:src="@drawable/noticon_more" />
+        tools:src="@drawable/ic_ellipsis_blue_wordpress_18dp" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text"

@@ -1,12 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-04-03 21:54:51+0000
+Translation-Revision-Date: 2017-08-18 23:31:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: hi_IN
 -->
 <resources>
+	<string name="editor_draft_saved_locally">ड्राफ़्ट डिवाइस पर सहेजा गया</string>
+	<string name="editor_post_saved_locally">पोस्ट डिवाइस पर सहेजा गया</string>
+	<string name="button_sync">सिंक</string>
+	<string name="wp_media_title">वर्डप्रेस मीडिया </string>
+	<string name="error_unknown_post_type">अज्ञात पोस्ट प्रारूप</string>
+	<string name="jetpack_stats_module_disabled_message_not_admin">जेटपैक प्लगइन से जुड़ा हुआ है, लेकिन आँकड़े मॉड्यूल सक्रिय नहीं है। साइट व्यवस्थापक से संपर्क करें।</string>
+	<string name="jetpack_stats_module_disabled_message">जेटपैक प्लगइन से जुड़ा हुआ है, लेकिन आँकड़े मॉड्यूल सक्रिय नहीं है। क्या आप आँकड़े सक्रिय करना चाहते हैं?</string>
+	<string name="jetpack_info">जेटपैक की जानकारी</string>
+	<string name="reader_photo_by">Photo by %s</string>
+	<string name="pending_draft_more">आप %d के पदों का मसौदा तैयार किया है, लेकिन उन्हें कभी नहीं प्रकाशित किया। जाँच करने के लिए टैप करें I</string>
+	<string name="reader_label_visit">भेंट</string>
+	<string name="swipe_for_more">अधिक के लिए स्वाइप करें</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">आप इस पोस्ट को देखने के लिए अधिकृत नहीं  हैं। पहले WordPress.com में जाकर लॉग इन करें या एक ब्राउज़र को खोलने के लिए शीर्ष कार्रवाई बटन का उपयोग करें।</string>
+	<string name="reader_err_get_post_not_authorized_signin">आप इस पोस्ट को देखने के लिए अधिकृत नहीं  हैं। पहले WordPress.com में जाकर लॉग इन करें</string>
+	<string name="reader_err_get_post_not_authorized_fallback">आप इस पोस्ट देखने के लिए अधिकृत नहीं  हैं। एक ब्राउज़र बदले की कोशिश करने के लिए शीर्ष कार्रवाई बटन का प्रयोग करें</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
+	<string name="reader_toast_err_already_liked">आपने पहले से ही उस टिप्पणी को पसंद किया हुआ हैI</string>
+	<string name="reader_toast_err_comment_not_found">कोई टिप्पणी नहीं पाया!</string>
+	<string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
+	<string name="reader_title_post_detail_wpcom">WordPress.com पोस्ट</string>
+	<string name="error_notif_q_action_reply">टिप्पणी करने के लिए जवाब नहीं कर सके। बाद में पुन: प्रयास करें।</string>
+	<string name="reader_title_deeplink">वर्डप्रेस रीडर</string>
+	<string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
+	<string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
+	<string name="notifications_label_new_notifications_subtitle">उन्हें दिखाने के लिए टैप करेंI</string>
+	<string name="notifications_label_new_notifications">नई सूचनाएं I</string>
+	<string name="like">लाइक</string>
+	<string name="timespan_now">अब</string>
+	<string name="visual_editor">विजुअल सम्पादक</string>
+	<string name="image_width">चौड़ाई </string>
+	<string name="invite_error_for_username">%1$s: %2$s</string>
 	<string name="post_format_video">विडियो </string>
+	<string name="alignment_center">मध्य में</string>
 	<string name="post_format_status">स्थिति</string>
 	<string name="theme_free">नि: शुल्क</string>
 	<string name="theme_all">सभी</string>
@@ -40,7 +72,6 @@ Language: hi_IN
 	<string name="site_settings_default_category_title">डिफ़ॉल्ट श्रेणी</string>
 	<string name="site_settings_tagline_title">टैगलाइन</string>
 	<string name="site_settings_title_title">साइट शीर्षक</string>
-	<string name="site_settings_this_device_header">यह डिवाइस</string>
 	<string name="comments">टिप्पणियां</string>
 	<string name="privacy">गोपनीयता</string>
 	<string name="never">कभी नहीं </string>
@@ -67,7 +98,6 @@ Language: hi_IN
 	<string name="reader_label_gap_marker">अधिक लेख लोड करे </string>
 	<string name="notifications_no_search_results">\'%s\' से किसी साइट का मेल नहीं हुआ </string>
 	<string name="search_sites">साइट्स खोजें</string>
-	<string name="unread">अपठित</string>
 	<string name="notifications_empty_view_reader">पाठक देखें</string>
 	<string name="notifications_empty_action_all">सक्रिय हों! जिन ब्लॉग का अनुगमन करते है उनके लेखों पर टिप्पणी करें </string>
 	<string name="notifications_empty_comments">कोई नई टिप्पणी नहीं है... अबतक।</string>
@@ -94,9 +124,6 @@ Language: hi_IN
 	<string name="notifications_tab">अधिसूचना सूचि</string>
 	<string name="email">ईमेल</string>
 	<string name="app_notifications">एप्लिकेशन अधिसूची</string>
-	<string name="notifications_other">अन्य</string>
-	<string name="notifications_account_emails">Wordpress.com की ओर से ईमेल</string>
-	<string name="your_sites">आपकी साइटे</string>
 	<string name="button_revert">उलट दें</string>
 	<string name="days_ago">%d दिन पहले</string>
 	<string name="yesterday">कल</string>
@@ -113,14 +140,13 @@ Language: hi_IN
 	<string name="post_deleted">पोस्ट नष्ट कर दिया गया</string>
 	<string name="my_site_no_sites_view_subtitle">क्या आप एक जोड़ना चाहेंगे?</string>
 	<string name="reader_toast_err_follow_blog_not_found">इस ब्लॉग को पाया नहीं जा सका</string>
-	<string name="tabbar_accessibility_label_my_site">मेरा साईट</string>
-	<string name="tabbar_accessibility_label_me">मैं </string>
 	<string name="editor_toast_changes_saved">परिवर्तन सहेजा गया</string>
 	<string name="ignore">ध्यान न दें</string>
 	<string name="stats_insights_most_popular_hour">सबसे लोकप्रिय घण्टा</string>
 	<string name="stats_insights_most_popular_day">सबसे लोकप्रिय दिन</string>
 	<string name="stats_insights_popular">सबसे लोकप्रिय दिन और घण्टा</string>
 	<string name="stats_insights_today">आज के आँकड़े</string>
+	<string name="account_settings">अकाउंट सेटिंग्स</string>
 	<string name="me_btn_support">मदद और सहायता</string>
 	<string name="site_picker_add_self_hosted">सेल्फ-होस्टेड साइट डाले </string>
 	<string name="site_picker_edit_visibility">साइट्स दिखाए या छिपाये</string>
@@ -134,30 +160,11 @@ Language: hi_IN
 	<string name="show">दिखाएँ</string>
 	<string name="hide">छुपाएँ</string>
 	<string name="select_all">सभी चुनें</string>
-	<string name="loading_blog_images">छवियाँ लाई जा रही है</string>
 	<string name="stats_generic_error">आवश्यक सांख्यिकी लोड करने में असफल</string>
-	<string name="error_loading_videos">वीडियो लाने में असमर्थ</string>
-	<string name="no_media_sources">मीडिया लाने में असफल</string>
-	<string name="error_loading_blog_videos">वीडियो लाने में असमर्थ</string>
-	<string name="error_loading_images">छवियाँ लाने में असमर्थ</string>
-	<string name="error_loading_blog_images">छवियाँ लाने में असमर्थ</string>
-	<string name="no_blog_videos">कोई वीडियो नहीं</string>
-	<string name="no_device_images">कोई चित्र नहीं</string>
-	<string name="no_blog_images">कोई चित्र नहीं</string>
-	<string name="loading_blog_videos">वीडियोलाये जा रहे है</string>
-	<string name="no_device_videos">कोई वीडियो नहीं</string>
-	<string name="loading_videos">वीडियो लोड हो रहे है</string>
-	<string name="loading_images">छवियाँ लोड हो रही है</string>
-	<string name="no_media">मीडिया नहीं</string>
 	<string name="device">यंत्र</string>
 	<string name="language">भाषा</string>
-	<string name="add_to_post">पोस्ट में जोड़ें</string>
 	<string name="verify">सत्यापित करें</string>
 	<string name="verification_code">सत्यापन कोड</string>
-	<string name="take_video">वीडियो बनाए</string>
-	<string name="take_photo">फोटो खींचे</string>
-	<string name="tab_title_site_videos">साइट वीडियो</string>
-	<string name="tab_title_site_images">साइट की छवियां</string>
 	<string name="pages_fetching">पृष्ठ ला रहे है...</string>
 	<string name="publisher">प्रकाशक:</string>
 	<string name="stats_view_authors">लेखक</string>
@@ -208,11 +215,6 @@ Language: hi_IN
 	<string name="hs__invalid_email_error">मान्य ईमेल पता दर्ज करें</string>
 	<string name="hs__conversation_detail_error">आप जो समस्या देख रहे है उसका वर्णन करें</string>
 	<string name="contact_us">हमसे संपर्क करें</string>
-	<string name="add_location">स्थान जोड़ें</string>
-	<string name="current_location">वर्तमान स्थान</string>
-	<string name="search_location">खोज</string>
-	<string name="edit_location">संपादित करें</string>
-	<string name="search_current_location">स्थान निर्धारण करे</string>
 	<string name="preference_send_usage_stats">आंकड़े भेजें</string>
 	<string name="preference_send_usage_stats_summary">स्वचालित रूप से उपयोग के आंकड़े भेज कर हमें एंड्रॉयड के लिए वर्डप्रेस को बेहतर बनाने में मदद करे\n\n</string>
 	<string name="update_verb">अपडेट करे</string>
@@ -261,13 +263,10 @@ Language: hi_IN
 	<string name="error_load_comment">टिप्पणी लोड नहीं हो सका</string>
 	<string name="theme_set_failed">थीम को सेट करने में असफल</string>
 	<string name="passcode_wrong_passcode">गलत पिन</string>
-	<string name="wait_until_upload_completes">अपलोड पूर्ण होने तक प्रतीक्षा करे</string>
 	<string name="username_not_allowed">उपयोगकर्ता नाम की अनुमति नहीं</string>
 	<string name="username_or_password_incorrect">आपके द्वारा दर्ज उपयोगकर्ता नाम या कूटशब्द गलत है</string>
 	<string name="gallery_error">मीडिया आइटम पुनः प्राप्त नहीं किया जा सका</string>
-	<string name="error_delete_post">%s को हटाने के दौरान एक त्रुटि हुई</string>
 	<string name="error_edit_comment">टिप्पणी के संपादन के दौरान एक त्रुटि हुई</string>
-	<string name="error_upload">%s को अपलोड करने के दौरान एक त्रुटि हुई</string>
 	<string name="blog_name_cant_be_used">आप उस साइट पते का उपयोग नहीं कर सकते</string>
 	<string name="invalid_url_message">दर्ज किया गये ब्लॉग यूआरएल की वैधता की जाँच करे</string>
 	<string name="error_refresh_comments">टिप्पणिया इस समय रिफ्रेश नहीं हो सकती</string>
@@ -294,7 +293,6 @@ Language: hi_IN
 	<string name="blog_name_reserved_but_may_be_available">वह साइट वर्तमान में आरक्षित है, लेकिन एक दो दिन में उपलब्ध हो सकता है</string>
 	<string name="username_reserved_but_may_be_available">वह  उपयोगकर्ता नाम वर्तमान में आरक्षित है, लेकिन एक दो दिन में उपलब्ध हो सकता है</string>
 	<string name="blog_not_found">इस ब्लॉग से पहुँच स्थापित करते समय ​​एक त्रुटि हुई</string>
-	<string name="no_site_error">वर्डप्रेस साइट से संपर्क स्थापित नहीं सका</string>
 	<string name="error_refresh_notifications">सूचनाएं को इस समय रिफ्रेश नहीं किया जा सकता</string>
 	<string name="error_refresh_posts">पोस्ट को इस समय रिफ्रेश नहीं किया जा सकता</string>
 	<string name="theme_auth_error_message">यह सुनिश्चित करे की आपको थीमस निर्धारित करने का विशेषाधिकार है</string>
@@ -315,7 +313,6 @@ Language: hi_IN
 	<string name="add_account_blog_url">ब्लॉग का पता</string>
 	<string name="delete_post">पोस्ट हटाये</string>
 	<string name="edit_comment">टिप्पणी संपादित करें</string>
-	<string name="media_gallery_edit">गैलरी संपादित करें</string>
 	<string name="edit_post">पोस्ट संपादित करें</string>
 	<string name="cancel_edit">संपादन रद्द करें</string>
 	<string name="category_name">श्रेणी नाम</string>
@@ -323,10 +320,7 @@ Language: hi_IN
 	<string name="account_details">खाता विवरण</string>
 	<string name="theme_current_theme">वर्तमान थीम</string>
 	<string name="email_hint">ईमेल पता</string>
-	<string name="media_gallery_settings_title">गैलरी सेटिंग्स</string>
-	<string name="category_desc">श्रेणी विवरण (वैकल्पिक)</string>
 	<string name="create_a_link">एक कड़ी बनाएं</string>
-	<string name="media_gallery_image_order">छवि के क्रम</string>
 	<string name="image_settings">छवि सेटिंग्स</string>
 	<string name="blog_name_invalid">अमान्य साइट का पता</string>
 	<string name="blog_title_invalid">अमान्य साइट शीर्षक</string>
@@ -339,15 +333,12 @@ Language: hi_IN
 	<string name="open_source_licenses">मुक्त स्रोत लाइसेंस</string>
 	<string name="page_settings">पृष्ठ सेटिंग्स</string>
 	<string name="comment_status_unapproved">विचाराधीन</string>
-	<string name="pending_review">समीक्षा विचाराधीन है</string>
-	<string name="post_format">पोस्ट प्रारूप</string>
 	<string name="post_settings">पोस्ट सेटिंग्स</string>
 	<string name="post_not_published">पोस्ट की स्थिति प्रकाशित नहीं है</string>
 	<string name="theme_premium_theme">प्रीमियम थीम</string>
 	<string name="preview_page">पूर्वावलोकन पृष्ठ</string>
 	<string name="preview_post">पूर्वावलोकन पोस्ट</string>
 	<string name="privacy_policy">गोपनीयता नीति</string>
-	<string name="reader_share_link">कड़ी साझा करे</string>
 	<string name="comment_status_spam">स्पैम</string>
 	<string name="mnu_comment_spam">स्पैम</string>
 	<string name="wordpress_blog">वर्डप्रेस ब्लॉग</string>
@@ -359,7 +350,6 @@ Language: hi_IN
 	<string name="comment_status_trash">कचरा पेटी में डाला गया</string>
 	<string name="trash_no">कचरा पेटी में नहीं डाले</string>
 	<string name="upload_failed">अपलोड असफल हो गया</string>
-	<string name="location_not_found">अज्ञात स्थान</string>
 	<string name="reader_toast_err_add_tag">इस टैग को जोड़ने में असमर्थ</string>
 	<string name="reader_toast_err_remove_tag">इस टैग को हटाने में असमर्थ</string>
 	<string name="mnu_comment_unapprove">अस्वीकृत</string>
@@ -375,7 +365,6 @@ Language: hi_IN
 	<string name="saving_changes">परिवर्तन सहेजे जा रहा</string>
 	<string name="site_address">आपका अपने से होस्ट किया हुआ पता(यूआरएल)</string>
 	<string name="toast_comment_unedited">टिप्पणी नहीं बदला है</string>
-	<string name="media_gallery_num_columns">कॉलम की संख्या</string>
 	<string name="page_not_published">पृष्ठ स्थिति प्रकाशित नहीं है</string>
 	<string name="dlg_confirm_trash_comments">कचरा पेटी में भेजें?</string>
 	<string name="dlg_trashing_comments">कचरा पेटी में भेजा जा रहा</string>
@@ -387,8 +376,6 @@ Language: hi_IN
 	<string name="horizontal_alignment">क्षैतिज संरेखण</string>
 	<string name="local_changes">स्थानीय परिवर्तन</string>
 	<string name="local_draft">स्थानीय प्रारूप</string>
-	<string name="category_parent">श्रेणी जनक (वैकल्पिक):</string>
-	<string name="category_slug">श्रेणी स्लग (वैकल्पिक)</string>
 	<string name="scaled_image_error">एक वैध बढ़ाया चौड़ाई का मान दर्ज करें</string>
 	<string name="error_blog_hidden">यह ब्लॉग छिपा हुआ है और लोड नहीं किया जा सकता है. सेटिंग्स में इसे फिर से सक्रिय करे और फिर कोशिश करें.</string>
 	<string name="file_error_create">मीडिया अपलोड करने के लिए अस्थायी फ़ाइल नहीं बनाया जा सका. आपके डिवाइस पर पर्याप्त खाली स्थान है सुनिश्चित करें.</string>
@@ -397,12 +384,12 @@ Language: hi_IN
 	<string name="themes_live_preview">लाइव पूर्वावलोकन</string>
 	<string name="reader_title_applog">एप्लीकेशन लॉग</string>
 	<string name="xmlrpc_error">कनेक्ट नहीं हो सका.अपने साईट पर xmlrpc.php का पूरा पथ दर्ज करें और पुन: प्रयास करे</string>
-	<string name="jetpack_message_not_admin">Jetpack प्लगइन आँकड़ों के लिए आवश्यक है. साइट व्यवस्थापक से संपर्क करें.</string>
 	<string name="http_credentials">HTTP क्रेडेंशियल्स (वैकल्पिक)</string>
 	<string name="email_cant_be_used_to_signup">आप पंजीकरण करने के लिए कि उस ईमेल पते का उपयोग नहीं कर सकते हैं. हमें उनके साथ समस्या हो रही है क्योंकि वे  हमारे ईमेल को ब्लॉक कर रहे है. एक अन्य ईमेल प्रदाता का प्रयोग करें.</string>
 	<string name="email_reserved">यह ईमेल पता पहले से ही इस्तेमाल में है. सक्रियण ईमेल के लिए अपने इनबॉक्स की जाँच करें. यदि आप सक्रिय नहीं करेंगे, तो आप कुछ दिनों में फिर से कोशिश कर सकते हैं.</string>
 	<string name="remove_account">ब्लॉग हटाये</string>
 	<string name="blog_removed_successfully">ब्लॉग सफलतापूर्वक हटा दिया गया</string>
+	<string name="jetpack_message_not_admin">Jetpack प्लगइन आवश्यक है. साइट व्यवस्थापक से संपर्क करें.</string>
 	<string name="deleting_page">पृष्ठ हटाया जा रहा है</string>
 	<string name="deleting_post">पोस्ट हटाया जा रहा है</string>
 	<string name="share_link">कड़ी साझा करे</string>
@@ -411,7 +398,6 @@ Language: hi_IN
 	<string name="creating_your_account">आपका खाता बनाया जा रहा</string>
 	<string name="creating_your_site">आपकी साइट बनाया जा रहा</string>
 	<string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा...</string>
-	<string name="error_refresh_media">मीडिया लाइब्रेरी को रिफ्रेश करते समय कुछ गलत हो गया. बाद में पुन: प्रयास करें.</string>
 	<string name="video">वीडियो</string>
 	<string name="download">मीडिया डाउनलोड हो रहा</string>
 	<string name="reader_label_reply">जवाब दें</string>
@@ -431,12 +417,12 @@ Language: hi_IN
 	<string name="account_two_step_auth_enabled">इस खाते में दो स्टेप प्रमाणीकरण सक्षम किया गया है.  WordPress.com पर अपनी सुरक्षा सेटिंग में जाएं और एक ऐप्लिकेशन विशिष्ट पासवर्ड उत्पन्न करे.</string>
 	<string name="nux_tap_continue">जारी रखे</string>
 	<string name="nux_welcome_create_account">खाता बनाएं</string>
+	<string name="nux_oops_not_selfhosted_blog">वर्डप्रेस डॉट कॉम पर साइन इन करे</string>
 	<string name="nux_add_selfhosted_blog">अपने से होस्ट किया हुआ साईट जोड़े</string>
 	<string name="password_invalid">आपको एक अधिक सुरक्षित पासवर्ड की जरूरत है. सुनिश्चित करें की आप 7 या अधिक वर्णों ,बड़े और छोटे अक्षरों, संख्या या विशेष वर्ण मिश्रण का उपयोग कर रहे है.</string>
 	<string name="reader_untitled_post">(शीर्षक रहित)</string>
 	<string name="reader_label_added_tag">जोड़ा गया %s</string>
 	<string name="reader_toast_err_comment_failed">आपकी टिप्पणी पोस्ट नहीं कर सके</string>
-	<string name="media_add_new_media_gallery">गैलरी बनाएं</string>
 	<string name="username_invalid">अमान्य उपयोगकर्ता नाम</string>
 	<string name="jetpack_not_found">जेटपैक प्लगइन नहीं मिला</string>
 	<string name="reader_likes_one">एक व्यक्ति ने पसंद किया</string>
@@ -451,15 +437,13 @@ Language: hi_IN
 	<string name="media_add_popup_title">मीडिया संग्रह में जोड़े</string>
 	<string name="reader_toast_err_tag_exists">आप पहले से ही इस टैग का अनुसरण कर रहे है</string>
 	<string name="select_from_media_library">मीडिया लाइब्रेरी से चुने </string>
-	<string name="reader_share_subject">%s द्वारा साझा किया गया</string>
 	<string name="empty_list_default">इस सूची खाली है</string>
 	<string name="nux_tutorial_get_started_title">शुरू हो जाये!</string>
 	<string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>
-	<string name="jetpack_message">Jetpack प्लगइन आँकड़ों के लिए आवश्यक है. आप Jetpack इनस्टॉल करना चाहते हैं?</string>
+	<string name="connecting_wpcom">WordPress.com से कनेक्ट हो रहा</string>
 	<string name="limit_reached">सीमा पहुँच गयी. आप 1 मिनट में फिर से कोशिश कर सकते हैं. उसके पहले कोशिश करने पर आपके प्रतिबंध हटाने के इन्तजार समय में वृद्धि होगी. आपको लगता है यह त्रुटी है तो, सहायता से संपर्क करे.</string>
 	<string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे...</string>
 	<string name="create_account_wpcom">Wordpress.com पे अकाउंट बनाये|</string>
-	<string name="all">सभी</string>
 	<string name="stats_entry_country">देश</string>
 	<string name="stats_entry_authors">लेखक</string>
 	<string name="media_edit_title_text">शीर्षक</string>
@@ -475,12 +459,10 @@ Language: hi_IN
 	<string name="media_gallery_type_circles">वृत्त</string>
 	<string name="stats_view_clicks">क्लिक</string>
 	<string name="themes_features_label">विशेषताएँ</string>
-	<string name="images">छविया</string>
 	<string name="stats_timeframe_months">महीने</string>
 	<string name="share_action">साझा करे</string>
 	<string name="themes">थीम्स</string>
 	<string name="stats_totals_clicks">क्लिक</string>
-	<string name="media_gallery_image_order_random">क्रमरहित</string>
 	<string name="stats_timeframe_weeks">सप्ताह</string>
 	<string name="stats_timeframe_yesterday">कल</string>
 	<string name="media_edit_success">अपडेट किया गया</string>
@@ -488,7 +470,6 @@ Language: hi_IN
 	<string name="media_edit_failure">अपडेट करने में असफल</string>
 	<string name="media_gallery_type">प्रकार</string>
 	<string name="stats_entry_tags_and_categories">विषय</string>
-	<string name="media_gallery_image_order_reverse">उल्टा</string>
 	<string name="stats_totals_views">देखें गये</string>
 	<string name="passcode_change_passcode">पिन बदलें</string>
 	<string name="theme_auth_error_title">थीम को प्राप्त करने में असफल</string>
@@ -500,16 +481,11 @@ Language: hi_IN
 	<string name="media_edit_caption_hint">यहा शीर्षक दर्ज करें</string>
 	<string name="passcode_enter_old_passcode">अपना पुराना पिन दर्ज करें</string>
 	<string name="passcode_enter_passcode">अपना पिन दर्ज करें</string>
-	<string name="unattached">असंबद्ध</string>
 	<string name="stats_view_visitors_and_views">दर्शक और देखें गये</string>
 	<string name="stats_entry_referrers">रेफ़रर</string>
 	<string name="stats_view_referrers">रेफ़ररस</string>
 	<string name="passcode_set">पिन निर्धारित करें</string>
 	<string name="stats_totals_plays">चलाया गया</string>
-	<string name="custom_date">कस्टम तिथि</string>
-	<string name="post_excerpt">अंश</string>
-	<string name="media_add_popup_capture_photo">छवि कैप्चर करे</string>
-	<string name="media_add_popup_capture_video">विडियो कैप्चर करे</string>
 	<string name="passcode_turn_off">पिन को ऑफ करे</string>
 	<string name="passcode_turn_on">पिन को ऑन करे</string>
 	<string name="passcode_manage">पिन का प्रबंधन करे</string>
@@ -518,11 +494,13 @@ Language: hi_IN
 	<string name="passcode_re_enter_passcode">अपना पिन फिर से दर्ज करें</string>
 	<string name="stats_view_tags_and_categories">टैग और श्रेणियाँ</string>
 	<string name="upload">अपलोड</string>
+	<string name="manage">प्रबंधन</string>
 	<string name="discard">नज़रअंदाज़ करे</string>
 	<string name="notifications">सूचनाएं</string>
 	<string name="note_reply_successful">जवाब प्रकाशित हो गया</string>
 	<string name="new_notifications">%d नयी सूचनाएं</string>
 	<string name="more_notifications">और %d और भी.</string>
+	<string name="sign_in">साइन इन</string>
 	<string name="loading">लोड किया जा रहा...</string>
 	<string name="httppassword">एचटीटीपी कूटशब्द</string>
 	<string name="httpuser">एचटीटीपी उपयोगकर्ता नाम</string>
@@ -545,22 +523,19 @@ Language: hi_IN
 	<string name="featured">विशेष छवि के रुप में उपयोग करें</string>
 	<string name="featured_in_post">पोस्ट सामग्री में छवि को शामिल करे</string>
 	<string name="blogusername">ब्लॉग उपयोगकर्ता नाम</string>
-	<string name="ok">ओके</string>
 	<string name="upload_scaled_image">अपलोड करें और बढाये गए छवि से जोड़े</string>
 	<string name="scaled_image">बढाये गए छवि की चौड़ाई</string>
-	<string name="scheduled">	नियत किया गया</string>
 	<string name="link_enter_url">यूआरएल</string>
+	<string name="uploading">अपलोड किया जा रहा</string>
 	<string name="version">संस्करण</string>
 	<string name="tos">सेवा की शर्तें</string>
 	<string name="app_title">एंड्राइड के लिए वर्डप्रेस</string>
-	<string name="max_thumbnail_px_width">मूलभूत छवि की चौड़ाई</string>
 	<string name="image_alignment">संरेखण</string>
 	<string name="refresh">रिफ्रेश</string>
 	<string name="untitled">बिना शीर्षक का</string>
 	<string name="edit">संपादित करें</string>
 	<string name="page_id">पृष्ठ</string>
 	<string name="post_id">पोस्ट</string>
-	<string name="post_password">कूटशब्द (वैकल्पिक)</string>
 	<string name="immediately">तुरंत</string>
 	<string name="quickpress_add_alert_title">शॉर्टकट नाम निर्धारित करें </string>
 	<string name="settings">सेटिंग्स</string>
@@ -568,25 +543,16 @@ Language: hi_IN
 	<string name="share_url">यूआरएल साझा करे</string>
 	<string name="quickpress_add_error">शॉर्टकट का नाम खाली नहीं हो सकता</string>
 	<string name="quickpress_window_title">QuickPress शॉर्टकट के लिए एक ब्लॉग चुने</string>
-	<string name="publish_post">प्रकाशित करे</string>
-	<string name="post_private">प्राइवेट</string>
-	<string name="draft">प्रारूप</string>
 	<string name="upload_full_size_image">अपलोड करें और पूर्ण छवि से जोड़े</string>
 	<string name="categories">श्रेणिया</string>
 	<string name="title">शीर्षक</string>
-	<string name="tags_separate_with_commas">टैग (अल्पविराम से अलग किये जाये टैग)</string>
+	<string name="tags_separate_with_commas">टैग को अल्पविराम से अलग करे \n</string>
 	<string name="dlg_deleting_comments">टिप्पणियों को हटाना</string>
-	<string name="notification_vibrate">वाइब्रेट</string>
-	<string name="notification_blink">ब्लिंक सुचना का प्रकाश </string>
-	<string name="status">स्थति</string>
-	<string name="location">स्थान</string>
-	<string name="select_video">गैलरी से एक वीडियो को चुने</string>
 	<string name="sdcard_title">एसडी कार्ड आवश्यक है</string>
 	<string name="media">मीडिया</string>
 	<string name="delete">हटाये</string>
 	<string name="none">कुछ भी नहीं</string>
 	<string name="blogs">ब्लॉग</string>
-	<string name="select_photo">गैलरी से एक तस्वीर को चुने </string>
 	<string name="add"> जोड़े</string>
 	<string name="cancel">रद्द करें</string>
 	<string name="error">त्रुटि</string>
@@ -597,4 +563,5 @@ Language: hi_IN
 	<string name="save">सहेजें</string>
 	<string name="yes">हां</string>
 	<string name="category_refresh_error">श्रेणी रिफ्रेश त्रुटि</string>
+	<string name="notification_settings">अधिसूचना सेटिंग</string>
 </resources>

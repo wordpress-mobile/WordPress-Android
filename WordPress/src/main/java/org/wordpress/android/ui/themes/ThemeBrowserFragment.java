@@ -21,21 +21,27 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.ThemeTable;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
+import org.wordpress.android.widgets.WPNetworkImageView;
+
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeBrowserFragment extends Fragment implements RecyclerListener, AdapterView.OnItemSelectedListener, AbsListView.OnScrollListener {
+public class ThemeBrowserFragment extends Fragment implements RecyclerListener, AdapterView.OnItemSelectedListener,
+        AbsListView.OnScrollListener {
     public interface ThemeBrowserFragmentCallback {
         void onActivateSelected(String themeId);
         void onTryAndCustomizeSelected(String themeId);
@@ -64,6 +70,32 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private boolean mShouldRefreshOnStart;
     private TextView mEmptyTextView;
     private ProgressBar mProgressBar;
+
+    private SiteModel mSite;
+
+    public static ThemeBrowserFragment newInstance(SiteModel site) {
+        ThemeBrowserFragment fragment = new ThemeBrowserFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(WordPress.SITE, site);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -132,6 +164,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         if (mGridView != null) {
             outState.putInt(BUNDLE_PAGE, mPage);
         }
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     public TextView getEmptyTextView() {
@@ -156,21 +189,23 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     protected void configureSwipeToRefresh(View view) {
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(mThemeBrowserActivity, (CustomSwipeRefreshLayout) view.findViewById(
-                R.id.ptr_layout), new RefreshListener() {
-            @Override
-            public void onRefreshStarted() {
-                if (!isAdded()) {
-                    return;
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!isAdded()) {
+                            return;
+                        }
+                        if (!NetworkUtils.checkConnection(mThemeBrowserActivity)) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            mEmptyTextView.setText(R.string.no_network_title);
+                            return;
+                        }
+                        mThemeBrowserActivity.fetchThemes();
+                    }
                 }
-                if (!NetworkUtils.checkConnection(mThemeBrowserActivity)) {
-                    mSwipeToRefreshHelper.setRefreshing(false);
-                    mEmptyTextView.setText(R.string.no_network_title);
-                    return;
-                }
-                mThemeBrowserActivity.fetchThemes();
-            }
-        });
+        );
         mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
     }
 
@@ -281,19 +316,19 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
      * @return a db Cursor or null if current blog is null
      */
     protected Cursor fetchThemes(int position) {
-        if (WordPress.getCurrentBlog() == null) {
+        if (mSite == null) {
             return null;
         }
 
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+        String blogId = String.valueOf(mSite.getSiteId());
         switch (position) {
             case THEME_FILTER_PREMIUM_INDEX:
-                return WordPress.wpDB.getThemesPremium(blogId);
+                return ThemeTable.getThemesPremium(WordPress.wpDB.getDatabase(), blogId);
             case THEME_FILTER_ALL_INDEX:
-                return WordPress.wpDB.getThemesAll(blogId);
+                return ThemeTable.getThemesAll(WordPress.wpDB.getDatabase(), blogId);
             case THEME_FILTER_FREE_INDEX:
             default:
-                return WordPress.wpDB.getThemesFree(blogId);
+                return ThemeTable.getThemesFree(WordPress.wpDB.getDatabase(), blogId);
         }
     }
 
@@ -334,13 +369,13 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     @Override
     public void onMovedToScrapHeap(View view) {
         // cancel image fetch requests if the view has been moved to recycler.
-        NetworkImageView niv = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
+        WPNetworkImageView niv = (WPNetworkImageView) view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
             // this tag is set in the ThemeBrowserAdapter class
             String requestUrl = (String) niv.getTag();
             if (requestUrl != null) {
                 // need a listener to cancel request, even if the listener does nothing
-                ImageContainer container = WordPress.imageLoader.get(requestUrl, new ImageListener() {
+                ImageContainer container = WordPress.sImageLoader.get(requestUrl, new ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                     }

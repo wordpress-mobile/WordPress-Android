@@ -74,4 +74,16 @@ public abstract class Tracker {
     void setWordPressComUserName(String userName) {
         mWpcomUserName = userName;
     }
+
+    public static boolean isValidEvent(Stat stat) {
+        if (stat == null) {
+            try {
+                throw new AnalyticsException("Trying to track a null stat event!");
+            } catch (AnalyticsException e) {
+                AppLog.e(AppLog.T.STATS, e);
+            }
+            return false;
+        }
+        return true;
+    }
 }

@@ -4,8 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class InsightsTodayModel extends BaseStatsModel {
-
-    private String mBlogID;
+    private long mBlogID;
     private String mDate;
     private String mPeriod;
     private int mVisitors;
@@ -15,7 +14,7 @@ public class InsightsTodayModel extends BaseStatsModel {
     private int mComments;
     private int mFollowers;
 
-    public InsightsTodayModel(String blogID, JSONObject response) throws JSONException {
+    public InsightsTodayModel(long blogID, JSONObject response) throws JSONException {
         this.setBlogID(blogID);
         this.mDate = response.getString("date");
         this.mPeriod = response.getString("period");
@@ -27,11 +26,11 @@ public class InsightsTodayModel extends BaseStatsModel {
         this.mFollowers = response.optInt("followers");
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    private void setBlogID(String blogID) {
+    private void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 

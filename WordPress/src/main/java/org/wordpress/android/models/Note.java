@@ -7,10 +7,12 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -21,7 +23,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.Locale;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -160,10 +161,6 @@ public class Note {
 
     public boolean canTrash() {
         return canModerate();
-    }
-
-    public boolean canEdit(int localBlogId) {
-        return (localBlogId > 0 && canModerate());
     }
 
     public boolean canLike() {
@@ -346,13 +343,6 @@ public class Note {
         return mActions;
     }
 
-
-    private void updateJSON(JSONObject json) {
-        synchronized (mSyncLock) {
-            mNoteJSON = json;
-        }
-    }
-
     /*
      * returns the actions allowed on this note, assumes it's a comment notification
      */
@@ -411,19 +401,20 @@ public class Note {
     /**
      * Constructs a new Comment object based off of data in a Note
      */
-    public Comment buildComment() {
-        return new Comment(
-                getPostId(),
-                getCommentId(),
-                getCommentAuthorName(),
-                DateTimeUtils.iso8601FromTimestamp(getTimestamp()),
-                getCommentText(),
-                CommentStatus.toString(getCommentStatus()),
-                "", // post title is unavailable in note model
-                getCommentAuthorUrl(),
-                "", // user email is unavailable in note model
-                getIconURL()
-        );
+    public CommentModel buildComment() {
+        CommentModel comment = new CommentModel();
+        comment.setRemotePostId(getPostId());
+        comment.setRemoteCommentId(getCommentId());
+        comment.setAuthorName(getCommentAuthorName());
+        comment.setDatePublished(DateTimeUtils.iso8601FromTimestamp(getTimestamp()));
+        comment.setContent(getCommentText());
+        comment.setStatus(getCommentStatus().toString());
+        comment.setAuthorUrl(getCommentAuthorUrl());
+        comment.setPostTitle(getTitle()); // unavailable in note model
+        comment.setAuthorEmail(""); // unavailable in note model
+        comment.setAuthorProfileImageUrl(getIconURL());
+        comment.setILike(hasLikedComment());
+        return comment;
     }
 
     public String getCommentAuthorName() {
@@ -473,7 +464,7 @@ public class Note {
             return CommentStatus.UNAPPROVED;
         }
 
-        return CommentStatus.UNKNOWN;
+        return CommentStatus.ALL;
     }
 
     public boolean hasLikedComment() {
@@ -491,36 +482,19 @@ public class Note {
         }
     }
 
-    /**
-     * Represents a user replying to a note.
-     */
-    public static class Reply {
-        private final String mContent;
-        private final String mRestPath;
-
-        Reply(String restPath, String content) {
-            mRestPath = restPath;
-            mContent = content;
+    // this method is used to compare two Notes: as it's potentially a very processing intensive operation,
+    // we're only comparing the note id, timestamp, and raw JSON length, which is accurate enough for
+    // the purpose of checking if the local Note is any different from a remote note.
+    public boolean equalsTimeAndLength(Note note) {
+        if (note == null) {
+            return false;
         }
 
-        public String getContent() {
-            return mContent;
+        if (this.getTimestampString().equalsIgnoreCase(note.getTimestampString())
+                && this.getJSON().length() == note.getJSON().length()) {
+            return true;
         }
-
-        public String getRestPath() {
-            return mRestPath;
-        }
-    }
-
-    public Reply buildReply(String content) {
-        String restPath;
-        if (this.isCommentType()) {
-            restPath = String.format(Locale.US, "sites/%d/comments/%d", getSiteId(), getCommentId());
-        } else {
-            restPath = String.format(Locale.US, "sites/%d/posts/%d", getSiteId(), getPostId());
-        }
-
-        return new Reply(String.format(Locale.US, "%s/replies/new", restPath), content);
+        return false;
     }
 
     public static synchronized Note buildFromBase64EncodedData(String noteId, String base64FullNoteData) {

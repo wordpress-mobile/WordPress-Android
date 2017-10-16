@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_blog_info"
@@ -25,7 +26,7 @@
             style="@style/ReaderImageView.Avatar"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_large"
-            tools:src="@drawable/blavatar_placeholder" />
+            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_blog_name"
@@ -79,7 +80,7 @@
             android:maxLines="3"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
-            app:wpFontFamily="merriweather"
+            android:fontFamily="serif"
             tools:text="text_description" />
 
         <LinearLayout

@@ -1,81 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/media_filter_spinner_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/grey_lighten_30"
-            android:clickable="true"
-            android:paddingLeft="8dp"
-            android:paddingRight="16dp">
-
-            <org.wordpress.android.ui.CustomSpinner
-                android:id="@+id/media_filter_spinner"
-                style="@style/DropDownNav.WordPress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:paddingLeft="0dp"/>
-        </FrameLayout>
-
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_filter_result_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <GridView
-                android:id="@+id/media_gridview"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:horizontalSpacing="@dimen/margin_small"
-                android:numColumns="@integer/media_grid_num_columns"
-                android:paddingLeft="@dimen/margin_small"
-                android:paddingRight="@dimen/margin_small"
-                android:scrollbarStyle="outsideOverlay"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="@dimen/margin_small"
-                tools:listitem="@layout/media_grid_item"/>
+                android:layout_height="match_parent"
+                android:fadeScrollbars="true"
+                android:scrollbars="vertical"
+                tools:listitem="@layout/media_grid_item" />
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
     </LinearLayout>
 
-
-    <LinearLayout
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        style="@style/WordPress.EmptyList.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+        android:layout_marginLeft="@dimen/empty_list_title_side_margin"
+        android:layout_marginRight="@dimen/empty_list_title_side_margin"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:text="@string/media_empty_list"
+        android:visibility="gone"
+        app:fixWidowWords="true"
+        tools:visibility="visible" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/empty_view_title"
-            style="@style/WordPress.EmptyList.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
-            android:layout_marginLeft="@dimen/empty_list_title_side_margin"
-            android:layout_marginRight="@dimen/empty_list_title_side_margin"
-            android:text="@string/media_empty_list_custom_date"
-            app:fixWidowWords="true"/>
-
-    </LinearLayout>
 </FrameLayout>

@@ -9,11 +9,11 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPPrefUtils;
-import org.wordpress.android.widgets.WPEditText;
 import org.wordpress.android.widgets.WPTextView;
 
 public class ProfileInputDialogFragment extends DialogFragment {
@@ -50,7 +50,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
         alertDialogBuilder.setView(promptView);
 
         final WPTextView textView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_label);
-        final WPEditText editText = (WPEditText) promptView.findViewById(R.id.my_profile_dialog_input);
+        final EditText editText = (EditText) promptView.findViewById(R.id.my_profile_dialog_input);
         final WPTextView hintView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_hint);
 
         Bundle args = getArguments();
@@ -76,7 +76,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
         }
 
         alertDialogBuilder.setCancelable(true)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (getTargetFragment() instanceof Callback) {
                             ((Callback) getTargetFragment()).onSuccessfulInput(editText.getText().toString(), callbackId);

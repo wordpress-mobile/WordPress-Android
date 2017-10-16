@@ -77,7 +77,7 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
                     GravatarUtils.fixGravatarUrl(user.getAvatarUrl(), mAvatarSz),
                     WPNetworkImageView.ImageType.AVATAR);
         } else {
-            holder.imgAvatar.showDefaultGravatarImage();
+            holder.imgAvatar.showDefaultGravatarImageAndNullifyUrl();
         }
     }
 

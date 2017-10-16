@@ -71,5 +71,4 @@ public class PlansUtils {
     public static void clearPlanData() {
         AppPrefs.setGlobalPlansFeatures(null);
     }
-
 }

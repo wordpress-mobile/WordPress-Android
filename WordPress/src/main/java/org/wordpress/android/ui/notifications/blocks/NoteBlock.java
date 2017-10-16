@@ -145,7 +145,7 @@ public class NoteBlock {
         if (hasImageMediaItem()) {
             // Request image, and animate it when loaded
             noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
-            WordPress.imageLoader.get(getNoteMediaItem().optString("url", ""), new ImageLoader.ImageListener() {
+            WordPress.sImageLoader.get(getNoteMediaItem().optString("url", ""), new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                     if (!mHasAnimatedBadge && response.getBitmap() != null && view.getContext() != null) {

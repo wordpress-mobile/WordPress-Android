@@ -55,7 +55,7 @@
             android:id="@+id/drake_empty_results"
             android:layout_width="@dimen/drake_themes_width"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/drake_empty_results"
+            app:srcCompat="@drawable/drake_empty_results_400dp"
             android:adjustViewBounds="true"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/theme_no_search_result_found" />

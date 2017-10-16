@@ -18,24 +18,24 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
@@ -56,7 +56,11 @@ import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class ReaderCommentListActivity extends AppCompatActivity {
 
@@ -79,17 +83,20 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private boolean mIsUpdatingComments;
     private boolean mHasUpdatedComments;
     private boolean mIsSubmittingComment;
+    private boolean mUpdateOnResume;
+
     private DirectOperation mDirectOperation;
     private long mReplyToCommentId;
     private long mCommentId;
     private int mRestorePosition;
     private String mInterceptedUri;
 
-    private boolean mBackFromLogin;
+    @Inject AccountStore mAccountStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.reader_activity_comment_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -122,23 +129,17 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
-            // we need to re-request comments every time this activity is shown in order to
-            // correctly reflect deletions and nesting changes - skipped when there's no
-            // connection so we can show existing comments while offline
-            if (NetworkUtils.isNetworkAvailable(this)) {
-                ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
-            }
         }
 
-
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this,
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 (CustomSwipeRefreshLayout) findViewById(R.id.swipe_to_refresh),
                 new SwipeToRefreshHelper.RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
                         updatePostAndComments();
                     }
-                });
+                }
+        );
 
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
         int spacingHorizontal = 0;
@@ -147,8 +148,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
-        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%s%d%d",
-                        AccountHelper.getCurrentUsernameForBlog(null), mPostId, mBlogId));
+        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", mPostId, mBlogId));
         mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
 
         if (!loadPost()) {
@@ -163,8 +163,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID), false);
         }
 
-        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, (int) mBlogId);
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions((int) mBlogId, this, mSuggestionServiceConnectionManager,
+        // update the post and its comments upon creation
+        mUpdateOnResume = (savedInstanceState == null);
+
+        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mBlogId, this, mSuggestionServiceConnectionManager,
                 mPost.isWP());
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
@@ -183,24 +186,24 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
     };
 
+    // to do a complete refresh we need to get updated post and new comments
     private void updatePostAndComments() {
-        //to do a complete refresh we need to get updated post and new comments
         ReaderPostActions.updatePost(mPost, new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (isFinishing()) {
-                    return;
-                }
-
-                if (result.isNewOrChanged()) {
-                    getCommentAdapter().setPost(mPost); //pass updated post to the adapter
-                    ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId); //clear all the previous comments
-                    updateComments(false, false); //load first page of comments
-                } else {
-                    setRefreshing(false);
+                if (!isFinishing() && result.isNewOrChanged()) {
+                    // get the updated post and pass it to the adapter
+                    ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
+                    if (post != null) {
+                        getCommentAdapter().setPost(post);
+                        mPost = post;
+                    }
                 }
             }
         });
+
+        // load the first page of comments
+        updateComments(true, false);
     }
 
     @Override
@@ -208,18 +211,12 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         super.onResume();
         EventBus.getDefault().register(this);
 
-        if (mBackFromLogin) {
-            if (NetworkUtils.isNetworkAvailable(this)) {
-                // purge and reload the comments since logged in changes some info (example: isLikedByCurrentUser)
-                ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
-                updatePostAndComments();
-            }
-
-            // clear up the back-from-login flag anyway
-            mBackFromLogin = false;
-        }
-
         refreshComments();
+
+        if (mUpdateOnResume && NetworkUtils.isNetworkAvailable(this)) {
+            updatePostAndComments();
+            mUpdateOnResume = false;
+        }
     }
 
     @SuppressWarnings("unused")
@@ -310,12 +307,13 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     }
 
     private boolean loadPost() {
-        mPost = ReaderPostTable.getBlogPost(mBlogId, mPostId, true);
+        mPost = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
         if (mPost == null) {
             return false;
         }
 
-        if (ReaderUtils.isLoggedOutReader()) {
+        TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
+        if (!mAccountStore.hasAccessToken()) {
             mCommentBox.setVisibility(View.GONE);
             showCommentsClosedMessage(false);
         } else if (mPost.isCommentsOpen) {
@@ -425,7 +423,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     mCommentId = 0;
                     break;
                 case COMMENT_REPLY:
-                    setReplyToCommentId(mCommentId, !ReaderUtils.isLoggedOutReader());
+                    setReplyToCommentId(mCommentId, mAccountStore.hasAccessToken());
 
                     // clear up the direct operation vars. Only performing it once.
                     mDirectOperation = null;
@@ -433,7 +431,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     break;
                 case COMMENT_LIKE:
                     getCommentAdapter().setHighlightCommentId(mCommentId, false);
-                    if (ReaderUtils.isLoggedOutReader()) {
+                    if (!mAccountStore.hasAccessToken()) {
                         Snackbar.make(mRecyclerView,
                                 R.string.reader_snackbar_err_cannot_like_post_logged_out,
                                 Snackbar.LENGTH_INDEFINITE)
@@ -449,7 +447,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                                     R.string.reader_toast_err_already_liked);
 
                         } else {
-                            if (ReaderCommentActions.performLikeAction(comment, true) &&
+                            long wpComUserId = mAccountStore.getAccount().getUserId();
+                            if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId) &&
                                     getCommentAdapter().refreshComment(mCommentId)) {
                                 getCommentAdapter().setAnimateLikeCommentId(mCommentId);
 
@@ -619,6 +618,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     // stop highlighting the fake comment and replace it with the real one
                     getCommentAdapter().setHighlightCommentId(0, false);
                     getCommentAdapter().replaceComment(fakeCommentId, newComment);
+                    getCommentAdapter().refreshPost();
                     setReplyToCommentId(0, false);
                     mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
                 } else {
@@ -631,12 +631,14 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             }
         };
 
+        long wpComUserId = mAccountStore.getAccount().getUserId();
         ReaderComment newComment = ReaderCommentActions.submitPostComment(
                 getPost(),
                 fakeCommentId,
                 commentText,
                 mReplyToCommentId,
-                actionListener);
+                actionListener,
+                wpComUserId);
 
         if (newComment != null) {
             mEditComment.setText(null);
@@ -666,8 +668,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // if user is returning from login, make sure to update the post and its comments
         if (requestCode == RequestCodes.DO_LOGIN && resultCode == Activity.RESULT_OK) {
-            mBackFromLogin = true;
+            mUpdateOnResume = true;
         }
     }
 }

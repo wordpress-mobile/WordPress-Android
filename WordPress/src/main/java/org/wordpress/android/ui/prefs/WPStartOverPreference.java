@@ -13,9 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.UrlUtils;
 
 /**
  * Calypso-style Preference that has an icon and a widget in the correct place. If there is a button
@@ -75,8 +72,8 @@ public class WPStartOverPreference extends WPPreference {
 
         if (view.findViewById(R.id.domain) != null) {
             TextView textView = (TextView) view.findViewById(R.id.domain);
-            Blog blog = WordPress.getCurrentBlog();
-            textView.setText(UrlUtils.getHost(blog.getHomeURL()));
+            // TODO: FluxC: We might want to get the selected site here and update the view
+            // textView.setText(UrlUtils.getHost(blog.getHomeURL()));
         }
     }
 }

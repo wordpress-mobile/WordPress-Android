@@ -1,10 +1,8 @@
 package org.wordpress.android.networking;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -19,8 +17,7 @@ import de.greenrobot.event.EventBus;
 public class ConnectionChangeReceiver extends BroadcastReceiver {
     private static boolean mIsFirstReceive = true;
     private static boolean mWasConnected = true;
-    private static boolean mIsEnabled = false; // this value must be synchronized with the ConnectionChangeReceiver
-                                               // state in our AndroidManifest
+    private static ConnectionChangeReceiver sInstance;
 
     public static class ConnectionChangeEvent {
         private final boolean mIsConnected;
@@ -53,18 +50,10 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         EventBus.getDefault().post(new ConnectionChangeEvent(isConnected));
     }
 
-    public static void setEnabled(Context context, boolean enabled) {
-        if (mIsEnabled == enabled) {
-            return;
+    public static ConnectionChangeReceiver getInstance(){
+        if (sInstance == null) {
+            sInstance = new ConnectionChangeReceiver();
         }
-        mIsEnabled = enabled;
-        AppLog.i(T.UTILS, "ConnectionChangeReceiver.setEnabled " + enabled);
-        int flag = (enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED :
-                              PackageManager.COMPONENT_ENABLED_STATE_DISABLED);
-        ComponentName component = new ComponentName(context, ConnectionChangeReceiver.class);
-        context.getPackageManager().setComponentEnabledSetting(component, flag, PackageManager.DONT_KILL_APP);
-        if (mIsEnabled) {
-            postConnectionChangeEvent(NetworkUtils.isNetworkAvailable(context));
-        }
+        return sInstance;
     }
 }

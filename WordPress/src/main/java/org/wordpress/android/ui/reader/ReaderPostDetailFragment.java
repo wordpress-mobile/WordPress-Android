@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,7 +29,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -56,6 +60,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -69,7 +74,11 @@ import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.EnumSet;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class ReaderPostDetailFragment extends Fragment
         implements WPMainActivity.OnActivityBackPressedListener,
@@ -119,6 +128,9 @@ public class ReaderPostDetailFragment extends Fragment
     // min scroll distance before toggling toolbar
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(false, blogId, postId, null, 0, false, null, null, false);
     }
@@ -156,6 +168,7 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
         if (savedInstanceState != null) {
             mPostHistory.restoreInstance(savedInstanceState);
         }
@@ -200,16 +213,19 @@ public class ReaderPostDetailFragment extends Fragment
         int swipeToRefreshOffset = getResources().getDimensionPixelSize(R.dimen.toolbar_content_offset);
         swipeRefreshLayout.setProgressViewOffset(false, 0, swipeToRefreshOffset);
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), swipeRefreshLayout, new SwipeToRefreshHelper.RefreshListener() {
-            @Override
-            public void onRefreshStarted() {
-                if (!isAdded()) {
-                    return;
-                }
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                swipeRefreshLayout,
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!isAdded()) {
+                            return;
+                        }
 
-                updatePost();
-            }
-        });
+                        updatePost();
+                    }
+                }
+        );
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);
@@ -415,7 +431,8 @@ public class ReaderPostDetailFragment extends Fragment
             likeCount.setSelected(isAskingToLike);
             ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
 
-            boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike);
+            boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike,
+                    mAccountStore.getAccount().getUserId());
             if (!success) {
                 likeCount.setSelected(!isAskingToLike);
                 return;
@@ -434,39 +451,22 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    /*
+    /**
      * display the standard Android share chooser to share this post
      */
-    private static final int MAX_SHARE_TITLE_LEN = 100;
-
     private void sharePage() {
         if (!isAdded() || !hasPost()) {
             return;
         }
 
-        final String url = (mPost.hasShortUrl() ? mPost.getShortUrl() : mPost.getUrl());
-        final String shareText;
-
-        if (mPost.hasTitle()) {
-            final String title;
-            // we don't know where the user will choose to share, so enforce a max title length
-            // in order to fit a tweet with some extra room for the URL and user edits
-            if (mPost.getTitle().length() > MAX_SHARE_TITLE_LEN) {
-                title = mPost.getTitle().substring(0, MAX_SHARE_TITLE_LEN).trim() + "…";
-            } else {
-                title = mPost.getTitle().trim();
-            }
-            shareText = title + " - " + url;
-        } else {
-            shareText = url;
-        }
+        String url = (mPost.hasShortUrl() ? mPost.getShortUrl() : mPost.getUrl());
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, shareText);
-        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.reader_share_subject, getString(R.string.app_name)));
+        intent.putExtra(Intent.EXTRA_TEXT, url);
+        intent.putExtra(Intent.EXTRA_SUBJECT, mPost.getTitle());
         try {
-            startActivity(Intent.createChooser(intent, getString(R.string.reader_share_link)));
+            startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
         } catch (android.content.ActivityNotFoundException ex) {
             ToastUtils.showToast(getActivity(), R.string.reader_toast_err_share_intent);
         }
@@ -698,7 +698,7 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setCount(mPost.numLikes);
             countLikes.setVisibility(View.VISIBLE);
             countLikes.setSelected(mPost.isLikedByCurrentUser);
-            if (ReaderUtils.isLoggedOutReader()) {
+            if (!mAccountStore.hasAccessToken()) {
                 countLikes.setEnabled(false);
             } else if (mPost.canLikePost()) {
                 countLikes.setOnClickListener(new View.OnClickListener() {
@@ -726,7 +726,7 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        if (ReaderUtils.isLoggedOutReader()) {
+        if (!mAccountStore.hasAccessToken()) {
             Snackbar.make(getView(), R.string.reader_snackbar_err_cannot_like_post_logged_out, Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.sign_in, mSignInClickListener).show();
             return;
@@ -810,6 +810,7 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderActions.OnRequestListener listener = new ReaderActions.OnRequestListener() {
             @Override
             public void onSuccess() {
+                mHasAlreadyRequestedPost = true;
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
                     showPost();
@@ -819,6 +820,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             @Override
             public void onFailure(int statusCode) {
+                mHasAlreadyRequestedPost = true;
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
                     onRequestFailure(statusCode);
@@ -861,7 +863,7 @@ public class ReaderPostDetailFragment extends Fragment
                 case 401:
                 case 403:
                     final boolean offerSignIn = WPUrlUtils.isWordPressCom(mInterceptedUri)
-                            && !AccountHelper.isSignedInWordPressDotCom();
+                            && !mAccountStore.hasAccessToken();
 
                     if (!offerSignIn) {
                         errMsgResId = (mInterceptedUri == null)
@@ -976,7 +978,6 @@ public class ReaderPostDetailFragment extends Fragment
                 // post couldn't be loaded which means it doesn't exist in db, so request it from
                 // the server if it hasn't already been requested
                 if (!mHasAlreadyRequestedPost) {
-                    mHasAlreadyRequestedPost = true;
                     AppLog.i(T.READER, "reader post detail > post not found, requesting it");
                     requestPost();
                 } else if (!TextUtils.isEmpty(mErrorMessage)) {
@@ -1036,13 +1037,37 @@ public class ReaderPostDetailFragment extends Fragment
             mRenderer = new ReaderPostRenderer(mReaderWebView, mPost);
             mRenderer.beginRender();
 
+            // if we're showing just the excerpt, also show a footer which links to the full post
+            if (mPost.shouldShowExcerpt()) {
+                ViewGroup excerptFooter = (ViewGroup) getView().findViewById(R.id.excerpt_footer);
+                excerptFooter.setVisibility(View.VISIBLE);
+
+                String blogName = "<font color='" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color
+                        .reader_hyperlink) + "'>" + mPost.getBlogName() + "</font>";
+                String linkText = String.format(WordPress.getContext().
+                        getString(R.string.reader_excerpt_link), blogName);
+
+                TextView txtExcerptFooter = (TextView) excerptFooter.findViewById(R.id.text_excerpt_footer);
+                txtExcerptFooter.setText(Html.fromHtml(linkText));
+
+                // we can't set the vector drawable in the layout because it will crash pre-API21
+                Drawable drawableRight = VectorDrawableCompat.create(txtExcerptFooter.getResources(), R.drawable.reader_visit, null);
+                txtExcerptFooter.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+
+                txtExcerptFooter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.openUrl(v.getContext(), mPost.getUrl());
+                    }
+                });
+            }
+
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             txtDateline.setText(timestamp);
 
-
-            headerView.setPost(mPost);
+            headerView.setPost(mPost, mAccountStore.hasAccessToken());
             tagStrip.setPost(mPost);
 
             if (canShowFooter() && mLayoutFooter.getVisibility() != View.VISIBLE) {
@@ -1141,9 +1166,9 @@ public class ReaderPostDetailFragment extends Fragment
         // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
         // used for Discover posts that highlight a blog
         if (ReaderUtils.isBlogPreviewUrl(url)) {
-            long blogId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
-            if (blogId != 0) {
-                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
+            long siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
+            if (siteId != 0) {
+                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), siteId);
             }
             return true;
         }
@@ -1265,7 +1290,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost == null) {
             return false;
         }
-        if (ReaderUtils.isLoggedOutReader()) {
+        if (!mAccountStore.hasAccessToken()) {
             return mPost.numReplies > 0;
         }
         return mPost.isWP()
@@ -1278,7 +1303,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost == null) {
             return false;
         }
-        if (ReaderUtils.isLoggedOutReader()) {
+        if (!mAccountStore.hasAccessToken()) {
             return mPost.numLikes > 0;
         }
         return mPost.canLikePost() || mPost.numLikes > 0;

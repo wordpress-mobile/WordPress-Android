@@ -22,8 +22,10 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Role;
+import org.wordpress.android.fluxc.model.RoleModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
@@ -42,36 +44,52 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PeopleInviteFragment extends Fragment implements
-        RoleSelectDialogFragment.OnRoleSelectListener,
+import javax.inject.Inject;
+
+public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFragment.OnRoleSelectListener,
         PeopleManagementActivity.InvitationSender {
-
+    private static final String URL_USER_ROLES_DOCUMENTATION = "https://en.support.wordpress.com/user-roles/";
     private static final String FLAG_SUCCESS = "SUCCESS";
-
-    private static final String ARG_BLOGID = "ARG_BLOGID";
-
+    private static final String KEY_USERNAMES = "usernames";
+    private static final String KEY_SELECTED_ROLE = "selected-role";
     private static final int MAX_NUMBER_OF_INVITEES = 10;
     private static final String[] USERNAME_DELIMITERS = {" ", ","};
     private final Map<String, ViewGroup> mUsernameButtons = new LinkedHashMap<>();
     private final HashMap<String, String> mUsernameResults = new HashMap<>();
     private final Map<String, View> mUsernameErrorViews = new Hashtable<>();
+    private ArrayList<String> mUsernames = new ArrayList<>();
     private ViewGroup mUsernamesContainer;
     private MultiUsernameEditText mUsernameEditText;
     private TextView mRoleTextView;
     private EditText mCustomMessageEditText;
 
-    private Role mRole;
+    private List<RoleModel> mInviteRoles;
+    private String mCurrentRole;
     private String mCustomMessage = "";
     private boolean mInviteOperationInProgress = false;
+    private SiteModel mSite;
 
-    public static PeopleInviteFragment newInstance(String dotComBlogId) {
+    @Inject SiteStore mSiteStore;
+
+    public static PeopleInviteFragment newInstance(SiteModel site) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
-
         Bundle bundle = new Bundle();
-        bundle.putString(ARG_BLOGID, dotComBlogId);
-
+        bundle.putSerializable(WordPress.SITE, site);
         peopleInviteFragment.setArguments(bundle);
         return peopleInviteFragment;
+    }
+
+    private void updateSiteOrFinishActivity() {
+        if (getArguments() != null) {
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
     }
 
     @Override
@@ -87,8 +105,31 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (mCurrentRole != null) {
+            outState.putString(KEY_SELECTED_ROLE, mCurrentRole);
+        }
+        outState.putStringArrayList(KEY_USERNAMES, new ArrayList<>(mUsernameButtons.keySet()));
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+        updateSiteOrFinishActivity();
+        mInviteRoles = RoleUtils.getInviteRoles(mSiteStore, mSite, this);
+
+        if (savedInstanceState != null) {
+            mCurrentRole = savedInstanceState.getString(KEY_SELECTED_ROLE);
+            ArrayList<String> retainedUsernames = savedInstanceState.getStringArrayList(KEY_USERNAMES);
+            if (retainedUsernames != null) {
+                mUsernames.clear();
+                mUsernames.addAll(retainedUsernames);
+            }
+        }
+
         // retain this fragment across configuration changes
         // WARNING: use setRetainInstance wisely. In this case we need this to be able to get the
         // results of network connections in the same fragment if going through a configuration change
@@ -116,9 +157,8 @@ public class PeopleInviteFragment extends Fragment implements
             }
         });
 
-        Role role = mRole;
-        if (role == null) {
-            role = getDefaultRole();
+        if (TextUtils.isEmpty(mCurrentRole)) {
+            mCurrentRole = getDefaultRole();
         }
 
         mUsernameEditText = (MultiUsernameEditText) view.findViewById(R.id.invite_usernames);
@@ -190,28 +230,37 @@ public class PeopleInviteFragment extends Fragment implements
         });
 
 
-        if (mUsernameButtons.size() > 0) {
-            ArrayList<String> usernames = new ArrayList<>(mUsernameButtons.keySet());
-            populateUsernameButtons(usernames);
+        // if mUsernameButtons is not empty, this means fragment retained itself
+        // if mUsernameButtons is empty, but we have manually retained usernames, this means that fragment was destroyed
+        // and we need to recreate manually added views and revalidate usernames
+        if (!mUsernameButtons.isEmpty()) {
+            mUsernameErrorViews.clear();
+            populateUsernameButtons(new ArrayList<>(mUsernameButtons.keySet()));
+        } else if (!mUsernames.isEmpty()) {
+            populateUsernameButtons(new ArrayList<>(mUsernames));
         }
 
-
-        view.findViewById(R.id.role_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, isPrivateSite());
-            }
-        });
-
         mRoleTextView = (TextView) view.findViewById(R.id.role);
-        setRole(role);
+        refreshRoleTextView();
         ImageView imgRoleInfo = (ImageView) view.findViewById(R.id.imgRoleInfo);
         imgRoleInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.openUrlExternal(v.getContext(), getString(R.string.role_info_url));
+                ActivityLauncher.openUrlExternal(v.getContext(), URL_USER_ROLES_DOCUMENTATION);
             }
         });
+
+        if (mInviteRoles.size() > 1) {
+            view.findViewById(R.id.role_container).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, mSite);
+                }
+            });
+        } else {
+            // Don't show drop-down arrow or role selector if there's only one role available
+            mRoleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
 
         final int MAX_CHARS = getResources().getInteger(R.integer.invite_message_char_limit);
         final TextView remainingCharsTextView = (TextView) view.findViewById(R.id.message_remaining);
@@ -271,9 +320,11 @@ public class PeopleInviteFragment extends Fragment implements
         }
     }
 
-    private Role getDefaultRole() {
-        Role[] inviteRoles = Role.inviteRoles(isPrivateSite());
-        return inviteRoles[0];
+    private String getDefaultRole() {
+        if (mInviteRoles.isEmpty()) {
+            return null;
+        }
+        return mInviteRoles.get(0).getName();
     }
 
     private void updateRemainingCharsView(TextView remainingCharsTextView, String currentString, int limit) {
@@ -370,8 +421,8 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     @Override
-    public void onRoleSelected(Role newRole) {
-        setRole(newRole);
+    public void onRoleSelected(RoleModel newRole) {
+        setRole(newRole.getName());
 
         if (!mUsernameButtons.keySet().isEmpty()) {
             // clear the username results list and let the 'validate' routine do the updates
@@ -381,9 +432,13 @@ public class PeopleInviteFragment extends Fragment implements
         }
     }
 
-    private void setRole(Role newRole) {
-        mRole = newRole;
-        mRoleTextView.setText(newRole.toDisplayString());
+    private void setRole(String newRole) {
+        mCurrentRole = newRole;
+        refreshRoleTextView();
+    }
+
+    private void refreshRoleTextView() {
+        mRoleTextView.setText(RoleUtils.getDisplayName(mCurrentRole, mInviteRoles));
     }
 
     private void validateAndStyleUsername(Collection<String> usernames, final ValidationEndListener validationEndListener) {
@@ -403,9 +458,9 @@ public class PeopleInviteFragment extends Fragment implements
         }
 
         if (usernamesToCheck.size() > 0) {
-
-            String dotComBlogId = getArguments().getString(ARG_BLOGID);
-            PeopleUtils.validateUsernames(usernamesToCheck, mRole, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
+            long dotComBlogId = mSite.getSiteId();
+            PeopleUtils.validateUsernames(usernamesToCheck, mCurrentRole, dotComBlogId,
+                    new PeopleUtils.ValidateUsernameCallback() {
                 @Override
                 public void onUsernameValidation(String username, ValidationResult validationResult) {
                     if (!isAdded()) {
@@ -584,8 +639,8 @@ public class PeopleInviteFragment extends Fragment implements
         //set the  "SEND" option disabled
         enableSendButton(false);
 
-        String dotComBlogId = getArguments().getString(ARG_BLOGID);
-        PeopleUtils.sendInvitations(new ArrayList<>(mUsernameButtons.keySet()), mRole, mCustomMessage, dotComBlogId,
+        long dotComBlogId = mSite.getSiteId();
+        PeopleUtils.sendInvitations(new ArrayList<>(mUsernameButtons.keySet()), mCurrentRole, mCustomMessage, dotComBlogId,
                 new PeopleUtils.InvitationsSendCallback() {
                     @Override
                     public void onSent(List<String> succeededUsernames, Map<String, String> failedUsernameErrors) {
@@ -649,12 +704,6 @@ public class PeopleInviteFragment extends Fragment implements
         if (mUsernameEditText != null) {
             mUsernameEditText.setOnFocusChangeListener(null);
         }
-    }
-
-    private boolean isPrivateSite() {
-        String dotComBlogId = getArguments().getString(ARG_BLOGID);
-        Blog blog = WordPress.wpDB.getBlogForDotComBlogId(dotComBlogId);
-        return blog != null && blog.isPrivate();
     }
 
     public interface ValidationEndListener {

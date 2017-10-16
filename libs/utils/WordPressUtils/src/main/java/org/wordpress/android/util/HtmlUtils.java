@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.QuoteSpan;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.util.helpers.WPHtmlTagHandler;
 import org.wordpress.android.util.helpers.WPImageGetter;
 import org.wordpress.android.util.helpers.WPQuoteSpan;
@@ -51,7 +51,7 @@ public class HtmlUtils {
         }
 
         // use regex to strip tags, then convert entities in the result
-        return trimStart(fastUnescapeHtml(str.replaceAll("<(.|\n)*?>", "")));
+        return trimStart(StringEscapeUtils.unescapeHtml4(str.replaceAll("<(.|\n)*?>", "")));
     }
 
     /*
@@ -68,18 +68,6 @@ public class HtmlUtils {
             start++;
         }
         return str.substring(start);
-    }
-
-    /**
-     * Convert html entities to actual Unicode characters - relies on commons apache lang
-     * @param text String to be decoded to Unicode
-     * @return String containing unicode characters
-     */
-    public static String fastUnescapeHtml(final String text) {
-        if (text == null || !text.contains("&")) {
-            return text;
-        }
-        return StringEscapeUtils.unescapeHtml(text);
     }
 
     /**
@@ -132,6 +120,7 @@ public class HtmlUtils {
      * @param  wpImageGetter
      */
     public static SpannableStringBuilder fromHtml(String source, WPImageGetter wpImageGetter) {
+        source = replaceListTagsWithCustomTags(source);
         SpannableStringBuilder html;
         try {
             html = (SpannableStringBuilder) Html.fromHtml(source, wpImageGetter, new WPHtmlTagHandler());
@@ -148,6 +137,15 @@ public class HtmlUtils {
             html.removeSpan(span);
         }
         return html;
+    }
+
+    private static String replaceListTagsWithCustomTags(String source) {
+        return source.replace("<ul", "<WPUL")
+                .replace("</ul>", "</WPUL>")
+                .replace("<ol", "<WPOL")
+                .replace("</ol>", "</WPOL>")
+                .replace("<li", "<WPLI")
+                .replace("</li>", "</WPLI>");
     }
 
     public static Spanned fromHtml(String source) {

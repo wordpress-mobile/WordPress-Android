@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:background="@drawable/dialog_full_holo_light"
-              android:minWidth="@dimen/default_dialog_width"
-              android:orientation="vertical">
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:background="@drawable/dialog_full_holo_light"
+    android:minWidth="@dimen/default_dialog_width"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,41 +21,90 @@
             android:layout_margin="@dimen/margin_large"
             android:orientation="vertical">
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
+                style="@style/Calypso.Text.Header"
                 android:id="@+id/blog_spinner_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_small"
+                android:paddingStart="@dimen/margin_small"
                 android:text="@string/select_a_blog"
-                android:textAllCaps="true"
-                android:textSize="@dimen/text_sz_small"/>
+                android:textColor="@color/wp_grey_darken_10"
+                android:textSize="@dimen/text_sz_small" />
 
-            <Spinner
+            <android.support.v7.widget.AppCompatSpinner
+                style="@style/Widget.AppCompat.TextView.SpinnerItem"
                 android:id="@+id/blog_spinner"
-                style="@style/DropDownNav.WordPress"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
+                style="@style/Calypso.Text.Header"
                 android:id="@+id/action_spinner_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_medium"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_small"
+                android:paddingStart="@dimen/margin_small"
                 android:text="@string/share_action_title"
-                android:textAllCaps="true"
-                android:textSize="@dimen/text_sz_small"/>
+                android:textColor="@color/wp_grey_darken_10"
+                android:textSize="@dimen/text_sz_small" />
 
-            <Spinner
-                android:id="@+id/action_spinner"
-                style="@style/DropDownNav.WordPress"
+            <RadioGroup
+                android:id="@+id/share_actions"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/new_post_share_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/grey_dark"
+                    android:text="@string/share_action_post"
+                    app:buttonTint="@color/wp_blue_medium" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/media_library_share_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/grey_dark"
+                    android:text="@string/share_action_media"
+                    app:buttonTint="@color/wp_blue_medium" />
+
+            </RadioGroup>
+
         </LinearLayout>
+
     </ScrollView>
 
-    <Button
-        android:id="@+id/share_intent_receiver_button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:onClick="onShareClicked"
-        android:text="@string/share_action"/>
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:id="@+id/share_intent_receiver_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onCancelClicked"
+            android:textColor="@color/blue_wordpress"
+            android:text="@string/cancel" />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:id="@+id/share_intent_receiver_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onShareClicked"
+            android:textColor="@color/blue_wordpress"
+            android:text="@string/share_action" />
+
+    </LinearLayout>
+
 </LinearLayout>

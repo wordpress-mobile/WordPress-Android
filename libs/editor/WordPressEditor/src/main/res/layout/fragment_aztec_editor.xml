@@ -10,7 +10,8 @@
         android:id="@+id/formatting_toolbar"
         android:layout_alignParentBottom="true"
         android:layout_height="@dimen/format_bar_height"
-        android:layout_width="match_parent" >
+        android:layout_width="match_parent"
+        aztec:advanced="true" >
     </org.wordpress.aztec.toolbar.AztecToolbar>
 
     <ScrollView
@@ -25,18 +26,42 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <org.wordpress.aztec.AztecText
-                android:id="@+id/title"
-                android:background="@null"
-                android:hint="@string/post_title"
-                android:inputType="textNoSuggestions|textMultiLine"
+            <RelativeLayout
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:padding="16dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                aztec:textColor="@color/grey_dark"
-                android:imeOptions="flagNoExtractUi" >
-            </org.wordpress.aztec.AztecText>
+                android:layout_width="match_parent" >
+
+                <org.wordpress.aztec.AztecText
+                    android:id="@+id/title"
+                    android:hint="@string/post_title"
+                    android:inputType="textCapSentences"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/title_beta"
+                    android:layout_toStartOf="@+id/title_beta"
+                    android:layout_width="match_parent"
+                    android:padding="16dp"
+                    android:fontFamily="serif"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/aztec_title_size"
+                    android:imeOptions="flagNoExtractUi"
+                    aztec:lineSpacingExtra="@dimen/spacing_extra_title"
+                    aztec:textColor="@color/grey_dark"
+                    aztec:textColorHint="@color/hint_text" >
+                </org.wordpress.aztec.AztecText>
+
+                <ImageButton
+                    android:id="@+id/title_beta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="@dimen/sourceview_side_margin"
+                    android:src="@drawable/ic_gridicons_help"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:contentDescription="@string/editor_title_beta">
+                </ImageButton>
+
+            </RelativeLayout>
 
             <View
                 android:id="@+id/sourceview_horizontal_divider"
@@ -53,7 +78,8 @@
                 <org.wordpress.aztec.AztecText
                     android:id="@+id/aztec"
                     android:gravity="top|start"
-                    android:hint="@string/edit_hint"
+                    android:hint="@string/editor_content_hint"
+                    android:inputType="textCapSentences|textMultiLine"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:paddingEnd="16dp"
@@ -62,30 +88,33 @@
                     android:paddingStart="16dp"
                     android:paddingTop="16dp"
                     android:scrollbars="vertical"
-                    android:textCursorDrawable="?attr/textColor"
-                    aztec:bulletColor="@color/blue_medium"
+                    android:fontFamily="serif"
+                    android:imeOptions="flagNoExtractUi"
+                    aztec:bulletColor="@color/bullet"
                     aztec:bulletMargin="@dimen/bullet_margin"
                     aztec:bulletPadding="@dimen/bullet_padding"
                     aztec:bulletWidth="@dimen/bullet_width"
+                    aztec:codeBackground="@color/code_background"
+                    aztec:codeColor="@color/code"
+                    aztec:drawableFailed="@drawable/ic_image_failed_grey_a_40_48dp"
+                    aztec:drawableLoading="@drawable/ic_image_loading_grey_a_40_48dp"
                     aztec:historyEnable="true"
                     aztec:historySize="10"
-                    aztec:lineSpacingExtra="0.8dp"
-                    aztec:lineSpacingMultiplier="@dimen/spacing_multiplier"
-                    aztec:linkColor="@color/blue_wordpress"
-                    aztec:linkUnderline="false"
-                    aztec:quoteBackground="@color/blue_wordpress"
-                    aztec:quoteColor="@color/blue_medium"
+                    aztec:linkColor="@color/link"
+                    aztec:linkUnderline="true"
+                    aztec:quoteBackground="@color/quote_background"
+                    aztec:quoteColor="@color/quote"
                     aztec:quoteMargin="@dimen/quote_margin"
                     aztec:quotePadding="@dimen/quote_padding"
                     aztec:quoteWidth="@dimen/quote_width"
-                    aztec:textColor="@color/grey_dark"
-                    android:imeOptions="flagNoExtractUi" >
+                    aztec:textColor="@color/text"
+                    aztec:textColorHint="@color/hint_text" >
+
                 </org.wordpress.aztec.AztecText>
 
                 <org.wordpress.aztec.source.SourceViewEditText
                     android:id="@+id/source"
                     android:gravity="top|start"
-                    android:hint="@string/source_hint"
                     android:inputType="textNoSuggestions|textMultiLine"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
@@ -95,9 +124,12 @@
                     android:paddingRight="16dp"
                     android:paddingEnd="16dp"
                     android:scrollbars="vertical"
+                    android:textColorHint="@color/hint_text"
+                    android:background="@null"
                     android:textSize="14sp"
                     android:imeOptions="flagNoExtractUi"
-                    android:visibility="gone" >
+                    android:visibility="gone"
+                    android:fontFamily="monospace">
                 </org.wordpress.aztec.source.SourceViewEditText>
 
             </FrameLayout>

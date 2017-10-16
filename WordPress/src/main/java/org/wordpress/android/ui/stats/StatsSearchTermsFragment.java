@@ -20,7 +20,7 @@ import java.util.List;
 public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsSearchTermsFragment.class.getSimpleName();
 
-    private final static String UNKNOWN_SEARCH_TERMS_HELP_PAGE = "http://en.support.wordpress.com/stats/#search-engine-terms";
+    private final static String UNKNOWN_SEARCH_TERMS_HELP_PAGE = "https://en.support.wordpress.com/stats/#search-engine-terms";
 
     private SearchTermsModel mSearchTerms;
 
@@ -160,7 +160,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
                 return super.getItem(position);
             }
 
-            return new SearchTermModel("", null, "Unknown Search Terms", encryptedSearchTerms, true);
+            return new SearchTermModel(0, null, "Unknown Search Terms", encryptedSearchTerms, true);
         }
 
         @Override

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingTop="@dimen/margin_extra_large">
+
+    <TextView
+        style="@style/LoginTheme.Heading"
+        android:id="@+id/logged_in_as_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:text="@string/login_logged_in_as" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/user_details_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginRight="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
+        app:cardBackgroundColor="@color/white"
+        app:cardElevation="@dimen/card_elevation"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="@dimen/cardview_default_radius">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large">
+
+            <org.wordpress.android.widgets.WPNetworkImageView
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/avatar_sz_login_epilogue"
+                android:layout_height="@dimen/avatar_sz_login_epilogue"
+                android:layout_marginTop="@dimen/margin_extra_medium_large"
+                android:layout_marginBottom="@dimen/margin_medium"
+                app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                style="@style/LoginTheme.Subhead"
+                android:id="@+id/display_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                tools:text="Full Name" />
+
+            <org.wordpress.android.widgets.WPTextView
+                style="@style/LoginTheme.Username"
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/margin_extra_medium_large"
+                tools:text="@username" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        style="@style/LoginTheme.Heading"
+        android:id="@+id/my_sites_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:text="@string/login_epilogue_mysites_other" />
+</LinearLayout>

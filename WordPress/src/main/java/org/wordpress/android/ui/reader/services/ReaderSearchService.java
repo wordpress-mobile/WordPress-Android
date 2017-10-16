@@ -19,6 +19,7 @@ import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import de.greenrobot.event.EventBus;
@@ -69,7 +70,7 @@ public class ReaderSearchService extends Service {
             return START_NOT_STICKY;
         }
 
-        String query = intent.getStringExtra(ARG_QUERY);
+        String query = StringUtils.notNullStr(intent.getStringExtra(ARG_QUERY));
         int offset = intent.getIntExtra(ARG_OFFSET, 0);
         startSearch(query, offset);
 

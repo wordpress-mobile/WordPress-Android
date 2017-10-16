@@ -2,11 +2,11 @@ package org.wordpress.android.ui.stats.models;
 
 import android.text.TextUtils;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,10 +16,10 @@ public class VisitsModel extends BaseStatsModel {
     private String mFields; // Holds a JSON Object
     private String mUnit;
     private String mDate;
-    private String mBlogID;
+    private long mBlogID;
     private List<VisitModel> mVisits;
 
-    public VisitsModel(String blogID, JSONObject response) throws JSONException {
+    public VisitsModel(long blogID, JSONObject response) throws JSONException {
         this.setBlogID(blogID);
         this.setDate(response.getString("date"));
         this.setUnit(response.getString("unit"));
@@ -86,11 +86,11 @@ public class VisitsModel extends BaseStatsModel {
         return mVisits;
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    private void setBlogID(String blogID) {
+    private void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 
@@ -113,7 +113,7 @@ public class VisitsModel extends BaseStatsModel {
     private JSONArray getFieldsJSON() {
         JSONArray jArray;
         try {
-            String categories = StringUtils.unescapeHTML(this.getFields() != null ? this.getFields() : "[]");
+            String categories = StringEscapeUtils.unescapeHtml4(this.getFields() != null ? this.getFields() : "[]");
             if (TextUtils.isEmpty(categories)) {
                 jArray = new JSONArray();
             } else {

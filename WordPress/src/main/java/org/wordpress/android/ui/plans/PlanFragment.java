@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.PlanFeaturesHighlightSection;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.HtmlUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class PlanFragment extends Fragment {
         NetworkImageView imgPlan = (NetworkImageView) getView().findViewById(R.id.image_plan_icon);
         String iconUrl = PlansUtils.getIconUrlForPlan(mPlanDetails, iconSize);
         if (!TextUtils.isEmpty(iconUrl)) {
-            imgPlan.setImageUrl(iconUrl, WordPress.imageLoader);
+            imgPlan.setImageUrl(iconUrl, WordPress.sImageLoader);
             imgPlan.setVisibility(View.VISIBLE);
         } else {
             imgPlan.setVisibility(View.GONE);
@@ -98,7 +98,7 @@ public class PlanFragment extends Fragment {
         txtProductName.setText(Html.fromHtml(productName));
 
         TextView txtTagLine = (TextView) getView().findViewById(R.id.text_tagline);
-        txtTagLine.setText(HtmlUtils.fastUnescapeHtml(mPlanDetails.getTagline()));
+        txtTagLine.setText(StringEscapeUtils.unescapeHtml4(mPlanDetails.getTagline()));
 
         addFeaturesToHighlight();
     }
@@ -134,7 +134,7 @@ public class PlanFragment extends Fragment {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.plan_section_title, mPlanContainerView, false);
 
         TextView txtTitle = (TextView) view.findViewById(R.id.text_section_title);
-        txtTitle.setText(HtmlUtils.fastUnescapeHtml(title));
+        txtTitle.setText(StringEscapeUtils.unescapeHtml4(title));
 
         mPlanContainerView.addView(view);
     }
@@ -147,8 +147,8 @@ public class PlanFragment extends Fragment {
 
         TextView txtTitle = (TextView) view.findViewById(R.id.text_feature_title);
         TextView txtDescription = (TextView) view.findViewById(R.id.text_feature_description);
-        String title = HtmlUtils.fastUnescapeHtml(feature.getTitleForPlan(mPlanDetails.getProductID()));
-        String description = HtmlUtils.fastUnescapeHtml(feature.getDescriptionForPlan(mPlanDetails.getProductID()));
+        String title = StringEscapeUtils.unescapeHtml4(feature.getTitleForPlan(mPlanDetails.getProductID()));
+        String description = StringEscapeUtils.unescapeHtml4(feature.getDescriptionForPlan(mPlanDetails.getProductID()));
         txtTitle.setText(title);
         txtDescription.setText(description);
 
@@ -156,9 +156,9 @@ public class PlanFragment extends Fragment {
         NetworkImageView imgIcon = (NetworkImageView) view.findViewById(R.id.image_icon);
         String iconUrl = feature.getIconForPlan(mPlanDetails.getProductID());
         if (!TextUtils.isEmpty(iconUrl)) {
-            imgIcon.setImageUrl(iconUrl, WordPress.imageLoader);
+            imgIcon.setImageUrl(iconUrl, WordPress.sImageLoader);
         } else {
-            imgIcon.setDefaultImageResId(R.drawable.noticon_publish);
+            imgIcon.setDefaultImageResId(R.drawable.ic_reader_blue_wordpress_18dp);
         }
 
         mPlanContainerView.addView(view);

@@ -14,20 +14,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.RoleModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.SimpleDateFormat;
@@ -35,20 +38,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PeopleListFragment extends Fragment {
-    private static final String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
+import javax.inject.Inject;
 
-    private int mLocalTableBlogID;
+public class PeopleListFragment extends Fragment {
+    private SiteModel mSite;
     private OnPersonSelectedListener mOnPersonSelectedListener;
     private OnFetchPeopleListener mOnFetchPeopleListener;
 
     private FilteredRecyclerView mFilteredRecyclerView;
     private PeopleListFilter mPeopleListFilter;
 
-    public static PeopleListFragment newInstance(int localTableBlogID) {
+    @Inject SiteStore mSiteStore;
+
+    public static PeopleListFragment newInstance(SiteModel site) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
+        bundle.putSerializable(WordPress.SITE, site);
         peopleListFragment.setArguments(bundle);
         return peopleListFragment;
     }
@@ -69,6 +74,12 @@ public class PeopleListFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.people_list, menu);
         super.onCreateOptionsMenu(menu, inflater);
@@ -80,9 +91,8 @@ public class PeopleListFragment extends Fragment {
 
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
-        mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-        final Blog blog = WordPress.getBlog(mLocalTableBlogID);
-        final boolean isPrivate = blog != null && blog.isPrivate();
+        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+        final boolean isPrivate =  mSite != null && mSite.isPrivate();
 
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
@@ -92,7 +102,7 @@ public class PeopleListFragment extends Fragment {
         // the following will change the look and feel of the toolbar to match the current design
         mFilteredRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blue_medium));
         mFilteredRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(getActivity(), R.color.white));
-        mFilteredRecyclerView.setToolbarSpinnerDrawable(R.drawable.arrow);
+        mFilteredRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_blue_light_24dp);
         mFilteredRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
                 getResources().getDimensionPixelSize(R.dimen.margin_none));
@@ -231,16 +241,16 @@ public class PeopleListFragment extends Fragment {
         List<Person> peopleList;
         switch (mPeopleListFilter) {
             case TEAM:
-                peopleList = PeopleTable.getUsers(mLocalTableBlogID);
+                peopleList = PeopleTable.getUsers(mSite.getId());
                 break;
             case FOLLOWERS:
-                peopleList = PeopleTable.getFollowers(mLocalTableBlogID);
+                peopleList = PeopleTable.getFollowers(mSite.getId());
                 break;
             case EMAIL_FOLLOWERS:
-                peopleList = PeopleTable.getEmailFollowers(mLocalTableBlogID);
+                peopleList = PeopleTable.getEmailFollowers(mSite.getId());
                 break;
             case VIEWERS:
-                peopleList = PeopleTable.getViewers(mLocalTableBlogID);
+                peopleList = PeopleTable.getViewers(mSite.getId());
                 break;
             default:
                 peopleList = new ArrayList<>();
@@ -260,6 +270,20 @@ public class PeopleListFragment extends Fragment {
         } else if (!isFetching) {
             // if we are not fetching and list is empty, show no content message
             mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+        }
+    }
+
+    // Refresh the role display names after user roles is fetched
+    public void refreshUserRoles() {
+        if (mFilteredRecyclerView == null) {
+            // bail when list is not available
+            return;
+        }
+
+        PeopleAdapter peopleAdapter = (PeopleAdapter) mFilteredRecyclerView.getAdapter();
+        if (peopleAdapter != null) {
+            peopleAdapter.refreshUserRoles();
+            peopleAdapter.notifyDataSetChanged();
         }
     }
 
@@ -291,12 +315,14 @@ public class PeopleListFragment extends Fragment {
         private final LayoutInflater mInflater;
         private List<Person> mPeopleList;
         private int mAvatarSz;
+        private List<RoleModel> mUserRoles;
 
         public PeopleAdapter(Context context, List<Person> peopleList) {
             mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.people_avatar_sz);
             mInflater = LayoutInflater.from(context);
             mPeopleList = peopleList;
             setHasStableIds(true);
+            refreshUserRoles();
         }
 
         public void setPeopleList(List<Person> peopleList) {
@@ -309,6 +335,12 @@ public class PeopleListFragment extends Fragment {
                 return null;
             }
             return mPeopleList.get(position);
+        }
+
+        public void refreshUserRoles() {
+            if (mSite != null) {
+                mUserRoles = mSiteStore.getUserRoles(mSite);
+            }
         }
 
         @Override
@@ -343,10 +375,10 @@ public class PeopleListFragment extends Fragment {
             if (person != null) {
                 String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
                 peopleViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-                peopleViewHolder.txtDisplayName.setText(StringUtils.unescapeHTML(person.getDisplayName()));
+                peopleViewHolder.txtDisplayName.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));
                 if (person.getRole() != null) {
                     peopleViewHolder.txtRole.setVisibility(View.VISIBLE);
-                    peopleViewHolder.txtRole.setText(StringUtils.capitalize(person.getRole().toDisplayString()));
+                    peopleViewHolder.txtRole.setText(RoleUtils.getDisplayName(person.getRole(), mUserRoles));
                 } else {
                     peopleViewHolder.txtRole.setVisibility(View.GONE);
                 }

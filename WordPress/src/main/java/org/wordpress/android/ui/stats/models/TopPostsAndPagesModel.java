@@ -13,10 +13,10 @@ import java.util.List;
 public class TopPostsAndPagesModel extends BaseStatsModel {
     private String mPeriod;
     private String mDate;
-    private String mBlogID;
-    private List<PostModel> mTopPostsAndPages;
+    private long mBlogID;
+    private List<StatsPostModel> mTopPostsAndPages;
 
-    public TopPostsAndPagesModel(String blogID, JSONObject response) throws JSONException {
+    public TopPostsAndPagesModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mPeriod = response.getString("period");
         this.mDate = response.getString("date");
@@ -37,7 +37,7 @@ public class TopPostsAndPagesModel extends BaseStatsModel {
             postViewsArray = new JSONArray();
         }
 
-        ArrayList<PostModel> list = new ArrayList<>(postViewsArray.length());
+        ArrayList<StatsPostModel> list = new ArrayList<>(postViewsArray.length());
 
         for (int i=0; i < postViewsArray.length(); i++) {
             try {
@@ -48,7 +48,7 @@ public class TopPostsAndPagesModel extends BaseStatsModel {
                 String itemURL = postObject.getString("href");
                 String itemType = postObject.getString("type");
                 String itemDate = postObject.getString("date");
-                PostModel currentModel = new PostModel(blogID, itemDate, itemID, itemTitle,
+                StatsPostModel currentModel = new StatsPostModel(blogID, itemDate, itemID, itemTitle,
                         itemTotal, itemURL, itemType);
                 list.add(currentModel);
             } catch (JSONException e) {
@@ -59,11 +59,11 @@ public class TopPostsAndPagesModel extends BaseStatsModel {
         this.mTopPostsAndPages = list;
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    public void setBlogID(String blogID) {
+    public void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 
@@ -83,7 +83,7 @@ public class TopPostsAndPagesModel extends BaseStatsModel {
         this.mPeriod = period;
     }
 
-    public List<PostModel> getTopPostsAndPages() {
+    public List<StatsPostModel> getTopPostsAndPages() {
         return mTopPostsAndPages;
     }
 

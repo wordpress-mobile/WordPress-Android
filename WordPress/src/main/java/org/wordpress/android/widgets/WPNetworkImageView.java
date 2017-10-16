@@ -2,6 +2,7 @@ package org.wordpress.android.widgets;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -15,6 +16,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -30,6 +32,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.HashSet;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * most of the code below is from Volley's NetworkImageView, but it's modified to support:
@@ -66,13 +69,28 @@ public class WPNetworkImageView extends AppCompatImageView {
     private static final HashSet<String> mUrlSkipList = new HashSet<>();
 
     public WPNetworkImageView(Context context) {
-        super(context);
+        this(context, null);
     }
     public WPNetworkImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
     public WPNetworkImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        if (attrs != null) {
+            TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.wpNetworkImageView, 0, 0);
+
+            try {
+                if (a.hasValue(R.styleable.wpNetworkImageView_wpDefaultImageDrawable)) {
+                    mDefaultImageResId = a.getResourceId(R.styleable.wpNetworkImageView_wpDefaultImageDrawable, 0);
+                }
+                if (a.hasValue(R.styleable.wpNetworkImageView_wpErrorImageDrawable)) {
+                    mErrorImageResId = a.getResourceId(R.styleable.wpNetworkImageView_wpErrorImageDrawable, 0);
+                }
+            } finally {
+                a.recycle();
+            }
+        }
     }
 
     public void setImageUrl(String url, ImageType imageType) {
@@ -158,6 +176,23 @@ public class WPNetworkImageView extends AppCompatImageView {
             return;
         }
 
+        int width = getWidth();
+        int height = getHeight();
+        ScaleType scaleType = getScaleType();
+
+        boolean wrapWidth = false, wrapHeight = false;
+        if (getLayoutParams() != null) {
+            wrapWidth = getLayoutParams().width == ViewGroup.LayoutParams.WRAP_CONTENT;
+            wrapHeight = getLayoutParams().height == ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+
+        // if the view's bounds aren't known yet, and this is not a wrap-content/wrap-content
+        // view, hold off on loading the image.
+        boolean isFullyWrapContent = wrapWidth && wrapHeight;
+        if (width == 0 && height == 0 && !isFullyWrapContent) {
+            return;
+        }
+
         // if the URL to be loaded in this view is empty, cancel any old requests and clear the
         // currently loaded image.
         if (TextUtils.isEmpty(mUrl)) {
@@ -189,48 +224,87 @@ public class WPNetworkImageView extends AppCompatImageView {
         if (mUrlSkipList.contains(mUrl)) {
             AppLog.d(AppLog.T.UTILS, "skipping image request " + mUrl);
             showErrorImage();
+            if (imageLoadListener != null) {
+                imageLoadListener.onError();
+            }
             return;
         }
 
+
+        // Calculate the max image width / height to use while ignoring WRAP_CONTENT dimens.
+        int maxWidth = wrapWidth ? 0 : width;
+        int maxHeight = wrapHeight ? 0 : height;
+
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
-        ImageLoader.ImageContainer newContainer = WordPress.imageLoader.get(mUrl,
-                new ImageLoader.ImageListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        showErrorImage();
-                        // keep track of URLs that 404 so we can skip them the next time
-                        int statusCode = VolleyUtils.statusCodeFromVolleyError(error);
-                        if (statusCode == 404) {
-                            mUrlSkipList.add(mUrl);
-                        }
-
-                        if (imageLoadListener != null) {
-                            imageLoadListener.onError();
-                        }
-                    }
-
-                    @Override
-                    public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
-                        // If this was an immediate response that was delivered inside of a layout
-                        // pass do not set the image immediately as it will trigger a requestLayout
-                        // inside of a layout. Instead, defer setting the image by posting back to
-                        // the main thread.
-                        if (isImmediate && isInLayoutPass) {
-                            post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    onResponse(response, false);
-                                }
-                            });
-                            return;
-                        }
-                        handleResponse(response, isImmediate, imageLoadListener);
-                    }
-                }, 0, 0, getScaleType());
-
+        ImageLoader.ImageContainer newContainer = WordPress.sImageLoader.get(mUrl,
+                new WPNetworkImageLoaderListener(mUrl, isInLayoutPass, imageLoadListener), maxWidth, maxHeight, scaleType);
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
+    }
+
+    /**
+     * Our implementation of ImageLoader.ImageListener that keeps a reference to the requested URL
+     * and makes sure we're setting the correct requested picture on response.
+     *
+     * Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5100
+     * This is a fix for those cases when WPNetworkImageView instances are used in UI items that can be recycled.
+     * The cell containing WPNetworkImageView could be recycled while the image request was still underway,
+     * so when the request completed it set the picture to the one requested prior to recycling.
+     */
+    private class WPNetworkImageLoaderListener implements ImageLoader.ImageListener {
+        private final String mRequestedURL;
+        private final ImageLoadListener mImageLoadListener;
+        private final boolean mIsInLayoutPass;
+
+        WPNetworkImageLoaderListener(final String requestedURL,
+                                     final boolean isInLayoutPass,
+                                     final ImageLoadListener imageLoadListener) {
+            mRequestedURL = requestedURL;
+            mIsInLayoutPass = isInLayoutPass;
+            mImageLoadListener = imageLoadListener;
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            // keep track of URLs that 404 so we can skip them the next time
+            int statusCode = VolleyUtils.statusCodeFromVolleyError(error);
+            if (statusCode == 404) {
+                mUrlSkipList.add(mRequestedURL);
+            }
+
+            if (mUrl == null || !mUrl.equals(mRequestedURL)) {
+                AppLog.w(AppLog.T.UTILS, "WPNetworkImageView > request no longer valid: " + mRequestedURL);
+                return;
+            }
+            showErrorImage();
+
+            if (mImageLoadListener != null) {
+                mImageLoadListener.onError();
+            }
+        }
+
+        @Override
+        public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
+            if (mUrl == null || !mUrl.equals(mRequestedURL)) {
+                AppLog.w(AppLog.T.UTILS, "WPNetworkImageView > request no longer valid: " + mRequestedURL);
+                return;
+            }
+            // If this was an immediate response that was delivered inside of a layout
+            // pass do not set the image immediately as it will trigger a requestLayout
+            // inside of a layout. Instead, defer setting the image by posting back to
+            // the main thread.
+            if (isImmediate && mIsInLayoutPass) {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onResponse(response, false);
+                    }
+                });
+                return;
+            }
+            handleResponse(response, isImmediate, mImageLoadListener);
+        }
     }
 
     private static boolean canFadeInImageType(ImageType imageType) {
@@ -240,24 +314,31 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     private void handleResponse(ImageLoader.ImageContainer response, boolean isCached, ImageLoadListener
             imageLoadListener) {
-        if (response.getBitmap() != null) {
+        if (response != null && response.getBitmap() != null) {
             Bitmap bitmap = response.getBitmap();
 
             if (mImageType == ImageType.GONE_UNTIL_AVAILABLE) {
                 setVisibility(View.VISIBLE);
             }
-
+            
             // if cropping is requested, do it before further manipulation
             if (mCropWidth > 0 && mCropHeight > 0) {
                 bitmap = ThumbnailUtils.extractThumbnail(bitmap, mCropWidth, mCropHeight);
             }
 
-            // Apply circular rounding to avatars in a background task
-            if (mImageType == ImageType.AVATAR) {
-                new ShapeBitmapTask(ShapeType.CIRCLE, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
-                return;
-            } else if (mImageType == ImageType.PHOTO_ROUNDED) {
-                new ShapeBitmapTask(ShapeType.ROUNDED, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+            try {
+                // Apply circular rounding to avatars in a background task
+                if (mImageType == ImageType.AVATAR) {
+                    new ShapeBitmapTask(ShapeType.CIRCLE, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                    return;
+                } else if (mImageType == ImageType.PHOTO_ROUNDED) {
+                    new ShapeBitmapTask(ShapeType.ROUNDED, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                    return;
+                }
+            } catch (RejectedExecutionException e) {
+                AppLog.w(AppLog.T.UTILS, "Too many tasks already available in the default AsyncTask.THREAD_POOL_EXECUTOR queue. " +
+                        "The current ShapeBitmapTask was rejected");
+                showDefaultImage();
                 return;
             }
 
@@ -379,16 +460,31 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
     }
 
-    public void showDefaultGravatarImage() {
-        if (getContext() == null) return;
-        new ShapeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
-                getContext().getResources(),
-                R.drawable.gravatar_placeholder
-        ));
+    public void showDefaultGravatarImageAndNullifyUrl() {
+        // Setting the image url `null` will result in showing the default image by calling `showErrorImage`
+        setImageUrl(null, ImageType.AVATAR);
     }
 
-    public void showDefaultBlavatarImage() {
-        setImageResource(R.drawable.blavatar_placeholder);
+    private void showDefaultGravatarImage() {
+        if (getContext() == null) return;
+        try {
+            new ShapeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
+                    getContext().getResources(),
+                    R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp
+            ));
+        } catch (RejectedExecutionException e) {
+            AppLog.w(AppLog.T.UTILS, "Too many tasks already available in the default AsyncTask.THREAD_POOL_EXECUTOR queue. " +
+                    "The current DefaultGravatarImage was rejected");
+        }
+    }
+
+    public void showDefaultBlavatarImageAndNullifyUrl() {
+        // Setting the image url `null` will result in showing the default image by calling `showErrorImage`
+        setImageUrl(null, ImageType.BLAVATAR);
+    }
+
+    private void showDefaultBlavatarImage() {
+        setImageResource(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
     }
 
     // --------------------------------------------------------------------------------------------------

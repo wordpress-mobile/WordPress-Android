@@ -2,17 +2,14 @@
 <!--
 Translation-Revision-Date: 2015-08-19 20:02:12+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: uz
 -->
 <resources>
-	<string name="loading_videos">Videolarni yuklash</string>
-	<string name="loading_images">Rasmlarni yuklash</string>
 	<string name="device">Qurilma</string>
 	<string name="creating_your_account">Akkauntingiz yaratilmoqda</string>
 	<string name="creating_your_site">Saytingiz yaratilmoqda</string>
 	<string name="reader_empty_posts_in_tag_updating">Postlar yuklanmoqda...</string>
-	<string name="error_refresh_media">Media kutubxonani yangilashda xatolik yuz berdi. Iltimos, keyinroq qayta harakat qilib ko‘ring.</string>
 	<string name="reader_likes_you_and_multi">Siz hamda %,d kishi buni yoqtiradi</string>
 	<string name="reader_likes_multi">%,d kishi buni yoqtiradi</string>
 	<string name="reader_toast_err_get_comment">Bu mulohazani yuklab bo‘lmadi</string>
@@ -28,13 +25,11 @@ Language: uz
 	<string name="pick_video">Video tanlang</string>
 	<string name="nux_tap_continue">Davom</string>
 	<string name="nux_welcome_create_account">Akkaunt ochish</string>
-	<string name="media_add_new_media_gallery">Yangi galereya</string>
 	<string name="reader_untitled_post">(Nomsiz)</string>
 	<string name="jetpack_not_found">Jetpack plagini topilmadi</string>
 	<string name="media_add_popup_title">Media kutubxonasiga qo‘sh</string>
 	<string name="empty_list_default">Ushbu ro‘yxat bo‘sh</string>
 	<string name="select_from_media_library">Media kutubxonadan tanla</string>
-	<string name="jetpack_message">Statistikalar uchun JetPack plagini lozim. JetPack plaginini o‘rnatasizmi?</string>
 	<string name="reader_btn_share">Bo‘lish</string>
 	<string name="reader_btn_follow">Kuzatish</string>
 	<string name="reader_btn_unfollow">Kuzatmoqda</string>
@@ -44,7 +39,6 @@ Language: uz
 	<string name="reader_toast_err_share_intent">Bo‘lishib bo‘lmadi</string>
 	<string name="reader_toast_err_view_image">Rasm ko‘rinmayapti</string>
 	<string name="reader_toast_err_url_intent">%s ochilmayapti</string>
-	<string name="reader_share_subject">%s orqali baham ko‘rilgan</string>
 	<string name="reader_label_added_tag">%s qo‘shildi</string>
 	<string name="reader_label_removed_tag">%s o‘chirildi</string>
 	<string name="reader_likes_one">Bir kishi yoqtirgan</string>
@@ -53,13 +47,8 @@ Language: uz
 	<string name="create_account_wpcom">Wordpress.com da akkaunt oching</string>
 	<string name="username_invalid">Yaroqsiz foydalanuvchi nomi</string>
 	<string name="limit_reached">Chegaraga yetib keldik. Bir minutdan keyin harakat qilib ko‘rishingiz mumkin. Bu vaqtdan avval harakatga o‘tishingiz kutish vaqtining yanada uzayishiga olib keladi. Agar bu biror tushunmovchilik natijasi deb o‘ylasangiz, yordam xizmatiga murojaat qiling.</string>
-	<string name="all">Hammasi</string>
-	<string name="images">Rasmlar</string>
-	<string name="unattached">Biriktirilmagan</string>
 	<string name="media_gallery_type_circles">Doiralar</string>
 	<string name="themes">Shablonlar</string>
-	<string name="media_gallery_image_order_random">Tasodifiy</string>
-	<string name="media_gallery_image_order_reverse">Teskari</string>
 	<string name="media_gallery_type">Tur</string>
 	<string name="media_gallery_type_squares">Kvadrat</string>
 	<string name="media_gallery_type_tiled">Bir qator</string>
@@ -74,8 +63,6 @@ Language: uz
 	<string name="theme_activating_button">Faollashtirilmoqda</string>
 	<string name="theme_set_success">Shablon muvaffaqiyatli faollashtirildi!</string>
 	<string name="theme_auth_error_title">Shablonlar yuklanmadi</string>
-	<string name="post_excerpt">Sitata</string>
-	<string name="share_action_title">Qo‘sh...</string>
 	<string name="share_action">Bo‘lish</string>
 	<string name="stats">Statistika</string>
 	<string name="stats_view_visitors_and_views">Kirivchular va ko‘rishlar</string>
@@ -93,9 +80,6 @@ Language: uz
 	<string name="stats_totals_views">Ko‘rishlar</string>
 	<string name="stats_totals_clicks">Bosishlar</string>
 	<string name="stats_totals_plays">Ko‘rishlar</string>
-	<string name="custom_date">Ixtiyoriy sana</string>
-	<string name="media_add_popup_capture_photo">Sur‘atga oling</string>
-	<string name="media_add_popup_capture_video">Videoga oling</string>
 	<string name="stats_view_referrers">Referrerlar</string>
 	<string name="stats_entry_referrers">Referrer</string>
 	<string name="passcode_manage">PIN kod moslamalari</string>
@@ -112,6 +96,7 @@ Language: uz
 	<string name="media_edit_caption_hint">Titr kiriting</string>
 	<string name="media_edit_description_hint">Izoh kiriting</string>
 	<string name="upload">Yuklash</string>
+	<string name="manage">Boshqarish</string>
 	<string name="discard">Bekor qilish</string>
 	<string name="notifications">Xabarlar</string>
 	<string name="note_reply_successful">Javob chop qilindi</string>
@@ -139,10 +124,8 @@ Language: uz
 	<string name="post">Post</string>
 	<string name="caption">Titr (ixtiyoriy)</string>
 	<string name="blogusername">blogusername</string>
-	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Rasm yuklab, hajmi moslashtirilgan (kichiklashtirilgan) nusxasiga havola berish</string>
 	<string name="scaled_image">Yangi hajm uchun en qiymati</string>
-	<string name="scheduled">Jadvalga kiritildi</string>
 	<string name="link_enter_url">URL</string>
 	<string name="version">Versiya</string>
 	<string name="tos">Xizmat shartlari</string>
@@ -153,31 +136,20 @@ Language: uz
 	<string name="edit">Tahrir qil</string>
 	<string name="post_id">Post</string>
 	<string name="page_id">Sahifa</string>
-	<string name="post_password">Parol (ixtiyoriy)</string>
 	<string name="immediately">Darrov</string>
 	<string name="quickpress_add_alert_title">Tez o‘tish nomi</string>
 	<string name="settings">Moslamalar</string>
 	<string name="quickpress_add_error">Tez o‘tar nomi bo‘sh bo‘lishi mumkin emas</string>
 	<string name="quickpress_window_title">QuickPress tez o‘tari uchun blog tanlang</string>
-	<string name="post_private">Maxfiy</string>
-	<string name="publish_post">Chop qil</string>
-	<string name="draft">Qoralama</string>
 	<string name="upload_full_size_image">To‘liq hajmda rasm yuklash</string>
-	<string name="tags_separate_with_commas">Teglar (vergul bilan ajrating)</string>
 	<string name="title">Sarlavha</string>
 	<string name="categories">Bo‘limlar</string>
-	<string name="notification_vibrate">Vibratsiya</string>
-	<string name="notification_blink">Yonib-o‘chuvchi xabar</string>
-	<string name="status">Status</string>
-	<string name="location">Manzil</string>
-	<string name="select_video">Galereyadan video tanla</string>
 	<string name="sdcard_title">SD karta kerak</string>
 	<string name="media">Media</string>
 	<string name="delete">O‘chir</string>
 	<string name="approve">Tasdiqla</string>
 	<string name="none">Hech bir</string>
 	<string name="blogs">Bloglar</string>
-	<string name="select_photo">Galereyadan rasm tanlash</string>
 	<string name="no">Yo‘q</string>
 	<string name="yes">Ha</string>
 	<string name="reply">Javob</string>

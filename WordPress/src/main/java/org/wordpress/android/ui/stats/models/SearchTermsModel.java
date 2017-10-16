@@ -13,11 +13,11 @@ import java.util.List;
 public class SearchTermsModel extends BaseStatsModel {
     private String mPeriod;
     private String mDate;
-    private String mBlogID;
+    private long mBlogID;
     private List<SearchTermModel> mSearchTerms;
     private int mEncryptedSearchTerms, mOtherSearchTerms, mTotalSearchTerms;
 
-    public SearchTermsModel(String blogID, JSONObject response) throws JSONException {
+    public SearchTermsModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mPeriod = response.getString("period");
         this.mDate = response.getString("date");
@@ -62,11 +62,11 @@ public class SearchTermsModel extends BaseStatsModel {
         this.mSearchTerms = list;
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    public void setBlogID(String blogID) {
+    public void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 

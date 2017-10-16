@@ -7,22 +7,36 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.Role;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.RoleModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.RoleUtils;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 public class RoleSelectDialogFragment extends DialogFragment {
-    private static final String IS_PRIVATE_TAG = "is_private";
+    @Inject SiteStore mSiteStore;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        boolean isPrivateSite = getArguments().getBoolean(IS_PRIVATE_TAG);
-        final Role[] roles = Role.inviteRoles(isPrivateSite);
-        final String[] stringRoles = new String[roles.length];
-        for (int i = 0; i < roles.length; i++) {
-            stringRoles[i] = roles[i].toDisplayString();
+        SiteModel site = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+        final List<RoleModel> inviteRoles = RoleUtils.getInviteRoles(mSiteStore, site, this);
+        final String[] stringRoles = new String[inviteRoles.size()];
+        for (int i = 0; i < inviteRoles.size(); i++) {
+            stringRoles[i] = inviteRoles.get(i).getDisplayName();
         }
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.role);
@@ -34,9 +48,9 @@ public class RoleSelectDialogFragment extends DialogFragment {
                 }
 
                 if (getTargetFragment() instanceof OnRoleSelectListener) {
-                    ((OnRoleSelectListener) getTargetFragment()).onRoleSelected(roles[which]);
+                    ((OnRoleSelectListener) getTargetFragment()).onRoleSelected(inviteRoles.get(which));
                 } else if (getActivity() instanceof OnRoleSelectListener) {
-                    ((OnRoleSelectListener) getActivity()).onRoleSelected(roles[which]);
+                    ((OnRoleSelectListener) getActivity()).onRoleSelected(inviteRoles.get(which));
                 }
             }
         });
@@ -45,10 +59,10 @@ public class RoleSelectDialogFragment extends DialogFragment {
     }
 
     public static <T extends Fragment & OnRoleSelectListener> void show(T parentFragment, int requestCode,
-                                                                        boolean isPrivateSite) {
+                                                                        @NonNull SiteModel site) {
         RoleSelectDialogFragment roleChangeDialogFragment = new RoleSelectDialogFragment();
         Bundle args = new Bundle();
-        args.putBoolean(IS_PRIVATE_TAG, isPrivateSite);
+        args.putSerializable(WordPress.SITE, site);
         roleChangeDialogFragment.setArguments(args);
         roleChangeDialogFragment.setTargetFragment(parentFragment, requestCode);
         roleChangeDialogFragment.show(parentFragment.getFragmentManager(), null);
@@ -60,7 +74,7 @@ public class RoleSelectDialogFragment extends DialogFragment {
     }
 
     // Container Activity must implement this interface
-    public interface OnRoleSelectListener {
-        void onRoleSelected(Role newRole);
+    interface OnRoleSelectListener {
+        void onRoleSelected(RoleModel newRole);
     }
 }

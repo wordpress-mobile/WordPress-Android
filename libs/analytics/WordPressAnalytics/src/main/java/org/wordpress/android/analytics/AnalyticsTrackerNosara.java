@@ -1,6 +1,7 @@
 package org.wordpress.android.analytics;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.automattic.android.tracks.TracksClient;
 
@@ -41,6 +42,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             return;
         }
 
+        if (!isValidEvent(stat)) {
+            return;
+        }
+
         String eventName = getEventNameForStat(stat);
         if (eventName == null) {
             AppLog.w(AppLog.T.STATS, "There is NO match for the event " + stat.name() + "stat");
@@ -49,15 +54,15 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         Map<String, Object> predefinedEventProperties = new HashMap<String, Object>();
         switch (stat) {
-            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
-                predefinedEventProperties.put("via", "local_library");
+            case EDITOR_ADDED_PHOTO_NEW:
+            case EDITOR_ADDED_VIDEO_NEW:
+                predefinedEventProperties.put("via", "device_camera");
+                break;
+            case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
+            case EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY:
+                predefinedEventProperties.put("via", "device_library");
                 break;
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
-                predefinedEventProperties.put("via", "media_library");
-                break;
-            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
-                predefinedEventProperties.put("via", "local_library");
-                break;
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 predefinedEventProperties.put("via", "media_library");
                 break;
@@ -67,16 +72,73 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_BOLD:
                 predefinedEventProperties.put("button", "bold");
                 break;
+            case EDITOR_TAPPED_ELLIPSIS_COLLAPSE:
+                predefinedEventProperties.put("button", "overflow_ellipsis");
+                predefinedEventProperties.put("action", "made_hidden");
+                break;
+            case EDITOR_TAPPED_ELLIPSIS_EXPAND:
+                predefinedEventProperties.put("button", "overflow_ellipsis");
+                predefinedEventProperties.put("action", "made_visible");
+                break;
+            case EDITOR_TAPPED_HEADING:
+                predefinedEventProperties.put("button", "header");
+                break;
+            case EDITOR_TAPPED_HEADING_1:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h1");
+                break;
+            case EDITOR_TAPPED_HEADING_2:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h2");
+                break;
+            case EDITOR_TAPPED_HEADING_3:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h3");
+                break;
+            case EDITOR_TAPPED_HEADING_4:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h4");
+                break;
+            case EDITOR_TAPPED_HEADING_5:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h5");
+                break;
+            case EDITOR_TAPPED_HEADING_6:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h6");
+                break;
             case EDITOR_TAPPED_IMAGE:
                 predefinedEventProperties.put("button", "image");
                 break;
             case EDITOR_TAPPED_ITALIC:
                 predefinedEventProperties.put("button", "italic");
                 break;
-            case EDITOR_TAPPED_LINK:
+            case EDITOR_TAPPED_LINK_ADDED:
                 predefinedEventProperties.put("button", "link");
                 break;
-            case EDITOR_TAPPED_MORE:
+            case EDITOR_TAPPED_LINK_REMOVED:
+                predefinedEventProperties.put("button", "unlink");
+                break;
+            case EDITOR_TAPPED_LIST:
+                predefinedEventProperties.put("button", "list");
+                break;
+            case EDITOR_TAPPED_LIST_ORDERED:
+                predefinedEventProperties.put("button", "ordered_list");
+                break;
+            case EDITOR_TAPPED_LIST_UNORDERED:
+                predefinedEventProperties.put("button", "unordered_list");
+                break;
+            case EDITOR_TAPPED_NEXT_PAGE:
+                predefinedEventProperties.put("button", "next_page");
+                break;
+            case EDITOR_TAPPED_PARAGRAPH:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "none");
+                break;
+            case EDITOR_TAPPED_PREFORMAT:
+                predefinedEventProperties.put("button", "preformat");
+                break;
+            case EDITOR_TAPPED_READ_MORE:
                 predefinedEventProperties.put("button", "more");
                 break;
             case EDITOR_TAPPED_STRIKETHROUGH:
@@ -88,14 +150,20 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_HTML:
                 predefinedEventProperties.put("button", "html");
                 break;
-            case EDITOR_TAPPED_ORDERED_LIST:
-                predefinedEventProperties.put("button", "ordered_list");
+            case EDITOR_AZTEC_BETA_LABEL:
+                predefinedEventProperties.put("source", "beta_label");
                 break;
-            case EDITOR_TAPPED_UNLINK:
-                predefinedEventProperties.put("button", "unlink");
+            case EDITOR_AZTEC_BETA_LINK:
+                predefinedEventProperties.put("source", "beta_link");
                 break;
-            case EDITOR_TAPPED_UNORDERED_LIST:
-                predefinedEventProperties.put("button", "unordered_list");
+            case EDITOR_AZTEC_PROMO_LINK:
+                predefinedEventProperties.put("source", "promo_link");
+                break;
+            case EDITOR_AZTEC_PROMO_NEGATIVE:
+                predefinedEventProperties.put("source", "promo_negative");
+                break;
+            case EDITOR_AZTEC_PROMO_POSITIVE:
+                predefinedEventProperties.put("source", "promo_positive");
                 break;
             case OPENED_POSTS:
                 predefinedEventProperties.put("menu_item", "posts");
@@ -108,6 +176,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case OPENED_VIEW_SITE:
                 predefinedEventProperties.put("menu_item", "view_site");
+                break;
+            case OPENED_VIEW_SITE_FROM_HEADER:
+                predefinedEventProperties.put("menu_item", "view_site_from_header");
                 break;
             case OPENED_VIEW_ADMIN:
                 predefinedEventProperties.put("menu_item", "view_admin");
@@ -153,27 +224,43 @@ public class AnalyticsTrackerNosara extends Tracker {
             userType = TracksClient.NosaraUserType.ANON;
         }
 
+        // It seems that we're tracking some events with user = null. Make sure we're catching the error here.
+        if (user == null) {
+            try {
+                throw new AnalyticsException("Trying to track analytics with an null user!");
+                // TODO add CrashlyticsUtils.logException or track this error in Nosara by using a special test user.
+            } catch (AnalyticsException e) {
+                AppLog.e(AppLog.T.STATS, e);
+            }
+            return;
+        }
 
         // create the merged JSON Object of properties
         // Properties defined by the user have precedence over the default ones pre-defined at "event level"
-        final JSONObject propertiesToJSON;
+        JSONObject propertiesToJSON = null;
         if (properties != null && properties.size() > 0) {
-            propertiesToJSON = new JSONObject(properties);
-            for (String key : predefinedEventProperties.keySet()) {
-                try {
-                    if (propertiesToJSON.has(key)) {
-                        AppLog.w(AppLog.T.STATS, "The user has defined a property named: '" + key + "' that will override" +
-                                "the same property pre-defined at event level. This may generate unexpected behavior!!");
-                        AppLog.w(AppLog.T.STATS, "User value: " + propertiesToJSON.get(key).toString() + " - pre-defined value: " +
-                                predefinedEventProperties.get(key).toString());
-                    } else {
-                        propertiesToJSON.put(key, predefinedEventProperties.get(key));
+            try {
+                propertiesToJSON = new JSONObject(properties);
+                for (String key : predefinedEventProperties.keySet()) {
+                    try {
+                        if (propertiesToJSON.has(key)) {
+                            AppLog.w(AppLog.T.STATS, "The user has defined a property named: '" + key + "' that will override" +
+                                    "the same property pre-defined at event level. This may generate unexpected behavior!!");
+                            AppLog.w(AppLog.T.STATS, "User value: " + propertiesToJSON.get(key).toString() + " - pre-defined value: " +
+                                    predefinedEventProperties.get(key).toString());
+                        } else {
+                            propertiesToJSON.put(key, predefinedEventProperties.get(key));
+                        }
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.STATS, "Error while merging user-defined properties with pre-defined properties", e);
                     }
-                } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Error while merging user-defined properties with pre-defined properties", e);
                 }
+            } catch (NullPointerException e) {
+                AppLog.e(AppLog.T.STATS, "A property passed to the event " + eventName + " has null key!", e);
             }
-        } else{
+        }
+
+        if (propertiesToJSON == null) {
             propertiesToJSON = new JSONObject(predefinedEventProperties);
         }
 
@@ -183,8 +270,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
         }
     }
-
-
 
     @Override
     public void endSession() {
@@ -214,7 +299,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             AppLog.e(AppLog.T.UTILS, e);
         }
 
-        if (metadata.isUserConnected() && metadata.isWordPressComUser()) {
+        // De-anonymize user only when it's WPCOM and we have the username available (might still be waiting for it to
+        //  be fetched).
+        if (metadata.isUserConnected() && metadata.isWordPressComUser()
+                && !TextUtils.isEmpty(metadata.getUsername())) {
             setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
             if (getAnonID() != null) {
@@ -248,6 +336,10 @@ public class AnalyticsTrackerNosara extends Tracker {
     }
 
     public static String getEventNameForStat(AnalyticsTracker.Stat stat) {
+        if (!isValidEvent(stat)) {
+            return null;
+        }
+
         switch (stat) {
             case APPLICATION_OPENED:
                 return "application_opened";
@@ -335,26 +427,56 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_discarded_changes";
             case EDITOR_EDITED_IMAGE:
                 return "editor_image_edited";
-            case EDITOR_ENABLED_NEW_VERSION:
-                return "editor_enabled_new_version";
-            case EDITOR_TOGGLED_OFF:
-                return "editor_toggled_off";
-            case EDITOR_TOGGLED_ON:
-                return "editor_toggled_on";
+            case EDITOR_HYBRID_ENABLED:
+                return "editor_hybrid_enabled";
+            case EDITOR_HYBRID_TOGGLED_OFF:
+                return "editor_hybrid_toggled_off";
+            case EDITOR_HYBRID_TOGGLED_ON:
+                return "editor_hybrid_toggled_on";
+            case EDITOR_AZTEC_ENABLED:
+                return "editor_aztec_enabled";
+            case EDITOR_AZTEC_TOGGLED_OFF:
+                return "editor_aztec_toggled_off";
+            case EDITOR_AZTEC_TOGGLED_ON:
+                return "editor_aztec_toggled_on";
+            case EDITOR_AZTEC_BETA_LABEL:
+                return "editor_aztec_beta_label";
+            case EDITOR_AZTEC_BETA_LINK:
+                return "editor_aztec_beta_link";
+            case EDITOR_AZTEC_PROMO_LINK:
+                return "editor_aztec_promo_link";
+            case EDITOR_AZTEC_PROMO_NEGATIVE:
+                return "editor_aztec_promo_negative";
+            case EDITOR_AZTEC_PROMO_POSITIVE:
+                return "editor_aztec_promo_positive";
             case EDITOR_UPLOAD_MEDIA_FAILED:
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:
                 return "editor_upload_media_retried";
             case EDITOR_CLOSED:
                 return "editor_closed";
-            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
+            case EDITOR_ADDED_PHOTO_NEW:
+                return "editor_photo_added";
+            case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
                 return "editor_photo_added";
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
                 return "editor_photo_added";
-            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
+            case EDITOR_ADDED_VIDEO_NEW:
+                return "editor_video_added";
+            case EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY:
                 return "editor_video_added";
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 return "editor_video_added";
+            case MEDIA_PHOTO_OPTIMIZED:
+                return "media_photo_optimized";
+            case MEDIA_PHOTO_OPTIMIZE_ERROR:
+                return "media_photo_optimize_error";
+            case MEDIA_VIDEO_OPTIMIZED:
+                return "media_video_optimized";
+            case MEDIA_VIDEO_OPTIMIZE_ERROR:
+                return "media_video_optimize_error";
+            case MEDIA_VIDEO_CANT_OPTIMIZE:
+                return "media_video_cant_optimize";
             case EDITOR_PUBLISHED_POST:
                 return "editor_post_published";
             case EDITOR_UPDATED_POST:
@@ -365,13 +487,41 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_BOLD:
                 return "editor_button_tapped";
+            case EDITOR_TAPPED_ELLIPSIS_COLLAPSE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_ELLIPSIS_EXPAND:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_1:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_2:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_3:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_4:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_5:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_6:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HORIZONTAL_RULE:
+                return "editor_button_tapped";
             case EDITOR_TAPPED_IMAGE:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_ITALIC:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_LINK:
+            case EDITOR_TAPPED_LINK_ADDED:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_MORE:
+            case EDITOR_TAPPED_LIST:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_READ_MORE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_NEXT_PAGE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_PARAGRAPH:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_PREFORMAT:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_STRIKETHROUGH:
                 return "editor_button_tapped";
@@ -379,11 +529,11 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_HTML:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_ORDERED_LIST:
+            case EDITOR_TAPPED_LIST_ORDERED:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_UNLINK:
+            case EDITOR_TAPPED_LINK_REMOVED:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_UNORDERED_LIST:
+            case EDITOR_TAPPED_LIST_UNORDERED:
                 return "editor_button_tapped";
             case NOTIFICATIONS_ACCESSED:
                 return "notifications_accessed";
@@ -425,6 +575,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case OPENED_COMMENTS:
                 return "site_menu_opened";
             case OPENED_VIEW_SITE:
+                return "site_menu_opened";
+            case OPENED_VIEW_SITE_FROM_HEADER:
                 return "site_menu_opened";
             case OPENED_VIEW_ADMIN:
                 return "site_menu_opened";
@@ -534,6 +686,32 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_autofill_credentials_filled";
             case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
                 return "login_autofill_credentials_updated";
+            case LOGIN_PROLOGUE_PAGED:
+                return "login_prologue_paged";
+            case LOGIN_PROLOGUE_VIEWED:
+                return "login_prologue_viewed";
+            case LOGIN_EMAIL_FORM_VIEWED:
+                return "login_email_form_viewed";
+            case LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED:
+                return "login_magic_link_open_email_client_viewed";
+            case LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED:
+                return "login_magic_link_open_email_client_clicked";
+            case LOGIN_MAGIC_LINK_REQUEST_FORM_VIEWED:
+                return "login_magic_link_request_form_viewed";
+            case LOGIN_PASSWORD_FORM_VIEWED:
+                return "login_password_form_viewed";
+            case LOGIN_URL_FORM_VIEWED:
+                return "login_url_form_viewed";
+            case LOGIN_URL_HELP_SCREEN_VIEWED:
+                return "login_url_help_screen_viewed";
+            case LOGIN_USERNAME_PASSWORD_FORM_VIEWED:
+                return "login_username_password_form_viewed";
+            case LOGIN_TWO_FACTOR_FORM_VIEWED:
+                return "login_two_factor_form_viewed";
+            case LOGIN_EPILOGUE_VIEWED:
+                return "login_epilogue_viewed";
+            case LOGIN_FORGOT_PASSWORD_CLICKED:
+                return "login_forgot_password_clicked";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
@@ -552,18 +730,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notification_settings_streams_opened";
             case NOTIFICATION_SETTINGS_DETAILS_OPENED:
                 return "notification_settings_details_opened";
+            case NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED:
+                return "notification_settings_app_notifications_disabled";
+            case NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED:
+                return "notification_settings_app_notifications_enabled";
             case ME_ACCESSED:
                 return "me_tab_accessed";
             case ME_GRAVATAR_TAPPED:
                 return "me_gravatar_tapped";
             case ME_GRAVATAR_TOOLTIP_TAPPED:
                 return "me_gravatar_tooltip_tapped";
-            case ME_GRAVATAR_PERMISSIONS_INTERRUPTED:
-                return "me_gravatar_permissions_interrupted";
-            case ME_GRAVATAR_PERMISSIONS_DENIED:
-                return "me_gravatar_permissions_denied";
-            case ME_GRAVATAR_PERMISSIONS_ACCEPTED:
-                return "me_gravatar_permissions_accepted";
             case ME_GRAVATAR_SHOT_NEW:
                 return "me_gravatar_shot_new";
             case ME_GRAVATAR_GALLERY_PICKED:
@@ -638,6 +814,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_delete_site_response_ok";
             case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
                 return "site_settings_delete_site_response_error";
+            case SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED:
+                return "site_settings_optimize_images_changed";
             case ABTEST_START:
                 return "abtest_start";
             case TRAIN_TRACKS_RENDER:
@@ -648,8 +826,36 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "deep_linked";
             case DEEP_LINKED_FALLBACK:
                 return "deep_linked_fallback";
-            case DEEP_LINK_NOT_DEFAULT_HANDER:
+            case DEEP_LINK_NOT_DEFAULT_HANDLER:
                 return "deep_link_not_default_handler";
+            case MEDIA_LIBRARY_ADDED_PHOTO:
+                return "media_library_photo_added";
+            case MEDIA_LIBRARY_ADDED_VIDEO:
+                return "media_library_video_added";
+            case MEDIA_UPLOAD_STARTED:
+                return "media_service_upload_started";
+            case MEDIA_UPLOAD_ERROR:
+                return "media_service_upload_response_error";
+            case MEDIA_UPLOAD_SUCCESS:
+                return "media_service_upload_response_ok";
+            case MEDIA_UPLOAD_CANCELED:
+                return "media_service_upload_canceled";
+            case MEDIA_PICKER_OPEN_CAPTURE_MEDIA:
+                return "media_picker_capture_media_opened";
+            case MEDIA_PICKER_OPEN_DEVICE_LIBRARY:
+                return "media_picker_device_library_opened";
+            case MEDIA_PICKER_OPEN_WP_MEDIA:
+                return "media_picker_wordpress_library_opened";
+            case MEDIA_PICKER_RECENT_MEDIA_SELECTED:
+                return "media_picker_recent_media_selected";
+            case MEDIA_PICKER_PREVIEW_OPENED:
+                return "media_picker_preview_opened";
+            case APP_PERMISSION_GRANTED:
+                return "app_permission_granted";
+            case APP_PERMISSION_DENIED:
+                return "app_permission_denied";
+            case SHARE_TO_WP_SUCCEEDED:
+                return "share_to_wp_succeeded";
             default:
                 return null;
         }

@@ -9,24 +9,30 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.MenuItem;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.PeopleTable;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -78,11 +84,32 @@ public class PeopleManagementActivity extends AppCompatActivity
     private int mFollowersLastFetchedPage;
     private int mEmailFollowersLastFetchedPage;
 
+    @Inject Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
+
+    private SiteModel mSite;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
 
         setContentView(R.layout.people_management_activity);
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
+        // Fetch the user roles to get ready
+        mDispatcher.dispatch(SiteActionBuilder.newFetchUserRolesAction(mSite));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -93,26 +120,20 @@ public class PeopleManagementActivity extends AppCompatActivity
             actionBar.setElevation(0);
         }
 
-        Blog blog = WordPress.getCurrentBlog();
-        if (blog == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found);
-            finish();
-            return;
-        }
 
         FragmentManager fragmentManager = getFragmentManager();
 
         if (savedInstanceState == null) {
             // only delete cached people if there is a connection
             if (NetworkUtils.isNetworkAvailable(this)) {
-                PeopleTable.deletePeopleExceptForFirstPage(blog.getLocalTableBlogId());
+                PeopleTable.deletePeopleExceptForFirstPage(mSite.getId());
             }
 
             if (actionBar != null) {
                 actionBar.setTitle(R.string.people);
             }
 
-            PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(blog.getLocalTableBlogId());
+            PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(mSite);
             peopleListFragment.setOnPersonSelectedListener(this);
             peopleListFragment.setOnFetchPeopleListener(this);
 
@@ -172,6 +193,8 @@ public class PeopleManagementActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
+
         outState.putBoolean(KEY_USERS_END_OF_LIST_REACHED, mUsersEndOfListReached);
         outState.putBoolean(KEY_FOLLOWERS_END_OF_LIST_REACHED, mFollowersEndOfListReached);
         outState.putBoolean(KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED, mEmailFollowersEndOfListReached);
@@ -228,16 +251,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
 
             if (peopleInviteFragment == null) {
-                Blog blog = WordPress.getCurrentBlog();
-                String dotComBlogId = blog.getDotComBlogId();
-                if (!TextUtils.isEmpty(dotComBlogId)) {
-                    peopleInviteFragment = PeopleInviteFragment.newInstance(dotComBlogId);
-                } else {
-                    String blogUrl = blog.getUrl();
-                    AppLog.e(T.PEOPLE, "getDotComBlogId() returned null or empty string! Blog URL: " +
-                            (blogUrl == null ? "null" : blogUrl));
-                    ToastUtils.showToast(this, R.string.error_generic).show();
-                }
+                peopleInviteFragment = PeopleInviteFragment.newInstance(mSite);
             }
             if (peopleInviteFragment != null && !peopleInviteFragment.isAdded()) {
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -255,20 +269,20 @@ public class PeopleManagementActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean fetchUsersList(String dotComBlogId, final int localTableBlogId, final int offset) {
+    private boolean fetchUsersList(final SiteModel site, final int offset) {
         if (mUsersEndOfListReached || mUsersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
             return false;
         }
 
         mUsersFetchRequestInProgress = true;
 
-        PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, offset, new PeopleUtils.FetchUsersCallback() {
+        PeopleUtils.fetchUsers(site, offset, new PeopleUtils.FetchUsersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
                 mHasRefreshedUsers = true;
                 mUsersEndOfListReached = isEndOfList;
-                PeopleTable.saveUsers(peopleList, localTableBlogId, isFreshList);
+                PeopleTable.saveUsers(peopleList, site.getId(), isFreshList);
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
@@ -296,21 +310,21 @@ public class PeopleManagementActivity extends AppCompatActivity
         return true;
     }
 
-    private boolean fetchFollowersList(String dotComBlogId, final int localTableBlogId, final int page) {
+    private boolean fetchFollowersList(final SiteModel site, final int page) {
         if (mFollowersEndOfListReached || mFollowersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
             return false;
         }
 
         mFollowersFetchRequestInProgress = true;
 
-        PeopleUtils.fetchFollowers(dotComBlogId, localTableBlogId, page, new PeopleUtils.FetchFollowersCallback() {
+        PeopleUtils.fetchFollowers(site, page, new PeopleUtils.FetchFollowersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
                 boolean isFreshList = (page == 1);
                 mHasRefreshedFollowers = true;
                 mFollowersLastFetchedPage = pageFetched;
                 mFollowersEndOfListReached = isEndOfList;
-                PeopleTable.saveFollowers(peopleList, localTableBlogId, isFreshList);
+                PeopleTable.saveFollowers(peopleList, site.getId(), isFreshList);
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
@@ -338,21 +352,21 @@ public class PeopleManagementActivity extends AppCompatActivity
         return true;
     }
 
-    private boolean fetchEmailFollowersList(String dotComBlogId, final int localTableBlogId, final int page) {
+    private boolean fetchEmailFollowersList(final SiteModel site, final int page) {
         if (mEmailFollowersEndOfListReached || mEmailFollowersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
             return false;
         }
 
         mEmailFollowersFetchRequestInProgress = true;
 
-        PeopleUtils.fetchEmailFollowers(dotComBlogId, localTableBlogId, page, new PeopleUtils.FetchFollowersCallback() {
+        PeopleUtils.fetchEmailFollowers(site, page, new PeopleUtils.FetchFollowersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
                 boolean isFreshList = (page == 1);
                 mHasRefreshedEmailFollowers = true;
                 mEmailFollowersLastFetchedPage = pageFetched;
                 mEmailFollowersEndOfListReached = isEndOfList;
-                PeopleTable.saveEmailFollowers(peopleList, localTableBlogId, isFreshList);
+                PeopleTable.saveEmailFollowers(peopleList, site.getId(), isFreshList);
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
@@ -380,20 +394,20 @@ public class PeopleManagementActivity extends AppCompatActivity
         return true;
     }
 
-    private boolean fetchViewersList(String dotComBlogId, final int localTableBlogId, final int offset) {
+    private boolean fetchViewersList(final SiteModel site, final int offset) {
         if (mViewersEndOfListReached || mViewersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
             return false;
         }
 
         mViewersFetchRequestInProgress = true;
 
-        PeopleUtils.fetchViewers(dotComBlogId, localTableBlogId, offset, new PeopleUtils.FetchViewersCallback() {
+        PeopleUtils.fetchViewers(site, offset, new PeopleUtils.FetchViewersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
                 mHasRefreshedViewers = true;
                 mViewersEndOfListReached = isEndOfList;
-                PeopleTable.saveViewers(peopleList, localTableBlogId, isFreshList);
+                PeopleTable.saveViewers(peopleList, site.getId(), isFreshList);
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
@@ -429,12 +443,13 @@ public class PeopleManagementActivity extends AppCompatActivity
         int localTableBlogID = person.getLocalTableBlogId();
 
         if (personDetailFragment == null) {
-            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID, person.getPersonType());
+            personDetailFragment = PersonDetailFragment.newInstance(mAccountStore.getAccount().getUserId(), personID,
+                    localTableBlogID, person.getPersonType());
         } else {
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }
         if (!personDetailFragment.isAdded()) {
-            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PERSON);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PERSON, mSite);
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
@@ -454,12 +469,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
         final Person person = PeopleTable.getUser(event.personID, event.localTableBlogId);
-        if (person == null || event.newRole == null || person.getRole() == event.newRole) {
-            return;
-        }
-
-        String blogId = WordPress.getCurrentRemoteBlogId();
-        if (blogId == null) {
+        if (person == null || event.newRole == null || event.newRole.equals(person.getRole())) {
             return;
         }
 
@@ -469,11 +479,11 @@ public class PeopleManagementActivity extends AppCompatActivity
             personDetailFragment.changeRole(event.newRole);
         }
 
-        PeopleUtils.updateRole(blogId, person.getPersonID(), event.newRole, event.localTableBlogId,
+        PeopleUtils.updateRole(mSite, person.getPersonID(), event.newRole, event.localTableBlogId,
                 new PeopleUtils.UpdateUserCallback() {
             @Override
             public void onSuccess(Person person) {
-                AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_UPDATED);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PERSON_UPDATED, mSite);
                 PeopleTable.saveUser(person);
                 refreshOnScreenFragmentDetails();
             }
@@ -525,10 +535,6 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (person == null) {
             return;
         }
-        String blogId = WordPress.getCurrentRemoteBlogId();
-        if (blogId == null) {
-            return;
-        }
 
         final Person.PersonType personType = person.getPersonType();
         final String displayName = person.getDisplayName();
@@ -537,7 +543,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(long personID, int localTableBlogId) {
                 if (personType == Person.PersonType.USER) {
-                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
+                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PERSON_REMOVED, mSite);
                 }
 
                 // remove the person from db, navigate back to list fragment and refresh it
@@ -571,12 +577,11 @@ public class PeopleManagementActivity extends AppCompatActivity
         };
 
         if (personType == Person.PersonType.FOLLOWER || personType == Person.PersonType.EMAIL_FOLLOWER) {
-            PeopleUtils.removeFollower(blogId, person.getPersonID(), person.getLocalTableBlogId(),
-                    personType, callback);
+            PeopleUtils.removeFollower(mSite, person.getPersonID(), personType, callback);
         } else if(personType == Person.PersonType.VIEWER) {
-            PeopleUtils.removeViewer(blogId, person.getPersonID(), person.getLocalTableBlogId(), callback);
+            PeopleUtils.removeViewer(mSite, person.getPersonID(), callback);
         } else {
-            PeopleUtils.removeUser(blogId, person.getPersonID(), person.getLocalTableBlogId(), callback);
+            PeopleUtils.removeUser(mSite, person.getPersonID(),callback);
         }
     }
 
@@ -626,15 +631,14 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     @Override
     public boolean onFetchFirstPage(PeopleListFilter filter) {
-        Blog blog = WordPress.getCurrentBlog();
         if (filter == PeopleListFilter.TEAM && !mHasRefreshedUsers) {
-            return fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
+            return fetchUsersList(mSite, 0);
         } else if (filter == PeopleListFilter.FOLLOWERS && !mHasRefreshedFollowers) {
-            return fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
+            return fetchFollowersList(mSite, 1);
         } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && !mHasRefreshedEmailFollowers) {
-            return fetchEmailFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
+            return fetchEmailFollowersList(mSite, 1);
         } else if (filter == PeopleListFilter.VIEWERS && !mHasRefreshedViewers) {
-            return fetchViewersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
+            return fetchViewersList(mSite, 0);
         }
         return false;
     }
@@ -642,21 +646,17 @@ public class PeopleManagementActivity extends AppCompatActivity
     @Override
     public boolean onFetchMorePeople(PeopleListFilter filter) {
         if (filter == PeopleListFilter.TEAM && !mUsersEndOfListReached) {
-            Blog blog = WordPress.getCurrentBlog();
-            int count = PeopleTable.getUsersCountForLocalBlogId(blog.getLocalTableBlogId());
-            return fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
+            int count = PeopleTable.getUsersCountForLocalBlogId(mSite.getId());
+            return fetchUsersList(mSite, count);
         } else if (filter == PeopleListFilter.FOLLOWERS && !mFollowersEndOfListReached) {
-            Blog blog = WordPress.getCurrentBlog();
             int pageToFetch = mFollowersLastFetchedPage + 1;
-            return fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), pageToFetch);
+            return fetchFollowersList(mSite, pageToFetch);
         } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && !mEmailFollowersEndOfListReached) {
-            Blog blog = WordPress.getCurrentBlog();
             int pageToFetch = mEmailFollowersLastFetchedPage + 1;
-            return fetchEmailFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), pageToFetch);
+            return fetchEmailFollowersList(mSite, pageToFetch);
         } else if (filter == PeopleListFilter.VIEWERS && !mViewersEndOfListReached) {
-            Blog blog = WordPress.getCurrentBlog();
-            int count = PeopleTable.getViewersCountForLocalBlogId(blog.getLocalTableBlogId());
-            return fetchViewersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
+            int count = PeopleTable.getViewersCountForLocalBlogId(mSite.getId());
+            return fetchViewersList(mSite, count);
         }
         return false;
     }
@@ -671,5 +671,20 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     public interface InvitationSender {
         void send();
+    }
+
+    // Fluxc events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUserRolesChanged(SiteStore.OnUserRolesChanged event) {
+        if (event.isError()) {
+            AppLog.e(AppLog.T.PEOPLE, "An error occurred while fetching the user roles with type: "
+                    + event.error.type);
+        }
+        PeopleListFragment peopleListFragment = getListFragment();
+        if (peopleListFragment != null) {
+            peopleListFragment.refreshUserRoles();
+        }
     }
 }

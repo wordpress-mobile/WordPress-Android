@@ -197,7 +197,7 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     }
 
     @Override
-    public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
+    public void onMediaUploadCancelClicked(String mediaId) {
 
     }
 
@@ -220,7 +220,6 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     public void onEditorFragmentInitialized() {
         // arbitrary setup
         mEditorFragment.setFeaturedImageSupported(true);
-        mEditorFragment.setBlogSettingMaxImageWidth("600");
         mEditorFragment.setDebugModeEnabled(true);
 
         // get title and content and draft switch
@@ -290,7 +289,7 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
                         count += 0.1;
                     }
 
-                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadFailed(mediaId,
+                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadFailed(mediaId, EditorFragmentAbstract.MediaType.IMAGE,
                             getString(R.string.tap_to_try_again));
 
                     mFailedUploads.put(mediaId, mediaUrl);

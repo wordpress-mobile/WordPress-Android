@@ -9,7 +9,7 @@ public class AutolinkUtils {
     private static final Set<Pattern> PROVIDERS;
 
     static {
-        PROVIDERS = new HashSet<Pattern>();
+        PROVIDERS = new HashSet<>();
         PROVIDERS.add(Pattern.compile("(https?://((m|www)\\.)?youtube\\.com/watch\\S+)", Pattern.CASE_INSENSITIVE));
         PROVIDERS.add(Pattern.compile("(https?://((m|www)\\.)?youtube\\.com/playlist\\S+)", Pattern.CASE_INSENSITIVE));
         PROVIDERS.add(Pattern.compile("(https?://youtu\\.be/\\S+)", Pattern.CASE_INSENSITIVE));

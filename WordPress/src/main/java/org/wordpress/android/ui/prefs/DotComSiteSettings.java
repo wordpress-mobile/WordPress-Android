@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.SiteSettingsTable;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -50,6 +50,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String MAX_LINKS_KEY = "comment_max_links";
     public static final String MODERATION_KEYS_KEY = "moderation_keys";
     public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
+    public static final String SHARING_LABEL_KEY = "sharing_label";
+    public static final String SHARING_BUTTON_STYLE_KEY = "sharing_button_style";
+    public static final String SHARING_REBLOGS_DISABLED_KEY = "disabled_reblogs";
+    public static final String SHARING_LIKES_DISABLED_KEY = "disabled_likes";
+    public static final String SHARING_COMMENT_LIKES_KEY = "jetpack_comment_likes_enabled";
+    public static final String TWITTER_USERNAME_KEY = "twitter_via";
 
     // WP.com REST keys used to GET certain site settings
     public static final String GET_TITLE_KEY = "name";
@@ -72,12 +78,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String CAT_POST_COUNT_KEY = "post_count";
     private static final String CAT_NUM_POSTS_KEY = "found";
     private static final String CATEGORIES_KEY = "categories";
+    public static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
 
     /**
      * Only instantiated by {@link SiteSettingsInterface}.
      */
-    DotComSiteSettings(Activity host, Blog blog, SiteSettingsListener listener) {
-        super(host, blog, listener);
+    DotComSiteSettings(Activity host, SiteModel site, SiteSettingsListener listener) {
+        super(host, site, listener);
     }
 
     @Override
@@ -88,7 +95,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (params == null || params.isEmpty()) return;
 
         WordPress.getRestClientUtils().setGeneralSiteSettings(
-                String.valueOf(mBlog.getRemoteBlogId()), new RestRequest.Listener() {
+                mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Site Settings saved remotely");
@@ -107,8 +114,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
                                     properties.put(SAVED_ITEM_PREFIX + currentKey, currentValue);
                                 }
                             }
-                            AnalyticsUtils.trackWithCurrentBlogDetails(
-                                    AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, properties);
+                            AnalyticsUtils.trackWithSiteDetails(
+                                    AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -127,21 +134,25 @@ class DotComSiteSettings extends SiteSettingsInterface {
     protected void fetchRemoteData() {
         fetchCategories();
         WordPress.getRestClientUtils().getGeneralSettings(
-                String.valueOf(mBlog.getRemoteBlogId()), new RestRequest.Listener() {
+                mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Received response to Settings REST request.");
                         credentialsVerified(true);
 
-                        mRemoteSettings.localTableId = mBlog.getRemoteBlogId();
-                        deserializeDotComRestResponse(mBlog, response);
+                        mRemoteSettings.localTableId = mSite.getId();
+                        deserializeDotComRestResponse(mSite, response);
                         if (!mRemoteSettings.equals(mSettings)) {
                             // postFormats setting is not returned by this api call so copy it over
                             final Map<String, String> currentPostFormats = mSettings.postFormats;
 
+                            // Local settings
+                            boolean location = mSettings.location;
+
                             mSettings.copyFrom(mRemoteSettings);
 
                             mSettings.postFormats = currentPostFormats;
+                            mSettings.location = location;
 
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);
@@ -159,19 +170,19 @@ class DotComSiteSettings extends SiteSettingsInterface {
     /**
      * Sets values from a .com REST response object.
      */
-    public void deserializeDotComRestResponse(Blog blog, JSONObject response) {
-        if (blog == null || response == null) return;
+    public void deserializeDotComRestResponse(SiteModel site, JSONObject response) {
+        if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject(SETTINGS_KEY);
 
-        mRemoteSettings.username = blog.getUsername();
-        mRemoteSettings.password = blog.getPassword();
+        mRemoteSettings.username = site.getUsername();
+        mRemoteSettings.password = site.getPassword();
         mRemoteSettings.address = response.optString(URL_KEY, "");
         mRemoteSettings.title = response.optString(GET_TITLE_KEY, "");
         mRemoteSettings.tagline = response.optString(GET_DESC_KEY, "");
         mRemoteSettings.languageId = settingsObject.optInt(LANGUAGE_ID_KEY, -1);
         mRemoteSettings.privacy = settingsObject.optInt(PRIVACY_KEY, -2);
-        mRemoteSettings.defaultCategory = settingsObject.optInt(DEF_CATEGORY_KEY, 0);
-        mRemoteSettings.defaultPostFormat = settingsObject.optString(DEF_POST_FORMAT_KEY, "0");
+        mRemoteSettings.defaultCategory = settingsObject.optInt(DEF_CATEGORY_KEY, 1);
+        mRemoteSettings.defaultPostFormat = settingsObject.optString(DEF_POST_FORMAT_KEY, STANDARD_POST_FORMAT_KEY);
         mRemoteSettings.language = languageIdToLanguageCode(Integer.toString(mRemoteSettings.languageId));
         mRemoteSettings.allowComments = settingsObject.optBoolean(ALLOW_COMMENTS_KEY, true);
         mRemoteSettings.sendPingbacks = settingsObject.optBoolean(SEND_PINGBACKS_KEY, false);
@@ -189,6 +200,15 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.maxLinks = settingsObject.optInt(MAX_LINKS_KEY, 0);
         mRemoteSettings.holdForModeration = new ArrayList<>();
         mRemoteSettings.blacklist = new ArrayList<>();
+        mRemoteSettings.sharingLabel = settingsObject.optString(SHARING_LABEL_KEY, "");
+        mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, DEFAULT_SHARING_BUTTON_STYLE);
+        mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(SHARING_COMMENT_LIKES_KEY, false);
+        mRemoteSettings.twitterUsername = settingsObject.optString(TWITTER_USERNAME_KEY, "");
+
+        boolean reblogsDisabled = settingsObject.optBoolean(SHARING_REBLOGS_DISABLED_KEY, false);
+        boolean likesDisabled = settingsObject.optBoolean(SHARING_LIKES_DISABLED_KEY, false);
+        mRemoteSettings.allowReblogButton = !reblogsDisabled;
+        mRemoteSettings.allowLikeButton = !likesDisabled;
 
         String modKeys = settingsObject.optString(MODERATION_KEYS_KEY, "");
         if (modKeys.length() > 0) {
@@ -317,6 +337,30 @@ class DotComSiteSettings extends SiteSettingsInterface {
             }
         }
 
+        if (mSettings.sharingLabel != null && !mSettings.sharingLabel.equals(mRemoteSettings.sharingLabel)) {
+            params.put(SHARING_LABEL_KEY, String.valueOf(mSettings.sharingLabel));
+        }
+
+        if (mSettings.sharingButtonStyle != null && !mSettings.sharingButtonStyle.equals(mRemoteSettings.sharingButtonStyle)) {
+            params.put(SHARING_BUTTON_STYLE_KEY, mSettings.sharingButtonStyle);
+        }
+
+        if (mSettings.allowReblogButton != mRemoteSettings.allowReblogButton) {
+            params.put(SHARING_REBLOGS_DISABLED_KEY, String.valueOf(!mSettings.allowReblogButton));
+        }
+
+        if (mSettings.allowLikeButton != mRemoteSettings.allowLikeButton) {
+            params.put(SHARING_LIKES_DISABLED_KEY, String.valueOf(!mSettings.allowLikeButton));
+        }
+
+        if (mSettings.allowCommentLikes != mRemoteSettings.allowCommentLikes) {
+            params.put(SHARING_COMMENT_LIKES_KEY, String.valueOf(mSettings.allowCommentLikes));
+        }
+
+        if (mSettings.twitterUsername != null && !mSettings.twitterUsername.equals(mRemoteSettings.twitterUsername)) {
+            params.put(TWITTER_USERNAME_KEY, mSettings.twitterUsername);
+        }
+
         return params;
     }
 
@@ -324,7 +368,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
      * Request a list of post categories for a site via the WordPress REST API.
      */
     private void fetchCategories() {
-        WordPress.getRestClientUtilsV1_1().getCategories(String.valueOf(mBlog.getRemoteBlogId()),
+        // TODO: Replace with FluxC (GET_CATEGORIES + TaxonomyStore.getCategoriesForSite())
+        WordPress.getRestClientUtilsV1_1().getCategories(mSite.getSiteId(),
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {

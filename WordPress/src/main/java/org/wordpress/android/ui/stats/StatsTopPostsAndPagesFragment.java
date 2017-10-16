@@ -5,7 +5,7 @@ import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.adapters.PostsAndPagesAdapter;
-import org.wordpress.android.ui.stats.models.PostModel;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 
@@ -65,7 +65,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
         }
 
         if (hasTopPostsAndPages()) {
-            List<PostModel> postViews = mTopPostsAndPagesModel.getTopPostsAndPages();
+            List<StatsPostModel> postViews = mTopPostsAndPagesModel.getTopPostsAndPages();
             ArrayAdapter adapter = new PostsAndPagesAdapter(getActivity(), postViews);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
@@ -78,9 +78,9 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
         return mTopPostsAndPagesModel != null && mTopPostsAndPagesModel.hasTopPostsAndPages();
     }
 
-    private List<PostModel> getTopPostsAndPages() {
+    private List<StatsPostModel> getTopPostsAndPages() {
         if (!hasTopPostsAndPages()) {
-            return new ArrayList<PostModel>(0);
+            return new ArrayList<StatsPostModel>(0);
         }
         return mTopPostsAndPagesModel.getTopPostsAndPages();
     }

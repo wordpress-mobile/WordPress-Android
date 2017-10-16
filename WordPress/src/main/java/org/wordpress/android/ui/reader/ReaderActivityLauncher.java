@@ -16,7 +16,6 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.EnumSet;
@@ -90,14 +89,11 @@ public class ReaderActivityLauncher {
     /*
      * show a list of posts in a specific blog
      */
-    public static void showReaderBlogPreview(Context context, long blogId) {
-        if (blogId == 0) {
-            return;
-        }
-
-        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED, blogId);
+    public static void showReaderBlogPreview(Context context, long siteId) {
+        if (siteId == 0) return;
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, siteId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
     }
@@ -254,9 +250,11 @@ public class ReaderActivityLauncher {
     }
 
     public enum OpenUrlType { INTERNAL, EXTERNAL }
+
     public static void openUrl(Context context, String url) {
         openUrl(context, url, OpenUrlType.INTERNAL);
     }
+
     public static void openUrl(Context context, String url, OpenUrlType openUrlType) {
         if (context == null || TextUtils.isEmpty(url)) return;
 
@@ -273,7 +271,7 @@ public class ReaderActivityLauncher {
     private static void openUrlInternal(Context context, @NonNull String url) {
         // That won't work on wpcom sites with custom urls
         if (WPUrlUtils.isWordPressCom(url)) {
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url);
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
         } else {
             WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
         }

@@ -11,7 +11,7 @@ public class GravatarUtils {
     // it's up to the caller to catch the 404 and provide a suitable default image
     private static final DefaultImage DEFAULT_GRAVATAR = DefaultImage.STATUS_404;
 
-    public static enum DefaultImage {
+    private enum DefaultImage {
         MYSTERY_MAN,
         STATUS_404,
         IDENTICON,
@@ -65,6 +65,7 @@ public class GravatarUtils {
     public static String gravatarFromEmail(final String email, int size) {
         return gravatarFromEmail(email, size, DEFAULT_GRAVATAR);
     }
+
     public static String gravatarFromEmail(final String email, int size, DefaultImage defaultImage) {
         return "http://gravatar.com/avatar/"
               + StringUtils.getMd5Hash(StringUtils.notNullStr(email))
@@ -75,6 +76,7 @@ public class GravatarUtils {
     public static String blavatarFromUrl(final String url, int size) {
         return blavatarFromUrl(url, size, DEFAULT_GRAVATAR);
     }
+
     public static String blavatarFromUrl(final String url, int size, DefaultImage defaultImage) {
         return "http://gravatar.com/blavatar/"
                 + StringUtils.getMd5Hash(UrlUtils.getHost(url))

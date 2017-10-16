@@ -10,6 +10,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap.ImageSize;
+import org.wordpress.android.ui.reader.utils.ReaderEmbedScanner;
 import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils;
 import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
@@ -22,8 +23,10 @@ import org.wordpress.android.util.StringUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -76,15 +79,18 @@ class ReaderPostRenderer {
             @Override
             public void run() {
                 final boolean hasTiledGallery = hasTiledGallery(mRenderBuilder.toString());
+                String content = mRenderBuilder.toString();
 
                 if (!(hasTiledGallery && mResourceVars.isWideDisplay)) {
-                    resizeImages();
+                    resizeImages(content);
                 }
 
-                resizeIframes();
+                resizeIframes(content);
 
-                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString(), hasTiledGallery,
-                        mResourceVars.isWideDisplay);
+                // Get the set of JS scripts to inject in our Webview to support some specific Embeds.
+                Set<String> jsToInject = injectJSForSpecificEmbedSupport(content);
+
+                final String htmlContent = formatPostContentForWebView(content, jsToInject, hasTiledGallery, mResourceVars.isWideDisplay);
                 mRenderBuilder = null;
                 handler.post(new Runnable() {
                     @Override
@@ -104,7 +110,7 @@ class ReaderPostRenderer {
     /*
      * scan the content for images and make sure they're correctly sized for the device
      */
-    private void resizeImages() {
+    private void resizeImages(String content) {
         ReaderHtmlUtils.HtmlScannerListener imageListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
             public void onTagFound(String imageTag, String imageUrl) {
@@ -113,22 +119,35 @@ class ReaderPostRenderer {
                 }
             }
         };
-        ReaderImageScanner scanner = new ReaderImageScanner(mRenderBuilder.toString(), mPost.isPrivate);
+        ReaderImageScanner scanner = new ReaderImageScanner(content, mPost.isPrivate);
         scanner.beginScan(imageListener);
     }
 
     /*
      * scan the content for iframes and make sure they're correctly sized for the device
      */
-    private void resizeIframes() {
+    private void resizeIframes(String content) {
         ReaderHtmlUtils.HtmlScannerListener iframeListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
             public void onTagFound(String tag, String src) {
                 replaceIframeTag(tag, src);
             }
         };
-        ReaderIframeScanner scanner = new ReaderIframeScanner(mRenderBuilder.toString());
+        ReaderIframeScanner scanner = new ReaderIframeScanner(content);
         scanner.beginScan(iframeListener);
+    }
+
+    private Set<String> injectJSForSpecificEmbedSupport(String content) {
+        final Set<String> jsToInject = new HashSet<>();
+        ReaderHtmlUtils.HtmlScannerListener embedListener = new ReaderHtmlUtils.HtmlScannerListener() {
+            @Override
+            public void onTagFound(String tag, String src) {
+                jsToInject.add(src);
+            }
+        };
+        ReaderEmbedScanner scanner = new ReaderEmbedScanner(content);
+        scanner.beginScan(embedListener);
+        return jsToInject;
     }
 
     /*
@@ -235,8 +254,10 @@ class ReaderPostRenderer {
      * returns the basic content of the post tweaked for use here
      */
     private String getPostContent() {
+        String content = mPost.shouldShowExcerpt() ? mPost.getExcerpt() : mPost.getText();
+
         // some content (such as Vimeo embeds) don't have "http:" before links
-        String content = mPost.getText().replace("src=\"//", "src=\"http://");
+        content = content.replace("src=\"//", "src=\"http://");
 
         // add the featured image (if any)
         if (shouldAddFeaturedImage()) {
@@ -317,7 +338,8 @@ class ReaderPostRenderer {
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
-    private String formatPostContentForWebView(final String content, boolean hasTiledGallery, boolean isWideDisplay) {
+    private String formatPostContentForWebView(final String content, final Set<String> jsToInject,
+                                               boolean hasTiledGallery, boolean isWideDisplay) {
         final boolean renderAsTiledGallery = hasTiledGallery && isWideDisplay;
 
         // unique CSS class assigned to the gallery elements for easy selection
@@ -332,23 +354,20 @@ class ReaderPostRenderer {
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
 
-        // use Merriweather font assets
-        .append("<link href='file:///android_asset/merriweather.css' rel='stylesheet' type='text/css'>")
-
         .append("<style type='text/css'>")
-        .append("  body { font-family: Merriweather, serif; font-weight: 400; margin: 0px; padding: 0px;}")
+        .append("  body { font-family: 'Noto Serif', serif; font-weight: 400; margin: 0px; padding: 0px;}")
         .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
 
-        // set line-height, font-size but not for gallery divs when rendering as tiled gallery as those will be
+        // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled gallery as those will be
         // handled with the .tiled-gallery rules bellow.
         .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
                 ", li { line-height: 1.6em; font-size: 100%; }")
 
         .append("  h1, h2 { line-height: 1.2em; }")
 
-        // counteract pre-defined height/width styles, except for the tiled-gallery divs when rendering as tiled gallery
+        // counteract pre-defined height/width styles, expect for the tiled-gallery divs when rendering as tiled gallery
         // as those will be handled with the .tiled-gallery rules bellow.
-        .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
+        .append("  p, div" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "") +
                 ", dl, table { width: auto !important; height: auto !important; }")
 
         // make sure long strings don't force the user to scroll horizontally
@@ -515,6 +534,10 @@ class ReaderPostRenderer {
             contentCustomised = contentCustomised.replaceAll(classToAmend, "$1 " + galleryOnlyClass + "$2");
         }
 
+        for (String jsUrl : jsToInject) {
+            sbHtml.append("<script src=\"").append(jsUrl).append("\" type=\"text/javascript\" async></script>");
+        }
+
         sbHtml.append("</head><body>")
         .append(contentCustomised)
         .append("</body></html>");
@@ -538,7 +561,7 @@ class ReaderPostRenderer {
 
     private ImageSize getImageSizeFromAttachments(final String imageUrl) {
         if (mAttachmentSizes == null) {
-            mAttachmentSizes = new ImageSizeMap(mPost.getAttachmentsJson());
+            mAttachmentSizes = new ImageSizeMap(mPost.getText(), mPost.getAttachmentsJson());
         }
         return mAttachmentSizes.getImageSize(imageUrl);
     }

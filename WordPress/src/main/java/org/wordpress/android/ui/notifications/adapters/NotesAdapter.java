@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.NotificationsTable;
-import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -192,7 +192,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         if (note == null) {
             return 0;
         }
-        
+
         return Long.valueOf(note.getId());
     }
 
@@ -238,7 +238,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             noteViewHolder.contentView.setVisibility(View.VISIBLE);
         }
 
-        CommentStatus commentStatus = CommentStatus.UNKNOWN;
+        CommentStatus commentStatus = CommentStatus.ALL;
         if (note.getCommentStatus() == CommentStatus.UNAPPROVED) {
             commentStatus = CommentStatus.UNAPPROVED;
         }

@@ -27,7 +27,7 @@
         android:textColor="@color/grey_darken_10"
         android:textSize="@dimen/text_sz_small"/>
 
-    <org.wordpress.android.widgets.WPEditText
+    <EditText
         android:id="@+id/my_profile_dialog_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

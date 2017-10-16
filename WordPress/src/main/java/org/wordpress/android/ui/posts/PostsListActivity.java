@@ -1,37 +1,87 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.AlertDialog;
-import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.ToastUtils;
+
+import javax.inject.Inject;
 
 public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
-    public static final String EXTRA_ERROR_MSG = "errorMessage";
-    public static final String EXTRA_BLOG_LOCAL_ID = "EXTRA_BLOG_LOCAL_ID";
+    public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
+    private SiteModel mSite;
+
+    @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.post_list_activity);
 
-        mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+
+        // get new intent extras and compare whether the running instance of PostsListActivity has
+        // the same values or not. If not, we need to create a new fragment and show the corresponding
+        // requested content
+        boolean pageHasChanged = false;
+        if (intent.hasExtra(EXTRA_VIEW_PAGES)) {
+            boolean isPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+            pageHasChanged = isPage != mIsPage;
+        }
+        mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+
+        boolean siteHasChanged = false;
+        if (intent.hasExtra(WordPress.SITE)) {
+            SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+            if (mSite != null && site != null) {
+                siteHasChanged = site.getId() != mSite.getId();
+            }
+            mSite = site;
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -40,11 +90,31 @@ public class PostsListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        FragmentManager fm = getFragmentManager();
-        mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
+        PostModel targetPost = null;
+        int targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0);
+        if (targetPostId > 0) {
+            targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
+            if (targetPost == null) {
+                String errorMessage = getString(mIsPage ? R.string.error_page_does_not_exist
+                        : R.string.error_post_does_not_exist);
+                ToastUtils.showToast(this, errorMessage);
+            }
+        }
 
-        showErrorDialogIfNeeded(getIntent().getExtras());
-        showWarningToastIfNeeded(getIntent().getExtras());
+        mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
+        if (mPostList == null || siteHasChanged || pageHasChanged || targetPost != null) {
+            PostsListFragment oldFragment = mPostList;
+            mPostList = PostsListFragment.newInstance(mSite, mIsPage, targetPost);
+            if (oldFragment == null) {
+                getFragmentManager().beginTransaction()
+                        .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                        .commit();
+            } else {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                        .commit();
+            }
+        }
     }
 
     @Override
@@ -53,44 +123,12 @@ public class PostsListActivity extends AppCompatActivity {
         ActivityId.trackLastActivity(mIsPage ? ActivityId.PAGES : ActivityId.POSTS);
     }
 
-    /**
-     * intent extras will contain error info if this activity was started from an
-     * upload error notification
-     */
-    private void showErrorDialogIfNeeded(Bundle extras) {
-        if (WordPress.getCurrentBlog() == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found);
-            finish();
-        }
-        if (extras == null || !extras.containsKey(EXTRA_ERROR_MSG) || isFinishing()) {
-            return;
-        }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        final String errorMessage = extras.getString(EXTRA_ERROR_MSG);
-
-        if (TextUtils.isEmpty(errorMessage)) {
-            return;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getResources().getText(R.string.error))
-               .setMessage(errorMessage)
-               .setPositiveButton(R.string.ok, null)
-               .setCancelable(true);
-
-        builder.create().show();
-    }
-
-    /**
-     * Show a toast when the user taps a Post Upload notification referencing a post that's not from the current
-     * selected Blog
-     */
-    private void showWarningToastIfNeeded(Bundle extras) {
-        if (extras == null || !extras.containsKey(EXTRA_BLOG_LOCAL_ID) || isFinishing()) {
-            return;
-        }
-        if (extras.getInt(EXTRA_BLOG_LOCAL_ID, -1) != WordPress.getCurrentLocalTableBlogId()) {
-            ToastUtils.showToast(this, R.string.error_open_list_from_notification);
+        if (requestCode == RequestCodes.EDIT_POST) {
+            mPostList.handleEditPostResult(resultCode, data);
         }
     }
 
@@ -109,9 +147,7 @@ public class PostsListActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (outState.isEmpty()) {
-            outState.putBoolean("bug_19917_fix", true);
-        }
         super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 }

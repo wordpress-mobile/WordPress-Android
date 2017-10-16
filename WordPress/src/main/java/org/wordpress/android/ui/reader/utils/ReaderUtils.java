@@ -7,15 +7,14 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -31,7 +30,7 @@ public class ReaderUtils {
                                             boolean isPrivate,
                                             PhotonUtils.Quality quality) {
 
-        final String unescapedUrl = HtmlUtils.fastUnescapeHtml(imageUrl);
+        final String unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl);
         if (isPrivate) {
             return getPrivateImageForDisplay(unescapedUrl, width, height);
         } else {
@@ -129,14 +128,6 @@ public class ReaderUtils {
     }
 
     /*
-     * returns true if the reader should provide a "logged out" experience - no likes,
-     * comments, or anything else that requires a wp.com account
-     */
-    public static boolean isLoggedOutReader() {
-        return !AccountHelper.isSignedInWordPressDotCom();
-    }
-
-    /*
      * returns true if a ReaderPost and ReaderComment exist for the passed Ids
      */
     public static boolean postAndCommentExists(long blogId, long postId, long commentId) {
@@ -216,6 +207,4 @@ public class ReaderUtils {
     public static ReaderTag getDefaultTag() {
         return getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT);
     }
-
-
 }

@@ -92,10 +92,10 @@ public class TestUtils {
     }
 
     public static void clearApplicationState(Context context) {
-        WordPress.currentBlog = null;
         if (WordPress.getContext() != null) {
             try {
-                WordPress.WordPressComSignOut(context);
+                WordPress app = (WordPress) context.getApplicationContext();
+                app.wordPressComSignOut();
             } catch (Exception e) {
                 // noop
             }

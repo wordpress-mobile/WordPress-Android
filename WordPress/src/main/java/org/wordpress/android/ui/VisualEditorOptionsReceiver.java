@@ -26,15 +26,16 @@ public class VisualEditorOptionsReceiver extends AppCompatActivity {
             if ("1".equals(available)) {
                 AppLog.i(T.EDITOR, "Visual Editor is now Available");
                 AppPrefs.setVisualEditorAvailable(true);
-                ToastUtils.showToast(this, R.string.visual_editor_enabled);
             }
 
             if ("1".equals(enabled)) {
                 AppLog.i(T.EDITOR, "Visual Editor Enabled");
                 AppPrefs.setVisualEditorEnabled(true);
+                ToastUtils.showToast(this, R.string.visual_editor_enabled);
             } else if ("0".equals(enabled)) {
                 AppLog.i(T.EDITOR, "Visual Editor Disabled");
                 AppPrefs.setVisualEditorEnabled(false);
+                ToastUtils.showToast(this, R.string.visual_editor_disabled);
             }
         }
 

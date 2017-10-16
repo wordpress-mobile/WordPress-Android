@@ -17,7 +17,6 @@ import com.jjoe64.graphview.GraphViewStyle;
 import com.jjoe64.graphview.IndexDependentColor;
 
 import org.wordpress.android.R;
-import org.wordpress.android.widgets.TypefaceCache;
 
 import java.text.NumberFormat;
 import java.util.LinkedList;
@@ -47,8 +46,6 @@ class StatsBarGraph extends GraphView {
         setLayoutParams(new LayoutParams(width, height));
 
         setProperties();
-
-        paint.setTypeface(TypefaceCache.getTypeface(getContext()));
 
         mDetector = new GestureDetectorCompat(getContext(), new MyGestureListener());
         mDetector.setIsLongpressEnabled(false);

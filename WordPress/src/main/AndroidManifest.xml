@@ -4,6 +4,8 @@
           xmlns:tools="http://schemas.android.com/tools"
           android:installLocation="auto">
 
+    <uses-sdk tools:overrideLibrary="org.m4m.android" />
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -23,6 +25,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <!-- GCM all build types configuration -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -68,10 +71,15 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/com_google_android_geo_api_key"/>
+
         <activity
             android:name=".ui.WPLaunchActivity"
             android:noHistory="true"
-            android:theme="@android:style/Theme.NoDisplay">
+            android:theme="@style/NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -98,12 +106,31 @@
                 <data
                     android:host="signin"
                     android:scheme="wordpress" />
+            </intent-filter>
+        </activity>
 
+        <activity
+            android:name=".ui.accounts.LoginActivity"
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.accounts.LoginMagicLinkInterceptActivity"
+            android:theme="@style/NoDisplay">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:host="magic-login"
                     android:scheme="wordpress" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.accounts.LoginEpilogueActivity"
+            android:theme="@style/LoginTheme" />
 
         <activity
             android:name=".ui.accounts.NewBlogActivity"
@@ -126,6 +153,9 @@
             android:label="@string/settings"
             android:theme="@style/CalypsoTheme" />
         <activity
+            android:name=".ui.prefs.ReleaseNotesActivity"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
@@ -141,7 +171,12 @@
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/Calypso.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".networking.SSLCertsViewActivity"
             android:theme="@style/Calypso.NoActionBar" />
@@ -155,10 +190,6 @@
             android:theme="@style/CalypsoTheme" />
 
         <!-- Posts activities -->
-        <activity
-            android:name=".ui.posts.AddCategoryActivity"
-            android:label="@string/add_new_category"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
             android:name=".editor.legacy.EditLinkActivity"
             android:label="@string/create_a_link"
@@ -197,11 +228,13 @@
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
             android:theme="@style/CalypsoTheme" />
+        <activity
+            android:name=".ui.posts.PostSettingsTagsActivity"
+            android:label="@string/post_settings_tags"
+            android:theme="@style/CalypsoTheme" />
 
         <!-- plans -->
         <activity android:name=".ui.plans.PlansActivity"
-                  android:theme="@style/Calypso.NoActionBar"/>
-        <activity android:name=".ui.plans.PlanPostPurchaseActivity"
                   android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Stats Activities -->
@@ -228,14 +261,18 @@
 
         <!-- Media Activities -->
         <activity
-            android:name=".ui.media.MediaPickerActivity"
-            android:theme="@style/CalypsoTheme"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
             android:name=".ui.media.MediaBrowserActivity"
-            android:theme="@style/Calypso.NoActionBar" />
-        <activity android:name=".ui.media.MediaGalleryActivity" />
-        <activity android:name=".ui.media.MediaGalleryPickerActivity" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/wp_media_title" />
+        <activity
+            android:name=".ui.media.MediaPreviewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".ui.media.MediaSettingsActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:label="@string/media"
+            android:theme="@style/MediaSettings.Activity" />
 
         <!-- Theme Activities -->
         <activity
@@ -360,9 +397,14 @@
             android:theme="@style/ReaderMediaViewerTheme" />
 
         <!-- Other activities -->
+        <activity
+            android:name=".ui.publicize.PublicizeListActivity"
+            android:label="@string/sharing"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <activity
             android:name=".ui.ShareIntentReceiverActivity"
+            android:excludeFromRecents="true"
             android:theme="@style/Calypso.FloatingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -390,6 +432,11 @@
             android:name=".ui.main.SitePickerActivity"
             android:label="@string/site_picker_title"
             android:theme="@style/CalypsoTheme" />
+
+        <activity
+            android:name=".ui.photopicker.PhotoPickerActivity"
+            android:label="@string/photo_picker_title"
+            android:theme="@style/Calypso.NoActionBar" />
 
         <!-- Notifications activities -->
         <activity
@@ -439,22 +486,13 @@
 
         <!-- Services -->
         <service
-            android:name=".ui.posts.services.PostUploadService"
-            android:label="Post Upload Service" />
-        <service
-            android:name=".ui.posts.services.PostMediaService"
-            android:exported="false"
-            android:label="Post Media Service" />
-        <service
-            android:name=".ui.posts.services.PostUpdateService"
-            android:exported="false"
-            android:label="Post Update Service" />
-        <service
-            android:name=".ui.media.services.MediaUploadService"
-            android:label="Media Upload Service" />
+            android:name=".ui.uploads.UploadService"
+            android:label="Upload Service" />
         <service
             android:name=".ui.media.services.MediaDeleteService"
-            android:label="Media Delete Service" />
+            android:label="Media Delete Service"
+            android:exported="false"
+            />
         <service
             android:name=".ui.stats.service.StatsService"
             android:exported="false"
@@ -476,6 +514,11 @@
             android:exported="false"
             android:label="Reader Comment Service" />
         <service
+            android:name=".ui.publicize.services.PublicizeUpdateService"
+            android:label="Publicize Update Service"
+            android:exported="false" />
+
+        <service
             android:name=".ui.suggestion.service.SuggestionService"
             android:exported="false"
             android:label="Suggestion Service" />
@@ -491,14 +534,6 @@
             android:name=".ui.notifications.services.NotificationsUpdateService"
             android:exported="false"
             android:label="Notifications Update Service" />
-        <service
-            android:name=".push.NotificationsScreenLockWatchService"
-            android:exported="false"
-            android:label="Notifications Screen Lock watch Service" />
-        <service
-            android:name=".ui.notifications.services.NotificationsPendingDraftsService"
-            android:exported="false"
-            android:label="Notifications Pending Drafts Service" />
 
         <!-- Samsung multiwindow support -->
         <uses-library
@@ -509,15 +544,15 @@
             android:name="com.sec.android.support.multiwindow"
             android:value="true" />
 
-        <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
-        <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
-        <receiver
-            android:name=".networking.ConnectionChangeReceiver"
-            android:enabled="false">
+        <receiver android:name=".ui.notifications.receivers.NotificationsPendingDraftsReceiver"
+            android:enabled="true">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
+        <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
         <receiver
             android:name=".ui.stats.StatsWidgetProvider"
             android:label="@string/stats_widget_name">
@@ -528,11 +563,6 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_widget_info" />
-        </receiver>
-        <receiver android:name=".ui.notifications.ScreenLockUnlockBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
         </receiver>
 
         <!-- Google Cloud Messaging receiver and services -->

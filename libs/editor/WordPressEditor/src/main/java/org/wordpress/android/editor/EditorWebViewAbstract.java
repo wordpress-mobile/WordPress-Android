@@ -21,13 +21,14 @@ import android.webkit.WebViewClient;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HTTPUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +38,8 @@ import java.util.Map;
  */
 public abstract class EditorWebViewAbstract extends WebView {
     public abstract void execJavaScriptFromString(String javaScript);
+
+    public static final int REQUEST_TIMEOUT_MS = 30000;
 
     private OnImeBackListener mOnImeBackListener;
     private AuthHeaderRequestListener mAuthHeaderRequestListener;
@@ -59,9 +62,20 @@ public abstract class EditorWebViewAbstract extends WebView {
 
         this.setWebViewClient(new WebViewClient() {
             @Override
+            @SuppressWarnings("deprecation")
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                // Only used on API16, because of security issues with addJavascriptInterface below API 17.
+                // Instead of a JS interface, we use an iframe in the editor JavaScript to make callbacks as URL
+                // requests, which are intercepted here.
                 if (url != null && url.startsWith("callback") && mJsCallbackReceiver != null) {
-                    String data = URLDecoder.decode(url);
+                    String data;
+                    try {
+                        data = URLDecoder.decode(url, "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        // Pretty much impossible
+                        AppLog.e(T.EDITOR, "UTF-8 is unsupported on this device, falling back to default");
+                        data = URLDecoder.decode(url);
+                    }
                     String[] split = data.split(":", 2);
                     String callbackId = split[0];
                     String params = (split.length > 1 ? split[1] : "");
@@ -99,7 +113,7 @@ public abstract class EditorWebViewAbstract extends WebView {
                         }
                         headerMap.put("Authorization", authHeader);
 
-                        HttpURLConnection conn = HTTPUtils.setupUrlConnection(url, headerMap);
+                        URLConnection conn = setupUrlConnection(url, headerMap);
                         return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
                                 conn.getInputStream());
                     } catch (IOException e) {
@@ -131,7 +145,7 @@ public abstract class EditorWebViewAbstract extends WebView {
                         Map<String, String> headerMap = new HashMap<>(mHeaderMap);
                         headerMap.put("Authorization", authHeader);
 
-                        HttpURLConnection conn = HTTPUtils.setupUrlConnection(url, headerMap);
+                        URLConnection conn = setupUrlConnection(url, headerMap);
                         return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
                                 conn.getInputStream());
                     } catch (IOException e) {
@@ -252,5 +266,17 @@ public abstract class EditorWebViewAbstract extends WebView {
     public interface ErrorListener {
         void onJavaScriptError(String sourceFile, int lineNumber, String message);
         void onJavaScriptAlert(String url, String message);
+    }
+
+    private static URLConnection setupUrlConnection(String url, Map<String, String> headers) throws IOException {
+        URLConnection conn = new URL(url).openConnection();
+        conn.setReadTimeout(REQUEST_TIMEOUT_MS);
+        conn.setConnectTimeout(REQUEST_TIMEOUT_MS);
+
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            conn.setRequestProperty(entry.getKey(), entry.getValue());
+        }
+
+        return conn;
     }
 }

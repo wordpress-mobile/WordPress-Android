@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content" >
 
     <FrameLayout
         android:id="@+id/frame_avatar"
@@ -17,7 +19,7 @@
             android:layout_width="@dimen/reader_detail_header_blavatar"
             android:layout_height="@dimen/reader_detail_header_blavatar"
             android:layout_gravity="top|left"
-            tools:src="@drawable/blavatar_placeholder" />
+            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_header_avatar"
@@ -26,7 +28,7 @@
             android:layout_gravity="bottom|right"
             android:background="@drawable/shape_oval_white"
             android:padding="2dp"
-            tools:src="@drawable/gravatar_placeholder" />
+            app:srcCompat="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp" />
     </FrameLayout>
 
 

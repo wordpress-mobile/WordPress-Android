@@ -2,21 +2,14 @@
 <!--
 Translation-Revision-Date: 2016-06-29 21:54:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: es_CL
 -->
 <resources>
 	<string name="editor_failed_uploads_switch_html">Algunas cargas de archivos fallaron. Puedes cambiar a modo HTML en este estado. ¿Eliminar los archivos que fallaron y continuar?</string>
-	<string name="format_bar_description_html">Modo HTML</string>
 	<string name="visual_editor">Editor Visual</string>
 	<string name="image_thumbnail">Miniatura de imagen</string>
-	<string name="format_bar_description_ul">Lista desordenada</string>
-	<string name="format_bar_description_ol">Lista ordenada</string>
-	<string name="format_bar_description_more">Insertar etiqueta Más</string>
-	<string name="format_bar_description_media">Insertar Media</string>
 	<string name="format_bar_description_strike">Texto tachado</string>
-	<string name="format_bar_description_quote">Bloque de Cita</string>
-	<string name="format_bar_description_link">Insertar Enlace</string>
 	<string name="format_bar_description_italic">Cursiva</string>
 	<string name="format_bar_description_underline">Subrayado</string>
 	<string name="image_settings_save_toast">Cambios guardados</string>
@@ -27,7 +20,6 @@ Language: es_CL
 	<string name="format_bar_description_bold">Negrita</string>
 	<string name="image_settings_dismiss_dialog_title">¿Descartar los cambios no guardados?</string>
 	<string name="stop_upload_dialog_title">¿Detener la cargar?</string>
-	<string name="stop_upload_button">Detener la Carga</string>
 	<string name="alert_error_adding_media">Se produjo un error al cargar los archivos</string>
 	<string name="alert_action_while_uploading">Actualmente estás subiendo archivos. Por favor, espera hasta que termine.</string>
 	<string name="alert_insert_image_html_mode">No se puede insertar medios directamente en modo HTML. Por favor, cambia al modo visual.</string>
@@ -77,13 +69,7 @@ Language: es_CL
 	<string name="app_notifications">Avisos de la aplicación</string>
 	<string name="notifications_tab">Pestaña de avisos</string>
 	<string name="email">Correo electrónico</string>
-	<string name="notifications_comments_other_blogs">Comentarios en otros sitios</string>
 	<string name="notifications_wpcom_updates">Actualizaciones de WordPress.com</string>
-	<string name="notifications_other">Otras</string>
-	<string name="notifications_account_emails">Correo de WordPress.com</string>
-	<string name="notifications_account_emails_summary">Siempre enviamos correos electrónicos importantes relativos a tu cuenta, pero también obtendrás extras útiles.</string>
-	<string name="notifications_sights_and_sounds">Vistas y sonidos</string>
-	<string name="your_sites">Tus Sitios</string>
 	<string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
 	<string name="stats_insights_latest_post_summary">Sumario de la Última Entrada</string>
 	<string name="button_revert">Deshacer</string>
@@ -94,7 +80,6 @@ Language: es_CL
 	<string name="post_deleted">Entrada borrada</string>
 	<string name="post_trashed">Entrada enviada a la papelera</string>
 	<string name="stats_no_activity_this_period">Sin actividad en este periodo</string>
-	<string name="trashed">En la papelera</string>
 	<string name="button_back">Atrás</string>
 	<string name="page_deleted">Página borrada</string>
 	<string name="button_stats">Estadísticas</string>
@@ -109,8 +94,6 @@ Language: es_CL
 	<string name="reader_toast_err_follow_blog_not_authorized">No tienes autorización para acceder a este blog</string>
 	<string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar dicho blog</string>
 	<string name="undo">Deshacer</string>
-	<string name="tabbar_accessibility_label_my_site">Mi sitio</string>
-	<string name="tabbar_accessibility_label_me">Yo</string>
 	<string name="passcodelock_prompt_message">Escribe tu PIN</string>
 	<string name="editor_toast_changes_saved">Cambios guardados</string>
 	<string name="ignore">Ignorar</string>
@@ -147,30 +130,11 @@ Language: es_CL
 	<string name="show">Mostrar</string>
 	<string name="hide">Ocultar</string>
 	<string name="select_all">Seleccionar todo</string>
-	<string name="select_from_new_picker">Selección múltiple con el nuevo selector</string>
 	<string name="stats_generic_error">No se pudieron cargar las estadísticas solicitadas.</string>
-	<string name="no_device_videos">No hay vídeos</string>
-	<string name="no_blog_images">No hay imágenes</string>
-	<string name="no_blog_videos">No hay vídeos</string>
-	<string name="no_device_images">No hay imágenes</string>
-	<string name="error_loading_blog_images">No se pudieron traer las imágenes</string>
-	<string name="error_loading_blog_videos">No se pudieron traer los vídeos</string>
-	<string name="error_loading_images">Error cargando imágenes</string>
-	<string name="error_loading_videos">Error cargando vídeos</string>
-	<string name="loading_blog_images">Trayendo imágenes</string>
-	<string name="loading_blog_videos">Trayendo vídeos</string>
-	<string name="no_media_sources">No se pudieron traer los archivos multimedia</string>
-	<string name="loading_videos">Cargando vídeos</string>
-	<string name="loading_images">Cargando imágenes</string>
-	<string name="no_media">No hay archivos multimedia</string>
 	<string name="device">Dispositivo</string>
 	<string name="language">Idioma</string>
-	<string name="media_picker_title">Selecciona medio</string>
-	<string name="take_photo">Sacar una foto</string>
-	<string name="take_video">Grabar un vídeo</string>
 	<string name="media_details_label_file_name">Nombre del archivo:</string>
 	<string name="media_details_label_file_type">Tipo de archivo:</string>
-	<string name="error_publish_no_network">No se puede publicar mientras no haya conexión. Guardado como borrador.</string>
 	<string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
 	<string name="verification_code">Código de verificación</string>
 	<string name="invalid_verification_code">Código de verificación no válido</string>
@@ -178,11 +142,6 @@ Language: es_CL
 	<string name="two_step_footer_label">Introduce el código de tu app de autentificación.</string>
 	<string name="two_step_footer_button">Enviar código vía mensaje de texto</string>
 	<string name="two_step_sms_sent">Revisa tus mensajes de texto para el código de verificación.</string>
-	<string name="add_to_post">Añadir a la Entrada</string>
-	<string name="tab_title_device_images">Imágenes del Dispositivo</string>
-	<string name="tab_title_device_videos">Vídeos del Dispositivo</string>
-	<string name="tab_title_site_images">Imágenes del Sitio</string>
-	<string name="tab_title_site_videos">Vídeos del Sitio</string>
 	<string name="reader_empty_posts_request_failed">No fue posible cargar las entradas</string>
 	<string name="publisher">Autor:</string>
 	<string name="error_notification_open">No se pudo abrir la notificación</string>
@@ -199,7 +158,6 @@ Language: es_CL
 	<string name="posts_fetching">Recuperando entradas…</string>
 	<string name="media_fetching">Recuperando medios…</string>
 	<string name="stats_search_terms_unknown_search_terms">Términos de Búsqueda Desconocidos</string>
-	<string name="post_uploading">Cargando</string>
 	<string name="stats_total">Total</string>
 	<string name="stats_overall">Global</string>
 	<string name="stats_period">Periodo</string>
@@ -276,8 +234,6 @@ Language: es_CL
 	<string name="confirm_delete_multi_media">¿Quieres eliminar los elementos seleccionados?</string>
 	<string name="confirm_delete_media">¿Quieres eliminar el elemento seleccionado?</string>
 	<string name="cab_selected">%d seleccionados</string>
-	<string name="media_gallery_date_range">Mostrando elementos multimedia desde %1$s a %2$s</string>
-	<string name="sure_to_remove_account">¿Deseas eliminar este sitio?</string>
 	<string name="reader_empty_followed_blogs_title">Todavía no sigues a ningún sitio.</string>
 	<string name="reader_empty_posts_liked">No te ha gustado ninguna entrada.</string>
 	<string name="faq_button">Preguntas frecuentes</string>
@@ -302,8 +258,6 @@ Language: es_CL
 	<string name="older_two_days">Hace más de 2 días</string>
 	<string name="older_last_week">Hace más de 1 semana</string>
 	<string name="stats_no_blog">No se han podido cargar las estadísticas del blog solicitado</string>
-	<string name="select_a_blog">Elegir un sitio de WordPress</string>
-	<string name="sending_content">Cargando el contenido de %s</string>
 	<string name="uploading_total">Cargando %1$d de %2$d</string>
 	<string name="mnu_comment_liked">Me gustó</string>
 	<string name="comment">Comentario</string>
@@ -311,8 +265,6 @@ Language: es_CL
 	<string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
 	<string name="comment_reply_to_user">Responder a %s</string>
 	<string name="pages_empty_list">Sin páginas todavía. ¿Por qué no crear una?</string>
-	<string name="media_empty_list_custom_date">Sin multimedia durante este intervalo de tiempo.</string>
-	<string name="posting_post">Publicando "%s"</string>
 	<string name="browse_our_faq_button">Revisa nuestras Preguntas Más Frecuentes.</string>
 	<string name="reader_toast_err_generic">No es posible realizar esta acción</string>
 	<string name="reader_toast_err_block_blog">No es posible bloquear este blog</string>
@@ -324,11 +276,6 @@ Language: es_CL
 	<string name="hs__conversation_header">Chat de soporte</string>
 	<string name="hs__username_blank_error">Escribe un nombre válido</string>
 	<string name="hs__invalid_email_error">Escribe una dirección de correo electrónico válida</string>
-	<string name="add_location">Añadir localización</string>
-	<string name="current_location">Localización actual</string>
-	<string name="search_location">Búsqueda</string>
-	<string name="edit_location">Editar</string>
-	<string name="search_current_location">Localizar</string>
 	<string name="preference_send_usage_stats">Enviar estadísticas</string>
 	<string name="preference_send_usage_stats_summary">Enviar automáticamente estadísticas de uso para ayudarnos a mejorar WordPress para Android</string>
 	<string name="update_verb">Actualizar</string>
@@ -363,7 +310,6 @@ Language: es_CL
 	<string name="theme_auth_error_message">Asegúrate que tienes autorización para elegir temas</string>
 	<string name="comments_empty_list">No hay comentarios.</string>
 	<string name="mnu_comment_unspam">No es spam</string>
-	<string name="no_site_error">No se pudo conectar con el sitio WordPress</string>
 	<string name="adding_cat_failed">No se pudo añadir la categoría</string>
 	<string name="adding_cat_success">Categoría agregada correctamente.</string>
 	<string name="cat_name_required">El campo nombre de categoría es necesario</string>
@@ -373,7 +319,6 @@ Language: es_CL
 	<string name="stats_bar_graph_empty">Estadísticas no disponibles.</string>
 	<string name="reply_failed">Respuesta fallida</string>
 	<string name="notifications_empty_list">Sin notificaciones</string>
-	<string name="error_delete_post">Ocurrió un error al eliminar el %s</string>
 	<string name="error_refresh_posts">Las entradas no pueden ser actualizadas en este momento</string>
 	<string name="error_refresh_pages">Las páginas no pueden ser actualizadas en este momento.</string>
 	<string name="error_refresh_comments">No se pudieron actualizar los comentarios</string>
@@ -381,7 +326,6 @@ Language: es_CL
 	<string name="error_generic">Ocurrió un error</string>
 	<string name="error_moderate_comment">Ocurrió un error al moderar el comentario</string>
 	<string name="error_edit_comment">Ocurrió un error al editar el comentario</string>
-	<string name="error_upload">Ocurrió un error mientras se subía el %s</string>
 	<string name="error_load_comment">No se pudo cargar el comentario</string>
 	<string name="error_downloading_image">Error al descargar la imagen</string>
 	<string name="passcode_wrong_passcode">PIN erróneo</string>
@@ -414,7 +358,6 @@ Language: es_CL
 	<string name="nux_cannot_log_in">No se pudo acceder</string>
 	<string name="no_network_message">No hay conexiones de red disponible</string>
 	<string name="could_not_remove_account">No pudimos eliminar el sitio</string>
-	<string name="wait_until_upload_completes">Espera mientras se complete la carga</string>
 	<string name="no_account">No entramos cuentas WordPress, añade una cuenta e intenta nuevamente</string>
 	<string name="error_refresh_notifications">No se pudieron actualizar las notificaciones</string>
 	<string name="invalid_url_message">Comprueba que la URL de blog ingresada es válida</string>
@@ -428,11 +371,7 @@ Language: es_CL
 	<string name="scaled_image_error">Introduce un valor válido de ancho a escala</string>
 	<string name="post_not_found">Ocurrió un error al cargar la entrada. Actualiza tus entradas e intenta nuevamente.</string>
 	<string name="learn_more">Aprender más</string>
-	<string name="media_gallery_settings_title">Ajustes de galería</string>
-	<string name="media_gallery_image_order">Orden de imágenes</string>
-	<string name="media_gallery_num_columns">Número de columnas</string>
 	<string name="media_gallery_type_thumbnail_grid">Malla (red) de miniaturas</string>
-	<string name="media_gallery_edit">Editar galería</string>
 	<string name="media_error_no_permission">No tienes permiso para ver la librería multimedia</string>
 	<string name="cannot_delete_multi_media_items">Algunos elementos multimedia no pudieron ser borrados. Prueba más tarde</string>
 	<string name="themes_live_preview">Vista previa</string>
@@ -484,18 +423,12 @@ Language: es_CL
 	<string name="view_in_browser">Ver en el navegador</string>
 	<string name="add_new_category">Añadir nueva categoría</string>
 	<string name="category_name">Nombre de la categoría</string>
-	<string name="category_slug">Slug de la categoría (opcional)</string>
-	<string name="category_desc">Descripción de la categoría (opcional)</string>
-	<string name="category_parent">Categoría padre (opcional):</string>
 	<string name="share_action_post">Nueva entrada</string>
 	<string name="share_action_media">Librería multimedia</string>
 	<string name="file_error_create">No se pudo crear un archivo temporal para subir el archivo multimedia. Asegúrate que haya suficiente espacio libre en tu dispositivo.</string>
-	<string name="location_not_found">Localización desconocida</string>
 	<string name="open_source_licenses">Licencias Open source</string>
-	<string name="pending_review">Pendiente de revisión</string>
 	<string name="http_credentials">Credenciales HTTP (opcional)</string>
 	<string name="http_authorization_required">Se necesita autorización</string>
-	<string name="post_format">Tipo de entrada</string>
 	<string name="new_post">Nueva entrada</string>
 	<string name="new_media">Nuevo elemento multimedia</string>
 	<string name="view_site">Ver sitio</string>
@@ -506,9 +439,7 @@ Language: es_CL
 	<string name="wordpress_blog">Blog de WordPress</string>
 	<string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
 	<string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
-	<string name="jetpack_message_not_admin">Se necesita el plugin Jetpack para tener estadísticas. Contacta con el administrador del sitio para activarlo.</string>
 	<string name="reader_title_applog">Registro de la aplicación</string>
-	<string name="reader_share_link">Compartir enlace</string>
 	<string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
 	<string name="reader_toast_err_remove_tag">No se pudo quitar esta etiqueta</string>
 	<string name="required_field">Campo obligatorio</string>
@@ -527,7 +458,6 @@ Language: es_CL
 	<string name="creating_your_account">Creando tu cuenta</string>
 	<string name="creating_your_site">Creando tu sitio</string>
 	<string name="reader_empty_posts_in_tag_updating">Recuperando entradas...</string>
-	<string name="error_refresh_media">Algo ha ido mal mientras actualizábamos la biblioteca multimedia. Inténtalo más tarde.</string>
 	<string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>
 	<string name="reader_likes_multi">A %,d personas les gusta esto</string>
 	<string name="reader_toast_err_get_comment">No ha sido posible cargar este comentario</string>
@@ -551,13 +481,10 @@ Language: es_CL
 	<string name="password_invalid">Necesitas una contraseña más segura. Asegúrate de utilizar 7 ó más caracteres, mezclar letras mayúsculas y minúsculas, número y caracteres especiales.</string>
 	<string name="nux_add_selfhosted_blog">Añade un sitio auto hospedado</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
-	<string name="media_add_new_media_gallery">Crear galería</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
 	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
-	<string name="jetpack_message">Necesitas el pluging Jetpack para tener estadísticas estadísticas. ¿Quieres instalar Jetpack?</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
 	<string name="reader_untitled_post">Sin título</string>
-	<string name="reader_share_subject">Compartido desde %s</string>
 	<string name="reader_btn_share">Compartir</string>
 	<string name="reader_btn_follow">Seguir</string>
 	<string name="reader_btn_unfollow">Siguiendo</string>
@@ -578,11 +505,6 @@ Language: es_CL
 	<string name="reader_toast_err_url_intent">No se pudo abrir %s</string>
 	<string name="nux_tutorial_get_started_title">¡Comencemos!</string>
 	<string name="themes">Temas</string>
-	<string name="all">Todas</string>
-	<string name="images">Imágenes</string>
-	<string name="unattached">Sin adjuntar</string>
-	<string name="media_gallery_image_order_random">Aleatorio</string>
-	<string name="media_gallery_image_order_reverse">Inverso</string>
 	<string name="media_gallery_type">Tipo</string>
 	<string name="media_gallery_type_squares">Cuadrados</string>
 	<string name="media_gallery_type_tiled">Mosaico</string>
@@ -602,8 +524,6 @@ Language: es_CL
 	<string name="theme_activating_button">Activando</string>
 	<string name="theme_set_success">¡Tema aplicado con exito!</string>
 	<string name="theme_auth_error_title">Error al recibir temas</string>
-	<string name="post_excerpt">Extracto</string>
-	<string name="share_action_title">Añadir a...</string>
 	<string name="share_action">Compartir</string>
 	<string name="stats">Estadísticas</string>
 	<string name="stats_view_clicks">Clics</string>
@@ -630,9 +550,6 @@ Language: es_CL
 	<string name="passcode_preference_title">PIN bloqueado</string>
 	<string name="passcode_turn_off">Desbloquear PIN</string>
 	<string name="passcode_turn_on">Bloquear PIN</string>
-	<string name="custom_date">Fecha Personalizada</string>
-	<string name="media_add_popup_capture_photo">Tomar Foto</string>
-	<string name="media_add_popup_capture_video">Capturar Vídeo</string>
 	<string name="stats_view_visitors_and_views">Visitantes y Visualizaciones</string>
 	<string name="passcode_enter_old_passcode">Introduce tu PIN anterior</string>
 	<string name="upload">Subir</string>
@@ -661,22 +578,18 @@ Language: es_CL
 	<string name="anonymous">Anónimo</string>
 	<string name="page">Página</string>
 	<string name="post">Entrada</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">Nombre de Usuario del blog</string>
 	<string name="upload_scaled_image">Subir y enlazar a la imagen escalada</string>
 	<string name="scaled_image">Ancho de la imagen en escala</string>
-	<string name="scheduled">Programado</string>
 	<string name="link_enter_url">URL</string>
 	<string name="version">Versión</string>
 	<string name="app_title">WordPress para Android</string>
 	<string name="tos">Términos de Servicio</string>
-	<string name="max_thumbnail_px_width">Ancho de Imagen por Defecto</string>
 	<string name="image_alignment">Alineamiento</string>
 	<string name="refresh">Refrescar</string>
 	<string name="untitled">Sin Título</string>
 	<string name="post_id">Entrada</string>
 	<string name="page_id">Página</string>
-	<string name="post_password">Contraseña (opcional)</string>
 	<string name="immediately">Inmediatamente</string>
 	<string name="quickpress_add_alert_title">Configura el nombre del acceso directo</string>
 	<string name="today">Hoy</string>
@@ -684,25 +597,14 @@ Language: es_CL
 	<string name="share_url">Compartir URL</string>
 	<string name="quickpress_window_title">Selecciona un blog para el acceso directo a la Publicación Rápida</string>
 	<string name="quickpress_add_error">El nombre del acceso directo no puede ser vacío</string>
-	<string name="publish_post">Publicar</string>
-	<string name="draft">Borrador</string>
-	<string name="post_private">Privado</string>
 	<string name="upload_full_size_image">Subir y enlazar a la imagen completa</string>
 	<string name="title">Título</string>
-	<string name="tags_separate_with_commas">Etiquetas (separa las etiquetas con comas)</string>
 	<string name="categories">Categorías</string>
-	<string name="notification_blink">Notificación luminosa</string>
-	<string name="notification_vibrate">Vibrar</string>
-	<string name="notification_sound">Sonido de Notificación</string>
-	<string name="status">Estado</string>
-	<string name="location">Ubicación</string>
 	<string name="sdcard_title">Requiere tarjeta SD</string>
-	<string name="select_video">Selecciona un video de la galería</string>
 	<string name="media">Multimedia</string>
 	<string name="delete">Eliminar</string>
 	<string name="none">Ninguno</string>
 	<string name="blogs">Blogs</string>
-	<string name="select_photo">Selecciona una foto de la galería</string>
 	<string name="error">Error</string>
 	<string name="cancel">Cancelar</string>
 	<string name="save">Guardar</string>

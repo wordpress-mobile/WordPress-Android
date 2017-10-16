@@ -37,6 +37,11 @@ public class ReaderHtmlUtils {
             "src\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
             Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
 
+    // regex for matching class attributes in tags
+    private static final Pattern CLASS_ATTR_PATTERN = Pattern.compile(
+            "class\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
+            Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+
 
     /*
     * returns the integer value from the data-orig-size attribute in the passed html tag
@@ -108,6 +113,23 @@ public class ReaderHtmlUtils {
         if (matcher.find()) {
             // remove "src=" and quotes from the result
             return tag.substring(matcher.start() + 5, matcher.end() - 1);
+        } else {
+            return null;
+        }
+    }
+
+    /*
+     * returns the value from class src attribute in the passed html tag
+     */
+    public static String getClassAttrValue(final String tag) {
+        if (tag == null) {
+            return null;
+        }
+
+        Matcher matcher = CLASS_ATTR_PATTERN.matcher(tag);
+        if (matcher.find()) {
+            // remove "class=" and quotes from the result
+            return tag.substring(matcher.start() + 7, matcher.end() - 1);
         } else {
             return null;
         }

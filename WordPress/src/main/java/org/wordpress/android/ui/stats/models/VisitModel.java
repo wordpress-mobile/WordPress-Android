@@ -9,13 +9,13 @@ public class VisitModel implements Serializable {
     private int mVisitors;
     private int mComments;
     private String mPeriod;
-    private String mBlogID;
+    private long mBlogID;
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    public void setBlogID(String blogID) {
+    public void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 
