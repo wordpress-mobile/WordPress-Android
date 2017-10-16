@@ -147,7 +147,6 @@ public class AccountStore extends Store {
             this.nonceSms = payload.twoStepNonceSms;
             this.notificationSent = payload.twoStepNotificationSent;
             this.userId = payload.userId;
-            this.requiresTwoStepAuth = true;
         }
     }
 
@@ -601,6 +600,7 @@ public class AccountStore extends Store {
         // No error, but either two-factor authentication or social connect is required; emit only social change.
         } else if (!payload.hasToken()) {
             OnSocialChanged event = new OnSocialChanged(payload);
+            event.requiresTwoStepAuth = payload.hasTwoStepTypes();
             emitChange(event);
         // No error and two-factor authentication is not required; emit only authentication change.
         } else {
