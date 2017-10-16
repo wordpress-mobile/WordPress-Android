@@ -57,6 +57,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             case WPCOM_LOGIN_DEEPLINK:
                 label.setText(R.string.login_log_in_for_deeplink);
                 break;
+            case SHARE_INTENT:
+                label.setText(R.string.login_log_in_for_share_intent);
+                break;
             case FULL:
                 label.setText(R.string.enter_email_wordpress_com);
                 break;
@@ -94,6 +97,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
         switch (mLoginListener.getLoginMode()) {
             case FULL:
+            case SHARE_INTENT:
                 // all features enabled and with typical values
                 secondaryButton.setText(R.string.enter_site_address_instead);
                 break;

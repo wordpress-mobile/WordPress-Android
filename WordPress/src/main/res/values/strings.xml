@@ -147,6 +147,7 @@
     <string name="media_error_timeout">Server took too long to respond</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
+    <string name="share_media_permission_required">Permissions required in order to share images or videos</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="media_file_type">File type: %s</string>
     <string name="media_file_name">File name: %s</string>
@@ -451,8 +452,10 @@
     <!-- action from share intents -->
     <string name="select_a_blog">Choose a WordPress site</string>
     <string name="share_action_title">Add to</string>
-    <string name="share_action_post">New post</string>
-    <string name="share_action_media">Media library</string>
+    <string name="share_action_post">Add to new post</string>
+    <string name="share_action_media">Add to media library</string>
+    <string name="share_intent_pick_site">Pick site</string>
+    <string name="share_intent_adding_to">Adding to</string>
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="cant_share_unknown_action">Unrecognized action requested, ignoring</string>
@@ -1923,6 +1926,7 @@
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="login_username_at">\@%s</string>
     <string name="enter_site_address">Enter the address of your WordPress site you\'d like to connect.</string>
+    <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="login_site_address">Site address</string>
     <string name="login_site_address_help">Need help finding your site address?</string>
     <string name="login_site_address_help_title">What\'s my site address?</string>
@@ -1931,6 +1935,7 @@
     <string name="login_checking_site_address">Checking site address</string>
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
+    <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
     <string name="login_empty_site_url">Please enter a site address</string>
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
