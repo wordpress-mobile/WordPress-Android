@@ -27,8 +27,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.Currency;
 
 class ThemeBrowserAdapter extends CursorAdapter {
+    private static final int HEADER_VIEW_TYPE = 1;
     private static final String HEADER_THEME_ID = "HEADER_THEME_ID";
-    private static int HEADER_VIEW_TYPE = 1;
     private static final String THEME_IMAGE_PARAMETER = "?w=";
 
     public static Cursor createHeaderCursor(String headerText) {

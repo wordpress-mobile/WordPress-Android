@@ -193,6 +193,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         addSearchFragment();
     }
 
+    @Override
+    public ThemeModel getCurrentTheme() {
+        return mCurrentTheme;
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemesChanged(ThemeStore.OnThemesChanged event) {
@@ -268,6 +273,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             }
         } else {
             AppLog.d(T.THEMES, "Themes search successful!");
+            mThemeSearchFragment.setSearchResults(event.searchResults);
         }
     }
 
@@ -326,11 +332,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         theme.setThemeId(themeId);
         ThemeStore.ActivateThemePayload payload = new ThemeStore.ActivateThemePayload(mSite, theme);
         mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(payload));
-    }
-
-    @Override
-    public ThemeModel getCurrentTheme() {
-        return mCurrentTheme;
     }
 
     protected void setThemeBrowserFragment(ThemeBrowserFragment themeBrowserFragment) {

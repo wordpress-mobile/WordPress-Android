@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.themes;
 
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -10,11 +11,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.wellsql.generated.ThemeModelTable;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import java.util.List;
 
 /**
  * A fragment for display the results of a theme search
@@ -25,6 +31,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
     public static final int SEARCH_VIEW_MAX_WIDTH = 10000;
 
+    private List<ThemeModel> mSearchResults;
     private String mLastSearch = "";
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
@@ -121,8 +128,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     protected Cursor fetchThemes() {
-        // only WP.com themes are searchable
-        return mThemeStore.getWpComThemesCursor();
+        return createResultsCursor();
     }
 
     @Override
@@ -135,6 +141,32 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     @Override
     protected void addHeaderViews(LayoutInflater inflater) {
         // No header on Search
+    }
+
+    public void setSearchResults(List<ThemeModel> results) {
+        mSearchResults = results;
+        refreshView();
+    }
+
+    private static final String[] CURSOR_COLUMNS = new String[] {
+            "_id", ThemeModelTable.NAME, ThemeModelTable.THEME_ID, ThemeModelTable.CURRENCY, ThemeModelTable.PRICE,
+            ThemeModelTable.SCREENSHOT_URL, ThemeModelTable.AUTHOR_NAME, ThemeModelTable.IS_WP_COM_THEME
+    };
+
+    private Cursor createResultsCursor() {
+        if (mSearchResults == null) {
+            return mThemeStore.getWpComThemesCursor();
+        }
+
+        MatrixCursor cursor = new MatrixCursor(CURSOR_COLUMNS);
+        for (ThemeModel theme : mSearchResults) {
+            Object[] values = new Object[] {
+                    0, theme.getName(), theme.getThemeId(), theme.getCurrency(), theme.getPrice(),
+                    theme.getScreenshotUrl(), theme.getAuthorName(), theme.isWpComTheme()
+            };
+            cursor.addRow(values);
+        }
+        return cursor;
     }
 
     private void search(String searchTerm) {
