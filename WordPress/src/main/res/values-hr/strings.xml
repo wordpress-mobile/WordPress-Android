@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-09-03 08:34:36+0000
+Translation-Revision-Date: 2017-09-27 10:15:55+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -230,13 +230,8 @@ Language: hr
 	<string name="app_notifications">Obavijesti aplikacije</string>
 	<string name="notifications_tab">Kartica obavijesti</string>
 	<string name="email">E-pošta</string>
-	<string name="notifications_comments_other_blogs">Komentari na drugim web-stranicama</string>
 	<string name="notifications_wpcom_updates">WordPress.com ažuriranja</string>
-	<string name="notifications_other">Drugo</string>
-	<string name="notifications_account_emails">Poruke od WordPress.com</string>
-	<string name="notifications_account_emails_summary">Uvijek ćemo slati važne poruke e-pošte o vašem računu, ali također možete dobiti i dodatnu pomoć.</string>
-	<string name="notifications_sights_and_sounds">Prizori i zvukovi</string>
-	<string name="your_sites">Vaše stranice</string>
+	<string name="notification_settings_item_other_account_emails_summary">Uvijek ćemo slati važne poruke e-pošte o vašem računu, ali također možete dobiti i dodatnu pomoć.</string>
 	<string name="stats_insights_latest_post_trend">Prošlo je %1$s od kad je %2$s objavljen. Ovo su informacije kako je primljen kod čitatelja...</string>
 	<string name="stats_insights_latest_post_summary">Najnoviji sažetak objava</string>
 	<string name="button_revert">Vrati</string>
@@ -775,7 +770,6 @@ Language: hr
 	<string name="version">Inačica</string>
 	<string name="tos">Uvjeti Korištenja</string>
 	<string name="app_title">WordPress za Android</string>
-	<string name="max_thumbnail_px_width">Zadana širina slike</string>
 	<string name="image_alignment">Poravnanje</string>
 	<string name="refresh">Osvježi</string>
 	<string name="untitled">Nenaslovljeno</string>
@@ -794,9 +788,6 @@ Language: hr
 	<string name="tags_separate_with_commas">Oznake (razdvoji oznake zarezima)</string>
 	<string name="categories">Kategorije</string>
 	<string name="dlg_deleting_comments">Brisanje komentara</string>
-	<string name="notification_blink">Trepereće svjetlo za obavijesti</string>
-	<string name="notification_vibrate">Vibracija</string>
-	<string name="notification_sound">Zvučna obavijest </string>
 	<string name="sdcard_title">Neophodna SD kartica</string>
 	<string name="media">Medijski zapisi</string>
 	<string name="approve">Odobri</string>

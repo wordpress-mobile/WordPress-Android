@@ -82,9 +82,7 @@ Language: is
 	<string name="jetpack_info">Jetpack upplýsingar</string>
 	<string name="reader_photo_by">Mynd eftir %s</string>
 	<string name="reader_label_visit">Heimsækja</string>
-	<string name="all_your_sites">Allir mínir vefir</string>
 	<string name="pending_draft_more">Þú hefur skrifað %d drög en aldrei birt þau. Ýttu til þess að skoða.</string>
-	<string name="notification_pending_drafts">Láta mig vita ef drög bíða</string>
 	<string name="invalid_verification_code_format">Verður að vera sex stafa tala</string>
 	<string name="confirm_discard_changes">Hætta við óvistaðar breytingar?</string>
 	<string name="swipe_for_more">Strjúktu fyrir meira</string>
@@ -575,13 +573,7 @@ Language: is
 	<string name="email">Netfang</string>
 	<string name="notifications_tab">Tilkynningar</string>
 	<string name="app_notifications">App tilkynningar</string>
-	<string name="notifications_comments_other_blogs">Athugasemdir á öðrum vefjum</string>
-	<string name="notifications_other">Annað</string>
 	<string name="notifications_wpcom_updates">WordPress.com uppfærslur</string>
-	<string name="notifications_account_emails">Tölvupóstur frá WordPress.com</string>
-	<string name="notifications_account_emails_summary">Við sendum þér ávallt mikilvæga tölvupósta í tengslum við aðganginn þinn, en þú gætir mögulega einnig fengið hjálplega tölvupósta til viðbótar.</string>
-	<string name="your_sites">Vefirnir þínir</string>
-	<string name="notifications_sights_and_sounds">Birtingar og hljóð</string>
 	<string name="stats_insights_latest_post_trend">Það er %1$s síðan %2$s var birt. Hér eru upplýsingar um hvernig færslunni hefur vegnað hingað til...</string>
 	<string name="stats_insights_latest_post_summary">Samantekt um síðustu færslu</string>
 	<string name="button_revert">Afturkalla</string>
@@ -1120,7 +1112,6 @@ Language: is
 	<string name="app_title">WordPress fyrir Android</string>
 	<string name="tos">Notendaskilmálar</string>
 	<string name="version">Útgáfa</string>
-	<string name="max_thumbnail_px_size">Sjálfgefin breidd myndar</string>
 	<string name="image_alignment">Jöfnun</string>
 	<string name="refresh">Endurhlaða</string>
 	<string name="untitled">Án titils</string>
@@ -1138,9 +1129,6 @@ Language: is
 	<string name="categories">Flokkar</string>
 	<string name="title">Titill</string>
 	<string name="dlg_deleting_comments">Eyði athugasemdum</string>
-	<string name="notification_vibrate">Titra</string>
-	<string name="notification_sound">Hljóð tilkynninga</string>
-	<string name="notification_blink">Blikka tilkynningaljós</string>
 	<string name="sdcard_title">SD minnikorts krafist</string>
 	<string name="media">Skrár</string>
 	<string name="approve">Samþykkja</string>

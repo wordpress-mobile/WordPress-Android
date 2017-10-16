@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 case JETPACK_STATS:
                 case WPCOM_LOGIN_DEEPLINK:
                 case WPCOM_REAUTHENTICATE:
+                case SHARE_INTENT:
                     checkSmartLockPasswordAndStartLogin();
                     break;
             }
@@ -145,8 +146,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
             case WPCOM_REAUTHENTICATE:
                 ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds);
                 break;
+            case SHARE_INTENT:
             case SELFHOSTED_ONLY:
-                // skip the epilogue when only added a selfhosted site
+                // skip the epilogue when only added a selfhosted site or sharing to WordPress
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
@@ -245,7 +247,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void gotWpcomEmail(String email) {
-        if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK) {
+        if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT) {
             LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(email);
             slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
         } else {
