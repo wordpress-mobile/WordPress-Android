@@ -105,6 +105,10 @@ public class AccountRestClient extends BaseWPComRestClient {
         public boolean hasToken() {
             return !TextUtils.isEmpty(this.bearerToken);
         }
+
+        public boolean hasTwoStepTypes() {
+            return this.twoStepTypes != null && this.twoStepTypes.size() > 0;
+        }
     }
 
     public static class NewAccountResponsePayload extends Payload<NewUserError> {
