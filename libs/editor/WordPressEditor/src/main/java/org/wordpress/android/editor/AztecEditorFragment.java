@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.DragEvent;
@@ -31,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
@@ -91,6 +91,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnImageTappedListener,
         AztecText.OnVideoTappedListener,
         AztecText.OnMediaDeletedListener,
+        View.OnTouchListener,
         EditorMediaUploadListener,
         IAztecToolbarClickListener,
         IHistoryListener {
@@ -119,7 +120,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static boolean mIsToolbarExpanded = false;
 
-    private boolean mIsKeyboardOpen = false;
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
 
@@ -179,6 +179,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         title = (AztecText) view.findViewById(R.id.title);
         content = (AztecText)view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
+
+        title.setOnTouchListener(this);
+        content.setOnTouchListener(this);
+        source.setOnTouchListener(this);
+
+        title.setOnImeBackListener(this);
+        content.setOnImeBackListener(this);
+        source.setOnImeBackListener(this);
 
         source.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
 
@@ -260,7 +268,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void onPause() {
         super.onPause();
         mEditorWasPaused = true;
-        mIsKeyboardOpen = false;
     }
 
     @Override
@@ -272,7 +279,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mEditorWasPaused
                 && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
                 && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
-            mIsKeyboardOpen = true;
             mHideActionBarOnSoftKeyboardUp = true;
             hideActionBarIfNeeded();
         }
@@ -327,7 +333,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if (item.getItemId() == R.id.undo) {
             if (content.getVisibility() == View.VISIBLE) {
                 content.undo();
@@ -377,7 +382,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
      */
     @Override
     public void onImeBack() {
-        mIsKeyboardOpen = false;
         showActionBarIfNeeded();
     }
 
@@ -1026,16 +1030,44 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Toggle action bar auto-hiding for the new orientation
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
+                && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
+            mHideActionBarOnSoftKeyboardUp = true;
+            hideActionBarIfNeeded();
+        } else {
+            mHideActionBarOnSoftKeyboardUp = false;
+            showActionBarIfNeeded();
+        }
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            // If the WebView or EditText has received a touch event, the keyboard will be displayed and the action bar
+            // should hide
+            mHideActionBarOnSoftKeyboardUp = true;
+            hideActionBarIfNeeded();
+        }
+        return false;
+    }
+
     /**
-     * Hide the action bar if needed.
+     * Hide the action bar if needed. Don't hide it if
+     *   - a hardware keyboard is connected.
+     *   - the soft keyboard is not visible.
+     *   - it's not visible.
      */
     private void hideActionBarIfNeeded() {
-
         ActionBar actionBar = getActionBar();
-        if (actionBar != null
-                && !isHardwareKeyboardPresent()
+        if (actionBar == null) {
+            return;
+        }
+        if (!isHardwareKeyboardPresent()
                 && mHideActionBarOnSoftKeyboardUp
-                && mIsKeyboardOpen
                 && actionBar.isShowing()) {
             getActionBar().hide();
         }
@@ -1045,9 +1077,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
      * Show the action bar if needed.
      */
     private void showActionBarIfNeeded() {
-
         ActionBar actionBar = getActionBar();
-        if (actionBar != null && !actionBar.isShowing()) {
+        if (actionBar == null) {
+            return;
+        }
+        if (!actionBar.isShowing()) {
             actionBar.show();
         }
     }
