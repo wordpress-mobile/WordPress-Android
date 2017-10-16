@@ -58,10 +58,6 @@ public class ThemeStore extends Store {
         public SearchThemesPayload(@NonNull String searchTerm) {
             this.searchTerm = searchTerm;
         }
-
-        public SearchThemesPayload(FetchThemesError error) {
-            this.error = error;
-        }
     }
 
     public static class SearchedThemesPayload extends Payload<FetchThemesError> {
