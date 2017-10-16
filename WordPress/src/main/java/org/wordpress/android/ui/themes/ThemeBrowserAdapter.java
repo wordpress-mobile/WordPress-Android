@@ -23,6 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 
 import java.util.Currency;
 
@@ -31,17 +32,18 @@ class ThemeBrowserAdapter extends CursorAdapter {
     private static final String HEADER_THEME_ID = "HEADER_THEME_ID";
     private static final String THEME_IMAGE_PARAMETER = "?w=";
 
-    public static Cursor createHeaderCursor(String headerText) {
-        MatrixCursor cursor = new MatrixCursor(new String[] {"_id", ThemeModelTable.THEME_ID, ThemeModelTable.NAME});
-        cursor.addRow(new String[]{"0", HEADER_THEME_ID, headerText});
+    static Cursor createHeaderCursor(String headerText, int count) {
+        MatrixCursor cursor =
+                new MatrixCursor(new String[] {"_id", ThemeModelTable.THEME_ID, ThemeModelTable.NAME, "count"});
+        cursor.addRow(new String[]{"0", HEADER_THEME_ID, headerText, String.valueOf(count)});
         return cursor;
     }
 
     private final LayoutInflater mInflater;
-    private final ThemeBrowserFragment.ThemeBrowserFragmentCallback mCallback;
+    private final ThemeBrowserFragmentCallback mCallback;
     private int mViewWidth;
 
-    ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery, ThemeBrowserFragment.ThemeBrowserFragmentCallback callback) {
+    ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery, ThemeBrowserFragmentCallback callback) {
         super(context, c, autoRequery);
         mInflater = LayoutInflater.from(context);
         mCallback = callback;
@@ -72,16 +74,18 @@ class ThemeBrowserAdapter extends CursorAdapter {
 
     private static class HeaderViewHolder {
         private final TextView headerText;
+        private final TextView countText;
 
-        HeaderViewHolder(TextView view) {
-            headerText = view;
+        HeaderViewHolder(View view) {
+            headerText = (TextView) view.findViewById(R.id.section_header_text);
+            countText = (TextView) view.findViewById(R.id.section_header_count);
         }
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         if (getItemViewType(cursor) == HEADER_VIEW_TYPE) {
-            TextView view = new TextView(context);
+            View view = mInflater.inflate(R.layout.theme_section_header, parent, false);
             HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
             view.setTag(headerViewHolder);
             return view;
@@ -99,7 +103,9 @@ class ThemeBrowserAdapter extends CursorAdapter {
         if (getItemViewType(cursor) == HEADER_VIEW_TYPE) {
             final HeaderViewHolder headerViewHolder = (HeaderViewHolder) view.getTag();
             final String headerText = cursor.getString(cursor.getColumnIndex(ThemeModelTable.NAME));
+            final String countText = cursor.getString(cursor.getColumnIndex("count"));
             headerViewHolder.headerText.setText(headerText);
+            headerViewHolder.countText.setText(countText);
             return;
         }
 
@@ -109,8 +115,8 @@ class ThemeBrowserAdapter extends CursorAdapter {
         final String themeId = cursor.getString(cursor.getColumnIndex(ThemeModelTable.THEME_ID));
         final String currency = cursor.getString(cursor.getColumnIndex(ThemeModelTable.CURRENCY));
         final float price = cursor.getFloat(cursor.getColumnIndex(ThemeModelTable.PRICE));
-        final boolean isCurrent = mCallback.getCurrentTheme() != null && mCallback.getCurrentTheme().getThemeId().equals(themeId);
-        final boolean isPremium = price != 0.f;
+        final boolean isCurrent = isCurrentTheme(themeId);
+        final boolean isPremium = price > 0.f;
 
         themeViewHolder.nameView.setText(name);
         if (isPremium) {
@@ -134,6 +140,7 @@ class ThemeBrowserAdapter extends CursorAdapter {
 
     @Override
     public int getViewTypeCount() {
+        // standard theme item view and a header view for Jetpack sites to section Uploaded/WP.com themes
         return 2;
     }
 
@@ -246,6 +253,10 @@ class ThemeBrowserAdapter extends CursorAdapter {
             mViewWidth = imageWidth;
             AppPrefs.setThemeImageSizeWidth(mViewWidth);
         }
+    }
+
+    private boolean isCurrentTheme(String themeId) {
+        return mCallback.getCurrentTheme() != null && mCallback.getCurrentTheme().getThemeId().equals(themeId);
     }
 
     private int getItemViewType(Cursor cursor) {

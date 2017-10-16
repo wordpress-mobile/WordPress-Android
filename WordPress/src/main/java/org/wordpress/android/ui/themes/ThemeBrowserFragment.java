@@ -377,11 +377,16 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         // 2. Uploaded themes
         // 3. WP.com header
         // 4. WP.com themes
-        Cursor[] cursors = new Cursor[4];
-        cursors[0] = ThemeBrowserAdapter.createHeaderCursor(getString(R.string.uploaded_themes_header));
-        cursors[1] = mThemeStore.getThemesCursorForSite(mSite);
-        cursors[2] = ThemeBrowserAdapter.createHeaderCursor(getString(R.string.wpcom_themes_header));
-        cursors[3] = mThemeStore.getWpComThemesCursor();
+        final Cursor[] cursors = new Cursor[4];
+        final Cursor uploadedThemes = mThemeStore.getThemesCursorForSite(mSite);
+        final Cursor wpComThemes = mThemeStore.getWpComThemesCursor();
+
+        cursors[0] = ThemeBrowserAdapter.createHeaderCursor(
+                getString(R.string.uploaded_themes_header), uploadedThemes.getCount());
+        cursors[1] = uploadedThemes;
+        cursors[2] = ThemeBrowserAdapter.createHeaderCursor(
+                getString(R.string.wpcom_themes_header), wpComThemes.getCount());
+        cursors[3] = wpComThemes;
 
         return new MergeCursor(cursors);
     }
