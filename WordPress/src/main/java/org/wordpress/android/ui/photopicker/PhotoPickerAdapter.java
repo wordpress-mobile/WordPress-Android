@@ -164,19 +164,16 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         }
 
         int selectedIndex = mIsMultiSelectEnabled ? mSelectedUris.indexOfUri(item.uri) : -1;
-        if (selectedIndex > -1) {
-            holder.txtSelectionCount.setSelected(true);
-            holder.txtSelectionCount.setText(Integer.toString(selectedIndex + 1));
+        if (mAllowMultiSelect) {
+            if (selectedIndex > -1) {
+                holder.txtSelectionCount.setSelected(true);
+                holder.txtSelectionCount.setText(Integer.toString(selectedIndex + 1));
+            } else {
+                holder.txtSelectionCount.setSelected(false);
+                holder.txtSelectionCount.setText(null);
+            }
         } else {
-            holder.txtSelectionCount.setSelected(false);
-            holder.txtSelectionCount.setText(null);
-        }
-
-        // make sure the thumbnail scale reflects its selection state
-        float scale = selectedIndex > -1 ? SCALE_SELECTED : SCALE_NORMAL;
-        if (holder.imgThumbnail.getScaleX() != scale) {
-            holder.imgThumbnail.setScaleX(scale);
-            holder.imgThumbnail.setScaleY(scale);
+            holder.txtSelectionCount.setVisibility(View.GONE);
         }
 
         holder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
@@ -328,7 +325,10 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position)) {
-                        if (mIsMultiSelectEnabled) {
+                        if (mAllowMultiSelect) {
+                            if (!mIsMultiSelectEnabled) {
+                                setMultiSelectEnabled(true);
+                            }
                             toggleSelection(ThumbnailViewHolder.this, position);
                         } else if (mListener != null) {
                             Uri uri = getItemAtPosition(position).uri;
@@ -338,18 +338,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 }
             });
 
-            imgThumbnail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (isValidPosition(position) && mAllowMultiSelect) {
-                        if (!mIsMultiSelectEnabled) {
-                            setMultiSelectEnabled(true);
-                        }
-                        toggleSelection(ThumbnailViewHolder.this, position);
-                    }
-                }
-            });
             imgThumbnail.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
