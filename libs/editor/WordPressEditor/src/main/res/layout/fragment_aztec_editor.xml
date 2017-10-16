@@ -42,6 +42,7 @@
                     android:fontFamily="serif"
                     android:textStyle="bold"
                     android:textSize="@dimen/aztec_title_size"
+                    android:imeOptions="flagNoExtractUi"
                     aztec:lineSpacingExtra="@dimen/spacing_extra_title"
                     aztec:textColor="@color/grey_dark"
                     aztec:textColorHint="@color/hint_text" >
@@ -88,6 +89,7 @@
                     android:paddingTop="16dp"
                     android:scrollbars="vertical"
                     android:fontFamily="serif"
+                    android:imeOptions="flagNoExtractUi"
                     aztec:bulletColor="@color/bullet"
                     aztec:bulletMargin="@dimen/bullet_margin"
                     aztec:bulletPadding="@dimen/bullet_padding"
@@ -125,8 +127,8 @@
                     android:background="@null"
                     android:textSize="14sp"
                     android:visibility="gone"
-                    android:fontFamily="monospace">
-                </org.wordpress.aztec.source.SourceViewEditText>
+                    android:fontFamily="monospace"
+                    android:imeOptions="flagNoExtractUi" />
 
             </FrameLayout>
 
