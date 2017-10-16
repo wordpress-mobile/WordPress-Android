@@ -293,7 +293,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (mIsSingleItemSelectionEnabled) {
-            if (getSitesCount() == 1) {
+            if (getSitesCount() <= 1) {
                 holder.selectedRadioButton.setVisibility(View.GONE);
             } else {
                 holder.selectedRadioButton.setVisibility(View.VISIBLE);
