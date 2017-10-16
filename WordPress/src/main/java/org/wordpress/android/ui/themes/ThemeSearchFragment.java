@@ -115,37 +115,39 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     }
 
     @Override
-    protected void addHeaderViews(LayoutInflater inflater) {
-        // No header on Search
+    public void setRefreshing(boolean refreshing) {
+        refreshView();
+    }
+
+    @Override
+    protected Cursor fetchThemes() {
+        // only WP.com themes are searchable
+        return mThemeStore.getWpComThemesCursor();
     }
 
     @Override
     protected void configureSwipeToRefresh(View view) {
         super.configureSwipeToRefresh(view);
+        mSwipeToRefreshHelper.setRefreshing(false);
         mSwipeToRefreshHelper.setEnabled(false);
     }
 
     @Override
-    public void setRefreshing(boolean refreshing) {
-        refreshView(getSpinnerPosition());
+    protected void addHeaderViews(LayoutInflater inflater) {
+        // No header on Search
     }
 
-    @Override
-    protected Cursor fetchThemes(int position) {
-        return mThemeStore.getWpComThemesCursor();
-    }
-
-    public void search(String searchTerm) {
+    private void search(String searchTerm) {
         mLastSearch = searchTerm;
 
         if (NetworkUtils.isNetworkAvailable(mThemeBrowserActivity)) {
             mThemeBrowserActivity.searchThemes(searchTerm);
         } else {
-            refreshView(getSpinnerPosition());
+            refreshView();
         }
     }
 
-    public void configureSearchView() {
+    private void configureSearchView() {
         mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setQuery(mLastSearch, true);

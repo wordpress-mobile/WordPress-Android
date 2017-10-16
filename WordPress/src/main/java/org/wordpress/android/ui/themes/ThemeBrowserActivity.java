@@ -207,12 +207,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 AppLog.d(T.THEMES, "WordPress.com Theme fetch successful!");
                 AppPrefs.setLastWpComThemeSync(System.currentTimeMillis());
                 if (mThemeBrowserFragment != null) {
-                    mThemeBrowserFragment.refreshView(ThemeBrowserFragment.THEME_FILTER_ALL_INDEX);
+                    mThemeBrowserFragment.refreshView();
                 }
             } else if (event.origin == ThemeAction.FETCH_INSTALLED_THEMES) {
                 AppLog.d(T.THEMES, "Installed themes fetch successful!");
                 if (mThemeBrowserFragment != null) {
-                    mThemeBrowserFragment.refreshView(ThemeBrowserFragment.THEME_FILTER_ALL_INDEX);
+                    mThemeBrowserFragment.refreshView();
                 }
             }
         }
