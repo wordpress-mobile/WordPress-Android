@@ -103,11 +103,19 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
+        // Set secondary toolbar title and master switch state from shared preferences.
+        boolean isMasterChecked = mSharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_master), true);
+        hideDisabledView(isMasterChecked);
+
         mToolbarSwitch = (Toolbar) findViewById(R.id.toolbar_with_switch);
-        mToolbarSwitch.setTitle("Off");
         mToolbarSwitch.inflateMenu(R.menu.notifications_settings_secondary);
+        mToolbarSwitch.setTitle(isMasterChecked ?
+                getString(R.string.notification_settings_master_status_on) :
+                getString(R.string.notification_settings_master_status_off));
+
         MenuItem menuItem = mToolbarSwitch.getMenu().findItem(R.id.master_switch);
         mMasterSwitch = (SwitchCompat) menuItem.getActionView();
+        mMasterSwitch.setChecked(isMasterChecked);
         mMasterSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -134,14 +142,6 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        // Set secondary toolbar title and master switch state from shared preferences.
-        boolean isMasterChecked = mSharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_master), true);
-        mToolbarSwitch.setTitle(isMasterChecked ?
-                getString(R.string.notification_settings_master_status_on) :
-                getString(R.string.notification_settings_master_status_off));
-        mMasterSwitch.setChecked(isMasterChecked);
-
     }
 
     /**
