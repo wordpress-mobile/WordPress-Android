@@ -27,7 +27,7 @@ public class ThemeSqlUtils {
         }
     }
 
-    public static void insertOrReplaceWpThemes(@NonNull List<ThemeModel> themes) {
+    public static void insertOrReplaceWpComThemes(@NonNull List<ThemeModel> themes) {
         // remove existing WP.com themes
         removeWpComThemes();
 
