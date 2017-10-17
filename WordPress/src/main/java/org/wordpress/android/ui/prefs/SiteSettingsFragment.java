@@ -165,7 +165,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Writing settings
     private DetailListPreference mCategoryPref;
     private DetailListPreference mFormatPref;
-    private Preference mRelatedPostsPref;
+    private DetailListPreference mTimezonePref;
+    private DetailListPreference mDateFormatPref;
+    private DetailListPreference mTimeFormatPref;
+    private DetailListPreference mWeekStartPref;
+    private Preference mPostsPerPagePref;
 
     // Discussion settings preview
     private WPSwitchPreference mAllowCommentsPref;
@@ -189,6 +193,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mMultipleLinksPref;
     private Preference mModerationHoldPref;
     private Preference mBlacklistPref;
+
+    // Traffic
+    private Preference mRelatedPostsPref;
+    private WPSwitchPreference mAmpPref;
 
     // Advanced settings
     private Preference mStartOverPref;
@@ -584,6 +592,18 @@ public class SiteSettingsFragment extends PreferenceFragment
             mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
         } else if (preference == mBlacklistPref) {
             mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        } else if (preference == mPostsPerPagePref) {
+            // TODO
+        } else if (preference == mAmpPref) {
+            // TODO
+        } else if (preference == mWeekStartPref) {
+            // TODO
+        } else if (preference == mDateFormatPref) {
+            // TODO
+        } else if (preference == mTimeFormatPref) {
+            // TODO
+        } else if (preference == mTimezonePref) {
+            // TODO
         } else {
             return false;
         }
@@ -711,6 +731,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
+        mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
+        mTimezonePref = (DetailListPreference) getChangePref(R.string.pref_key_site_timezone);
+        mDateFormatPref = (DetailListPreference) getChangePref(R.string.pref_key_site_date_format);
+        mTimeFormatPref = (DetailListPreference) getChangePref(R.string.pref_key_site_time_format);
+        mWeekStartPref = (DetailListPreference) getChangePref(R.string.pref_key_site_week_start);
+        mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
 
         sortLanguages();
 
@@ -743,8 +769,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
-                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref,
-                mDeleteSitePref
+                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref, mDeleteSitePref,
+                mPostsPerPagePref, mTimezonePref, mDateFormatPref, mTimeFormatPref, mAmpPref, mWeekStartPref
         };
 
         for (Preference preference : editablePreference) {
@@ -998,6 +1024,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
         mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
         mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        // TODO
+        mPostsPerPagePref.setSummary("10");
+        mWeekStartPref.setSummary("Monday");
+        mTimezonePref.setSummary("UTC+8");
+        mDateFormatPref.setSummary("December 31, 2017");
+        mTimeFormatPref.setSummary("23:59");
     }
 
     private void setCategories() {
