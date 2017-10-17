@@ -319,10 +319,6 @@ class PostUploadNotifier {
             sPostIdToErrorNotificationId.put(post.getId(), errorNotificationId);
         }
 
-//        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
-//        if (notificationData.notificationErrorId == 0) {
-//            notificationData.notificationErrorId = notificationData.notificationId + (new Random()).nextInt();
-//        }
         doNotify(errorNotificationId, notificationBuilder.build());
     }
 
