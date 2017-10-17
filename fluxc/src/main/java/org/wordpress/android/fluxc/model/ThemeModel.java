@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class ThemeModel implements Identifiable, Serializable {
     @PrimaryKey @Column private int mId;
 
-    @Column private long mLocalSiteId;
+    @Column private int mLocalSiteId;
     @Column private String mThemeId;
     @Column private String mName;
     @Column private String mDescription;
@@ -67,11 +67,11 @@ public class ThemeModel implements Identifiable, Serializable {
                 && getAutoUpdateTranslation() == otherTheme.getAutoUpdateTranslation();
     }
 
-    public long getLocalSiteId() {
+    public int getLocalSiteId() {
         return mLocalSiteId;
     }
 
-    public void setLocalSiteId(long localSiteId) {
+    public void setLocalSiteId(int localSiteId) {
         this.mLocalSiteId = localSiteId;
     }
 
