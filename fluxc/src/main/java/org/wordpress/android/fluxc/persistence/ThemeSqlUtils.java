@@ -12,11 +12,12 @@ import org.wordpress.android.fluxc.model.ThemeModel;
 import java.util.List;
 
 public class ThemeSqlUtils {
-    public static void insertOrUpdateTheme(@NonNull ThemeModel theme) {
+    public static void insertOrUpdateThemeForSite(@NonNull ThemeModel theme) {
         List<ThemeModel> existing = WellSql.select(ThemeModel.class)
-                .where()
+                .where().beginGroup()
                 .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
-                .endWhere().getAsModel();
+                .equals(ThemeModelTable.LOCAL_SITE_ID, theme.getLocalSiteId())
+                .endGroup().endWhere().getAsModel();
 
         if (existing.isEmpty()) {
             WellSql.insert(theme).asSingleTransaction(true).execute();
@@ -64,7 +65,7 @@ public class ThemeSqlUtils {
 
         // make sure active flag is set then add to db
         theme.setActive(true);
-        insertOrUpdateTheme(theme);
+        insertOrUpdateThemeForSite(theme);
     }
 
     public static List<ThemeModel> getActiveThemeForSite(@NonNull SiteModel site) {
