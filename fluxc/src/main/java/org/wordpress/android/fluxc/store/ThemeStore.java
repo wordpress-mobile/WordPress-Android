@@ -245,11 +245,11 @@ public class ThemeStore extends Store {
         AppLog.d(AppLog.T.API, "ThemeStore onRegister");
     }
 
-    public List<ThemeModel> getWpThemes() {
+    public List<ThemeModel> getWpComThemes() {
         return ThemeSqlUtils.getThemesWithNoSite();
     }
 
-    public Cursor getWpThemesCursor() {
+    public Cursor getWpComThemesCursor() {
         return ThemeSqlUtils.getThemesWithNoSiteAsCursor();
     }
 
