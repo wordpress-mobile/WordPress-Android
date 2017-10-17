@@ -70,7 +70,6 @@ class PostUploadNotifier {
     private void updateForegroundNotification(@Nullable PostModel post) {
         updateNotificationBuilder(post);
         updateNotificationProgress();
-        //doNotify(sNotificationData.notificationId, mNotificationBuilder.build());
     }
 
     private void updateNotificationBuilder(@Nullable PostModel post) {
