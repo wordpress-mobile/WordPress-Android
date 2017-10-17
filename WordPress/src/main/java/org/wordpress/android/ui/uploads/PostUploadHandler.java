@@ -623,10 +623,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                     + ", post id: " + sCurrentUploadingPost.getId());
             mMediaLatchMap.get(event.media.getId()).countDown();
             mMediaLatchMap.remove(event.media.getId());
-        } else {
-            // TODO DELETE THIS ONCE PROGRESS BAR REFACTOR IS CONCLUDED
-//            // Progress update
-//            mPostUploadNotifier.updateNotificationProgressForMedia(event.media, event.progress);
         }
     }
 }
