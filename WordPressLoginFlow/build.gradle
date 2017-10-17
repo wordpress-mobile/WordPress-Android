@@ -9,7 +9,14 @@ buildscript {
 
 apply plugin: 'com.android.library'
 
+repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+
 android {
+    publishNonDefault true
+
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
 
@@ -19,7 +26,21 @@ android {
         versionCode 1
         versionName "1.0"
 
+        vectorDrawables.useSupportLibrary = true
     }
 }
 
-dependencies {}
+dependencies {
+    compile 'org.wordpress:utils:1.17.1'
+    compile 'org.wordpress:analytics:1.3.0'
+
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:77e383f3e65ce1cee3f9ebad2eac522f29b4e3b8') {
+        exclude group: "com.android.volley";
+    }
+
+    compile 'com.github.bumptech.glide:glide:4.0.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+}
