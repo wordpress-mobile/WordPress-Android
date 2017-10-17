@@ -129,6 +129,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int CLOSE_AFTER_REQUEST_CODE = 4;
     private static final int MULTIPLE_LINKS_REQUEST_CODE = 5;
     private static final int DELETE_SITE_REQUEST_CODE = 6;
+    private static final int POSTS_PER_PAGE_REQUEST_CODE = 7;
     private static final String DELETE_SITE_TAG = "delete-site";
     private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
     private static final String PURCHASE_ACTIVE_KEY = "active";
@@ -353,6 +354,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                     if (numLinks < 0 || numLinks == mSiteSettings.getMultipleLinks()) return;
                     onPreferenceChange(mMultipleLinksPref, numLinks);
                     break;
+                case POSTS_PER_PAGE_REQUEST_CODE:
+                    int numPosts = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
+                    if (numPosts < 0 || numPosts == 10) return;
+                    onPreferenceChange(mPostsPerPagePref, numPosts);
+                    break;
             }
         } else {
             switch (requestCode) {
@@ -456,6 +462,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             showRelatedPostsDialog();
         } else if (preference == mMultipleLinksPref) {
             showMultipleLinksDialog();
+        } else if (preference == mPostsPerPagePref) {
+            showPostsPerPageDialog();
         } else if (preference == mModerationHoldPref) {
             mEditingList = mSiteSettings.getModerationKeys();
             showListEditorDialog(R.string.site_settings_moderation_hold_title,
@@ -593,6 +601,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mBlacklistPref) {
             mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
         } else if (preference == mPostsPerPagePref) {
+            mPostsPerPagePref.setSummary(newValue.toString());
             // TODO
         } else if (preference == mAmpPref) {
             // TODO
@@ -988,6 +997,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.max_links_limit));
         args.putInt(NumberPickerDialog.CUR_VALUE_KEY, mSiteSettings.getMultipleLinks());
         showNumberPickerDialog(args, MULTIPLE_LINKS_REQUEST_CODE, "multiple-links-dialog");
+    }
+
+    private void showPostsPerPageDialog() {
+        Bundle args = new Bundle();
+        args.putBoolean(NumberPickerDialog.SHOW_SWITCH_KEY, false);
+        args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_posts_per_page_title));
+        args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 0);
+        args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.posts_per_page_limit));
+        args.putInt(NumberPickerDialog.CUR_VALUE_KEY, 10);
+        showNumberPickerDialog(args, POSTS_PER_PAGE_REQUEST_CODE, "posts-per-page-dialog");
     }
 
     public void setPreferencesFromSiteSettings() {
