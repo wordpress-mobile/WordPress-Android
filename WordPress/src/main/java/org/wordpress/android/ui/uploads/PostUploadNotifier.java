@@ -167,7 +167,6 @@ class PostUploadNotifier {
 
     void incrementUploadedMediaCountFromProgressNotificationOrFinish(int mediaId) {
         sNotificationData.currentMediaItem++;
-        removeProgressForMediaItem(mediaId);
         if (!removeNotificationAndStopForegroundServiceIfNoItemsInQueue()) {
             // update Notification now
             updateForegroundNotification(null);
@@ -193,6 +192,7 @@ class PostUploadNotifier {
         sNotificationData.totalMediaItems = 0;
         sNotificationData.totalPostItems = 0;
         sNotificationData.totalPageItemsIncludedInPostCount = 0;
+        sNotificationData.mediaItemToProgressMap.clear();
     }
 
     void cancelErrorNotification(PostModel post) {
@@ -348,10 +348,6 @@ class PostUploadNotifier {
 
     private void setProgressForMediaItem(int mediaId, float progress) {
         sNotificationData.mediaItemToProgressMap.put(mediaId, progress);
-    }
-
-    private void removeProgressForMediaItem(int mediaId) {
-        sNotificationData.mediaItemToProgressMap.remove(mediaId);
     }
 
     private float getCurrentOverallProgress() {
