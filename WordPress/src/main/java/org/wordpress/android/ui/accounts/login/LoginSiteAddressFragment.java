@@ -15,7 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import java.util.ArrayList;
+import javax.inject.Inject;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -39,10 +40,6 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
-
-import java.util.ArrayList;
-
-import javax.inject.Inject;
 
 public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener {
@@ -80,7 +77,14 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
     @Override
     protected void setupLabel(TextView label) {
-        label.setText(R.string.enter_site_address);
+        switch (mLoginListener.getLoginMode()) {
+            case SHARE_INTENT:
+                label.setText(R.string.enter_site_address_share_intent);
+                break;
+            default:
+                label.setText(R.string.enter_site_address);
+                break;
+        }
     }
 
     @Override
