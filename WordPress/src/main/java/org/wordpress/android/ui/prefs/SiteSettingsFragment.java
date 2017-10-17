@@ -846,7 +846,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             public void onResponse(JSONObject response) {
                 dismissProgressDialog(progressDialog);
                 if (isAdded()) {
-                    showPurchasesOrDeleteSiteDialog(response, mSite);
+                    showPurchasesOrDeleteSiteDialog(response);
                 }
             }
         }, new RestRequest.ErrorListener() {
@@ -861,11 +861,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         });
     }
 
-    private void showPurchasesOrDeleteSiteDialog(JSONObject response, final SiteModel site) {
+    private void showPurchasesOrDeleteSiteDialog(JSONObject response) {
         try {
             JSONArray purchases = response.getJSONArray(PURCHASE_ORIGINAL_RESPONSE_KEY);
             if (hasActivePurchases(purchases)) {
-                showPurchasesDialog(site);
+                showPurchasesDialog();
             } else {
                 showDeleteSiteWarningDialog();
             }
@@ -874,7 +874,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    private void showPurchasesDialog(final SiteModel site) {
+    private void showPurchasesDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.premium_upgrades_title);
         builder.setMessage(R.string.premium_upgrades_message);
