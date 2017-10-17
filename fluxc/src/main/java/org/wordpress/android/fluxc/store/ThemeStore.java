@@ -191,10 +191,10 @@ public class ThemeStore extends Store {
         }
         switch ((ThemeAction) actionType) {
             case FETCH_WP_COM_THEMES:
-                fetchWpThemes();
+                fetchWpComThemes();
                 break;
             case FETCHED_WP_COM_THEMES:
-                handleWpThemesFetched((FetchedThemesPayload) action.getPayload());
+                handleWpComThemesFetched((FetchedThemesPayload) action.getPayload());
                 break;
             case FETCH_INSTALLED_THEMES:
                 fetchInstalledThemes((SiteModel) action.getPayload());
@@ -277,17 +277,17 @@ public class ThemeStore extends Store {
         ThemeSqlUtils.insertOrReplaceActiveThemeForSite(site, theme);
     }
 
-    private void fetchWpThemes() {
+    private void fetchWpComThemes() {
         mThemeRestClient.fetchWpComThemes();
     }
 
-    private void handleWpThemesFetched(@NonNull FetchedThemesPayload payload) {
+    private void handleWpComThemesFetched(@NonNull FetchedThemesPayload payload) {
         OnThemesChanged event = new OnThemesChanged(payload.site);
         event.origin = ThemeAction.FETCH_WP_COM_THEMES;
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.insertOrReplaceWpThemes(payload.themes);
+            ThemeSqlUtils.insertOrReplaceWpComThemes(payload.themes);
         }
         emitChange(event);
     }

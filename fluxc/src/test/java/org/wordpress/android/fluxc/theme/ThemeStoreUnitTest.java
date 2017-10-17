@@ -44,15 +44,15 @@ public class ThemeStoreUnitTest {
         final List<ThemeModel> thirdTestThemes = generateThemesTestList(10);
 
         // first add 20 themes and make sure the count is correct
-        ThemeSqlUtils.insertOrReplaceWpThemes(firstTestThemes);
+        ThemeSqlUtils.insertOrReplaceWpComThemes(firstTestThemes);
         assertEquals(20, mThemeStore.getWpComThemes().size());
 
         // next add a larger list of themes (with 20 being duplicates) and make sure the count is correct
-        ThemeSqlUtils.insertOrReplaceWpThemes(secondTestThemes);
+        ThemeSqlUtils.insertOrReplaceWpComThemes(secondTestThemes);
         assertEquals(30, mThemeStore.getWpComThemes().size());
 
         // lastly add a smaller list of themes (all duplicates) and make sure count is correct
-        ThemeSqlUtils.insertOrReplaceWpThemes(thirdTestThemes);
+        ThemeSqlUtils.insertOrReplaceWpComThemes(thirdTestThemes);
         assertEquals(10, mThemeStore.getWpComThemes().size());
     }
 
