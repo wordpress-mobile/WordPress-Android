@@ -247,10 +247,6 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
-    /**
-     * Delete a site
-     */
-
     public void getSitePurchases(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/purchases", siteId);
         get(path, listener, errorListener);

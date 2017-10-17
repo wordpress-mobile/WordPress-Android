@@ -317,6 +317,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onDestroyView() {
         removeMoreScreenToolbar();
+        removeJetpackSecurityScreenToolbar();
         super.onDestroyView();
     }
 
@@ -394,15 +395,20 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         removeMoreScreenToolbar();
+        removeJetpackSecurityScreenToolbar();
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         setupMorePreferenceScreen();
+        setupJetpackSecurityScreen();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) setupMorePreferenceScreen();
+        if (savedInstanceState != null) {
+            setupMorePreferenceScreen();
+            setupJetpackSecurityScreen();
+        }
     }
 
     @Override
@@ -673,25 +679,27 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onSettingsUpdated(Exception error) {
-        if (error != null) {
-            ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
-            getActivity().finish();
-            return;
-        }
-
-        if (isAdded()) setPreferencesFromSiteSettings();
+    public void onSaveError(Exception error) {
+        ToastUtils.showToast(getActivity(), R.string.error_post_remote_site_settings);
+        getActivity().finish();
     }
 
     @Override
-    public void onSettingsSaved(Exception error) {
-        if (error != null) {
-            ToastUtils.showToast(WordPress.getContext(), R.string.error_post_remote_site_settings);
-            return;
+    public void onFetchError(Exception error) {
+        ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
+        getActivity().finish();
+    }
+
+    @Override
+    public void onSettingsUpdated() {
+        if (isAdded()) {
+            setPreferencesFromSiteSettings();
         }
+    }
 
+    @Override
+    public void onSettingsSaved() {
         mSite.setName(mSiteSettings.getTitle());
-
         // Locally save the site
         mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
     }
@@ -788,7 +796,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     public void setEditingEnabled(boolean enabled) {
-        // excludes mAddressPref, mMorePreference
+        // excludes mAddressPref, mMorePreference, mJpSecuritySettings
         final Preference[] editablePreference = {
                 mTitlePref , mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
                 mPasswordPref, mCategoryPref, mFormatPref, mAllowCommentsPref,
@@ -796,7 +804,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref,
-                mDeleteSitePref
+                mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
+                mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref
         };
 
         for (Preference preference : editablePreference) {
@@ -1398,6 +1407,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mMorePreference == null || !isAdded()) return;
         Dialog moreDialog = mMorePreference.getDialog();
         WPActivityUtils.removeToolbarFromDialog(this, moreDialog);
+    }
+
+    private void removeJetpackSecurityScreenToolbar() {
+        if (mJpSecuritySettings == null || !isAdded()) return;
+        Dialog securityDialog = mJpSecuritySettings.getDialog();
+        WPActivityUtils.removeToolbarFromDialog(this, securityDialog);
     }
 
     private void hideAdminRequiredPreferences() {

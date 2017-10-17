@@ -92,11 +92,6 @@ public abstract class SiteSettingsInterface {
     private static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
 
     /**
-     * Key used to access the sharing button style stored in {@link SharedPreferences}.
-     */
-    public static final String SHARING_BUTTON_STYLE_PREF_KEY = "site-settings-sharing-button-style-pref";
-
-    /**
      * Identifies an Ascending (oldest to newest) sort order.
      */
     static final int ASCENDING_SORT = 0;
@@ -170,21 +165,18 @@ public abstract class SiteSettingsInterface {
      * Interface callbacks for settings events.
      */
     public interface SiteSettingsListener {
+        void onSaveError(Exception error);
+        void onFetchError(Exception error);
+
         /**
          * Called when settings have been updated with remote changes.
-         *
-         * @param error
-         * null if successful
          */
-        void onSettingsUpdated(Exception error);
+        void onSettingsUpdated();
 
         /**
          * Called when attempt to update remote settings is finished.
-         *
-         * @param error
-         * null if successful
          */
-        void onSettingsSaved(Exception error);
+        void onSettingsSaved();
 
         /**
          * Called when a request to validate current credentials has completed.
@@ -858,29 +850,12 @@ public abstract class SiteSettingsInterface {
     public SiteSettingsInterface init(boolean fetchRemote) {
         loadCachedSettings();
 
-        if (mSite.isJetpackConnected()) {
-            loadCachedJpSettings();
-        }
-
         if (fetchRemote) {
             fetchRemoteData();
             mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
         }
 
         return this;
-    }
-
-    private void loadCachedJpSettings() {
-        Cursor localSettings = SiteSettingsTable.getJpSettings(mSite.getId());
-
-        if (localSettings != null && localSettings.getCount() > 0) {
-            SiteSettingsTable.deserializeJetpackDatabaseCursor(mJpSettings, localSettings);
-            notifyUpdatedOnUiThread(null);
-        }
-
-        if (localSettings != null) {
-            localSettings.close();
-        }
     }
 
     /**
@@ -928,7 +903,7 @@ public abstract class SiteSettingsInterface {
             }
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
-            notifyUpdatedOnUiThread(null);
+            notifyUpdatedOnUiThread();
         } else {
             mSettings.isInLocalTable = false;
             mSettings.localTableId = mSite.getId();
@@ -963,16 +938,42 @@ public abstract class SiteSettingsInterface {
         });
     }
 
+    protected void notifyFetchErrorOnUiThread(final Exception error) {
+        if (mActivity == null || mActivity.isFinishing() || mListener == null) {
+            return;
+        }
+
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mListener.onFetchError(error);
+            }
+        });
+    }
+
+    protected void notifySaveErrorOnUiThread(final Exception error) {
+        if (mActivity == null || mActivity.isFinishing() || mListener == null) {
+            return;
+        }
+
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mListener.onSaveError(error);
+            }
+        });
+    }
+
     /**
      * Notifies listener that settings have been updated with the latest remote data.
      */
-    protected void notifyUpdatedOnUiThread(final Exception error) {
+    protected void notifyUpdatedOnUiThread() {
         if (mActivity == null || mActivity.isFinishing() || mListener == null) return;
 
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mListener.onSettingsUpdated(error);
+                mListener.onSettingsUpdated();
             }
         });
     }
@@ -980,13 +981,13 @@ public abstract class SiteSettingsInterface {
     /**
      * Notifies listener that settings have been saved or an error occurred while saving.
      */
-    protected void notifySavedOnUiThread(final Exception error) {
+    protected void notifySavedOnUiThread() {
         if (mActivity == null || mListener == null) return;
 
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mListener.onSettingsSaved(error);
+                mListener.onSettingsSaved();
             }
         });
     }
@@ -999,6 +1000,6 @@ public abstract class SiteSettingsInterface {
         if (event.isError()) {
             return;
         }
-        notifyUpdatedOnUiThread(null);
+        notifyUpdatedOnUiThread();
     }
 }
