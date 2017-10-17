@@ -322,7 +322,7 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.insertOrUpdateTheme(payload.theme);
+            ThemeSqlUtils.insertOrUpdateThemeForSite(payload.theme);
         }
         emitChange(event);
     }
@@ -337,7 +337,7 @@ public class ThemeStore extends Store {
             event.error = payload.error;
         } else {
             for (ThemeModel theme : payload.themes) {
-                ThemeSqlUtils.insertOrUpdateTheme(theme);
+                ThemeSqlUtils.insertOrUpdateThemeForSite(theme);
             }
         }
         emitChange(event);
@@ -357,7 +357,8 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.insertOrUpdateTheme(payload.theme);
+            payload.theme.setLocalSiteId(payload.site.getId());
+            ThemeSqlUtils.insertOrUpdateThemeForSite(payload.theme);
         }
         emitChange(event);
     }
@@ -391,6 +392,7 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
+            payload.theme.setLocalSiteId(payload.site.getId());
             ThemeSqlUtils.removeTheme(payload.theme);
         }
         emitChange(event);
