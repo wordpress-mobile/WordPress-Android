@@ -152,10 +152,10 @@
     </string-array>
 
     <string-array name="date_format_entries">
-        <item>F j, Y</item>
-        <item>Y-m-d</item>
-        <item>m/d/Y</item>
-        <item>d/m/Y</item>
+        <item>December 31, 2017</item>
+        <item>2017–12–31</item>
+        <item>12/31/2017</item>
+        <item>31/12/2017</item>
         <item>Custom</item>
     </string-array>
 
@@ -168,9 +168,9 @@
     </string-array>
 
     <string-array name="time_format_entries">
-        <item>g:i a</item>
-        <item>g:i A</item>
-        <item>H:i</item>
+        <item>11:59 pm</item>
+        <item>11:59 PM</item>
+        <item>23:59</item>
         <item>Custom</item>
     </string-array>
 
@@ -181,6 +181,7 @@
         <item>Custom</item>
     </string-array>
 
+    <!-- TODO: Unsure of source for these entries/values. Hard-coded or do we get from an endpoint? -->
     <string-array name="timezone_entries">
         <item>TODO</item>
     </string-array>
