@@ -400,8 +400,7 @@ class PostUploadNotifier {
     private String buildNotificationSubtitleForPost(PostModel post){
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
-                getCurrentPostItem() + 1,
-                sNotificationData.totalPostItems,
+                sNotificationData.totalPostItems - getCurrentPostItem(),
                 (post != null && post.isPage()) ? mContext.getString(R.string.page).toLowerCase()
                         : mContext.getString(R.string.post).toLowerCase()
         );
@@ -412,8 +411,7 @@ class PostUploadNotifier {
         String pagesAndOrPosts = getPagesAndOrPostsString();
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
-                getCurrentPostItem() + 1,
-                sNotificationData.totalPostItems,
+                sNotificationData.totalPostItems - getCurrentPostItem(),
                 pagesAndOrPosts
         );
         return uploadingMessage;
@@ -424,14 +422,24 @@ class PostUploadNotifier {
         if (sNotificationData.totalPageItemsIncludedInPostCount > 0 && sNotificationData.totalPostItems > 0
                 && sNotificationData.totalPostItems > sNotificationData.totalPageItemsIncludedInPostCount) {
             // we have both pages and posts
-            pagesAndOrPosts = mContext.getString(R.string.post).toLowerCase() + "/" +
-                    mContext.getString(R.string.page).toLowerCase();
+            pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase() + "/" +
+                    mContext.getString(R.string.pages).toLowerCase();
         } else if (sNotificationData.totalPageItemsIncludedInPostCount > 0) {
             // we have only pages
-            pagesAndOrPosts = mContext.getString(R.string.page).toLowerCase();
+            if (sNotificationData.totalPageItemsIncludedInPostCount == 1) {
+                // only one page
+                pagesAndOrPosts = mContext.getString(R.string.page).toLowerCase();
+            } else {
+                pagesAndOrPosts = mContext.getString(R.string.pages).toLowerCase();
+            }
         } else {
             // we have only posts
-            pagesAndOrPosts = mContext.getString(R.string.post).toLowerCase();
+            if (sNotificationData.totalPostItems == 1) {
+                // only one post
+                pagesAndOrPosts = mContext.getString(R.string.post).toLowerCase();
+            } else {
+                pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase();
+            }
         }
         return pagesAndOrPosts;
     }
@@ -439,7 +447,7 @@ class PostUploadNotifier {
     private String buildNotificationSubtitleForMedia(){
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_media_only),
-                getCurrentMediaItem() + 1,
+                sNotificationData.totalMediaItems - getCurrentMediaItem(),
                 sNotificationData.totalMediaItems
         );
         return uploadingMessage;
@@ -448,10 +456,9 @@ class PostUploadNotifier {
     private String buildNotificationSubtitleForMixedContent(){
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_mixed),
-                getCurrentPostItem() + 1,
-                sNotificationData.totalPostItems,
+                sNotificationData.totalPostItems - getCurrentPostItem(),
                 getPagesAndOrPostsString(),
-                getCurrentMediaItem() + 1,
+                sNotificationData.totalMediaItems - getCurrentMediaItem(),
                 sNotificationData.totalMediaItems
         );
         return uploadingMessage;
