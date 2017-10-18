@@ -43,6 +43,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialLoginPayload;
 import org.wordpress.android.ui.accounts.LoginMode;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -522,5 +523,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                     break;
             }
         }
+    }
+
+    @Override
+    protected void onLoginFinished() {
+        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
     }
 }
