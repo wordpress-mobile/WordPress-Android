@@ -241,7 +241,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void newUserCreatedButErrored(String email, String password) {
-        LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, password, false);
+        LoginEmailPasswordFragment loginEmailPasswordFragment =
+                LoginEmailPasswordFragment.newInstance(email, password, null, null, false);
         slideInFragment(loginEmailPasswordFragment, false, LoginEmailPasswordFragment.TAG);
     }
 
@@ -251,7 +252,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
             LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(email);
             slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
         } else {
-            LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, null, false);
+            LoginEmailPasswordFragment loginEmailPasswordFragment =
+                    LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
             slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
         }
     }
@@ -263,8 +265,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void loginViaSocialAccount(String email, boolean isPasswordRequired) {
-        LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, null, true);
+    public void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired) {
+        LoginEmailPasswordFragment loginEmailPasswordFragment =
+                LoginEmailPasswordFragment.newInstance(email, null, null, null, isPasswordRequired);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
     }
 
@@ -292,7 +295,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void usePasswordInstead(String email) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
-        LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, null, false);
+        LoginEmailPasswordFragment loginEmailPasswordFragment =
+                LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
     }
 
