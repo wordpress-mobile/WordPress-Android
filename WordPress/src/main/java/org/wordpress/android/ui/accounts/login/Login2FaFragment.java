@@ -43,8 +43,23 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private static final String KEY_IN_PROGRESS_MESSAGE_ID = "KEY_IN_PROGRESS_MESSAGE_ID";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
 
+    private static final String ARG_2FA_ID_TOKEN = "ARG_2FA_ID_TOKEN";
+    private static final String ARG_2FA_IS_SOCIAL = "ARG_2FA_IS_SOCIAL";
+    private static final String ARG_2FA_IS_SOCIAL_CONNECT = "ARG_2FA_IS_SOCIAL_CONNECT";
+    private static final String ARG_2FA_NONCE_AUTHENTICATOR = "ARG_2FA_NONCE_AUTHENTICATOR";
+    private static final String ARG_2FA_NONCE_BACKUP = "ARG_2FA_NONCE_BACKUP";
+    private static final String ARG_2FA_NONCE_SMS = "ARG_2FA_NONCE_SMS";
+    private static final String ARG_2FA_SOCIAL_SERVICE = "ARG_2FA_SOCIAL_SERVICE";
+    private static final String ARG_2FA_TYPE = "ARG_2FA_TYPE";
+    private static final String ARG_2FA_TYPE_AUTHENTICATOR = "authenticator";
+    private static final String ARG_2FA_TYPE_BACKUP = "backup";
+    private static final String ARG_2FA_TYPE_SMS = "sms";
+    private static final String ARG_2FA_USER_ID = "ARG_2FA_USER_ID";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
+    private static final int LENGTH_NONCE_AUTHENTICATOR = 6;
+    private static final int LENGTH_NONCE_BACKUP = 8;
+    private static final int LENGTH_NONCE_SMS = 7;
 
     public static final String TAG = "login_2fa_fragment_tag";
 
@@ -54,7 +69,17 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     ArrayList<Integer> mOldSitesIDs;
 
     private String mEmailAddress;
+    private String mIdToken;
+    private String mNonce;
+    private String mNonceAuthenticator;
+    private String mNonceBackup;
+    private String mNonceSms;
     private String mPassword;
+    private String mService;
+    private String mType;
+    private String mUserId;
+    private boolean isSocialLogin2fa;
+    private boolean isSocialLoginConnect;
 
     public static Login2FaFragment newInstance(String emailAddress, String password,
                                                String idToken, String service,
@@ -63,6 +88,27 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
         args.putString(ARG_PASSWORD, password);
+        args.putString(ARG_2FA_ID_TOKEN, idToken);
+        args.putBoolean(ARG_2FA_IS_SOCIAL_CONNECT, isSocialLoginConnect);
+        args.putString(ARG_2FA_SOCIAL_SERVICE, service);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static Login2FaFragment newInstance(String emailAddress, String userId,
+                                               String nonceAuthenticator, String nonceBackup,
+                                               String nonceSms) {
+        Login2FaFragment fragment = new Login2FaFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_EMAIL_ADDRESS, emailAddress);
+        args.putString(ARG_2FA_USER_ID, userId);
+        args.putString(ARG_2FA_TYPE, ARG_2FA_TYPE_AUTHENTICATOR);
+        args.putString(ARG_2FA_NONCE_AUTHENTICATOR, nonceAuthenticator);
+        args.putString(ARG_2FA_NONCE_BACKUP, nonceBackup);
+        args.putString(ARG_2FA_NONCE_SMS, nonceSms);
+        args.putBoolean(ARG_2FA_IS_SOCIAL, true);
+        // Social account connected, connect call not needed.
+        args.putBoolean(ARG_2FA_IS_SOCIAL_CONNECT, false);
         fragment.setArguments(args);
         return fragment;
     }
@@ -130,6 +176,15 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
         mPassword = getArguments().getString(ARG_PASSWORD);
+        mNonceAuthenticator = getArguments().getString(ARG_2FA_NONCE_AUTHENTICATOR);
+        mNonceBackup = getArguments().getString(ARG_2FA_NONCE_BACKUP);
+        mNonceSms = getArguments().getString(ARG_2FA_NONCE_SMS);
+        mType = getArguments().getString(ARG_2FA_TYPE);
+        mUserId = getArguments().getString(ARG_2FA_USER_ID);
+        mIdToken = getArguments().getString(ARG_2FA_ID_TOKEN);
+        isSocialLogin2fa = getArguments().getBoolean(ARG_2FA_IS_SOCIAL);
+        isSocialLoginConnect = getArguments().getBoolean(ARG_2FA_IS_SOCIAL_CONNECT);
+        mService = getArguments().getString(ARG_2FA_SOCIAL_SERVICE);
     }
 
     @Override

@@ -502,6 +502,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     public void onSocialChanged(OnSocialChanged event) {
         disconnectGoogleClient();
 
+        // Response returns error for non-existing account and existing account not connected.
         if (event.isError()) {
             AppLog.e(T.API, "LoginEmailFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
@@ -523,6 +524,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                     showErrorDialog(getString(R.string.login_error_generic));
                     break;
             }
+        // Response does not return error when two-factor authentication is required.
+        } else if (event.requiresTwoStepAuth) {
+            mLoginListener.needs2fa(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup, event.nonceSms);
+        } else {
+            doFinishLogin();
         }
     }
 

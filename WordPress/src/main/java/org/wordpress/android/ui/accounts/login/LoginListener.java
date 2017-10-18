@@ -36,6 +36,7 @@ public interface LoginListener {
     // Login email password callbacks
     void needs2fa(String email, String password);
     void needs2fa(String email, String password, String idToken, String service, boolean isSocialLogin);
+    void needs2fa(String email, String userId, String nonceAuthenticator, String nonceBackup, String nonceSms);
     void loggedInViaPassword(ArrayList<Integer> oldSitesIds);
     void helpEmailPasswordScreen(String email);
 
