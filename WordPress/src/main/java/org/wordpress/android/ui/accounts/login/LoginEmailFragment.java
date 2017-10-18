@@ -85,7 +85,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
 
     @Override
     protected @LayoutRes int getProgressBarText() {
-        return R.string.checking_email;
+        return isSocialLogin ? R.string.logging_in : R.string.checking_email;
     }
 
     @Override
