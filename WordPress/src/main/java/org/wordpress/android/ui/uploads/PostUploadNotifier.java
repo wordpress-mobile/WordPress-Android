@@ -353,7 +353,7 @@ class PostUploadNotifier {
     private float getCurrentOverallProgress() {
         int totalItemCount = sNotificationData.totalPostItems + sNotificationData.totalMediaItems;
         float currentMediaProgress = getCurrentMediaProgress();
-        float overAllProgress = 0;
+        float overAllProgress;
         overAllProgress = sNotificationData.totalPostItems > 0 ?
                 (sNotificationData.currentPostItem/sNotificationData.totalPostItems) * totalItemCount : 0;
         overAllProgress += sNotificationData.totalMediaItems > 0 ?
