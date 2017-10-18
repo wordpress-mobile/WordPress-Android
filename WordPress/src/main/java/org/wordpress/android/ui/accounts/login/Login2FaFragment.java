@@ -240,6 +240,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
         if (isSocialLogin2fa && !shouldSendTwoStepSMS) {
+            setAuthCodeTypeAndNonce(twoStepCode);
             AccountStore.PushSocialAuthPayload payload = new AccountStore.PushSocialAuthPayload(mUserId, mType, mNonce, twoStepCode);
             mDispatcher.dispatch(AccountActionBuilder.newPushSocialAuthAction(payload));
         } else {
@@ -267,6 +268,23 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         }
 
         return "";
+    }
+
+    private void setAuthCodeTypeAndNonce(String twoStepCode) {
+        switch(twoStepCode.length()) {
+            case LENGTH_NONCE_AUTHENTICATOR:
+                mType = ARG_2FA_TYPE_AUTHENTICATOR;
+                mNonce = mNonceAuthenticator;
+                break;
+            case LENGTH_NONCE_BACKUP:
+                mType = ARG_2FA_TYPE_BACKUP;
+                mNonce = mNonceBackup;
+                break;
+            case LENGTH_NONCE_SMS:
+                mType = ARG_2FA_TYPE_SMS;
+                mNonce = mNonceSms;
+                break;
+        }
     }
 
     @Override
