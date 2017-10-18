@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -356,6 +357,34 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
         doFinishLogin();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSocialChanged(OnSocialChanged event) {
+        if (event.isError()) {
+            endProgress();
+
+            switch (event.error.type) {
+                // Two-factor authentication code was incorrect; save new nonce for another try.
+                case INVALID_TWO_STEP_CODE:
+                    switch (mType) {
+                        case ARG_2FA_TYPE_AUTHENTICATOR:
+                            mNonceAuthenticator = event.error.nonce;
+                            break;
+                        case ARG_2FA_TYPE_BACKUP:
+                            mNonceBackup = event.error.nonce;
+                            break;
+                        case ARG_2FA_TYPE_SMS :
+                            mNonceSms = event.error.nonce;
+                            break;
+                    }
+
+                    show2FaError(getString(R.string.invalid_verification_code));
+            }
+        } else {
+            doFinishLogin();
+        }
     }
 
     @Override
