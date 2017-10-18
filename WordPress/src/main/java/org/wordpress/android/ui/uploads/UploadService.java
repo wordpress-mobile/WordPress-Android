@@ -180,9 +180,10 @@ public class UploadService extends Service {
 
             mPostUploadNotifier.cancelErrorNotification(post);
 
-            // is this a new post? only add count to the notification when the post is new
+            // is this a new post? only add count to the notification when the post is totally new
             // i.e. it still doesn't have any tracked state in the UploadStore
-            if (isThisPostTotallyNew(post)) {
+            // or it's a failed one the user is activley retrying.
+            if (isThisPostTotallyNewOrFailed(post)) {
                 mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
             }
 
@@ -197,7 +198,7 @@ public class UploadService extends Service {
         }
     }
 
-    private boolean isThisPostTotallyNew(PostModel post){
+    private boolean isThisPostTotallyNewOrFailed(PostModel post){
         // if we have any tracks for this Post's UploadState, this means this Post is not new.
         // Conditions under which the UploadStore would contain traces of this Post's UploadState are:
         // - it's been cancelled by entering/exiting/entering the editor thus cancelling the queued post upload
@@ -206,7 +207,7 @@ public class UploadService extends Service {
         // - it's a pending upload (it is currently registered for upload once the associated media finishes
         // uploading).
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
-        return (postUploadModel == null);
+        return (postUploadModel == null) || (postUploadModel.getUploadState() == PostUploadModel.FAILED);
     }
 
     /**
