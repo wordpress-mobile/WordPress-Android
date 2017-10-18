@@ -55,7 +55,9 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     private String mPassword;
     private boolean isSocialLogin;
 
-    public static LoginEmailPasswordFragment newInstance(String emailAddress, String password, boolean isSocialLogin) {
+    public static LoginEmailPasswordFragment newInstance(String emailAddress, String password,
+                                                         String idToken, String service,
+                                                         boolean isSocialLogin) {
         LoginEmailPasswordFragment fragment = new LoginEmailPasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);

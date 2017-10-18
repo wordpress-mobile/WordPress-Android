@@ -70,6 +70,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
 
     private GoogleApiClient mGoogleApiClient;
     private String mGoogleEmail;
+    private String mIdToken;
     private String mRequestedEmail;
     private WPLoginInputRow mEmailInput;
     private boolean isResolvingError;
@@ -423,7 +424,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                         try {
                             GoogleSignInAccount account = signInResult.getSignInAccount();
                             mGoogleEmail = account.getEmail();
-                            PushSocialLoginPayload payload = new PushSocialLoginPayload(account.getIdToken(), SERVICE_TYPE_GOOGLE);
+                            mIdToken = account.getIdToken();
+                            PushSocialLoginPayload payload = new PushSocialLoginPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
                         } catch (NullPointerException exception) {
                             disconnectGoogleClient();
@@ -507,7 +509,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
             switch (event.error.type) {
                 // WordPress account exists with input email address, but not connected.
                 case USER_EXISTS:
-                    mLoginListener.loginViaSocialAccount(mGoogleEmail, true);
+                    mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
                     break;
                 // WordPress account does not exist with input email address.
                 case UNKNOWN_USER:
