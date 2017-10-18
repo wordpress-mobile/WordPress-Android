@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
@@ -9,7 +8,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -25,7 +23,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -121,7 +118,6 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -664,7 +660,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // make sure we initialized the photo picker
         if (mPhotoPickerFragment == null) {
-            //SmartToast.reset();
             initPhotoPicker();
         }
 
@@ -687,13 +682,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment)mEditorFragment).enableMediaMode(true);
-        }
-
-        // let the user know about long-press to multiselect, but only if the user has already granted
-        // storage permission - otherwise the toast will appear above the "soft ask" view
-        if (!isAlreadyShowing && ContextCompat.checkSelfPermission(
-                    this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            SmartToast.show(this, SmartToast.SmartToastType.MEDIA_LONG_PRESS);
         }
     }
 
