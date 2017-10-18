@@ -386,6 +386,13 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                     }
 
                     show2FaError(getString(R.string.invalid_verification_code));
+                    break;
+                case UNABLE_CONNECT:
+                    AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
+                    break;
+                case USER_ALREADY_ASSOCIATED:
+                    AppLog.e(T.API, "This social account is already associated with a WordPress.com account.");
+                    break;
             }
         } else {
             doFinishLogin();
