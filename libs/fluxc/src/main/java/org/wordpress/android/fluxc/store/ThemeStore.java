@@ -257,11 +257,11 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getThemesForSite(site);
     }
 
-    public ThemeModel getThemeByThemeId(String themeId) {
+    public ThemeModel getThemeByThemeId(String themeId, boolean wpCom) {
         if (themeId == null || themeId.isEmpty()) {
             return null;
         }
-        return ThemeSqlUtils.getThemeWithId(themeId);
+        return ThemeSqlUtils.getThemeByThemeId(themeId, wpCom);
     }
 
     public ThemeModel getActiveThemeForSite(@NonNull SiteModel site) {
