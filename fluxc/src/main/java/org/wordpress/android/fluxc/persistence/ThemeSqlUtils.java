@@ -113,11 +113,11 @@ public class ThemeSqlUtils {
     /**
      * @return the first theme that matches a given theme ID; null if none found
      */
-    public static ThemeModel getThemeByThemeId(@NonNull String themeId, boolean wpCom) {
+    public static ThemeModel getThemeByThemeId(@NonNull String themeId, boolean isWpComTheme) {
         List<ThemeModel> matches = WellSql.select(ThemeModel.class)
                 .where().beginGroup()
                 .equals(ThemeModelTable.THEME_ID, themeId)
-                .equals(ThemeModelTable.IS_WP_COM_THEME, wpCom)
+                .equals(ThemeModelTable.IS_WP_COM_THEME, isWpComTheme)
                 .endGroup().endWhere().getAsModel();
 
         if (matches == null || matches.isEmpty()) {
