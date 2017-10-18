@@ -144,7 +144,7 @@ class PostUploadNotifier {
 //        doNotify(sPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
     }
 
-    void incrementUploadedPostCountFromForegroundNotification(PostModel post) {
+    void incrementUploadedPostCountFromForegroundNotification(@NonNull PostModel post) {
         sNotificationData.currentPostItem++;
         if (post.isPage()) {
             sNotificationData.totalPageItemsIncludedInPostCount--;
@@ -186,7 +186,7 @@ class PostUploadNotifier {
         sNotificationData.totalPageItemsIncludedInPostCount = 0;
     }
 
-    void cancelErrorNotification(PostModel post) {
+    void cancelErrorNotification(@NonNull PostModel post) {
         Integer errorNotificationId = sPostIdToErrorNotificationId.get(post.getId());
         if (errorNotificationId != null && errorNotificationId != 0) {
             mNotificationManager.cancel(errorNotificationId);
@@ -194,7 +194,7 @@ class PostUploadNotifier {
         }
     }
 
-    void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstTimePublish) {
+    void updateNotificationSuccess(@NonNull PostModel post, @NonNull SiteModel site, boolean isFirstTimePublish) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationSuccess");
 
         // Get the shareableUrl
@@ -272,7 +272,7 @@ class PostUploadNotifier {
         return post.getLocalSiteId() + remotePostId;
     }
 
-    void updateNotificationError(PostModel post, SiteModel site, String errorMessage) {
+    void updateNotificationError(@NonNull PostModel post, @NonNull SiteModel site, String errorMessage) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationError: " + errorMessage);
 
         NotificationCompat.Builder notificationBuilder =
