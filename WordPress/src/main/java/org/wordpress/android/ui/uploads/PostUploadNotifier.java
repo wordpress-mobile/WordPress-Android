@@ -359,7 +359,7 @@ class PostUploadNotifier {
     }
 
     private String buildNotificationTitleForPost(PostModel post) {
-        String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
+        String postTitle = (post == null || TextUtils.isEmpty(post.getTitle())) ? mContext.getString(R.string.untitled) : post.getTitle();
         return String.format(mContext.getString(R.string.uploading_post), postTitle);
     }
 
@@ -376,7 +376,7 @@ class PostUploadNotifier {
                 mContext.getString(R.string.uploading_subtitle_posts_only),
                 getCurrentPostItem() + 1,
                 sNotificationData.totalPostItems,
-                post.isPage() ? mContext.getString(R.string.page).toLowerCase()
+                (post != null && post.isPage()) ? mContext.getString(R.string.page).toLowerCase()
                         : mContext.getString(R.string.post).toLowerCase()
         );
         return uploadingMessage;
