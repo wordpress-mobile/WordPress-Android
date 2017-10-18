@@ -186,11 +186,11 @@ public class PluginStore extends Store {
     }
 
     public List<PluginModel> getSitePlugins(SiteModel site) {
-        return PluginSqlUtils.getPlugins(site);
+        return PluginSqlUtils.getSitePlugins(site);
     }
 
     public PluginModel getSitePluginByName(SiteModel site, String name) {
-        return PluginSqlUtils.getPluginByName(site, name);
+        return PluginSqlUtils.getSitePluginByName(site, name);
     }
 
     public PluginInfoModel getPluginInfoBySlug(String slug) {
@@ -226,7 +226,7 @@ public class PluginStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            PluginSqlUtils.insertOrReplacePlugins(payload.site, payload.plugins);
+            PluginSqlUtils.insertOrReplaceSitePlugins(payload.site, payload.plugins);
         }
         emitChange(event);
     }
@@ -249,7 +249,7 @@ public class PluginStore extends Store {
         } else {
             payload.plugin.setLocalSiteId(payload.site.getId());
             event.plugin = payload.plugin;
-            PluginSqlUtils.insertOrUpdatePlugin(payload.site, payload.plugin);
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
         }
         emitChange(event);
     }
