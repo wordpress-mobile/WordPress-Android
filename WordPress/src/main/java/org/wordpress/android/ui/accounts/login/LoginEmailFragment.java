@@ -75,7 +75,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     private String mRequestedEmail;
     private WPLoginInputRow mEmailInput;
     private boolean isResolvingError;
-    private boolean isThirdParty;
+    private boolean isSocialLogin;
     private boolean shouldResolveError;
 
     @Override
@@ -129,7 +129,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                 // Start login process.
                 if (NetworkUtils.checkConnection(getActivity()) && !isResolvingError) {
                     connectGoogleClient();
-                    isThirdParty = true;
+                    isSocialLogin = true;
                 }
             }
         });
@@ -183,7 +183,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @Override
     protected void onHelp() {
         if (mLoginListener != null) {
-            if (isThirdParty) {
+            if (isSocialLogin) {
                 // Send last email chosen from Google login if available
                 mLoginListener.helpSocialEmailScreen(mGoogleEmail);
             } else {
@@ -324,7 +324,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mEmailInput.setError(null);
-        isThirdParty = false;
+        isSocialLogin = false;
     }
 
     private void showEmailError(int messageId) {
