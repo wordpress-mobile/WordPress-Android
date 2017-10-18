@@ -13,16 +13,16 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import java.util.List;
 
 public class PluginSqlUtils {
-    public static List<PluginModel> getPlugins(@NonNull SiteModel site) {
+    public static List<PluginModel> getSitePlugins(@NonNull SiteModel site) {
         return WellSql.select(PluginModel.class)
                 .where()
                 .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().getAsModel();
     }
 
-    public static void insertOrReplacePlugins(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
+    public static void insertOrReplaceSitePlugins(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
         // Remove previous plugins for this site
-        removePlugins(site);
+        removeSitePlugins(site);
         // Insert new plugins for this site
         for (PluginModel pluginModel : plugins) {
             pluginModel.setLocalSiteId(site.getId());
@@ -30,19 +30,19 @@ public class PluginSqlUtils {
         WellSql.insert(plugins).asSingleTransaction(true).execute();
     }
 
-    private static void removePlugins(@NonNull SiteModel site) {
+    private static void removeSitePlugins(@NonNull SiteModel site) {
         WellSql.delete(PluginModel.class)
                 .where()
                 .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().execute();
     }
 
-    public static int insertOrUpdatePlugin(SiteModel site, PluginModel plugin) {
+    public static int insertOrUpdateSitePlugin(SiteModel site, PluginModel plugin) {
         if (plugin == null) {
             return 0;
         }
 
-        PluginModel oldPlugin = getPluginByName(site, plugin.getName());
+        PluginModel oldPlugin = getSitePluginByName(site, plugin.getName());
         if (oldPlugin == null) {
             WellSql.insert(plugin).execute();
             return 1;
@@ -71,7 +71,7 @@ public class PluginSqlUtils {
         }
     }
 
-    public static PluginModel getPluginByName(SiteModel site, String name) {
+    public static PluginModel getSitePluginByName(SiteModel site, String name) {
         List<PluginModel> result = WellSql.select(PluginModel.class)
                 .where().equals(PluginModelTable.NAME, name)
                 .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
