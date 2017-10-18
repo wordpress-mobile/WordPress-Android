@@ -284,6 +284,10 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     protected void onLoginFinished() {
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
-        mLoginListener.loggedInViaPassword(mOldSitesIDs);
+        if (isSocialLogin) {
+            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
+        } else {
+            mLoginListener.loggedInViaPassword(mOldSitesIDs);
+        }
     }
 }
