@@ -18,6 +18,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
@@ -250,11 +251,13 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
-        if (!isSocialLogin) {
+        if (isSocialLogin) {
+            AccountStore.PushSocialLoginPayload payload = new AccountStore.PushSocialLoginPayload(mIdToken, mService);
+            mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
+        } else {
             saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mRequestedPassword);
+            doFinishLogin();
         }
-
-        doFinishLogin();
     }
 
     @Override
