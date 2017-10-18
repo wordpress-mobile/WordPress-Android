@@ -270,6 +270,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
+    public void loggedInViaSocialAccount(ArrayList<Integer> oldSitesIds) {
+        loggedInAndFinish(oldSitesIds);
+    }
+
+    @Override
     public void loginViaWpcomUsernameInstead() {
         jumpToUsernamePassword(null, null);
     }
