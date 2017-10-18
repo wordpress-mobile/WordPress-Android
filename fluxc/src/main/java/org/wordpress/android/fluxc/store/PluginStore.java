@@ -165,31 +165,31 @@ public class PluginStore extends Store {
         }
         switch ((PluginAction) actionType) {
             case FETCH_SITE_PLUGINS:
-                fetchPlugins((SiteModel) action.getPayload());
+                fetchSitePlugins((SiteModel) action.getPayload());
                 break;
             case FETCH_PLUGIN_INFO:
                 fetchPluginInfo((String) action.getPayload());
                 break;
             case UPDATE_SITE_PLUGIN:
-                updatePlugin((UpdatePluginPayload) action.getPayload());
+                updateSitePlugin((UpdatePluginPayload) action.getPayload());
                 break;
             case FETCHED_SITE_PLUGINS:
-                fetchedPlugins((FetchedPluginsPayload) action.getPayload());
+                fetchedSitePlugins((FetchedPluginsPayload) action.getPayload());
                 break;
             case FETCHED_PLUGIN_INFO:
                 fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
                 break;
             case UPDATED_SITE_PLUGIN:
-                updatedPlugin((UpdatedPluginPayload) action.getPayload());
+                updatedSitePlugin((UpdatedPluginPayload) action.getPayload());
                 break;
         }
     }
 
-    public List<PluginModel> getPlugins(SiteModel site) {
+    public List<PluginModel> getSitePlugins(SiteModel site) {
         return PluginSqlUtils.getPlugins(site);
     }
 
-    public PluginModel getPluginByName(SiteModel site, String name) {
+    public PluginModel getSitePluginByName(SiteModel site, String name) {
         return PluginSqlUtils.getPluginByName(site, name);
     }
 
@@ -197,13 +197,13 @@ public class PluginStore extends Store {
         return PluginSqlUtils.getPluginInfoBySlug(slug);
     }
 
-    private void fetchPlugins(SiteModel site) {
+    private void fetchSitePlugins(SiteModel site) {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             mPluginRestClient.fetchPlugins(site);
         } else {
             FetchPluginsError error = new FetchPluginsError(FetchPluginsErrorType.NOT_AVAILABLE);
             FetchedPluginsPayload payload = new FetchedPluginsPayload(error);
-            fetchedPlugins(payload);
+            fetchedSitePlugins(payload);
         }
     }
 
@@ -211,17 +211,17 @@ public class PluginStore extends Store {
         mPluginWPOrgClient.fetchPluginInfo(plugin);
     }
 
-    private void updatePlugin(UpdatePluginPayload payload) {
+    private void updateSitePlugin(UpdatePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.updatePlugin(payload.site, payload.plugin);
         } else {
             UpdatePluginError error = new UpdatePluginError(UpdatePluginErrorType.NOT_AVAILABLE);
             UpdatedPluginPayload errorPayload = new UpdatedPluginPayload(payload.site, error);
-            updatedPlugin(errorPayload);
+            updatedSitePlugin(errorPayload);
         }
     }
 
-    private void fetchedPlugins(FetchedPluginsPayload payload) {
+    private void fetchedSitePlugins(FetchedPluginsPayload payload) {
         OnPluginsChanged event = new OnPluginsChanged(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
@@ -242,7 +242,7 @@ public class PluginStore extends Store {
         emitChange(event);
     }
 
-    private void updatedPlugin(UpdatedPluginPayload payload) {
+    private void updatedSitePlugin(UpdatedPluginPayload payload) {
         OnPluginChanged event = new OnPluginChanged(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
