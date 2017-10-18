@@ -73,18 +73,18 @@ public class ThemeStoreUnitTest {
         final ThemeModel insertTheme = generateTestTheme(12345, testThemeId, testThemeName);
 
         // verify theme doesn't already exist
-        assertEquals(null, mThemeStore.getThemeByThemeId(testThemeId));
+        assertEquals(null, mThemeStore.getThemeByThemeId(testThemeId, false));
 
         // insert new theme and verify it exists
         ThemeSqlUtils.insertOrUpdateThemeForSite(insertTheme);
-        assertNotNull(mThemeStore.getThemeByThemeId(testThemeId));
-        assertEquals(testThemeName, mThemeStore.getThemeByThemeId(testThemeId).getName());
+        assertNotNull(mThemeStore.getThemeByThemeId(testThemeId, false));
+        assertEquals(testThemeName, mThemeStore.getThemeByThemeId(testThemeId, false).getName());
 
         // update the theme and verify the updated attributes
         insertTheme.setName(testUpdatedName);
         ThemeSqlUtils.insertOrUpdateThemeForSite(insertTheme);
-        assertNotNull(mThemeStore.getThemeByThemeId(testThemeId));
-        assertEquals(testUpdatedName, mThemeStore.getThemeByThemeId(testThemeId).getName());
+        assertNotNull(mThemeStore.getThemeByThemeId(testThemeId, false));
+        assertEquals(testUpdatedName, mThemeStore.getThemeByThemeId(testThemeId, false).getName());
     }
 
     @Test
