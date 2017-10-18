@@ -362,6 +362,10 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     protected void onLoginFinished() {
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
-        mLoginListener.loggedInViaPassword(mOldSitesIDs);
+        if (isSocialLogin2fa) {
+            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
+        } else {
+            mLoginListener.loggedInViaPassword(mOldSitesIDs);
+        }
     }
 }
