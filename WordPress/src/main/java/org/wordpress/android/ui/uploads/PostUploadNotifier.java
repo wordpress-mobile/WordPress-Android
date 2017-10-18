@@ -110,7 +110,7 @@ class PostUploadNotifier {
         }
     }
 
-    // Post could have initial media, or not (nulable)
+    // Post could have initial media, or not (nullable)
     void addPostInfoToForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
         sNotificationData.totalPostItems++;
         if (post.isPage()) {
@@ -165,7 +165,7 @@ class PostUploadNotifier {
         }
     }
 
-    boolean removeNotificationAndStopForegroundServiceIfNoItemsInQueue() {
+    private boolean removeNotificationAndStopForegroundServiceIfNoItemsInQueue() {
         if (sNotificationData.currentPostItem == sNotificationData.totalPostItems
                 && sNotificationData.currentMediaItem == sNotificationData.totalMediaItems) {
             mNotificationManager.cancel(sNotificationData.notificationId);
@@ -178,7 +178,7 @@ class PostUploadNotifier {
         return false;
     }
 
-    void resetNotificationCounters() {
+    private void resetNotificationCounters() {
         sNotificationData.currentPostItem = 0;
         sNotificationData.currentMediaItem = 0;
         sNotificationData.totalMediaItems = 0;
