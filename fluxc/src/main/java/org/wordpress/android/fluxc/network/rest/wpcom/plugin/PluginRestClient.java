@@ -57,7 +57,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 plugins.add(pluginModelFromResponse(site, pluginResponse));
                             }
                         }
-                        mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginsAction(
+                        mDispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginsAction(
                                 new FetchedPluginsPayload(site, plugins)));
                     }
                 },
@@ -75,7 +75,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                         }
                         fetchPluginsError.message = networkError.message;
                         FetchedPluginsPayload payload = new FetchedPluginsPayload(fetchPluginsError);
-                        mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginsAction(payload));
+                        mDispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginsAction(payload));
                     }
                 }
         );
@@ -98,7 +98,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
                         PluginModel pluginModel = pluginModelFromResponse(site, response);
-                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedPluginAction(
+                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(
                                 new UpdatedPluginPayload(site, pluginModel)));
                     }
                 },
@@ -116,7 +116,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                         }
                         updatePluginError.message = networkError.message;
                         UpdatedPluginPayload payload = new UpdatedPluginPayload(site, updatePluginError);
-                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedPluginAction(payload));
+                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
                     }
                 }
         );

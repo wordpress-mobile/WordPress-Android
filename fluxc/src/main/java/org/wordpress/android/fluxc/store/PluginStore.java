@@ -164,22 +164,22 @@ public class PluginStore extends Store {
             return;
         }
         switch ((PluginAction) actionType) {
-            case FETCH_PLUGINS:
+            case FETCH_SITE_PLUGINS:
                 fetchPlugins((SiteModel) action.getPayload());
                 break;
             case FETCH_PLUGIN_INFO:
                 fetchPluginInfo((String) action.getPayload());
                 break;
-            case UPDATE_PLUGIN:
+            case UPDATE_SITE_PLUGIN:
                 updatePlugin((UpdatePluginPayload) action.getPayload());
                 break;
-            case FETCHED_PLUGINS:
+            case FETCHED_SITE_PLUGINS:
                 fetchedPlugins((FetchedPluginsPayload) action.getPayload());
                 break;
             case FETCHED_PLUGIN_INFO:
                 fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
                 break;
-            case UPDATED_PLUGIN:
+            case UPDATED_SITE_PLUGIN:
                 updatedPlugin((UpdatedPluginPayload) action.getPayload());
                 break;
         }
