@@ -36,7 +36,7 @@ class PostUploadNotifier {
     private final UploadService mService;
 
     private final NotificationManager mNotificationManager;
-    private final Notification.Builder mNotificationBuilder;
+    private final NotificationCompat.Builder mNotificationBuilder;
 
     // error notifications will remain visible until the user discards or acts upon them,
     // so we need to be able to map them to the Post that failed
@@ -63,8 +63,9 @@ class PostUploadNotifier {
         sNotificationData = new NotificationData();
         mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                 Context.NOTIFICATION_SERVICE);
-        mNotificationBuilder = new Notification.Builder(mContext.getApplicationContext());
-        mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
+        mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext());
+        mNotificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp)
+                .setColor(context.getResources().getColor(R.color.blue_wordpress));
     }
 
     private void updateForegroundNotification(@Nullable PostModel post) {
