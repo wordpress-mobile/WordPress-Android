@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -256,6 +257,27 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
         } else {
             saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mRequestedPassword);
+            doFinishLogin();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSocialChanged(OnSocialChanged event) {
+        if (event.isError()) {
+            endProgress();
+
+            switch (event.error.type) {
+                // Unable to connect WordPress.com account to social account.
+                case UNABLE_CONNECT:
+                    // TODO: Log UNABLE_CONNECT error.
+                    break;
+                // This social account is already associated with a WordPress.com account.
+                case USER_ALREADY_ASSOCIATED:
+                    // TODO: Log USER_ALREADY_ASSOCIATED error.
+                    break;
+            }
+        } else if (!event.requiresTwoStepAuth) {
             doFinishLogin();
         }
     }
