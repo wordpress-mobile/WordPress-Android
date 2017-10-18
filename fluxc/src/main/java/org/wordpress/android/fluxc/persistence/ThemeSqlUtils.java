@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.persistence;
 
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.wellsql.generated.ThemeModelTable;
@@ -11,11 +12,12 @@ import org.wordpress.android.fluxc.model.ThemeModel;
 import java.util.List;
 
 public class ThemeSqlUtils {
-    public static void insertOrUpdateTheme(@NonNull ThemeModel theme) {
+    public static void insertOrUpdateThemeForSite(@NonNull ThemeModel theme) {
         List<ThemeModel> existing = WellSql.select(ThemeModel.class)
-                .where()
+                .where().beginGroup()
                 .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
-                .endWhere().getAsModel();
+                .equals(ThemeModelTable.LOCAL_SITE_ID, theme.getLocalSiteId())
+                .endGroup().endWhere().getAsModel();
 
         if (existing.isEmpty()) {
             WellSql.insert(theme).asSingleTransaction(true).execute();
@@ -25,21 +27,23 @@ public class ThemeSqlUtils {
         }
     }
 
-    public static void insertOrReplaceWpThemes(@NonNull List<ThemeModel> themes) {
+    public static void insertOrReplaceWpComThemes(@NonNull List<ThemeModel> themes) {
         // remove existing WP.com themes
-        removeThemesWithNoSite();
+        removeWpComThemes();
 
+        // ensure WP.com flag is set before inserting
         for (ThemeModel theme : themes) {
-            theme.setLocalSiteId(0);
+            theme.setIsWpComTheme(true);
         }
 
         WellSql.insert(themes).asSingleTransaction(true).execute();
     }
 
     public static int insertOrReplaceInstalledThemes(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
-        // Remove existing installed themes
+        // remove existing installed themes
         removeThemes(site);
 
+        // ensure site ID is set before inserting
         for (ThemeModel theme : themes) {
             theme.setLocalSiteId(site.getId());
         }
@@ -49,10 +53,42 @@ public class ThemeSqlUtils {
         return themes.size();
     }
 
-    public static List<ThemeModel> getThemesWithNoSite() {
+    public static void insertOrReplaceActiveThemeForSite(@NonNull SiteModel site, @NonNull ThemeModel theme) {
+        // find any existing active theme for the site and unset active flag
+        List<ThemeModel> existing = getActiveThemeForSite(site);
+        if (!existing.isEmpty()) {
+            for (ThemeModel activeTheme : existing) {
+                activeTheme.setActive(false);
+                WellSql.update(ThemeModel.class)
+                        .whereId(activeTheme.getId())
+                        .put(activeTheme).execute();
+            }
+        }
+
+        // make sure active flag is set then add to db
+        theme.setActive(true);
+        insertOrUpdateThemeForSite(theme);
+    }
+
+    public static List<ThemeModel> getActiveThemeForSite(@NonNull SiteModel site) {
+        return WellSql.select(ThemeModel.class)
+                .where().beginGroup()
+                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(ThemeModelTable.ACTIVE, true)
+                .endGroup().endWhere().getAsModel();
+    }
+
+    public static Cursor getWpComThemesCursor() {
         return WellSql.select(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, 0)
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
+                .endWhere().getAsCursor();
+    }
+
+    public static List<ThemeModel> getWpComThemes() {
+        return WellSql.select(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
                 .endWhere().getAsModel();
     }
 
@@ -60,6 +96,13 @@ public class ThemeSqlUtils {
      * Retrieves themes associated with a given site. Installed themes (for Jetpack sites) are the only themes
      * targeted for now.
      */
+    public static Cursor getThemesForSiteAsCursor(@NonNull SiteModel site) {
+        return WellSql.select(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
+                .endWhere().getAsCursor();
+    }
+
     public static List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
         return WellSql.select(ThemeModel.class)
                 .where()
@@ -67,13 +110,39 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
-    public static void removeThemes(@NonNull SiteModel site) {
-        removeThemes(site.getId());
+    /**
+     * @return the first theme that matches a given theme ID; null if none found
+     */
+    public static ThemeModel getThemeByThemeId(@NonNull String themeId, boolean isWpComTheme) {
+        List<ThemeModel> matches = WellSql.select(ThemeModel.class)
+                .where().beginGroup()
+                .equals(ThemeModelTable.THEME_ID, themeId)
+                .equals(ThemeModelTable.IS_WP_COM_THEME, isWpComTheme)
+                .endGroup().endWhere().getAsModel();
+
+        if (matches == null || matches.isEmpty()) {
+            return null;
+        }
+
+        return matches.get(0);
     }
 
-    private static void removeThemesWithNoSite() {
-        // Remove themes whose localSiteId is 0
-        removeThemes(0);
+    public static void removeWpComThemes() {
+        WellSql.delete(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
+                .endWhere().execute();
+    }
+
+    public static void removeTheme(@NonNull ThemeModel theme) {
+        WellSql.delete(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.ID, theme.getId())
+                .endWhere().execute();
+    }
+
+    public static void removeThemes(@NonNull SiteModel site) {
+        removeThemes(site.getId());
     }
 
     private static void removeThemes(int localSiteId) {

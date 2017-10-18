@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class ThemeModel implements Identifiable, Serializable {
     @PrimaryKey @Column private int mId;
 
-    @Column private long mLocalSiteId;
+    @Column private int mLocalSiteId;
     @Column private String mThemeId;
     @Column private String mName;
     @Column private String mDescription;
@@ -26,10 +26,14 @@ public class ThemeModel implements Identifiable, Serializable {
     @Column private String mDemoUrl;
     @Column private String mDownloadUrl;
     @Column private String mStylesheet;
+    @Column private String mCurrency;
     @Column private float mPrice;
     @Column private boolean mActive;
     @Column private boolean mAutoUpdate;
     @Column private boolean mAutoUpdateTranslation;
+
+    // local use only
+    @Column private boolean mIsWpComTheme;
 
     @Override
     public int getId() {
@@ -61,17 +65,19 @@ public class ThemeModel implements Identifiable, Serializable {
                 && StringUtils.equals(getSlug(), otherTheme.getSlug())
                 && StringUtils.equals(getDownloadUrl(), otherTheme.getDownloadUrl())
                 && StringUtils.equals(getStylesheet(), otherTheme.getStylesheet())
+                && StringUtils.equals(getCurrency(), otherTheme.getCurrency())
                 && getPrice() == otherTheme.getPrice()
                 && getActive() == otherTheme.getActive()
                 && getAutoUpdate() == otherTheme.getAutoUpdate()
-                && getAutoUpdateTranslation() == otherTheme.getAutoUpdateTranslation();
+                && getAutoUpdateTranslation() == otherTheme.getAutoUpdateTranslation()
+                && isWpComTheme() == otherTheme.isWpComTheme();
     }
 
-    public long getLocalSiteId() {
+    public int getLocalSiteId() {
         return mLocalSiteId;
     }
 
-    public void setLocalSiteId(long localSiteId) {
+    public void setLocalSiteId(int localSiteId) {
         this.mLocalSiteId = localSiteId;
     }
 
@@ -171,6 +177,14 @@ public class ThemeModel implements Identifiable, Serializable {
         mStylesheet = stylesheet;
     }
 
+    public String getCurrency() {
+        return mCurrency;
+    }
+
+    public void setCurrency(String currency) {
+        mCurrency = currency;
+    }
+
     public float getPrice() {
         return mPrice;
     }
@@ -201,5 +215,13 @@ public class ThemeModel implements Identifiable, Serializable {
 
     public void setAutoUpdateTranslation(boolean autoUpdateTranslation) {
         mAutoUpdateTranslation = autoUpdateTranslation;
+    }
+
+    public boolean isWpComTheme() {
+        return mIsWpComTheme;
+    }
+
+    public void setIsWpComTheme(boolean isWpComTheme) {
+        mIsWpComTheme = isWpComTheme;
     }
 }
