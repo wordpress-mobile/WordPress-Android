@@ -394,7 +394,7 @@ class PostUploadNotifier {
     }
 
     private String getPagesAndOrPostsString() {
-        String pagesAndOrPosts = "";
+        String pagesAndOrPosts;
         if (sNotificationData.totalPageItemsIncludedInPostCount > 0 && sNotificationData.totalPostItems > 0
                 && sNotificationData.totalPostItems > sNotificationData.totalPageItemsIncludedInPostCount) {
             // we have both pages and posts
