@@ -56,7 +56,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private String mEmailAddress;
     private String mPassword;
 
-    public static Login2FaFragment newInstance(String emailAddress, String password) {
+    public static Login2FaFragment newInstance(String emailAddress, String password,
+                                               String idToken, String service,
+                                               boolean isSocialLoginConnect) {
         Login2FaFragment fragment = new Login2FaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);

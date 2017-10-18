@@ -216,8 +216,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             case NEEDS_2FA:
                 // login credentials were correct anyway so, offer to save to SmartLock
                 saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mPassword);
-
-                mLoginListener.needs2fa(mEmailAddress, mRequestedPassword);
+                mLoginListener.needs2fa(mEmailAddress, mRequestedPassword, mIdToken, mService, isSocialLogin);
                 break;
             case INVALID_REQUEST:
                 // TODO: FluxC: could be specific?
