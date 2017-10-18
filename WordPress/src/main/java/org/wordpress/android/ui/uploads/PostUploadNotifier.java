@@ -53,7 +53,7 @@ class PostUploadNotifier {
         int totalPostItems;
         int totalPageItemsIncludedInPostCount;
         int currentPostItem;
-        Map<Integer, Float> mediaItemToProgressMap = new HashMap<>();
+        final Map<Integer, Float> mediaItemToProgressMap = new HashMap<>();
     }
 
     PostUploadNotifier(Context context, UploadService service) {
