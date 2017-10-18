@@ -317,6 +317,12 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgress(true);
+        }
+
+        @Override
         protected Bitmap doInBackground(Void... params) {
             int orientation = ImageUtils.getImageOrientation(getActivity(), mMediaUri);
             byte[] bytes = ImageUtils.createThumbnailFromUri(
@@ -335,6 +341,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                 } else {
                     showLoadingError();
                 }
+                showProgress(false);
             }
         }
     }
