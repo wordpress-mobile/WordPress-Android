@@ -1046,9 +1046,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            // If the WebView or EditText has received a touch event, the keyboard will be displayed and the action bar
-            // should hide
+        // In landscape mode, if the title or content view has received a touch event, the keyboard will be
+        // displayed and the action bar should hide
+        if (event.getAction() == MotionEvent.ACTION_UP
+                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mHideActionBarOnSoftKeyboardUp = true;
             hideActionBarIfNeeded();
         }
