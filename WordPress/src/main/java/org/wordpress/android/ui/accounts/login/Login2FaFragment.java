@@ -21,6 +21,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
@@ -238,10 +239,15 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
-        AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(mEmailAddress, mPassword);
-        payload.twoStepCode = twoStepCode;
-        payload.shouldSendTwoStepSms = shouldSendTwoStepSMS;
-        mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+        if (isSocialLogin2fa && !shouldSendTwoStepSMS) {
+            AccountStore.PushSocialAuthPayload payload = new AccountStore.PushSocialAuthPayload(mUserId, mType, mNonce, twoStepCode);
+            mDispatcher.dispatch(AccountActionBuilder.newPushSocialAuthAction(payload));
+        } else {
+            AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(mEmailAddress, mPassword);
+            payload.twoStepCode = twoStepCode;
+            payload.shouldSendTwoStepSms = shouldSendTwoStepSMS;
+            mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+        }
     }
 
     private String getAuthCodeFromClipboard() {
