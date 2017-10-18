@@ -54,6 +54,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     public void onResponse(ThemeJetpackResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to Jetpack theme deletion request.");
                         ThemeModel responseTheme = createThemeFromJetpackResponse(response);
+                        responseTheme.setId(theme.getId());
+                        responseTheme.setLocalSiteId(site.getId());
                         ActivateThemePayload payload = new ActivateThemePayload(site, responseTheme);
                         mDispatcher.dispatch(ThemeActionBuilder.newDeletedThemeAction(payload));
                     }
@@ -71,14 +73,15 @@ public class ThemeRestClient extends BaseWPComRestClient {
 
     /** Endpoint: v1.1/site/$siteId/themes/$themeId/install */
     public void installTheme(@NonNull final SiteModel site, @NonNull final ThemeModel theme) {
-        String themeIdWIthSuffix = getThemeIdWithWpComSuffix(theme);
-        String url = WPCOMREST.sites.site(site.getSiteId()).themes.theme(themeIdWIthSuffix).install.getUrlV1_1();
+        String themeId = getThemeIdWithWpComSuffix(theme);
+        String url = WPCOMREST.sites.site(site.getSiteId()).themes.theme(themeId).install.getUrlV1_1();
         add(WPComGsonRequest.buildPostRequest(url, null, ThemeJetpackResponse.class,
                 new Response.Listener<ThemeJetpackResponse>() {
                     @Override
                     public void onResponse(ThemeJetpackResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to Jetpack theme installation request.");
                         ThemeModel responseTheme = createThemeFromJetpackResponse(response);
+                        responseTheme.setLocalSiteId(site.getId());
                         ActivateThemePayload payload = new ActivateThemePayload(site, responseTheme);
                         mDispatcher.dispatch(ThemeActionBuilder.newInstalledThemeAction(payload));
                     }
@@ -255,6 +258,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
         theme.setScreenshotUrl(response.screenshot);
         theme.setDescription(response.description);
         theme.setDownloadUrl(response.download_uri);
+        if (response.price != null) {
+            theme.setCurrency(response.price.currency);
+            theme.setPrice(response.price.value);
+        }
         return theme;
     }
 
@@ -274,7 +281,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
         // the screenshot field in Jetpack responses does not contain a protocol so we'll prepend 'https'
         String screenshotUrl = response.screenshot;
         if (screenshotUrl != null && screenshotUrl.startsWith("//")) {
-            screenshotUrl = "https" + screenshotUrl;
+            screenshotUrl = "https:" + screenshotUrl;
         }
         theme.setScreenshotUrl(screenshotUrl);
 
@@ -314,7 +321,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
     private @NonNull String getThemeIdWithWpComSuffix(ThemeModel theme) {
         if (theme == null || theme.getThemeId() == null) {
             return "";
+        } else if (theme.getThemeId().endsWith("-wpcom")) {
+            return theme.getThemeId();
         }
+
         return theme.getThemeId() + "-wpcom";
     }
 }
