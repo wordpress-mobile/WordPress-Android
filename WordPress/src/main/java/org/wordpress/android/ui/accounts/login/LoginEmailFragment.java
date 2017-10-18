@@ -481,8 +481,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
+        disconnectGoogleClient();
+
         if (event.isError()) {
-            disconnectGoogleClient();
             AppLog.e(T.API, "LoginEmailFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
@@ -496,8 +497,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSocialChanged(OnSocialChanged event) {
+        disconnectGoogleClient();
+
         if (event.isError()) {
-            disconnectGoogleClient();
             AppLog.e(T.API, "LoginEmailFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
