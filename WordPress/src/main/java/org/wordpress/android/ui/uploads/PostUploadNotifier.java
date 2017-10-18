@@ -113,7 +113,7 @@ class PostUploadNotifier {
         }
     }
 
-    // Post could have initial media, or not (nulable)
+    // Post could have initial media, or not (nullable)
     void addPostInfoToForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
         sNotificationData.totalPostItems++;
         if (post.isPage()) {
@@ -153,7 +153,7 @@ class PostUploadNotifier {
 //        doNotify(sPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
     }
 
-    void incrementUploadedPostCountFromForegroundNotification(PostModel post) {
+    void incrementUploadedPostCountFromForegroundNotification(@NonNull PostModel post) {
         sNotificationData.currentPostItem++;
         if (post.isPage()) {
             sNotificationData.totalPageItemsIncludedInPostCount--;
@@ -173,7 +173,7 @@ class PostUploadNotifier {
         }
     }
 
-    boolean removeNotificationAndStopForegroundServiceIfNoItemsInQueue() {
+    private boolean removeNotificationAndStopForegroundServiceIfNoItemsInQueue() {
         if (sNotificationData.currentPostItem == sNotificationData.totalPostItems
                 && sNotificationData.currentMediaItem == sNotificationData.totalMediaItems) {
             mNotificationManager.cancel(sNotificationData.notificationId);
@@ -186,7 +186,7 @@ class PostUploadNotifier {
         return false;
     }
 
-    void resetNotificationCounters() {
+    private void resetNotificationCounters() {
         sNotificationData.currentPostItem = 0;
         sNotificationData.currentMediaItem = 0;
         sNotificationData.totalMediaItems = 0;
@@ -195,7 +195,7 @@ class PostUploadNotifier {
         sNotificationData.mediaItemToProgressMap.clear();
     }
 
-    void cancelErrorNotification(PostModel post) {
+    void cancelErrorNotification(@NonNull PostModel post) {
         Integer errorNotificationId = sPostIdToErrorNotificationId.get(post.getId());
         if (errorNotificationId != null && errorNotificationId != 0) {
             mNotificationManager.cancel(errorNotificationId);
@@ -203,7 +203,7 @@ class PostUploadNotifier {
         }
     }
 
-    void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstTimePublish) {
+    void updateNotificationSuccess(@NonNull PostModel post, @NonNull SiteModel site, boolean isFirstTimePublish) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationSuccess");
 
         // Get the shareableUrl
@@ -281,7 +281,7 @@ class PostUploadNotifier {
         return post.getLocalSiteId() + remotePostId;
     }
 
-    void updateNotificationError(PostModel post, SiteModel site, String errorMessage) {
+    void updateNotificationError(@NonNull PostModel post, @NonNull SiteModel site, String errorMessage) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationError: " + errorMessage);
 
         NotificationCompat.Builder notificationBuilder =
@@ -385,7 +385,7 @@ class PostUploadNotifier {
     }
 
     private String buildNotificationTitleForPost(PostModel post) {
-        String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
+        String postTitle = (post == null || TextUtils.isEmpty(post.getTitle())) ? mContext.getString(R.string.untitled) : post.getTitle();
         return String.format(mContext.getString(R.string.uploading_post), postTitle);
     }
 
@@ -402,7 +402,7 @@ class PostUploadNotifier {
                 mContext.getString(R.string.uploading_subtitle_posts_only),
                 getCurrentPostItem() + 1,
                 sNotificationData.totalPostItems,
-                post.isPage() ? mContext.getString(R.string.page).toLowerCase()
+                (post != null && post.isPage()) ? mContext.getString(R.string.page).toLowerCase()
                         : mContext.getString(R.string.post).toLowerCase()
         );
         return uploadingMessage;
@@ -420,7 +420,7 @@ class PostUploadNotifier {
     }
 
     private String getPagesAndOrPostsString() {
-        String pagesAndOrPosts = "";
+        String pagesAndOrPosts;
         if (sNotificationData.totalPageItemsIncludedInPostCount > 0 && sNotificationData.totalPostItems > 0
                 && sNotificationData.totalPostItems > sNotificationData.totalPageItemsIncludedInPostCount) {
             // we have both pages and posts
