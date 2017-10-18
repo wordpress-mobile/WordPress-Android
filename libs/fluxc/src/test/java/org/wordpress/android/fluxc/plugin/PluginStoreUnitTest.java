@@ -51,12 +51,12 @@ public class PluginStoreUnitTest {
 
         // Set 3 plugins
         PluginSqlUtils.insertOrReplacePlugins(site, generatePlugins("akismet", "hello", "jetpack"));
-        List<PluginModel> plugins = mPluginStore.getPlugins(site);
+        List<PluginModel> plugins = mPluginStore.getSitePlugins(site);
         assertEquals(3, plugins.size());
 
         // Set 1 plugin
         PluginSqlUtils.insertOrReplacePlugins(site, generatePlugins("jetpack"));
-        plugins = mPluginStore.getPlugins(site);
+        plugins = mPluginStore.getSitePlugins(site);
         // make sure the previous plugins are removed
         assertEquals(1, plugins.size());
         assertEquals("jetpack", plugins.get(0).getName());
@@ -77,7 +77,7 @@ public class PluginStoreUnitTest {
 
         String name = "akismet/akismet";
         PluginSqlUtils.insertOrUpdatePlugin(site, generatePlugin(name));
-        PluginModel plugin = mPluginStore.getPluginByName(site, name);
+        PluginModel plugin = mPluginStore.getSitePluginByName(site, name);
         assertEquals(name, plugin.getName());
     }
 }
