@@ -26,7 +26,9 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 class PostUploadNotifier {
@@ -51,6 +53,7 @@ class PostUploadNotifier {
         int totalPostItems;
         int totalPageItemsIncludedInPostCount;
         int currentPostItem;
+        final Map<Integer, Float> mediaItemToProgressMap = new HashMap<>();
     }
 
     PostUploadNotifier(Context context, UploadService service) {
@@ -66,7 +69,7 @@ class PostUploadNotifier {
 
     private void updateForegroundNotification(@Nullable PostModel post) {
         updateNotificationBuilder(post);
-        doNotify(sNotificationData.notificationId, mNotificationBuilder.build());
+        updateNotificationProgress();
     }
 
     private void updateNotificationBuilder(@Nullable PostModel post) {
@@ -122,13 +125,19 @@ class PostUploadNotifier {
         startOrUpdateForegroundNotification(post);
     }
 
-    void addMediaInfoToForegroundNotification(@NonNull List<MediaModel> media) {
-        sNotificationData.totalMediaItems += media.size();
+    void addMediaInfoToForegroundNotification(@NonNull List<MediaModel> mediaList) {
+        sNotificationData.totalMediaItems += mediaList.size();
+        // setup progresses for each media item
+        for (MediaModel media : mediaList) {
+            setProgressForMediaItem(media.getId(), 0.0f);
+        }
         startOrUpdateForegroundNotification(null);
     }
 
     void addMediaInfoToForegroundNotification(@NonNull MediaModel media) {
         sNotificationData.totalMediaItems++;
+        // setup progress for media item
+        setProgressForMediaItem(media.getId(), 0.0f);
         startOrUpdateForegroundNotification(null);
     }
 
@@ -156,9 +165,8 @@ class PostUploadNotifier {
         }
     }
 
-    void incrementUploadedMediaCountFromProgressNotificationOrFinish() {
+    void incrementUploadedMediaCountFromProgressNotificationOrFinish(int mediaId) {
         sNotificationData.currentMediaItem++;
-
         if (!removeNotificationAndStopForegroundServiceIfNoItemsInQueue()) {
             // update Notification now
             updateForegroundNotification(null);
@@ -184,6 +192,7 @@ class PostUploadNotifier {
         sNotificationData.totalMediaItems = 0;
         sNotificationData.totalPostItems = 0;
         sNotificationData.totalPageItemsIncludedInPostCount = 0;
+        sNotificationData.mediaItemToProgressMap.clear();
     }
 
     void cancelErrorNotification(@NonNull PostModel post) {
@@ -309,31 +318,57 @@ class PostUploadNotifier {
             sPostIdToErrorNotificationId.put(post.getId(), errorNotificationId);
         }
 
-//        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
-//        if (notificationData.notificationErrorId == 0) {
-//            notificationData.notificationErrorId = notificationData.notificationId + (new Random()).nextInt();
-//        }
         doNotify(errorNotificationId, notificationBuilder.build());
     }
 
-    void updateNotificationProgress(PostModel post, float progress) {
+    void updateNotificationProgressForMedia(MediaModel media, float progress) {
+        if (sNotificationData.totalMediaItems == 0 && sNotificationData.totalPostItems == 0) {
+            return;
+        }
 
-        //TODO MEDIA reimplement although most probably will REMOVE THIS COMPLETELY
-//        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
-//        if (notificationData.totalMediaItems == 0) {
-//            return;
-//        }
-//
-//        // Simple way to show progress of entire post upload
-//        // Would be better if we could get total bytes for all media items.
-//        double currentChunkProgress = (notificationData.itemProgressSize * progress);
-//
-//        if (notificationData.currentMediaItem > 1) {
-//            currentChunkProgress += notificationData.itemProgressSize * (notificationData.currentMediaItem - 1);
-//        }
-//
-//        mNotificationBuilder.setProgress(100, (int) Math.ceil(currentChunkProgress), false);
-//        doNotify(sPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
+        // only update if media item is in our map - this check is performed because
+        // it could happen that a media item is already done uploading but we receive an upload
+        // progress event from FluxC after that. We just need to avoid re-adding the item to the map.
+        Float currentProgress = sNotificationData.mediaItemToProgressMap.get(media.getId());
+        // also, only set updates in increments of 5% per media item to avoid lots of notification updates
+        if (currentProgress != null && progress > (currentProgress + 0.05f)) {
+            setProgressForMediaItem(media.getId(), progress);
+            updateNotificationProgress();
+        }
+    }
+
+    private void updateNotificationProgress() {
+        if (sNotificationData.totalMediaItems == 0 && sNotificationData.totalPostItems == 0) {
+            return;
+        }
+
+        mNotificationBuilder.setProgress(100, (int) Math.ceil(getCurrentOverallProgress() * 100), false);
+        doNotify(sNotificationData.notificationId, mNotificationBuilder.build());
+    }
+
+    private void setProgressForMediaItem(int mediaId, float progress) {
+        sNotificationData.mediaItemToProgressMap.put(mediaId, progress);
+    }
+
+    private float getCurrentOverallProgress() {
+        int totalItemCount = sNotificationData.totalPostItems + sNotificationData.totalMediaItems;
+        float currentMediaProgress = getCurrentMediaProgress();
+        float overAllProgress;
+        overAllProgress = sNotificationData.totalPostItems > 0 ?
+                (sNotificationData.currentPostItem/sNotificationData.totalPostItems) * totalItemCount : 0;
+        overAllProgress += sNotificationData.totalMediaItems > 0 ?
+                (sNotificationData.currentMediaItem/sNotificationData.totalMediaItems) * totalItemCount : 0;
+        overAllProgress += currentMediaProgress;
+        return overAllProgress;
+    }
+
+    private float getCurrentMediaProgress() {
+        float currentMediaProgress = 0.0f;
+        int size = sNotificationData.mediaItemToProgressMap.values().size();
+        for (Float itemProgress : sNotificationData.mediaItemToProgressMap.values()) {
+            currentMediaProgress += (itemProgress / size);
+        }
+        return currentMediaProgress;
     }
 
     private synchronized void doNotify(long id, Notification notification) {
@@ -347,15 +382,6 @@ class PostUploadNotifier {
 
     void setTotalMediaItems(PostModel post, int totalMediaItems) {
         sNotificationData.totalMediaItems+=totalMediaItems;
-
-        // TODO MEDIA REIMPLEMENT OR DELETE THIS
-//        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
-//        notificationData.totalMediaItems = totalMediaItems;
-//        notificationData.itemProgressSize = 100.0f / notificationData.totalMediaItems;
-    }
-
-    void setCurrentMediaItem(PostModel post, int currentItem) {
-        // TODO MEDIA REIMPLEMENT OR DELETE THIS
     }
 
     private String buildNotificationTitleForPost(PostModel post) {

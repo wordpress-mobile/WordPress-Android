@@ -538,8 +538,12 @@ public class UploadService extends Service {
                     }
                 }
             }
-            mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotificationOrFinish();
+            mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotificationOrFinish(event.media.getId());
             stopServiceIfUploadsComplete();
+        } else {
+            // in-progress upload
+            // Progress update
+            mPostUploadNotifier.updateNotificationProgressForMedia(event.media, event.progress);
         }
     }
 

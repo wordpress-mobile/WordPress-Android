@@ -342,7 +342,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                             }
 
                             mediaItemCount++;
-                            mPostUploadNotifier.setCurrentMediaItem(mPost, mediaItemCount);
                             mPostUploadNotifier.updateNotificationIcon(mPost, imageIcon);
                             mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaModel);
 
@@ -624,9 +623,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                     + ", post id: " + sCurrentUploadingPost.getId());
             mMediaLatchMap.get(event.media.getId()).countDown();
             mMediaLatchMap.remove(event.media.getId());
-        } else {
-            // Progress update
-            mPostUploadNotifier.updateNotificationProgress(sCurrentUploadingPost, event.progress);
         }
     }
 }
