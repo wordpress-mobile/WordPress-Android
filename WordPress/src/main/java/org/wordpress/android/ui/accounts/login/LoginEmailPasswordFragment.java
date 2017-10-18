@@ -268,13 +268,11 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             endProgress();
 
             switch (event.error.type) {
-                // Unable to connect WordPress.com account to social account.
                 case UNABLE_CONNECT:
-                    // TODO: Log UNABLE_CONNECT error.
+                    AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
                     break;
-                // This social account is already associated with a WordPress.com account.
                 case USER_ALREADY_ASSOCIATED:
-                    // TODO: Log USER_ALREADY_ASSOCIATED error.
+                    AppLog.e(T.API, "This social account is already associated with a WordPress.com account.");
                     break;
             }
         } else if (!event.requiresTwoStepAuth) {
