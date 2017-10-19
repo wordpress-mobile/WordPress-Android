@@ -137,7 +137,9 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             if (!TextUtils.isEmpty(mPassword)) {
                 mPasswordInput.setText(mPassword);
             } else {
-                autoFillFromBuildConfig("DEBUG_DOTCOM_LOGIN_PASSWORD", mPasswordInput.getEditText());
+                if (BuildConfig.DEBUG) {
+                    mPasswordInput.getEditText().setText(BuildConfig.DEBUG_DOTCOM_LOGIN_PASSWORD);
+                }
             }
         } else {
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
