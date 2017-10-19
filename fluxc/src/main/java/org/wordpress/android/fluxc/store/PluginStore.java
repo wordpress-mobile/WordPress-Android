@@ -164,46 +164,46 @@ public class PluginStore extends Store {
             return;
         }
         switch ((PluginAction) actionType) {
-            case FETCH_PLUGINS:
-                fetchPlugins((SiteModel) action.getPayload());
+            case FETCH_SITE_PLUGINS:
+                fetchSitePlugins((SiteModel) action.getPayload());
                 break;
             case FETCH_PLUGIN_INFO:
                 fetchPluginInfo((String) action.getPayload());
                 break;
-            case UPDATE_PLUGIN:
-                updatePlugin((UpdatePluginPayload) action.getPayload());
+            case UPDATE_SITE_PLUGIN:
+                updateSitePlugin((UpdatePluginPayload) action.getPayload());
                 break;
-            case FETCHED_PLUGINS:
-                fetchedPlugins((FetchedPluginsPayload) action.getPayload());
+            case FETCHED_SITE_PLUGINS:
+                fetchedSitePlugins((FetchedPluginsPayload) action.getPayload());
                 break;
             case FETCHED_PLUGIN_INFO:
                 fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
                 break;
-            case UPDATED_PLUGIN:
-                updatedPlugin((UpdatedPluginPayload) action.getPayload());
+            case UPDATED_SITE_PLUGIN:
+                updatedSitePlugin((UpdatedPluginPayload) action.getPayload());
                 break;
         }
     }
 
-    public List<PluginModel> getPlugins(SiteModel site) {
-        return PluginSqlUtils.getPlugins(site);
+    public List<PluginModel> getSitePlugins(SiteModel site) {
+        return PluginSqlUtils.getSitePlugins(site);
     }
 
-    public PluginModel getPluginByName(SiteModel site, String name) {
-        return PluginSqlUtils.getPluginByName(site, name);
+    public PluginModel getSitePluginByName(SiteModel site, String name) {
+        return PluginSqlUtils.getSitePluginByName(site, name);
     }
 
     public PluginInfoModel getPluginInfoBySlug(String slug) {
         return PluginSqlUtils.getPluginInfoBySlug(slug);
     }
 
-    private void fetchPlugins(SiteModel site) {
+    private void fetchSitePlugins(SiteModel site) {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             mPluginRestClient.fetchPlugins(site);
         } else {
             FetchPluginsError error = new FetchPluginsError(FetchPluginsErrorType.NOT_AVAILABLE);
             FetchedPluginsPayload payload = new FetchedPluginsPayload(error);
-            fetchedPlugins(payload);
+            fetchedSitePlugins(payload);
         }
     }
 
@@ -211,22 +211,22 @@ public class PluginStore extends Store {
         mPluginWPOrgClient.fetchPluginInfo(plugin);
     }
 
-    private void updatePlugin(UpdatePluginPayload payload) {
+    private void updateSitePlugin(UpdatePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.updatePlugin(payload.site, payload.plugin);
         } else {
             UpdatePluginError error = new UpdatePluginError(UpdatePluginErrorType.NOT_AVAILABLE);
             UpdatedPluginPayload errorPayload = new UpdatedPluginPayload(payload.site, error);
-            updatedPlugin(errorPayload);
+            updatedSitePlugin(errorPayload);
         }
     }
 
-    private void fetchedPlugins(FetchedPluginsPayload payload) {
+    private void fetchedSitePlugins(FetchedPluginsPayload payload) {
         OnPluginsChanged event = new OnPluginsChanged(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            PluginSqlUtils.insertOrReplacePlugins(payload.site, payload.plugins);
+            PluginSqlUtils.insertOrReplaceSitePlugins(payload.site, payload.plugins);
         }
         emitChange(event);
     }
@@ -242,14 +242,14 @@ public class PluginStore extends Store {
         emitChange(event);
     }
 
-    private void updatedPlugin(UpdatedPluginPayload payload) {
+    private void updatedSitePlugin(UpdatedPluginPayload payload) {
         OnPluginChanged event = new OnPluginChanged(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
             payload.plugin.setLocalSiteId(payload.site.getId());
             event.plugin = payload.plugin;
-            PluginSqlUtils.insertOrUpdatePlugin(payload.site, payload.plugin);
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
         }
         emitChange(event);
     }

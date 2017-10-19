@@ -13,17 +13,17 @@ import org.wordpress.android.fluxc.store.PluginStore.UpdatedPluginPayload;
 public enum PluginAction implements IAction {
     // Remote actions
     @Action(payloadType = SiteModel.class)
-    FETCH_PLUGINS,
+    FETCH_SITE_PLUGINS,
     @Action(payloadType = String.class)
     FETCH_PLUGIN_INFO,
     @Action(payloadType = UpdatePluginPayload.class)
-    UPDATE_PLUGIN,
+    UPDATE_SITE_PLUGIN,
 
     // Remote responses
     @Action(payloadType = FetchedPluginsPayload.class)
-    FETCHED_PLUGINS,
+    FETCHED_SITE_PLUGINS,
     @Action(payloadType = FetchedPluginInfoPayload.class)
     FETCHED_PLUGIN_INFO,
     @Action(payloadType = UpdatedPluginPayload.class)
-    UPDATED_PLUGIN
+    UPDATED_SITE_PLUGIN
 }
