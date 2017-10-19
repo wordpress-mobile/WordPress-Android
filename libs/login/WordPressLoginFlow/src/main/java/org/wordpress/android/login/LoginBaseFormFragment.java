@@ -270,21 +270,6 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         }
     }
 
-    /*
-     * auto-fill the username and password from BuildConfig/gradle.properties (developer feature,
-     * only enabled for DEBUG releases)
-     */
-    protected void autoFillFromBuildConfig(String configValueName, TextView textView) {
-        if (!BuildConfig.DEBUG) return;
-
-        // TODO: Restore pre-filled login for development
-//        String value = (String) WordPress.getBuildConfigValue(getActivity().getApplication(), configValueName);
-//        if (!TextUtils.isEmpty(value)) {
-//            textView.setText(value);
-//            AppLog.d(AppLog.T.NUX, "Auto-filled from build config: " + configValueName);
-//        }
-    }
-
     // OnChanged events
 
     @SuppressWarnings("unused")

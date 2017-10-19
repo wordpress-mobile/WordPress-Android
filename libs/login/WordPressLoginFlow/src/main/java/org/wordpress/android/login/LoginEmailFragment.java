@@ -70,7 +70,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     protected void setupContent(ViewGroup rootView) {
         mEmailInput = (WPLoginInputRow) rootView.findViewById(R.id.login_email_row);
-        autoFillFromBuildConfig("DEBUG_DOTCOM_LOGIN_EMAIL", mEmailInput.getEditText());
+        if (BuildConfig.DEBUG) {
+            mEmailInput.getEditText().setText(BuildConfig.DEBUG_DOTCOM_LOGIN_EMAIL);
+        }
         mEmailInput.addTextChangedListener(this);
         mEmailInput.setOnEditorCommitListener(this);
     }

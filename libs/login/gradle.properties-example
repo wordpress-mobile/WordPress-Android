@@ -1,0 +1,6 @@
+# Project-wide Gradle settings.
+
+# Optional: used to autofill username and password fields at login on debug build only
+wp.debug.dotcom_login_email =
+wp.debug.dotcom_login_username =
+wp.debug.dotcom_login_password =
