@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
 }
@@ -63,7 +63,9 @@ kapt {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
 
     // WordPress libs
     compile ('org.wordpress:utils:1.16.0') {
@@ -85,12 +87,11 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.8.1'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'org.apache.commons:commons-text:1.1'
 
     // Dagger
-    compile 'com.google.dagger:dagger:2.11'
-    kapt 'com.google.dagger:dagger-compiler:2.11'
+    compile "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     provided 'org.glassfish:javax.annotation:10.0-b28'
 }
 
