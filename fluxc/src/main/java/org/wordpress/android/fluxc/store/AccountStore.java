@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 
@@ -136,6 +135,7 @@ public class AccountStore extends Store {
         public String nonceSms;
         public String notificationSent;
         public String userId;
+        public boolean requiresTwoStepAuth;
 
         public OnSocialChanged() {
         }
@@ -270,6 +270,11 @@ public class AccountStore extends Store {
         public String message;
         public String nonce;
 
+        public AccountSocialError(@NonNull String type, @NonNull String message) {
+            this.type = AccountSocialErrorType.fromString(type);
+            this.message = message;
+        }
+
         public AccountSocialError(@NonNull byte[] response) {
             try {
                 String responseBody = new String(response, "UTF-8");
@@ -288,7 +293,9 @@ public class AccountStore extends Store {
     public enum AccountSocialErrorType {
         INVALID_TOKEN,
         INVALID_TWO_STEP_CODE,
+        UNABLE_CONNECT,
         UNKNOWN_USER,
+        USER_ALREADY_ASSOCIATED,
         USER_EXISTS,
         GENERIC_ERROR;
 
@@ -429,6 +436,9 @@ public class AccountStore extends Store {
                 break;
             case PUSH_SOCIAL_AUTH:
                 createPushSocialAuth((PushSocialAuthPayload) payload);
+                break;
+            case PUSH_SOCIAL_CONNECT:
+                createPushSocialConnect((PushSocialLoginPayload) payload);
                 break;
             case PUSH_SOCIAL_LOGIN:
                 createPushSocialLogin((PushSocialLoginPayload) payload);
@@ -587,9 +597,10 @@ public class AccountStore extends Store {
             OnSocialChanged event = new OnSocialChanged();
             event.error = payload.error;
             emitChange(event);
-        // No error, but two-factor authentication is required; emit only social change.
-        } else if (TextUtils.isEmpty(payload.bearerToken)) {
+        // No error, but either two-factor authentication or social connect is required; emit only social change.
+        } else if (!payload.hasToken()) {
             OnSocialChanged event = new OnSocialChanged(payload);
+            event.requiresTwoStepAuth = payload.hasTwoStepTypes();
             emitChange(event);
         // No error and two-factor authentication is not required; emit only authentication change.
         } else {
@@ -627,6 +638,10 @@ public class AccountStore extends Store {
 
     private void createPushSocialAuth(PushSocialAuthPayload payload) {
         mAccountRestClient.pushSocialAuth(payload.userId, payload.type, payload.nonce, payload.code);
+    }
+
+    private void createPushSocialConnect(PushSocialLoginPayload payload) {
+        mAccountRestClient.pushSocialConnect(payload.idToken, payload.service);
     }
 
     private void createPushSocialLogin(PushSocialLoginPayload payload) {
