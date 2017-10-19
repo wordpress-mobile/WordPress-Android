@@ -389,9 +389,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                     break;
                 case UNABLE_CONNECT:
                     AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
+                    doFinishLogin();
                     break;
                 case USER_ALREADY_ASSOCIATED:
                     AppLog.e(T.API, "This social account is already associated with a WordPress.com account.");
+                    doFinishLogin();
                     break;
             }
         } else {
