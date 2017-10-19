@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -33,6 +34,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
@@ -374,6 +376,16 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             Fragment fragment = mFragmentMap.get(position);
             if (fragment != null) {
                 ((MediaPreviewFragment) fragment).playMedia();
+            }
+        }
+
+        @Override
+        public void restoreState(Parcelable state, ClassLoader loader) {
+            // work around https://code.google.com/p/android/issues/detail?id=42601
+            try {
+                super.restoreState(state, loader);
+            } catch (IllegalStateException e) {
+                AppLog.e(AppLog.T.MEDIA, e);
             }
         }
     }
