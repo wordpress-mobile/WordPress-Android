@@ -274,8 +274,12 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                     break;
                 case USER_ALREADY_ASSOCIATED:
                     AppLog.e(T.API, "This social account is already associated with a WordPress.com account.");
-                    doFinishLogin();
                     break;
+            }
+
+            // Finish login on social connect error.
+            if (isSocialLogin) {
+                doFinishLogin();
             }
         } else if (!event.requiresTwoStepAuth) {
             doFinishLogin();
