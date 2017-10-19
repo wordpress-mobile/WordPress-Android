@@ -20,10 +20,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResponse.FetchPluginsResponse;
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsError;
-import org.wordpress.android.fluxc.store.PluginStore.FetchPluginsErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginError;
-import org.wordpress.android.fluxc.store.PluginStore.UpdatePluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
 
 import java.io.UnsupportedEncodingException;
@@ -65,11 +65,11 @@ public class PluginRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         FetchSitePluginsError fetchPluginsError
-                                = new FetchSitePluginsError(FetchPluginsErrorType.GENERIC_ERROR);
+                                = new FetchSitePluginsError(FetchSitePluginsErrorType.GENERIC_ERROR);
                         if (networkError instanceof WPComGsonNetworkError) {
                             switch (((WPComGsonNetworkError) networkError).apiError) {
                                 case "unauthorized":
-                                    fetchPluginsError.type = FetchPluginsErrorType.UNAUTHORIZED;
+                                    fetchPluginsError.type = FetchSitePluginsErrorType.UNAUTHORIZED;
                                     break;
                             }
                         }
@@ -106,11 +106,11 @@ public class PluginRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         UpdateSitePluginError updatePluginError
-                                = new UpdateSitePluginError(UpdatePluginErrorType.GENERIC_ERROR);
+                                = new UpdateSitePluginError(UpdateSitePluginErrorType.GENERIC_ERROR);
                         if (networkError instanceof WPComGsonNetworkError) {
                             switch (((WPComGsonNetworkError) networkError).apiError) {
                                 case "unauthorized":
-                                    updatePluginError.type = UpdatePluginErrorType.UNAUTHORIZED;
+                                    updatePluginError.type = UpdateSitePluginErrorType.UNAUTHORIZED;
                                     break;
                             }
                         }
