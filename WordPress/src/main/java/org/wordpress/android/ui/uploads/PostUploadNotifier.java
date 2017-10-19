@@ -214,7 +214,9 @@ class PostUploadNotifier {
 
         // Notification builder
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext.getApplicationContext());
+                new NotificationCompat.Builder(mContext.getApplicationContext())
+                        .setSmallIcon(R.drawable.ic_my_sites_24dp)
+                        .setColor(mContext.getResources().getColor(R.color.blue_wordpress));
         String notificationTitle;
         String notificationMessage;
 
