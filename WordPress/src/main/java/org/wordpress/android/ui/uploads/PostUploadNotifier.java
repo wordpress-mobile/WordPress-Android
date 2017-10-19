@@ -222,13 +222,12 @@ class PostUploadNotifier {
 
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
         notificationTitle = "\"" + postTitle + "\" ";
+        notificationMessage = site.getName();
 
         if (PostStatus.DRAFT.equals(PostStatus.fromPost(post))) {
             notificationTitle += mContext.getString(R.string.draft_uploaded);
-            notificationMessage = String.format(mContext.getString(R.string.post_draft_param), postTitle);
         } else if (PostStatus.SCHEDULED.equals(PostStatus.fromPost(post))) {
             notificationTitle += mContext.getString(post.isPage() ? R.string.page_scheduled : R.string.post_scheduled);
-            notificationMessage = String.format(mContext.getString(R.string.post_scheduled_param), postTitle);
         } else {
             if (post.isPage()) {
                 notificationTitle += mContext.getString(
@@ -237,8 +236,6 @@ class PostUploadNotifier {
                 notificationTitle += mContext.getString(
                         isFirstTimePublish ? R.string.post_published : R.string.post_updated);
             }
-            notificationMessage = String.format(mContext.getString(
-                    isFirstTimePublish ? R.string.post_published_param : R.string.post_updated_param), postTitle);
         }
 
         notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
