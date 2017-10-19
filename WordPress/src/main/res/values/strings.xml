@@ -287,6 +287,7 @@
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
+    <string name="post_publish_q_action">Publish</string>
 
     <!-- post view -->
     <string name="post_id">Post</string>

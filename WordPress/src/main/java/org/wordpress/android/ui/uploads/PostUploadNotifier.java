@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -37,10 +36,6 @@ class PostUploadNotifier {
 
     private final NotificationManager mNotificationManager;
     private final Notification.Builder mNotificationBuilder;
-
-    // error notifications will remain visible until the user discards or acts upon them,
-    // so we need to be able to map them to the Post that failed
-    private static final SparseArray<Integer> sPostIdToErrorNotificationId = new SparseArray<>();
 
     // used to hold notification data for everything (only one outstanding foreground notification
     // for the live UploadService instance
@@ -196,11 +191,11 @@ class PostUploadNotifier {
     }
 
     void cancelErrorNotification(@NonNull PostModel post) {
-        Integer errorNotificationId = sPostIdToErrorNotificationId.get(post.getId());
-        if (errorNotificationId != null && errorNotificationId != 0) {
-            mNotificationManager.cancel(errorNotificationId);
-            sPostIdToErrorNotificationId.remove(post.getId());
-        }
+        mNotificationManager.cancel((int)getNotificationIdForPost(post));
+    }
+
+    void cancelSuccessNotification(@NonNull PostModel post) {
+        mNotificationManager.cancel((int)getNotificationIdForPost(post));
     }
 
     void updateNotificationSuccess(@NonNull PostModel post, @NonNull SiteModel site, boolean isFirstTimePublish) {
@@ -267,6 +262,16 @@ class PostUploadNotifier {
             notificationBuilder.addAction(R.drawable.ic_share_24dp, mContext.getString(R.string.share_action),
                     pendingIntent);
         }
+
+        // add draft Publish action for drafts
+        if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
+            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post, isFirstTimePublish, notificationId, true);
+            PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
+            notificationBuilder.addAction(R.drawable.ic_posts_grey_24dp, mContext.getString(R.string.post_publish_q_action),
+                    pendingIntent);
+        }
+
         doNotify(notificationId, notificationBuilder.build());
     }
 
@@ -308,13 +313,7 @@ class PostUploadNotifier {
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
 
-        Integer errorNotificationId = sPostIdToErrorNotificationId.get(post.getId());
-        if (errorNotificationId == null || errorNotificationId == 0) {
-            errorNotificationId = sNotificationData.notificationId + (new Random()).nextInt();
-            sPostIdToErrorNotificationId.put(post.getId(), errorNotificationId);
-        }
-
-        doNotify(errorNotificationId, notificationBuilder.build());
+        doNotify(notificationId, notificationBuilder.build());
     }
 
     void updateNotificationProgressForMedia(MediaModel media, float progress) {
