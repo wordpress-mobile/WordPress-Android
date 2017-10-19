@@ -237,9 +237,6 @@ class PostUploadNotifier {
         }
 
         notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
-        notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(mContext.getApplicationContext()
-                        .getResources(),
-                R.mipmap.app_icon));
         notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
 
         notificationBuilder.setContentTitle(notificationTitle);
