@@ -19,12 +19,6 @@ public interface LoginListener {
 
     LoginMode getLoginMode();
 
-    // Login Prologue callbacks
-    void showEmailLoginScreen();
-    void doStartSignup();
-    void loggedInViaSignup(ArrayList<Integer> oldSitesIds);
-    void newUserCreatedButErrored(String email, String password);
-
     // Login Email input callbacks
     void gotWpcomEmail(String email);
     void loginViaSiteAddress();

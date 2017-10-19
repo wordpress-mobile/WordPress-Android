@@ -11,14 +11,13 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.widgets.WPViewPager;
 
 public class LoginPrologueFragment extends Fragment {
 
     public static final String TAG = "login_prologue_fragment_tag";
 
-    LoginListener mLoginListener;
+    LoginPrologueListener mLoginPrologueListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,8 +26,8 @@ public class LoginPrologueFragment extends Fragment {
         view.findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mLoginListener != null) {
-                    mLoginListener.showEmailLoginScreen();
+                if (mLoginPrologueListener != null) {
+                    mLoginPrologueListener.showEmailLoginScreen();
                 }
             }
         });
@@ -36,8 +35,8 @@ public class LoginPrologueFragment extends Fragment {
         view.findViewById(R.id.create_site_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mLoginListener != null) {
-                    mLoginListener.doStartSignup();
+                if (mLoginPrologueListener != null) {
+                    mLoginPrologueListener.doStartSignup();
                 }
             }
         });
@@ -76,16 +75,16 @@ public class LoginPrologueFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof LoginListener) {
-            mLoginListener = (LoginListener) context;
+        if (context instanceof LoginPrologueListener) {
+            mLoginPrologueListener = (LoginPrologueListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement LoginListener");
+            throw new RuntimeException(context.toString() + " must implement LoginPrologueListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mLoginListener = null;
+        mLoginPrologueListener = null;
     }
 }

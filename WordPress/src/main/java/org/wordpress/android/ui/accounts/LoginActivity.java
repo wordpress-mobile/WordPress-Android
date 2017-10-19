@@ -36,6 +36,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
+import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -51,7 +52,7 @@ import java.util.EnumSet;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener {
+        Callback, LoginListener, LoginPrologueListener {
     private static final String KEY_SMARTLOCK_COMPLETED = "KEY_SMARTLOCK_COMPLETED";
 
     private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
@@ -231,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         }
     }
 
-    // LoginListener implementation methods
+    // LoginPrologueListener implementation methods
 
     @Override
     public void showEmailLoginScreen() {
@@ -255,6 +256,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, password);
         slideInFragment(loginEmailPasswordFragment, false, LoginEmailPasswordFragment.TAG);
     }
+
+    // LoginListener implementation methods
 
     @Override
     public void gotWpcomEmail(String email) {
