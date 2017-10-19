@@ -368,11 +368,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSocialChanged(OnSocialChanged event) {
         if (event.isError()) {
-            endProgress();
-
             switch (event.error.type) {
                 // Two-factor authentication code was incorrect; save new nonce for another try.
                 case INVALID_TWO_STEP_CODE:
+                    endProgress();
+
                     switch (mType) {
                         case ARG_2FA_TYPE_AUTHENTICATOR:
                             mNonceAuthenticator = event.error.nonce;
