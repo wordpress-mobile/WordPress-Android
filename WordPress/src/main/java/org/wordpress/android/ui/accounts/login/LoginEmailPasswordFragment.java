@@ -265,8 +265,6 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSocialChanged(OnSocialChanged event) {
         if (event.isError()) {
-            endProgress();
-
             switch (event.error.type) {
                 case UNABLE_CONNECT:
                     AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
