@@ -214,9 +214,7 @@ class PostUploadNotifier {
 
         // Notification builder
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext.getApplicationContext())
-                        .setSmallIcon(R.drawable.ic_my_sites_24dp)
-                        .setColor(mContext.getResources().getColor(R.color.blue_wordpress));
+                new NotificationCompat.Builder(mContext.getApplicationContext());
         String notificationTitle;
         String notificationMessage;
 
@@ -238,10 +236,11 @@ class PostUploadNotifier {
             }
         }
 
-        notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
+        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
         notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(mContext.getApplicationContext()
                         .getResources(),
                 R.mipmap.app_icon));
+        notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
 
         notificationBuilder.setContentTitle(notificationTitle);
         notificationBuilder.setContentText(notificationMessage);
