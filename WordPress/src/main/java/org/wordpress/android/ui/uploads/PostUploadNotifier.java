@@ -221,19 +221,20 @@ class PostUploadNotifier {
         String notificationMessage;
 
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
+        notificationTitle = "\"" + postTitle + "\" ";
 
         if (PostStatus.DRAFT.equals(PostStatus.fromPost(post))) {
-            notificationTitle = mContext.getString(R.string.draft_uploaded);
+            notificationTitle += mContext.getString(R.string.draft_uploaded);
             notificationMessage = String.format(mContext.getString(R.string.post_draft_param), postTitle);
         } else if (PostStatus.SCHEDULED.equals(PostStatus.fromPost(post))) {
-            notificationTitle = mContext.getString(post.isPage() ? R.string.page_scheduled : R.string.post_scheduled);
+            notificationTitle += mContext.getString(post.isPage() ? R.string.page_scheduled : R.string.post_scheduled);
             notificationMessage = String.format(mContext.getString(R.string.post_scheduled_param), postTitle);
         } else {
             if (post.isPage()) {
-                notificationTitle = mContext.getString(
+                notificationTitle += mContext.getString(
                         isFirstTimePublish ? R.string.page_published : R.string.page_updated);
             } else {
-                notificationTitle = mContext.getString(
+                notificationTitle += mContext.getString(
                         isFirstTimePublish ? R.string.post_published : R.string.post_updated);
             }
             notificationMessage = String.format(mContext.getString(
