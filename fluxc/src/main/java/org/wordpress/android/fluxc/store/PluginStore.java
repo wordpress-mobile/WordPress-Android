@@ -77,14 +77,14 @@ public class PluginStore extends Store {
     }
 
     public static class FetchSitePluginsError implements OnChangedError {
-        public FetchPluginsErrorType type;
+        public FetchSitePluginsErrorType type;
         public String message;
 
-        public FetchSitePluginsError(FetchPluginsErrorType type) {
+        public FetchSitePluginsError(FetchSitePluginsErrorType type) {
             this(type, "");
         }
 
-        FetchSitePluginsError(FetchPluginsErrorType type, String message) {
+        FetchSitePluginsError(FetchSitePluginsErrorType type, String message) {
             this.type = type;
             this.message = message;
         }
@@ -99,15 +99,15 @@ public class PluginStore extends Store {
     }
 
     public static class UpdateSitePluginError implements OnChangedError {
-        public UpdatePluginErrorType type;
+        public UpdateSitePluginErrorType type;
         public String message;
 
-        public UpdateSitePluginError(UpdatePluginErrorType type) {
+        public UpdateSitePluginError(UpdateSitePluginErrorType type) {
             this.type = type;
         }
     }
 
-    public enum FetchPluginsErrorType {
+    public enum FetchSitePluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
         NOT_AVAILABLE // Return for non-jetpack sites
@@ -117,7 +117,7 @@ public class PluginStore extends Store {
         GENERIC_ERROR
     }
 
-    public enum UpdatePluginErrorType {
+    public enum UpdateSitePluginErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
         NOT_AVAILABLE // Return for non-jetpack sites
@@ -202,7 +202,7 @@ public class PluginStore extends Store {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             mPluginRestClient.fetchPlugins(site);
         } else {
-            FetchSitePluginsError error = new FetchSitePluginsError(FetchPluginsErrorType.NOT_AVAILABLE);
+            FetchSitePluginsError error = new FetchSitePluginsError(FetchSitePluginsErrorType.NOT_AVAILABLE);
             FetchedSitePluginsPayload payload = new FetchedSitePluginsPayload(error);
             fetchedSitePlugins(payload);
         }
@@ -216,7 +216,7 @@ public class PluginStore extends Store {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.updatePlugin(payload.site, payload.plugin);
         } else {
-            UpdateSitePluginError error = new UpdateSitePluginError(UpdatePluginErrorType.NOT_AVAILABLE);
+            UpdateSitePluginError error = new UpdateSitePluginError(UpdateSitePluginErrorType.NOT_AVAILABLE);
             UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site, error);
             updatedSitePlugin(errorPayload);
         }
