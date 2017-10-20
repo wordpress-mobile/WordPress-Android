@@ -335,10 +335,10 @@ class PostUploadNotifier {
 
         if (mediaItemsNotUploaded > 0) {
             newErrorMessage += String.format(mContext.getString(R.string.media_files_not_uploaded), mediaItemsNotUploaded);
-            if (mediaItemsNotUploaded < sNotificationData.currentMediaItem) {
+            if (mediaItemsNotUploaded <= sNotificationData.currentMediaItem) {
                 // some media items were uploaded successfully
                 newErrorMessage += " " + String.format(mContext.getString(R.string.media_files_uploaded_succcessfully),
-                        (sNotificationData.currentMediaItem - mediaItemsNotUploaded));
+                        sNotificationData.currentMediaItem);
             }
         }
 
