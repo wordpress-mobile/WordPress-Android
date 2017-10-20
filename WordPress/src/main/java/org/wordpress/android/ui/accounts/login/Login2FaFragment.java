@@ -210,6 +210,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         outState.putInt(KEY_IN_PROGRESS_MESSAGE_ID, mInProgressMessageId);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
+        outState.putString(ARG_2FA_NONCE_AUTHENTICATOR, mNonceAuthenticator);
+        outState.putString(ARG_2FA_NONCE_BACKUP, mNonceBackup);
+        outState.putString(ARG_2FA_NONCE_SMS, mNonceSms);
     }
 
     @Override
