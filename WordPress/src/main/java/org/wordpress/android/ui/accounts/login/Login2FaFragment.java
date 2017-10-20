@@ -53,15 +53,16 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private static final String ARG_2FA_NONCE_SMS = "ARG_2FA_NONCE_SMS";
     private static final String ARG_2FA_SOCIAL_SERVICE = "ARG_2FA_SOCIAL_SERVICE";
     private static final String ARG_2FA_TYPE = "ARG_2FA_TYPE";
-    private static final String ARG_2FA_TYPE_AUTHENTICATOR = "authenticator";
-    private static final String ARG_2FA_TYPE_BACKUP = "backup";
-    private static final String ARG_2FA_TYPE_SMS = "sms";
     private static final String ARG_2FA_USER_ID = "ARG_2FA_USER_ID";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
     private static final int LENGTH_NONCE_AUTHENTICATOR = 6;
     private static final int LENGTH_NONCE_BACKUP = 8;
     private static final int LENGTH_NONCE_SMS = 7;
+
+    private static final String TWO_FACTOR_TYPE_AUTHENTICATOR = "authenticator";
+    private static final String TWO_FACTOR_TYPE_BACKUP = "backup";
+    private static final String TWO_FACTOR_TYPE_SMS = "sms";
 
     public static final String TAG = "login_2fa_fragment_tag";
 
@@ -104,7 +105,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
         args.putString(ARG_2FA_USER_ID, userId);
-        args.putString(ARG_2FA_TYPE, ARG_2FA_TYPE_AUTHENTICATOR);
+        args.putString(ARG_2FA_TYPE, TWO_FACTOR_TYPE_AUTHENTICATOR);
         args.putString(ARG_2FA_NONCE_AUTHENTICATOR, nonceAuthenticator);
         args.putString(ARG_2FA_NONCE_BACKUP, nonceBackup);
         args.putString(ARG_2FA_NONCE_SMS, nonceSms);
@@ -275,15 +276,15 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private void setAuthCodeTypeAndNonce(String twoStepCode) {
         switch(twoStepCode.length()) {
             case LENGTH_NONCE_AUTHENTICATOR:
-                mType = ARG_2FA_TYPE_AUTHENTICATOR;
+                mType = TWO_FACTOR_TYPE_AUTHENTICATOR;
                 mNonce = mNonceAuthenticator;
                 break;
             case LENGTH_NONCE_BACKUP:
-                mType = ARG_2FA_TYPE_BACKUP;
+                mType = TWO_FACTOR_TYPE_BACKUP;
                 mNonce = mNonceBackup;
                 break;
             case LENGTH_NONCE_SMS:
-                mType = ARG_2FA_TYPE_SMS;
+                mType = TWO_FACTOR_TYPE_SMS;
                 mNonce = mNonceSms;
                 break;
         }
@@ -375,13 +376,13 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                     endProgress();
 
                     switch (mType) {
-                        case ARG_2FA_TYPE_AUTHENTICATOR:
+                        case TWO_FACTOR_TYPE_AUTHENTICATOR:
                             mNonceAuthenticator = event.error.nonce;
                             break;
-                        case ARG_2FA_TYPE_BACKUP:
+                        case TWO_FACTOR_TYPE_BACKUP:
                             mNonceBackup = event.error.nonce;
                             break;
-                        case ARG_2FA_TYPE_SMS :
+                        case TWO_FACTOR_TYPE_SMS:
                             mNonceSms = event.error.nonce;
                             break;
                     }
