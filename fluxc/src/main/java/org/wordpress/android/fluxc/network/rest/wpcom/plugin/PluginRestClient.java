@@ -45,7 +45,7 @@ public class PluginRestClient extends BaseWPComRestClient {
     }
 
     public void fetchSitePlugins(@NonNull final SiteModel site) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.getUrlV1_1();
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.getUrlV1_2();
         final WPComGsonRequest<FetchPluginsResponse> request = WPComGsonRequest.buildGetRequest(url, null,
                 FetchPluginsResponse.class,
                 new Listener<FetchPluginsResponse>() {
@@ -90,7 +90,7 @@ public class PluginRestClient extends BaseWPComRestClient {
         } catch (UnsupportedEncodingException e) {
             name = plugin.getName();
         }
-        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(name).getUrlV1_1();
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(name).getUrlV1_2();
         Map<String, Object> params = paramsFromPluginModel(plugin);
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, params,
                 PluginWPComRestResponse.class,
