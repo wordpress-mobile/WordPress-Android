@@ -189,11 +189,9 @@ class PostUploadNotifier {
         sNotificationData.mediaItemToProgressMap.clear();
     }
 
-    void cancelErrorNotification(@NonNull PostModel post) {
-        mNotificationManager.cancel((int)getNotificationIdForPost(post));
-    }
-
-    void cancelSuccessNotification(@NonNull PostModel post) {
+    // cancels the error or success notification (only one of these exist per Post at any given
+    // time
+    void cancelFinalNotification(@NonNull PostModel post) {
         mNotificationManager.cancel((int)getNotificationIdForPost(post));
     }
 

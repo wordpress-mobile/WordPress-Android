@@ -183,8 +183,7 @@ public class UploadService extends Service {
 
             // cancel any outstanding "end" notification for this Post before we start processing it again
             // i.e. dismiss success or error notification for the post.
-            mPostUploadNotifier.cancelErrorNotification(post);
-            mPostUploadNotifier.cancelSuccessNotification(post);
+            mPostUploadNotifier.cancelFinalNotification(post);
 
             // if the user tapped on the PUBLISH quick action, make this Post publishable and track
             // analytics before starting the upload process.
