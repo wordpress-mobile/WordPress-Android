@@ -23,6 +23,7 @@ import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.Login2FaFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
+import org.wordpress.android.ui.accounts.login.LoginGoogleFragment.OnGoogleLoginFinishedListener;
 import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
@@ -38,7 +39,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener {
+        Callback, LoginListener, OnGoogleLoginFinishedListener {
     private static final String KEY_SMARTLOCK_COMPLETED = "KEY_SMARTLOCK_COMPLETED";
 
     private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
@@ -466,5 +467,14 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onConnectionSuspended(int i) {
         AppLog.d(AppLog.T.NUX, "Google API client connection suspended");
+    }
+
+    // OnGoogleLoginFinishedListener
+
+    @Override
+    public void onGoogleLoginFinished() {
+        LoginEmailFragment loginEmailFragment =
+                (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
+        loginEmailFragment.finishLogin();
     }
 }

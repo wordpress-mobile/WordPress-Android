@@ -41,6 +41,7 @@ import static android.app.Activity.RESULT_OK;
 public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener {
     private GoogleApiClient mGoogleApiClient;
     private LoginListener mLoginListener;
+    private OnGoogleLoginFinishedListener mOnGoogleLoginFinishedListener;
     private String mGoogleEmail;
     private String mIdToken;
     private boolean isResolvingError;
@@ -54,6 +55,10 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
     public static final String TAG = "login_google_fragment_tag";
 
     @Inject Dispatcher mDispatcher;
+
+    public interface OnGoogleLoginFinishedListener {
+        void onGoogleLoginFinished();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +99,12 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
     public void onAttach(Context context) {
         super.onAttach(context);
         mLoginListener = (LoginListener) context;
+
+        try {
+            mOnGoogleLoginFinishedListener = (OnGoogleLoginFinishedListener) context;
+        } catch (ClassCastException exception) {
+            throw new ClassCastException(context.toString() + " must implement OnGoogleLoginFinishedListener");
+        }
     }
 
     @Override
@@ -285,7 +296,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
             showErrorDialog(getString(R.string.login_error_generic));
         } else {
             AppLog.i(T.NUX, "LoginEmailFragment.onAuthenticationChanged: " + event.toString());
-            // TODO: Finish login.
+            mOnGoogleLoginFinishedListener.onGoogleLoginFinished();
         }
     }
 
@@ -321,7 +332,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
                     event.nonceSms);
         } else {
-            // TODO: Finish login.
+            mOnGoogleLoginFinishedListener.onGoogleLoginFinished();
         }
     }
 }

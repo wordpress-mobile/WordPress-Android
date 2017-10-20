@@ -303,6 +303,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         }
     }
 
+    public void finishLogin() {
+        doFinishLogin();
+    }
+
     @Override
     protected void onLoginFinished() {
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
