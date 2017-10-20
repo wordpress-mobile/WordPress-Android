@@ -130,11 +130,13 @@ dependencies {
     compile 'org.wordpress:passcodelock:1.5.1'
 
     // Dagger
-    compile 'com.google.dagger:dagger:2.0.2'
-    apt 'com.google.dagger:dagger-compiler:2.0.2'
+    compile 'com.google.dagger:dagger:2.11'
+    apt 'com.google.dagger:dagger-compiler:2.11'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.google.dagger:dagger-android-support:2.11'
+    apt 'com.google.dagger:dagger-android-processor:2.11'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:6422c5020f442bbe42003cb1ae887b8f898e1d2d') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3c598e8f305b0346a4fb84e94e0c097f7fe28df5') {
         exclude group: "com.android.volley";
     }
 
