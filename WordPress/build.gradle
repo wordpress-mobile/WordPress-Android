@@ -46,19 +46,16 @@ android {
 
         buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
         buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "false"
-        buildConfigField "boolean", "LOGIN_GOOGLE_ENABLED", "true"
     }
 
     productFlavors {
         vanilla { // used for release and beta
-            buildConfigField "boolean", "LOGIN_GOOGLE_ENABLED", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "true"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "LOGIN_GOOGLE_ENABLED", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
