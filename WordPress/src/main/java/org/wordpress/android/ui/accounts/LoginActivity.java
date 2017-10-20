@@ -319,13 +319,15 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void needs2fa(String email, String password, String idToken, String service, boolean isSocialLogin) {
-        Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, password, idToken, service, isSocialLogin);
+        Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, password, idToken, service,
+                isSocialLogin);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
     }
 
     @Override
     public void needs2fa(String email, String userId, String nonceAuthenticator, String nonceBackup, String nonceSms) {
-        Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, userId, nonceAuthenticator, nonceBackup, nonceSms);
+        Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, userId, nonceAuthenticator,
+                nonceBackup, nonceSms);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
     }
 
