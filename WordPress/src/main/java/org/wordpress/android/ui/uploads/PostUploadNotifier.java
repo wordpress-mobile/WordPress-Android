@@ -134,7 +134,7 @@ class PostUploadNotifier {
         startOrUpdateForegroundNotification(null);
     }
 
-    void incrementUploadedPostCountFromForegroundNotification(@NonNull PostModel post) {
+    void incrementUploadedPostCountFromForegroundNotificationOrFinish(@NonNull PostModel post) {
         sNotificationData.currentPostItem++;
         if (post.isPage()) {
             sNotificationData.totalPageItemsIncludedInPostCount--;

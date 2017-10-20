@@ -517,7 +517,7 @@ public class UploadService extends Service {
         if (postToCancel == null) return;
 
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
-        mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(postToCancel);
+        mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotificationOrFinish(postToCancel);
 
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(postToCancel.getId());
         if (showError || ((postUploadModel != null)
