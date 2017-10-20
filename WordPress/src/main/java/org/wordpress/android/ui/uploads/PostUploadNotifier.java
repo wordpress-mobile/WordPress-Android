@@ -303,7 +303,8 @@ class PostUploadNotifier {
                 (int)notificationId,
                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
+        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
+        notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
 
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
         String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), postTitle);
