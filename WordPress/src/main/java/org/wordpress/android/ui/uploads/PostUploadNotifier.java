@@ -308,9 +308,37 @@ class PostUploadNotifier {
 
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
         String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), postTitle);
-        notificationBuilder.setContentTitle(notificationTitle);
 
-        notificationBuilder.setContentText(errorMessage);
+        // first we build a summary of what failed and what went OK, like this:
+        // i.e. "1 post, 3 media files not uploaded (9 successfully uploaded)"
+        String newErrorMessage = "";
+        int postItemsNotUploaded = sNotificationData.totalPostItems - sNotificationData.currentPostItem;
+        int mediaItemsNotUploaded = sNotificationData.totalMediaItems - sNotificationData.currentMediaItem;
+        if (postItemsNotUploaded > 0) {
+            newErrorMessage += postItemsNotUploaded + " " + getPagesAndOrPostsString();
+            if (mediaItemsNotUploaded > 0) {
+                newErrorMessage += ", ";
+            }
+        }
+
+        if (mediaItemsNotUploaded > 0) {
+            newErrorMessage += String.format(mContext.getString(R.string.media_files_not_uploaded), mediaItemsNotUploaded);
+            if (mediaItemsNotUploaded < sNotificationData.currentMediaItem) {
+                // some media items were uploaded successfully
+                newErrorMessage += " " + String.format(mContext.getString(R.string.media_files_uploaded_succcessfully),
+                        (sNotificationData.currentMediaItem - mediaItemsNotUploaded));
+            }
+        }
+
+        // now append the detailed error message below
+        if (newErrorMessage.length() > 0) {
+            newErrorMessage += "\n" + errorMessage;
+        } else {
+            newErrorMessage = errorMessage;
+        }
+
+        notificationBuilder.setContentTitle(notificationTitle);
+        notificationBuilder.setContentText(newErrorMessage);
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(errorMessage));
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
