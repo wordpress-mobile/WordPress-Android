@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -241,6 +242,7 @@ public class UploadUtils {
                     @Override
                     public void onClick(View view) {
                         // TODO implement RETRY
+                        Toast.makeText(activity, "RETRY Not implemented yet", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {

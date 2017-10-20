@@ -11,6 +11,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
@@ -34,6 +35,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
@@ -47,6 +49,7 @@ import de.greenrobot.event.EventBus;
 
 public class UploadService extends Service {
     private static final String KEY_SHOULD_PUBLISH = "shouldPublish";
+    private static final String KEY_SHOULD_RETRY = "shouldRetry";
     private static final String KEY_MEDIA_LIST = "mediaList";
     private static final String KEY_LOCAL_POST_ID = "localPostId";
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
@@ -192,6 +195,11 @@ public class UploadService extends Service {
                 PostUtils.trackSavePostAnalytics(post, mSiteStore.getSiteByLocalId(post.getLocalSiteId()));
             }
 
+            if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
+                aztecRetryUpload(post);
+                return;
+            }
+
             // is this a new post? only add count to the notification when the post is totally new
             // i.e. it still doesn't have any tracked state in the UploadStore
             // or it's a failed one the user is actively retrying.
@@ -230,11 +238,12 @@ public class UploadService extends Service {
 
 
     public static Intent getUploadPostServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics,
-                                                    long notificationId, boolean publish) {
+                                                    long notificationId, boolean publish, boolean isRetry) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
         intent.putExtra(KEY_SHOULD_PUBLISH, publish);
+        intent.putExtra(KEY_SHOULD_RETRY, isRetry);
         return intent;
     }
 
@@ -533,6 +542,39 @@ public class UploadService extends Service {
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
+    }
+
+    private void aztecRetryUpload(PostModel post) {
+        PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(post);
+        List<String> mediaMarkedUploadingIds =
+                AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, updatedPost.getContent());
+        Collections.sort(mediaMarkedUploadingIds);
+        boolean allMediaOkToRetry = true;
+        ArrayList<MediaModel> mediaModelList = new ArrayList<>();
+
+        for (String mediaId : mediaMarkedUploadingIds) {
+            MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
+            if (media == null) {
+                // TODO this media doesn't exist anymore, so we can't really retry. Notify the user that they need
+                // to edit the Post manually.
+                allMediaOkToRetry = false;
+                break;
+            } else {
+                mediaModelList.add(media);
+            }
+        }
+
+
+        // if all media items are good, run through them again
+        if (allMediaOkToRetry) {
+            for (MediaModel media : mediaModelList) {
+                media.setUploadState(MediaModel.MediaUploadState.QUEUED);
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+            }
+            // now start the service, enqueuing the media and the Post
+            uploadMedia(this, mediaModelList);
+            uploadPost(this, post);
+        }
     }
 
     /**

@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SystemServiceFactory;
@@ -280,7 +281,7 @@ class PostUploadNotifier {
 
         // add draft Publish action for drafts
         if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
-            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post, isFirstTimePublish, notificationId, true);
+            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post, isFirstTimePublish, notificationId, true, false);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(R.drawable.ic_posts_grey_24dp, mContext.getString(R.string.post_publish_q_action),
@@ -356,6 +357,20 @@ class PostUploadNotifier {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newErrorMessage));
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
+
+        boolean isFirstTimePublish =
+                (PostStatus.fromPost(post) == PostStatus.UNKNOWN || PostStatus.fromPost(post) == PostStatus.PUBLISHED) &&
+                post.isLocalDraft();
+
+        // Add RETRY action - only available on Aztec
+        if ( AppPrefs.isAztecEditorEnabled()) {
+            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post, isFirstTimePublish, notificationId, false, true);
+            PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
+            notificationBuilder.addAction(0, mContext.getString(R.string.retry),
+                    actionPendingIntent);
+        }
+
 
         EventBus.getDefault().post(new UploadService.UploadErrorEvent(post, newErrorMessage));
 
