@@ -346,6 +346,7 @@ class PostUploadNotifier {
         }
 
         // now append the detailed error message below
+        String snackbarMessage = new String(newErrorMessage);
         if (newErrorMessage.length() > 0) {
             newErrorMessage += "\n" + errorMessage;
         } else {
@@ -368,11 +369,11 @@ class PostUploadNotifier {
             PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
-                    actionPendingIntent);
+                    actionPendingIntent).setColor(mContext.getResources().getColor(R.color.orange_jazzy));
         }
 
 
-        EventBus.getDefault().post(new UploadService.UploadErrorEvent(post, newErrorMessage));
+        EventBus.getDefault().post(new UploadService.UploadErrorEvent(post, snackbarMessage));
 
         doNotify(notificationId, notificationBuilder.build());
     }
