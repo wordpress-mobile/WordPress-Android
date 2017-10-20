@@ -291,7 +291,7 @@ class PostUploadNotifier {
         doNotify(notificationId, notificationBuilder.build());
     }
 
-    private long getNotificationIdForPost(PostModel post) {
+    public static long getNotificationIdForPost(PostModel post) {
         long remotePostId = post.getRemotePostId();
         // We can't use the local table post id here because it can change between first post (local draft) to
         // first edit (post pulled from the server)

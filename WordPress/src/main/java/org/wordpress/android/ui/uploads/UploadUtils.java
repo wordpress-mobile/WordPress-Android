@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -181,6 +182,10 @@ public class UploadUtils {
                 .setAction(buttonTitleRes, onClickListener).show();
     }
 
+    private static void showSnackbarError(View view, String message) {
+        Snackbar.make(view, message, 5000).show();
+    }
+
     private static void showSnackbar(View view, int messageRes, int buttonTitleRes,
                                      View.OnClickListener onClickListener) {
         Snackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
@@ -238,13 +243,21 @@ public class UploadUtils {
                                                      final SiteModel site, final Dispatcher dispatcher) {
         if (isError) {
             if (errorMessage != null) {
-                UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // TODO implement RETRY
-                        Toast.makeText(activity, "RETRY Not implemented yet", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                if (AppPrefs.isAztecEditorEnabled()) {
+                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            boolean isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT
+                                    || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
+
+                            Intent intent = UploadService.getUploadPostServiceIntent(activity, post, isFirstTimePublish,
+                                    PostUploadNotifier.getNotificationIdForPost(post), false, true);
+                            activity.startService(intent);
+                        }
+                    });
+                } else {
+                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage);
+                }
             } else {
                 UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally);
             }
