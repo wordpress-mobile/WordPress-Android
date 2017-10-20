@@ -268,7 +268,6 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             switch (event.error.type) {
                 case UNABLE_CONNECT:
                     AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
-                    doFinishLogin();
                     break;
                 case USER_ALREADY_ASSOCIATED:
                     AppLog.e(T.API, "This social account is already associated with a WordPress.com account.");
