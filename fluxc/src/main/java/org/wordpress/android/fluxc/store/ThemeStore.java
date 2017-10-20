@@ -119,7 +119,8 @@ public class ThemeStore extends Store {
         }
     }
 
-    public static class OnThemesChanged extends OnChanged<FetchThemesError> {
+    // OnChanged events
+    public static class OnThemesChanged extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeAction origin;
 
@@ -151,6 +152,26 @@ public class ThemeStore extends Store {
         public ThemeModel theme;
 
         public OnThemeActivated(SiteModel site, ThemeModel theme) {
+            this.site = site;
+            this.theme = theme;
+        }
+    }
+
+    public static class OnThemeDeleted extends OnChanged<ThemesError> {
+        public SiteModel site;
+        public ThemeModel theme;
+
+        public OnThemeDeleted(SiteModel site, ThemeModel theme) {
+            this.site = site;
+            this.theme = theme;
+        }
+    }
+
+    public static class OnThemeInstalled extends OnChanged<ThemesError> {
+        public SiteModel site;
+        public ThemeModel theme;
+
+        public OnThemeInstalled(SiteModel site, ThemeModel theme) {
             this.site = site;
             this.theme = theme;
         }
@@ -341,7 +362,7 @@ public class ThemeStore extends Store {
     }
 
     private void handleThemeInstalled(@NonNull ActivateThemePayload payload) {
-        OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
+        OnThemeInstalled event = new OnThemeInstalled(payload.site, payload.theme);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
@@ -375,7 +396,7 @@ public class ThemeStore extends Store {
     }
 
     private void handleThemeDeleted(@NonNull ActivateThemePayload payload) {
-        OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
+        OnThemeDeleted event = new OnThemeDeleted(payload.site, payload.theme);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
