@@ -1,7 +1,8 @@
 package org.wordpress.android.modules;
 
+import android.app.Application;
+
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseOkHttpClientModule;
@@ -106,20 +107,26 @@ import org.wordpress.android.util.WPWebViewClient;
 
 import javax.inject.Singleton;
 
+import dagger.BindsInstance;
 import dagger.Component;
+import dagger.android.AndroidInjector;
+import dagger.android.support.AndroidSupportInjectionModule;
 
 @Singleton
 @Component(modules = {
-        AppContextModule.class,
+        ApplicationModule.class,
         AppSecretsModule.class,
         ReleaseBaseModule.class,
         ReleaseOkHttpClientModule.class,
         ReleaseNetworkModule.class,
         LegacyModule.class,
-        ReleaseToolsModule.class
+        ReleaseToolsModule.class,
+        AndroidSupportInjectionModule.class
 })
-public interface AppComponent {
-    void inject(WordPress application);
+public interface AppComponent extends AndroidInjector<WordPress> {
+    @Override
+    void inject(WordPress instance);
+
     void inject(WPMainActivity object);
     void inject(SignInActivity object);
     void inject(SignInFragment object);
@@ -236,4 +243,14 @@ public interface AppComponent {
     void inject(AddCategoryFragment object);
 
     void inject(HtmlToSpannedConverter object);
+
+    // Allows us to inject the application without having to instantiate any modules, and provides the Application
+    // in the app graph
+    @Component.Builder
+    interface Builder {
+        @BindsInstance
+        AppComponent.Builder application(Application application);
+
+        AppComponent build();
+    }
 }

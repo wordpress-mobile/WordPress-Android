@@ -43,7 +43,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -203,7 +202,7 @@ public class WordPress extends MultiDexApplication {
 
         // Init Dagger
         mAppComponent = DaggerAppComponent.builder()
-                .appContextModule(new AppContextModule(getApplicationContext()))
+                .application(this)
                 .build();
         component().inject(this);
         mDispatcher.register(this);
