@@ -176,7 +176,7 @@ public class UploadUtils {
 
     private static void showSnackbarError(View view, String message, int buttonTitleRes,
                                           View.OnClickListener onClickListener) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG)
+        Snackbar.make(view, message, 5000)
                 .setAction(buttonTitleRes, onClickListener).show();
     }
 
@@ -188,7 +188,7 @@ public class UploadUtils {
 
     private static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        Snackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
+        Snackbar.make(view, messageRes, 5000)
                 .setAction(buttonTitleRes, onClickListener).
                 setActionTextColor(view.getResources().getColor(R.color.blue_medium))
                 .show();
