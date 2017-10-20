@@ -351,7 +351,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                             }
 
                             mediaItemCount++;
-                            mPostUploadNotifier.updateNotificationIcon(mPost, imageIcon);
                             mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaModel);
 
                             String mediaUploadOutput;

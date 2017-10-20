@@ -135,18 +135,6 @@ class PostUploadNotifier {
         startOrUpdateForegroundNotification(null);
     }
 
-    void updateNotificationIcon(PostModel post, Bitmap icon) {
-        // TODO MEDIA reimplement or remove completely
-
-//        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
-//
-//        if (icon != null) {
-//            notificationData.latestIcon = icon;
-//            mNotificationBuilder.setLargeIcon(notificationData.latestIcon);
-//        }
-//        doNotify(sPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
-    }
-
     void incrementUploadedPostCountFromForegroundNotification(@NonNull PostModel post) {
         sNotificationData.currentPostItem++;
         if (post.isPage()) {
