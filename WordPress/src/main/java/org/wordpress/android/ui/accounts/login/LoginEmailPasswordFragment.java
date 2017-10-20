@@ -274,10 +274,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                     break;
             }
 
-            // Finish login on social connect error.
-            if (isSocialLogin) {
-                doFinishLogin();
-            }
+            doFinishLogin();
         } else if (!event.requiresTwoStepAuth) {
             doFinishLogin();
         }
