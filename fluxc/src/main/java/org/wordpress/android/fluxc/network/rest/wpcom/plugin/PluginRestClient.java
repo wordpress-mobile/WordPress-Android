@@ -44,7 +44,7 @@ public class PluginRestClient extends BaseWPComRestClient {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
-    public void fetchPlugins(@NonNull final SiteModel site) {
+    public void fetchSitePlugins(@NonNull final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).plugins.getUrlV1_1();
         final WPComGsonRequest<FetchPluginsResponse> request = WPComGsonRequest.buildGetRequest(url, null,
                 FetchPluginsResponse.class,
@@ -82,7 +82,7 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void updatePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
+    public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
         String name;
         try {
             // We need to encode plugin name otherwise names like "akismet/akismet" would fail

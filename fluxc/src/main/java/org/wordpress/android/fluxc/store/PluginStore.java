@@ -200,7 +200,7 @@ public class PluginStore extends Store {
 
     private void fetchSitePlugins(SiteModel site) {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
-            mPluginRestClient.fetchPlugins(site);
+            mPluginRestClient.fetchSitePlugins(site);
         } else {
             FetchSitePluginsError error = new FetchSitePluginsError(FetchSitePluginsErrorType.NOT_AVAILABLE);
             FetchedSitePluginsPayload payload = new FetchedSitePluginsPayload(error);
@@ -214,7 +214,7 @@ public class PluginStore extends Store {
 
     private void updateSitePlugin(UpdateSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
-            mPluginRestClient.updatePlugin(payload.site, payload.plugin);
+            mPluginRestClient.updateSitePlugin(payload.site, payload.plugin);
         } else {
             UpdateSitePluginError error = new UpdateSitePluginError(UpdateSitePluginErrorType.NOT_AVAILABLE);
             UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site, error);
