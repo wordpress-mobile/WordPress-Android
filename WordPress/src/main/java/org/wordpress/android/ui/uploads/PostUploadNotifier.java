@@ -23,6 +23,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ class PostUploadNotifier {
         int totalPageItemsIncludedInPostCount;
         int currentPostItem;
         final Map<Integer, Float> mediaItemToProgressMap = new HashMap<>();
+        final List<PostModel> mUploadedPostsCounted = new ArrayList<>();;
     }
 
     PostUploadNotifier(Context context, UploadService service) {
@@ -135,6 +137,15 @@ class PostUploadNotifier {
     }
 
     void incrementUploadedPostCountFromForegroundNotificationOrFinish(@NonNull PostModel post) {
+        // first we need to check that we only count this post once as  "ended" (either successfully or with error)
+        // for every error we get. We'll then try to increment the Post count as it's been cancelled/failed because the
+        // related media was cancelled or has failed too (i.e. we can't upload a Post with failed media, therefore
+        // it needs to be cancelled).
+        if (isPostAlreadyInPostCount(post)) {
+            return;
+        } else {
+            addPostToPostCount(post);
+        }
         sNotificationData.currentPostItem++;
         if (post.isPage()) {
             sNotificationData.totalPageItemsIncludedInPostCount--;
@@ -174,6 +185,20 @@ class PostUploadNotifier {
         sNotificationData.totalPostItems = 0;
         sNotificationData.totalPageItemsIncludedInPostCount = 0;
         sNotificationData.mediaItemToProgressMap.clear();
+        sNotificationData.mUploadedPostsCounted.clear();
+    }
+
+    private boolean isPostAlreadyInPostCount(@NonNull PostModel post){
+        for (PostModel onePost : sNotificationData.mUploadedPostsCounted) {
+            if (onePost.getId() == post.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void addPostToPostCount(@NonNull PostModel post) {
+        sNotificationData.mUploadedPostsCounted.add(post);
     }
 
     // cancels the error or success notification (only one of these exist per Post at any given

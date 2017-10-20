@@ -523,6 +523,7 @@ public class UploadService extends Service {
         if (showError || ((postUploadModel != null)
                 && postUploadModel.getUploadState() != PostUploadModel.PENDING
                 && postUploadModel.getUploadState() != PostUploadModel.CANCELLED)) {
+
             // Only show the media upload error notification if the post is NOT registered in the UploadStore
             // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
             // the user actively cancelled it. No need to show an error then.
