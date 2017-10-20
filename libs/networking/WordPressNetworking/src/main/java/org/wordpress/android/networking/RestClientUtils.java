@@ -1,6 +1,3 @@
-/**
- * Interface to the WordPress.com REST API.
- */
 package org.wordpress.android.networking;
 
 import android.content.Context;
@@ -12,18 +9,25 @@ import com.android.volley.Request;
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
 import com.wordpress.rest.JsonRestRequest;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 import com.wordpress.rest.RestRequest.ErrorListener;
 import com.wordpress.rest.RestRequest.Listener;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LanguageUtils;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+/**
+ * Interface to the WordPress.com REST API.
+ */
 
 public class RestClientUtils {
     public static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
@@ -126,7 +130,7 @@ public class RestClientUtils {
      * https://developer.wordpress.com/docs/api/1/post/notifications/seen
      */
     public void markNotificationsSeen(String timestamp, Listener listener, ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("time", timestamp);
         post("notifications/seen", params, null, listener, errorListener);
     }
@@ -141,7 +145,7 @@ public class RestClientUtils {
     public void decrementUnreadCount(String noteId, String decrementAmount,
                                      Listener listener, ErrorListener errorListener) {
         String path = "notifications/read";
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put(String.format("counts[%s]", noteId), decrementAmount);
         post(path, params, null, listener, errorListener);
     }
@@ -195,21 +199,53 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
-    public void getGeneralSettings(long siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/settings", siteId);
-        Map<String, String> params = new HashMap<String, String>();
-        get(path, params, null, listener, errorListener);
+    public void getJetpackSettings(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d/rest-api/?path=/jetpack/v4/settings", siteId);
+        get(path, listener, errorListener);
     }
 
-    public void setGeneralSiteSettings(long siteId, Listener listener, ErrorListener errorListener,
-                                       Map<String, String> params) {
+    public void getGeneralSettings(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/settings", siteId);
+        get(path, listener, errorListener);
+    }
+
+    public void getJetpackMonitorSettings(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
+        get(path, listener, errorListener);
+    }
+
+    public void setGeneralSiteSettings(long siteId, JSONObject params, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/settings", siteId);
         post(path, params, null, listener, errorListener);
     }
 
-    /**
-     * Delete a site
-     */
+    public void setJetpackSettings(long siteId, Map<String, Object> bodyData,
+                                  Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d/rest-api/", siteId);
+        JSONObject params = new JSONObject();
+        JSONObject body = new JSONObject();
+        try {
+            for (String key : bodyData.keySet()) {
+                body.putOpt(key, bodyData.get(key));
+            }
+            params.put("path", "/jetpack/v4/settings/");
+            params.put("body", body.toString());
+            post(path, params, null, listener, errorListener);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.API, "Error updating Jetpack settings: " + e);
+            // make sure to invoke error listener, caller will be expecting it
+            if (errorListener != null) {
+                errorListener.onErrorResponse(
+                        new VolleyError("Error: Attempted to update Jetpack settings with malformed body data", e));
+            }
+        }
+    }
+
+    public void setJetpackMonitorSettings(long siteId, Map<String, String> params,
+                                          Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
+        post(path, params, null, listener, errorListener);
+    }
 
     public void getSitePurchases(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/purchases", siteId);
