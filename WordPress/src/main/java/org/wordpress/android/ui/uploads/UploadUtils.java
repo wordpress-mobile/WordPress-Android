@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
-import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -175,6 +174,12 @@ public class UploadUtils {
         }
     }
 
+    private static void showSnackbarError(View view, String message, int buttonTitleRes,
+                                          View.OnClickListener onClickListener) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG)
+                .setAction(buttonTitleRes, onClickListener).show();
+    }
+
     private static void showSnackbar(View view, int messageRes, int buttonTitleRes,
                                      View.OnClickListener onClickListener) {
         Snackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
@@ -226,25 +231,37 @@ public class UploadUtils {
     }
 
     public static void onPostUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
-                                                     PostStore.OnPostUploaded event,
+                                                     boolean isError,
+                                                     final PostModel post,
+                                                     final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher) {
-        final PostModel post = event.post;
-        if (event.isError()) {
-            UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally);
-        } else {
-            boolean isDraft = PostStatus.fromPost(post) == PostStatus.DRAFT;
-            if (isDraft) {
-                View.OnClickListener publishPostListener = new View.OnClickListener() {
+        if (isError) {
+            if (errorMessage != null) {
+                UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry, new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        UploadUtils.publishPost(activity, post, site, dispatcher);
+                    public void onClick(View view) {
+                        // TODO implement RETRY
                     }
-                };
-                UploadUtils.showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
-                        R.string.button_publish, publishPostListener);
+                });
             } else {
-                int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
-                UploadUtils.showSnackbar(snackbarAttachView, messageRes);
+                UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally);
+            }
+        } else {
+            if (post != null) {
+                boolean isDraft = PostStatus.fromPost(post) == PostStatus.DRAFT;
+                if (isDraft) {
+                    View.OnClickListener publishPostListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            UploadUtils.publishPost(activity, post, site, dispatcher);
+                        }
+                    };
+                    UploadUtils.showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
+                            R.string.button_publish, publishPostListener);
+                } else {
+                    int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
+                    UploadUtils.showSnackbar(snackbarAttachView, messageRes);
+                }
             }
         }
     }

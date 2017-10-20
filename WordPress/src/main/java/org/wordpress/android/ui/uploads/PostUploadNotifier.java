@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import de.greenrobot.event.EventBus;
+
 class PostUploadNotifier {
     private final Context mContext;
     private final UploadService mService;
@@ -354,6 +356,8 @@ class PostUploadNotifier {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newErrorMessage));
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
+
+        EventBus.getDefault().post(new UploadService.UploadErrorEvent(post, newErrorMessage));
 
         doNotify(notificationId, notificationBuilder.build());
     }

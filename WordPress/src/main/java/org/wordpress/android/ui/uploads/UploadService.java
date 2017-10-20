@@ -609,4 +609,14 @@ public class UploadService extends Service {
     public void onPostUploaded(OnPostUploaded event) {
         stopServiceIfUploadsComplete();
     }
+
+    public static class UploadErrorEvent {
+        public final PostModel post;
+        public final String errorMessage;
+
+        UploadErrorEvent(PostModel post, String errorMessage) {
+            this.post = post;
+            this.errorMessage = errorMessage;
+        }
+    }
 }
