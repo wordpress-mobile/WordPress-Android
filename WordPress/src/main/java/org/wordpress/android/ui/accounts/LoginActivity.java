@@ -267,7 +267,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired) {
         LoginEmailPasswordFragment loginEmailPasswordFragment =
-                LoginEmailPasswordFragment.newInstance(email, null, null, null, isPasswordRequired);
+                LoginEmailPasswordFragment.newInstance(email, null, idToken, service, isPasswordRequired);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
     }
 
