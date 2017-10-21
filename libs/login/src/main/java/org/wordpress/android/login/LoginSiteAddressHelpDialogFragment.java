@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 
 import javax.inject.Inject;
 
+import dagger.android.support.AndroidSupportInjection;
+
 public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
     public static final String TAG = "login_site_address_help_dialog_fragment_tag";
 
@@ -23,13 +25,8 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
     @Inject AccountStore mAccountStore;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mLoginListener.inject(this);
-    }
-
-    @Override
     public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
         if (context instanceof LoginListener) {
             mLoginListener = (LoginListener) context;

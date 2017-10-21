@@ -1,5 +1,6 @@
 package org.wordpress.android.login;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -37,6 +38,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
+
+import dagger.android.support.AndroidSupportInjection;
 
 public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener {
@@ -192,9 +195,14 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     }
 
     @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLoginListener.inject(this);
 
         mInputSiteAddress = getArguments().getString(ARG_INPUT_SITE_ADDRESS);
         mEndpointAddress = getArguments().getString(ARG_ENDPOINT_ADDRESS);
