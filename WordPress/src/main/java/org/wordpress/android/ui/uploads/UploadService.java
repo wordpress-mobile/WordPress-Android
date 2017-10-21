@@ -351,9 +351,12 @@ public class UploadService extends Service {
             for (MediaModel media : completedMedia) {
                 post = updatePostWithMediaUrl(post, media, processor);
             }
-            // finally remove all completed uploads for this post, as they've been taken care of
-            ClearMediaPayload clearMediaPayload = new ClearMediaPayload(post, completedMedia);
-            sInstance.mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
+
+            if (completedMedia != null && !completedMedia.isEmpty()) {
+                // finally remove all completed uploads for this post, as they've been taken care of
+                ClearMediaPayload clearMediaPayload = new ClearMediaPayload(post, completedMedia);
+                sInstance.mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
+            }
         }
         return post;
     }
