@@ -17,7 +17,9 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -178,17 +180,34 @@ public class UploadService extends Service {
 
             mPostUploadNotifier.cancelErrorNotification(post);
 
+            // is this a new post? only add count to the notification when the post is totally new
+            // i.e. it still doesn't have any tracked state in the UploadStore
+            // or it's a failed one the user is actively retrying.
+            if (isThisPostTotallyNewOrFailed(post)) {
+                mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
+            }
+
             if (!hasPendingOrInProgressMediaUploadsForPost(post)) {
                 mPostUploadHandler.upload(post);
-                mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
             } else {
                 // Register the post (as PENDING) in the UploadStore, along with all media currently in progress for it
                 // If the post is already registered, the new media will be added to its list
                 List<MediaModel> activeMedia = MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
                 mUploadStore.registerPostModel(post, activeMedia);
-                mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
             }
         }
+    }
+
+    private boolean isThisPostTotallyNewOrFailed(PostModel post){
+        // if we have any tracks for this Post's UploadState, this means this Post is not new.
+        // Conditions under which the UploadStore would contain traces of this Post's UploadState are:
+        // - it's been cancelled by entering/exiting/entering the editor thus cancelling the queued post upload
+        // to allow for the user to keep editing it before sending to the server
+        // - it's a failed upload (due to some network issue, for example)
+        // - it's a pending upload (it is currently registered for upload once the associated media finishes
+        // uploading).
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
+        return (postUploadModel == null) || (postUploadModel.getUploadState() == PostUploadModel.FAILED);
     }
 
     /**
@@ -465,15 +484,20 @@ public class UploadService extends Service {
         }
     }
 
-    private void cancelPostUploadMatchingMedia(@NonNull MediaModel media, String errorMessage) {
+    private void cancelPostUploadMatchingMedia(@NonNull MediaModel media, String errorMessage, boolean showError) {
         PostModel postToCancel = mPostStore.getPostByLocalPostId(media.getLocalPostId());
         if (postToCancel == null) return;
 
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
         mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(postToCancel);
 
-        if (mUploadStore.isPendingPost(postToCancel) || mUploadStore.isCancelledPost(postToCancel)) {
-            // Only show the media upload error notification if the post is registered in the UploadStore
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(postToCancel.getId());
+        if (showError || ((postUploadModel != null)
+                && postUploadModel.getUploadState() != PostUploadModel.PENDING
+                && postUploadModel.getUploadState() != PostUploadModel.CANCELLED)) {
+            // Only show the media upload error notification if the post is NOT registered in the UploadStore
+            // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
+            // the user actively cancelled it. No need to show an error then.
             String message = UploadUtils.getErrorMessage(this, postToCancel, errorMessage, true);
             mPostUploadNotifier.updateNotificationError(postToCancel, site, message);
         }
@@ -498,7 +522,7 @@ public class UploadService extends Service {
                 AppLog.w(T.MAIN, "UploadService > Media upload failed for post " + event.media.getLocalPostId() + " : "
                         + event.error.type + ": " + event.error.message);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
-                cancelPostUploadMatchingMedia(event.media, errorMessage);
+                cancelPostUploadMatchingMedia(event.media, errorMessage, true);
             }
             stopServiceIfUploadsComplete();
             return;
@@ -508,7 +532,7 @@ public class UploadService extends Service {
             if (event.media.getLocalPostId() > 0) {
                 AppLog.i(T.MAIN, "UploadService > Upload cancelled for post with id " + event.media.getLocalPostId()
                         + " - a media upload for this post has been cancelled, id: " + event.media.getId());
-                cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
+                cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled), false);
             }
             stopServiceIfUploadsComplete();
             return;
