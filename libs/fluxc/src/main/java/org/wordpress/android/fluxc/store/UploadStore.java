@@ -199,6 +199,11 @@ public class UploadStore extends Store {
         return postUploadModel != null && postUploadModel.getUploadState() == PostUploadModel.CANCELLED;
     }
 
+    public boolean isRegisteredPostModel(PostModel post) {
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
+        return postUploadModel != null;
+    }
+
     /**
      * If the {@code postModel} has been registered as uploading with the UploadStore, this will return the associated
      * {@link PostError}, if any.
