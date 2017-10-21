@@ -218,6 +218,12 @@ public class UploadService extends Service {
         }
     }
 
+    public static void cancelFinalNotification(PostModel post){
+        // cancel any outstanding "end" notification for this Post before we start processing it again
+        // i.e. dismiss success or error notification for the post.
+        sInstance.mPostUploadNotifier.cancelFinalNotification(post);
+    }
+
     private void makePostPublishable(@NonNull PostModel post) {
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
