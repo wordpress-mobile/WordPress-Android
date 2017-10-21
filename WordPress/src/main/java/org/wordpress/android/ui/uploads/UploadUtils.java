@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -248,11 +247,8 @@ public class UploadUtils {
                     UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            boolean isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT
-                                    || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
-
                             Intent intent = UploadService.getUploadPostServiceIntent(
-                                    activity, post, isFirstTimePublish, false, true);
+                                    activity, post, PostUtils.isFirstTimePublish(post), false, true);
                             activity.startService(intent);
                         }
                     });

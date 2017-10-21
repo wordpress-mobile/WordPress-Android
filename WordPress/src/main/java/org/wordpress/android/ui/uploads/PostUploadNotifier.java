@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
+import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -360,20 +361,15 @@ class PostUploadNotifier {
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
 
-        boolean isFirstTimePublish =
-                (PostStatus.fromPost(post) == PostStatus.UNKNOWN || PostStatus.fromPost(post) == PostStatus.PUBLISHED) &&
-                post.isLocalDraft();
-
         // Add RETRY action - only available on Aztec
         if ( AppPrefs.isAztecEditorEnabled()) {
             Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post,
-                    isFirstTimePublish, false, true);
+                    PostUtils.isFirstTimePublish(post), false, true);
             PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
                     actionPendingIntent).setColor(mContext.getResources().getColor(R.color.orange_jazzy));
         }
-
 
         EventBus.getDefault().post(new UploadService.UploadErrorEvent(post, snackbarMessage));
 
