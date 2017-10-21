@@ -567,10 +567,10 @@ public class UploadService extends Service {
         for (String mediaId : mediaMarkedUploadingIds) {
             MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
             if (media == null) {
-                // TODO this media doesn't exist anymore, so we can't really retry. Notify the user that they need
+                // this media doesn't exist anymore, so we can't really retry. Notify the user that they need
                 // to edit the Post manually.
+                ToastUtils.showToast(this, R.string.media_file_missing_for_retry);
                 allMediaOkToRetry = false;
-                // TODO JUST OPEN THE POST IN THE EDITOR FOR NOW
                 break;
             } else {
                 mediaModelList.add(media);
