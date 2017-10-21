@@ -446,22 +446,36 @@ class PostUploadNotifier {
     }
 
     private String buildNotificationSubtitleForMedia(){
-        String uploadingMessage = String.format(
-                mContext.getString(R.string.uploading_subtitle_media_only),
-                sNotificationData.totalMediaItems - getCurrentMediaItem(),
-                sNotificationData.totalMediaItems
-        );
+        String uploadingMessage;
+        if (sNotificationData.totalMediaItems == 1) {
+            uploadingMessage = mContext.getString(R.string.uploading_subtitle_media_only_one);
+        } else {
+            uploadingMessage = String.format(
+                    mContext.getString(R.string.uploading_subtitle_media_only),
+                    sNotificationData.totalMediaItems - getCurrentMediaItem(),
+                    sNotificationData.totalMediaItems
+            );
+        }
         return uploadingMessage;
     }
 
     private String buildNotificationSubtitleForMixedContent(){
-        String uploadingMessage = String.format(
-                mContext.getString(R.string.uploading_subtitle_mixed),
-                sNotificationData.totalPostItems - getCurrentPostItem(),
-                getPagesAndOrPostsString(),
-                sNotificationData.totalMediaItems - getCurrentMediaItem(),
-                sNotificationData.totalMediaItems
-        );
+        String uploadingMessage;
+        if (sNotificationData.totalMediaItems == 1) {
+            uploadingMessage = String.format(
+                    mContext.getString(R.string.uploading_subtitle_mixed_one),
+                    sNotificationData.totalPostItems - getCurrentPostItem(),
+                    getPagesAndOrPostsString()
+            );
+        } else {
+            uploadingMessage = String.format(
+                    mContext.getString(R.string.uploading_subtitle_mixed),
+                    sNotificationData.totalPostItems - getCurrentPostItem(),
+                    getPagesAndOrPostsString(),
+                    sNotificationData.totalMediaItems - getCurrentMediaItem(),
+                    sNotificationData.totalMediaItems
+            );
+        }
         return uploadingMessage;
     }
 
