@@ -31,11 +31,13 @@ import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.posts.PostUtils;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
@@ -196,7 +198,11 @@ public class UploadService extends Service {
             }
 
             if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
-                aztecRetryUpload(post);
+                if (AppPrefs.isAztecEditorEnabled()) {
+                    aztecRetryUpload(post);
+                } else {
+                    ToastUtils.showToast(this, R.string.retry_needs_aztec);
+                }
                 return;
             }
 
@@ -564,6 +570,7 @@ public class UploadService extends Service {
                 // TODO this media doesn't exist anymore, so we can't really retry. Notify the user that they need
                 // to edit the Post manually.
                 allMediaOkToRetry = false;
+                // TODO JUST OPEN THE POST IN THE EDITOR FOR NOW
                 break;
             } else {
                 mediaModelList.add(media);
