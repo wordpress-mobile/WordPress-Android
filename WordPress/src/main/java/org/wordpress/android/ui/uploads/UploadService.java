@@ -39,6 +39,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.aztec.Aztec;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -227,7 +228,9 @@ public class UploadService extends Service {
     public static void cancelFinalNotification(PostModel post){
         // cancel any outstanding "end" notification for this Post before we start processing it again
         // i.e. dismiss success or error notification for the post.
-        sInstance.mPostUploadNotifier.cancelFinalNotification(post);
+        if (sInstance != null && sInstance.mPostUploadNotifier != null) {
+            sInstance.mPostUploadNotifier.cancelFinalNotification(post);
+        }
     }
 
     private void makePostPublishable(@NonNull PostModel post) {
@@ -526,14 +529,19 @@ public class UploadService extends Service {
             // For each post with completed media uploads, update the content with the new remote URLs
             // This is done in a batch when all media is complete to prevent conflicts by updating separate images
             // at a time simultaneously for the same post
-            PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(postModel);
-            // also do the same now with failed uploads
-            updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
-            // finally, save the PostModel
-            if (updatedPost != null) {
-                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
-            }
+            updateOnePostModelWithCompletedAndFailedUploads(postModel);
         }
+    }
+
+    private PostModel updateOnePostModelWithCompletedAndFailedUploads(PostModel postModel) {
+        PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(postModel);
+        // also do the same now with failed uploads
+        updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
+        // finally, save the PostModel
+        if (updatedPost != null) {
+            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+        }
+        return updatedPost;
     }
 
     private void cancelPostUploadMatchingMedia(@NonNull MediaModel media, String errorMessage, boolean showError) {
@@ -560,14 +568,14 @@ public class UploadService extends Service {
     }
 
     private void aztecRetryUpload(PostModel post) {
-        PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(post);
-        List<String> mediaMarkedUploadingIds =
-                AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, updatedPost.getContent());
-        Collections.sort(mediaMarkedUploadingIds);
+        PostModel updatedPost = updateOnePostModelWithCompletedAndFailedUploads(post);
+        List<String> mediaMarkedFailedIds =
+                AztecEditorFragment.getMediaMarkedFailedInPostContent(this, updatedPost.getContent());
+        Collections.sort(mediaMarkedFailedIds);
         boolean allMediaOkToRetry = true;
         ArrayList<MediaModel> mediaModelList = new ArrayList<>();
 
-        for (String mediaId : mediaMarkedUploadingIds) {
+        for (String mediaId : mediaMarkedFailedIds) {
             MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
             if (media == null) {
                 // this media doesn't exist anymore, so we can't really retry. Notify the user that they need
@@ -580,16 +588,18 @@ public class UploadService extends Service {
             }
         }
 
-
         // if all media items are good, run through them again
         if (allMediaOkToRetry) {
             for (MediaModel media : mediaModelList) {
                 media.setUploadState(MediaModel.MediaUploadState.QUEUED);
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             }
+            String postContentWithRestartedUploads = AztecEditorFragment.restartFailedMediaToUploading(this, updatedPost.getContent());
+            updatedPost.setContent(postContentWithRestartedUploads);
+            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
             // now start the service, enqueuing the media and the Post
             uploadMedia(this, mediaModelList);
-            uploadPost(this, post);
+            uploadPost(this, updatedPost);
         }
     }
 
