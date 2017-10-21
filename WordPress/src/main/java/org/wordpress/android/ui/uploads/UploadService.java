@@ -238,7 +238,7 @@ public class UploadService extends Service {
 
 
     public static Intent getUploadPostServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics,
-                                                    long notificationId, boolean publish, boolean isRetry) {
+                                                    boolean publish, boolean isRetry) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);

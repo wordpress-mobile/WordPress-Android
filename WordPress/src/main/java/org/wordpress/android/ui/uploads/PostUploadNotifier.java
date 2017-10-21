@@ -281,7 +281,8 @@ class PostUploadNotifier {
 
         // add draft Publish action for drafts
         if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
-            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post, isFirstTimePublish, notificationId, true, false);
+            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post,
+                    isFirstTimePublish, true, false);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(R.drawable.ic_posts_grey_24dp, mContext.getString(R.string.post_publish_q_action),
@@ -365,7 +366,8 @@ class PostUploadNotifier {
 
         // Add RETRY action - only available on Aztec
         if ( AppPrefs.isAztecEditorEnabled()) {
-            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post, isFirstTimePublish, notificationId, false, true);
+            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post,
+                    isFirstTimePublish, false, true);
             PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),

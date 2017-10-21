@@ -243,6 +243,7 @@ public class UploadUtils {
                                                      final SiteModel site, final Dispatcher dispatcher) {
         if (isError) {
             if (errorMessage != null) {
+                // RETRY only available for Aztec
                 if (AppPrefs.isAztecEditorEnabled()) {
                     UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry, new View.OnClickListener() {
                         @Override
@@ -250,8 +251,8 @@ public class UploadUtils {
                             boolean isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT
                                     || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
 
-                            Intent intent = UploadService.getUploadPostServiceIntent(activity, post, isFirstTimePublish,
-                                    PostUploadNotifier.getNotificationIdForPost(post), false, true);
+                            Intent intent = UploadService.getUploadPostServiceIntent(
+                                    activity, post, isFirstTimePublish, false, true);
                             activity.startService(intent);
                         }
                     });
