@@ -156,9 +156,6 @@ class PostUploadNotifier {
 
     void incrementUploadedPostCountFromForegroundNotification(@NonNull PostModel post) {
         sNotificationData.currentPostItem++;
-        if (post.isPage()) {
-            sNotificationData.totalPageItemsIncludedInPostCount--;
-        }
 
         // update Notification now
         if (!removeNotificationAndStopForegroundServiceIfNoItemsInQueue()) {
@@ -409,16 +406,17 @@ class PostUploadNotifier {
     }
 
     private String buildNotificationSubtitleForPosts(){
-        String pagesAndOrPosts = getPagesAndOrPostsString();
+        int remaining = sNotificationData.totalPostItems - getCurrentPostItem();
+        String pagesAndOrPosts = getPagesAndOrPostsString(remaining);
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
-                sNotificationData.totalPostItems - getCurrentPostItem(),
+                remaining,
                 pagesAndOrPosts
         );
         return uploadingMessage;
     }
 
-    private String getPagesAndOrPostsString() {
+    private String getPagesAndOrPostsString(int remaining) {
         String pagesAndOrPosts;
         if (sNotificationData.totalPageItemsIncludedInPostCount > 0 && sNotificationData.totalPostItems > 0
                 && sNotificationData.totalPostItems > sNotificationData.totalPageItemsIncludedInPostCount) {
@@ -427,7 +425,7 @@ class PostUploadNotifier {
                     mContext.getString(R.string.pages).toLowerCase();
         } else if (sNotificationData.totalPageItemsIncludedInPostCount > 0) {
             // we have only pages
-            if (sNotificationData.totalPageItemsIncludedInPostCount == 1) {
+            if (remaining == 1) {
                 // only one page
                 pagesAndOrPosts = mContext.getString(R.string.page).toLowerCase();
             } else {
@@ -435,7 +433,7 @@ class PostUploadNotifier {
             }
         } else {
             // we have only posts
-            if (sNotificationData.totalPostItems == 1) {
+            if (remaining == 1) {
                 // only one post
                 pagesAndOrPosts = mContext.getString(R.string.post).toLowerCase();
             } else {
@@ -460,18 +458,19 @@ class PostUploadNotifier {
     }
 
     private String buildNotificationSubtitleForMixedContent(){
+        int remaining = sNotificationData.totalPostItems - getCurrentPostItem();
         String uploadingMessage;
         if (sNotificationData.totalMediaItems == 1) {
             uploadingMessage = String.format(
                     mContext.getString(R.string.uploading_subtitle_mixed_one),
-                    sNotificationData.totalPostItems - getCurrentPostItem(),
-                    getPagesAndOrPostsString()
+                    remaining,
+                    getPagesAndOrPostsString(remaining)
             );
         } else {
             uploadingMessage = String.format(
                     mContext.getString(R.string.uploading_subtitle_mixed),
                     sNotificationData.totalPostItems - getCurrentPostItem(),
-                    getPagesAndOrPostsString(),
+                    getPagesAndOrPostsString(remaining),
                     sNotificationData.totalMediaItems - getCurrentMediaItem(),
                     sNotificationData.totalMediaItems
             );
