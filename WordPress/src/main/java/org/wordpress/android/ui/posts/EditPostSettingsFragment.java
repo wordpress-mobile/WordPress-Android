@@ -172,15 +172,25 @@ public class EditPostSettingsFragment extends Fragment {
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSite(),
                 new SiteSettingsListener() {
                     @Override
-                    public void onSettingsUpdated(Exception error) {
-                        // EditPostActivityHook will be null if the fragment is detached
-                        if (error == null && getEditPostActivityHook() != null) {
+                    public void onSaveError(Exception error) {
+                        // no-op
+                    }
+
+                    @Override
+                    public void onFetchError(Exception error) {
+                        // no-op
+                    }
+
+                    @Override
+                    public void onSettingsUpdated() {
+                        // mEditPostActivityHook will be null if the fragment is detached
+                        if (getEditPostActivityHook() != null) {
                             updatePostFormat(mSiteSettings.getDefaultPostFormat());
                         }
                     }
 
                     @Override
-                    public void onSettingsSaved(Exception error) {
+                    public void onSettingsSaved() {
                         // no-op
                     }
 
