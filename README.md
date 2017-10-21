@@ -66,10 +66,10 @@ Read more about [OAuth2](https://developer.wordpress.com/docs/oauth2/) and the [
 ## Google Configuration ##
 
 Google Sign-In is only available for WordPress.com accounts through the [official app][1].
-Contributors can build and run the app without issue, but Google Sign-In will
-fail silently. Google Sign-In requires configuration files which contain client
-and server information that can't be shared publicly. More documentation and
-guides can be found on the [Google Identity Platform website][8].
+Contributors can build and run the app without issue, but Google Sign-In will always fail.
+Google Sign-In requires configuration files which contain client and server information
+that can't be shared publicly. More documentation and guides can be found on the
+[Google Identity Platform website][8].
 
 ## How we work ##
 
