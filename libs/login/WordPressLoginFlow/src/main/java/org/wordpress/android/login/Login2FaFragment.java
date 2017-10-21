@@ -1,6 +1,7 @@
 package org.wordpress.android.login;
 
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -34,6 +35,8 @@ import org.wordpress.android.util.ToastUtils;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import dagger.android.support.AndroidSupportInjection;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
@@ -121,9 +124,14 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     }
 
     @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLoginListener.inject(this);
 
         mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
         mPassword = getArguments().getString(ARG_PASSWORD);

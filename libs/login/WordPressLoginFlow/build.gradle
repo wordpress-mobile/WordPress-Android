@@ -37,12 +37,19 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:77e383f3e65ce1cee3f9ebad2eac522f29b4e3b8') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3c598e8f305b0346a4fb84e94e0c097f7fe28df5') {
         exclude group: "com.android.volley";
     }
 
     compile 'com.github.bumptech.glide:glide:4.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+
+    // Dagger
+    compile 'com.google.dagger:dagger:2.11'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.google.dagger:dagger-android-support:2.11'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
 }
 
 // Add properties named "wp.xxx" to our BuildConfig

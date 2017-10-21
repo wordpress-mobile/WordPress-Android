@@ -7,13 +7,7 @@ import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseOkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
-import org.wordpress.android.login.Login2FaFragment;
-import org.wordpress.android.login.LoginEmailFragment;
-import org.wordpress.android.login.LoginEmailPasswordFragment;
-import org.wordpress.android.login.LoginMagicLinkRequestFragment;
-import org.wordpress.android.login.LoginSiteAddressFragment;
-import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment;
-import org.wordpress.android.login.LoginUsernamePasswordFragment;
+import org.wordpress.android.login.di.LoginModule;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
@@ -121,7 +115,8 @@ import dagger.android.support.AndroidSupportInjectionModule;
         ReleaseNetworkModule.class,
         LegacyModule.class,
         ReleaseToolsModule.class,
-        AndroidSupportInjectionModule.class
+        AndroidSupportInjectionModule.class,
+        LoginModule.class
 })
 public interface AppComponent extends AndroidInjector<WordPress> {
     @Override
@@ -141,14 +136,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(LoginActivity object);
     void inject(LoginEpilogueActivity object);
-
-    void inject(Login2FaFragment object);
-    void inject(LoginEmailFragment object);
-    void inject(LoginEmailPasswordFragment object);
-    void inject(LoginMagicLinkRequestFragment object);
-    void inject(LoginSiteAddressFragment object);
-    void inject(LoginSiteAddressHelpDialogFragment object);
-    void inject(LoginUsernamePasswordFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsWidgetConfigureAdapter object);

@@ -30,7 +30,6 @@ import org.wordpress.android.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.login.LoginSiteAddressFragment;
-import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -51,8 +50,14 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
+
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener, LoginPrologueListener {
+        Callback, LoginListener, LoginPrologueListener, HasSupportFragmentInjector {
     private static final String KEY_SMARTLOCK_COMPLETED = "KEY_SMARTLOCK_COMPLETED";
 
     private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
@@ -61,6 +66,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private boolean mSmartLockCompleted;
 
     private LoginMode mLoginMode;
+
+    @Inject DispatchingAndroidInjector<Fragment> fragmentInjector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -456,43 +463,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         AnalyticsUtils.trackAnalyticsSignIn(accountStore, siteStore, isWpcomLogin);
     }
 
-    // Injectors
-
-    @Override
-    public void inject(Login2FaFragment object) {
-        ((WordPress) getApplication()).component().inject(object);
-    }
-
-    @Override
-    public void inject(LoginEmailFragment object) {
-        ((WordPress) getApplication()).component().inject(object);
-    }
-
-    @Override
-    public void inject(LoginEmailPasswordFragment object) {
-        ((WordPress) getApplication()).component().inject(object);
-    }
-
-    @Override
-    public void inject(LoginMagicLinkRequestFragment object) {
-        ((WordPress) getApplication()).component().inject(object);
-    }
-
-    @Override
-    public void inject(LoginSiteAddressFragment object) {
-        ((WordPress) getApplication()).component().inject(object);
-    }
-
-    @Override
-    public void inject(LoginSiteAddressHelpDialogFragment object) {
-        ((WordPress) getApplication()).component().inject(object);
-    }
-
-    @Override
-    public void inject(LoginUsernamePasswordFragment object) {
-        ((WordPress) getApplication()).component().inject(object);
-    }
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         AppLog.d(AppLog.T.NUX, "Connection result: " + connectionResult);
@@ -533,5 +503,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onConnectionSuspended(int i) {
         AppLog.d(AppLog.T.NUX, "Google API client connection suspended");
+    }
+
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return fragmentInjector;
     }
 }
