@@ -722,6 +722,26 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_epilogue_viewed";
             case LOGIN_FORGOT_PASSWORD_CLICKED:
                 return "login_forgot_password_clicked";
+            case LOGIN_SOCIAL_BUTTON_CLICK:
+                return "login_social_button_click";
+            case LOGIN_SOCIAL_BUTTON_FAILURE:
+                return "login_social_button_failure";
+            case LOGIN_SOCIAL_CONNECT_SUCCESS:
+                return "login_social_connect_success";
+            case LOGIN_SOCIAL_CONNECT_FAILURE:
+                return "login_social_connect_failure";
+            case LOGIN_SOCIAL_SUCCESS:
+                return "login_social_success";
+            case LOGIN_SOCIAL_FAILURE:
+                return "login_social_failure";
+            case LOGIN_SOCIAL_2FA_NEEDED:
+                return "login_social_2fa_needed";
+            case LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING:
+                return "login_social_accounts_need_connecting";
+            case LOGIN_SOCIAL_ERROR_ACCOUNT_ALREADY_CONNECTED:
+                return "login_social_account_already_connected";
+            case LOGIN_SOCIAL_ERROR_UNKNOWN_USER:
+                return "login_social_unknown_user";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
