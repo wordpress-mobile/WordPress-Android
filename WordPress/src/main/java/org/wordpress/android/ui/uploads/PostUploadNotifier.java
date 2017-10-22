@@ -269,7 +269,7 @@ class PostUploadNotifier {
             Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post, isFirstTimePublish, notificationId, true);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
-            notificationBuilder.addAction(R.drawable.ic_posts_grey_24dp, mContext.getString(R.string.post_publish_q_action),
+            notificationBuilder.addAction(R.drawable.ic_posts_grey_24dp, mContext.getString(R.string.button_publish),
                     pendingIntent);
         }
 
