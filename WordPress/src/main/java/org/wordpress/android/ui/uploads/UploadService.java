@@ -200,7 +200,7 @@ public class UploadService extends Service {
 
             if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
                 if (AppPrefs.isAztecEditorEnabled()) {
-                    aztecRetryUpload(post);
+                    aztecRetryUpload(post, shouldTrackAnalytics);
                 } else {
                     ToastUtils.showToast(this, R.string.retry_needs_aztec);
                 }
@@ -567,7 +567,7 @@ public class UploadService extends Service {
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
     }
 
-    private void aztecRetryUpload(PostModel post) {
+    private void aztecRetryUpload(PostModel post, boolean shouldTrackAnalytics) {
         PostModel updatedPost = updateOnePostModelWithCompletedAndFailedUploads(post);
         List<String> mediaMarkedFailedIds =
                 AztecEditorFragment.getMediaMarkedFailedInPostContent(this, updatedPost.getContent());
@@ -599,7 +599,11 @@ public class UploadService extends Service {
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
             // now start the service, enqueuing the media and the Post
             uploadMedia(this, mediaModelList);
-            uploadPost(this, updatedPost);
+            if (shouldTrackAnalytics) {
+                uploadPostAndTrackAnalytics(this, updatedPost);
+            } else {
+                uploadPost(this, updatedPost);
+            }
         }
     }
 
