@@ -245,6 +245,14 @@ public class UploadUtils {
             } else {
                 int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
                 UploadUtils.showSnackbar(snackbarAttachView, messageRes);
+                UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes,
+                        R.string.button_view, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // jump to Editor Preview mode to show this Post
+                                ActivityLauncher.viewPostPreviewForResult(activity, site, post);
+                            }
+                        });
             }
         }
     }
