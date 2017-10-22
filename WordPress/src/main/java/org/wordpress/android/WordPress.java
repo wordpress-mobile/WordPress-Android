@@ -611,7 +611,6 @@ public class WordPress extends MultiDexApplication {
         private boolean mConnectionReceiverRegistered;
 
         boolean mFirstActivityResumed = true;
-        boolean mIsInBackground = true;
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
@@ -706,7 +705,6 @@ public class WordPress extends MultiDexApplication {
 
         private void onAppGoesToBackground() {
             AppLog.i(T.UTILS, "App goes to background");
-            mIsInBackground = true;
             sAppIsInTheBackground = true;
             String lastActivityString = AppPrefs.getLastActivityStr();
             ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
@@ -737,7 +735,6 @@ public class WordPress extends MultiDexApplication {
                 this.mActivityTransitionTimer.cancel();
             }
 
-            mIsInBackground = false;
             sAppIsInTheBackground = false;
         }
 
@@ -802,13 +799,12 @@ public class WordPress extends MultiDexApplication {
 
         @Override
         public void onActivityResumed(Activity activity) {
-            if (mIsInBackground) {
+            if (sAppIsInTheBackground) {
                 // was in background before
                 onAppComesFromBackground(activity);
             }
             stopActivityTransitionTimer();
 
-            mIsInBackground = false;
             sAppIsInTheBackground = false;
             if (mFirstActivityResumed) {
                 deferredInit(activity);
