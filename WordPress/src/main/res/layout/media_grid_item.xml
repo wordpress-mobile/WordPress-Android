@@ -93,8 +93,8 @@
                     android:layout_height="38dp"
                     android:layout_marginLeft="@dimen/margin_medium"
                     android:layout_marginRight="@dimen/margin_medium"
-                    android:background="@drawable/photo_picker_circle_normal"
-                    android:padding="@dimen/margin_small"
+                    android:background="@drawable/media_icon_circle"
+                    android:padding="10dp"
                     app:srcCompat="@drawable/media_retry_image" />
 
                 <ImageView
@@ -103,8 +103,8 @@
                     android:layout_height="38dp"
                     android:layout_marginLeft="@dimen/margin_medium"
                     android:layout_marginRight="@dimen/margin_medium"
-                    android:background="@drawable/photo_picker_circle_normal"
-                    android:padding="@dimen/margin_small"
+                    android:background="@drawable/media_icon_circle"
+                    android:padding="10dp"
                     app:srcCompat="@drawable/ic_trash_white_24dp" />
             </LinearLayout>
 
