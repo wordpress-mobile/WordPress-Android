@@ -99,9 +99,7 @@ Language: th
 	<string name="invalid_username_no_spaces">ชื่อผู้ใช้ไม่สามารถมีที่ว่างได้</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">เว็บที่คุณติดตามยังไม่มีเรื่องใหม่เมื่อเร็ว ๆ มานี้</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">ไม่มีเรื่องใหม่</string>
-	<string name="media_details_copy_url_toast">คัดลอก URL ไปยังคลิปบอร์ด</string>
 	<string name="edit_media">แก้ไขไฟล์สื่อ</string>
-	<string name="media_details_copy_url">คัดลอก URL</string>
 	<string name="media_details_label_date_uploaded">อัปโหลดแล้ว</string>
 	<string name="media_details_label_date_added">เพิ่มแล้ว</string>
 	<string name="selected_theme">ธีมที่เลือก</string>
@@ -362,7 +360,6 @@ Language: th
 	<string name="delete_sure_page">ลบหน้านี้</string>
 	<string name="cab_selected">%d ถูกเลือก</string>
 	<string name="confirm_delete_multi_media">ลบสิ่งที่ถูกเลือกหรือไม่?</string>
-	<string name="confirm_delete_media">ลบสิ่งที่ถูกเลือกหรือไม่?</string>
 	<string name="comment_reply_to_user">ตอบกลับไปที่ %s</string>
 	<string name="pages_empty_list">ยังไม่มีหน้า ทำไมไม่สร้างสักหนึ่งหน้า?</string>
 	<string name="older_two_days">เก่ากว่า 2 วัน</string>

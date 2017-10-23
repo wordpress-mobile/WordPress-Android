@@ -492,9 +492,7 @@ Language: sq_AL
 	<string name="invalid_username_no_spaces">Emri i përdoruesit s&amp;#8217;mund të përmbajë hapësira</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Sajtet që ndiqni s&amp;#8217;kanë postuar gjë tani afër</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Pa postime së fundi</string>
-	<string name="media_details_copy_url_toast">URL-ja u kopjua në të papastër</string>
 	<string name="edit_media">Përpunoni media</string>
-	<string name="media_details_copy_url">Kopjojei URL-në</string>
 	<string name="media_details_label_date_uploaded">U ngarkua</string>
 	<string name="media_details_label_date_added">U shtua</string>
 	<string name="selected_theme">Temë e Përzgjedhur</string>
@@ -755,7 +753,6 @@ Language: sq_AL
 	<string name="delete_sure">Fshije këtë skicë</string>
 	<string name="delete_sure_page">Fshije këtë faqe</string>
 	<string name="confirm_delete_multi_media">Të fshihen objektet e përzgjedhur?</string>
-	<string name="confirm_delete_media">Të fshihet objekti i përzgjedhur?</string>
 	<string name="cab_selected">%d të përzgjedhur</string>
 	<string name="reader_empty_posts_liked">S\'keni pëlqyer ende ndonjë postim</string>
 	<string name="faq_button">FAQ</string>

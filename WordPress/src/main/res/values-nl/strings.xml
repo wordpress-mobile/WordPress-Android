@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-09-27 08:54:33+0000
+Translation-Revision-Date: 2017-10-20 15:28:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+	<string name="error_media_still_uploading">Wacht tot de upload voltooid is</string>
+	<string name="deleting_media_dlg">Verwijderen...</string>
+	<string name="confirm_delete_media_video">Deze video verwijderen?</string>
+	<string name="confirm_delete_media_image">Deze afbeelding verwijderen?</string>
+	<string name="media_title_document_details">Documentgegevens</string>
+	<string name="media_title_audio_details">Audiogegevens</string>
+	<string name="media_title_video_details">Videogegevens</string>
+	<string name="media_title_image_details">Afbeeldinggegevens</string>
+	<string name="fab_content_description_preview">Voorbeeld bekijken</string>
+	<string name="media_edit_upload_date_caption">Uploaddatum</string>
+	<string name="media_edit_duration_caption">Duur</string>
+	<string name="media_edit_video_dimensions_caption">Video-afmetingen</string>
+	<string name="media_edit_image_dimensions_caption">Afbeeldingsafmetingen</string>
+	<string name="media_edit_filetype_caption">Bestandstype</string>
+	<string name="media_edit_filename_caption">Bestandsnaam</string>
+	<string name="media_edit_url_caption">URL</string>
+	<string name="media_edit_card_caption">Bestandgegevens</string>
+	<string name="media_edit_alttext_text">Alt. tekst</string>
+	<string name="copy">Kopieer</string>
 	<string name="connect_site">Site koppelen</string>
 	<string name="notification_settings_item_sights_and_sounds_blink_light">Lamp laten knipperen</string>
 	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Apparaat laten trillen</string>
@@ -756,8 +775,7 @@ Language: nl
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">De sites die je volgt hebben recent niets geplaatst</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Geen recente berichten</string>
 	<string name="edit_media">Media bewerken</string>
-	<string name="media_details_copy_url_toast">URL gekopieerd naar klembord</string>
-	<string name="media_details_copy_url">URL kopiëren</string>
+	<string name="media_edit_copy_url_toast">URL gekopieerd naar klembord</string>
 	<string name="media_details_label_date_uploaded">Geüpload</string>
 	<string name="media_details_label_date_added">Toegevoegd</string>
 	<string name="selected_theme">Geselecteerd thema</string>
@@ -1018,7 +1036,6 @@ Language: nl
 	<string name="themes_fetching">Thema\'s ophalen …</string>
 	<string name="ssl_certificate_details">Details</string>
 	<string name="cab_selected">%d geselecteerd</string>
-	<string name="confirm_delete_media">Geselecteerd item verwijderen?</string>
 	<string name="confirm_delete_multi_media">Geselecteerde items verwijderen?</string>
 	<string name="delete_sure_page">Deze pagina verwijderen</string>
 	<string name="delete_sure">Dit concept verwijderen</string>
