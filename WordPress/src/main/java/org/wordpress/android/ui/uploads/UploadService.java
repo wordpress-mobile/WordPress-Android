@@ -34,6 +34,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -197,6 +198,10 @@ public class UploadService extends Service {
 
             if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
                 if (AppPrefs.isAztecEditorEnabled()) {
+                    if (!NetworkUtils.isNetworkAvailable(this)) {
+                        rebuildNotificationError(post, getString(R.string.no_network_message));
+                        return;
+                    }
                     aztecRetryUpload(post);
                 } else {
                     ToastUtils.showToast(this, R.string.retry_needs_aztec);
@@ -557,6 +562,14 @@ public class UploadService extends Service {
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
+
+    }
+
+    private void rebuildNotificationError(PostModel post, String errorMessage) {
+        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
+        mPostUploadNotifier.setTotalMediaItems(post, failedMedia.size());
+        mPostUploadNotifier.updateNotificationError(post,
+                mSiteStore.getSiteByLocalId(post.getLocalSiteId()), errorMessage);
 
     }
 

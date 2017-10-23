@@ -434,7 +434,13 @@ class PostUploadNotifier {
     }
 
     void setTotalMediaItems(PostModel post, int totalMediaItems) {
-        sNotificationData.totalMediaItems+=totalMediaItems;
+        if (post != null) {
+            sNotificationData.totalPostItems = 1;
+            if (post.isPage()) {
+                sNotificationData.totalPageItemsIncludedInPostCount = 1;
+            }
+        }
+        sNotificationData.totalMediaItems = totalMediaItems;
     }
 
     private String buildNotificationTitleForPost(PostModel post) {
