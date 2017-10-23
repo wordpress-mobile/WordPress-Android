@@ -232,7 +232,6 @@ Language: es_CL
 	<string name="delete_sure">Eliminar este borrador</string>
 	<string name="delete_sure_page">Eliminar esta página</string>
 	<string name="confirm_delete_multi_media">¿Quieres eliminar los elementos seleccionados?</string>
-	<string name="confirm_delete_media">¿Quieres eliminar el elemento seleccionado?</string>
 	<string name="cab_selected">%d seleccionados</string>
 	<string name="reader_empty_followed_blogs_title">Todavía no sigues a ningún sitio.</string>
 	<string name="reader_empty_posts_liked">No te ha gustado ninguna entrada.</string>
