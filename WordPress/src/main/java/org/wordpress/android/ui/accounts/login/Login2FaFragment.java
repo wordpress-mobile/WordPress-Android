@@ -55,7 +55,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private static final String ARG_2FA_NONCE_BACKUP = "ARG_2FA_NONCE_BACKUP";
     private static final String ARG_2FA_NONCE_SMS = "ARG_2FA_NONCE_SMS";
     private static final String ARG_2FA_SOCIAL_SERVICE = "ARG_2FA_SOCIAL_SERVICE";
-    private static final String ARG_2FA_TYPE = "ARG_2FA_TYPE";
     private static final String ARG_2FA_USER_ID = "ARG_2FA_USER_ID";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
@@ -108,7 +107,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
         args.putString(ARG_2FA_USER_ID, userId);
-        args.putString(ARG_2FA_TYPE, TWO_FACTOR_TYPE_AUTHENTICATOR);
         args.putString(ARG_2FA_NONCE_AUTHENTICATOR, nonceAuthenticator);
         args.putString(ARG_2FA_NONCE_BACKUP, nonceBackup);
         args.putString(ARG_2FA_NONCE_SMS, nonceSms);
@@ -185,7 +183,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mNonceAuthenticator = getArguments().getString(ARG_2FA_NONCE_AUTHENTICATOR);
         mNonceBackup = getArguments().getString(ARG_2FA_NONCE_BACKUP);
         mNonceSms = getArguments().getString(ARG_2FA_NONCE_SMS);
-        mType = getArguments().getString(ARG_2FA_TYPE);
         mUserId = getArguments().getString(ARG_2FA_USER_ID);
         mIdToken = getArguments().getString(ARG_2FA_ID_TOKEN);
         isSocialLogin2fa = getArguments().getBoolean(ARG_2FA_IS_SOCIAL);
