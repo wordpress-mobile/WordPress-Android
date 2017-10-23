@@ -53,6 +53,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,6 +61,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         implements TextWatcher, OnEditorCommitListener, ConnectionCallbacks, OnConnectionFailedListener {
+    private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
     private static final String SERVICE_TYPE_GOOGLE = "google";
     private static final String STATE_RESOLVING_ERROR = "STATE_RESOLVING_ERROR";
@@ -69,6 +71,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
+    private ArrayList<Integer> mOldSitesIDs;
     private GoogleApiClient mGoogleApiClient;
     private String mGoogleEmail;
     private String mIdToken;
@@ -129,6 +132,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
 
                 // Start login process.
                 if (NetworkUtils.checkConnection(getActivity()) && !isResolvingError) {
+                    mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                     connectGoogleClient();
                     isSocialLogin = true;
                 }
@@ -224,6 +228,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
+            mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
             mRequestedEmail = savedInstanceState.getString(KEY_REQUESTED_EMAIL);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
@@ -233,6 +238,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
         outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);
         outState.putBoolean(STATE_RESOLVING_ERROR, isResolvingError);
     }
@@ -540,6 +546,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @Override
     protected void onLoginFinished() {
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
-        mLoginListener.loggedInViaSocialAccount(SiteUtils.getCurrentSiteIds(mSiteStore, false));
+        mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
     }
 }
