@@ -1,6 +1,7 @@
 package org.wordpress.android.analytics;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.automattic.android.tracks.TracksClient;
 
@@ -298,7 +299,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             AppLog.e(AppLog.T.UTILS, e);
         }
 
-        if (metadata.isUserConnected() && metadata.isWordPressComUser()) {
+        // De-anonymize user only when it's WPCOM and we have the username available (might still be waiting for it to
+        //  be fetched).
+        if (metadata.isUserConnected() && metadata.isWordPressComUser()
+                && !TextUtils.isEmpty(metadata.getUsername())) {
             setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
             if (getAnonID() != null) {
@@ -682,6 +686,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_autofill_credentials_filled";
             case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
                 return "login_autofill_credentials_updated";
+            case LOGIN_PROLOGUE_PAGED:
+                return "login_prologue_paged";
             case LOGIN_PROLOGUE_VIEWED:
                 return "login_prologue_viewed";
             case LOGIN_EMAIL_FORM_VIEWED:
@@ -724,6 +730,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notification_settings_streams_opened";
             case NOTIFICATION_SETTINGS_DETAILS_OPENED:
                 return "notification_settings_details_opened";
+            case NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED:
+                return "notification_settings_app_notifications_disabled";
+            case NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED:
+                return "notification_settings_app_notifications_enabled";
             case ME_ACCESSED:
                 return "me_tab_accessed";
             case ME_GRAVATAR_TAPPED:
@@ -844,6 +854,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_permission_granted";
             case APP_PERMISSION_DENIED:
                 return "app_permission_denied";
+            case SHARE_TO_WP_SUCCEEDED:
+                return "share_to_wp_succeeded";
             default:
                 return null;
         }

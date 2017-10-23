@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -57,6 +60,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -73,6 +77,8 @@ import java.util.EnumSet;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class ReaderPostDetailFragment extends Fragment
         implements WPMainActivity.OnActivityBackPressedListener,
@@ -207,16 +213,19 @@ public class ReaderPostDetailFragment extends Fragment
         int swipeToRefreshOffset = getResources().getDimensionPixelSize(R.dimen.toolbar_content_offset);
         swipeRefreshLayout.setProgressViewOffset(false, 0, swipeToRefreshOffset);
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), swipeRefreshLayout, new SwipeToRefreshHelper.RefreshListener() {
-            @Override
-            public void onRefreshStarted() {
-                if (!isAdded()) {
-                    return;
-                }
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                swipeRefreshLayout,
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!isAdded()) {
+                            return;
+                        }
 
-                updatePost();
-            }
-        });
+                        updatePost();
+                    }
+                }
+        );
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);
@@ -1027,6 +1036,31 @@ public class ReaderPostDetailFragment extends Fragment
             // render the post in the webView
             mRenderer = new ReaderPostRenderer(mReaderWebView, mPost);
             mRenderer.beginRender();
+
+            // if we're showing just the excerpt, also show a footer which links to the full post
+            if (mPost.shouldShowExcerpt()) {
+                ViewGroup excerptFooter = (ViewGroup) getView().findViewById(R.id.excerpt_footer);
+                excerptFooter.setVisibility(View.VISIBLE);
+
+                String blogName = "<font color='" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color
+                        .reader_hyperlink) + "'>" + mPost.getBlogName() + "</font>";
+                String linkText = String.format(WordPress.getContext().
+                        getString(R.string.reader_excerpt_link), blogName);
+
+                TextView txtExcerptFooter = (TextView) excerptFooter.findViewById(R.id.text_excerpt_footer);
+                txtExcerptFooter.setText(Html.fromHtml(linkText));
+
+                // we can't set the vector drawable in the layout because it will crash pre-API21
+                Drawable drawableRight = VectorDrawableCompat.create(txtExcerptFooter.getResources(), R.drawable.reader_visit, null);
+                txtExcerptFooter.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+
+                txtExcerptFooter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.openUrl(v.getContext(), mPost.getUrl());
+                    }
+                });
+            }
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 

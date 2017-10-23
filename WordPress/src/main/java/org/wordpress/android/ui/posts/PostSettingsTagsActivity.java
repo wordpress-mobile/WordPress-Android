@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -229,6 +229,10 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
 
         @Override
         public void onBindViewHolder(final TagViewHolder holder, int position) {
+            // Guard against mFilteredTags getting altered in another thread
+            if (mFilteredTags.size() <= position) {
+                return;
+            }
             String tag = StringEscapeUtils.unescapeHtml4(mFilteredTags.get(position).getName());
             holder.nameTextView.setText(tag);
         }

@@ -10,7 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -81,6 +83,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private OnSelectedCountChangedListener mSelectedCountListener;
     private OnDataLoadedListener mDataLoadedListener;
 
+    private boolean mIsSingleItemSelectionEnabled;
+    private int mSelectedItemPos;
+
     // show recently picked first if there are at least this many blogs
     private static final int RECENTLY_PICKED_THRESHOLD = 15;
 
@@ -97,6 +102,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final WPNetworkImageView imgBlavatar;
         private final View divider;
         private Boolean isSiteHidden;
+        private final RadioButton selectedRadioButton;
 
         public SiteViewHolder(View view) {
             super(view);
@@ -106,6 +112,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
             divider = view.findViewById(R.id.divider);
             isSiteHidden = null;
+            selectedRadioButton = (RadioButton) view.findViewById(R.id.radio_selected);
         }
     }
 
@@ -147,6 +154,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.grey_lighten_20_translucent_50));
 
         mHeaderHandler = headerHandler;
+        mSelectedItemPos = getPositionOffset();
 
         mIgnoreSitesIds = ignoreSitesIds;
 
@@ -156,6 +164,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemCount() {
         return (mHeaderHandler != null ? 1 : 0) + mSites.size();
+    }
+
+    public int getSitesCount(){
+        return mSites.size();
     }
 
     @Override
@@ -177,8 +189,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private SiteRecord getItem(int position) {
-        int offset = (mHeaderHandler == null ? 0 : 1);
-        return mSites.get(position - offset);
+        return mSites.get(position - getPositionOffset());
+    }
+
+    private int getPositionOffset(){
+        return (mHeaderHandler == null ? 0 : 1);
     }
 
     void setOnSelectedCountChangedListener(OnSelectedCountChangedListener listener) {
@@ -276,6 +291,51 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
         }
+
+        if (mIsSingleItemSelectionEnabled) {
+            if (getSitesCount() <= 1) {
+                holder.selectedRadioButton.setVisibility(View.GONE);
+            } else {
+                holder.selectedRadioButton.setVisibility(View.VISIBLE);
+                holder.selectedRadioButton.setChecked(mSelectedItemPos == position);
+                holder.layoutContainer.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectSingleItem(holder.getAdapterPosition());
+                    }
+                });
+            }
+        } else {
+            if (holder.selectedRadioButton != null) {
+                holder.selectedRadioButton.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void selectSingleItem(final int newItemPosition) {
+        // clear last selected item
+        notifyItemChanged(mSelectedItemPos);
+        mSelectedItemPos = newItemPosition;
+        // select new item
+        notifyItemChanged(mSelectedItemPos);
+    }
+
+    public void setSingleItemSelectionEnabled(final boolean enabled) {
+        if (enabled != mIsSingleItemSelectionEnabled) {
+            mIsSingleItemSelectionEnabled = enabled;
+            notifyDataSetChanged();
+        }
+    }
+
+    public void findAndSelect(final int lastUsedBlogLocalId) {
+        int positionInSitesArray = mSites.indexOfSiteId(lastUsedBlogLocalId);
+        if (positionInSitesArray != -1) {
+            selectSingleItem(positionInSitesArray + getPositionOffset());
+        }
+    }
+
+    public int getSelectedItemLocalId() {
+        return mSites.size() != 0 ? getItem(mSelectedItemPos).localId : -1;
     }
 
     public String getLastSearch() {
@@ -471,12 +531,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * AsyncTask which loads sites from database and populates the adapter
      */
-    private boolean mIsTaskRunning;
-    private class LoadSitesTask extends AsyncTask<Void, Void, Void> {
+    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList[]> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mIsTaskRunning = true;
             if (mDataLoadedListener != null) {
                 boolean isEmpty = mSites == null || mSites.size() == 0;
                 mDataLoadedListener.onBeforeLoad(isEmpty);
@@ -486,11 +544,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            mIsTaskRunning = false;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected SiteList[] doInBackground(Void... params) {
             List<SiteModel> siteModels;
             if (mIsInSearchMode) {
                 siteModels = mSiteStore.getSites();
@@ -541,17 +598,22 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             if (mSites == null || !mSites.isSameList(sites)) {
-                mAllSites = (SiteList) sites.clone();
-                mSites = filteredSitesByTextIfInSearchMode(sites);
+                SiteList allSites = (SiteList) sites.clone();
+                SiteList filteredSites = filteredSitesByTextIfInSearchMode(sites);
+
+                return new SiteList[]{allSites, filteredSites};
             }
 
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void results) {
-            notifyDataSetChanged();
-            mIsTaskRunning = false;
+        protected void onPostExecute(SiteList[] updatedSiteLists) {
+            if (updatedSiteLists != null) {
+                mAllSites = updatedSiteLists[0];
+                mSites = updatedSiteLists[1];
+                notifyDataSetChanged();
+            }
             if (mDataLoadedListener != null) {
                 mDataLoadedListener.onAfterLoad();
             }
@@ -652,12 +714,5 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             return -1;
         }
-    }
-
-    /*
-     * same as Long.compare() which wasn't added until API 19
-     */
-    private static int compareTimestamps(long timestamp1, long timestamp2) {
-        return timestamp1 < timestamp2 ? -1 : (timestamp1 == timestamp2 ? 0 : 1);
     }
 }

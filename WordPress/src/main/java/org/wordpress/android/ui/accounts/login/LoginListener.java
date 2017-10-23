@@ -11,7 +11,7 @@ public interface LoginListener {
     // Login Prologue callbacks
     void showEmailLoginScreen();
     void doStartSignup();
-    void loggedInViaSigUp(ArrayList<Integer> oldSitesIds);
+    void loggedInViaSignup(ArrayList<Integer> oldSitesIds);
     void newUserCreatedButErrored(String email, String password);
 
     // Login Email input callbacks
@@ -23,7 +23,7 @@ public interface LoginListener {
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
     void usePasswordInstead(String email);
-    void forgotPassword();
+    void forgotPassword(String url);
     void helpMagicLinkRequest(String email);
 
     // Login Magic Link Sent callbacks

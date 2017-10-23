@@ -46,10 +46,6 @@ Language: es_VE
 	<string name="timespan_now">ahora</string>
 	<string name="role_follower">Seguidor</string>
 	<string name="role_viewer">Espectador</string>
-	<string name="role_editor">Editor</string>
-	<string name="role_contributor">Colaborador</string>
-	<string name="role_author">Autor</string>
-	<string name="role_admin">Administrador</string>
 	<string name="error_post_my_profile_no_connection">Sin conexión, no se pudo guardar tu perfil</string>
 	<string name="alignment_none">Ninguna</string>
 	<string name="alignment_left">Izquierda</string>
@@ -387,7 +383,6 @@ Language: es_VE
 	<string name="site_settings_address_title">Dirección</string>
 	<string name="site_settings_title_title">Título del sitio</string>
 	<string name="site_settings_tagline_title">Lema</string>
-	<string name="site_settings_this_device_header">Este dispositivo</string>
 	<string name="site_settings_discussion_new_posts_header">Por defecto para nuevas entradas</string>
 	<string name="site_settings_writing_header">Escribiendo</string>
 	<string name="site_settings_account_header">Cuenta</string>
@@ -409,9 +404,7 @@ Language: es_VE
 	<string name="invalid_username_no_spaces">El nombre de usuario no puede tener espacios</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Los sitios que estás siguiendo no han publicado nada recientemente</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">No hay entradas recientes</string>
-	<string name="media_details_copy_url_toast">URL copiada al portapapeles</string>
 	<string name="edit_media">Editar multimedia</string>
-	<string name="media_details_copy_url">Copiar URL</string>
 	<string name="media_details_label_date_uploaded">Subido</string>
 	<string name="media_details_label_date_added">Añadido</string>
 	<string name="selected_theme">Tema seleccionado</string>
@@ -501,13 +494,7 @@ Language: es_VE
 	<string name="notifications_tab">Pestaña de avisos</string>
 	<string name="email">Correo electrónico</string>
 	<string name="app_notifications">Avisos de la aplicación</string>
-	<string name="notifications_comments_other_blogs">Comentarios en otros sitios</string>
-	<string name="notifications_other">Otras</string>
 	<string name="notifications_wpcom_updates">Actualizaciones de WordPress.com</string>
-	<string name="notifications_account_emails">Correo de WordPress.com</string>
-	<string name="notifications_account_emails_summary">Siempre mandamos correos electrónicos importantes relativos a tu cuenta, pero también obtendrás extras útiles.</string>
-	<string name="notifications_sights_and_sounds">Vistas y sonidos</string>
-	<string name="your_sites">Tus sitios</string>
 	<string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
 	<string name="stats_insights_latest_post_summary">Sumario de la última entrada</string>
 	<string name="button_revert">Volver</string>
@@ -613,7 +600,6 @@ Language: es_VE
 	<string name="logs_copied_to_clipboard">Los informes de la aplicación se han copiado al portapapeles</string>
 	<string name="stats_overall">Global</string>
 	<string name="reader_empty_posts_in_blog">Este blog está vacío</string>
-	<string name="post_uploading">Cargando</string>
 	<string name="stats_recent_weeks">Últimas Semanas</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
 	<string name="stats_views">Vistas</string>
@@ -678,7 +664,6 @@ Language: es_VE
 	<string name="delete_sure_page">Eliminar esta página</string>
 	<string name="delete_sure_post">Eliminar esta entrada</string>
 	<string name="confirm_delete_multi_media">¿Quieres eliminar los elementos seleccionados?</string>
-	<string name="confirm_delete_media">¿Quieres eliminar el elemento seleccionado?</string>
 	<string name="cab_selected">%d seleccionados</string>
 	<string name="nux_help_description">Visita el centro de ayuda para obtener respuestas a las preguntas habituales o visita los foros para hacer preguntas nuevas.</string>
 	<string name="reader_label_view_original">Ver artículo original</string>
@@ -687,7 +672,6 @@ Language: es_VE
 	<string name="pages_empty_list">Sin páginas todavía. ¿Por qué no crear una?</string>
 	<string name="new_blog_wpcom_created">Se ha creado un blog de WordPress.com.</string>
 	<string name="comment_reply_to_user">Responder a %s</string>
-	<string name="posting_post">Publicando "%s"</string>
 	<string name="faq_button">Preguntas frecuentes</string>
 	<string name="error_refresh_unauthorized_pages">No tienes permiso para ver o editar páginas.</string>
 	<string name="error_refresh_unauthorized_posts">No tienes permiso para ver o editar entradas.</string>
@@ -709,7 +693,6 @@ Language: es_VE
 	<string name="reader_label_comments_on">Comentarios en</string>
 	<string name="comment">Comentario</string>
 	<string name="signing_out">Cerrando sesión…</string>
-	<string name="sending_content">Cargando el contenido de %s</string>
 	<string name="uploading_total">Cargando %1$d de %2$d</string>
 	<string name="agree_terms_of_service">Al crear una cuenta, aceptas los fascinantes %1$sTérminos de servicio%2$s.</string>
 	<string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
@@ -757,7 +740,6 @@ Language: es_VE
 	<string name="no_network_message">No hay ninguna conexión de red disponible</string>
 	<string name="gallery_error">El elemento multimedia no ha podido ser recuperado</string>
 	<string name="blog_not_found">Ha ocurrido un error mientras se accedía a este blog</string>
-	<string name="wait_until_upload_completes">Espere mientras se complete la carga</string>
 	<string name="theme_fetch_failed">Ocurrió un error al obtener los temas.</string>
 	<string name="theme_set_failed">No se pudo establecer el tema</string>
 	<string name="theme_auth_error_message">Asegúrate que tienes autorización para elegir temas</string>
@@ -773,7 +755,6 @@ Language: es_VE
 	<string name="stats_bar_graph_empty">Estadísticas no disponibles.</string>
 	<string name="reply_failed">Respuesta fallida</string>
 	<string name="notifications_empty_list">Sin notificaciones</string>
-	<string name="error_delete_post">Ocurrió un error al eliminar el %s</string>
 	<string name="error_refresh_posts">Las entradas no pueden ser actualizadas en este momento</string>
 	<string name="error_refresh_pages">Las páginas no pueden ser actualizadas en este momento.</string>
 	<string name="error_refresh_notifications">No se pudo actualizar las notificaciones</string>
@@ -1049,7 +1030,6 @@ Language: es_VE
 	<string name="version">Versión</string>
 	<string name="tos">Términos del servicio</string>
 	<string name="app_title">WordPress para Android</string>
-	<string name="max_thumbnail_px_width">Ancho predeterminado de la imagen </string>
 	<string name="image_alignment">Alineamiento</string>
 	<string name="refresh">Refrescar</string>
 	<string name="untitled">Sin Título</string>
@@ -1067,9 +1047,6 @@ Language: es_VE
 	<string name="title">Título</string>
 	<string name="categories">Categorías</string>
 	<string name="dlg_deleting_comments">Eliminando comentarios</string>
-	<string name="notification_blink">Notificación luminosa</string>
-	<string name="notification_vibrate">Vibrar</string>
-	<string name="notification_sound">Sonido de aviso</string>
 	<string name="sdcard_title">Requiere tarjeta SD</string>
 	<string name="media">Multimedia</string>
 	<string name="delete">Eliminar</string>

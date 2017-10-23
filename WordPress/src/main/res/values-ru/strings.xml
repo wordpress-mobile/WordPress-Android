@@ -22,7 +22,6 @@ Language: ru
 	<string name="start_over_email_body">Я хочу переделать сайт %s</string>
 	<string name="start_over_email_subject">Переделать сайт %s</string>
 	<string name="site_picker_remove_site_error">Невозможно удалить сайт, попробуйте позже.</string>
-	<string name="editor_post_saved_locally_unfinished_media">Эта запись сохранена локально: она содержит медиафайлы, загрузка которых не завершена.</string>
 	<string name="sure_to_remove_account">Удалить этот сайт из приложения?</string>
 	<string name="photo_picker_title">Выбрать фото</string>
 	<string name="error_publish_no_network">Нет доступа к сети Интернет. Изменения сохранены локально.</string>
@@ -43,18 +42,12 @@ Language: ru
 	<string name="keep_editing">Продолжить редактирование</string>
 	<string name="error_all_media_upload_canceled">Все процессы загрузки медиафайлов были прерваны из-за неизвестной ошибки. Попробуйте начать загрузку заново</string>
 	<string name="error_unknown_post_type">Неизвестный формат записи</string>
-	<string name="error_unknown_post">Неизвестная запись. Возможно, локальная копия этой записи не синхронизирована с сервером</string>
 	<string name="error_fetch_site_after_creation">Создан новый сайт. Возможно, вам следует обновить список сайтов в подборке.</string>
-	<string name="error_upload_params">При загрузке %1$s произошла ошибка: %2$s</string>
 	<string name="submit_for_review">Отправить</string>
 	<string name="signout">Выйти</string>
 	<string name="timespan_now">сейчас</string>
 	<string name="role_viewer">Обозреватель</string>
 	<string name="role_follower">Читатель</string>
-	<string name="role_contributor">Участник</string>
-	<string name="role_author">Автор</string>
-	<string name="role_editor">Редактор</string>
-	<string name="role_admin">Администратор</string>
 	<string name="error_post_my_profile_no_connection">Нет сети — не удалось сохранить профиль.</string>
 	<string name="alignment_right">Справа</string>
 	<string name="alignment_left">Слева</string>
@@ -386,7 +379,6 @@ Language: ru
 	<string name="site_settings_address_title">Адрес</string>
 	<string name="site_settings_tagline_title">Ключевая фраза</string>
 	<string name="site_settings_title_title">Название сайта</string>
-	<string name="site_settings_this_device_header">На этом устройстве</string>
 	<string name="site_settings_discussion_new_posts_header">Параметры по умолчанию для новых записей</string>
 	<string name="site_settings_writing_header">Написание</string>
 	<string name="site_settings_account_header">Учетная запись</string>
@@ -409,8 +401,6 @@ Language: ru
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">На сайтах, на которые вы подписаны, в последнее время не публиковались новые записи</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Нет свежих записей</string>
 	<string name="edit_media">Изменить файл мультимедиа</string>
-	<string name="media_details_copy_url_toast">URL-адрес скопирован в буфер обмена</string>
-	<string name="media_details_copy_url">Копировать URL</string>
 	<string name="media_details_label_date_uploaded">Загружено</string>
 	<string name="media_details_label_date_added">Добавлено</string>
 	<string name="selected_theme">Выбранная тема</string>
@@ -500,13 +490,7 @@ Language: ru
 	<string name="email">E-mail</string>
 	<string name="notifications_tab">Вкладка «Уведомления»</string>
 	<string name="app_notifications">Уведомления в приложении</string>
-	<string name="notifications_comments_other_blogs">Комментарии на других сайтах</string>
-	<string name="notifications_other">Другое</string>
 	<string name="notifications_wpcom_updates">Обновления WordPress.com</string>
-	<string name="notifications_account_emails">Письма с WordPress.com</string>
-	<string name="notifications_account_emails_summary">Важные письма, касающиеся вашей учётной записи, мы отправляем всегда, но можно также включить и другие полезные уведомления.</string>
-	<string name="your_sites">Ваши сайты</string>
-	<string name="notifications_sights_and_sounds">Визуализация и звуки</string>
 	<string name="stats_insights_latest_post_trend">С момента публикации %2$s прошло %1$s. Вот данные о популярности записи...</string>
 	<string name="stats_insights_latest_post_summary">Данные о последней записи</string>
 	<string name="button_revert">Отменить</string>
@@ -609,7 +593,6 @@ Language: ru
 	<string name="stats_period">Период</string>
 	<string name="stats_overall">Все время</string>
 	<string name="stats_total">Итого</string>
-	<string name="post_uploading">Идет отправка на сервер.</string>
 	<string name="stats_visitors">Посетителей</string>
 	<string name="stats_views">Просмотров</string>
 	<string name="stats_timeframe_years">Годы</string>
@@ -670,13 +653,11 @@ Language: ru
 	<string name="themes_fetching">Получение тем…</string>
 	<string name="ssl_certificate_details">Подробнее</string>
 	<string name="cab_selected">Выбрано: %d</string>
-	<string name="confirm_delete_media">Удалить выбранный элемент?</string>
 	<string name="confirm_delete_multi_media">Удалить выбранные элементы?</string>
 	<string name="delete_sure_page">Удалить страницу</string>
 	<string name="delete_sure">Удалить черновик</string>
 	<string name="delete_sure_post">Удалить запись</string>
 	<string name="signing_out">Выход из системы...</string>
-	<string name="posting_post">Публикуется материал "%s"</string>
 	<string name="pages_empty_list">Пока нет страниц. Создайте первую!</string>
 	<string name="comment_reply_to_user">Ответить автору %s</string>
 	<string name="posts_empty_list">Пока нет записей. Создайте первую!</string>
@@ -684,7 +665,6 @@ Language: ru
 	<string name="comment">Комментировать</string>
 	<string name="mnu_comment_liked">Понравилось</string>
 	<string name="uploading_total">Загружается %1$d из %2$d</string>
-	<string name="sending_content">Загрузка содержимого: %s</string>
 	<string name="stats_no_blog">Невозможно загрузить статистику для этого блога.</string>
 	<string name="older_last_week">Больше недели</string>
 	<string name="older_two_days">Больше двух дней назад</string>
@@ -785,7 +765,6 @@ Language: ru
 	<string name="error_refresh_notifications">Уведомление не могут быть обновлены в данный момент</string>
 	<string name="error_refresh_pages">Страница не может быть обновлена в данный момент</string>
 	<string name="error_refresh_posts">Пост не может быть обновлен в данный момент</string>
-	<string name="error_delete_post">Произошла ошибка при удалении %s</string>
 	<string name="notifications_empty_list">Нет уведомлений</string>
 	<string name="reply_failed">Ошибочный ответ</string>
 	<string name="invalid_url_message">Убедитесь, что введен допустимый URL-адрес</string>
@@ -802,7 +781,6 @@ Language: ru
 	<string name="theme_auth_error_message">Убедитесь, что у вас достаточно прав для установки темы</string>
 	<string name="theme_set_failed">Невозможно установить тему</string>
 	<string name="theme_fetch_failed">Ошибка выбора темы.</string>
-	<string name="wait_until_upload_completes">Подождите конца загрузки</string>
 	<string name="blog_not_found">Ошибка при попытке подключиться к блогу</string>
 	<string name="gallery_error">Медиа-файл не может быть восстановлен</string>
 	<string name="could_not_remove_account">Невозможно удалить сайт</string>
@@ -1020,6 +998,7 @@ Language: ru
 	<string name="publish_date">Опубликовано</string>
 	<string name="post_content">Содержимое (нажмите, чтобы добавить текст и медиа)</string>
 	<string name="incorrect_credentials">Неправильное имя или пароль.</string>
+	<string name="log_in">Войти</string>
 	<string name="username">Имя</string>
 	<string name="password">Пароль</string>
 	<string name="reader">Читать</string>
@@ -1041,7 +1020,6 @@ Language: ru
 	<string name="app_title">WordPress для Android</string>
 	<string name="tos">Условия сервиса</string>
 	<string name="version">Версия</string>
-	<string name="max_thumbnail_px_width">Ширина изображения по умолчанию</string>
 	<string name="image_alignment">Выравнивание</string>
 	<string name="refresh">Обновить</string>
 	<string name="untitled">Без заголовка</string>
@@ -1059,9 +1037,6 @@ Language: ru
 	<string name="categories">Рубрики</string>
 	<string name="title">Заголовок</string>
 	<string name="dlg_deleting_comments">Удаление комментариев</string>
-	<string name="notification_vibrate">Вибрация</string>
-	<string name="notification_sound">Уведомление звуком</string>
-	<string name="notification_blink">Уведомление мигающей лампочкой</string>
 	<string name="sdcard_title">Требуется SD-карта</string>
 	<string name="media">Медиа</string>
 	<string name="approve">Одобрить</string>

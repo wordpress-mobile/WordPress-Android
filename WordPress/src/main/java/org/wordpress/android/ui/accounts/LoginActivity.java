@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         Callback, LoginListener {
     private static final String KEY_SMARTLOCK_COMPLETED = "KEY_SMARTLOCK_COMPLETED";
 
-    private static final String FORGOT_PASSWORD_URL = "https://wordpress.com/wp-login.php?action=lostpassword";
+    private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
 
     private SmartLockHelper mSmartLockHelper;
     private boolean mSmartLockCompleted;
@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 case JETPACK_STATS:
                 case WPCOM_LOGIN_DEEPLINK:
                 case WPCOM_REAUTHENTICATE:
+                case SHARE_INTENT:
                     checkSmartLockPasswordAndStartLogin();
                     break;
             }
@@ -145,8 +146,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
             case WPCOM_REAUTHENTICATE:
                 ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds);
                 break;
+            case SHARE_INTENT:
             case SELFHOSTED_ONLY:
-                // skip the epilogue when only added a selfhosted site
+                // skip the epilogue when only added a selfhosted site or sharing to WordPress
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
@@ -192,10 +194,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void checkSmartLockPasswordAndStartLogin() {
+        boolean smartLockStarted = false;
         if (!mSmartLockCompleted && mSmartLockHelper == null) {
             mSmartLockHelper = new SmartLockHelper(this);
-            mSmartLockHelper.initSmartLockForPasswords();
-        } else {
+            smartLockStarted = mSmartLockHelper.initSmartLockForPasswords();
+        }
+
+        if (!smartLockStarted) {
             startLogin();
         }
     }
@@ -230,7 +235,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void loggedInViaSigUp(ArrayList<Integer> oldSitesIds) {
+    public void loggedInViaSignup(ArrayList<Integer> oldSitesIds) {
         loggedInAndFinish(oldSitesIds);
     }
 
@@ -242,7 +247,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void gotWpcomEmail(String email) {
-        if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK) {
+        if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT) {
             LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(email);
             slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
         } else {
@@ -286,9 +291,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void forgotPassword() {
+    public void forgotPassword(String url) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FORGOT_PASSWORD_CLICKED);
-        ActivityLauncher.openUrlExternal(this, FORGOT_PASSWORD_URL);
+        ActivityLauncher.openUrlExternal(this, url + FORGOT_PASSWORD_URL_SUFFIX);
     }
 
     @Override

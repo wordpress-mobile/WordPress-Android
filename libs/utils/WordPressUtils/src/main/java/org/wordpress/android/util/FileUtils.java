@@ -1,5 +1,7 @@
 package org.wordpress.android.util;
 
+import android.text.TextUtils;
+
 import java.io.File;
 
 public class FileUtils {
@@ -27,5 +29,32 @@ public class FileUtils {
             AppLog.e(AppLog.T.MEDIA, "Can't access the file.", e);
             return -1L;
         }
+    }
+
+    /**
+     * Given the full file path, or the filename with extension (i.e. my-picture.jpg), returns the filename part only (my-picture).
+     *
+     * @param filePath The path to the file or the full filename
+     * @return filename part only or null
+     */
+    public static String getFileNameFromPath(String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            return null;
+        }
+        if (filePath.contains("/")) {
+            if (filePath.lastIndexOf("/") + 1 >= filePath.length()) {
+                filePath = filePath.substring(0, filePath.length() - 1);
+            }
+            filePath = filePath.substring(filePath.lastIndexOf("/") + 1);
+        }
+
+        String filename;
+        int dotPos = filePath.indexOf('.');
+        if (dotPos > 0) {
+            filename = filePath.substring(0, dotPos);
+        } else {
+            filename = filePath;
+        }
+        return filename;
     }
 }

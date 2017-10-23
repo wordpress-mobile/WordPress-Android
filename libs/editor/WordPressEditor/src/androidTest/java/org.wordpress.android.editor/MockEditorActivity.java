@@ -55,12 +55,22 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
     }
 
     @Override
-    public void onMediaRetryClicked(String mediaId) {
-
+    public boolean onMediaRetryClicked(String mediaId) {
+        return true;
     }
 
     @Override
     public void onMediaUploadCancelClicked(String mediaId) {
+
+    }
+
+    @Override
+    public void onMediaDeleted(String mediaId) {
+
+    }
+
+    @Override
+    public void onUndoMediaCheck(String undoedContent) {
 
     }
 

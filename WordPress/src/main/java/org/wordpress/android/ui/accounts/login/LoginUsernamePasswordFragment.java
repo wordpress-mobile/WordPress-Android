@@ -33,8 +33,8 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
-import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 
@@ -53,6 +53,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     private static final String ARG_INPUT_PASSWORD = "ARG_INPUT_PASSWORD";
     private static final String ARG_IS_WPCOM = "ARG_IS_WPCOM";
 
+    private static final String FORGOT_PASSWORD_URL_WPCOM = "https://wordpress.com/";
+
     public static final String TAG = "login_username_password_fragment_tag";
 
     private ScrollView mScrollView;
@@ -67,6 +69,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     ArrayList<Integer> mOldSitesIDs;
 
     private String mInputSiteAddress;
+    private String mInputSiteAddressWithoutSuffix;
     private String mEndpointAddress;
     private String mSiteName;
     private String mSiteIconUrl;
@@ -125,8 +128,11 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         siteAddressView.setText(UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(mInputSiteAddress)));
         siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
+        mInputSiteAddressWithoutSuffix = UrlUtils.removeXmlrpcSuffix(mEndpointAddress);
+
         mUsernameInput = (WPLoginInputRow) rootView.findViewById(R.id.login_username_row);
         mUsernameInput.setText(mInputUsername);
+        autoFillFromBuildConfig("DEBUG_DOTCOM_LOGIN_USERNAME", mUsernameInput.getEditText());
         mUsernameInput.addTextChangedListener(this);
         mUsernameInput.setOnEditorCommitListener(new OnEditorCommitListener() {
             @Override
@@ -138,6 +144,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
         mPasswordInput = (WPLoginInputRow) rootView.findViewById(R.id.login_password_row);
         mPasswordInput.setText(mInputPassword);
+        autoFillFromBuildConfig("DEBUG_DOTCOM_LOGIN_PASSWORD", mPasswordInput.getEditText());
         mPasswordInput.addTextChangedListener(this);
 
         mPasswordInput.setOnEditorCommitListener(this);
@@ -150,7 +157,11 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
-                    mLoginListener.forgotPassword();
+                    if (mIsWpcom) {
+                        mLoginListener.forgotPassword(FORGOT_PASSWORD_URL_WPCOM);
+                    } else {
+                        mLoginListener.forgotPassword(mInputSiteAddressWithoutSuffix);
+                    }
                 }
             }
         });

@@ -67,7 +67,6 @@ Language: nb_NO
 	<string name="pages_fetching">Henter sider …</string>
 	<string name="reader_label_new_posts">Nye innlegg</string>
 	<string name="stats_total">Totalt</string>
-	<string name="post_uploading">Laster opp</string>
 	<string name="stats_months_and_years">Måneder og år</string>
 	<string name="stats_view_all">Vis alle</string>
 	<string name="stats_view">Vis</string>
@@ -104,7 +103,6 @@ Language: nb_NO
 	<string name="delete_sure">Slett denne kladden</string>
 	<string name="delete_sure_post">Slett dette innlegget</string>
 	<string name="confirm_delete_multi_media">Slette valgte elementer?</string>
-	<string name="confirm_delete_media">Slette valgt element?</string>
 	<string name="reader_label_comment_count_single">En kommentar</string>
 	<string name="comment">Kommentar</string>
 	<string name="comment_trashed">Kommentar slettet</string>
@@ -317,8 +315,6 @@ Language: nb_NO
 	<string name="upload_full_size_image">Last opp og lenk til full bildestørrelse</string>
 	<string name="title">Tittel</string>
 	<string name="categories">Kategorier</string>
-	<string name="notification_vibrate">Vibrer</string>
-	<string name="notification_blink">Blinkende varsler</string>
 	<string name="sdcard_title">Krever SD kort</string>
 	<string name="media">Media</string>
 	<string name="delete">Slett</string>

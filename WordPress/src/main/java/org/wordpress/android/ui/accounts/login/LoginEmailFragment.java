@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -59,6 +57,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             case WPCOM_LOGIN_DEEPLINK:
                 label.setText(R.string.login_log_in_for_deeplink);
                 break;
+            case SHARE_INTENT:
+                label.setText(R.string.login_log_in_for_share_intent);
+                break;
             case FULL:
                 label.setText(R.string.enter_email_wordpress_com);
                 break;
@@ -74,11 +75,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     protected void setupContent(ViewGroup rootView) {
         mEmailInput = (WPLoginInputRow) rootView.findViewById(R.id.login_email_row);
-
+        autoFillFromBuildConfig("DEBUG_DOTCOM_LOGIN_EMAIL", mEmailInput.getEditText());
         mEmailInput.addTextChangedListener(this);
-
-        autoFillFromBuildConfig();
-
         mEmailInput.setOnEditorCommitListener(this);
     }
 
@@ -99,6 +97,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
         switch (mLoginListener.getLoginMode()) {
             case FULL:
+            case SHARE_INTENT:
                 // all features enabled and with typical values
                 secondaryButton.setText(R.string.enter_site_address_instead);
                 break;
@@ -155,21 +154,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);
-    }
-
-    /*
-     * auto-fill the username and password from BuildConfig/gradle.properties (developer feature,
-     * only enabled for DEBUG releases)
-     */
-    private void autoFillFromBuildConfig() {
-        if (!BuildConfig.DEBUG) return;
-
-        String email = (String) WordPress.getBuildConfigValue(getActivity().getApplication(),
-                "DEBUG_DOTCOM_LOGIN_EMAIL");
-        if (!TextUtils.isEmpty(email)) {
-            mEmailInput.setText(email);
-            AppLog.d(T.NUX, "Auto-filled email from build config");
-        }
     }
 
     protected void next(String email) {
@@ -242,7 +226,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         if (event.isError()) {
             // report the error but don't bail yet.
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
-            showEmailError(R.string.login_error_while_checking_email);
+            showEmailError(R.string.email_not_registered_wpcom);
             return;
         }
 

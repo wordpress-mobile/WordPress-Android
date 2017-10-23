@@ -8,10 +8,6 @@ Language: hu
 <resources>
 	<string name="reader_label_image_count_one">1 kép</string>
 	<string name="timespan_now">most</string>
-	<string name="role_admin">Adminisztrátor</string>
-	<string name="role_editor">Szerkesztő</string>
-	<string name="role_author">Szerző</string>
-	<string name="role_contributor">Közreműködő</string>
 	<string name="role_follower">Követő</string>
 	<string name="two_step_footer_button">Kód küldése szöveges üzenetben</string>
 	<string name="verify">Ellenőrzés</string>
@@ -46,7 +42,6 @@ Language: hu
 	<string name="delete_sure">Vázlat törlése</string>
 	<string name="delete_sure_page">Oldal törlése</string>
 	<string name="confirm_delete_multi_media">Kiválasztott sablon törlése?</string>
-	<string name="confirm_delete_media">Kiválasztott tétel törlése?</string>
 	<string name="cab_selected">%d kiválasztva</string>
 	<string name="reader_empty_posts_liked">Még egy bejegyzés sincs tetszettként jelölve</string>
 	<string name="faq_button">GYIK</string>
@@ -197,6 +192,7 @@ Language: hu
 	<string name="incorrect_credentials">Hibás felhasználónév vagy jelszó.</string>
 	<string name="password">Jelszó</string>
 	<string name="username">Felhasználó név</string>
+	<string name="log_in">Bejelentkezés</string>
 	<string name="reader">Olvasó</string>
 	<string name="featured">Használat kiemelt képként</string>
 	<string name="pages">Oldalak</string>
@@ -231,8 +227,6 @@ Language: hu
 	<string name="upload_full_size_image">Feltöltés és hivatkozás a teljes képhez</string>
 	<string name="categories">Kategóriák</string>
 	<string name="title">Címsor</string>
-	<string name="notification_blink">Figyelmeztető fényjelzés</string>
-	<string name="notification_vibrate">Rezgés</string>
 	<string name="sdcard_title">SD kártya szükséges</string>
 	<string name="media">Média</string>
 	<string name="delete">Törlés</string>

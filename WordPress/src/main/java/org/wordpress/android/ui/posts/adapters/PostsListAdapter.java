@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -38,6 +38,8 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.UploadStore;
+import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -107,6 +109,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Inject Dispatcher mDispatcher;
     @Inject protected PostStore mPostStore;
     @Inject protected MediaStore mMediaStore;
+    @Inject protected UploadStore mUploadStore;
 
     public PostsListAdapter(Context context, @NonNull SiteModel site, boolean isPage) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -205,7 +208,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         // TODO remove the hasMediaErrorForPost(post) check when we get a proper retry mechanism in place,
         // that retried to upload any failed media along with the post
         return post != null && !UploadService.isPostUploadingOrQueued(post) &&
-                !UploadService.hasMediaErrorForPost(post) &&
+                !UploadUtils.isMediaError(mUploadStore.getUploadErrorForPost(post)) &&
                 (post.isLocallyChanged() || post.isLocalDraft() || PostStatus.fromPost(post) == PostStatus.DRAFT);
     }
 
@@ -347,6 +350,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             Bitmap bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(
                     imgFeatured.getContext(), imageUrl, mPhotonWidth);
             if (bmp != null) {
+                imgFeatured.setImageUrl(null, WPNetworkImageView.ImageType.NONE);
                 imgFeatured.setVisibility(View.VISIBLE);
                 imgFeatured.setImageBitmap(bmp);
             } else {
@@ -414,7 +418,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
-        if (UploadService.isPostUploadingOrQueued(post)) {
+        if (UploadService.isPostUploadingOrQueued(post) || UploadService.hasInProgressMediaUploadsForPost(post)) {
             view.setVisibility(View.VISIBLE);
             int overallProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100);
             // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
@@ -426,6 +430,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void updateStatusTextAndImage(TextView txtStatus, ImageView imgStatus, PostModel post) {
+        Context context = txtStatus.getContext();
+
         if ((PostStatus.fromPost(post) == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.isLocallyChanged()) {
             txtStatus.setVisibility(View.GONE);
             imgStatus.setVisibility(View.GONE);
@@ -435,13 +441,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             int statusColorResId = R.color.grey_darken_10;
             String errorMessage = null;
 
-            UploadService.UploadError reason = UploadService.getUploadErrorForPost(post);
+            UploadError reason = mUploadStore.getUploadErrorForPost(post);
             if (reason != null) {
                 if (reason.mediaError != null) {
-                    errorMessage = txtStatus.getContext().getString(R.string.error_media_recover);
+                    errorMessage = context.getString(post.isPage() ? R.string.error_media_recover_page
+                            : R.string.error_media_recover_post);
                 } else if (reason.postError != null) {
-                    errorMessage = UploadUtils.getErrorMessageFromPostError(
-                            txtStatus.getContext(), post, reason.postError);
+                    errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError);
                 }
                 statusIconResId = R.drawable.ic_notice_48dp;
                 statusColorResId = R.color.alert_red;
@@ -491,7 +497,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             }
 
-            Resources resources = txtStatus.getContext().getResources();
+            Resources resources = context.getResources();
             txtStatus.setTextColor(resources.getColor(statusColorResId));
             if (!TextUtils.isEmpty(errorMessage)) {
                 txtStatus.setText(errorMessage);
@@ -521,7 +527,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
 
-        if (UploadService.getUploadErrorForPost(post) != null) {
+        if (mUploadStore.getUploadErrorForPost(post) != null) {
             holder.btnPublish.setButtonType(PostListButton.BUTTON_RETRY);
         } else {
             if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {

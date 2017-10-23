@@ -154,7 +154,8 @@ public class PostUtils {
     }
 
     public static boolean isPublishable(PostModel post) {
-        return !(post.getContent().isEmpty() && post.getExcerpt().isEmpty() && post.getTitle().isEmpty());
+        return post != null
+                && !(post.getContent().isEmpty() && post.getExcerpt().isEmpty() && post.getTitle().isEmpty());
     }
 
     public static boolean hasEmptyContentFields(PostModel post) {

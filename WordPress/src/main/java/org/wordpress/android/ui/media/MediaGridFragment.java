@@ -40,20 +40,25 @@ import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
+import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 /**
  * The grid displaying the media items.
@@ -177,6 +182,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
+
+        if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+            SmartToast.show(getActivity(), SmartToast.SmartToastType.MEDIA_LONG_PRESS);
+        }
     }
 
     @Override
@@ -212,7 +221,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mRecycler.setAdapter(getAdapter());
 
         // disable thumbnail loading during a fling to conserve memory
-        final int minDistance = WordPressMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
+        final int minDistance = WPMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
         mRecycler.setOnFlingListener(new RecyclerView.OnFlingListener() {
             @Override
             public boolean onFling(int velocityX, int velocityY) {
@@ -235,7 +244,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mEmptyView = (TextView) view.findViewById(R.id.empty_view);
 
         // swipe to refresh setup
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout), new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -249,7 +258,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         }
                         fetchMediaList(false);
                     }
-                });
+                }
+        );
 
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
@@ -267,7 +277,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private MediaGridAdapter getAdapter() {
         if (!hasAdapter()) {
             boolean canMultiSelect = mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
-                    && WordPressMediaUtils.currentUserCanDeleteMedia(mSite);
+                    && WPMediaUtils.currentUserCanDeleteMedia(mSite);
             mGridAdapter = new MediaGridAdapter(getActivity(), mSite);
             mGridAdapter.setCallback(this);
             mGridAdapter.setAllowMultiselect(canMultiSelect);
@@ -305,38 +315,78 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
-    private List<MediaModel> getFilteredMedia() {
-        if (!TextUtils.isEmpty(mSearchTerm)) {
-            return mMediaStore.searchSiteMedia(mSite, mSearchTerm);
-        }
+    /*
+     * this method has two purposes: (1) make sure media that is being deleted still has the right UploadState,
+     * as it may have been overwritten by a refresh while deletion was still in progress, (2) remove any local
+     * files (ie: media not uploaded yet) that no longer exist (in case user deleted them from the device)
+     */
+    private void ensureCorrectState(List<MediaModel> mediaModels) {
+        if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
+            // we only need to check the deletion state if media are currently being deleted
+            MediaDeleteService service = ((MediaBrowserActivity)getActivity()).getMediaDeleteService();
+            boolean checkDeleteState = service != null && service.isAnyMediaBeingDeleted();
 
-        if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER) {
+            // note we count backwards so we can remove from the list
+            for (int i = mediaModels.size() - 1 ; i >= 0; i--) {
+                MediaModel media = mediaModels.get(i);
+                // ensure correct upload state for media being deleted
+                if (checkDeleteState && service.isMediaBeingDeleted(media)) {
+                    media.setUploadState(MediaUploadState.DELETING);
+                }
+
+                // remove local media that no longer exists
+                if (media.getFilePath() != null
+                        && org.wordpress.android.util.MediaUtils.isLocalFile(media.getUploadState())) {
+                    File file = new File(media.getFilePath());
+                    if (!file.exists()) {
+                        AppLog.w(AppLog.T.MEDIA, "removing nonexistent local media " + media.getFilePath());
+                        // remove from the store
+                        mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(media));
+                        // remove from the passed list
+                        mediaModels.remove(i);
+                    }
+                }
+            }
+        }
+    }
+
+    List<MediaModel> getFilteredMedia() {
+        List<MediaModel> mediaList;
+        if (!TextUtils.isEmpty(mSearchTerm)) {
+            mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);
+        } else if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER) {
             List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
-            List<MediaModel> imagesAndVideos = new ArrayList<>();
+            mediaList = new ArrayList<>();
             for (MediaModel media: allMedia) {
                 String mime = media.getMimeType();
                 if (mime != null && (mime.startsWith("image") || mime.startsWith("video"))) {
-                    imagesAndVideos.add(media);
+                    mediaList.add(media);
                 }
             }
-            return imagesAndVideos;
         } else if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
-            return mMediaStore.getSiteImages(mSite);
+            mediaList = mMediaStore.getSiteImages(mSite);
+        } else {
+            switch (mFilter) {
+                case FILTER_IMAGES:
+                    mediaList = mMediaStore.getSiteImages(mSite);
+                    break;
+                case FILTER_DOCUMENTS:
+                    mediaList = mMediaStore.getSiteDocuments(mSite);
+                    break;
+                case FILTER_VIDEOS:
+                    mediaList = mMediaStore.getSiteVideos(mSite);
+                    break;
+                case FILTER_AUDIO:
+                    mediaList = mMediaStore.getSiteAudio(mSite);
+                    break;
+                default:
+                    mediaList = mMediaStore.getAllSiteMedia(mSite);
+                    break;
+            }
         }
 
-
-        switch (mFilter) {
-            case FILTER_IMAGES:
-                return mMediaStore.getSiteImages(mSite);
-            case FILTER_DOCUMENTS:
-                return mMediaStore.getSiteDocuments(mSite);
-            case FILTER_VIDEOS:
-                return mMediaStore.getSiteVideos(mSite);
-            case FILTER_AUDIO:
-                return mMediaStore.getSiteAudio(mSite);
-            default:
-                return mMediaStore.getAllSiteMedia(mSite);
-        }
+        ensureCorrectState(mediaList);
+        return mediaList;
     }
 
     void setFilter(@NonNull MediaFilter filter) {
@@ -429,11 +479,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
      * update just the passed media item - if it doesn't exist it may be because
      * it was just added, so reload the adapter
      */
-    void updateMediaItem(@NonNull MediaModel media) {
+    void updateMediaItem(@NonNull MediaModel media, boolean forceUpdate) {
         if (!isAdded() || !hasAdapter()) return;
 
         if (getAdapter().mediaExists(media)) {
-            getAdapter().updateMediaItem(media);
+            getAdapter().updateMediaItem(media, forceUpdate);
         } else {
             reload();
         }
@@ -557,12 +607,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                                     ((MediaBrowserActivity) getActivity()).deleteMedia(
                                             getAdapter().getSelectedItems());
                                 }
-                                // update upload state
-                                for (int itemId : getAdapter().getSelectedItems()) {
-                                    MediaModel media = mMediaStore.getMediaWithLocalId(itemId);
-                                    media.setUploadState(MediaUploadState.DELETING);
-                                    mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-                                }
                                 getAdapter().clearSelection();
                                 if (mActionMode != null) {
                                     mActionMode.finish();
@@ -628,7 +672,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
         }
 
-        getAdapter().setMediaList(getFilteredMedia());
+        List<MediaModel> filteredMedia = getFilteredMedia();
+        getAdapter().setMediaList(filteredMedia);
 
         boolean hasRetrievedAll = !event.canLoadMore;
         getAdapter().setHasRetrievedAll(hasRetrievedAll);
@@ -704,6 +749,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             setSwipeToRefreshEnabled(false);
             getAdapter().setInMultiSelect(true);
             updateActionModeTitle(selectCount);
+            SmartToast.disableSmartToast(SmartToast.SmartToastType.MEDIA_LONG_PRESS);
             return true;
         }
 

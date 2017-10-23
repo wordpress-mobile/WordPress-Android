@@ -16,7 +16,6 @@ Language: mk
 	<string name="stats_period">Период</string>
 	<string name="stats_overall">Севкупно</string>
 	<string name="stats_total">Вкупно</string>
-	<string name="post_uploading">Прикачување</string>
 	<string name="stats_empty_top_authors_desc">Пратете ги гледањата на написите на секој соработник и откријте ја најпопуларната содржина на секој автор.</string>
 	<string name="stats_empty_comments_desc">Доколку дозволите коментари на вашата страница, пратете ги вашите најдобри коментатори и откријте што ја распламтува конверзацијата врз база на последните 1000 коментари.</string>
 	<string name="stats_followers_total_email">Вкупно Е-Пошта Следбеници: %1$s</string>
@@ -78,7 +77,6 @@ Language: mk
 	<string name="delete_sure_post">Избриши напис</string>
 	<string name="delete_sure">Избриши овој драфт</string>
 	<string name="confirm_delete_multi_media">Избриши слектирни?</string>
-	<string name="confirm_delete_media">Избриши селектирано</string>
 	<string name="cab_selected">%d слекетирано</string>
 	<string name="delete_sure_page">Избриши оваа страница</string>
 	<string name="reader_empty_posts_liked">Сеуште немате допаднити написи</string>
@@ -106,14 +104,12 @@ Language: mk
 	<string name="older_two_days">Постари од 2 дена</string>
 	<string name="older_last_week">Постари од седмица</string>
 	<string name="stats_no_blog">Статиска неможе да се покаже за побараниот блог</string>
-	<string name="sending_content">Испраќа %s содржина</string>
 	<string name="uploading_total">Испраќа %1$d of %2$d</string>
 	<string name="mnu_comment_liked">Допаднато</string>
 	<string name="comment">Коментар</string>
 	<string name="posts_empty_list">Сеуште нема написи. Зошто не создадете еден?</string>
 	<string name="comment_reply_to_user">Одговори на %s</string>
 	<string name="pages_empty_list">Сеуште нема страници. Зошто не создадете една?</string>
-	<string name="posting_post">Објавување "%s"</string>
 	<string name="comment_trashed">Комента исфрлен</string>
 	<string name="reader_toast_err_generic">Неможе да се изврши ова дејство</string>
 	<string name="reader_toast_err_block_blog">Неможе да се блокира овој блог</string>
@@ -156,7 +152,6 @@ Language: mk
 	<string name="passcode_wrong_passcode">Погрешен PIN</string>
 	<string name="out_of_memory">Уредот е остана без меморија</string>
 	<string name="no_network_message">Нема досптана мрежа</string>
-	<string name="wait_until_upload_completes">Почекај додека заврши испраќањето</string>
 	<string name="theme_fetch_failed">Неможе да ги прикаже темите</string>
 	<string name="theme_set_failed">Неможе да промени тема</string>
 	<string name="theme_auth_error_message">Осигурете се дека имате привилегија за поставување на теми</string>
@@ -189,7 +184,6 @@ Language: mk
 	<string name="username_only_lowercase_letters_and_numbers">Корисничкото име може да содржи само мали буви (a-z) или бројки</string>
 	<string name="reply_failed">Не успешен одговор</string>
 	<string name="stats_bar_graph_empty">Нема статистика</string>
-	<string name="error_delete_post">Се појави грешка додека се бришаше %s</string>
 	<string name="sdcard_message">Сврзана SD карта е потребна за качување на медиа</string>
 	<string name="error_load_comment">Неможе да се покаже коментар</string>
 	<string name="nux_cannot_log_in">Неможе да ве најавиме</string>
@@ -442,8 +436,6 @@ Language: mk
 	<string name="upload_full_size_image">Качи на сервер и додај врска до оригиналната фотографија</string>
 	<string name="title">Наслов</string>
 	<string name="categories">Категории</string>
-	<string name="notification_blink">Известување со трепкачко светло</string>
-	<string name="notification_vibrate">Вибрирај</string>
 	<string name="sdcard_title">Потребна е SD картичка</string>
 	<string name="media">Мултимедија</string>
 	<string name="delete">Бриши</string>

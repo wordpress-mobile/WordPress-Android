@@ -26,6 +26,10 @@
     <dimen name="tabs_elevation">4dp</dimen>
 
     <dimen name="media_grid_progress_height">24dp</dimen>
+    <dimen name="media_settings_margin_normal">@dimen/margin_extra_large</dimen>
+    <dimen name="media_settings_margin_tablet">48dp</dimen>
+    <dimen name="media_settings_margin_tablet_large">96dp</dimen>
+    <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
 
     <dimen name="theme_details_fragment_width">650dp</dimen>
     <dimen name="theme_details_fragment_height">450dp</dimen>
@@ -78,9 +82,6 @@
     <dimen name="margin_extra_extra_large">48dp</dimen>
     <dimen name="margin_filter_spinner">64dp</dimen>
 
-    <item name="wp_match_parent" type="dimen">-1</item>
-    <dimen name="reader_webview_width">@dimen/wp_match_parent</dimen>
-
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
     <dimen name="reader_card_margin_tablet">48dp</dimen>
@@ -90,7 +91,9 @@
     <!-- left/right margin for reader detail -->
     <dimen name="reader_detail_margin_normal">24dp</dimen>
     <dimen name="reader_detail_margin_tablet">48dp</dimen>
+    <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
     <dimen name="reader_detail_margin_tablet_big">96dp</dimen>
+    <dimen name="reader_detail_margin_tablet_big_landscape">160dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
     <dimen name="reader_detail_header_avatar">48dp</dimen>

@@ -5,13 +5,13 @@ import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseOkHttpClientModule;
-import org.wordpress.android.fluxc.module.ReleaseStoreModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
+import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -44,6 +44,8 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaEditFragment;
 import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
+import org.wordpress.android.ui.media.MediaPreviewFragment;
+import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -114,7 +116,6 @@ import dagger.Component;
         ReleaseBaseModule.class,
         ReleaseOkHttpClientModule.class,
         ReleaseNetworkModule.class,
-        ReleaseStoreModule.class,
         LegacyModule.class,
         ReleaseToolsModule.class
 })
@@ -153,6 +154,7 @@ public interface AppComponent {
     void inject(GCMRegistrationIntentService object);
     void inject(DeepLinkingIntentReceiverActivity object);
     void inject(ShareIntentReceiverActivity object);
+    void inject(ShareIntentReceiverFragment object);
     void inject(AddQuickPressShortcutActivity object);
 
     void inject(HelpActivity object);
@@ -185,6 +187,8 @@ public interface AppComponent {
     void inject(MediaGridFragment object);
     void inject(MediaEditFragment object);
     void inject(MediaPreviewActivity object);
+    void inject(MediaPreviewFragment object);
+    void inject(MediaSettingsActivity object);
 
     void inject(PublicizeListActivity object);
     void inject(PublicizeWebViewFragment object);

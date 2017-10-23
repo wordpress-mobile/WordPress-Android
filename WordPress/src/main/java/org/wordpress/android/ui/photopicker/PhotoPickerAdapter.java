@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.photopicker;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Outline;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -11,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,7 +38,7 @@ import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUM
 class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.ThumbnailViewHolder> {
 
     private static final float SCALE_NORMAL = 1.0f;
-    private static final float SCALE_SELECTED = .85f;
+    private static final float SCALE_SELECTED = .8f;
 
     /*
      * used by this adapter to communicate with the owning fragment
@@ -160,21 +164,18 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         }
 
         int selectedIndex = mIsMultiSelectEnabled ? mSelectedUris.indexOfUri(item.uri) : -1;
-        if (selectedIndex > -1) {
-            holder.txtSelectionCount.setVisibility(View.VISIBLE);
-            holder.txtSelectionCount.setText(Integer.toString(selectedIndex + 1));
+        if (mAllowMultiSelect) {
+            if (selectedIndex > -1) {
+                holder.txtSelectionCount.setSelected(true);
+                holder.txtSelectionCount.setText(Integer.toString(selectedIndex + 1));
+            } else {
+                holder.txtSelectionCount.setSelected(false);
+                holder.txtSelectionCount.setText(null);
+            }
         } else {
             holder.txtSelectionCount.setVisibility(View.GONE);
         }
 
-        // make sure the thumbnail scale reflects its selection state
-        float scale = selectedIndex > -1 ? SCALE_SELECTED : SCALE_NORMAL;
-        if (holder.imgThumbnail.getScaleX() != scale) {
-            holder.imgThumbnail.setScaleX(scale);
-            holder.imgThumbnail.setScaleY(scale);
-        }
-
-        holder.imgPreview.setVisibility(item.isVideo ? View.GONE : View.VISIBLE);
         holder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
 
         if (!mDisableImageReset) {
@@ -244,16 +245,16 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         if (selectedIndex > -1) {
             mSelectedUris.remove(selectedIndex);
             isSelected = false;
+            holder.txtSelectionCount.setText(null);
         } else {
             mSelectedUris.add(item.uri);
             isSelected = true;
             holder.txtSelectionCount.setText(Integer.toString(mSelectedUris.size()));
         }
+        holder.txtSelectionCount.setSelected(isSelected);
 
         // animate the count
-        AniUtils.startAnimation(holder.txtSelectionCount,
-                isSelected ? R.anim.cab_select : R.anim.cab_deselect);
-        holder.txtSelectionCount.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+        AniUtils.startAnimation(holder.txtSelectionCount, R.anim.pop);
 
         // scale the thumbnail
         if (isSelected) {
@@ -308,7 +309,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         private final ImageView imgThumbnail;
         private final TextView txtSelectionCount;
         private final ImageView videoOverlay;
-        private final ImageView imgPreview;
 
         public ThumbnailViewHolder(View view) {
             super(view);
@@ -316,7 +316,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             imgThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
             txtSelectionCount = (TextView) view.findViewById(R.id.text_selection_count);
             videoOverlay = (ImageView) view.findViewById(R.id.image_video_overlay);
-            imgPreview = (ImageView) view.findViewById(R.id.image_preview);
 
             imgThumbnail.getLayoutParams().width = mThumbWidth;
             imgThumbnail.getLayoutParams().height = mThumbHeight;
@@ -326,7 +325,10 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position)) {
-                        if (mIsMultiSelectEnabled) {
+                        if (mAllowMultiSelect) {
+                            if (!mIsMultiSelectEnabled) {
+                                setMultiSelectEnabled(true);
+                            }
                             toggleSelection(ThumbnailViewHolder.this, position);
                         } else if (mListener != null) {
                             Uri uri = getItemAtPosition(position).uri;
@@ -340,33 +342,46 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 @Override
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
-                    if (isValidPosition(position) && mAllowMultiSelect) {
-                        if (!mIsMultiSelectEnabled) {
-                            setMultiSelectEnabled(true);
-                        }
-                        toggleSelection(ThumbnailViewHolder.this, position);
-                    }
+                    showPreview(position);
                     return true;
                 }
             });
 
-            View.OnClickListener previewListener = new View.OnClickListener() {
+            videoOverlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    PhotoPickerItem item = getItemAtPosition(position);
-                    if (item != null) {
-                        trackOpenPreviewScreenEvent(item);
-                        MediaPreviewActivity.showPreview(
-                                mContext,
-                                v,
-                                item.uri.toString(),
-                                item.isVideo);
-                    }
+                    showPreview(position);
                 }
-            };
-            imgPreview.setOnClickListener(previewListener);
-            videoOverlay.setOnClickListener(previewListener);
+            });
+
+            addShadow(txtSelectionCount);
+        }
+
+        /**
+         * adds an inset circular shadow outline to the selection count (Lollipop+ only)
+         */
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        private void addShadow(@NonNull View view) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                view.setOutlineProvider(new ViewOutlineProvider() {
+                    @Override
+                    public void getOutline(View view, Outline outline) {
+                        outline.setOval(0, 0, view.getWidth(), view.getHeight());
+                    }
+                });
+            }
+        }
+    }
+
+    private void showPreview(int position) {
+        PhotoPickerItem item = getItemAtPosition(position);
+        if (item != null) {
+            trackOpenPreviewScreenEvent(item);
+            MediaPreviewActivity.showPreview(
+                    mContext,
+                    null,
+                    item.uri.toString());
         }
     }
 

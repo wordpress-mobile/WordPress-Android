@@ -57,16 +57,17 @@ public class SmartLockHelper {
         return null;
     }
 
-    public void initSmartLockForPasswords() {
+    public boolean initSmartLockForPasswords() {
         FragmentActivity activity = getActivityAndCheckAvailability();
         if (activity == null) {
-            return;
+            return false;
         }
         mCredentialsClient = new GoogleApiClient.Builder(activity)
                 .addConnectionCallbacks((ConnectionCallbacks) activity)
                 .enableAutoManage(activity, (OnConnectionFailedListener) activity)
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
+        return true;
     }
 
     public void smartLockAutoFill(@NonNull final Callback callback) {

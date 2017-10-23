@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-05 02:03:38+0000
+Translation-Revision-Date: 2017-09-13 04:16:22+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: vi_VN
 -->
 <resources>
+	<string name="retry">Thử lại</string>
+	<string name="like">Thích</string>
 	<string name="editor_failed_uploads_switch_html">Một số media tải lên đã bị lỗi. Bạn không thể chuyển sang chế độ HTML \n        trong tình huống này. Loại bỏ tất cả tải lên bị lỗi và tiếp tục?</string>
 	<string name="image_thumbnail">Hình thu nhỏ Ảnh</string>
 	<string name="visual_editor">Trình biên tập trực quan</string>
@@ -314,7 +316,6 @@ Language: vi_VN
 	<string name="site_settings_address_title">Địa chỉ</string>
 	<string name="site_settings_tagline_title">Khẩu hiệu</string>
 	<string name="site_settings_title_title">Tiêu đề Site</string>
-	<string name="site_settings_this_device_header">Thiết bị này</string>
 	<string name="site_settings_discussion_new_posts_header">Mặc định cho cá bài viết mới</string>
 	<string name="site_settings_writing_header">Viết</string>
 	<string name="site_settings_account_header">Tài khoản</string>
@@ -337,8 +338,6 @@ Language: vi_VN
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Site mà bạn theo dõi không đăng bất kì bài viết nào gần đây</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Không có bài viết gần đây</string>
 	<string name="edit_media">Sửa media</string>
-	<string name="media_details_copy_url_toast">URL đã được sao chép vào bộ nhớ tạm</string>
-	<string name="media_details_copy_url">Sao chép URL</string>
 	<string name="media_details_label_date_uploaded">Đã tải lên</string>
 	<string name="media_details_label_date_added">Đã thêm</string>
 	<string name="selected_theme">Chủ đề đã chọn</string>
@@ -428,13 +427,7 @@ Language: vi_VN
 	<string name="email">Email</string>
 	<string name="notifications_tab">Thẻ thông báo</string>
 	<string name="app_notifications">Thông báo ứng dụng</string>
-	<string name="notifications_comments_other_blogs">Bình luận trên các site khác</string>
-	<string name="notifications_other">Khác</string>
 	<string name="notifications_wpcom_updates">Các cập nhật WordPress.com</string>
-	<string name="notifications_account_emails">Cập nhật từ WordPress.com</string>
-	<string name="notifications_account_emails_summary">Chúng tôi sẽ luôn gửi những email liên quan đến tài khoản của bạn, nhưng bạn có thể muốn nhận thêm những thông tin hữu ích khác,</string>
-	<string name="your_sites">Site của bạn</string>
-	<string name="notifications_sights_and_sounds">Cảnh và âm thanh</string>
 	<string name="stats_insights_latest_post_trend">Đó là %1$s kể từ %2$s đã được xuất bản. Đây là cách các bài đã thực hiện cho đến nay ...</string>
 	<string name="stats_insights_latest_post_summary">Tóm tắt bài viết mới nhất</string>
 	<string name="button_revert">Hoàn nguyên</string>
@@ -541,7 +534,6 @@ Language: vi_VN
 	<string name="stats_period">Khoảng thời gian</string>
 	<string name="stats_overall">Tổng quan</string>
 	<string name="stats_total">Tổng cộng</string>
-	<string name="post_uploading">Tải lên</string>
 	<string name="stats_visitors">Khách ghé thăm</string>
 	<string name="stats_views">Xem</string>
 	<string name="stats_timeframe_years">Năm</string>
@@ -602,13 +594,11 @@ Language: vi_VN
 	<string name="themes_fetching">Đang tìm nạp chủ đề...</string>
 	<string name="ssl_certificate_details">Chi tiết</string>
 	<string name="cab_selected">%d đã chọn</string>
-	<string name="confirm_delete_media">Xóa mục đã chọn?</string>
 	<string name="confirm_delete_multi_media">Xóa các mục đã chọn?</string>
 	<string name="delete_sure_page">Xóa trang này</string>
 	<string name="delete_sure">Xóa bản nháp này</string>
 	<string name="delete_sure_post">Xóa bài viết này</string>
 	<string name="signing_out">Đang đăng xuất...</string>
-	<string name="posting_post">Đang viết bài "%s"</string>
 	<string name="pages_empty_list">Chưa có trang nào. Tại sao không tạo 1 trang?</string>
 	<string name="comment_reply_to_user">Trả lời tới %s</string>
 	<string name="posts_empty_list">Chưa viết bài nào. Tại sao không tạo 1 bài?</string>
@@ -616,7 +606,6 @@ Language: vi_VN
 	<string name="comment">Bình luận</string>
 	<string name="mnu_comment_liked">Đã thích</string>
 	<string name="uploading_total">Đang tải lên %1$d của %2$d</string>
-	<string name="sending_content">Đang tải lên %s nội dung</string>
 	<string name="stats_no_blog">Thống kê không thể được nạp cho các blog yêu cầu</string>
 	<string name="older_last_week">Cũ hơn 1 tuần</string>
 	<string name="older_two_days">Cũ hơn 2 ngày</string>
@@ -717,7 +706,6 @@ Language: vi_VN
 	<string name="error_refresh_notifications">Thông báo không thể được làm mới tại thời điểm này</string>
 	<string name="error_refresh_pages">Trang không thể được làm mới tại thời điểm này</string>
 	<string name="error_refresh_posts">Bài viết không thể được làm mới tại thời điểm này</string>
-	<string name="error_delete_post">Một lỗi đã xảy ra trong khi xóa %s</string>
 	<string name="notifications_empty_list">Không có thông báo</string>
 	<string name="reply_failed">Trả lời bị lỗi</string>
 	<string name="invalid_url_message">Kiểm tra URL đã nhập là hợp lệ</string>
@@ -734,7 +722,6 @@ Language: vi_VN
 	<string name="theme_auth_error_message">Hãy đảm bảo bạn có đặc quyền để thiết đặt chủ đề</string>
 	<string name="theme_set_failed">Không thể thiết đặt chủ đề</string>
 	<string name="theme_fetch_failed">Không thể lấy chủ đề</string>
-	<string name="wait_until_upload_completes">Chờ đến khi tải lên hoàn tất</string>
 	<string name="blog_not_found">Một lỗi đã xảy ra khi truy cập blog này</string>
 	<string name="gallery_error">Các mục media không thể được lấy ra</string>
 	<string name="could_not_remove_account">Không thể loại bỏ site</string>
@@ -974,7 +961,6 @@ Language: vi_VN
 	<string name="app_title">WordPress cho Android</string>
 	<string name="tos">Điều khoản dịch vụ</string>
 	<string name="version">Phiên bản</string>
-	<string name="max_thumbnail_px_width">Chiều rộng ảnh mặc định</string>
 	<string name="image_alignment">Canh lề</string>
 	<string name="refresh">Làm mới</string>
 	<string name="untitled">Chưa có tiêu đề</string>
@@ -992,9 +978,6 @@ Language: vi_VN
 	<string name="categories">Danh mục</string>
 	<string name="title">Tiêu đề</string>
 	<string name="dlg_deleting_comments">Xóa bình luận</string>
-	<string name="notification_vibrate">Rung</string>
-	<string name="notification_sound">Âm thanh thông báo</string>
-	<string name="notification_blink">Nháy đèn thông báo</string>
 	<string name="sdcard_title">Yêu cầu thẻ SD</string>
 	<string name="media">Media</string>
 	<string name="delete">Xóa</string>
