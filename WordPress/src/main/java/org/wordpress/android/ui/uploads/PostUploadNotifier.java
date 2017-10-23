@@ -330,7 +330,7 @@ class PostUploadNotifier {
         int postItemsNotUploaded = sNotificationData.totalPostItems > 0 ? sNotificationData.totalPostItems - (sNotificationData.currentPostItem-1) : 0;
         int mediaItemsNotUploaded = sNotificationData.totalMediaItems - sNotificationData.currentMediaItem;
         if (postItemsNotUploaded > 0) {
-            newErrorMessage += postItemsNotUploaded + " " + getPagesAndOrPostsString();
+            newErrorMessage += postItemsNotUploaded + " " + getPagesAndOrPostsString(postItemsNotUploaded);
             if (mediaItemsNotUploaded > 0) {
                 newErrorMessage += ", ";
             }
