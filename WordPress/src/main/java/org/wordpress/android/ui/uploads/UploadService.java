@@ -17,8 +17,8 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
+import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -43,6 +44,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class UploadService extends Service {
+    private static final String KEY_SHOULD_PUBLISH = "shouldPublish";
     private static final String KEY_MEDIA_LIST = "mediaList";
     private static final String KEY_LOCAL_POST_ID = "localPostId";
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
@@ -177,7 +179,16 @@ public class UploadService extends Service {
                 mPostUploadHandler.registerPostForAnalyticsTracking(post);
             }
 
-            mPostUploadNotifier.cancelErrorNotification(post);
+            // cancel any outstanding "end" notification for this Post before we start processing it again
+            // i.e. dismiss success or error notification for the post.
+            mPostUploadNotifier.cancelFinalNotification(post);
+
+            // if the user tapped on the PUBLISH quick action, make this Post publishable and track
+            // analytics before starting the upload process.
+            if (intent.getBooleanExtra(KEY_SHOULD_PUBLISH, false)) {
+                makePostPublishable(post);
+                PostUtils.trackSavePostAnalytics(post, mSiteStore.getSiteByLocalId(post.getLocalSiteId()));
+            }
 
             // is this a new post? only add count to the notification when the post is totally new
             // i.e. it still doesn't have any tracked state in the UploadStore
@@ -197,6 +208,12 @@ public class UploadService extends Service {
         }
     }
 
+    private void makePostPublishable(@NonNull PostModel post) {
+        PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
+        post.setStatus(PostStatus.PUBLISHED.toString());
+        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
+    }
+
     private boolean isThisPostTotallyNewOrFailed(PostModel post){
         // if we have any tracks for this Post's UploadState, this means this Post is not new.
         // Conditions under which the UploadStore would contain traces of this Post's UploadState are:
@@ -208,12 +225,22 @@ public class UploadService extends Service {
         return !mUploadStore.isRegisteredPostModel(post) || mUploadStore.isFailedPost(post);
     }
 
+
+    public static Intent getUploadPostServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics,
+                                                    long notificationId, boolean publish) {
+        Intent intent = new Intent(context, UploadService.class);
+        intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
+        intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
+        intent.putExtra(KEY_SHOULD_PUBLISH, publish);
+        return intent;
+    }
+
     /**
      * Adds a post to the queue.
      */
     public static void uploadPost(Context context, @NonNull PostModel post) {
         Intent intent = new Intent(context, UploadService.class);
-        intent.putExtra(UploadService.KEY_LOCAL_POST_ID, post.getId());
+        intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, false);
         context.startService(intent);
     }
@@ -225,7 +252,7 @@ public class UploadService extends Service {
      */
     public static void uploadPostAndTrackAnalytics(Context context, @NonNull PostModel post) {
         Intent intent = new Intent(context, UploadService.class);
-        intent.putExtra(UploadService.KEY_LOCAL_POST_ID, post.getId());
+        intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, true);
         context.startService(intent);
     }
@@ -489,10 +516,7 @@ public class UploadService extends Service {
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
         mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(postToCancel);
 
-        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(postToCancel.getId());
-        if (showError || ((postUploadModel != null)
-                && postUploadModel.getUploadState() != PostUploadModel.PENDING
-                && postUploadModel.getUploadState() != PostUploadModel.CANCELLED)) {
+        if (showError || mUploadStore.isFailedPost(postToCancel)) {
             // Only show the media upload error notification if the post is NOT registered in the UploadStore
             // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
             // the user actively cancelled it. No need to show an error then.
