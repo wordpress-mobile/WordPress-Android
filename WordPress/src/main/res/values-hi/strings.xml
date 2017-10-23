@@ -77,7 +77,6 @@ Language: hi_IN
 	<string name="never">कभी नहीं </string>
 	<string name="unknown">अज्ञात</string>
 	<string name="edit_media">मीडिया को संपादित करे</string>
-	<string name="media_details_copy_url">यूआरएल को कॉपी करे</string>
 	<string name="media_details_label_date_uploaded">अपलोड की गई</string>
 	<string name="could_not_load_theme">थीम लोड नहीं हो सका</string>
 	<string name="theme_by_author_prompt_append">द्वारा %1$s</string>

@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-09-28 22:57:07+0000
+Translation-Revision-Date: 2017-10-17 00:08:06+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+	<string name="error_media_still_uploading">Espere até que o upload termine</string>
+	<string name="deleting_media_dlg">Excluindo</string>
+	<string name="confirm_delete_media_video">Excluir este vídeo?</string>
+	<string name="confirm_delete_media_image">Excluir esta imagem?</string>
+	<string name="media_title_document_details">Detalhes do documento</string>
+	<string name="media_title_audio_details">Detalhes do áudio</string>
+	<string name="media_title_video_details">Detalhes do vídeo</string>
+	<string name="media_title_image_details">Detalhes da imagem</string>
+	<string name="fab_content_description_preview">Visualizar</string>
+	<string name="media_edit_upload_date_caption">Data de upload</string>
+	<string name="media_edit_duration_caption">Duração</string>
+	<string name="media_edit_video_dimensions_caption">Dimensões do vídeo</string>
+	<string name="media_edit_image_dimensions_caption">Dimensões da imagem</string>
+	<string name="media_edit_filetype_caption">Tipo de arquivo</string>
+	<string name="media_edit_filename_caption">Nome do arquivo</string>
+	<string name="media_edit_url_caption">URL</string>
+	<string name="media_edit_card_caption">Detalhes do arquivo</string>
+	<string name="media_edit_alttext_text">Texto alternativo</string>
+	<string name="copy">Copiar</string>
 	<string name="connect_site">Conectar site</string>
 	<string name="notification_settings_item_sights_and_sounds_blink_light">Sinal luminoso</string>
 	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrar dispositivo</string>
@@ -756,8 +775,7 @@ Language: pt_BR
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Os sites que você segue não publicaram nada recentemente</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Não há posts recentes</string>
 	<string name="edit_media">Editar mídia</string>
-	<string name="media_details_copy_url_toast">A URL foi copiada para a área de transferência</string>
-	<string name="media_details_copy_url">Copiar URL</string>
+	<string name="media_edit_copy_url_toast">O URL foi copiado para a área de transferência</string>
 	<string name="media_details_label_date_uploaded">Upload completo</string>
 	<string name="media_details_label_date_added">Adicionada</string>
 	<string name="selected_theme">Tema selecionado</string>
@@ -1021,7 +1039,6 @@ Language: pt_BR
 	<string name="delete_sure">Excluir este rascunho</string>
 	<string name="delete_sure_page">Excluir esta página</string>
 	<string name="confirm_delete_multi_media">Excluir itens selecionados?</string>
-	<string name="confirm_delete_media">Excluir item selecionado?</string>
 	<string name="cab_selected">%d selecionados</string>
 	<string name="faq_button">Perguntas frequentes</string>
 	<string name="agree_terms_of_service">Ao criar sua conta, você está concordando com os nossos %1$sTermos de Serviço%2$s</string>
