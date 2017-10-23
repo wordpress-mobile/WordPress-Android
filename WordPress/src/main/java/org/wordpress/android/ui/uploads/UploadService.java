@@ -39,7 +39,6 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
-import org.wordpress.aztec.Aztec;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -295,6 +294,19 @@ public class UploadService extends Service {
 
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
+        context.startService(intent);
+    }
+
+    private static void restartServiceForRetryUpload(Context context, @NonNull PostModel post,
+                                                     @NonNull ArrayList<MediaModel> mediaList, boolean trackAnalytics) {
+        Intent intent = new Intent(context, UploadService.class);
+        if (post != null) {
+            intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
+            intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
+        }
+        if (mediaList != null && !mediaList.isEmpty()) {
+            intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
+        }
         context.startService(intent);
     }
 
@@ -565,6 +577,7 @@ public class UploadService extends Service {
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
+
     }
 
     private void aztecRetryUpload(PostModel post, boolean shouldTrackAnalytics) {
@@ -572,7 +585,7 @@ public class UploadService extends Service {
         List<String> mediaMarkedFailedIds =
                 AztecEditorFragment.getMediaMarkedFailedInPostContent(this, updatedPost.getContent());
         Collections.sort(mediaMarkedFailedIds);
-        boolean allMediaOkToRetry = true;
+        boolean allMediaOkToRetryOrNoMedia = true;
         ArrayList<MediaModel> mediaModelList = new ArrayList<>();
 
         for (String mediaId : mediaMarkedFailedIds) {
@@ -581,7 +594,7 @@ public class UploadService extends Service {
                 // this media doesn't exist anymore, so we can't really retry. Notify the user that they need
                 // to edit the Post manually.
                 ToastUtils.showToast(this, R.string.media_file_missing_for_retry);
-                allMediaOkToRetry = false;
+                allMediaOkToRetryOrNoMedia = false;
                 break;
             } else {
                 mediaModelList.add(media);
@@ -589,21 +602,31 @@ public class UploadService extends Service {
         }
 
         // if all media items are good, run through them again
-        if (allMediaOkToRetry) {
+        if (allMediaOkToRetryOrNoMedia) {
             for (MediaModel media : mediaModelList) {
                 media.setUploadState(MediaModel.MediaUploadState.QUEUED);
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             }
-            String postContentWithRestartedUploads = AztecEditorFragment.restartFailedMediaToUploading(this, updatedPost.getContent());
-            updatedPost.setContent(postContentWithRestartedUploads);
-            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
-            // now start the service, enqueuing the media and the Post
-            uploadMedia(this, mediaModelList);
-            if (shouldTrackAnalytics) {
-                uploadPostAndTrackAnalytics(this, updatedPost);
-            } else {
-                uploadPost(this, updatedPost);
+
+            if (!mediaModelList.isEmpty()) {
+                String postContentWithRestartedUploads = AztecEditorFragment.restartFailedMediaToUploading(this, updatedPost.getContent());
+                updatedPost.setContent(postContentWithRestartedUploads);
+                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+
+                // Register the post (as PENDING) in the UploadStore, along with all media currently in progress for it
+                // If the post is already registered, the new media will be added to its list
+                //List<MediaModel> activeMedia = MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
+                mUploadStore.registerPostModel(post, mediaModelList);
             }
+            // now start the service, enqueuing the media and the Post
+            restartServiceForRetryUpload(this, updatedPost, mediaModelList, shouldTrackAnalytics);
+//            uploadMedia(this, mediaModelList);
+//
+//            if (shouldTrackAnalytics) {
+//                uploadPostAndTrackAnalytics(this, updatedPost);
+//            } else {
+//                uploadPost(this, updatedPost);
+//            }
         }
     }
 
