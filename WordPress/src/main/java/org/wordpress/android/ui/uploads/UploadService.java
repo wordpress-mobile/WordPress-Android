@@ -17,10 +17,8 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
-import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -224,8 +222,7 @@ public class UploadService extends Service {
         // - it's a failed upload (due to some network issue, for example)
         // - it's a pending upload (it is currently registered for upload once the associated media finishes
         // uploading).
-        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
-        return (postUploadModel == null) || (postUploadModel.getUploadState() == PostUploadModel.FAILED);
+        return !mUploadStore.isRegisteredPostModel(post) || mUploadStore.isFailedPost(post);
     }
 
 
@@ -519,10 +516,7 @@ public class UploadService extends Service {
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
         mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(postToCancel);
 
-        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(postToCancel.getId());
-        if (showError || ((postUploadModel != null)
-                && postUploadModel.getUploadState() != PostUploadModel.PENDING
-                && postUploadModel.getUploadState() != PostUploadModel.CANCELLED)) {
+        if (showError || mUploadStore.isFailedPost(postToCancel)) {
             // Only show the media upload error notification if the post is NOT registered in the UploadStore
             // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
             // the user actively cancelled it. No need to show an error then.
