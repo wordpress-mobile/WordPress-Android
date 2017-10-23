@@ -607,7 +607,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     // Helpers
 
-    private PostModel getPost() {
+    private @Nullable PostModel getPost() {
         if (getEditPostActivityHook() == null) {
             // This can only happen during a callback while activity is re-created for some reason (config changes etc)
             return null;
@@ -615,7 +615,7 @@ public class EditPostSettingsFragment extends Fragment {
         return getEditPostActivityHook().getPost();
     }
 
-    private SiteModel getSite() {
+    private @Nullable SiteModel getSite() {
         if (getEditPostActivityHook() == null) {
             // This can only happen during a callback while activity is re-created for some reason (config changes etc)
             return null;
@@ -623,7 +623,7 @@ public class EditPostSettingsFragment extends Fragment {
         return getEditPostActivityHook().getSite();
     }
 
-    private EditPostActivityHook getEditPostActivityHook() {
+    private @Nullable EditPostActivityHook getEditPostActivityHook() {
         Activity activity = getActivity();
         if (activity == null) {
             return null;
