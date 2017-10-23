@@ -86,23 +86,18 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private boolean isSocialLogin2fa;
     private boolean isSocialLoginConnect;
 
-    public static Login2FaFragment newInstance(String emailAddress, String password,
-                                               String idToken, String service,
-                                               boolean isSocialLoginConnect) {
+    public static Login2FaFragment newInstance(String emailAddress, String password) {
         Login2FaFragment fragment = new Login2FaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
         args.putString(ARG_PASSWORD, password);
-        args.putString(ARG_2FA_ID_TOKEN, idToken);
-        args.putBoolean(ARG_2FA_IS_SOCIAL_CONNECT, isSocialLoginConnect);
-        args.putString(ARG_2FA_SOCIAL_SERVICE, service);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static Login2FaFragment newInstance(String emailAddress, String userId,
-                                               String nonceAuthenticator, String nonceBackup,
-                                               String nonceSms) {
+    public static Login2FaFragment newInstanceSocial(String emailAddress, String userId,
+                                                     String nonceAuthenticator, String nonceBackup,
+                                                     String nonceSms) {
         Login2FaFragment fragment = new Login2FaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
@@ -113,6 +108,19 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         args.putBoolean(ARG_2FA_IS_SOCIAL, true);
         // Social account connected, connect call not needed.
         args.putBoolean(ARG_2FA_IS_SOCIAL_CONNECT, false);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static Login2FaFragment newInstanceSocialConnect(String emailAddress, String password,
+                                                            String idToken, String service) {
+        Login2FaFragment fragment = new Login2FaFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_EMAIL_ADDRESS, emailAddress);
+        args.putString(ARG_PASSWORD, password);
+        args.putString(ARG_2FA_ID_TOKEN, idToken);
+        args.putBoolean(ARG_2FA_IS_SOCIAL_CONNECT, true);
+        args.putString(ARG_2FA_SOCIAL_SERVICE, service);
         fragment.setArguments(args);
         return fragment;
     }

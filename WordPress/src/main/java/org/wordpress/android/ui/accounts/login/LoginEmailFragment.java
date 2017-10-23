@@ -537,7 +537,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
             }
         // Response does not return error when two-factor authentication is required.
         } else if (event.requiresTwoStepAuth) {
-            mLoginListener.needs2fa(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup, event.nonceSms);
+            mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
+                    event.nonceSms);
         } else {
             doFinishLogin();
         }
