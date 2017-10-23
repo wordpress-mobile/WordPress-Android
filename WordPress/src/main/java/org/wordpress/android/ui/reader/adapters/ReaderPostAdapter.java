@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -788,6 +789,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             canShowComments = post.numReplies > 0;
         } else {
             canShowComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
+        }
+        // On Jetpack sites, if the feature flag is not enabled, we don't want to show comments
+        if (post.isJetpack && !BuildConfig.ENABLE_READER_COMMENTS_FOR_JETPACK_SITES) {
+            canShowComments = false;
         }
 
         if (canShowComments) {
