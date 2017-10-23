@@ -150,6 +150,10 @@ public class EditPostSettingsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        if (!isAdded()) {
+            return;
+        }
+
         updatePostFormatKeysAndNames();
         fetchSiteSettingsAndUpdateDefaultPostFormatIfNecessary();
 
