@@ -26,6 +26,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class ThemeStoreUnitTest {
@@ -52,17 +53,21 @@ public class ThemeStoreUnitTest {
 
         // set first theme active and verify
         mThemeStore.setActiveThemeForSite(site, firstTheme);
-        ThemeModel firstStoreTheme = mThemeStore.getActiveThemeForSite(site);
-        assertNotNull(firstStoreTheme);
-        assertEquals(firstTheme.getThemeId(), firstStoreTheme.getThemeId());
-        assertEquals(firstTheme.getName(), firstStoreTheme.getName());
+        List<ThemeModel> activeThemes = ThemeSqlUtils.getActiveThemeForSite(site);
+        assertNotNull(activeThemes);
+        assertTrue(activeThemes.size() == 1);
+        ThemeModel firstActiveTheme = activeThemes.get(0);
+        assertEquals(firstTheme.getThemeId(), firstActiveTheme.getThemeId());
+        assertEquals(firstTheme.getName(), firstActiveTheme.getName());
 
         // set second theme active and verify
         mThemeStore.setActiveThemeForSite(site, secondTheme);
-        ThemeModel secondStoreTheme = mThemeStore.getActiveThemeForSite(site);
-        assertNotNull(secondStoreTheme);
-        assertEquals(secondTheme.getThemeId(), secondStoreTheme.getThemeId());
-        assertEquals(secondTheme.getName(), secondStoreTheme.getName());
+        activeThemes = ThemeSqlUtils.getActiveThemeForSite(site);
+        assertNotNull(activeThemes);
+        assertTrue(activeThemes.size() == 1);
+        ThemeModel secondActiveTheme = activeThemes.get(0);
+        assertEquals(secondTheme.getThemeId(), secondActiveTheme.getThemeId());
+        assertEquals(secondTheme.getName(), secondActiveTheme.getName());
     }
 
     @Test
