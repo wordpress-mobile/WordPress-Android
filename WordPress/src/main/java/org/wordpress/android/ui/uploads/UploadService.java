@@ -576,6 +576,7 @@ public class UploadService extends Service {
     private void aztecRetryUpload(PostModel post) {
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
+        mPostUploadNotifier.prepareForegroundNotificationForRetry(post, mediaToRetry);
         if (!failedMedia.isEmpty()) {
             // reset these media items to QUEUED
             for (MediaModel media : failedMedia) {
@@ -592,7 +593,6 @@ public class UploadService extends Service {
             for (MediaModel media : mediaToRetry) {
                 mMediaUploadHandler.upload(media);
             }
-            mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaToRetry);
 
             // Register the post (as PENDING) in the UploadStore, along with all media currently in progress for it
             // If the post is already registered, the new media will be added to its list

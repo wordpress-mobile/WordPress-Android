@@ -113,6 +113,22 @@ class PostUploadNotifier {
         }
     }
 
+    void prepareForegroundNotificationForRetry(@NonNull PostModel post, @Nullable List<MediaModel> media) {
+        removePostInfoFromForegroundNotificationData(post, media);
+    }
+
+    private void removePostInfoFromForegroundNotificationData(@NonNull PostModel post, @Nullable List<MediaModel> media) {
+        if (sNotificationData.totalPostItems > 0) {
+            sNotificationData.totalPostItems--;
+            if (post.isPage()) {
+                sNotificationData.totalPageItemsIncludedInPostCount--;
+            }
+        }
+        if (media != null) {
+            removeMediaInfoFromForegroundNotification(media);
+        }
+    }
+
     // Post could have initial media, or not (nullable)
     void addPostInfoToForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
         sNotificationData.totalPostItems++;
@@ -123,6 +139,12 @@ class PostUploadNotifier {
             addMediaInfoToForegroundNotification(media);
         }
         startOrUpdateForegroundNotification(post);
+    }
+
+    void removeMediaInfoFromForegroundNotification(@NonNull List<MediaModel> mediaList) {
+        if (sNotificationData.totalMediaItems >= mediaList.size()) {
+            sNotificationData.totalMediaItems -= mediaList.size();
+        }
     }
 
     void addMediaInfoToForegroundNotification(@NonNull List<MediaModel> mediaList) {
