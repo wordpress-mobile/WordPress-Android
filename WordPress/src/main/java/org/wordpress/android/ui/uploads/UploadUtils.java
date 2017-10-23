@@ -250,7 +250,7 @@ public class UploadUtils {
                             @Override
                             public void onClick(View view) {
                                 // jump to Editor Preview mode to show this Post
-                                ActivityLauncher.viewPostPreviewForResult(activity, site, post);
+                                ActivityLauncher.browsePostOrPage(activity, site, post);
                             }
                         });
             }
