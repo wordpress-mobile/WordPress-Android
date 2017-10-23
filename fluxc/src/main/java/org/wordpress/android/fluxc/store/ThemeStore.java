@@ -264,11 +264,18 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getThemesForSite(site);
     }
 
-    public ThemeModel getThemeByThemeId(String themeId, boolean isWpComTheme) {
+    public ThemeModel getInstalledThemeByThemeId(String themeId) {
         if (themeId == null || themeId.isEmpty()) {
             return null;
         }
-        return ThemeSqlUtils.getThemeByThemeId(themeId, isWpComTheme);
+        return ThemeSqlUtils.getThemeByThemeId(themeId, false);
+    }
+
+    public ThemeModel getWpComThemeByThemeId(String themeId) {
+        if (themeId == null || themeId.isEmpty()) {
+            return null;
+        }
+        return ThemeSqlUtils.getThemeByThemeId(themeId, true);
     }
 
     public ThemeModel getActiveThemeForSite(@NonNull SiteModel site) {
