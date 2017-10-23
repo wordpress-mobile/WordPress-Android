@@ -408,8 +408,6 @@ Language: ms
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Laman yang anda ikuti belum mengirim apa-apa baru-baru ini</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Tiada kiriman terkini</string>
 	<string name="edit_media">Sunting media</string>
-	<string name="media_details_copy_url_toast">URL disalin ke papan keratan</string>
-	<string name="media_details_copy_url">Salin URL</string>
 	<string name="media_details_label_date_uploaded">Dimuat naik</string>
 	<string name="media_details_label_date_added">Ditambah</string>
 	<string name="selected_theme">Tema Dipilih</string>
@@ -666,7 +664,6 @@ Language: ms
 	<string name="themes_fetching">Mengambil tema...</string>
 	<string name="ssl_certificate_details">Perincian</string>
 	<string name="cab_selected">%d dipilih</string>
-	<string name="confirm_delete_media">Hapuskan butir yang dipilih?</string>
 	<string name="confirm_delete_multi_media">Hapuskan butiran yang dipilih?</string>
 	<string name="delete_sure_page">Hapuskan halaman ini</string>
 	<string name="delete_sure">Hapuskan draf ini</string>

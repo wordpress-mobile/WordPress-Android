@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-09-27 10:15:55+0000
+Translation-Revision-Date: 2017-10-11 08:04:22+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -137,9 +137,8 @@ Language: hr
 	<string name="invalid_username_no_spaces">Korisničko ime ne može sadržavati razmake</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Web-stranice koje pratite nisu ništa objavile u posljednje vrijeme</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Nema novijih objava</string>
-	<string name="media_details_copy_url_toast">URL kopiran u međuspremnik</string>
+	<string name="media_edit_copy_url_toast">URL kopiran u međuspremnik</string>
 	<string name="edit_media">Uredi medijski zapis</string>
-	<string name="media_details_copy_url">Kopiraj URL</string>
 	<string name="media_details_label_date_uploaded">Preneseno</string>
 	<string name="media_details_label_date_added">Dodano</string>
 	<string name="selected_theme">Odabrana tema</string>
@@ -403,7 +402,6 @@ Language: hr
 	<string name="delete_sure">Obriši ovu skicu</string>
 	<string name="delete_sure_page">Obriši ovu stranicu</string>
 	<string name="confirm_delete_multi_media">Obriši odabrane stavke?</string>
-	<string name="confirm_delete_media">Obriši odabranu stavku?</string>
 	<string name="cab_selected">%d odabrano</string>
 	<string name="reader_empty_posts_liked">Niste lajkali ni jednu objavu</string>
 	<string name="faq_button">FAQ</string>

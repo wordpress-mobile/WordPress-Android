@@ -455,8 +455,6 @@ Language: ar
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">لم تنشر المواقع التي تتابعها أي شيء مؤخرًا</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">لا توجد مقالات حديثة</string>
 	<string name="edit_media">تحرير الوسائط</string>
-	<string name="media_details_copy_url_toast">تم نسخ عنوان URL إلى الحافظة</string>
-	<string name="media_details_copy_url">نسخ عنوان URL</string>
 	<string name="media_details_label_date_uploaded">تم التحميل</string>
 	<string name="media_details_label_date_added">تمت الإضافة</string>
 	<string name="selected_theme">تحديد قالب</string>
@@ -706,7 +704,6 @@ Language: ar
 	<string name="themes_fetching">جارٍ إحضار القوالب…</string>
 	<string name="ssl_certificate_details">تفاصيل</string>
 	<string name="cab_selected">تم تحديد %d</string>
-	<string name="confirm_delete_media">هل تريد حذف العنصر المحدد؟</string>
 	<string name="confirm_delete_multi_media">هل تريد حذف العناصر المحددة؟</string>
 	<string name="delete_sure_page">حذف هذه الصفحة</string>
 	<string name="delete_sure">حذف هذه المسودة</string>

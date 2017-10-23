@@ -103,7 +103,6 @@ Language: nb_NO
 	<string name="delete_sure">Slett denne kladden</string>
 	<string name="delete_sure_post">Slett dette innlegget</string>
 	<string name="confirm_delete_multi_media">Slette valgte elementer?</string>
-	<string name="confirm_delete_media">Slette valgt element?</string>
 	<string name="reader_label_comment_count_single">En kommentar</string>
 	<string name="comment">Kommentar</string>
 	<string name="comment_trashed">Kommentar slettet</string>
