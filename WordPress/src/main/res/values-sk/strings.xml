@@ -208,9 +208,7 @@ Language: sk
 	<string name="invalid_username_no_spaces">Používateľské meno nemôže obsahovať medzery</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Webové stránky, ktoré sledujete v poslednej dobe nezverejnili nič.</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Žiadne nové články</string>
-	<string name="media_details_copy_url_toast">URL adresa skopírovaná do schránky</string>
 	<string name="edit_media">Upraviť súbory</string>
-	<string name="media_details_copy_url">Kopírovať URL adresu</string>
 	<string name="media_details_label_date_uploaded">Nahraté</string>
 	<string name="media_details_label_date_added">Pridané</string>
 	<string name="selected_theme">Zvolená téma</string>
@@ -462,7 +460,6 @@ Language: sk
 	<string name="delete_sure">Vymazať tento koncept</string>
 	<string name="delete_sure_post">Vymazať tento príspevok</string>
 	<string name="cab_selected">%d vybraných</string>
-	<string name="confirm_delete_media">Zmazať vybranú položku?</string>
 	<string name="confirm_delete_multi_media">Zmazať vybrané položky?</string>
 	<string name="posts_empty_list">Žiadne príspevky. Želáte si nejaký vytvoriť?</string>
 	<string name="reader_label_comment_count_multi">odpovedí: %,d</string>

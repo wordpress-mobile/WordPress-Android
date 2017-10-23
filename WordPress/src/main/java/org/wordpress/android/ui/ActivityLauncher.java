@@ -352,6 +352,19 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
+    public static void loginForShareIntent(Activity activity) {
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            Intent intent = new Intent(activity, LoginActivity.class);
+            LoginMode.SHARE_INTENT.putInto(intent);
+            activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+        } else {
+            ToastUtils.showToast(activity, R.string.no_account,
+                    ToastUtils.Duration.LONG);
+            activity.startActivity(new Intent(activity, SignInActivity.class));
+            activity.finish();
+        }
+    }
+
     public static void loginWithoutMagicLink(Activity activity) {
         Intent intent;
 

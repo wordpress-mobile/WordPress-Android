@@ -587,8 +587,6 @@ Language: he_IL
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">האתרים אחריהם אתה עוקב לא פרסמו דבר לאחרונה</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">אין פוסטים אחרונים</string>
 	<string name="edit_media">עריכת מדיה</string>
-	<string name="media_details_copy_url_toast">הכתובת הועתקה ללוח העריכה</string>
-	<string name="media_details_copy_url">העתק כתובת</string>
 	<string name="media_details_label_date_uploaded">הועלה</string>
 	<string name="media_details_label_date_added">התווסף</string>
 	<string name="selected_theme">תבנית נבחרת</string>
@@ -848,7 +846,6 @@ Language: he_IL
 	<string name="themes_fetching">משיג ערכות עיצוב…</string>
 	<string name="ssl_certificate_details">פרטים</string>
 	<string name="cab_selected">%d נבחרו</string>
-	<string name="confirm_delete_media">מחיקת פריט שנבחר?</string>
 	<string name="confirm_delete_multi_media">מחיקת פריטים שנבחרו?</string>
 	<string name="delete_sure_page">מחיקת עמוד</string>
 	<string name="delete_sure">מחיקת טיוטה</string>

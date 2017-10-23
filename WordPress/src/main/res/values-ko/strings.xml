@@ -417,9 +417,7 @@ Language: ko_KR
 	<string name="invalid_username_no_spaces">사용자명에 공백을 포함할 수 없습니다.</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">팔로우하는 사이트에 최근 게시된 글이 없습니다.</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">최근 글 없음</string>
-	<string name="media_details_copy_url_toast">URL이 클립보드에 복사됨</string>
 	<string name="edit_media">미디어 편집</string>
-	<string name="media_details_copy_url">URL 복사</string>
 	<string name="media_details_label_date_uploaded">업로드됨</string>
 	<string name="media_details_label_date_added">추가됨</string>
 	<string name="selected_theme">선택된 테마</string>
@@ -679,7 +677,6 @@ Language: ko_KR
 	<string name="delete_sure">이 임시 글을 삭제하기</string>
 	<string name="delete_sure_page">이 페이지를 삭제하기</string>
 	<string name="confirm_delete_multi_media">선택된 아이템을 삭제될까요?</string>
-	<string name="confirm_delete_media">선택된 아이템을 삭제될까요?</string>
 	<string name="cab_selected">%d개 선택함</string>
 	<string name="reader_empty_followed_blogs_title">아직 팔로우하는 블로그가 없습니다.</string>
 	<string name="reader_empty_posts_liked">좋아하는 게시물이 없군요.</string>

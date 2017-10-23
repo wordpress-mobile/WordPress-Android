@@ -720,8 +720,6 @@ Language: it
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">I siti che segui non hanno pubblicato nulla recentemente</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Nessun articolo recente</string>
 	<string name="edit_media">Modifica media</string>
-	<string name="media_details_copy_url_toast">URL copiata negli appunti</string>
-	<string name="media_details_copy_url">Copia URL</string>
 	<string name="media_details_label_date_uploaded">Caricato</string>
 	<string name="media_details_label_date_added">Aggiunto</string>
 	<string name="selected_theme">Tema selezionato</string>
@@ -981,7 +979,6 @@ Language: it
 	<string name="themes_fetching">Recupero temi…</string>
 	<string name="ssl_certificate_details">Dettagli</string>
 	<string name="cab_selected">%d selezionati</string>
-	<string name="confirm_delete_media">Cancellare l\'elemento selezionato?</string>
 	<string name="confirm_delete_multi_media">Cancellare gli elementi selezionati?</string>
 	<string name="delete_sure_page">Cancella questa pagina</string>
 	<string name="delete_sure">Cancella questa bozza</string>

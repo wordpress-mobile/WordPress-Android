@@ -95,6 +95,7 @@
     <string name="confirm">Confirm</string>
     <string name="cant_open_url">Unable to open the link</string>
     <string name="retry">Retry</string>
+    <string name="invalid_ip_or_range">Invalid IP or IP range</string>
     <string name="copy">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
 
@@ -147,6 +148,7 @@
     <string name="media_error_timeout">Server took too long to respond</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
+    <string name="share_media_permission_required">Permissions required in order to share images or videos</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="media_file_type">File type: %s</string>
     <string name="media_file_name">File name: %s</string>
@@ -452,8 +454,10 @@
     <!-- action from share intents -->
     <string name="select_a_blog">Choose a WordPress site</string>
     <string name="share_action_title">Add to</string>
-    <string name="share_action_post">New post</string>
-    <string name="share_action_media">Media library</string>
+    <string name="share_action_post">Add to new post</string>
+    <string name="share_action_media">Add to media library</string>
+    <string name="share_intent_pick_site">Pick site</string>
+    <string name="share_intent_adding_to">Adding to</string>
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="cant_share_unknown_action">Unrecognized action requested, ignoring</string>
@@ -527,6 +531,20 @@
     <string name="site_settings_moderation_hold_title">Hold for Moderation</string>
     <string name="site_settings_blacklist_title">Blacklist</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
+
+    <!-- Jetpack settings -->
+    <string name="jetpack_site_settings_category_title">Jetpack Settings</string>
+    <string name="jetpack_security_setting_title">Security</string>
+    <string name="jetpack_monitor_uptime_title">Monitor your site\'s uptime</string>
+    <string name="jetpack_send_email_notifications_title">Send notifications by email</string>
+    <string name="jetpack_send_wp_notifications_title">Send push notifications</string>
+    <string name="jetpack_prevent_brute_force_category_title">Brute force attack protection</string>
+    <string name="jetpack_prevent_brute_force_title">Block malicious login attempts</string>
+    <string name="jetpack_brute_force_whitelist_title">Whitelisted IP addresses</string>
+    <string name="jetpack_wpcom_sign_in_category_title">WordPress.com login</string>
+    <string name="jetpack_allow_wpcom_sign_in_title">Allow WordPress.com login</string>
+    <string name="jetpack_match_wpcom_via_email_title">Match accounts using email</string>
+    <string name="jetpack_require_two_factor_title">Require two-step authentication</string>
 
     <!-- Preference Summaries -->
     <string name="site_settings_privacy_public_summary">Public</string>
@@ -643,6 +661,7 @@
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="site_settings_blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+    <string name="site_settings_jetpack_whitelist_description">You may whitelist an IP address or series of addresses preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
 
     <!-- Dialogs -->
     <string name="site_settings_discussion_title" translatable="false">@string/discussion</string>
@@ -1925,6 +1944,7 @@
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="login_username_at">\@%s</string>
     <string name="enter_site_address">Enter the address of your WordPress site you\'d like to connect.</string>
+    <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="login_site_address">Site address</string>
     <string name="login_site_address_help">Need help finding your site address?</string>
     <string name="login_site_address_help_title">What\'s my site address?</string>
@@ -1933,6 +1953,7 @@
     <string name="login_checking_site_address">Checking site address</string>
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
+    <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
     <string name="login_empty_site_url">Please enter a site address</string>
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_2fa">Please enter a verification code</string>

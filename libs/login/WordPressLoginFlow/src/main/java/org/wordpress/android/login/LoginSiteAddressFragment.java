@@ -79,7 +79,14 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
     @Override
     protected void setupLabel(TextView label) {
-        label.setText(R.string.enter_site_address);
+        switch (mLoginListener.getLoginMode()) {
+            case SHARE_INTENT:
+                label.setText(R.string.enter_site_address_share_intent);
+                break;
+            default:
+                label.setText(R.string.enter_site_address);
+                break;
+        }
     }
 
     @Override

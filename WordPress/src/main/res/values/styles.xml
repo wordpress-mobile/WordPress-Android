@@ -67,7 +67,7 @@
         <item name="android:divider">@drawable/tab_divider_wordpress</item>
     </style>
 
-   <style name="PopupMenu.WordPress" parent="android:Widget.Holo.ListPopupWindow">
+    <style name="PopupMenu.WordPress" parent="android:Widget.Holo.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
     </style>
 
