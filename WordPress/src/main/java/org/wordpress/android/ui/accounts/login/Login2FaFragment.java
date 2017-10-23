@@ -83,7 +83,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private String mService;
     private String mType;
     private String mUserId;
-    private boolean isSocialLogin2fa;
+    private boolean isSocialLogin;
     private boolean isSocialLoginConnect;
 
     public static Login2FaFragment newInstance(String emailAddress, String password) {
@@ -193,7 +193,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mNonceSms = getArguments().getString(ARG_2FA_NONCE_SMS);
         mUserId = getArguments().getString(ARG_2FA_USER_ID);
         mIdToken = getArguments().getString(ARG_2FA_ID_TOKEN);
-        isSocialLogin2fa = getArguments().getBoolean(ARG_2FA_IS_SOCIAL);
+        isSocialLogin = getArguments().getBoolean(ARG_2FA_IS_SOCIAL);
         isSocialLoginConnect = getArguments().getBoolean(ARG_2FA_IS_SOCIAL_CONNECT);
         mService = getArguments().getString(ARG_2FA_SOCIAL_SERVICE);
 
@@ -259,7 +259,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
-        if (isSocialLogin2fa && !shouldSendTwoStepSMS) {
+        if (isSocialLogin && !shouldSendTwoStepSMS) {
             setAuthCodeTypeAndNonce(twoStepCode);
             AccountStore.PushSocialAuthPayload payload = new AccountStore.PushSocialAuthPayload(mUserId, mType, mNonce,
                     twoStepCode);
@@ -428,7 +428,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     protected void onLoginFinished() {
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
-        if (isSocialLogin2fa) {
+        if (isSocialLogin) {
             mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
         } else {
             mLoginListener.loggedInViaPassword(mOldSitesIDs);
