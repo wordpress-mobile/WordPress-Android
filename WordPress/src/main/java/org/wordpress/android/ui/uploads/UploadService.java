@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -206,8 +205,7 @@ public class UploadService extends Service {
         // - it's a failed upload (due to some network issue, for example)
         // - it's a pending upload (it is currently registered for upload once the associated media finishes
         // uploading).
-        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
-        return (postUploadModel == null) || (postUploadModel.getUploadState() == PostUploadModel.FAILED);
+        return !mUploadStore.isRegisteredPostModel(post) || mUploadStore.isFailedPost(post);
     }
 
     /**
