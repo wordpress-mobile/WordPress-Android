@@ -197,7 +197,7 @@ public class UploadService extends Service {
 
             if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
                 if (AppPrefs.isAztecEditorEnabled()) {
-                    aztecRetryUpload(post, shouldTrackAnalytics);
+                    aztecRetryUpload(post);
                 } else {
                     ToastUtils.showToast(this, R.string.retry_needs_aztec);
                 }
@@ -244,7 +244,7 @@ public class UploadService extends Service {
         // - it's a failed upload (due to some network issue, for example)
         // - it's a pending upload (it is currently registered for upload once the associated media finishes
         // uploading).
-        return !mUploadStore.isRegisteredPostModel(post) || mUploadStore.isFailedPost(post);
+        return !mUploadStore.isRegisteredPostModel(post) || (mUploadStore.isFailedPost(post) || mUploadStore.isPendingPost(post));
     }
 
 
@@ -291,19 +291,6 @@ public class UploadService extends Service {
 
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
-        context.startService(intent);
-    }
-
-    private static void restartServiceForRetryUpload(Context context, @NonNull PostModel post,
-                                                     @NonNull ArrayList<MediaModel> mediaList, boolean trackAnalytics) {
-        Intent intent = new Intent(context, UploadService.class);
-        if (post != null) {
-            intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
-            intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
-        }
-        if (mediaList != null && !mediaList.isEmpty()) {
-            intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
-        }
         context.startService(intent);
     }
 
@@ -573,53 +560,34 @@ public class UploadService extends Service {
 
     }
 
-    private void aztecRetryUpload(PostModel post, boolean shouldTrackAnalytics) {
-        PostModel updatedPost = updateOnePostModelWithCompletedAndFailedUploads(post);
-        List<String> mediaMarkedFailedIds =
-                AztecEditorFragment.getMediaMarkedFailedInPostContent(this, updatedPost.getContent());
-        Collections.sort(mediaMarkedFailedIds);
-        boolean allMediaOkToRetryOrNoMedia = true;
-        ArrayList<MediaModel> mediaModelList = new ArrayList<>();
-
-        for (String mediaId : mediaMarkedFailedIds) {
-            MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
-            if (media == null) {
-                // this media doesn't exist anymore, so we can't really retry. Notify the user that they need
-                // to edit the Post manually.
-                ToastUtils.showToast(this, R.string.media_file_missing_for_retry);
-                allMediaOkToRetryOrNoMedia = false;
-                break;
-            } else {
-                mediaModelList.add(media);
-            }
-        }
-
-        // if all media items are good, run through them again
-        if (allMediaOkToRetryOrNoMedia) {
-            for (MediaModel media : mediaModelList) {
+    private void aztecRetryUpload(PostModel post) {
+        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
+        ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
+        if (!failedMedia.isEmpty()) {
+            // reset these media items to QUEUED
+            for (MediaModel media : failedMedia) {
                 media.setUploadState(MediaModel.MediaUploadState.QUEUED);
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             }
 
-            if (!mediaModelList.isEmpty()) {
-                String postContentWithRestartedUploads = AztecEditorFragment.restartFailedMediaToUploading(this, updatedPost.getContent());
-                updatedPost.setContent(postContentWithRestartedUploads);
-                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+            // do the same within the Post content itself
+            String postContentWithRestartedUploads = AztecEditorFragment.restartFailedMediaToUploading(this, post.getContent());
+            post.setContent(postContentWithRestartedUploads);
+            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 
-                // Register the post (as PENDING) in the UploadStore, along with all media currently in progress for it
-                // If the post is already registered, the new media will be added to its list
-                //List<MediaModel> activeMedia = MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
-                mUploadStore.registerPostModel(post, mediaModelList);
+            // no retry uploading the media items
+            for (MediaModel media : mediaToRetry) {
+                mMediaUploadHandler.upload(media);
             }
-            // now start the service, enqueuing the media and the Post
-            restartServiceForRetryUpload(this, updatedPost, mediaModelList, shouldTrackAnalytics);
-//            uploadMedia(this, mediaModelList);
-//
-//            if (shouldTrackAnalytics) {
-//                uploadPostAndTrackAnalytics(this, updatedPost);
-//            } else {
-//                uploadPost(this, updatedPost);
-//            }
+            mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaToRetry);
+
+            // Register the post (as PENDING) in the UploadStore, along with all media currently in progress for it
+            // If the post is already registered, the new media will be added to its list
+            mUploadStore.registerPostModel(post, mediaToRetry);
+            mPostUploadNotifier.addPostInfoToForegroundNotification(post, mediaToRetry);
+        } else {
+            // retry uploading the Post
+            mPostUploadHandler.upload(post);
         }
     }
 

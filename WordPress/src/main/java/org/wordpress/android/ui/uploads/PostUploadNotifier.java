@@ -327,8 +327,8 @@ class PostUploadNotifier {
         // first we build a summary of what failed and what went OK, like this:
         // i.e. "1 post, 3 media files not uploaded (9 successfully uploaded)"
         String newErrorMessage = "";
-        int postItemsNotUploaded = sNotificationData.totalPostItems > 0 ? sNotificationData.totalPostItems - (sNotificationData.currentPostItem-1) : 0;
-        int mediaItemsNotUploaded = sNotificationData.totalMediaItems - sNotificationData.currentMediaItem;
+        int postItemsNotUploaded = sNotificationData.totalPostItems > 0 ? sNotificationData.totalPostItems - getCurrentPostItem() : 0;
+        int mediaItemsNotUploaded = sNotificationData.totalMediaItems - getCurrentMediaItem();
         if (postItemsNotUploaded > 0) {
             newErrorMessage += postItemsNotUploaded + " " + getPagesAndOrPostsString(postItemsNotUploaded);
             if (mediaItemsNotUploaded > 0) {
