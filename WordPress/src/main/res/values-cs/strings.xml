@@ -440,9 +440,7 @@ Language: cs_CZ
 	<string name="invalid_username_no_spaces">Uživatelské jméno nemůže obsahovat mezery</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Stránky, které sledujete v poslední době neměly žádné příspěvky</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Žádné nedávné příspěvky</string>
-	<string name="media_details_copy_url_toast">URL adresa byla zkopírována do schránky</string>
 	<string name="edit_media">Upravit média</string>
-	<string name="media_details_copy_url">Kopírovat URL adresu</string>
 	<string name="media_details_label_date_uploaded">Nahráno</string>
 	<string name="media_details_label_date_added">Přidáno</string>
 	<string name="selected_theme">Vybraná šablona</string>
@@ -704,7 +702,6 @@ Language: cs_CZ
 	<string name="delete_sure">Smazat koncept</string>
 	<string name="delete_sure_post">Smazat příspěvek</string>
 	<string name="confirm_delete_multi_media">Odstranit zvolené položky?</string>
-	<string name="confirm_delete_media">Odstranit zvolenou položku?</string>
 	<string name="reader_title_photo_viewer">%1$d z %2$d</string>
 	<string name="reader_label_comments_closed">Komentáře jsou uzavřené</string>
 	<string name="reader_label_comment_count_single">Jeden komentář</string>
