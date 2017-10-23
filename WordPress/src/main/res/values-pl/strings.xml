@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-01 06:41:36+0000
+Translation-Revision-Date: 2017-10-15 08:42:00+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="error_media_still_uploading">Proszę czekaj na zakończenie przesłania</string>
+	<string name="deleting_media_dlg">Usuwanie</string>
+	<string name="confirm_delete_media_video">Usunąć ten film? </string>
+	<string name="confirm_delete_media_image">Usunąć ten obrazek? </string>
+	<string name="media_title_document_details">Szczegóły dokumentu</string>
+	<string name="media_title_audio_details">Szczegóły pliku dźwiękowego</string>
+	<string name="media_title_video_details">Szczegóły filmu</string>
+	<string name="media_title_image_details">Szczegóły obrazka</string>
+	<string name="fab_content_description_preview">Podgląd</string>
+	<string name="media_edit_upload_date_caption">Data przesłania</string>
+	<string name="media_edit_duration_caption">Czas trwania</string>
+	<string name="media_edit_video_dimensions_caption">Wymiary filmu</string>
+	<string name="media_edit_image_dimensions_caption">Wymiary obrazka</string>
+	<string name="media_edit_filetype_caption">Typ pliku</string>
+	<string name="media_edit_filename_caption">Nazwa pliku</string>
+	<string name="media_edit_url_caption">Adres URL </string>
+	<string name="media_edit_card_caption">Szczegóły pliku</string>
+	<string name="media_edit_alttext_text">Tekst alternatywny</string>
+	<string name="copy">Kopia</string>
 	<string name="connect_site">Połącz witrynę</string>
 	<string name="notification_settings_item_sights_and_sounds_blink_light">Zamigaj diodą</string>
 	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Zawibruj urządzeniem</string>
@@ -756,8 +775,7 @@ Language: pl
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Witryny, które obserwujesz niczego ostatnio nie opublikowały</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Brak ostatnich wpisów</string>
 	<string name="edit_media">Edytuj media</string>
-	<string name="media_details_copy_url_toast">Adres URL skopiowano do schowka</string>
-	<string name="media_details_copy_url">Kopiuj adres URL</string>
+	<string name="media_edit_copy_url_toast">Adres URL skopiowano do schowka</string>
 	<string name="media_details_label_date_uploaded">Przesłano</string>
 	<string name="media_details_label_date_added">Dodano</string>
 	<string name="selected_theme">Wybrany motyw</string>
@@ -1018,7 +1036,6 @@ Language: pl
 	<string name="themes_fetching">Pobieranie motywów...</string>
 	<string name="ssl_certificate_details">Szczegóły</string>
 	<string name="cab_selected">Liczba zaznaczonych: %d</string>
-	<string name="confirm_delete_media">Usunąć zaznaczony element?</string>
 	<string name="confirm_delete_multi_media">Usunąć zaznaczone elementy?</string>
 	<string name="delete_sure_page">Usuń tę stronę</string>
 	<string name="delete_sure">Usuń ten szkic</string>
