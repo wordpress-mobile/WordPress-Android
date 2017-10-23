@@ -43,6 +43,9 @@ import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher, OnEditorCommitListener {
     private static final String KEY_IN_PROGRESS_MESSAGE_ID = "KEY_IN_PROGRESS_MESSAGE_ID";
+    private static final String KEY_NONCE_AUTHENTICATOR = "KEY_NONCE_AUTHENTICATOR";
+    private static final String KEY_NONCE_BACKUP = "KEY_NONCE_BACKUP";
+    private static final String KEY_NONCE_SMS = "KEY_NONCE_SMS";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
 
     private static final String ARG_2FA_ID_TOKEN = "ARG_2FA_ID_TOKEN";
@@ -188,6 +191,13 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         isSocialLogin2fa = getArguments().getBoolean(ARG_2FA_IS_SOCIAL);
         isSocialLoginConnect = getArguments().getBoolean(ARG_2FA_IS_SOCIAL_CONNECT);
         mService = getArguments().getString(ARG_2FA_SOCIAL_SERVICE);
+
+        // Overwrite argument nonce values with saved state values on device rotation.
+        if (savedInstanceState != null) {
+            mNonceAuthenticator = savedInstanceState.getString(KEY_NONCE_AUTHENTICATOR);
+            mNonceBackup = savedInstanceState.getString(KEY_NONCE_BACKUP);
+            mNonceSms = savedInstanceState.getString(KEY_NONCE_SMS);
+        }
     }
 
     @Override
@@ -210,9 +220,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         outState.putInt(KEY_IN_PROGRESS_MESSAGE_ID, mInProgressMessageId);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
-        outState.putString(ARG_2FA_NONCE_AUTHENTICATOR, mNonceAuthenticator);
-        outState.putString(ARG_2FA_NONCE_BACKUP, mNonceBackup);
-        outState.putString(ARG_2FA_NONCE_SMS, mNonceSms);
+        outState.putString(KEY_NONCE_AUTHENTICATOR, mNonceAuthenticator);
+        outState.putString(KEY_NONCE_BACKUP, mNonceBackup);
+        outState.putString(KEY_NONCE_SMS, mNonceSms);
     }
 
     @Override
