@@ -443,9 +443,7 @@ Language: cy_GB
 	<string name="invalid_username_no_spaces">Nid oes modd i enw defnyddiwr gynnwys bylchau</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Nid yw\'r gwefannau rydych yn eu dilyn gofnodi dim yn ddiweddar</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Dim cofnodion diweddar</string>
-	<string name="media_details_copy_url_toast">URL wedi ei gopïo i\'r clipfwrdd</string>
 	<string name="edit_media">Golygu cyfrwng</string>
-	<string name="media_details_copy_url">Copïo URL</string>
 	<string name="media_details_label_date_uploaded">Wedi ei lwytho</string>
 	<string name="media_details_label_date_added">Ychwanegwyd</string>
 	<string name="selected_theme">Thema Dewiswyd</string>
@@ -701,7 +699,6 @@ Language: cy_GB
 	<string name="stats_view">Gweld</string>
 	<string name="themes_fetching">Estyn themâu…</string>
 	<string name="ssl_certificate_details">Manylion</string>
-	<string name="confirm_delete_media">Dileu\'r eitem hon?</string>
 	<string name="cab_selected">%d wedi eu dewis</string>
 	<string name="delete_sure_post">Dileu\'r cofnod</string>
 	<string name="delete_sure">Dileu\'r drafft</string>

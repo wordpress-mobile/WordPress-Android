@@ -175,7 +175,6 @@ Language: az
 	<string name="delete_sure">Bu qaralamanı sil</string>
 	<string name="delete_sure_page">Bu səhifəni sil</string>
 	<string name="confirm_delete_multi_media">Seçilmiş maddələr silinsinmi?</string>
-	<string name="confirm_delete_media">Seçilmiş maddə silinsinmi?</string>
 	<string name="cab_selected">%d seçildi</string>
 	<string name="faq_button">ÇVS</string>
 	<string name="create_new_blog_wpcom">WordPress.com bloqu yarat</string>
