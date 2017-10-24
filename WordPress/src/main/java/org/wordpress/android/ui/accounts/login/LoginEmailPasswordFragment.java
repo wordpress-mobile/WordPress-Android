@@ -19,18 +19,14 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.fluxc.generated.AccountActionBuilder;
-import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
-import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
-import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
-import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
+import org.wordpress.android.ui.accounts.login.LoginWpcomService.OnCredentialsOK;
+import org.wordpress.android.ui.accounts.login.LoginWpcomService.OnLoginStateUpdated;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
@@ -62,6 +58,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     private String mService;
     private boolean isSocialLogin;
 
+    private AutoForeground.ServiceEventConnection mServiceEventConnection;
+
     public static LoginEmailPasswordFragment newInstance(String emailAddress, String password,
                                                          String idToken, String service,
                                                          boolean isSocialLogin) {
@@ -90,6 +88,27 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         if (savedInstanceState != null) {
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // connect to the Service. We'll receive updates via EventBus.
+        mServiceEventConnection = new AutoForeground.ServiceEventConnection(getContext(), LoginWpcomService.class, this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // disconnect from the Service
+        mServiceEventConnection.disconnect(getContext(), this);
+    }
+
+    @Override
+    protected boolean listenForLogin() {
+        return false;
     }
 
     @Override
@@ -181,10 +200,12 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         mRequestedPassword = mPasswordInput.getEditText().getText().toString();
 
+        LoginWpcomService.loginWithEmailAndPassword(getContext(), mEmailAddress, mRequestedPassword, mIdToken, mService,
+                isSocialLogin);
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
-        AuthenticatePayload payload = new AuthenticatePayload(mEmailAddress, mRequestedPassword);
-        mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+//        AuthenticatePayload payload = new AuthenticatePayload(mEmailAddress, mRequestedPassword);
+//        mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
     @Override
@@ -210,101 +231,149 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         mPasswordInput.setError(getString(R.string.password_incorrect));
     }
 
-    private void handleAuthError(AccountStore.AuthenticationErrorType error, String errorMessage) {
-
-        if (error != AccountStore.AuthenticationErrorType.NEEDS_2FA) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, error.getClass().getSimpleName(), error.toString(), errorMessage);
-
-            if (isSocialLogin) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, error.getClass().getSimpleName(), error.toString(), errorMessage);
-            }
-        }
-
-        switch (error) {
-            case INCORRECT_USERNAME_OR_PASSWORD:
-            case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
-                showPasswordError();
-                break;
-            case NEEDS_2FA:
-                // login credentials were correct anyway so, offer to save to SmartLock
-                saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mPassword);
-
-                if (isSocialLogin) {
-                    mLoginListener.needs2faSocialConnect(mEmailAddress, mRequestedPassword, mIdToken, mService);
-                } else {
-                    mLoginListener.needs2fa(mEmailAddress, mRequestedPassword);
-                }
-
-                break;
-            case INVALID_REQUEST:
-                // TODO: FluxC: could be specific?
-            default:
-                AppLog.e(T.NUX, "Server response: " + errorMessage);
-
-                ToastUtils.showToast(getActivity(),
-                        errorMessage == null ? getString(R.string.error_generic) : errorMessage);
-                break;
-        }
+    private void showError(String error) {
+        mPasswordInput.setError(error);
     }
+
+//    private void handleAuthError(AccountStore.AuthenticationErrorType error, String errorMessage) {
+//
+//        if (error != AccountStore.AuthenticationErrorType.NEEDS_2FA) {
+//            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, error.getClass().getSimpleName(), error.toString(), errorMessage);
+//
+//            if (isSocialLogin) {
+//                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, error.getClass().getSimpleName(), error.toString(), errorMessage);
+//            }
+//        }
+//
+//        switch (error) {
+//            case INCORRECT_USERNAME_OR_PASSWORD:
+//            case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
+//                showPasswordError();
+//                break;
+//            case NEEDS_2FA:
+//                // login credentials were correct anyway so, offer to save to SmartLock
+//                saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mPassword);
+//
+//                if (isSocialLogin) {
+//                    mLoginListener.needs2faSocialConnect(mEmailAddress, mRequestedPassword, mIdToken, mService);
+//                } else {
+//                    mLoginListener.needs2fa(mEmailAddress, mRequestedPassword);
+//                }
+//
+//                break;
+//            case INVALID_REQUEST:
+//                // TODO: FluxC: could be specific?
+//            default:
+//                AppLog.e(T.NUX, "Server response: " + errorMessage);
+//
+//                ToastUtils.showToast(getActivity(),
+//                        errorMessage == null ? getString(R.string.error_generic) : errorMessage);
+//                break;
+//        }
+//    }
 
     // OnChanged events
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        if (event.isError()) {
-            endProgress();
-
-            AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
-
-            if (isAdded()) {
-                handleAuthError(event.error.type, event.error.message);
-            }
-
-            return;
-        }
-
-        AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
-
-        if (isSocialLogin) {
-            AccountStore.PushSocialLoginPayload payload = new AccountStore.PushSocialLoginPayload(mIdToken, mService);
-            mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
-        } else {
-            saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mRequestedPassword);
-            doFinishLogin();
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSocialChanged(OnSocialChanged event) {
-        if (event.isError()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_FAILURE);
-            switch (event.error.type) {
-                case UNABLE_CONNECT:
-                    AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
-                    break;
-                case USER_ALREADY_ASSOCIATED:
-                    AppLog.e(T.API, "This social account is already associated with a WordPress.com account.");
-                    break;
-                // Ignore other error cases.  The above are the only two we have chosen to log.
-            }
-
-            doFinishLogin();
-        } else if (!event.requiresTwoStepAuth) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_SUCCESS);
-            doFinishLogin();
-        }
-    }
+//    @SuppressWarnings("unused")
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onAuthenticationChanged(OnAuthenticationChanged event) {
+//        if (event.isError()) {
+//            endProgress();
+//
+//            AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
+//
+//            if (isAdded()) {
+//                handleAuthError(event.error.type, event.error.message);
+//            }
+//
+//            return;
+//        }
+//
+//        AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
+//
+//        if (isSocialLogin) {
+//            AccountStore.PushSocialLoginPayload payload = new AccountStore.PushSocialLoginPayload(mIdToken, mService);
+//            mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
+//        } else {
+//            saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mRequestedPassword);
+//            doFinishLogin();
+//        }
+//    }
+//
+//    @SuppressWarnings("unused")
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onSocialChanged(OnSocialChanged event) {
+//        if (event.isError()) {
+//            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_FAILURE);
+//            switch (event.error.type) {
+//                case UNABLE_CONNECT:
+//                    AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
+//                    break;
+//                case USER_ALREADY_ASSOCIATED:
+//                    AppLog.e(T.API, "This social account is already associated with a WordPress.com account.");
+//                    break;
+//                // Ignore other error cases.  The above are the only two we have chosen to log.
+//            }
+//
+//            doFinishLogin();
+//        } else if (!event.requiresTwoStepAuth) {
+//            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_SUCCESS);
+//            doFinishLogin();
+//        }
+//    }
 
     @Override
     protected void onLoginFinished() {
-        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
-
         if (isSocialLogin) {
             mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
         } else {
             mLoginListener.loggedInViaPassword(mOldSitesIDs);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCredentialsOK(OnCredentialsOK event) {
+        saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mRequestedPassword);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginStateUpdated(OnLoginStateUpdated event) {
+        AppLog.i(T.NUX, "Received state: " + event.state.name());
+
+        switch (event.state) {
+            case IDLE:
+                // nothing special to do, we'll start the service on next()
+                break;
+            case AUTHENTICATING:
+                if (!isInProgress()) {
+                    startProgress();
+                }
+                break;
+            case FETCHING_ACCOUNT:
+                if (!isInProgress()) {
+                    startProgress();
+                }
+                break;
+            case FETCHING_SETTINGS:
+                if (!isInProgress()) {
+                    startProgress();
+                }
+                break;
+            case FETCHING_SITES:
+                if (!isInProgress()) {
+                    startProgress();
+                }
+                break;
+            case FAILURE:
+                endProgress();
+
+                showError(getString(R.string.error_generic));
+                break;
+            case SUCCESS:
+                onLoginFinished();
+                break;
         }
     }
 }
