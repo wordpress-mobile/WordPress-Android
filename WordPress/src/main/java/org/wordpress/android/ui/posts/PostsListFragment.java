@@ -748,5 +748,10 @@ public class PostsListFragment extends Fragment
             UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), true, event.post, event.errorMessage, mSite, mDispatcher);
         }
+        else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), true,
+                    event.mediaModelList, event.errorMessage);
+        }
     }
 }

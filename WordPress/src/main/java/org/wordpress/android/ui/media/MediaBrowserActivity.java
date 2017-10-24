@@ -64,6 +64,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -86,6 +87,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * The main activity in which the user can browse their media.
@@ -309,6 +312,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         super.onStart();
         registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         mDispatcher.register(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -331,6 +335,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onStop() {
+        EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
         mDispatcher.unregister(this);
         super.onStop();
@@ -1061,4 +1066,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mMediaGridFragment.reload();
         }
     }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadErrorEvent event) {
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(this,
+                    findViewById(R.id.tab_layout), true,
+                    event.mediaModelList, event.errorMessage);
+        }
+    }
+
 }
