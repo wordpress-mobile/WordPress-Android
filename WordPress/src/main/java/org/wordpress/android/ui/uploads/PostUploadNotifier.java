@@ -234,8 +234,8 @@ class PostUploadNotifier {
         mNotificationManager.cancel((int)getNotificationIdForPost(post));
     }
 
-    void cancelFinalNotification(@NonNull MediaModel media) {
-        mNotificationManager.cancel((int)getNotificationIdForMedia(media));
+    void cancelFinalNotificationForMedia() {
+        mNotificationManager.cancel((int)getNotificationIdForMedia());
     }
 
     void updateNotificationSuccess(@NonNull PostModel post, @NonNull SiteModel site, boolean isFirstTimePublish) {
@@ -327,9 +327,8 @@ class PostUploadNotifier {
         return post.getLocalSiteId() + remotePostId;
     }
 
-    public static long getNotificationIdForMedia(MediaModel media) {
-        long mediaId = media.getId();
-        return media.getLocalSiteId() + mediaId + BASE_MEDIA_ERROR_NOTIFICATION_ID;
+    public static long getNotificationIdForMedia() {
+        return BASE_MEDIA_ERROR_NOTIFICATION_ID;
     }
 
     void updateNotificationErrorForPost(@NonNull PostModel post, @NonNull SiteModel site, String errorMessage) {
@@ -382,13 +381,13 @@ class PostUploadNotifier {
         doNotify(notificationId, notificationBuilder.build());
     }
 
-    void updateNotificationErrorForMedia(@NonNull MediaModel media, @NonNull SiteModel site, String errorMessage) {
+    void updateNotificationErrorForMedia(@NonNull List<MediaModel> mediaList, @NonNull SiteModel site, String errorMessage) {
         AppLog.d(AppLog.T.MEDIA, "updateNotificationErrorForMedia: " + errorMessage);
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(mContext.getApplicationContext());
 
-        long notificationId = getNotificationIdForMedia(media);
+        long notificationId = getNotificationIdForMedia();
         // Tap notification intent (open the post list)
         Intent notificationIntent = new Intent(mContext, MediaBrowserActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -415,17 +414,19 @@ class PostUploadNotifier {
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
 
-        // Add RETRY action - only available on Aztec
-        ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
-        mediaListToRetry.add(media);
-        Intent publishIntent = UploadService.getUploadMediaServiceIntent(mContext, mediaListToRetry, true);
-        PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
-        notificationBuilder.addAction(0, mContext.getString(R.string.retry),
-                actionPendingIntent).setColor(mContext.getResources().getColor(R.color.orange_jazzy));
+        // Add RETRY action - only if there is media to retry
+        if (mediaList != null && !mediaList.isEmpty()) {
+            ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
+            mediaListToRetry.addAll(mediaList);
+            Intent publishIntent = UploadService.getUploadMediaServiceIntent(mContext, mediaListToRetry, true);
+            PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
+            notificationBuilder.addAction(0, mContext.getString(R.string.retry),
+                    actionPendingIntent).setColor(mContext.getResources().getColor(R.color.orange_jazzy));
 
-        EventBus.getDefault().post(new UploadService.UploadErrorEvent(media, snackbarMessage));
+        }
 
+        EventBus.getDefault().post(new UploadService.UploadErrorEvent(mediaList, snackbarMessage));
         doNotify(notificationId, notificationBuilder.build());
     }
 

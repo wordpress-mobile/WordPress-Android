@@ -502,10 +502,12 @@ public class MySiteFragment extends Fragment
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         SiteModel site = getSelectedSite();
         if (site != null) {
-            if (event.post.getLocalSiteId() == site.getId()) {
-                UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                        getActivity().findViewById(R.id.coordinator), true,
-                        event.post, event.errorMessage, site, mDispatcher);
+            if (event.post != null) {
+                if (event.post.getLocalSiteId() == site.getId()) {
+                    UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
+                            getActivity().findViewById(R.id.coordinator), true,
+                            event.post, event.errorMessage, site, mDispatcher);
+                }
             }
         }
     }

@@ -165,12 +165,13 @@ public class UploadService extends Service {
 //            }
 //        }
 
+        mPostUploadNotifier.cancelFinalNotificationForMedia();
+
         // add new media
         @SuppressWarnings("unchecked")
         List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(KEY_MEDIA_LIST);
         if (mediaList != null) {
             for (MediaModel media : mediaList) {
-                mPostUploadNotifier.cancelFinalNotification(media);
                 mMediaUploadHandler.upload(media);
             }
             mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaList);
@@ -636,7 +637,25 @@ public class UploadService extends Service {
                 // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
                 // the user actively cancelled it. No need to show an error then.
                 String message = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
-                mPostUploadNotifier.updateNotificationErrorForMedia(event.media,
+
+                // get all retriable media ? To retry or not to retry, that is the question
+                int siteLocalId = AppPrefs.getSelectedSite();
+                SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+                List<MediaModel> failedMedia = null;
+                if (selectedSite != null) {
+                    failedMedia = mMediaStore.getSiteMediaWithState(
+                            selectedSite, MediaModel.MediaUploadState.FAILED);
+                }
+
+                if (failedMedia == null || failedMedia.isEmpty()) {
+                    // if we couldn't get the failed media from the MediaStore, at least we know
+                    // for sure we're hadnling the event for this specific media item, so throw an error
+                    // notificaiton for this particular media item travelling in event.media
+                    failedMedia = new ArrayList<>();
+                    failedMedia.add(event.media);
+                }
+
+                mPostUploadNotifier.updateNotificationErrorForMedia(failedMedia,
                         mSiteStore.getSiteByLocalId(event.media.getLocalSiteId()),message);
             }
             stopServiceIfUploadsComplete();
@@ -698,18 +717,18 @@ public class UploadService extends Service {
 
     public static class UploadErrorEvent {
         public final PostModel post;
-        public final MediaModel media;
+        public final List<MediaModel> mediaModelList;
         public final String errorMessage;
 
         UploadErrorEvent(PostModel post, String errorMessage) {
             this.post = post;
-            this.media = null;
+            this.mediaModelList = null;
             this.errorMessage = errorMessage;
         }
 
-        UploadErrorEvent(MediaModel mediaModel, String errorMessage) {
+        UploadErrorEvent(List<MediaModel> mediaModelList, String errorMessage) {
             this.post = null;
-            this.media = mediaModel;
+            this.mediaModelList = mediaModelList;
             this.errorMessage = errorMessage;
         }
     }
