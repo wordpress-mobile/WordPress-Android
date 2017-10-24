@@ -524,7 +524,6 @@ public class MySiteFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(PostStore.OnPostUploaded event) {
-        final PostModel post = event.post;
         if (isAdded() && event.post != null) {
             SiteModel site = getSelectedSite();
             if (site != null) {
