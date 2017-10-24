@@ -17,12 +17,12 @@ repositories {
 android {
     publishNonDefault true
 
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion project.COMPILE_SDK_VERSION.toInteger()
+    buildToolsVersion project.BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion project.TARGET_SDK_VERSION.toInteger()
         versionCode 1
         versionName "1.0"
 
@@ -34,8 +34,8 @@ dependencies {
     compile 'org.wordpress:utils:1.17.1'
     compile 'org.wordpress:analytics:1.3.0'
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
+    compile "com.android.support:appcompat-v7:$project.SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:design:$project.SUPPORT_LIBRARY_VERSION"
 
     compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3c598e8f305b0346a4fb84e94e0c097f7fe28df5') {
         exclude group: "com.android.volley";
