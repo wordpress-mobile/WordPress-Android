@@ -169,7 +169,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         setupTabs();
 
         MediaFilter filter;
-        if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
+        if (mBrowserType.imagesOnly()) {
             filter = MediaFilter.FILTER_IMAGES;
         } else if (savedInstanceState != null) {
             filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
@@ -775,7 +775,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
     private void createAddMediaPopup() {
-        SimpleAdapter adapter = mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER
+        SimpleAdapter adapter = mBrowserType.imagesOnly()
                 ? getAddMenuSimpleAdapter(
                         AddMenuItem.ITEM_CAPTURE_PHOTO,
                         AddMenuItem.ITEM_CHOOSE_PHOTO)

@@ -352,7 +352,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     mediaList.add(media);
                 }
             }
-        } else if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
+        } else if (mBrowserType.imagesOnly()) {
             mediaList = mMediaStore.getSiteImages(mSite);
         } else {
             switch (mFilter) {
@@ -426,7 +426,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
+        if (!mBrowserType.canMultiselect()) {
             return;
         }
 

@@ -15,5 +15,12 @@ public enum MediaBrowserType {
     public boolean canMultiselect() {
         return this == EDITOR_PICKER;
     }
+
+    /*
+     * don't show non-image media when choosing featured image
+     */
+    public boolean imagesOnly() {
+        return this == FEATURED_IMAGE_PICKER;
+    }
 }
 
