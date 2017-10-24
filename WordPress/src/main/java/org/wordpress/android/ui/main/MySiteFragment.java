@@ -501,13 +501,11 @@ public class MySiteFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         SiteModel site = getSelectedSite();
-        if (site != null) {
-            if (event.post != null) {
-                if (event.post.getLocalSiteId() == site.getId()) {
-                    UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                            getActivity().findViewById(R.id.coordinator), true,
-                            event.post, event.errorMessage, site, mDispatcher);
-                }
+        if (site != null && event.post != null) {
+            if (event.post.getLocalSiteId() == site.getId()) {
+                UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
+                        getActivity().findViewById(R.id.coordinator), true,
+                        event.post, event.errorMessage, site, mDispatcher);
             }
         }
     }
@@ -526,7 +524,6 @@ public class MySiteFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(PostStore.OnPostUploaded event) {
-        final PostModel post = event.post;
         if (isAdded() && event.post != null) {
             SiteModel site = getSelectedSite();
             if (site != null) {
