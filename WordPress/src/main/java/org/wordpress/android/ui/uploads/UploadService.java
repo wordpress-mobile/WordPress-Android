@@ -638,25 +638,19 @@ public class UploadService extends Service {
                 // the user actively cancelled it. No need to show an error then.
                 String message = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
 
-                // get all retriable media ? To retry or not to retry, that is the question
                 int siteLocalId = AppPrefs.getSelectedSite();
                 SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-                List<MediaModel> failedMedia = null;
-                if (selectedSite != null) {
-                    failedMedia = mMediaStore.getSiteMediaWithState(
-                            selectedSite, MediaModel.MediaUploadState.FAILED);
-                }
 
-                if (failedMedia == null || failedMedia.isEmpty()) {
+                List<MediaModel> failedStandAloneMedia = getRetriableStandaloneMedia(selectedSite);
+                if (failedStandAloneMedia.isEmpty()) {
                     // if we couldn't get the failed media from the MediaStore, at least we know
-                    // for sure we're hadnling the event for this specific media item, so throw an error
-                    // notificaiton for this particular media item travelling in event.media
-                    failedMedia = new ArrayList<>();
-                    failedMedia.add(event.media);
+                    // for sure we're handling the event for this specific media item, so throw an error
+                    // notification for this particular media item travelling in event.media
+                    failedStandAloneMedia.add(event.media);
                 }
 
-                mPostUploadNotifier.updateNotificationErrorForMedia(failedMedia,
-                        mSiteStore.getSiteByLocalId(event.media.getLocalSiteId()),message);
+                mPostUploadNotifier.updateNotificationErrorForMedia(failedStandAloneMedia,
+                        selectedSite,message);
             }
             stopServiceIfUploadsComplete();
             return;
@@ -703,6 +697,25 @@ public class UploadService extends Service {
             // Progress update
             mPostUploadNotifier.updateNotificationProgressForMedia(event.media, event.progress);
         }
+    }
+
+    private List<MediaModel> getRetriableStandaloneMedia(SiteModel selectedSite) {
+        // get all retriable media ? To retry or not to retry, that is the question
+        List<MediaModel> failedMedia = null;
+        List<MediaModel> failedStandAloneMedia = new ArrayList<>();
+        if (selectedSite != null) {
+            failedMedia = mMediaStore.getSiteMediaWithState(
+                    selectedSite, MediaModel.MediaUploadState.FAILED);
+        }
+
+        // only take into account those media items that do not belong to any Post
+        for (MediaModel media: failedMedia) {
+            if (media.getLocalPostId() == 0) {
+                failedStandAloneMedia.add(media);
+            }
+        }
+
+        return failedStandAloneMedia;
     }
 
     /**

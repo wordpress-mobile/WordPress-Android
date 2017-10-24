@@ -41,7 +41,7 @@ class PostUploadNotifier {
     private final NotificationManager mNotificationManager;
     private final NotificationCompat.Builder mNotificationBuilder;
 
-    private final static int BASE_MEDIA_ERROR_NOTIFICATION_ID = 70000;
+    private final static int BASE_MEDIA_ERROR_NOTIFICATION_ID = 72000;
 
     // used to hold notification data for everything (only one outstanding foreground notification
     // for the live UploadService instance
@@ -357,7 +357,7 @@ class PostUploadNotifier {
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
         String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), postTitle);
 
-        String newErrorMessage = buildErrorMessage();
+        String newErrorMessage = buildErrorMessageMixed();
         String snackbarMessage = buildSnackbarErrorMessage(newErrorMessage, errorMessage);
 
         notificationBuilder.setContentTitle(notificationTitle);
@@ -405,7 +405,7 @@ class PostUploadNotifier {
         String siteName = TextUtils.isEmpty(site.getName()) ? mContext.getString(R.string.untitled) : site.getName();
         String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), siteName);
 
-        String newErrorMessage = buildErrorMessage();
+        String newErrorMessage = buildErrorMessageForMedia(mediaList.size());
         String snackbarMessage = buildSnackbarErrorMessage(newErrorMessage, errorMessage);
 
         notificationBuilder.setContentTitle(notificationTitle);
@@ -430,7 +430,7 @@ class PostUploadNotifier {
         doNotify(notificationId, notificationBuilder.build());
     }
 
-    private String buildErrorMessage() {
+    private String buildErrorMessageMixed() {
         // first we build a summary of what failed and what went OK, like this:
         // i.e. "1 post, 3 media files not uploaded (9 successfully uploaded)"
         String newErrorMessage = "";
@@ -455,13 +455,28 @@ class PostUploadNotifier {
         return newErrorMessage;
     }
 
+    private String buildErrorMessageForMedia(int mediaItemsNotUploaded) {
+        String newErrorMessage = "";
+        if (mediaItemsNotUploaded > 0) {
+            newErrorMessage += String.format(mContext.getString(R.string.media_files_not_uploaded), mediaItemsNotUploaded);
+            if (mediaItemsNotUploaded <= sNotificationData.currentMediaItem) {
+                // some media items were uploaded successfully
+                newErrorMessage += " " + String.format(mContext.getString(R.string.media_files_uploaded_succcessfully),
+                        sNotificationData.currentMediaItem);
+            }
+        }
+
+        return newErrorMessage;
+    }
+
+
     private String buildSnackbarErrorMessage(String newErrorMessage, String detailErrorMessage) {
         // now append the detailed error message below
         String snackbarMessage = new String(newErrorMessage);
         if (newErrorMessage.length() > 0) {
-            newErrorMessage += "\n" + detailErrorMessage;
+            snackbarMessage += "\n" + detailErrorMessage;
         } else {
-            newErrorMessage = detailErrorMessage;
+            snackbarMessage = detailErrorMessage;
         }
 
         return snackbarMessage;
