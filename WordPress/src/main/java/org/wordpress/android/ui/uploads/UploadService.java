@@ -632,7 +632,7 @@ public class UploadService extends Service {
                 cancelPostUploadMatchingMedia(event.media, errorMessage, true);
             } else {
                 // this media item doesn't belong to a Post
-                mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotificationOrFinish(event.media.getId());
+                mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotification(event.media.getId());
                 // Only show the media upload error notification if the post is NOT registered in the UploadStore
                 // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
                 // the user actively cancelled it. No need to show an error then.
