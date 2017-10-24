@@ -9,9 +9,6 @@ public enum MediaBrowserType {
         return this == EDITOR_PICKER || this == SINGLE_IMAGE_PICKER;
     }
 
-    /*
-     * multiselect is only availble when inserting into the editor
-     */
     public boolean canMultiselect() {
         return this == EDITOR_PICKER;
     }

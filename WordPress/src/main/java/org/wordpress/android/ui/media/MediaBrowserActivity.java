@@ -203,7 +203,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         return mBrowserType == MediaBrowserType.BROWSER;
     }
 
-    public void enableTabs(boolean enable) {
+    private void enableTabs(boolean enable) {
         if (!shouldShowTabs()) return;
 
         if (enable && mTabLayout.getVisibility() != View.VISIBLE) {
@@ -558,7 +558,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 || mBrowserType.isPicker() && isLongClick) {
             showMediaSettings(media, sourceView);
         } else if (mBrowserType == MediaBrowserType.SINGLE_IMAGE_PICKER && !isLongClick) {
-            // if we're picking a featured image, we're done
+            // if we're picking a single image, we're done
             Intent intent = new Intent();
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
             remoteMediaIds.add(media.getMediaId());
@@ -681,7 +681,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     // TODO: in a future PR this and startMediaDeleteService() can be simplified since multiselect delete was dropped
-    public void deleteMedia(final ArrayList<Integer> ids) {
+    private void deleteMedia(final ArrayList<Integer> ids) {
         final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
         int processedItemCount = 0;
 

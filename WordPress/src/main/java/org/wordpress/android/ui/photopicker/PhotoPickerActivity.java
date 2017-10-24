@@ -85,7 +85,6 @@ public class PhotoPickerActivity extends AppCompatActivity
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commitAllowingStateLoss();
         } else {
-            // fragment.setOptions(options); // TODO ?
             fragment.setPhotoPickerListener(this);
         }
     }

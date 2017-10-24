@@ -41,7 +41,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     /*
      * used by this adapter to communicate with the owning fragment
      */
-    protected interface PhotoPickerAdapterListener {
+    interface PhotoPickerAdapterListener {
         void onItemTapped(Uri mediaUri);
         void onSelectedCountChanged(int count);
         void onAdapterLoaded(boolean isEmpty);
@@ -135,7 +135,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         }
     }
 
-    public boolean isEmpty() {
+    private boolean isEmpty() {
         return mMediaList.size() == 0;
     }
 

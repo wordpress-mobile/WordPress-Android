@@ -421,7 +421,7 @@ public class PhotoPickerFragment extends Fragment {
      * load the photos if we have the necessary permission, otherwise show the "soft ask" view
      * which asks the user to allow the permission
      */
-    public void checkStoragePermission() {
+    private void checkStoragePermission() {
         if (!isAdded()) return;
 
         if (hasStoragePermission()) {
