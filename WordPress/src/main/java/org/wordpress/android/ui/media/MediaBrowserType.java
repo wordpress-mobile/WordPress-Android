@@ -16,9 +16,5 @@ public enum MediaBrowserType {
     public boolean imagesOnly() {
         return this == SINGLE_IMAGE_PICKER;
     }
-
-    public boolean deviceOnly() {
-        return this == SINGLE_IMAGE_PICKER;
-    }
 }
 

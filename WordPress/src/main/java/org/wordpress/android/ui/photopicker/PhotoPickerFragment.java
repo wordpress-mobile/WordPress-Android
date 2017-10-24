@@ -144,8 +144,9 @@ public class PhotoPickerFragment extends Fragment {
 
         mSoftAskContainer = (ViewGroup) view.findViewById(R.id.container_soft_ask);
 
+        // no WP media when choosing a single image
         View wpMediaIcon = mBottomBar.findViewById(R.id.icon_wpmedia);
-        if (mBrowserType.deviceOnly()) {
+        if (mBrowserType == MediaBrowserType.SINGLE_IMAGE_PICKER) {
             wpMediaIcon.setVisibility(View.GONE);
         } else {
             wpMediaIcon.setOnClickListener(new View.OnClickListener() {
