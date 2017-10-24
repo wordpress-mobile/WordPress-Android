@@ -501,7 +501,7 @@ public class MySiteFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         SiteModel site = getSelectedSite();
-        if (site != null) {
+        if (site != null && event.post != null) {
             if (event.post.getLocalSiteId() == site.getId()) {
                 UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
                         getActivity().findViewById(R.id.coordinator), true,
