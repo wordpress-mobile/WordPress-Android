@@ -35,7 +35,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
@@ -550,7 +549,7 @@ public class UploadService extends Service {
         if (postToCancel == null) return;
 
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
-        mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotificationOrFinish(postToCancel);
+        mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(postToCancel);
 
         if (showError || mUploadStore.isFailedPost(postToCancel)) {
             // Only show the media upload error notification if the post is NOT registered in the UploadStore
@@ -660,7 +659,7 @@ public class UploadService extends Service {
                     }
                 }
             }
-            mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotificationOrFinish(event.media.getId());
+            mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotification(event.media.getId());
             stopServiceIfUploadsComplete();
         } else {
             // in-progress upload
