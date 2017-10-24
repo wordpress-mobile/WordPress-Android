@@ -21,28 +21,30 @@ import org.wordpress.android.util.AppLog;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class PluginStore extends Store {
     // Payloads
-    public static class UpdatePluginPayload extends Payload<BaseNetworkError> {
+    public static class UpdateSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public PluginModel plugin;
 
-        public UpdatePluginPayload(SiteModel site, PluginModel plugin) {
+        public UpdateSitePluginPayload(SiteModel site, PluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
     }
 
-    public static class FetchedPluginsPayload extends Payload<FetchPluginsError> {
+    public static class FetchedSitePluginsPayload extends Payload<FetchSitePluginsError> {
         public SiteModel site;
         public List<PluginModel> plugins;
 
-        public FetchedPluginsPayload(FetchPluginsError error) {
+        public FetchedSitePluginsPayload(FetchSitePluginsError error) {
             this.error = error;
         }
 
-        public FetchedPluginsPayload(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
+        public FetchedSitePluginsPayload(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
             this.site = site;
             this.plugins = plugins;
         }
@@ -60,28 +62,29 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class UpdatedPluginPayload extends Payload<UpdatePluginError> {
+    public static class UpdatedSitePluginPayload extends Payload<UpdateSitePluginError> {
         public SiteModel site;
         public PluginModel plugin;
 
-        public UpdatedPluginPayload(SiteModel site, PluginModel plugin) {
+        public UpdatedSitePluginPayload(SiteModel site, PluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
 
-        public UpdatedPluginPayload(SiteModel site, UpdatePluginError error) {
+        public UpdatedSitePluginPayload(SiteModel site, UpdateSitePluginError error) {
             this.error = error;
         }
     }
 
-    public static class FetchPluginsError implements OnChangedError {
-        public FetchPluginsErrorType type;
+    public static class FetchSitePluginsError implements OnChangedError {
+        public FetchSitePluginsErrorType type;
         public String message;
-        public FetchPluginsError(FetchPluginsErrorType type) {
+
+        public FetchSitePluginsError(FetchSitePluginsErrorType type) {
             this(type, "");
         }
 
-        FetchPluginsError(FetchPluginsErrorType type, String message) {
+        FetchSitePluginsError(FetchSitePluginsErrorType type, String message) {
             this.type = type;
             this.message = message;
         }
@@ -95,16 +98,16 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class UpdatePluginError implements OnChangedError {
-        public UpdatePluginErrorType type;
+    public static class UpdateSitePluginError implements OnChangedError {
+        public UpdateSitePluginErrorType type;
         public String message;
 
-        public UpdatePluginError(UpdatePluginErrorType type) {
+        public UpdateSitePluginError(UpdateSitePluginErrorType type) {
             this.type = type;
         }
     }
 
-    public enum FetchPluginsErrorType {
+    public enum FetchSitePluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
         NOT_AVAILABLE // Return for non-jetpack sites
@@ -114,15 +117,15 @@ public class PluginStore extends Store {
         GENERIC_ERROR
     }
 
-    public enum UpdatePluginErrorType {
+    public enum UpdateSitePluginErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
         NOT_AVAILABLE // Return for non-jetpack sites
     }
 
-    public static class OnPluginsChanged extends OnChanged<FetchPluginsError> {
+    public static class OnSitePluginsChanged extends OnChanged<FetchSitePluginsError> {
         public SiteModel site;
-        public OnPluginsChanged(SiteModel site) {
+        public OnSitePluginsChanged(SiteModel site) {
             this.site = site;
         }
     }
@@ -131,10 +134,10 @@ public class PluginStore extends Store {
         public PluginInfoModel pluginInfo;
     }
 
-    public static class OnPluginChanged extends OnChanged<UpdatePluginError> {
+    public static class OnSitePluginChanged extends OnChanged<UpdateSitePluginError> {
         public SiteModel site;
         public PluginModel plugin;
-        public OnPluginChanged(SiteModel site) {
+        public OnSitePluginChanged(SiteModel site) {
             this.site = site;
         }
     }
@@ -162,46 +165,46 @@ public class PluginStore extends Store {
             return;
         }
         switch ((PluginAction) actionType) {
-            case FETCH_PLUGINS:
-                fetchPlugins((SiteModel) action.getPayload());
+            case FETCH_SITE_PLUGINS:
+                fetchSitePlugins((SiteModel) action.getPayload());
                 break;
             case FETCH_PLUGIN_INFO:
                 fetchPluginInfo((String) action.getPayload());
                 break;
-            case UPDATE_PLUGIN:
-                updatePlugin((UpdatePluginPayload) action.getPayload());
+            case UPDATE_SITE_PLUGIN:
+                updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
                 break;
-            case FETCHED_PLUGINS:
-                fetchedPlugins((FetchedPluginsPayload) action.getPayload());
+            case FETCHED_SITE_PLUGINS:
+                fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
                 break;
             case FETCHED_PLUGIN_INFO:
                 fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
                 break;
-            case UPDATED_PLUGIN:
-                updatedPlugin((UpdatedPluginPayload) action.getPayload());
+            case UPDATED_SITE_PLUGIN:
+                updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
                 break;
         }
     }
 
-    public List<PluginModel> getPlugins(SiteModel site) {
-        return PluginSqlUtils.getPlugins(site);
+    public List<PluginModel> getSitePlugins(SiteModel site) {
+        return PluginSqlUtils.getSitePlugins(site);
     }
 
-    public PluginModel getPluginByName(SiteModel site, String name) {
-        return PluginSqlUtils.getPluginByName(site, name);
+    public PluginModel getSitePluginByName(SiteModel site, String name) {
+        return PluginSqlUtils.getSitePluginByName(site, name);
     }
 
     public PluginInfoModel getPluginInfoBySlug(String slug) {
         return PluginSqlUtils.getPluginInfoBySlug(slug);
     }
 
-    private void fetchPlugins(SiteModel site) {
+    private void fetchSitePlugins(SiteModel site) {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
-            mPluginRestClient.fetchPlugins(site);
+            mPluginRestClient.fetchSitePlugins(site);
         } else {
-            FetchPluginsError error = new FetchPluginsError(FetchPluginsErrorType.NOT_AVAILABLE);
-            FetchedPluginsPayload payload = new FetchedPluginsPayload(error);
-            fetchedPlugins(payload);
+            FetchSitePluginsError error = new FetchSitePluginsError(FetchSitePluginsErrorType.NOT_AVAILABLE);
+            FetchedSitePluginsPayload payload = new FetchedSitePluginsPayload(error);
+            fetchedSitePlugins(payload);
         }
     }
 
@@ -209,22 +212,22 @@ public class PluginStore extends Store {
         mPluginWPOrgClient.fetchPluginInfo(plugin);
     }
 
-    private void updatePlugin(UpdatePluginPayload payload) {
+    private void updateSitePlugin(UpdateSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
-            mPluginRestClient.updatePlugin(payload.site, payload.plugin);
+            mPluginRestClient.updateSitePlugin(payload.site, payload.plugin);
         } else {
-            UpdatePluginError error = new UpdatePluginError(UpdatePluginErrorType.NOT_AVAILABLE);
-            UpdatedPluginPayload errorPayload = new UpdatedPluginPayload(payload.site, error);
-            updatedPlugin(errorPayload);
+            UpdateSitePluginError error = new UpdateSitePluginError(UpdateSitePluginErrorType.NOT_AVAILABLE);
+            UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site, error);
+            updatedSitePlugin(errorPayload);
         }
     }
 
-    private void fetchedPlugins(FetchedPluginsPayload payload) {
-        OnPluginsChanged event = new OnPluginsChanged(payload.site);
+    private void fetchedSitePlugins(FetchedSitePluginsPayload payload) {
+        OnSitePluginsChanged event = new OnSitePluginsChanged(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            PluginSqlUtils.insertOrReplacePlugins(payload.site, payload.plugins);
+            PluginSqlUtils.insertOrReplaceSitePlugins(payload.site, payload.plugins);
         }
         emitChange(event);
     }
@@ -240,14 +243,14 @@ public class PluginStore extends Store {
         emitChange(event);
     }
 
-    private void updatedPlugin(UpdatedPluginPayload payload) {
-        OnPluginChanged event = new OnPluginChanged(payload.site);
+    private void updatedSitePlugin(UpdatedSitePluginPayload payload) {
+        OnSitePluginChanged event = new OnSitePluginChanged(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
             payload.plugin.setLocalSiteId(payload.site.getId());
             event.plugin = payload.plugin;
-            PluginSqlUtils.insertOrUpdatePlugin(payload.site, payload.plugin);
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
         }
         emitChange(event);
     }

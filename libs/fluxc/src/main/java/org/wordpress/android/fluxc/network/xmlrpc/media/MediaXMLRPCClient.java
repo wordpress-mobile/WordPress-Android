@@ -55,6 +55,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.inject.Singleton;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -64,6 +66,7 @@ import okhttp3.Request.Builder;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+@Singleton
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
     private static final String[] REQUIRED_UPLOAD_RESPONSE_FIELDS = {
             "attachment_id", "parent", "title", "caption", "description", "thumbnail", "date_created_gmt", "link"};

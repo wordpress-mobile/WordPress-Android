@@ -32,6 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
     public TaxonomyXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent,
                                 HTTPAuthManager httpAuthManager) {

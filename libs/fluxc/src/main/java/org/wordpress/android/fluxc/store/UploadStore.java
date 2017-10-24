@@ -149,6 +149,7 @@ public class UploadStore extends Store {
         }
 
         postUploadModel.setAssociatedMediaIdSet(mediaIdSet);
+        postUploadModel.setUploadState(PostUploadModel.PENDING);
         UploadSqlUtils.insertOrUpdatePost(postUploadModel);
     }
 
@@ -197,6 +198,11 @@ public class UploadStore extends Store {
     public boolean isCancelledPost(PostModel post) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         return postUploadModel != null && postUploadModel.getUploadState() == PostUploadModel.CANCELLED;
+    }
+
+    public boolean isRegisteredPostModel(PostModel post) {
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
+        return postUploadModel != null;
     }
 
     /**
