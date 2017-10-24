@@ -509,7 +509,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         txtFilename.setText(mMedia.getFileName());
 
         TextView txtFileType = (TextView) findViewById(R.id.text_filetype);
-        txtFileType.setText(mMedia.getFileExtension().toUpperCase());
+        txtFileType.setText(StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase());
 
         float mediaWidth = mMedia.getWidth();
         float mediaHeight = mMedia.getHeight();
