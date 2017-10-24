@@ -17,13 +17,12 @@ import android.view.MenuItem;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
-import java.util.EnumSet;
 import java.util.List;
 
 public class PhotoPickerActivity extends AppCompatActivity
@@ -39,6 +38,7 @@ public class PhotoPickerActivity extends AppCompatActivity
     public static final String EXTRA_MEDIA_SOURCE = "media_source";
 
     private String mMediaCapturePath;
+    private MediaBrowserType mBrowserType;
 
     public enum PhotoPickerMediaSource {
         ANDROID_CAMERA,
@@ -71,19 +71,21 @@ public class PhotoPickerActivity extends AppCompatActivity
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
-        // only show photos (no videos) and only from device (no wp media)
-        EnumSet<PhotoPickerOption> options = EnumSet.of(
-                PhotoPickerOption.PHOTOS_ONLY,
-                PhotoPickerOption.DEVICE_ONLY);
+        if (savedInstanceState == null) {
+            mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(PhotoPickerFragment.ARG_BROWSER_TYPE);
+        } else {
+            mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(PhotoPickerFragment.ARG_BROWSER_TYPE);
+        }
+
         PhotoPickerFragment fragment = getPickerFragment();
         if (fragment == null) {
-            fragment = PhotoPickerFragment.newInstance(this, options);
+            fragment = PhotoPickerFragment.newInstance(this, mBrowserType);
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, fragment, PICKER_FRAGMENT_TAG)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commitAllowingStateLoss();
         } else {
-            fragment.setOptions(options);
+            // fragment.setOptions(options); // TODO ?
             fragment.setPhotoPickerListener(this);
         }
     }
@@ -99,6 +101,7 @@ public class PhotoPickerActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putSerializable(PhotoPickerFragment.ARG_BROWSER_TYPE, mBrowserType);
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(KEY_MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }

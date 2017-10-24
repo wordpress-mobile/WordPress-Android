@@ -30,6 +30,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
@@ -82,6 +83,7 @@ public class ActivityLauncher {
 
     public static void showPhotoPickerForResult(Activity activity) {
         Intent intent = new Intent(activity, PhotoPickerActivity.class);
+        intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_IMAGE_PICKER);
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
