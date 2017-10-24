@@ -149,6 +149,7 @@ public class UploadStore extends Store {
         }
 
         postUploadModel.setAssociatedMediaIdSet(mediaIdSet);
+        postUploadModel.setUploadState(PostUploadModel.PENDING);
         UploadSqlUtils.insertOrUpdatePost(postUploadModel);
     }
 
