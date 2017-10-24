@@ -94,16 +94,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         OnQueryTextListener, OnActionExpandListener,
         WPMediaUtils.LaunchCameraCallback {
 
-    public enum MediaBrowserType {
-        BROWSER,                   // browse & manage media
-        EDITOR_PICKER,             // select multiple images or videos to insert into a post
-        FEATURED_IMAGE_PICKER;     // select a single image to use as a post's featured image
-
-        public boolean isPicker() {
-            return this == EDITOR_PICKER || this == FEATURED_IMAGE_PICKER;
-        }
-    }
-
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_FILTER = "filter";
     public static final String RESULT_IDS = "result_ids";
