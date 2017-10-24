@@ -48,6 +48,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         params.put("status", status.toString());
         params.put("offset", String.valueOf(offset));
         params.put("number", String.valueOf(number));
+        params.put("force", "wpcom");
         final WPComGsonRequest<CommentsWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
                 url, params, CommentsWPComRestResponse.class,
                 new Listener<CommentsWPComRestResponse>() {
