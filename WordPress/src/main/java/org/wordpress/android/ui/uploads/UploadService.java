@@ -51,6 +51,7 @@ public class UploadService extends Service {
     private static final String KEY_SHOULD_PUBLISH = "shouldPublish";
     private static final String KEY_SHOULD_RETRY = "shouldRetry";
     private static final String KEY_MEDIA_LIST = "mediaList";
+    private static final String KEY_UPLOAD_MEDIA_FROM_EDITOR = "mediaFromEditor";
     private static final String KEY_LOCAL_POST_ID = "localPostId";
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
 
@@ -165,7 +166,13 @@ public class UploadService extends Service {
 //            }
 //        }
 
-        mPostUploadNotifier.cancelFinalNotificationForMedia();
+        if (!intent.getBooleanExtra(KEY_UPLOAD_MEDIA_FROM_EDITOR, false)) {
+            // only cancel the media error notification if we're triggering a new media pload
+            // either from Media Browser or a RETRY from a notification.
+            // Otherwise, this flag should be true, and we need to keep the error notification as
+            // it might be a separate action (user is editing a Post and including media there)
+            mPostUploadNotifier.cancelFinalNotificationForMedia();
+        }
 
         // add new media
         @SuppressWarnings("unchecked")
@@ -305,6 +312,17 @@ public class UploadService extends Service {
 
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
+        context.startService(intent);
+    }
+
+    public static void uploadMediaFromEditor(Context context, @NonNull ArrayList<MediaModel> mediaList) {
+        if (context == null) {
+            return;
+        }
+
+        Intent intent = new Intent(context, UploadService.class);
+        intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
+        intent.putExtra(UploadService.KEY_UPLOAD_MEDIA_FROM_EDITOR, true);
         context.startService(intent);
     }
 

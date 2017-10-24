@@ -419,7 +419,7 @@ class PostUploadNotifier {
             ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
             mediaListToRetry.addAll(mediaList);
             Intent publishIntent = UploadService.getUploadMediaServiceIntent(mContext, mediaListToRetry, true);
-            PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
+            PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 1, publishIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
                     actionPendingIntent).setColor(mContext.getResources().getColor(R.color.orange_jazzy));
