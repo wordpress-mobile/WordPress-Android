@@ -29,6 +29,8 @@ public enum AccountAction implements IAction {
     @Action(payloadType = PushSocialAuthPayload.class)
     PUSH_SOCIAL_AUTH,      // request social auth remotely
     @Action(payloadType = PushSocialLoginPayload.class)
+    PUSH_SOCIAL_CONNECT,    // request social connect remotely
+    @Action(payloadType = PushSocialLoginPayload.class)
     PUSH_SOCIAL_LOGIN,      // request social login remotely
     @Action(payloadType = NewAccountPayload.class)
     CREATE_NEW_ACCOUNT,     // create a new account (can be used to validate the account before creating it)

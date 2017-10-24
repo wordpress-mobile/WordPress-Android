@@ -43,6 +43,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class PostXMLRPCClient extends BaseXMLRPCClient {
     public PostXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent,
                             HTTPAuthManager httpAuthManager) {
