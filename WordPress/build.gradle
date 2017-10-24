@@ -59,6 +59,7 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
+            buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "true"
         }
     }
 
