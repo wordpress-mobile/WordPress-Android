@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
+import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.network.HTTPAuthModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -52,11 +53,12 @@ public class WellSqlConfig extends DefaultWellConfig {
         add(SiteModel.class);
         add(TaxonomyModel.class);
         add(TermModel.class);
+        add(ThemeModel.class);
     }};
 
     @Override
     public int getDbVersion() {
-        return 15;
+        return 16;
     }
 
     @Override
@@ -143,6 +145,13 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("CREATE TABLE PostUploadModel (_id INTEGER PRIMARY KEY,UPLOAD_STATE INTEGER,"
                         + "ASSOCIATED_MEDIA_IDS TEXT,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,FOREIGN KEY(_id) REFERENCES "
                         + "PostModel(_id) ON DELETE CASCADE)");
+                oldVersion++;
+            case 15:
+                db.execSQL("CREATE TABLE ThemeModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "THEME_ID TEXT,NAME TEXT,DESCRIPTION TEXT,SLUG TEXT,VERSION TEXT,AUTHOR_NAME TEXT,"
+                        + "AUTHOR_URL TEXT,THEME_URL TEXT,SCREENSHOT_URL TEXT,DEMO_URL TEXT,DOWNLOAD_URL TEXT,"
+                        + "STYLESHEET TEXT,CURRENCY TEXT,PRICE REAL,ACTIVE INTEGER,AUTO_UPDATE INTEGER,"
+                        + "AUTO_UPDATE_TRANSLATION INTEGER,IS_WP_COM_THEME INTEGER)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

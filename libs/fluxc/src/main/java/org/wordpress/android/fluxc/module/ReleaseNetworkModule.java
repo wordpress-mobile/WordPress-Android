@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
 import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
@@ -189,6 +190,14 @@ public class ReleaseNetworkModule {
                                                                     @Named("custom-ssl") RequestQueue requestQueue,
                                                                     UserAgent userAgent) {
         return new DiscoveryWPAPIRestClient(dispatcher, requestQueue, userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public ThemeRestClient provideThemeRestClient(Context appContext, Dispatcher dispatcher,
+                                                  @Named("regular") RequestQueue requestQueue,
+                                                  AccessToken token, UserAgent userAgent) {
+        return new ThemeRestClient(appContext, dispatcher, requestQueue, token, userAgent);
     }
 
     @Singleton
