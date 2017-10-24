@@ -35,7 +35,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
@@ -171,6 +170,7 @@ public class UploadService extends Service {
         List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(KEY_MEDIA_LIST);
         if (mediaList != null) {
             for (MediaModel media : mediaList) {
+                mPostUploadNotifier.cancelFinalNotification(media);
                 mMediaUploadHandler.upload(media);
             }
             mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaList);
@@ -259,6 +259,14 @@ public class UploadService extends Service {
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
         intent.putExtra(KEY_SHOULD_PUBLISH, publish);
+        intent.putExtra(KEY_SHOULD_RETRY, isRetry);
+        return intent;
+    }
+
+    public static Intent getUploadMediaServiceIntent(Context context, @NonNull ArrayList<MediaModel> mediaList,
+                                                     boolean isRetry) {
+        Intent intent = new Intent(context, UploadService.class);
+        intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
         intent.putExtra(KEY_SHOULD_RETRY, isRetry);
         return intent;
     }
@@ -557,7 +565,7 @@ public class UploadService extends Service {
             // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
             // the user actively cancelled it. No need to show an error then.
             String message = UploadUtils.getErrorMessage(this, postToCancel, errorMessage, true);
-            mPostUploadNotifier.updateNotificationError(postToCancel, site, message);
+            mPostUploadNotifier.updateNotificationErrorForPost(postToCancel, site, message);
         }
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
@@ -568,7 +576,7 @@ public class UploadService extends Service {
     private void rebuildNotificationError(PostModel post, String errorMessage) {
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         mPostUploadNotifier.setTotalMediaItems(post, failedMedia.size());
-        mPostUploadNotifier.updateNotificationError(post,
+        mPostUploadNotifier.updateNotificationErrorForPost(post,
                 mSiteStore.getSiteByLocalId(post.getLocalSiteId()), errorMessage);
 
     }
@@ -621,6 +629,15 @@ public class UploadService extends Service {
                         + event.error.type + ": " + event.error.message);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
                 cancelPostUploadMatchingMedia(event.media, errorMessage, true);
+            } else {
+                // this media item doesn't belong to a Post
+                mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotificationOrFinish(event.media.getId());
+                // Only show the media upload error notification if the post is NOT registered in the UploadStore
+                // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
+                // the user actively cancelled it. No need to show an error then.
+                String message = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
+                mPostUploadNotifier.updateNotificationErrorForMedia(event.media,
+                        mSiteStore.getSiteByLocalId(event.media.getLocalSiteId()),message);
             }
             stopServiceIfUploadsComplete();
             return;
@@ -681,10 +698,18 @@ public class UploadService extends Service {
 
     public static class UploadErrorEvent {
         public final PostModel post;
+        public final MediaModel media;
         public final String errorMessage;
 
         UploadErrorEvent(PostModel post, String errorMessage) {
             this.post = post;
+            this.media = null;
+            this.errorMessage = errorMessage;
+        }
+
+        UploadErrorEvent(MediaModel mediaModel, String errorMessage) {
+            this.post = null;
+            this.media = mediaModel;
             this.errorMessage = errorMessage;
         }
     }

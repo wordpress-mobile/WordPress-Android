@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -39,6 +40,8 @@ class PostUploadNotifier {
 
     private final NotificationManager mNotificationManager;
     private final NotificationCompat.Builder mNotificationBuilder;
+
+    private final static int BASE_MEDIA_ERROR_NOTIFICATION_ID = 70000;
 
     // used to hold notification data for everything (only one outstanding foreground notification
     // for the live UploadService instance
@@ -231,6 +234,10 @@ class PostUploadNotifier {
         mNotificationManager.cancel((int)getNotificationIdForPost(post));
     }
 
+    void cancelFinalNotification(@NonNull MediaModel media) {
+        mNotificationManager.cancel((int)getNotificationIdForMedia(media));
+    }
+
     void updateNotificationSuccess(@NonNull PostModel post, @NonNull SiteModel site, boolean isFirstTimePublish) {
         if (!WordPress.sAppIsInTheBackground) {
             // only produce success notifications for the user if the app is in the background
@@ -320,8 +327,13 @@ class PostUploadNotifier {
         return post.getLocalSiteId() + remotePostId;
     }
 
-    void updateNotificationError(@NonNull PostModel post, @NonNull SiteModel site, String errorMessage) {
-        AppLog.d(AppLog.T.POSTS, "updateNotificationError: " + errorMessage);
+    public static long getNotificationIdForMedia(MediaModel media) {
+        long mediaId = media.getId();
+        return media.getLocalSiteId() + mediaId + BASE_MEDIA_ERROR_NOTIFICATION_ID;
+    }
+
+    void updateNotificationErrorForPost(@NonNull PostModel post, @NonNull SiteModel site, String errorMessage) {
+        AppLog.d(AppLog.T.POSTS, "updateNotificationErrorForPost: " + errorMessage);
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(mContext.getApplicationContext());
@@ -346,34 +358,8 @@ class PostUploadNotifier {
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
         String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), postTitle);
 
-        // first we build a summary of what failed and what went OK, like this:
-        // i.e. "1 post, 3 media files not uploaded (9 successfully uploaded)"
-        String newErrorMessage = "";
-        int postItemsNotUploaded = sNotificationData.totalPostItems > 0 ? sNotificationData.totalPostItems - getCurrentPostItem() : 0;
-        int mediaItemsNotUploaded = sNotificationData.totalMediaItems - getCurrentMediaItem();
-        if (postItemsNotUploaded > 0) {
-            newErrorMessage += postItemsNotUploaded + " " + getPagesAndOrPostsString(postItemsNotUploaded);
-            if (mediaItemsNotUploaded > 0) {
-                newErrorMessage += ", ";
-            }
-        }
-
-        if (mediaItemsNotUploaded > 0) {
-            newErrorMessage += String.format(mContext.getString(R.string.media_files_not_uploaded), mediaItemsNotUploaded);
-            if (mediaItemsNotUploaded <= sNotificationData.currentMediaItem) {
-                // some media items were uploaded successfully
-                newErrorMessage += " " + String.format(mContext.getString(R.string.media_files_uploaded_succcessfully),
-                        sNotificationData.currentMediaItem);
-            }
-        }
-
-        // now append the detailed error message below
-        String snackbarMessage = new String(newErrorMessage);
-        if (newErrorMessage.length() > 0) {
-            newErrorMessage += "\n" + errorMessage;
-        } else {
-            newErrorMessage = errorMessage;
-        }
+        String newErrorMessage = buildErrorMessage();
+        String snackbarMessage = buildSnackbarErrorMessage(newErrorMessage, errorMessage);
 
         notificationBuilder.setContentTitle(notificationTitle);
         notificationBuilder.setContentText(newErrorMessage);
@@ -395,6 +381,91 @@ class PostUploadNotifier {
 
         doNotify(notificationId, notificationBuilder.build());
     }
+
+    void updateNotificationErrorForMedia(@NonNull MediaModel media, @NonNull SiteModel site, String errorMessage) {
+        AppLog.d(AppLog.T.MEDIA, "updateNotificationErrorForMedia: " + errorMessage);
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(mContext.getApplicationContext());
+
+        long notificationId = getNotificationIdForMedia(media);
+        // Tap notification intent (open the post list)
+        Intent notificationIntent = new Intent(mContext, MediaBrowserActivity.class);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        notificationIntent.putExtra(WordPress.SITE, site);
+        notificationIntent.setAction(String.valueOf(notificationId));
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
+                (int)notificationId,
+                notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+
+        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
+        notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
+
+        String siteName = TextUtils.isEmpty(site.getName()) ? mContext.getString(R.string.untitled) : site.getName();
+        String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), siteName);
+
+        String newErrorMessage = buildErrorMessage();
+        String snackbarMessage = buildSnackbarErrorMessage(newErrorMessage, errorMessage);
+
+        notificationBuilder.setContentTitle(notificationTitle);
+        notificationBuilder.setContentText(newErrorMessage);
+        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newErrorMessage));
+        notificationBuilder.setContentIntent(pendingIntent);
+        notificationBuilder.setAutoCancel(true);
+
+        // Add RETRY action - only available on Aztec
+        ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
+        mediaListToRetry.add(media);
+        Intent publishIntent = UploadService.getUploadMediaServiceIntent(mContext, mediaListToRetry, true);
+        PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        notificationBuilder.addAction(0, mContext.getString(R.string.retry),
+                actionPendingIntent).setColor(mContext.getResources().getColor(R.color.orange_jazzy));
+
+        EventBus.getDefault().post(new UploadService.UploadErrorEvent(media, snackbarMessage));
+
+        doNotify(notificationId, notificationBuilder.build());
+    }
+
+    private String buildErrorMessage() {
+        // first we build a summary of what failed and what went OK, like this:
+        // i.e. "1 post, 3 media files not uploaded (9 successfully uploaded)"
+        String newErrorMessage = "";
+        int postItemsNotUploaded = sNotificationData.totalPostItems > 0 ? sNotificationData.totalPostItems - getCurrentPostItem() : 0;
+        int mediaItemsNotUploaded = sNotificationData.totalMediaItems - getCurrentMediaItem();
+        if (postItemsNotUploaded > 0) {
+            newErrorMessage += postItemsNotUploaded + " " + getPagesAndOrPostsString(postItemsNotUploaded);
+            if (mediaItemsNotUploaded > 0) {
+                newErrorMessage += ", ";
+            }
+        }
+
+        if (mediaItemsNotUploaded > 0) {
+            newErrorMessage += String.format(mContext.getString(R.string.media_files_not_uploaded), mediaItemsNotUploaded);
+            if (mediaItemsNotUploaded <= sNotificationData.currentMediaItem) {
+                // some media items were uploaded successfully
+                newErrorMessage += " " + String.format(mContext.getString(R.string.media_files_uploaded_succcessfully),
+                        sNotificationData.currentMediaItem);
+            }
+        }
+
+        return newErrorMessage;
+    }
+
+    private String buildSnackbarErrorMessage(String newErrorMessage, String detailErrorMessage) {
+        // now append the detailed error message below
+        String snackbarMessage = new String(newErrorMessage);
+        if (newErrorMessage.length() > 0) {
+            newErrorMessage += "\n" + detailErrorMessage;
+        } else {
+            newErrorMessage = detailErrorMessage;
+        }
+
+        return snackbarMessage;
+    }
+
 
     void updateNotificationProgressForMedia(MediaModel media, float progress) {
         if (sNotificationData.totalMediaItems == 0 && sNotificationData.totalPostItems == 0) {

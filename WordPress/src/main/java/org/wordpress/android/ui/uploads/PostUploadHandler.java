@@ -203,7 +203,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 // This block only runs if the PUSH_POST action was never dispatched - if it was dispatched, any error
                 // will be handled in OnPostChanged instead of here
                 mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotificationOrFinish(mPost);
-                mPostUploadNotifier.updateNotificationError(mPost, mSite, mErrorMessage);
+                mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage);
                 finishUpload();
             }
         }
@@ -564,7 +564,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             Context context = WordPress.getContext();
             String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
-            mPostUploadNotifier.updateNotificationError(event.post, site, notificationMessage);
+            mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage);
             sFirstPublishPosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotificationOrFinish(event.post);
@@ -615,7 +615,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String notificationMessage =
                     UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage, true);
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotificationOrFinish(sCurrentUploadingPost);
-            mPostUploadNotifier.updateNotificationError(sCurrentUploadingPost, site, notificationMessage);
+            mPostUploadNotifier.updateNotificationErrorForPost(sCurrentUploadingPost, site, notificationMessage);
             sFirstPublishPosts.remove(sCurrentUploadingPost.getId());
             finishUpload();
             return;
