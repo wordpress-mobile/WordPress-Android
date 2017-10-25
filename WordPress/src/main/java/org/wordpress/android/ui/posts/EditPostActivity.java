@@ -186,6 +186,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private Handler mHandler;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
+    private boolean mMediaInsertedOnCreation;
 
     private List<String> mPendingVideoPressInfoRequests;
     private List<String> mAztecBackspaceDeletedMediaItemIds = new ArrayList<>();
@@ -1771,7 +1772,8 @@ public class EditPostActivity extends AppCompatActivity implements
             contentChanged = true;
         } else if (mEditorFragment instanceof AztecEditorFragment
                 && ((AztecEditorFragment) mEditorFragment).isHistoryEnabled()) {
-            contentChanged = ((AztecEditorFragment) mEditorFragment).hasHistory();
+            contentChanged = ((AztecEditorFragment) mEditorFragment).hasHistory() || mMediaInsertedOnCreation;
+            mMediaInsertedOnCreation = false;
         } else {
             contentChanged = mPost.getContent().compareTo(content) != 0;
         }
@@ -2629,13 +2631,19 @@ public class EditPostActivity extends AppCompatActivity implements
             List<MediaModel> mediaList = (List<MediaModel>) getIntent().getSerializableExtra(EXTRA_INSERT_MEDIA);
             if (mediaList != null && !mediaList.isEmpty()) {
                 shouldFinishInit = false;
+                mMediaInsertedOnCreation = true;
                 for (MediaModel media : mediaList) {
                     addExistingMediaToEditor(media.getMediaId());
                 }
                 savePostAsync(new AfterSavePostListener() {
                     @Override
                     public void onPostSave() {
-                        onEditorFinalTouchesBeforeShowing();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                onEditorFinalTouchesBeforeShowing();
+                            }
+                        });
                     }
                 });
             }
