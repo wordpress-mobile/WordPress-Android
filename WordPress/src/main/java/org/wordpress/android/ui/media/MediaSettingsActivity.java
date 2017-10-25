@@ -136,8 +136,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                                      @Nullable View sourceView) {
         // go directly to preview for local images, videos and audio (do nothing for local documents)
         if (MediaUtils.isLocalFile(media.getUploadState())) {
-            if (MediaUtils.isValidImage(media.getUrl())
-                    || MediaUtils.isAudio(media.getUrl())
+            if (MediaUtils.isValidImage(media.getFilePath())
+                    || MediaUtils.isAudio(media.getFilePath())
                     || media.isVideo()) {
                 MediaPreviewActivity.showPreview(activity, site, media.getFilePath());
             }
