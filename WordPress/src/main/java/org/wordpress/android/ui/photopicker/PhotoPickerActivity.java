@@ -158,7 +158,11 @@ public class PhotoPickerActivity extends AppCompatActivity
                     AppLog.e(AppLog.T.MEDIA, e);
                 }
                 break;
-            // user selected from WP media library
+            // user selected from WP media library - pass result to caller
+            case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
+                setResult(resultCode, data);
+                finish();
+                break;
         }
     }
 

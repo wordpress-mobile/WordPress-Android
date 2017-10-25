@@ -413,6 +413,7 @@ public class EditPostSettingsFragment extends Fragment {
                         updateTags(selectedTags);
                     }
                     break;
+                case RequestCodes.PHOTO_PICKER:
                 case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
                     if (resultCode == RESULT_OK) {
                         ArrayList<Long> ids = ListUtils.

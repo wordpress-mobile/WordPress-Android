@@ -2047,6 +2047,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     handleMediaPickerResult(data);
                     // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditor
                     break;
+                case RequestCodes.PHOTO_PICKER:
+                    // user chose a featured image - pass it to the settings fragment
+                    // TODO
+                    if (mEditPostSettingsFragment != null) {
+                        mEditPostSettingsFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                    break;
                 case RequestCodes.PICTURE_LIBRARY:
                     final Uri imageUri = data.getData();
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
