@@ -40,7 +40,8 @@ import java.util.regex.Pattern;
 
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         implements TextWatcher, OnEditorCommitListener {
-        private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
+    private static final String KEY_IS_SOCIAL = "KEY_IS_SOCIAL";
+    private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
 
     public static final String TAG = "login_email_fragment_tag";
@@ -50,6 +51,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     private LoginGoogleFragment mLoginGoogleFragment;
     private String mRequestedEmail;
     private WPLoginInputRow mEmailInput;
+    private boolean isSocialLogin;
 
     @Override
     protected @LayoutRes int getContentLayout() {
@@ -58,7 +60,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
 
     @Override
     protected @LayoutRes int getProgressBarText() {
-        return mLoginGoogleFragment != null ? R.string.logging_in : R.string.checking_email;
+        return isSocialLogin ? R.string.logging_in : R.string.checking_email;
     }
 
     @Override
@@ -100,6 +102,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                 if (NetworkUtils.checkConnection(getActivity())) {
                     mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                     mLoginGoogleFragment = addGoogleFragment();
+                    isSocialLogin = true;
                 }
             }
         });
@@ -153,7 +156,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @Override
     protected void onHelp() {
         if (mLoginListener != null) {
-            if (mLoginGoogleFragment != null) {
+            if (isSocialLogin && mLoginGoogleFragment != null) {
                 mLoginGoogleFragment.onHelp();
             } else {
                 // Send exact string the user has inputted for email
@@ -190,6 +193,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         if (savedInstanceState != null) {
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
             mRequestedEmail = savedInstanceState.getString(KEY_REQUESTED_EMAIL);
+            isSocialLogin = savedInstanceState.getBoolean(KEY_IS_SOCIAL);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
         }
@@ -200,6 +204,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         super.onSaveInstanceState(outState);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
         outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);
+        outState.putBoolean(KEY_IS_SOCIAL, isSocialLogin);
     }
 
     protected void next(String email) {
@@ -250,6 +255,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mEmailInput.setError(null);
         mLoginGoogleFragment = null;
+        isSocialLogin = false;
     }
 
     private void showEmailError(int messageId) {
