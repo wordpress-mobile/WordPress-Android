@@ -36,6 +36,7 @@ import org.wordpress.android.util.AppLog.T;
 
 import javax.inject.Inject;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener {
@@ -275,8 +276,10 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
                                 break;
                         }
                     }
+                } else if (result == RESULT_CANCELED) {
+                    AppLog.e(T.NUX, "Google Sign-in Failed: cancelled by user.");
                 } else {
-                    AppLog.e(T.NUX, "Google Sign-in Failed: result was not RESULT_OK.");
+                    AppLog.e(T.NUX, "Google Sign-in Failed: result was not OK or CANCELED.");
                     showErrorDialog(getString(R.string.login_error_generic));
                 }
 
