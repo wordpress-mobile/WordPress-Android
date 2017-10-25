@@ -515,6 +515,15 @@ public class MySiteFragment extends Fragment
         }
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), true,
+                    event.mediaModelList, event.successMessage);
+        }
+    }
+
 
     // FluxC events
     @SuppressWarnings("unused")

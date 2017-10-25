@@ -168,6 +168,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
     public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
+    public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -321,6 +322,19 @@ public class EditPostActivity extends AppCompatActivity implements
                 // Load post passed in extras
                 initializePostObjects(extras.getInt(EXTRA_POST_LOCAL_ID));
             }
+
+            // now that we have the Post object initialized,
+            // check whether we have media items to insert from the WRITE POST with media functionality
+            if (getIntent().hasExtra(EXTRA_INSERT_MEDIA)) {
+                List<MediaModel> mediaList = (List<MediaModel>) getIntent().getSerializableExtra(EXTRA_INSERT_MEDIA);
+                if (mediaList != null && !mediaList.isEmpty()) {
+                    for (MediaModel media : mediaList) {
+                        addExistingMediaToEditorAndSave(media.getId());
+                    }
+                    savePostAsync(null);
+                }
+            }
+
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
@@ -1453,13 +1467,21 @@ public class EditPostActivity extends AppCompatActivity implements
         return mMaxThumbWidth;
     }
 
-    private void addExistingMediaToEditor(long mediaId) {
+    private boolean addExistingMediaToEditor(long mediaId) {
         MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
-        if (media != null) {
-            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-            trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
-            String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
-            mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
+        if (media == null) {
+            return false;
+        }
+
+        MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
+        trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
+        String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
+        mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
+        return true;
+    }
+
+    private void addExistingMediaToEditorAndSave(long mediaId) {
+        if (addExistingMediaToEditor(mediaId)) {
             savePostAsync(null);
         }
     }
@@ -1643,7 +1665,7 @@ public class EditPostActivity extends AppCompatActivity implements
         long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS);
         ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
         for (Long id: idsList) {
-            addExistingMediaToEditor(id);
+            addExistingMediaToEditorAndSave(id);
         }
     }
 
@@ -2052,7 +2074,7 @@ public class EditPostActivity extends AppCompatActivity implements
             switch (requestCode) {
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
                     handleMediaPickerResult(data);
-                    // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditor
+                    // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditorAndSave
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     final Uri imageUri = data.getData();
@@ -2165,7 +2187,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // media dialog so the user can choose how to insert the items
         if (ids.size() == 1) {
             long mediaId = ids.get(0);
-            addExistingMediaToEditor(mediaId);
+            addExistingMediaToEditorAndSave(mediaId);
         } else {
             showInsertMediaDialog(ids);
         }
@@ -2188,7 +2210,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         break;
                     case INDIVIDUALLY:
                         for (Long id: mediaIds) {
-                            addExistingMediaToEditor(id);
+                            addExistingMediaToEditorAndSave(id);
                         }
                         break;
                 }
