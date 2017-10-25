@@ -1,6 +1,7 @@
 package org.wordpress.android.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -40,6 +41,8 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import dagger.android.support.AndroidSupportInjection;
+
 public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener {
     private static final String KEY_REQUESTED_SITE_ADDRESS = "KEY_REQUESTED_SITE_ADDRESS";
@@ -76,7 +79,14 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
     @Override
     protected void setupLabel(TextView label) {
-        label.setText(R.string.enter_site_address);
+        switch (mLoginListener.getLoginMode()) {
+            case SHARE_INTENT:
+                label.setText(R.string.enter_site_address_share_intent);
+                break;
+            default:
+                label.setText(R.string.enter_site_address);
+                break;
+        }
     }
 
     @Override
@@ -115,9 +125,9 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mLoginListener.inject(this);
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @Override

@@ -17,12 +17,12 @@ repositories {
 android {
     publishNonDefault true
 
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion project.COMPILE_SDK_VERSION.toInteger()
+    buildToolsVersion project.BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion project.TARGET_SDK_VERSION.toInteger()
         versionCode 1
         versionName "1.0"
 
@@ -34,13 +34,42 @@ dependencies {
     compile 'org.wordpress:utils:1.17.1'
     compile 'org.wordpress:analytics:1.3.0'
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
+    compile "com.android.support:appcompat-v7:$project.SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:design:$project.SUPPORT_LIBRARY_VERSION"
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:77e383f3e65ce1cee3f9ebad2eac522f29b4e3b8') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3c598e8f305b0346a4fb84e94e0c097f7fe28df5') {
         exclude group: "com.android.volley";
     }
 
     compile 'com.github.bumptech.glide:glide:4.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+
+    // Dagger
+    compile 'com.google.dagger:dagger:2.11'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.google.dagger:dagger-android-support:2.11'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+}
+
+// Add properties named "wp.xxx" to our BuildConfig
+android.buildTypes.all { buildType ->
+    Properties gradleProperties = new Properties()
+    File propertiesFile = file("../gradle.properties")
+    if (propertiesFile.exists()) {
+        gradleProperties.load(new FileInputStream(propertiesFile))
+    } else {
+        // Load defaults
+        gradleProperties.load(new FileInputStream(file("../gradle.properties-example")))
+    }
+    gradleProperties.any { property ->
+        if (property.key.toLowerCase().startsWith("wp.")) {
+            buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
+                    "\"${property.value}\""
+        }
+        if (property.key.toLowerCase().startsWith("wp.res.")) {
+            buildType.resValue "string", property.key.replace("wp.res.", "").replace(".", "_").toLowerCase(),
+                    "${property.value}"
+        }
+    }
 }

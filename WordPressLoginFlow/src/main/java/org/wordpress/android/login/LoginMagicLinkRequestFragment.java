@@ -41,6 +41,8 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
+import dagger.android.support.AndroidSupportInjection;
+
 public class LoginMagicLinkRequestFragment extends Fragment {
     public static final String TAG = "login_magic_link_request_fragment_tag";
 
@@ -71,9 +73,19 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
+        if (context instanceof LoginListener) {
+            mLoginListener = (LoginListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement LoginListener");
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLoginListener.inject(this);
 
         if (getArguments() != null) {
             mEmail = getArguments().getString(ARG_EMAIL_ADDRESS);
@@ -164,16 +176,6 @@ public class LoginMagicLinkRequestFragment extends Fragment {
 
             boolean gravatarInProgress = savedInstanceState.getBoolean(KEY_GRAVATAR_IN_PROGRESS);
             mAvatarProgressBar.setVisibility(gravatarInProgress ? View.VISIBLE : View.GONE);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof LoginListener) {
-            mLoginListener = (LoginListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement LoginListener");
         }
     }
 

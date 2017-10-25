@@ -1,5 +1,6 @@
 package org.wordpress.android.login;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -28,6 +29,8 @@ import org.wordpress.android.util.NetworkUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dagger.android.support.AndroidSupportInjection;
+
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener {
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
@@ -55,6 +58,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             case WPCOM_LOGIN_DEEPLINK:
                 label.setText(R.string.login_log_in_for_deeplink);
                 break;
+            case SHARE_INTENT:
+                label.setText(R.string.login_log_in_for_share_intent);
+                break;
             case FULL:
                 label.setText(R.string.enter_email_wordpress_com);
                 break;
@@ -70,7 +76,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     protected void setupContent(ViewGroup rootView) {
         mEmailInput = (WPLoginInputRow) rootView.findViewById(R.id.login_email_row);
-        autoFillFromBuildConfig("DEBUG_DOTCOM_LOGIN_EMAIL", mEmailInput.getEditText());
+        if (BuildConfig.DEBUG) {
+            mEmailInput.getEditText().setText(BuildConfig.DEBUG_DOTCOM_LOGIN_EMAIL);
+        }
         mEmailInput.addTextChangedListener(this);
         mEmailInput.setOnEditorCommitListener(this);
     }
@@ -92,6 +100,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
         switch (mLoginListener.getLoginMode()) {
             case FULL:
+            case SHARE_INTENT:
                 // all features enabled and with typical values
                 secondaryButton.setText(R.string.enter_site_address_instead);
                 break;
@@ -127,9 +136,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mLoginListener.inject(this);
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @Override

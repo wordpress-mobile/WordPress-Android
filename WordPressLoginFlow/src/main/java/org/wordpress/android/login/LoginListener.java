@@ -19,12 +19,6 @@ public interface LoginListener {
 
     LoginMode getLoginMode();
 
-    // Login Prologue callbacks
-    void showEmailLoginScreen();
-    void doStartSignup();
-    void loggedInViaSignup(ArrayList<Integer> oldSitesIds);
-    void newUserCreatedButErrored(String email, String password);
-
     // Login Email input callbacks
     void gotWpcomEmail(String email);
     void loginViaSiteAddress();
@@ -74,13 +68,4 @@ public interface LoginListener {
     void track(AnalyticsTracker.Stat stat, Map<String, ?> properties);
     void track(AnalyticsTracker.Stat stat, String errorContext, String errorType, String errorDescription);
     void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin);
-
-    // Injectors
-    void inject(Login2FaFragment object);
-    void inject(LoginEmailFragment object);
-    void inject(LoginEmailPasswordFragment object);
-    void inject(LoginMagicLinkRequestFragment object);
-    void inject(LoginSiteAddressFragment object);
-    void inject(LoginSiteAddressHelpDialogFragment object);
-    void inject(LoginUsernamePasswordFragment object);
 }
