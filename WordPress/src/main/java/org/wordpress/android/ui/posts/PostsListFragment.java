@@ -633,6 +633,8 @@ public class PostsListFragment extends Fragment
         mRVScrollPositionSaver.onSaveInstanceState(outState, mRecyclerView);
     }
 
+    // FluxC events
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
@@ -682,7 +684,8 @@ public class PostsListFragment extends Fragment
         if (isAdded() && event.post != null && event.post.getLocalSiteId() == mSite.getId()) {
             loadPosts(LoadMode.FORCED);
             UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                    getActivity().findViewById(R.id.coordinator), event, mSite, mDispatcher);
+                    getActivity().findViewById(R.id.coordinator),
+                    event.isError(), event.post, null, mSite, mDispatcher);
         }
     }
 
@@ -737,5 +740,11 @@ public class PostsListFragment extends Fragment
                 mPostsListAdapter.updateProgressForPost(post);
             }
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadErrorEvent event) {
+        UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
+                getActivity().findViewById(R.id.coordinator), true, event.post, event.errorMessage, mSite, mDispatcher);
     }
 }

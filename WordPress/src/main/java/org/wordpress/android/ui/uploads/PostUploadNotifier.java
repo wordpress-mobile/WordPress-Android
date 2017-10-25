@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -18,16 +17,21 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
+import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import de.greenrobot.event.EventBus;
 
 class PostUploadNotifier {
     private final Context mContext;
@@ -48,6 +52,7 @@ class PostUploadNotifier {
         int totalPageItemsIncludedInPostCount;
         int currentPostItem;
         final Map<Integer, Float> mediaItemToProgressMap = new HashMap<>();
+        final List<PostModel> mUploadedPostsCounted = new ArrayList<>();;
     }
 
     PostUploadNotifier(Context context, UploadService service) {
@@ -108,6 +113,22 @@ class PostUploadNotifier {
         }
     }
 
+    void prepareForegroundNotificationForRetry(@NonNull PostModel post, @Nullable List<MediaModel> media) {
+        removePostInfoFromForegroundNotificationData(post, media);
+    }
+
+    private void removePostInfoFromForegroundNotificationData(@NonNull PostModel post, @Nullable List<MediaModel> media) {
+        if (sNotificationData.totalPostItems > 0) {
+            sNotificationData.totalPostItems--;
+            if (post.isPage()) {
+                sNotificationData.totalPageItemsIncludedInPostCount--;
+            }
+        }
+        if (media != null) {
+            removeMediaInfoFromForegroundNotification(media);
+        }
+    }
+
     // Post could have initial media, or not (nullable)
     void addPostInfoToForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
         sNotificationData.totalPostItems++;
@@ -118,6 +139,12 @@ class PostUploadNotifier {
             addMediaInfoToForegroundNotification(media);
         }
         startOrUpdateForegroundNotification(post);
+    }
+
+    void removeMediaInfoFromForegroundNotification(@NonNull List<MediaModel> mediaList) {
+        if (sNotificationData.totalMediaItems >= mediaList.size()) {
+            sNotificationData.totalMediaItems -= mediaList.size();
+        }
     }
 
     void addMediaInfoToForegroundNotification(@NonNull List<MediaModel> mediaList) {
@@ -136,19 +163,16 @@ class PostUploadNotifier {
         startOrUpdateForegroundNotification(null);
     }
 
-    void updateNotificationIcon(PostModel post, Bitmap icon) {
-        // TODO MEDIA reimplement or remove completely
-
-//        NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
-//
-//        if (icon != null) {
-//            notificationData.latestIcon = icon;
-//            mNotificationBuilder.setLargeIcon(notificationData.latestIcon);
-//        }
-//        doNotify(sPostIdToNotificationData.get(post.getId()).notificationId, mNotificationBuilder.build());
-    }
-
     void incrementUploadedPostCountFromForegroundNotification(@NonNull PostModel post) {
+        // first we need to check that we only count this post once as  "ended" (either successfully or with error)
+        // for every error we get. We'll then try to increment the Post count as it's been cancelled/failed because the
+        // related media was cancelled or has failed too (i.e. we can't upload a Post with failed media, therefore
+        // it needs to be cancelled).
+        if (isPostAlreadyInPostCount(post)) {
+            return;
+        } else {
+            addPostToPostCount(post);
+        }
         sNotificationData.currentPostItem++;
 
         // update Notification now
@@ -157,7 +181,7 @@ class PostUploadNotifier {
         }
     }
 
-    void incrementUploadedMediaCountFromProgressNotificationOrFinish(int mediaId) {
+    void incrementUploadedMediaCountFromProgressNotification(int mediaId) {
         sNotificationData.currentMediaItem++;
         if (!removeNotificationAndStopForegroundServiceIfNoItemsInQueue()) {
             // update Notification now
@@ -185,6 +209,20 @@ class PostUploadNotifier {
         sNotificationData.totalPostItems = 0;
         sNotificationData.totalPageItemsIncludedInPostCount = 0;
         sNotificationData.mediaItemToProgressMap.clear();
+        sNotificationData.mUploadedPostsCounted.clear();
+    }
+
+    private boolean isPostAlreadyInPostCount(@NonNull PostModel post){
+        for (PostModel onePost : sNotificationData.mUploadedPostsCounted) {
+            if (onePost.getId() == post.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void addPostToPostCount(@NonNull PostModel post) {
+        sNotificationData.mUploadedPostsCounted.add(post);
     }
 
     // cancels the error or success notification (only one of these exist per Post at any given
@@ -264,7 +302,8 @@ class PostUploadNotifier {
 
         // add draft Publish action for drafts
         if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
-            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post, isFirstTimePublish, notificationId, true);
+            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post,
+                    isFirstTimePublish, true, false);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(R.drawable.ic_posts_grey_24dp, mContext.getString(R.string.button_publish),
@@ -274,7 +313,7 @@ class PostUploadNotifier {
         doNotify(notificationId, notificationBuilder.build());
     }
 
-    private long getNotificationIdForPost(PostModel post) {
+    public static long getNotificationIdForPost(PostModel post) {
         long remotePostId = post.getRemotePostId();
         // We can't use the local table post id here because it can change between first post (local draft) to
         // first edit (post pulled from the server)
@@ -301,16 +340,58 @@ class PostUploadNotifier {
                 (int)notificationId,
                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
+        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
+        notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
 
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
         String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), postTitle);
-        notificationBuilder.setContentTitle(notificationTitle);
 
-        notificationBuilder.setContentText(errorMessage);
-        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(errorMessage));
+        // first we build a summary of what failed and what went OK, like this:
+        // i.e. "1 post, 3 media files not uploaded (9 successfully uploaded)"
+        String newErrorMessage = "";
+        int postItemsNotUploaded = sNotificationData.totalPostItems > 0 ? sNotificationData.totalPostItems - getCurrentPostItem() : 0;
+        int mediaItemsNotUploaded = sNotificationData.totalMediaItems - getCurrentMediaItem();
+        if (postItemsNotUploaded > 0) {
+            newErrorMessage += postItemsNotUploaded + " " + getPagesAndOrPostsString(postItemsNotUploaded);
+            if (mediaItemsNotUploaded > 0) {
+                newErrorMessage += ", ";
+            }
+        }
+
+        if (mediaItemsNotUploaded > 0) {
+            newErrorMessage += String.format(mContext.getString(R.string.media_files_not_uploaded), mediaItemsNotUploaded);
+            if (mediaItemsNotUploaded <= sNotificationData.currentMediaItem) {
+                // some media items were uploaded successfully
+                newErrorMessage += " " + String.format(mContext.getString(R.string.media_files_uploaded_succcessfully),
+                        sNotificationData.currentMediaItem);
+            }
+        }
+
+        // now append the detailed error message below
+        String snackbarMessage = new String(newErrorMessage);
+        if (newErrorMessage.length() > 0) {
+            newErrorMessage += "\n" + errorMessage;
+        } else {
+            newErrorMessage = errorMessage;
+        }
+
+        notificationBuilder.setContentTitle(notificationTitle);
+        notificationBuilder.setContentText(newErrorMessage);
+        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newErrorMessage));
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
+
+        // Add RETRY action - only available on Aztec
+        if ( AppPrefs.isAztecEditorEnabled()) {
+            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post,
+                    PostUtils.isFirstTimePublish(post), false, true);
+            PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
+            notificationBuilder.addAction(0, mContext.getString(R.string.retry),
+                    actionPendingIntent).setColor(mContext.getResources().getColor(R.color.orange_jazzy));
+        }
+
+        EventBus.getDefault().post(new UploadService.UploadErrorEvent(post, snackbarMessage));
 
         doNotify(notificationId, notificationBuilder.build());
     }
@@ -375,7 +456,13 @@ class PostUploadNotifier {
     }
 
     void setTotalMediaItems(PostModel post, int totalMediaItems) {
-        sNotificationData.totalMediaItems+=totalMediaItems;
+        if (post != null) {
+            sNotificationData.totalPostItems = 1;
+            if (post.isPage()) {
+                sNotificationData.totalPageItemsIncludedInPostCount = 1;
+            }
+        }
+        sNotificationData.totalMediaItems = totalMediaItems;
     }
 
     private String buildNotificationTitleForPost(PostModel post) {

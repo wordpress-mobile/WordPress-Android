@@ -37,6 +37,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
@@ -498,6 +499,20 @@ public class MySiteFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadErrorEvent event) {
+        SiteModel site = getSelectedSite();
+        if (site != null && event.post != null) {
+            if (event.post.getLocalSiteId() == site.getId()) {
+                UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
+                        getActivity().findViewById(R.id.coordinator), true,
+                        event.post, event.errorMessage, site, mDispatcher);
+            }
+        }
+    }
+
+
+    // FluxC events
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         if (!isAdded()) {
@@ -509,13 +524,13 @@ public class MySiteFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(PostStore.OnPostUploaded event) {
-        final PostModel post = event.post;
         if (isAdded() && event.post != null) {
             SiteModel site = getSelectedSite();
             if (site != null) {
                 if (event.post.getLocalSiteId() == site.getId()) {
                     UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                            getActivity().findViewById(R.id.coordinator), event, site, mDispatcher);
+                            getActivity().findViewById(R.id.coordinator),
+                            event.isError(), event.post, null, site, mDispatcher);
                 }
             }
         }

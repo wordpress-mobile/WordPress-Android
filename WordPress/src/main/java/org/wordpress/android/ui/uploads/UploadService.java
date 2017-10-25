@@ -11,6 +11,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
@@ -28,10 +29,13 @@ import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.posts.PostUtils;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
@@ -45,6 +49,7 @@ import de.greenrobot.event.EventBus;
 
 public class UploadService extends Service {
     private static final String KEY_SHOULD_PUBLISH = "shouldPublish";
+    private static final String KEY_SHOULD_RETRY = "shouldRetry";
     private static final String KEY_MEDIA_LIST = "mediaList";
     private static final String KEY_LOCAL_POST_ID = "localPostId";
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
@@ -190,6 +195,19 @@ public class UploadService extends Service {
                 PostUtils.trackSavePostAnalytics(post, mSiteStore.getSiteByLocalId(post.getLocalSiteId()));
             }
 
+            if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
+                if (AppPrefs.isAztecEditorEnabled()) {
+                    if (!NetworkUtils.isNetworkAvailable(this)) {
+                        rebuildNotificationError(post, getString(R.string.no_network_message));
+                        return;
+                    }
+                    aztecRetryUpload(post);
+                } else {
+                    ToastUtils.showToast(this, R.string.retry_needs_aztec);
+                }
+                return;
+            }
+
             // is this a new post? only add count to the notification when the post is totally new
             // i.e. it still doesn't have any tracked state in the UploadStore
             // or it's a failed one the user is actively retrying.
@@ -208,6 +226,14 @@ public class UploadService extends Service {
         }
     }
 
+    public static void cancelFinalNotification(PostModel post){
+        // cancel any outstanding "end" notification for this Post before we start processing it again
+        // i.e. dismiss success or error notification for the post.
+        if (sInstance != null && sInstance.mPostUploadNotifier != null) {
+            sInstance.mPostUploadNotifier.cancelFinalNotification(post);
+        }
+    }
+
     private void makePostPublishable(@NonNull PostModel post) {
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
@@ -222,16 +248,17 @@ public class UploadService extends Service {
         // - it's a failed upload (due to some network issue, for example)
         // - it's a pending upload (it is currently registered for upload once the associated media finishes
         // uploading).
-        return !mUploadStore.isRegisteredPostModel(post) || mUploadStore.isFailedPost(post);
+        return !mUploadStore.isRegisteredPostModel(post) || (mUploadStore.isFailedPost(post) || mUploadStore.isPendingPost(post));
     }
 
 
     public static Intent getUploadPostServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics,
-                                                    long notificationId, boolean publish) {
+                                                    boolean publish, boolean isRetry) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
         intent.putExtra(KEY_SHOULD_PUBLISH, publish);
+        intent.putExtra(KEY_SHOULD_RETRY, isRetry);
         return intent;
     }
 
@@ -327,9 +354,12 @@ public class UploadService extends Service {
             for (MediaModel media : completedMedia) {
                 post = updatePostWithMediaUrl(post, media, processor);
             }
-            // finally remove all completed uploads for this post, as they've been taken care of
-            ClearMediaPayload clearMediaPayload = new ClearMediaPayload(post, completedMedia);
-            sInstance.mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
+
+            if (completedMedia != null && !completedMedia.isEmpty()) {
+                // finally remove all completed uploads for this post, as they've been taken care of
+                ClearMediaPayload clearMediaPayload = new ClearMediaPayload(post, completedMedia);
+                sInstance.mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
+            }
         }
         return post;
     }
@@ -499,14 +529,19 @@ public class UploadService extends Service {
             // For each post with completed media uploads, update the content with the new remote URLs
             // This is done in a batch when all media is complete to prevent conflicts by updating separate images
             // at a time simultaneously for the same post
-            PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(postModel);
-            // also do the same now with failed uploads
-            updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
-            // finally, save the PostModel
-            if (updatedPost != null) {
-                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
-            }
+            updateOnePostModelWithCompletedAndFailedUploads(postModel);
         }
+    }
+
+    private PostModel updateOnePostModelWithCompletedAndFailedUploads(PostModel postModel) {
+        PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(postModel);
+        // also do the same now with failed uploads
+        updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
+        // finally, save the PostModel
+        if (updatedPost != null) {
+            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+        }
+        return updatedPost;
     }
 
     private void cancelPostUploadMatchingMedia(@NonNull MediaModel media, String errorMessage, boolean showError) {
@@ -526,6 +561,46 @@ public class UploadService extends Service {
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
+
+    }
+
+    private void rebuildNotificationError(PostModel post, String errorMessage) {
+        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
+        mPostUploadNotifier.setTotalMediaItems(post, failedMedia.size());
+        mPostUploadNotifier.updateNotificationError(post,
+                mSiteStore.getSiteByLocalId(post.getLocalSiteId()), errorMessage);
+
+    }
+
+    private void aztecRetryUpload(PostModel post) {
+        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
+        ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
+        mPostUploadNotifier.prepareForegroundNotificationForRetry(post, mediaToRetry);
+        if (!failedMedia.isEmpty()) {
+            // reset these media items to QUEUED
+            for (MediaModel media : failedMedia) {
+                media.setUploadState(MediaModel.MediaUploadState.QUEUED);
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+            }
+
+            // do the same within the Post content itself
+            String postContentWithRestartedUploads = AztecEditorFragment.restartFailedMediaToUploading(this, post.getContent());
+            post.setContent(postContentWithRestartedUploads);
+            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
+
+            // no retry uploading the media items
+            for (MediaModel media : mediaToRetry) {
+                mMediaUploadHandler.upload(media);
+            }
+
+            // Register the post (as PENDING) in the UploadStore, along with all media currently in progress for it
+            // If the post is already registered, the new media will be added to its list
+            mUploadStore.registerPostModel(post, mediaToRetry);
+            mPostUploadNotifier.addPostInfoToForegroundNotification(post, mediaToRetry);
+        } else {
+            // retry uploading the Post
+            mPostUploadHandler.upload(post);
+        }
     }
 
     /**
@@ -584,7 +659,7 @@ public class UploadService extends Service {
                     }
                 }
             }
-            mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotificationOrFinish(event.media.getId());
+            mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotification(event.media.getId());
             stopServiceIfUploadsComplete();
         } else {
             // in-progress upload
@@ -601,5 +676,15 @@ public class UploadService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostUploaded(OnPostUploaded event) {
         stopServiceIfUploadsComplete();
+    }
+
+    public static class UploadErrorEvent {
+        public final PostModel post;
+        public final String errorMessage;
+
+        UploadErrorEvent(PostModel post, String errorMessage) {
+            this.post = post;
+            this.errorMessage = errorMessage;
+        }
     }
 }

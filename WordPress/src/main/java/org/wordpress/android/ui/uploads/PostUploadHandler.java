@@ -351,7 +351,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                             }
 
                             mediaItemCount++;
-                            mPostUploadNotifier.updateNotificationIcon(mPost, imageIcon);
                             mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaModel);
 
                             String mediaUploadOutput;
@@ -565,6 +564,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             Context context = WordPress.getContext();
             String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             mPostUploadNotifier.updateNotificationError(event.post, site, notificationMessage);
             sFirstPublishPosts.remove(event.post.getId());
         } else {

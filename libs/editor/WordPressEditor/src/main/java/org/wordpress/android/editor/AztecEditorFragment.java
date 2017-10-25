@@ -1720,11 +1720,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     public static List<String> getMediaMarkedUploadingInPostContent(Context context, @NonNull String postContent) {
+        return getMediaMarkedAsClassInPostContent(context, postContent, ATTR_STATUS_UPLOADING);
+    }
+
+    public static List<String> getMediaMarkedFailedInPostContent(Context context, @NonNull String postContent) {
+        return getMediaMarkedAsClassInPostContent(context, postContent, ATTR_STATUS_FAILED);
+    }
+
+    private static List<String> getMediaMarkedAsClassInPostContent(Context context, @NonNull String postContent, String classToUse) {
         ArrayList<String> mediaMarkedUploading = new ArrayList<>();
         // fill in Aztec with the post's content
         AztecParser parser = getAztecParserWithPlugins();
         Spanned content = parser.fromHtml(postContent, context);
-        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(ATTR_STATUS_UPLOADING);
+        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(classToUse);
         for (Attributes attrs : getAllElementAttributes(content, uploadingPredicate)) {
             String itemId = attrs.getValue(ATTR_ID_WP);
             if (!TextUtils.isEmpty(itemId)) {
@@ -1758,6 +1766,27 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         for (IAztecAttributedSpan span : getSpansForPredicate(content, statusPredicate, false)) {
             clearMediaUploadingAndSetToFailedIfLocal(span);
         }
+    }
+
+    public static String restartFailedMediaToUploading(Context context, String postContent) {
+        // fill in Aztec with the post's content
+        AztecParser parser = getAztecParserWithPlugins();
+        Spanned content = parser.fromHtml(postContent, context);
+
+        // get all items with class defined by the "status" variable
+        AztecText.AttributePredicate statusPredicate = getPredicateWithClass(ATTR_STATUS_FAILED);
+
+        // update all these items to UPLOADING
+        for (IAztecAttributedSpan span : getSpansForPredicate(content, statusPredicate, false)) {
+            AttributesWithClass attributesWithClass = getAttributesWithClass(span.getAttributes());
+            attributesWithClass.removeClass(ATTR_STATUS_FAILED);
+            attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
+            span.setAttributes(attributesWithClass.getAttributes());
+        }
+
+        // re-set the post content
+        postContent = parser.toHtml(content, false);
+        return postContent;
     }
 
     private static void clearMediaUploadingAndSetToFailedIfLocal(IAztecAttributedSpan span) {

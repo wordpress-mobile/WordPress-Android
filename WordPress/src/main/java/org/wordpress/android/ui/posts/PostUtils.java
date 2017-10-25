@@ -326,4 +326,9 @@ public class PostUtils {
         }
         return false;
     }
+
+    public static boolean isFirstTimePublish(PostModel post) {
+        return PostStatus.fromPost(post) == PostStatus.DRAFT
+                || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
+    }
 }
