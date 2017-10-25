@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
@@ -9,7 +8,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -25,7 +23,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -121,7 +118,6 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -664,7 +660,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // make sure we initialized the photo picker
         if (mPhotoPickerFragment == null) {
-            //SmartToast.reset();
             initPhotoPicker();
         }
 
@@ -687,13 +682,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment)mEditorFragment).enableMediaMode(true);
-        }
-
-        // let the user know about long-press to multiselect, but only if the user has already granted
-        // storage permission - otherwise the toast will appear above the "soft ask" view
-        if (!isAlreadyShowing && ContextCompat.checkSelfPermission(
-                    this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            SmartToast.show(this, SmartToast.SmartToastType.MEDIA_LONG_PRESS);
         }
     }
 
@@ -901,11 +889,6 @@ public class EditPostActivity extends AppCompatActivity implements
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                     FluxCUtils.mediaFileFromMediaModel(media));
         }
-        removeMediaFromPendingList(media);
-    }
-
-    private void onUploadCanceled(MediaModel media) {
-        removeMediaFromPendingList(media);
     }
 
     private void onUploadError(MediaModel media, MediaStore.MediaError error) {
@@ -929,26 +912,12 @@ public class EditPostActivity extends AppCompatActivity implements
             mEditorMediaUploadListener.onMediaUploadFailed(localMediaId,
                     EditorFragmentAbstract.getEditorMimeType(mf), errorMessage);
         }
-
-        removeMediaFromPendingList(media);
     }
 
     private void onUploadProgress(MediaModel media, float progress) {
         String localMediaId = String.valueOf(media.getId());
         if (mEditorMediaUploadListener != null) {
             mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
-        }
-    }
-
-    private void removeMediaFromPendingList(MediaModel mediaToClear) {
-        if (mediaToClear == null) {
-            return;
-        }
-        for (MediaModel pendingUpload : mPendingUploads) {
-            if (pendingUpload.getId() == mediaToClear.getId()) {
-                mPendingUploads.remove(pendingUpload);
-                break;
-            }
         }
     }
 
@@ -2142,8 +2111,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
-
     /*
      * called before we add media to make sure we have access to any media shared from another app (Google Photos, etc.)
      */
@@ -2299,27 +2266,22 @@ public class EditPostActivity extends AppCompatActivity implements
     /**
      * Starts the upload service to upload selected media.
      */
-    private void startUploadService() {
-        if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
-            final ArrayList<MediaModel> mediaList = new ArrayList<>();
-            for (MediaModel media : mPendingUploads) {
-                if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
-                    mediaList.add(media);
-                }
-            }
-
-            if (!mediaList.isEmpty()) {
-                // before starting the service, we need to update the posts' contents so we are sure the service
-                // can retrieve it from there on
-                savePostAsync(new AfterSavePostListener() {
-                    @Override
-                    public void onPostSave() {
-                        UploadService.uploadMedia(EditPostActivity.this, mediaList);
-                    }
-                });
-
-            }
+    private void startUploadService(MediaModel media) {
+        // make sure we only pass items with the QUEUED state to the UploadService
+        if (!MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
+            return;
         }
+
+        final ArrayList<MediaModel> mediaList = new ArrayList<>();
+        mediaList.add(media);
+        // before starting the service, we need to update the posts' contents so we are sure the service
+        // can retrieve it from there on
+        savePostAsync(new AfterSavePostListener() {
+            @Override
+            public void onPostSave() {
+                UploadService.uploadMedia(EditPostActivity.this, mediaList);
+            }
+        });
     }
 
     private String getVideoThumbnail(String videoPath) {
@@ -2370,10 +2332,7 @@ public class EditPostActivity extends AppCompatActivity implements
         media.setLocalPostId(mPost.getId());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
-        // add this item to the queue - we keep it for visual aid atm
-        mPendingUploads.add(media);
-
-        startUploadService();
+        startUploadService(media);
 
         return media;
     }
@@ -2508,8 +2467,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             media.setUploadState(MediaUploadState.QUEUED);
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-            mPendingUploads.add(media);
-            startUploadService();
+            startUploadService(media);
         }
 
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
@@ -2778,8 +2736,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (event.isError()) {
             onUploadError(event.media, event.error);
-        } else if (event.canceled) {
-            onUploadCanceled(event.media);
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
             if (event.media.getUrl() == null) {

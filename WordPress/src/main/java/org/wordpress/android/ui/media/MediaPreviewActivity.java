@@ -1,37 +1,32 @@
 package org.wordpress.android.ui.media;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.ImageView;
-import android.widget.MediaController;
-import android.widget.TextView;
-import android.widget.VideoView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -40,40 +35,28 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ImageUtils;
-import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPViewPagerTransformer;
+import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
+public class MediaPreviewActivity extends AppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
 
-public class MediaPreviewActivity extends AppCompatActivity implements MediaController.MediaPlayerControl {
+    private static final String ARG_ID_LIST = "id_list";
 
-    private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
-    private static final String ARG_IS_VIDEO = "is_video";
-    private static final String ARG_IS_AUDIO = "is_audio";
-    private static final String ARG_POSITION = "position";
-    private static final String ARG_TITLE = "title";
-
+    private int mMediaId;
+    private ArrayList<String> mMediaIdList;
     private String mContentUri;
-    private String mTitle;
-    private boolean mIsVideo;
-    private boolean mIsAudio;
+    private int mLastPosition;
 
     private SiteModel mSite;
 
     private Toolbar mToolbar;
-    private ImageView mImageView;
-    private VideoView mVideoView;
-    private ViewGroup mVideoFrame;
-    private ViewGroup mAudioFrame;
-
-    private MediaPlayer mAudioPlayer;
-    private MediaController mControls;
+    private ViewPager mViewPager;
+    private MediaPagerAdapter mPagerAdapter;
 
     private static final long FADE_DELAY_MS = 3000;
     private final Handler mFadeHandler = new Handler();
@@ -81,19 +64,23 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
 
+    public static class MediaPreviewSwiped {
+        final int mediaId;
+        public MediaPreviewSwiped(int mediaId) {
+            this.mediaId = mediaId;
+        }
+    }
+
     /**
      * @param context     self explanatory
      * @param site        optional site this media is associated with
      * @param contentUri  URI of media - can be local or remote
-     * @param isVideo     whether the passed media is a video - assumed to be an image otherwise
      */
-    public static void showPreview(Context context,
-                                   SiteModel site,
-                                   String contentUri,
-                                   boolean isVideo) {
+    public static void showPreview(@NonNull Context context,
+                                   @Nullable SiteModel site,
+                                   @NonNull String contentUri) {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
-        intent.putExtra(ARG_MEDIA_CONTENT_URI, contentUri);
-        intent.putExtra(ARG_IS_VIDEO, isVideo);
+        intent.putExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, contentUri);
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
         }
@@ -105,20 +92,20 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
      * @param context     self explanatory
      * @param site        optional site this media is associated with
      * @param media       media model
+     * @param mediaIdList optional list of media IDs to page through
      */
-    public static void showPreview(Context context,
-                                   SiteModel site,
-                                   MediaModel media) {
+    public static void showPreview(@NonNull Context context,
+                                   @Nullable SiteModel site,
+                                   @NonNull MediaModel media,
+                                   @Nullable ArrayList<String> mediaIdList) {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
-        intent.putExtra(ARG_MEDIA_CONTENT_URI, media.getUrl());
-        intent.putExtra(ARG_TITLE, media.getTitle());
-        intent.putExtra(ARG_IS_VIDEO, media.isVideo());
-
-        String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-        intent.putExtra(ARG_IS_AUDIO, mimeType.startsWith("audio"));
-
+        intent.putExtra(MediaPreviewFragment.ARG_MEDIA_ID, media.getId());
+        intent.putExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, media.getUrl());
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
+        }
+        if (mediaIdList != null) {
+            intent.putStringArrayListExtra(ARG_ID_LIST, mediaIdList);
         }
 
         startIntent(context, intent);
@@ -138,36 +125,31 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_preview_activity);
-        mImageView = (ImageView) findViewById(R.id.image_preview);
-        mVideoView = (VideoView) findViewById(R.id.video_preview);
 
-        mVideoFrame = (ViewGroup) findViewById(R.id.frame_video);
-        mAudioFrame = (ViewGroup) findViewById(R.id.frame_audio);
-
-        int position;
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mContentUri = savedInstanceState.getString(ARG_MEDIA_CONTENT_URI);
-            mTitle = savedInstanceState.getString(ARG_TITLE);
-            mIsVideo = savedInstanceState.getBoolean(ARG_IS_VIDEO);
-            mIsAudio = savedInstanceState.getBoolean(ARG_IS_AUDIO);
-            position = savedInstanceState.getInt(ARG_POSITION, 0);
+            mMediaId = savedInstanceState.getInt(MediaPreviewFragment.ARG_MEDIA_ID);
+            mContentUri = savedInstanceState.getString(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI);
+            if (savedInstanceState.containsKey(ARG_ID_LIST)) {
+                mMediaIdList = savedInstanceState.getStringArrayList(ARG_ID_LIST);
+            }
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            mContentUri = getIntent().getStringExtra(ARG_MEDIA_CONTENT_URI);
-            mTitle = getIntent().getStringExtra(ARG_TITLE);
-            mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
-            mIsAudio = getIntent().getBooleanExtra(ARG_IS_AUDIO, false);
-            position = 0;
+            mMediaId = getIntent().getIntExtra(MediaPreviewFragment.ARG_MEDIA_ID, 0);
+            mContentUri = getIntent().getStringExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI);
+            if (getIntent().hasExtra(ARG_ID_LIST)) {
+                mMediaIdList = getIntent().getStringArrayListExtra(ARG_ID_LIST);
+            }
         }
 
         if (TextUtils.isEmpty(mContentUri)) {
-            delayedFinish(true);
+            delayedFinish();
             return;
         }
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
+        //noinspection deprecation
         mToolbar.setBackgroundDrawable(new ColorDrawable(toolbarColor));
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -176,69 +158,27 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mImageView.setVisibility(mIsVideo || mIsAudio ? View.GONE : View.VISIBLE);
-        mVideoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
-        mAudioFrame.setVisibility(mIsAudio ? View.VISIBLE : View.GONE);
+        View fragmentContainer = findViewById(R.id.fragment_container);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showToolbar();
-                if (mControls != null) {
-                    mControls.show();
-                }
-            }
-        };
-
-        if (mIsVideo) {
-            mVideoFrame.setOnClickListener(listener);
-            playVideo(mContentUri, position);
-        } else if (mIsAudio) {
-            mAudioFrame.setOnClickListener(listener);
-            if (!TextUtils.isEmpty(mTitle)) {
-                TextView txtAudioTitle = (TextView) findViewById(R.id.text_audio_title);
-                txtAudioTitle.setText(mTitle);
-                txtAudioTitle.setVisibility(View.VISIBLE);
-            }
-            playAudio(mContentUri, position);
+        // use a ViewPager if we're passed a list of media, otherwise show a single fragment
+        if (mMediaIdList != null && mMediaIdList.size() > 1) {
+            fragmentContainer.setVisibility(View.GONE);
+            mViewPager.setVisibility(View.VISIBLE);
+            setupViewPager();
         } else {
-            loadImage(mContentUri);
+            fragmentContainer.setVisibility(View.VISIBLE);
+            mViewPager.setVisibility(View.GONE);
+            showPreviewFragment();
         }
 
         mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
     }
 
     @Override
-    protected void onStop() {
-        if (mControls != null) {
-            mControls.hide();
-        }
-        if (mAudioPlayer != null && mAudioPlayer.isPlaying()) {
-            mAudioPlayer.stop();
-        }
-        if (mVideoView.isPlaying()) {
-            mVideoView.stopPlayback();
-        }
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mAudioPlayer != null) {
-            mAudioPlayer.release();
-            mAudioPlayer = null;
-        }
-        if (mVideoView.isPlaying()) {
-            mVideoView.stopPlayback();
-            mVideoView.setMediaController(null);
-        }
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -253,28 +193,15 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(ARG_MEDIA_CONTENT_URI, mContentUri);
-        outState.putString(ARG_TITLE, mTitle);
-
-        if (mIsVideo) {
-            outState.putBoolean(ARG_IS_VIDEO, true);
-            outState.putInt(ARG_POSITION, mVideoView.getCurrentPosition());
-        } else if (mIsAudio) {
-            outState.putBoolean(ARG_IS_AUDIO, true);
-            if (mAudioPlayer != null) {
-                outState.putInt(ARG_POSITION, mAudioPlayer.getCurrentPosition());
-            }
-        }
-
-        if (mSite != null) {
-            outState.putSerializable(WordPress.SITE, mSite);
+        outState.putInt(MediaPreviewFragment.ARG_MEDIA_ID, mMediaId);
+        outState.putString(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, mContentUri);
+        if (mMediaIdList != null) {
+            outState.putStringArrayList(ARG_ID_LIST, mMediaIdList);
         }
     }
 
-    private void delayedFinish(boolean showError) {
-        if (showError) {
-            ToastUtils.showToast(this, R.string.error_media_not_found);
-        }
+    private void delayedFinish() {
+        ToastUtils.showToast(this, R.string.error_media_not_found);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -283,169 +210,24 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         }, 1500);
     }
 
-    private void showProgress(boolean show) {
-        findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
-    }
-
     /*
-     * loads and displays a remote or local image
+     * shows a single preview fragment within this activity - called when we can't use a ViewPager to swipe
+     * between media (ie: we're previewing a local file)
      */
-    private void loadImage(@NonNull String mediaUri) {
-        int width = DisplayUtils.getDisplayPixelWidth(this);
-        int height = DisplayUtils.getDisplayPixelHeight(this);
-        int size = Math.max(width, height);
-
-        if (mediaUri.startsWith("http")) {
-            showProgress(true);
-            String imageUrl = mediaUri;
-            if (SiteUtils.isPhotonCapable(mSite)) {
-                imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
-            }
-            mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    if (!isFinishing() && response.getBitmap() != null) {
-                        showProgress(false);
-                        setBitmap(response.getBitmap());
-                    }
-                }
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    AppLog.e(AppLog.T.MEDIA, error);
-                    if (!isFinishing()) {
-                        showProgress(false);
-                        delayedFinish(true);
-                    }
-                }
-            }, size, 0);
+    private void showPreviewFragment() {
+        MediaPreviewFragment fragment;
+        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+        if (media != null) {
+            fragment = MediaPreviewFragment.newInstance(mSite, media, true);
         } else {
-            new LocalImageTask(mediaUri, size).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            fragment = MediaPreviewFragment.newInstance(mSite, mContentUri);
         }
-    }
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment, MediaPreviewFragment.TAG)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
 
-    private class LocalImageTask extends AsyncTask<Void, Void, Bitmap> {
-        private final String mMediaUri;
-        private final int mSize;
-
-        LocalImageTask(@NonNull String mediaUri, int size) {
-            mMediaUri = mediaUri;
-            mSize = size;
-        }
-
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            int orientation = ImageUtils.getImageOrientation(MediaPreviewActivity.this, mMediaUri);
-            byte[] bytes = ImageUtils.createThumbnailFromUri(
-                    MediaPreviewActivity.this, Uri.parse(mMediaUri), mSize, null, orientation);
-            if (bytes != null) {
-                return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (isFinishing()) {
-                return;
-            }
-            if (bitmap != null) {
-                setBitmap(bitmap);
-            } else {
-                delayedFinish(true);
-            }
-        }
-    }
-
-    private void setBitmap(@NonNull Bitmap bmp) {
-        // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
-        // for it to be correctly resized upon loading
-        PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
-        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float x, float y) {
-                showToolbar();
-            }
-        });
-        mImageView.setImageBitmap(bmp);
-    }
-
-    /*
-     * initialize the media controls (audio/video only)
-     */
-    private void initControls() {
-        mControls = new MediaController(this);
-        if (mIsVideo) {
-            mControls.setAnchorView(mVideoFrame);
-            mControls.setMediaPlayer(mVideoView);
-        } else if (mIsAudio) {
-            mControls.setAnchorView(mAudioFrame);
-            mControls.setMediaPlayer(this);
-        }
-    }
-
-    private void playVideo(@NonNull String mediaUri, final int position) {
-        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                delayedFinish(false);
-                return false;
-            }
-        });
-
-        showProgress(true);
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                if (!isFinishing()) {
-                    showProgress(false);
-                    mp.start();
-                    if (position > 0) {
-                        mp.seekTo(position);
-                    }
-                    mControls.show();
-                }
-            }
-        });
-
-        initControls();
-        mVideoView.setVideoURI(Uri.parse(mediaUri));
-        mVideoView.requestFocus();
-    }
-
-    private void playAudio(@NonNull String mediaUri, final int position) {
-        mAudioPlayer = new MediaPlayer();
-        mAudioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mAudioPlayer.setDataSource(this, Uri.parse(mediaUri));
-        } catch (Exception e) {
-            AppLog.e(AppLog.T.MEDIA, e);
-            delayedFinish(true);
-        }
-
-        mAudioPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                if (!isFinishing()) {
-                    showProgress(false);
-                    mp.start();
-                    if (position > 0) {
-                        mp.seekTo(position);
-                    }
-                    mControls.show();
-                }
-            }
-        });
-        mAudioPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                delayedFinish(false);
-                return false;
-            }
-        });
-
-        initControls();
-        showProgress(true);
-        mAudioPlayer.prepareAsync();
+        fragment.setOnMediaTappedListener(this);
     }
 
     private final Runnable fadeOutRunnable = new Runnable() {
@@ -485,74 +267,126 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaCont
         }
     }
 
+    private void setupViewPager() {
+        mPagerAdapter = new MediaPagerAdapter(getFragmentManager());
+        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
+
+        // determine the position of the original media item so we can page to it immediately
+        int initialPos = 0;
+        for (int i = 0; i < mMediaIdList.size(); i++) {
+            int thisId = Integer.valueOf(mMediaIdList.get(i));
+            if (thisId == mMediaId) {
+                initialPos = i;
+                break;
+            }
+        }
+        mViewPager.setCurrentItem(initialPos);
+        mPagerAdapter.unpauseFragment(initialPos);
+        mLastPosition = initialPos;
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                // pause the outgoing fragment and unpause the incoming one - this prevents audio/video from
+                // playing in inactive fragments
+                if (mLastPosition != position) {
+                    mPagerAdapter.pauseFragment(mLastPosition);
+                }
+                mPagerAdapter.unpauseFragment(position);
+                mLastPosition = position;
+                mMediaId = Integer.valueOf(mMediaIdList.get(position));
+                // fire event so settings activity shows the same media as this activity (user may have swiped)
+                EventBus.getDefault().post(new MediaPreviewSwiped(mMediaId));
+            }
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // noop
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // noop
+            }
+        });
+    }
+
     /*
-     * MediaController.MediaPlayerControl - for audio playback only
+     * make sure toolbar appears when user taps the media in the fragment
      */
     @Override
-    public void start() {
-        if (mAudioPlayer != null) {
-            mAudioPlayer.start();
+    public void onMediaTapped() {
+        showToolbar();
+    }
+
+    private class MediaPagerAdapter extends FragmentStatePagerAdapter {
+        private final SparseArray<Fragment> mFragmentMap = new SparseArray<>();
+        private boolean mDidAutoPlay;
+
+        public MediaPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            int id = Integer.valueOf(mMediaIdList.get(position));
+            MediaModel media = mMediaStore.getMediaWithLocalId(id);
+
+            // make sure we autoplay the initial item (relevant only for audio/video)
+            boolean autoPlay;
+            if (id == mMediaId && !mDidAutoPlay) {
+                autoPlay = true;
+                mDidAutoPlay = true;
+            } else {
+                autoPlay = false;
+            }
+
+            MediaPreviewFragment fragment = MediaPreviewFragment.newInstance(mSite, media, autoPlay);
+            fragment.setOnMediaTappedListener(MediaPreviewActivity.this);
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return mMediaIdList.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Object item = super.instantiateItem(container, position);
+            if (item instanceof Fragment) {
+                mFragmentMap.put(position, (Fragment) item);
+            }
+            return item;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            mFragmentMap.remove(position);
+            super.destroyItem(container, position, object);
+        }
+
+        private void pauseFragment(int position) {
+            Fragment fragment = mFragmentMap.get(position);
+            if (fragment != null) {
+                ((MediaPreviewFragment) fragment).pauseMedia();
+            }
+        }
+
+        private void unpauseFragment(int position) {
+            Fragment fragment = mFragmentMap.get(position);
+            if (fragment != null) {
+                ((MediaPreviewFragment) fragment).playMedia();
+            }
+        }
+
+        @Override
+        public void restoreState(Parcelable state, ClassLoader loader) {
+            // work around https://code.google.com/p/android/issues/detail?id=42601
+            try {
+                super.restoreState(state, loader);
+            } catch (IllegalStateException e) {
+                AppLog.e(AppLog.T.MEDIA, e);
+            }
         }
     }
-
-    @Override
-    public void pause() {
-        if (mAudioPlayer != null) {
-            mAudioPlayer.pause();
-        }
-    }
-
-    @Override
-    public int getDuration() {
-        if (mAudioPlayer != null) {
-            return mAudioPlayer.getDuration();
-        }
-        return 0;
-    }
-
-    @Override
-    public int getCurrentPosition() {
-        if (mAudioPlayer != null) {
-            return mAudioPlayer.getCurrentPosition();
-        }
-        return 0;
-    }
-
-    @Override
-    public void seekTo(int pos) {
-        if (mAudioPlayer != null) {
-            mAudioPlayer.seekTo(pos);
-        }
-    }
-
-    @Override
-    public boolean isPlaying() {
-        return mAudioPlayer != null && mAudioPlayer.isPlaying();
-    }
-
-    @Override
-    public int getBufferPercentage() {
-        return 0;
-    }
-
-    @Override
-    public boolean canPause() {
-        return true;
-    }
-
-    @Override
-    public boolean canSeekBackward() {
-        return true;
-    }
-
-    @Override
-    public boolean canSeekForward() {
-        return true;
-    }
-
-    @Override
-    public int getAudioSessionId() {
-        return 0;
-    }
-
 }

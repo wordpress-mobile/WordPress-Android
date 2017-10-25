@@ -102,7 +102,6 @@ public class EditPostSettingsFragment extends Fragment {
     private static final int SELECT_LIBRARY_MENU_POSITION = 100;
     private static final int CLEAR_FEATURED_IMAGE_MENU_POSITION = 101;
 
-    private EditPostActivityHook mEditPostActivityHook;
     private SiteSettingsInterface mSiteSettings;
 
     private LinearLayout mCategoriesContainer;
@@ -173,15 +172,25 @@ public class EditPostSettingsFragment extends Fragment {
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSite(),
                 new SiteSettingsListener() {
                     @Override
-                    public void onSettingsUpdated(Exception error) {
+                    public void onSaveError(Exception error) {
+                        // no-op
+                    }
+
+                    @Override
+                    public void onFetchError(Exception error) {
+                        // no-op
+                    }
+
+                    @Override
+                    public void onSettingsUpdated() {
                         // mEditPostActivityHook will be null if the fragment is detached
-                        if (error == null && mEditPostActivityHook != null) {
+                        if (getEditPostActivityHook() != null) {
                             updatePostFormat(mSiteSettings.getDefaultPostFormat());
                         }
                     }
 
                     @Override
-                    public void onSettingsSaved(Exception error) {
+                    public void onSettingsSaved() {
                         // no-op
                     }
 
@@ -194,23 +203,6 @@ public class EditPostSettingsFragment extends Fragment {
             // init will fetch remote settings for us
             mSiteSettings.init(true);
         }
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof EditPostActivityHook) {
-            mEditPostActivityHook = (EditPostActivityHook) activity;
-        } else {
-            throw new RuntimeException(activity.toString() + " must implement PostSettingsListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mEditPostActivityHook = null;
     }
 
     @Override
@@ -626,19 +618,32 @@ public class EditPostSettingsFragment extends Fragment {
     // Helpers
 
     private PostModel getPost() {
-        if (mEditPostActivityHook == null) {
+        if (getEditPostActivityHook() == null) {
             // This can only happen during a callback while activity is re-created for some reason (config changes etc)
             return null;
         }
-        return mEditPostActivityHook.getPost();
+        return getEditPostActivityHook().getPost();
     }
 
     private SiteModel getSite() {
-        if (mEditPostActivityHook == null) {
+        if (getEditPostActivityHook() == null) {
             // This can only happen during a callback while activity is re-created for some reason (config changes etc)
             return null;
         }
-        return mEditPostActivityHook.getSite();
+        return getEditPostActivityHook().getSite();
+    }
+
+    private EditPostActivityHook getEditPostActivityHook() {
+        Activity activity = getActivity();
+        if (activity == null) {
+            return null;
+        }
+
+        if (activity instanceof EditPostActivityHook) {
+            return (EditPostActivityHook) activity;
+        } else {
+            throw new RuntimeException(activity.toString() + " must implement EditPostActivityHook");
+        }
     }
 
     private void updateSaveButton() {

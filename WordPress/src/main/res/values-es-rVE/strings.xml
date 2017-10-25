@@ -404,9 +404,7 @@ Language: es_VE
 	<string name="invalid_username_no_spaces">El nombre de usuario no puede tener espacios</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Los sitios que estás siguiendo no han publicado nada recientemente</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">No hay entradas recientes</string>
-	<string name="media_details_copy_url_toast">URL copiada al portapapeles</string>
 	<string name="edit_media">Editar multimedia</string>
-	<string name="media_details_copy_url">Copiar URL</string>
 	<string name="media_details_label_date_uploaded">Subido</string>
 	<string name="media_details_label_date_added">Añadido</string>
 	<string name="selected_theme">Tema seleccionado</string>
@@ -666,7 +664,6 @@ Language: es_VE
 	<string name="delete_sure_page">Eliminar esta página</string>
 	<string name="delete_sure_post">Eliminar esta entrada</string>
 	<string name="confirm_delete_multi_media">¿Quieres eliminar los elementos seleccionados?</string>
-	<string name="confirm_delete_media">¿Quieres eliminar el elemento seleccionado?</string>
 	<string name="cab_selected">%d seleccionados</string>
 	<string name="nux_help_description">Visita el centro de ayuda para obtener respuestas a las preguntas habituales o visita los foros para hacer preguntas nuevas.</string>
 	<string name="reader_label_view_original">Ver artículo original</string>

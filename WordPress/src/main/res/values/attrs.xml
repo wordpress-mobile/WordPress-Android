@@ -26,6 +26,12 @@
         <attr name="buttonTextAllCaps" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="LearnMorePreference">
+        <attr name="url" format="string" />
+        <attr name="caption" format="string" />
+        <attr name="useCustomJsFormatting" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="FlowLayout">
         <attr name="horizontalSpacing" format="dimension" />
         <attr name="verticalSpacing" format="dimension" />

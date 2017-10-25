@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.provider.ContactsContract;
@@ -42,6 +43,7 @@ import android.widget.NumberPicker.Formatter;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.helpshift.network.util.InetAddressUtils;
 import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -49,6 +51,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -72,6 +75,7 @@ import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -94,7 +98,6 @@ public class SiteSettingsFragment extends PreferenceFragment
      * is set to this value and {@link Activity#finish()} is invoked.
      */
     public static final int RESULT_BLOG_REMOVED = Activity.RESULT_FIRST_USER;
-
 
     /**
      * Provides the regex to identify domain HTTP(S) protocol and/or 'www' sub-domain.
@@ -193,6 +196,17 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mExportSitePref;
     private Preference mDeleteSitePref;
 
+    // Jetpack settings
+    private PreferenceScreen mJpSecuritySettings;
+    private WPSwitchPreference mJpMonitorActivePref;
+    private WPSwitchPreference mJpMonitorEmailNotesPref;
+    private WPSwitchPreference mJpMonitorWpNotesPref;
+    private WPSwitchPreference mJpBruteForcePref;
+    private WPPreference mJpWhitelistPref;
+    private WPSwitchPreference mJpSsoPref;
+    private WPSwitchPreference mJpMatchEmailPref;
+    private WPSwitchPreference mJpUseTwoFactorPref;
+
     public boolean mEditingEnabled = true;
 
     // Reference to the state of the fragment
@@ -248,6 +262,22 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     public void addPreferencesFromResource() {
         addPreferencesFromResource(R.xml.site_settings);
+
+        // add Disconnect option for Jetpack sites when running a debug build
+        if (shouldShowDisconnect()) {
+            PreferenceCategory parent = (PreferenceCategory) findPreference(getString(R.string.pref_key_site_discussion));
+            Preference disconnectPref = new Preference(getActivity());
+            disconnectPref.setTitle(getString(R.string.jetpack_disconnect_pref_title));
+            disconnectPref.setKey(getString(R.string.pref_key_site_disconnect));
+            disconnectPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    disconnectFromJetpack();
+                    return true;
+                }
+            });
+            parent.addPreference(disconnectPref);
+        }
     }
 
     @Override
@@ -287,6 +317,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onDestroyView() {
         removeMoreScreenToolbar();
+        removeJetpackSecurityScreenToolbar();
         super.onDestroyView();
     }
 
@@ -364,15 +395,20 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         removeMoreScreenToolbar();
+        removeJetpackSecurityScreenToolbar();
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         setupMorePreferenceScreen();
+        setupJetpackSecurityScreen();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) setupMorePreferenceScreen();
+        if (savedInstanceState != null) {
+            setupMorePreferenceScreen();
+            setupJetpackSecurityScreen();
+        }
     }
 
     @Override
@@ -404,6 +440,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                     AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED_MORE_SETTINGS, mSite);
 
             return setupMorePreferenceScreen();
+        } else if (preference == mJpSecuritySettings) {
+            setupJetpackSecurityScreen();
         } else if (preference == findPreference(getString(R.string.pref_key_site_start_over_screen))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (mSite == null || dialog == null) return false;
@@ -438,6 +476,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             mEditingList = mSiteSettings.getBlacklistKeys();
             showListEditorDialog(R.string.site_settings_blacklist_title,
                     R.string.site_settings_blacklist_description);
+        } else if (preference == mJpWhitelistPref) {
+            mEditingList = mSiteSettings.getJetpackWhitelistKeys();
+            showListEditorDialog(R.string.jetpack_brute_force_whitelist_title,
+                    R.string.site_settings_jetpack_whitelist_description);
         } else if (preference == mStartOverPref) {
             handleStartOver();
         } else if (preference == mCloseAfterPref) {
@@ -460,11 +502,62 @@ public class SiteSettingsFragment extends PreferenceFragment
         return true;
     }
 
+    private void disconnectFromJetpack() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.jetpack_disconnect_confirmation_message);
+        builder.setPositiveButton(R.string.jetpack_disconnect_confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String url = String.format(Locale.US, "jetpack-blogs/%d/mine/delete", mSite.getSiteId());
+                        WordPress.getRestClientUtilsV1_1().post(url, new RestRequest.Listener() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                AppLog.v(AppLog.T.API, "Successfully disconnected Jetpack site");
+                                ToastUtils.showToast(getActivity(), R.string.jetpack_disconnect_success_toast);
+                                mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
+                                mSite = null;
+                            }
+                        }, new RestRequest.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                AppLog.e(AppLog.T.API, "Error disconnecting Jetpack site");
+                                ToastUtils.showToast(getActivity(), R.string.jetpack_disconnect_error_toast);
+                            }
+                        });
+                    }
+                });
+        builder.setNegativeButton(android.R.string.cancel, null);
+        builder.show();
+    }
+
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (newValue == null || !mEditingEnabled) return false;
 
-        if (preference == mTitlePref) {
+        if (preference == mJpWhitelistPref) {
+            mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
+        } else if (preference == mJpMonitorActivePref) {
+            mJpMonitorActivePref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackMonitor((Boolean) newValue);
+        } else if (preference == mJpMonitorEmailNotesPref) {
+            mJpMonitorEmailNotesPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackMonitorEmailNotifications((Boolean) newValue);
+        } else if (preference == mJpMonitorWpNotesPref) {
+            mJpMonitorWpNotesPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackMonitorWpNotifications((Boolean) newValue);
+        } else if (preference == mJpBruteForcePref) {
+            mJpBruteForcePref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackProtect((Boolean) newValue);
+        } else if (preference == mJpSsoPref) {
+            mJpSsoPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackSso((Boolean) newValue);
+        } else if (preference == mJpMatchEmailPref) {
+            mJpMatchEmailPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackSsoMatchEmail((Boolean) newValue);
+        } else if (preference == mJpUseTwoFactorPref) {
+            mJpUseTwoFactorPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackSsoTwoFactor((Boolean) newValue);
+        } else if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
             changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         } else if (preference == mTaglinePref) {
@@ -579,30 +672,34 @@ public class SiteSettingsFragment extends PreferenceFragment
             onPreferenceChange(mModerationHoldPref, mEditingList.size());
         } else if (mEditingList == mSiteSettings.getBlacklistKeys()) {
             onPreferenceChange(mBlacklistPref, mEditingList.size());
+        } else if (mEditingList == mSiteSettings.getJetpackWhitelistKeys()) {
+            onPreferenceChange(mJpWhitelistPref, mEditingList.size());
         }
         mEditingList = null;
     }
 
     @Override
-    public void onSettingsUpdated(Exception error) {
-        if (error != null) {
-            ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
-            getActivity().finish();
-            return;
-        }
-
-        if (isAdded()) setPreferencesFromSiteSettings();
+    public void onSaveError(Exception error) {
+        ToastUtils.showToast(getActivity(), R.string.error_post_remote_site_settings);
+        getActivity().finish();
     }
 
     @Override
-    public void onSettingsSaved(Exception error) {
-        if (error != null) {
-            ToastUtils.showToast(WordPress.getContext(), R.string.error_post_remote_site_settings);
-            return;
+    public void onFetchError(Exception error) {
+        ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
+        getActivity().finish();
+    }
+
+    @Override
+    public void onSettingsUpdated() {
+        if (isAdded()) {
+            setPreferencesFromSiteSettings();
         }
+    }
 
+    @Override
+    public void onSettingsSaved() {
         mSite.setName(mSiteSettings.getTitle());
-
         // Locally save the site
         mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
     }
@@ -665,6 +762,15 @@ public class SiteSettingsFragment extends PreferenceFragment
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
+        mJpSecuritySettings = (PreferenceScreen) getClickPref(R.string.pref_key_jetpack_security_screen);
+        mJpMonitorActivePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_monitor_uptime);
+        mJpMonitorEmailNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_email_notifications);
+        mJpMonitorWpNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_wp_notifications);
+        mJpSsoPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_allow_wpcom_sign_in);
+        mJpBruteForcePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_prevent_brute_force);
+        mJpMatchEmailPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_match_via_email);
+        mJpUseTwoFactorPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_require_two_factor);
+        mJpWhitelistPref = (WPPreference) getClickPref(R.string.pref_key_jetpack_brute_force_whitelist);
 
         sortLanguages();
 
@@ -690,7 +796,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     public void setEditingEnabled(boolean enabled) {
-        // excludes mAddressPref, mMorePreference
+        // excludes mAddressPref, mMorePreference, mJpSecuritySettings
         final Preference[] editablePreference = {
                 mTitlePref , mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
                 mPasswordPref, mCategoryPref, mFormatPref, mAllowCommentsPref,
@@ -698,7 +804,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref,
-                mDeleteSitePref
+                mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
+                mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref
         };
 
         for (Preference preference : editablePreference) {
@@ -952,6 +1059,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
         mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
         mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        mJpMonitorActivePref.setChecked(mSiteSettings.isJetpackMonitorEnabled());
+        mJpMonitorEmailNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorEmailNotifications());
+        mJpMonitorWpNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorWpNotifications());
+        mJpBruteForcePref.setChecked(mSiteSettings.isJetpackProtectEnabled());
+        mJpSsoPref.setChecked(mSiteSettings.isJetpackSsoEnabled());
+        mJpMatchEmailPref.setChecked(mSiteSettings.isJetpackSsoMatchEmailEnabled());
+        mJpUseTwoFactorPref.setChecked(mSiteSettings.isJetpackSsoTwoFactorEnabled());
+        mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
     }
 
     private void setCategories() {
@@ -1187,6 +1302,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                     public void onClick(DialogInterface dialog, int which) {
                         String entry = input.getText().toString();
                         if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
+                            // don't modify mEditingList if it's not a reference to the JP whitelist keys
+                            if (mEditingList == mSiteSettings.getJetpackWhitelistKeys() && !isValidIpOrRange(entry)) {
+                                ToastUtils.showToast(getActivity(), R.string.invalid_ip_or_range);
+                                return;
+                            }
+
                             mEditingList.add(entry);
                             getAdapter().notifyItemInserted(getAdapter().getItemCount() - 1);
                             list.post(
@@ -1226,8 +1347,48 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
+    /**
+     * Verifies that a given string can correctly be interpreted as an IP address or an IP range.
+     */
+    private boolean isValidIpOrRange(String entry) {
+        // empty strings are not valid
+        if (TextUtils.isEmpty(entry)) {
+            return false;
+        }
+
+        // remove whitespace
+        entry = entry.replaceAll("\\s", "");
+
+        // if entry is a range it will be formatted as two IP addresses separated by a '-'
+        String[] ipStrings = entry.split("-");
+
+        // entry is not well-formed if there are more than 2 ipStrings (a range) or no ipStrings
+        if (ipStrings.length > 2 || ipStrings.length < 1) {
+            return false;
+        }
+
+        // if any IP string is not a valid IP address then entry is not valid
+        for (String ip : ipStrings) {
+            if (!InetAddressUtils.isIPv4Address(ip)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public boolean shouldShowListPreference(DetailListPreference preference) {
         return preference != null && preference.getEntries() != null && preference.getEntries().length > 0;
+    }
+
+    private void setupJetpackSecurityScreen() {
+        if (mJpSecuritySettings == null || !isAdded()) return;
+        String title = getString(R.string.jetpack_security_setting_title);
+        Dialog dialog = mJpSecuritySettings.getDialog();
+        if (dialog != null) {
+            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+        }
     }
 
     private boolean setupMorePreferenceScreen() {
@@ -1246,6 +1407,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mMorePreference == null || !isAdded()) return;
         Dialog moreDialog = mMorePreference.getDialog();
         WPActivityUtils.removeToolbarFromDialog(this, moreDialog);
+    }
+
+    private void removeJetpackSecurityScreenToolbar() {
+        if (mJpSecuritySettings == null || !isAdded()) return;
+        Dialog securityDialog = mJpSecuritySettings.getDialog();
+        WPActivityUtils.removeToolbarFromDialog(this, securityDialog);
     }
 
     private void hideAdminRequiredPreferences() {
@@ -1284,6 +1451,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void removeNonDotComPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
     }
 
     private Preference getChangePref(int id) {
@@ -1440,5 +1608,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             );
             return true;
         }
+    }
+
+    /** Show Disconnect button for development purposes. Only available in debug builds on Jetpack sites. */
+    private boolean shouldShowDisconnect() {
+        return BuildConfig.DEBUG && mSite.isJetpackConnected() && mSite.isUsingWpComRestApi();
     }
 }
