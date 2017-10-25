@@ -205,10 +205,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private boolean canPublishPost(PostModel post) {
-        // TODO remove the hasMediaErrorForPost(post) check when we get a proper retry mechanism in place,
-        // that retried to upload any failed media along with the post
         return post != null && !UploadService.isPostUploadingOrQueued(post) &&
-                !UploadUtils.isMediaError(mUploadStore.getUploadErrorForPost(post)) &&
                 (post.isLocallyChanged() || post.isLocalDraft() || PostStatus.fromPost(post) == PostStatus.DRAFT);
     }
 
