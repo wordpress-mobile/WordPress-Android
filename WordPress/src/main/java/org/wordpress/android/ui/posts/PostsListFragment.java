@@ -751,7 +751,7 @@ public class PostsListFragment extends Fragment
         else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), true,
-                    event.mediaModelList, event.errorMessage);
+                    event.mediaModelList, mSite, event.errorMessage);
         }
     }
 
@@ -760,7 +760,7 @@ public class PostsListFragment extends Fragment
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), false,
-                    event.mediaModelList, event.successMessage);
+                    event.mediaModelList, mSite, event.successMessage);
         }
     }
 

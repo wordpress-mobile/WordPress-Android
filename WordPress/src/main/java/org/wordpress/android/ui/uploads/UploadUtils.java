@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -202,6 +203,14 @@ public class UploadUtils {
                 .show();
     }
 
+    private static void showSnackbarSuccessAction(View view, String messageRes, int buttonTitleRes,
+                                                  View.OnClickListener onClickListener) {
+        Snackbar.make(view, messageRes, 5000)
+                .setAction(buttonTitleRes, onClickListener).
+                setActionTextColor(view.getResources().getColor(R.color.blue_medium))
+                .show();
+    }
+
     private static void showSnackbar(View view, int messageRes) {
         Snackbar.make(view,
                 messageRes, Snackbar.LENGTH_LONG).show();
@@ -290,13 +299,13 @@ public class UploadUtils {
 
     public static void onMediaUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
                                                      boolean isError,
-                                                     final List<MediaModel> mediaList,
-                                                     final String errorMessage) {
+                                                     final List<MediaModel> mediaList, final SiteModel site,
+                                                     final String messageForUser) {
         if (isError) {
-            if (errorMessage != null) {
+            if (messageForUser != null) {
                 // RETRY only available for Aztec
                 if (mediaList != null && !mediaList.isEmpty()) {
-                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry, new View.OnClickListener() {
+                    UploadUtils.showSnackbarError(snackbarAttachView, messageForUser, R.string.retry, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
@@ -306,22 +315,34 @@ public class UploadUtils {
                         }
                     });
                 } else {
-                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage);
+                    UploadUtils.showSnackbarError(snackbarAttachView, messageForUser);
                 }
             } else {
                 UploadUtils.showSnackbarError(snackbarAttachView, activity.getString(R.string.error_media_upload));
             }
         } else {
-            // TODO implement success snackbar for media only items (i.e. WRITE POST functtionality)
-//            int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
-//            UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes,
-//                    R.string.button_view, new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            // jump to Editor Preview mode to show this Post
-//                            ActivityLauncher.browsePostOrPage(activity, site, post);
-//                        }
-//                    });
+            if (mediaList == null || mediaList.isEmpty()) {
+                return;
+            }
+
+            // show success snackbar for media only items and offer the WRITE POST functionality)
+            UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageForUser,
+                    R.string.media_files_uploaded_write_post, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // WRITE POST functionality: show pre-populated Post
+                            ArrayList<MediaModel> mediaListToInsertInPost = new ArrayList<>();
+                            mediaListToInsertInPost.addAll(mediaList);
+
+                            Intent writePostIntent = new Intent(activity, EditPostActivity.class);
+                            writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            writePostIntent.putExtra(WordPress.SITE, site);
+                            writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+                            writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
+                            activity.startActivity(writePostIntent);
+                        }
+                    });
         }
     }
 
