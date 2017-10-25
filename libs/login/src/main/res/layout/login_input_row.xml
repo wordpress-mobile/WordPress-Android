@@ -15,7 +15,7 @@
         android:tint="@color/grey_lighten_10"
         app:srcCompat="@drawable/ic_user_grey_24dp"/>
 
-    <org.wordpress.android.login.widgets.WPTextInputLayout
+    <org.wordpress.android.util.widgets.WPTextInputLayout
         app:theme="@style/LoginTheme.EditText"
         android:id="@+id/input_layout"
         android:layout_width="match_parent"
@@ -32,5 +32,5 @@
             android:layout_marginRight="@dimen/textinputlayout_correction_margin_right"
             android:layout_marginEnd="@dimen/textinputlayout_correction_margin_right"
             android:hint="@string/email_address"/>
-    </org.wordpress.android.login.widgets.WPTextInputLayout>
+    </org.wordpress.android.util.widgets.WPTextInputLayout>
 </RelativeLayout>
