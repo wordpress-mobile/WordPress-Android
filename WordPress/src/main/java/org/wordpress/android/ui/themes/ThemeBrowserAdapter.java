@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.wellsql.generated.ThemeModelTable;
 
 import org.wordpress.android.R;
+import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -256,7 +257,9 @@ class ThemeBrowserAdapter extends CursorAdapter {
     }
 
     private boolean isCurrentTheme(String themeId) {
-        return mCallback.getCurrentTheme() != null && mCallback.getCurrentTheme().getThemeId().equals(themeId);
+        ThemeModel theme = mCallback.getCurrentTheme();
+        return !(themeId == null || theme == null || theme.getThemeId() == null) &&
+                theme.getThemeId().replace("-wpcom", "").equals(themeId.replace("-wpcom", ""));
     }
 
     private int getItemViewType(Cursor cursor) {
