@@ -76,7 +76,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
 
         switch (type) {
             case PREVIEW:
-                return String.format(THEME_URL_PREVIEW, homeURL, domain, theme.getId());
+                return String.format(THEME_URL_PREVIEW, homeURL, domain, theme.getThemeId());
             case DEMO:
                 String url = theme.getDemoUrl();
                 if (url.contains("?")) {
@@ -86,9 +86,9 @@ public class ThemeWebActivity extends WPWebViewActivity {
                 }
             case DETAILS:
                 String currentURL = homeURL.replaceFirst(THEME_HTTPS_PREFIX, "");
-                return String.format(THEME_URL_DETAILS, currentURL, theme.getId());
+                return String.format(THEME_URL_DETAILS, currentURL, theme.getThemeId());
             case SUPPORT:
-                return String.format(THEME_URL_SUPPORT, theme.getId());
+                return String.format(THEME_URL_SUPPORT, theme.getThemeId());
             default:
                 return "";
         }
