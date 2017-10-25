@@ -202,7 +202,7 @@ public class UploadService extends Service {
 
             // cancel any outstanding "end" notification for this Post before we start processing it again
             // i.e. dismiss success or error notification for the post.
-            mPostUploadNotifier.cancelFinalNotification(post);
+            mPostUploadNotifier.cancelFinalNotification(this, post);
 
             // if the user tapped on the PUBLISH quick action, make this Post publishable and track
             // analytics before starting the upload process.
@@ -242,11 +242,11 @@ public class UploadService extends Service {
         }
     }
 
-    public static void cancelFinalNotification(PostModel post){
+    public static void cancelFinalNotification(Context context, PostModel post){
         // cancel any outstanding "end" notification for this Post before we start processing it again
         // i.e. dismiss success or error notification for the post.
         if (sInstance != null && sInstance.mPostUploadNotifier != null) {
-            sInstance.mPostUploadNotifier.cancelFinalNotification(post);
+            sInstance.mPostUploadNotifier.cancelFinalNotification(context, post);
         }
     }
 
@@ -366,8 +366,13 @@ public class UploadService extends Service {
         return sInstance != null && post != null && PostUploadHandler.isPostUploading(post);
     }
 
-    public static void cancelQueuedPostUploadAndRelatedMedia(PostModel post) {
+    public static void cancelQueuedPostUploadAndRelatedMedia(Context context, PostModel post) {
         if (post != null) {
+            PostUploadNotifier.cancelFinalNotification(context, post);
+            if (sInstance != null) {
+                sInstance.mPostUploadNotifier.removePostInfoFromForegroundNotification(
+                        post, sInstance.mMediaStore.getMediaForPost(post));
+            }
             cancelQueuedPostUpload(post);
             EventBus.getDefault().post(new PostEvents.PostMediaCanceled(post));
         }
