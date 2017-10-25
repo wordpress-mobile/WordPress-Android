@@ -150,19 +150,10 @@ public class PhotoPickerFragment extends Fragment {
             }
         });
 
-<<<<<<< HEAD
         // choosing from WP media requires a site
         View wpMedia = mBottomBar.findViewById(R.id.icon_wpmedia);
         if (mSite == null) {
             wpMedia.setVisibility(View.GONE);
-=======
-        mSoftAskContainer = (ViewGroup) view.findViewById(R.id.container_soft_ask);
-
-        // no WP media when choosing a single image
-        View wpMediaIcon = mBottomBar.findViewById(R.id.icon_wpmedia);
-        if (mBrowserType.isSingleImagePicker()) {
-            wpMediaIcon.setVisibility(View.GONE);
->>>>>>> ed163f759e471b492cfc0cc478e16a8ed9b9eaf4
         } else {
             wpMedia.setOnClickListener(new View.OnClickListener() {
                 @Override

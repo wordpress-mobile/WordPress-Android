@@ -477,11 +477,7 @@ public class MeFragment extends Fragment {
     }
 
     private void showPhotoPickerForGravatar() {
-<<<<<<< HEAD
-        ActivityLauncher.showPhotoPickerForResult(getActivity(), null);
-=======
-        ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.GRAVATAR_IMAGE_PICKER);
->>>>>>> ed163f759e471b492cfc0cc478e16a8ed9b9eaf4
+        ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.GRAVATAR_IMAGE_PICKER, null);
     }
 
     private void startCropActivity(Uri uri) {
