@@ -81,9 +81,9 @@ public class ActivityLauncher {
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
     }
 
-    public static void showPhotoPickerForResult(Activity activity) {
+    public static void showPhotoPickerForResult(Activity activity, @NonNull MediaBrowserType browserType) {
         Intent intent = new Intent(activity, PhotoPickerActivity.class);
-        intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_IMAGE_PICKER);
+        intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
