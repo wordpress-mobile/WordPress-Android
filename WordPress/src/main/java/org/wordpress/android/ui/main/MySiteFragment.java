@@ -508,6 +508,11 @@ public class MySiteFragment extends Fragment
                         event.post, event.errorMessage, site, mDispatcher);
             }
         }
+        else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), true,
+                    event.mediaModelList, event.errorMessage);
+        }
     }
 
 

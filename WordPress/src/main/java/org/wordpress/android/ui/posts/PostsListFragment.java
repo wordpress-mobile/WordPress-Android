@@ -744,7 +744,14 @@ public class PostsListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
-        UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                getActivity().findViewById(R.id.coordinator), true, event.post, event.errorMessage, mSite, mDispatcher);
+        if (event.post != null) {
+            UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), true, event.post, event.errorMessage, mSite, mDispatcher);
+        }
+        else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), true,
+                    event.mediaModelList, event.errorMessage);
+        }
     }
 }

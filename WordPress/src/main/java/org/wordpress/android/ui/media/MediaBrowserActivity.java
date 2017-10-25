@@ -64,6 +64,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -86,6 +87,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * The main activity in which the user can browse their media.
@@ -309,6 +312,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         super.onStart();
         registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         mDispatcher.register(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -331,6 +335,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onStop() {
+        EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
         mDispatcher.unregister(this);
         super.onStop();
@@ -654,23 +659,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
-        if (event.isError()) {
-            AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
-                    + " - " + event.error.message);
-            String errorMessage = WPMediaUtils.getErrorMessage(this, event.media, event.error);
-            if (errorMessage != null) {
-                ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
-            } else {
-                showMediaToastError(R.string.media_upload_error, event.error.message);
-            }
-        } else if (event.completed) {
-            String title = "";
-            if (event.media != null) {
-                title = event.media.getTitle();
-            }
-            AppLog.d(AppLog.T.MEDIA, "<" + title + "> upload complete");
-        }
-
         if (event.media != null) {
             updateMediaGridItem(event.media, event.isError());
         } else {
@@ -1070,4 +1058,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mMediaGridFragment.reload();
         }
     }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadErrorEvent event) {
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(this,
+                    findViewById(R.id.tab_layout), true,
+                    event.mediaModelList, event.errorMessage);
+        }
+    }
+
 }

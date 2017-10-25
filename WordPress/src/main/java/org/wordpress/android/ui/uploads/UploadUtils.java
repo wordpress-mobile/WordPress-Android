@@ -26,6 +26,9 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UploadUtils {
     /**
      * Returns a post-type specific error message string.
@@ -284,4 +287,42 @@ public class UploadUtils {
             }
         }
     }
+
+    public static void onMediaUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
+                                                     boolean isError,
+                                                     final List<MediaModel> mediaList,
+                                                     final String errorMessage) {
+        if (isError) {
+            if (errorMessage != null) {
+                // RETRY only available for Aztec
+                if (mediaList != null && !mediaList.isEmpty()) {
+                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
+                            mediaListToRetry.addAll(mediaList);
+                            Intent retryIntent = UploadService.getUploadMediaServiceIntent(activity, mediaListToRetry, true);
+                            activity.startService(retryIntent);
+                        }
+                    });
+                } else {
+                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage);
+                }
+            } else {
+                UploadUtils.showSnackbarError(snackbarAttachView, activity.getString(R.string.error_media_upload));
+            }
+        } else {
+            // TODO implement success snackbar for media only items (i.e. WRITE POST functtionality)
+//            int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
+//            UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes,
+//                    R.string.button_view, new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            // jump to Editor Preview mode to show this Post
+//                            ActivityLauncher.browsePostOrPage(activity, site, post);
+//                        }
+//                    });
+        }
+    }
+
 }

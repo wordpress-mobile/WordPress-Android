@@ -51,6 +51,7 @@ public class UploadService extends Service {
     private static final String KEY_SHOULD_PUBLISH = "shouldPublish";
     private static final String KEY_SHOULD_RETRY = "shouldRetry";
     private static final String KEY_MEDIA_LIST = "mediaList";
+    private static final String KEY_UPLOAD_MEDIA_FROM_EDITOR = "mediaFromEditor";
     private static final String KEY_LOCAL_POST_ID = "localPostId";
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
 
@@ -165,6 +166,14 @@ public class UploadService extends Service {
 //            }
 //        }
 
+        if (!intent.getBooleanExtra(KEY_UPLOAD_MEDIA_FROM_EDITOR, false)) {
+            // only cancel the media error notification if we're triggering a new media pload
+            // either from Media Browser or a RETRY from a notification.
+            // Otherwise, this flag should be true, and we need to keep the error notification as
+            // it might be a separate action (user is editing a Post and including media there)
+            mPostUploadNotifier.cancelFinalNotificationForMedia();
+        }
+
         // add new media
         @SuppressWarnings("unchecked")
         List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(KEY_MEDIA_LIST);
@@ -262,6 +271,14 @@ public class UploadService extends Service {
         return intent;
     }
 
+    public static Intent getUploadMediaServiceIntent(Context context, @NonNull ArrayList<MediaModel> mediaList,
+                                                     boolean isRetry) {
+        Intent intent = new Intent(context, UploadService.class);
+        intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
+        intent.putExtra(KEY_SHOULD_RETRY, isRetry);
+        return intent;
+    }
+
     /**
      * Adds a post to the queue.
      */
@@ -295,6 +312,17 @@ public class UploadService extends Service {
 
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
+        context.startService(intent);
+    }
+
+    public static void uploadMediaFromEditor(Context context, @NonNull ArrayList<MediaModel> mediaList) {
+        if (context == null) {
+            return;
+        }
+
+        Intent intent = new Intent(context, UploadService.class);
+        intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
+        intent.putExtra(UploadService.KEY_UPLOAD_MEDIA_FROM_EDITOR, true);
         context.startService(intent);
     }
 
@@ -556,7 +584,7 @@ public class UploadService extends Service {
             // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
             // the user actively cancelled it. No need to show an error then.
             String message = UploadUtils.getErrorMessage(this, postToCancel, errorMessage, true);
-            mPostUploadNotifier.updateNotificationError(postToCancel, site, message);
+            mPostUploadNotifier.updateNotificationErrorForPost(postToCancel, site, message);
         }
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
@@ -567,7 +595,7 @@ public class UploadService extends Service {
     private void rebuildNotificationError(PostModel post, String errorMessage) {
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         mPostUploadNotifier.setTotalMediaItems(post, failedMedia.size());
-        mPostUploadNotifier.updateNotificationError(post,
+        mPostUploadNotifier.updateNotificationErrorForPost(post,
                 mSiteStore.getSiteByLocalId(post.getLocalSiteId()), errorMessage);
 
     }
@@ -620,6 +648,27 @@ public class UploadService extends Service {
                         + event.error.type + ": " + event.error.message);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
                 cancelPostUploadMatchingMedia(event.media, errorMessage, true);
+            } else {
+                // this media item doesn't belong to a Post
+                mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotification(event.media.getId());
+                // Only show the media upload error notification if the post is NOT registered in the UploadStore
+                // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
+                // the user actively cancelled it. No need to show an error then.
+                String message = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
+
+                int siteLocalId = AppPrefs.getSelectedSite();
+                SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+
+                List<MediaModel> failedStandAloneMedia = getRetriableStandaloneMedia(selectedSite);
+                if (failedStandAloneMedia.isEmpty()) {
+                    // if we couldn't get the failed media from the MediaStore, at least we know
+                    // for sure we're handling the event for this specific media item, so throw an error
+                    // notification for this particular media item travelling in event.media
+                    failedStandAloneMedia.add(event.media);
+                }
+
+                mPostUploadNotifier.updateNotificationErrorForMedia(failedStandAloneMedia,
+                        selectedSite,message);
             }
             stopServiceIfUploadsComplete();
             return;
@@ -668,6 +717,25 @@ public class UploadService extends Service {
         }
     }
 
+    private List<MediaModel> getRetriableStandaloneMedia(SiteModel selectedSite) {
+        // get all retriable media ? To retry or not to retry, that is the question
+        List<MediaModel> failedMedia = null;
+        List<MediaModel> failedStandAloneMedia = new ArrayList<>();
+        if (selectedSite != null) {
+            failedMedia = mMediaStore.getSiteMediaWithState(
+                    selectedSite, MediaModel.MediaUploadState.FAILED);
+        }
+
+        // only take into account those media items that do not belong to any Post
+        for (MediaModel media: failedMedia) {
+            if (media.getLocalPostId() == 0) {
+                failedStandAloneMedia.add(media);
+            }
+        }
+
+        return failedStandAloneMedia;
+    }
+
     /**
      * Has lower priority than the PostUploadHandler, which ensures that the handler has already received and
      * processed this OnPostUploaded event. This means we can safely rely on its internal state being up to date.
@@ -680,10 +748,18 @@ public class UploadService extends Service {
 
     public static class UploadErrorEvent {
         public final PostModel post;
+        public final List<MediaModel> mediaModelList;
         public final String errorMessage;
 
         UploadErrorEvent(PostModel post, String errorMessage) {
             this.post = post;
+            this.mediaModelList = null;
+            this.errorMessage = errorMessage;
+        }
+
+        UploadErrorEvent(List<MediaModel> mediaModelList, String errorMessage) {
+            this.post = null;
+            this.mediaModelList = mediaModelList;
             this.errorMessage = errorMessage;
         }
     }

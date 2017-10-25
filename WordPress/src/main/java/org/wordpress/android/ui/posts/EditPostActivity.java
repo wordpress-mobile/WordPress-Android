@@ -2283,7 +2283,7 @@ public class EditPostActivity extends AppCompatActivity implements
         savePostAsync(new AfterSavePostListener() {
             @Override
             public void onPostSave() {
-                UploadService.uploadMedia(EditPostActivity.this, mediaList);
+                UploadService.uploadMediaFromEditor(EditPostActivity.this, mediaList);
             }
         });
     }
