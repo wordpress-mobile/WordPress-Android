@@ -279,6 +279,17 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onThemeInstalled(ThemeStore.OnThemeInstalled event) {
+        if (event.isError()) {
+            AppLog.e(T.THEMES, "Error installing theme: " + event.error.message);
+        } else {
+            AppLog.d(T.THEMES, "Theme installation successful! Installed theme: " + event.theme.getName());
+            activateTheme(event.theme.getThemeId());
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemeActivated(ThemeStore.OnThemeActivated event) {
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error activating theme: " + event.error.message);
@@ -331,7 +342,13 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         ThemeModel theme = new ThemeModel();
         theme.setThemeId(themeId);
         ThemeStore.ActivateThemePayload payload = new ThemeStore.ActivateThemePayload(mSite, theme);
-        mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(payload));
+
+        if (mSite.isJetpackConnected() && mThemeStore.getInstalledThemeByThemeId(themeId) == null) {
+            // first install the theme, then activate it
+            mDispatcher.dispatch(ThemeActionBuilder.newInstallThemeAction(payload));
+        } else {
+            mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(payload));
+        }
     }
 
     protected void setThemeBrowserFragment(ThemeBrowserFragment themeBrowserFragment) {
