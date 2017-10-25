@@ -76,6 +76,9 @@ public class PhotoPickerActivity extends AppCompatActivity
         } else {
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(PhotoPickerFragment.ARG_BROWSER_TYPE);
         }
+        if (mBrowserType == null) {
+            mBrowserType = MediaBrowserType.SINGLE_IMAGE_PICKER;
+        }
 
         PhotoPickerFragment fragment = getPickerFragment();
         if (fragment == null) {
