@@ -25,7 +25,9 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -72,11 +74,16 @@ public class PhotoPickerFragment extends Fragment {
     private PhotoPickerListener mListener;
     private PhotoPickerIcon mLastTappedIcon;
     private MediaBrowserType mBrowserType;
+    private SiteModel mSite;
 
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
-                                                  @NonNull MediaBrowserType browserType) {
+                                                  @NonNull MediaBrowserType browserType,
+                                                  @Nullable SiteModel site) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_BROWSER_TYPE, browserType);
+        if (site != null) {
+            args.putSerializable(WordPress.SITE, site);
+        }
 
         PhotoPickerFragment fragment = new PhotoPickerFragment();
         fragment.setPhotoPickerListener(listener);
@@ -89,6 +96,7 @@ public class PhotoPickerFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mBrowserType = (MediaBrowserType) getArguments().getSerializable(ARG_BROWSER_TYPE);
+        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
     }
 
     @Override
@@ -141,12 +149,19 @@ public class PhotoPickerFragment extends Fragment {
 
             }
         });
-        mBottomBar.findViewById(R.id.icon_wpmedia).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doIconClicked(PhotoPickerIcon.WP_MEDIA);
-            }
-        });
+
+        // choosing from WP media requires a site
+        View wpMedia = mBottomBar.findViewById(R.id.icon_wpmedia);
+        if (mSite == null) {
+            wpMedia.setVisibility(View.GONE);
+        } else {
+            wpMedia.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    doIconClicked(PhotoPickerIcon.WP_MEDIA);
+                }
+            });
+        }
 
         mSoftAskContainer = (ViewGroup) view.findViewById(R.id.container_soft_ask);
 

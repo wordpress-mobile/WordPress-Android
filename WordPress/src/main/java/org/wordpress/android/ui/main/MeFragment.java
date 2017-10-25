@@ -476,7 +476,7 @@ public class MeFragment extends Fragment {
     }
 
     private void showPhotoPickerForGravatar() {
-        ActivityLauncher.showPhotoPickerForResult(getActivity());
+        ActivityLauncher.showPhotoPickerForResult(getActivity(), null);
     }
 
     private void startCropActivity(Uri uri) {

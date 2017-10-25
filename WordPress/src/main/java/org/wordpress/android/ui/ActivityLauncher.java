@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -81,9 +82,12 @@ public class ActivityLauncher {
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
     }
 
-    public static void showPhotoPickerForResult(Activity activity) {
+    public static void showPhotoPickerForResult(Activity activity, @Nullable SiteModel site) {
         Intent intent = new Intent(activity, PhotoPickerActivity.class);
         intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_IMAGE_PICKER);
+        if (site != null) {
+            intent.putExtra(WordPress.SITE, site);
+        }
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
@@ -320,11 +324,19 @@ public class ActivityLauncher {
         context.startActivity(statsPostViewIntent);
     }
 
-    public static void viewMediaPickerForResult(Activity activity, @NonNull SiteModel site) {
+    public static void viewMediaPickerForResult(Activity activity,
+                                                @NonNull SiteModel site,
+                                                @NonNull MediaBrowserType browserType) {
         Intent intent = new Intent(activity, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.EDITOR_PICKER);
-        activity.startActivityForResult(intent, RequestCodes.MULTI_SELECT_MEDIA_PICKER);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType);
+        int requestCode;
+        if (browserType.canMultiselect()) {
+            requestCode = RequestCodes.MULTI_SELECT_MEDIA_PICKER;
+        } else {
+            requestCode = RequestCodes.SINGLE_SELECT_MEDIA_PICKER;
+        }
+        activity.startActivityForResult(intent, requestCode);
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {

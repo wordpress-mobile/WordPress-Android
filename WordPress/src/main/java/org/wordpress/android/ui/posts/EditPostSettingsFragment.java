@@ -900,7 +900,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void launchFeaturedMediaPicker() {
         if (isAdded()) {
-            ActivityLauncher.showPhotoPickerForResult(getActivity());
+            ActivityLauncher.showPhotoPickerForResult(getActivity(), getSite());
         }
     }
 

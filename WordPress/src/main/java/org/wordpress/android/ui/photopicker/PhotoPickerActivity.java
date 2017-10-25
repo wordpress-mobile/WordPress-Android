@@ -16,6 +16,9 @@ import android.view.MenuItem;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.util.AppLog;
@@ -39,6 +42,7 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     private String mMediaCapturePath;
     private MediaBrowserType mBrowserType;
+    private SiteModel mSite;
 
     public enum PhotoPickerMediaSource {
         ANDROID_CAMERA,
@@ -73,16 +77,15 @@ public class PhotoPickerActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(PhotoPickerFragment.ARG_BROWSER_TYPE);
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(PhotoPickerFragment.ARG_BROWSER_TYPE);
-        }
-        if (mBrowserType == null) {
-            mBrowserType = MediaBrowserType.SINGLE_IMAGE_PICKER;
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         PhotoPickerFragment fragment = getPickerFragment();
         if (fragment == null) {
-            fragment = PhotoPickerFragment.newInstance(this, mBrowserType);
+            fragment = PhotoPickerFragment.newInstance(this, mBrowserType, mSite);
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, fragment, PICKER_FRAGMENT_TAG)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -104,6 +107,9 @@ public class PhotoPickerActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(PhotoPickerFragment.ARG_BROWSER_TYPE, mBrowserType);
+        if (mSite != null) {
+            outState.putSerializable(WordPress.SITE, mSite);
+        }
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(KEY_MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
@@ -152,6 +158,7 @@ public class PhotoPickerActivity extends AppCompatActivity
                     AppLog.e(AppLog.T.MEDIA, e);
                 }
                 break;
+            // user selected from WP media library
         }
     }
 
@@ -169,6 +176,12 @@ public class PhotoPickerActivity extends AppCompatActivity
     private void launchPictureLibrary() {
         WPMediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
+    }
+
+    private void launchWPMediaLibrary() {
+        if (mSite != null) {
+            ActivityLauncher.viewMediaPickerForResult(this, mSite, mBrowserType);
+        }
     }
 
     private void mediaSelected(@NonNull Uri mediaUri, @NonNull PhotoPickerMediaSource source) {
@@ -194,6 +207,9 @@ public class PhotoPickerActivity extends AppCompatActivity
                 break;
             case ANDROID_CHOOSE_PHOTO:
                 launchPictureLibrary();
+                break;
+            case WP_MEDIA:
+                launchWPMediaLibrary();
                 break;
         }
     }
