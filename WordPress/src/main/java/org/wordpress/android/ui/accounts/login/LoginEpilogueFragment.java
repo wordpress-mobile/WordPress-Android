@@ -17,10 +17,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.login.LoginBaseFormFragment;
-import org.wordpress.android.login.util.ViewUtils;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ViewUtils;
 
 import java.util.ArrayList;
 

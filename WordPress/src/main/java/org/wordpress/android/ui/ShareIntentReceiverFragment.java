@@ -17,12 +17,12 @@ import android.widget.Button;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.login.util.ViewUtils;
 import org.wordpress.android.ui.accounts.login.LoginHeaderViewHolder;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.HeaderHandler;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.ViewUtils;
 
 import javax.inject.Inject;
 

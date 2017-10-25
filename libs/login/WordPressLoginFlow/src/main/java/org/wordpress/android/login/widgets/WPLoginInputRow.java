@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.login.R;
-import org.wordpress.android.login.util.ViewUtils;
+import org.wordpress.android.util.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
