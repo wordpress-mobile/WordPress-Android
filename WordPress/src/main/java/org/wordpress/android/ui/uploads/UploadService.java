@@ -566,14 +566,16 @@ public class UploadService extends Service {
         if (!mMediaBatchUploaded.isEmpty()) {
             ArrayList<MediaModel> standAloneMediaItems = new ArrayList<>();
             for (MediaModel media: mMediaBatchUploaded) {
-                if (media.getLocalPostId() == 0) {
-                    standAloneMediaItems.add(media);
+                // we need to obtain the latest copy from the Store, as it's got the remote mediaId field
+                MediaModel currentMedia = mMediaStore.getMediaWithLocalId(media.getId());
+                if (currentMedia.getLocalPostId() == 0) {
+                    standAloneMediaItems.add(currentMedia);
                 }
             }
 
             if (!standAloneMediaItems.isEmpty()) {
-                SiteModel site = mSiteStore.getSiteByLocalId(mMediaBatchUploaded.get(0).getLocalSiteId());
-                mPostUploadNotifier.updateNotificationSuccessForMedia(mMediaBatchUploaded, site);
+                SiteModel site = mSiteStore.getSiteByLocalId(standAloneMediaItems.get(0).getLocalSiteId());
+                mPostUploadNotifier.updateNotificationSuccessForMedia(standAloneMediaItems, site);
                 mMediaBatchUploaded.clear();
             }
         }

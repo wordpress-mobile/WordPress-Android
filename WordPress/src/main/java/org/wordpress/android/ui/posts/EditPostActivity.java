@@ -323,18 +323,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 initializePostObjects(extras.getInt(EXTRA_POST_LOCAL_ID));
             }
 
-            // now that we have the Post object initialized,
-            // check whether we have media items to insert from the WRITE POST with media functionality
-            if (getIntent().hasExtra(EXTRA_INSERT_MEDIA)) {
-                List<MediaModel> mediaList = (List<MediaModel>) getIntent().getSerializableExtra(EXTRA_INSERT_MEDIA);
-                if (mediaList != null && !mediaList.isEmpty()) {
-                    for (MediaModel media : mediaList) {
-                        addExistingMediaToEditorAndSave(media.getId());
-                    }
-                    savePostAsync(null);
-                }
-            }
-
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
@@ -1665,8 +1653,9 @@ public class EditPostActivity extends AppCompatActivity implements
         long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS);
         ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
         for (Long id: idsList) {
-            addExistingMediaToEditorAndSave(id);
+            addExistingMediaToEditor(id);
         }
+        savePostAsync(null);
     }
 
     // TODO: Replace with contents of the updatePostContentNewEditor() method when legacy editor is dropped
@@ -2210,8 +2199,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         break;
                     case INDIVIDUALLY:
                         for (Long id: mediaIds) {
-                            addExistingMediaToEditorAndSave(id);
+                            addExistingMediaToEditor(id);
                         }
+                        savePostAsync(null);
                         break;
                 }
             }
@@ -2632,6 +2622,31 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onEditorFragmentInitialized() {
+        boolean shouldFinishInit = true;
+        // now that we have the Post object initialized,
+        // check whether we have media items to insert from the WRITE POST with media functionality
+        if (getIntent().hasExtra(EXTRA_INSERT_MEDIA)) {
+            List<MediaModel> mediaList = (List<MediaModel>) getIntent().getSerializableExtra(EXTRA_INSERT_MEDIA);
+            if (mediaList != null && !mediaList.isEmpty()) {
+                shouldFinishInit = false;
+                for (MediaModel media : mediaList) {
+                    addExistingMediaToEditor(media.getMediaId());
+                }
+                savePostAsync(new AfterSavePostListener() {
+                    @Override
+                    public void onPostSave() {
+                        onEditorFinalTouchesBeforeShowing();
+                    }
+                });
+            }
+        }
+
+        if (shouldFinishInit) {
+            onEditorFinalTouchesBeforeShowing();
+        }
+    }
+
+    private void onEditorFinalTouchesBeforeShowing() {
         fillContentEditorFields();
         // Set the error listener
         if (mEditorFragment instanceof EditorFragment) {
