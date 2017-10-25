@@ -323,6 +323,13 @@ class PostUploadNotifier {
     }
 
     void updateNotificationSuccessForMedia(@NonNull List<MediaModel> mediaList, @NonNull SiteModel site) {
+
+        // show the snackbar
+        if (mediaList != null && !mediaList.isEmpty()) {
+            String snackbarMessage = buildSnackbarSuccessMessageForMedia(mediaList.size());
+            EventBus.getDefault().post(new UploadService.UploadMediaSuccessEvent(mediaList, snackbarMessage));
+        }
+
         if (!WordPress.sAppIsInTheBackground) {
             // only produce success notifications for the user if the app is in the background
             return;
@@ -350,8 +357,6 @@ class PostUploadNotifier {
         String notificationTitle = buildSuccessMessageForMedia(mediaList.size());
         String notificationMessage = TextUtils.isEmpty(site.getName()) ? mContext.getString(R.string.untitled) : site.getName();
 
-        String snackbarMessage = buildSnackbarSuccessMessageForMedia(mediaList.size());
-
         notificationBuilder.setContentTitle(notificationTitle);
         notificationBuilder.setContentText(notificationMessage);
         //notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newSuccessMessage));
@@ -377,7 +382,6 @@ class PostUploadNotifier {
 
         }
 
-        EventBus.getDefault().post(new UploadService.UploadMediaSuccessEvent(mediaList, snackbarMessage));
         doNotify(notificationId, notificationBuilder.build());
     }
 
