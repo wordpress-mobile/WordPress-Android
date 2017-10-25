@@ -44,6 +44,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -476,7 +477,11 @@ public class MeFragment extends Fragment {
     }
 
     private void showPhotoPickerForGravatar() {
+<<<<<<< HEAD
         ActivityLauncher.showPhotoPickerForResult(getActivity(), null);
+=======
+        ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.GRAVATAR_IMAGE_PICKER);
+>>>>>>> ed163f759e471b492cfc0cc478e16a8ed9b9eaf4
     }
 
     private void startCropActivity(Uri uri) {

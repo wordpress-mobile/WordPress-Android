@@ -903,6 +903,13 @@ public class EditPostSettingsFragment extends Fragment {
         if (isAdded()) {
             ActivityLauncher.showPhotoPickerForResult(getActivity(), getSite());
         }
+<<<<<<< HEAD
+=======
+        Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
+        intent.putExtra(WordPress.SITE, getSite());
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.FEATURED_IMAGE_PICKER);
+        startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
+>>>>>>> ed163f759e471b492cfc0cc478e16a8ed9b9eaf4
     }
 
     // Publish Date Helpers

@@ -82,12 +82,18 @@ public class ActivityLauncher {
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
     }
 
+<<<<<<< HEAD
     public static void showPhotoPickerForResult(Activity activity, @Nullable SiteModel site) {
         Intent intent = new Intent(activity, PhotoPickerActivity.class);
         intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_IMAGE_PICKER);
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
         }
+=======
+    public static void showPhotoPickerForResult(Activity activity, @NonNull MediaBrowserType browserType) {
+        Intent intent = new Intent(activity, PhotoPickerActivity.class);
+        intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
+>>>>>>> ed163f759e471b492cfc0cc478e16a8ed9b9eaf4
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
