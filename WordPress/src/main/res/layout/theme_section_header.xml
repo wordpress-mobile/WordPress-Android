@@ -4,7 +4,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:padding="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_extra_large"
+    android:paddingBottom="@dimen/margin_medium"
     android:clipToPadding="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
