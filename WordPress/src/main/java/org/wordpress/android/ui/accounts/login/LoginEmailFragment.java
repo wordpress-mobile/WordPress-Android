@@ -48,7 +48,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     public static final int MAX_EMAIL_LENGTH = 100;
 
     private ArrayList<Integer> mOldSitesIDs;
-    private LoginGoogleFragment mLoginGoogleFragment;
+    private String mGoogleEmail;
     private String mRequestedEmail;
     private WPLoginInputRow mEmailInput;
     private boolean isSocialLogin;
@@ -101,7 +101,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
 
                 if (NetworkUtils.checkConnection(getActivity())) {
                     mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
-                    mLoginGoogleFragment = addGoogleFragment();
+                    addGoogleFragment();
                     isSocialLogin = true;
                 }
             }
@@ -156,8 +156,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @Override
     protected void onHelp() {
         if (mLoginListener != null) {
-            if (isSocialLogin && mLoginGoogleFragment != null) {
-                mLoginGoogleFragment.onHelp();
+            if (isSocialLogin) {
+                // Send last email chosen from Google login if available.
+                mLoginListener.helpSocialEmailScreen(mGoogleEmail);
             } else {
                 // Send exact string the user has inputted for email
                 mLoginListener.helpEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()));
@@ -254,7 +255,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mEmailInput.setError(null);
-        mLoginGoogleFragment = null;
         isSocialLogin = false;
     }
 
@@ -306,6 +306,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     }
 
     public void setGoogleEmail(String email) {
+        mGoogleEmail = email;
     }
 
     public void finishLogin() {
