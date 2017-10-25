@@ -41,8 +41,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener {
     private GoogleApiClient mGoogleApiClient;
+    private GoogleLoginListener mGoogleLoginListener;
     private LoginListener mLoginListener;
-    private OnGoogleLoginFinishedListener mOnGoogleLoginFinishedListener;
     private String mGoogleEmail;
     private String mIdToken;
     private boolean isResolvingError;
@@ -57,7 +57,8 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
 
     @Inject Dispatcher mDispatcher;
 
-    public interface OnGoogleLoginFinishedListener {
+    public interface GoogleLoginListener {
+        void onGoogleEmailSelected(String email);
         void onGoogleLoginFinished();
     }
 
@@ -102,7 +103,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         mLoginListener = (LoginListener) context;
 
         try {
-            mOnGoogleLoginFinishedListener = (OnGoogleLoginFinishedListener) context;
+            mGoogleLoginListener = (GoogleLoginListener) context;
         } catch (ClassCastException exception) {
             throw new ClassCastException(context.toString() + " must implement OnGoogleLoginFinishedListener");
         }
@@ -229,6 +230,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
                         try {
                             GoogleSignInAccount account = signInResult.getSignInAccount();
                             mGoogleEmail = account.getEmail();
+                            mGoogleLoginListener.onGoogleEmailSelected(mGoogleEmail);
                             mIdToken = account.getIdToken();
                             PushSocialLoginPayload payload = new PushSocialLoginPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
@@ -299,7 +301,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
             showErrorDialog(getString(R.string.login_error_generic));
         } else {
             AppLog.i(T.NUX, "LoginEmailFragment.onAuthenticationChanged: " + event.toString());
-            mOnGoogleLoginFinishedListener.onGoogleLoginFinished();
+            mGoogleLoginListener.onGoogleLoginFinished();
         }
     }
 
@@ -335,7 +337,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
                     event.nonceSms);
         } else {
-            mOnGoogleLoginFinishedListener.onGoogleLoginFinished();
+            mGoogleLoginListener.onGoogleLoginFinished();
         }
     }
 }

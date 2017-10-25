@@ -305,6 +305,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         }
     }
 
+    public void setGoogleEmail(String email) {
+    }
+
     public void finishLogin() {
         doFinishLogin();
     }
