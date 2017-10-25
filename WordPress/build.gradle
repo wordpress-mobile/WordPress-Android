@@ -35,8 +35,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-81"
-        versionCode 478
+        versionName "alpha-82"
+        versionCode 481
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -44,6 +44,7 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
+        buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "false"
     }
 
     productFlavors {
@@ -52,11 +53,13 @@ android {
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
+            buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
+            buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "true"
         }
     }
 
@@ -134,7 +137,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:185cb8bc887f90dc5ae4cfeea2ec4d2d52f195ed') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:28698747680c4acc9d9dcc85e26a19d755c9f2f6') {
         exclude group: "com.android.volley";
     }
 

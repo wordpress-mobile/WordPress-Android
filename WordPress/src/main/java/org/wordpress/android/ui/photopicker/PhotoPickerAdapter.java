@@ -26,6 +26,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SqlUtils;
+import org.wordpress.android.util.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -355,22 +356,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 }
             });
 
-            addShadow(txtSelectionCount);
-        }
-
-        /**
-         * adds an inset circular shadow outline to the selection count (Lollipop+ only)
-         */
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        private void addShadow(@NonNull View view) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                view.setOutlineProvider(new ViewOutlineProvider() {
-                    @Override
-                    public void getOutline(View view, Outline outline) {
-                        outline.setOval(0, 0, view.getWidth(), view.getHeight());
-                    }
-                });
-            }
+            ViewUtils.addCircularShadowOutline(txtSelectionCount);
         }
     }
 
