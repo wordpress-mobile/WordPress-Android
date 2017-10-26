@@ -116,20 +116,20 @@
                     wp:wpPostButtonType="edit" />
 
                 <org.wordpress.android.widgets.PostListButton
-                    android:id="@+id/btn_view"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    wp:wpPostButtonType="view" />
-
-                <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_publish"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
                     wp:wpPostButtonType="publish" />
+
+                <org.wordpress.android.widgets.PostListButton
+                    android:id="@+id/btn_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    wp:wpPostButtonType="view" />
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_stats"

@@ -543,7 +543,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         // edit / view are always visible
         holder.btnEdit.setVisibility(View.VISIBLE);
-        holder.btnView.setVisibility(View.VISIBLE);
+        holder.btnPublish.setVisibility(View.VISIBLE);
 
         // if we have enough room to show all buttons, hide the back/more buttons and show stats/trash/publish
         if (mAlwaysShowAllButtons || numVisibleButtons <= 3) {
@@ -561,7 +561,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnBack.setVisibility(View.GONE);
             holder.btnTrash.setVisibility(View.GONE);
             holder.btnStats.setVisibility(View.GONE);
-            holder.btnPublish.setVisibility(View.GONE);
+            holder.btnView.setVisibility(View.GONE);
         }
 
         View.OnClickListener btnClickListener = new View.OnClickListener() {
@@ -615,11 +615,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 // row 1
                 holder.btnEdit.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
-                holder.btnView.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
+                holder.btnPublish.setVisibility(showRow1 && canPublishPost(post) ? View.VISIBLE : View.GONE);
                 holder.btnMore.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
                 // row 2
+                holder.btnView.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
                 holder.btnStats.setVisibility(!showRow1 && canShowStatsForPost(post) ? View.VISIBLE : View.GONE);
-                holder.btnPublish.setVisibility(!showRow1 && canPublishPost(post) ? View.VISIBLE : View.GONE);
                 holder.btnTrash.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
                 holder.btnBack.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
 
