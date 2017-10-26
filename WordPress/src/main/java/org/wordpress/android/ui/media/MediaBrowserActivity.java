@@ -94,16 +94,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         OnQueryTextListener, OnActionExpandListener,
         WPMediaUtils.LaunchCameraCallback {
 
-    public enum MediaBrowserType {
-        BROWSER,                              // browse & manage media
-        MULTI_SELECT_IMAGE_AND_VIDEO_PICKER,  // select multiple images or videos
-        SINGLE_SELECT_IMAGE_PICKER;           // select a single image
-
-        public boolean isPicker() {
-            return this == MULTI_SELECT_IMAGE_AND_VIDEO_PICKER || this == SINGLE_SELECT_IMAGE_PICKER;
-        }
-    }
-
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_FILTER = "filter";
     public static final String RESULT_IDS = "result_ids";
@@ -179,7 +169,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         setupTabs();
 
         MediaFilter filter;
-        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+        if (mBrowserType.isSingleImagePicker()) {
             filter = MediaFilter.FILTER_IMAGES;
         } else if (savedInstanceState != null) {
             filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
@@ -207,13 +197,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     /*
-     * only show tabs when being used as a media browser rather than a media picker
+     * only show tabs when the user can filter the media by type
      */
     private boolean shouldShowTabs() {
-        return mBrowserType == MediaBrowserType.BROWSER;
+        return mBrowserType.canFilter();
     }
 
-    public void enableTabs(boolean enable) {
+    private void enableTabs(boolean enable) {
         if (!shouldShowTabs()) return;
 
         if (enable && mTabLayout.getVisibility() != View.VISIBLE) {
@@ -452,7 +442,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         // hide "add media" if the user doesn't have upload permission or this is a multiselect picker
-        if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER
+        if (mBrowserType.canMultiselect()
                 || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
         }
@@ -549,7 +539,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onMediaItemSelected(View sourceView, int localMediaId) {
+    public void onMediaItemSelected(View sourceView, int localMediaId, boolean isLongClick) {
         MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
         if (media == null) {
             AppLog.w(AppLog.T.MEDIA, "Media browser > unable to load localMediaId = " + localMediaId);
@@ -557,24 +547,42 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             return;
         }
 
-        boolean isLocalFile = MediaUtils.isLocalFile(media.getUploadState());
+        // do nothing for failed uploads
+        if (MediaUploadState.fromString(media.getUploadState()) == MediaUploadState.FAILED) {
+            return;
+        }
 
-        // if this is being used as a media picker return the selected item and finish, otherwise
-        // preview the selected item
-        if (mBrowserType.isPicker()) {
-            if (isLocalFile) {
-                ToastUtils.showToast(this, R.string.error_media_still_uploading);
-                return;
-            }
+        // show detail view when tapped if we're browsing media, when used as a picker show detail
+        // when long tapped (to mimic native photo picker)
+        if (mBrowserType.isBrowser() && !isLongClick
+                || mBrowserType.isPicker() && isLongClick) {
+            showMediaSettings(media, sourceView);
+        } else if (mBrowserType.isSingleImagePicker() && !isLongClick) {
+            // if we're picking a single image, we're done
             Intent intent = new Intent();
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
             remoteMediaIds.add(media.getMediaId());
             intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
             setResult(RESULT_OK, intent);
             finish();
-        } else {
-            showMediaSettings(media, sourceView);
         }
+    }
+
+    @Override
+    public void onMediaRequestRetry(int localMediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
+        if (media != null) {
+            addMediaToUploadService(media);
+        } else {
+            ToastUtils.showToast(this, R.string.error_media_not_found);
+        }
+    }
+
+    @Override
+    public void onMediaRequestDelete(int localMediaId) {
+        ArrayList<Integer> ids = new ArrayList<>();
+        ids.add(localMediaId);
+        deleteMedia(ids);
     }
 
     private void showMediaSettings(@NonNull MediaModel media, View sourceView) {
@@ -589,16 +597,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public void onMediaCapturePathReady(String mediaCapturePath) {
         mMediaCapturePath = mediaCapturePath;
-    }
-
-    @Override
-    public void onRetryUpload(int localMediaId) {
-        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
-        if (media == null) {
-            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
-            return;
-        }
-        addMediaToUploadService(media);
     }
 
     private void showMediaToastError(@StringRes int message, @Nullable String messageDetail) {
@@ -682,7 +680,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         enableTabs(true);
     }
 
-    public void deleteMedia(final ArrayList<Integer> ids) {
+    // TODO: in a future PR this and startMediaDeleteService() can be simplified since multiselect delete was dropped
+    private void deleteMedia(final ArrayList<Integer> ids) {
         final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
         int processedItemCount = 0;
 
@@ -776,7 +775,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
     private void createAddMediaPopup() {
-        SimpleAdapter adapter = mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
+        SimpleAdapter adapter = mBrowserType.isSingleImagePicker()
                 ? getAddMenuSimpleAdapter(
                         AddMenuItem.ITEM_CAPTURE_PHOTO,
                         AddMenuItem.ITEM_CHOOSE_PHOTO)
