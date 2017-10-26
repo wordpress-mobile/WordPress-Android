@@ -99,8 +99,8 @@ public class EditPostSettingsFragment extends Fragment {
     private static final int ACTIVITY_REQUEST_CODE_PICK_LOCATION = 7;
     private static final int ACTIVITY_REQUEST_PLAY_SERVICES_RESOLUTION = 8;
 
-    private static final int SELECT_LIBRARY_MENU_POSITION = 100;
-    private static final int CLEAR_FEATURED_IMAGE_MENU_POSITION = 101;
+    private static final int CHOOSE_FEATURED_IMAGE_MENU_ID = 100;
+    private static final int REMOVE_FEATURED_IMAGE_MENU_ID = 101;
 
     private SiteSettingsInterface mSiteSettings;
 
@@ -337,17 +337,17 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, SELECT_LIBRARY_MENU_POSITION, 0, getResources().getText(R.string.select_from_media_library));
-        menu.add(0, CLEAR_FEATURED_IMAGE_MENU_POSITION, 0, "Remove featured image");
+        menu.add(0, CHOOSE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_choose_featured_image));
+        menu.add(0, REMOVE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_remove_featured_image));
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case SELECT_LIBRARY_MENU_POSITION:
+            case CHOOSE_FEATURED_IMAGE_MENU_ID:
                 launchFeaturedMediaPicker();
                 return true;
-            case CLEAR_FEATURED_IMAGE_MENU_POSITION:
+            case REMOVE_FEATURED_IMAGE_MENU_ID:
                 clearFeaturedImage();
                 return true;
             default:

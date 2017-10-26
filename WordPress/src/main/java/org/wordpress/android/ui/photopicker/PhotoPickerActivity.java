@@ -178,7 +178,9 @@ public class PhotoPickerActivity extends AppCompatActivity
             case RequestCodes.PICTURE_LIBRARY:
                 if (data != null) {
                     Uri imageUri = data.getData();
-                    doMediaUriSelected(imageUri, PhotoPickerMediaSource.ANDROID_PICKER);
+                    if (imageUri != null) {
+                        doMediaUriSelected(imageUri, PhotoPickerMediaSource.ANDROID_PICKER);
+                    }
                 }
                 break;
             // user took a photo with the device camera
