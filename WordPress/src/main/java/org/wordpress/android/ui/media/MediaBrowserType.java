@@ -3,7 +3,7 @@ package org.wordpress.android.ui.media;
 public enum MediaBrowserType {
     BROWSER,                 // browse & manage media
     EDITOR_PICKER,           // select multiple images or videos to insert into a post
-    FEATURED_IMAGE_PICKER,  // select a single image as a featured image
+    FEATURED_IMAGE_PICKER,   // select a single image as a featured image
     GRAVATAR_IMAGE_PICKER;   // select a single image as a gravatar
 
     public boolean isPicker() {
@@ -21,5 +21,8 @@ public enum MediaBrowserType {
     public boolean canMultiselect() {
         return this == EDITOR_PICKER;
     }
-}
 
+    public boolean canFilter() {
+        return this == BROWSER;
+    }
+}

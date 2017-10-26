@@ -197,10 +197,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     /*
-     * only show tabs when being used as a media browser rather than a media picker
+     * only show tabs when the user can filter the media by type
      */
     private boolean shouldShowTabs() {
-        return mBrowserType.isBrowser();
+        return mBrowserType.canFilter();
     }
 
     private void enableTabs(boolean enable) {
