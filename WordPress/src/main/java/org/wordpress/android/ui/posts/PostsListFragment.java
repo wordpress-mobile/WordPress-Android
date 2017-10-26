@@ -751,7 +751,17 @@ public class PostsListFragment extends Fragment
         else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), true,
-                    event.mediaModelList, event.errorMessage);
+                    event.mediaModelList, mSite, event.errorMessage);
         }
     }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), false,
+                    event.mediaModelList, mSite, event.successMessage);
+        }
+    }
+
 }

@@ -61,6 +61,9 @@ public class UploadService extends Service {
     private PostUploadHandler mPostUploadHandler;
     private PostUploadNotifier mPostUploadNotifier;
 
+    // we hold this reference here for the success notification for Media uploads
+    private List<MediaModel> mMediaBatchUploaded = new ArrayList<>();
+
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
@@ -166,18 +169,22 @@ public class UploadService extends Service {
 //            }
 //        }
 
-        if (!intent.getBooleanExtra(KEY_UPLOAD_MEDIA_FROM_EDITOR, false)) {
-            // only cancel the media error notification if we're triggering a new media pload
-            // either from Media Browser or a RETRY from a notification.
-            // Otherwise, this flag should be true, and we need to keep the error notification as
-            // it might be a separate action (user is editing a Post and including media there)
-            mPostUploadNotifier.cancelFinalNotificationForMedia();
-        }
-
         // add new media
         @SuppressWarnings("unchecked")
         List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(KEY_MEDIA_LIST);
-        if (mediaList != null) {
+        if (mediaList != null && !mediaList.isEmpty()) {
+            if (!intent.getBooleanExtra(KEY_UPLOAD_MEDIA_FROM_EDITOR, false)) {
+                // only cancel the media error notification if we're triggering a new media pload
+                // either from Media Browser or a RETRY from a notification.
+                // Otherwise, this flag should be true, and we need to keep the error notification as
+                // it might be a separate action (user is editing a Post and including media there)
+                mPostUploadNotifier.cancelFinalNotificationForMedia(
+                        mSiteStore.getSiteByLocalId(mediaList.get(0).getLocalSiteId()));
+
+                // add these media items so we can use them in WRITE POST once they end up loading successfully
+                mMediaBatchUploaded.addAll(mediaList);
+            }
+
             for (MediaModel media : mediaList) {
                 mMediaUploadHandler.upload(media);
             }
@@ -540,6 +547,8 @@ public class UploadService extends Service {
 
         if (mMediaUploadHandler != null && mMediaUploadHandler.hasInProgressUploads()) {
             return;
+        } else {
+            verifyMediaOnlyUploadsAndNotify();
         }
 
         if (!mUploadStore.getPendingPosts().isEmpty()) {
@@ -550,6 +559,26 @@ public class UploadService extends Service {
 
         AppLog.i(T.MAIN, "UploadService > Completed");
         stopSelf();
+    }
+
+    private void verifyMediaOnlyUploadsAndNotify() {
+        // check if all are successful uploads, then notify the user about it
+        if (!mMediaBatchUploaded.isEmpty()) {
+            ArrayList<MediaModel> standAloneMediaItems = new ArrayList<>();
+            for (MediaModel media: mMediaBatchUploaded) {
+                // we need to obtain the latest copy from the Store, as it's got the remote mediaId field
+                MediaModel currentMedia = mMediaStore.getMediaWithLocalId(media.getId());
+                if (currentMedia.getLocalPostId() == 0) {
+                    standAloneMediaItems.add(currentMedia);
+                }
+            }
+
+            if (!standAloneMediaItems.isEmpty()) {
+                SiteModel site = mSiteStore.getSiteByLocalId(standAloneMediaItems.get(0).getLocalSiteId());
+                mPostUploadNotifier.updateNotificationSuccessForMedia(standAloneMediaItems, site);
+                mMediaBatchUploaded.clear();
+            }
+        }
     }
 
     private void updatePostModelsWithCompletedAndFailedUploads(){
@@ -763,4 +792,15 @@ public class UploadService extends Service {
             this.errorMessage = errorMessage;
         }
     }
+
+    public static class UploadMediaSuccessEvent {
+        public final List<MediaModel> mediaModelList;
+        public final String successMessage;
+
+        UploadMediaSuccessEvent(List<MediaModel> mediaModelList, String successMessage) {
+            this.mediaModelList = mediaModelList;
+            this.successMessage = successMessage;
+        }
+    }
+
 }

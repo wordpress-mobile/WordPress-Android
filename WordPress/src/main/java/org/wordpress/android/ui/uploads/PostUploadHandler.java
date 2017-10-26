@@ -570,7 +570,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         } else {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
-            mPostUploadNotifier.updateNotificationSuccess(event.post, site, isFirstTimePublish);
+            mPostUploadNotifier.updateNotificationSuccessForPost(event.post, site, isFirstTimePublish);
             if (isFirstTimePublish) {
                 if (sCurrentUploadingPostAnalyticsProperties != null){
                     sCurrentUploadingPostAnalyticsProperties.put("post_id", event.post.getRemotePostId());

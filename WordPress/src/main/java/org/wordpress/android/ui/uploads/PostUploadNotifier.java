@@ -16,8 +16,10 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -234,16 +236,16 @@ class PostUploadNotifier {
         mNotificationManager.cancel((int)getNotificationIdForPost(post));
     }
 
-    void cancelFinalNotificationForMedia() {
-        mNotificationManager.cancel((int)getNotificationIdForMedia());
+    void cancelFinalNotificationForMedia(@NonNull SiteModel site) {
+        mNotificationManager.cancel((int)getNotificationIdForMedia(site));
     }
 
-    void updateNotificationSuccess(@NonNull PostModel post, @NonNull SiteModel site, boolean isFirstTimePublish) {
+    void updateNotificationSuccessForPost(@NonNull PostModel post, @NonNull SiteModel site, boolean isFirstTimePublish) {
         if (!WordPress.sAppIsInTheBackground) {
             // only produce success notifications for the user if the app is in the background
             return;
         }
-        AppLog.d(AppLog.T.POSTS, "updateNotificationSuccess");
+        AppLog.d(AppLog.T.POSTS, "updateNotificationSuccessForPost");
 
         // Get the shareableUrl
         String shareableUrl = WPMeShortlinks.getPostShortlink(site, post);
@@ -320,6 +322,69 @@ class PostUploadNotifier {
         doNotify(notificationId, notificationBuilder.build());
     }
 
+    void updateNotificationSuccessForMedia(@NonNull List<MediaModel> mediaList, @NonNull SiteModel site) {
+
+        // show the snackbar
+        if (mediaList != null && !mediaList.isEmpty()) {
+            String snackbarMessage = buildSnackbarSuccessMessageForMedia(mediaList.size());
+            EventBus.getDefault().post(new UploadService.UploadMediaSuccessEvent(mediaList, snackbarMessage));
+        }
+
+        if (!WordPress.sAppIsInTheBackground) {
+            // only produce success notifications for the user if the app is in the background
+            return;
+        }
+        AppLog.d(AppLog.T.MEDIA, "updateNotificationSuccessForMedia");
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(mContext.getApplicationContext());
+
+        long notificationId = getNotificationIdForMedia(site);
+        // Tap notification intent (open the media browser)
+        Intent notificationIntent = new Intent(mContext, MediaBrowserActivity.class);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        notificationIntent.putExtra(WordPress.SITE, site);
+        notificationIntent.setAction(String.valueOf(notificationId));
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
+                (int)notificationId,
+                notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+
+        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
+        notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
+
+        String notificationTitle = buildSuccessMessageForMedia(mediaList.size());
+        String notificationMessage = TextUtils.isEmpty(site.getName()) ? mContext.getString(R.string.untitled) : site.getName();
+
+        notificationBuilder.setContentTitle(notificationTitle);
+        notificationBuilder.setContentText(notificationMessage);
+        //notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newSuccessMessage));
+        notificationBuilder.setContentIntent(pendingIntent);
+        notificationBuilder.setAutoCancel(true);
+
+        // Add WRITE POST action - only if there is media we can insert in the Post
+        if (mediaList != null && !mediaList.isEmpty()) {
+            ArrayList<MediaModel> mediaToIncludeInPost = new ArrayList<>(mediaList);
+
+            Intent writePostIntent = new Intent(mContext, EditPostActivity.class);
+            writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            writePostIntent.putExtra(WordPress.SITE, site);
+            writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+            writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaToIncludeInPost);
+            writePostIntent.setAction(String.valueOf(notificationId));
+
+            PendingIntent actionPendingIntent = PendingIntent.getActivity(mContext, RequestCodes.EDIT_POST, writePostIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
+            notificationBuilder.addAction(0, mContext.getString(R.string.media_files_uploaded_write_post),
+                    actionPendingIntent);
+
+        }
+
+        doNotify(notificationId, notificationBuilder.build());
+    }
+
     public static long getNotificationIdForPost(PostModel post) {
         long remotePostId = post.getRemotePostId();
         // We can't use the local table post id here because it can change between first post (local draft) to
@@ -327,8 +392,12 @@ class PostUploadNotifier {
         return post.getLocalSiteId() + remotePostId;
     }
 
-    public static long getNotificationIdForMedia() {
-        return BASE_MEDIA_ERROR_NOTIFICATION_ID;
+    public static long getNotificationIdForMedia(SiteModel site) {
+        if (site != null) {
+            return BASE_MEDIA_ERROR_NOTIFICATION_ID + site.getId();
+        } else {
+            return BASE_MEDIA_ERROR_NOTIFICATION_ID;
+        }
     }
 
     void updateNotificationErrorForPost(@NonNull PostModel post, @NonNull SiteModel site, String errorMessage) {
@@ -387,8 +456,8 @@ class PostUploadNotifier {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(mContext.getApplicationContext());
 
-        long notificationId = getNotificationIdForMedia();
-        // Tap notification intent (open the post list)
+        long notificationId = getNotificationIdForMedia(site);
+        // Tap notification intent (open the media browser)
         Intent notificationIntent = new Intent(mContext, MediaBrowserActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -479,6 +548,24 @@ class PostUploadNotifier {
         return newErrorMessage;
     }
 
+    private String buildSuccessMessageForMedia(int mediaItemsUploaded) {
+        // all media items were uploaded successfully
+        String successMessage =  String.format(mContext.getString(R.string.media_all_files_uploaded_succcessfully),
+                    mediaItemsUploaded);
+        return successMessage;
+    }
+
+    private String buildSnackbarSuccessMessageForMedia(int mediaItemsUploaded) {
+        String successMessage = "";
+        if (mediaItemsUploaded > 0) {
+            if (mediaItemsUploaded == 1) {
+                successMessage += mContext.getString(R.string.media_file_uploaded);
+            } else {
+                successMessage += String.format(mContext.getString(R.string.media_files_uploaded), mediaItemsUploaded);
+            }
+        }
+        return successMessage;
+    }
 
     private String buildSnackbarErrorMessage(String newErrorMessage, String detailErrorMessage) {
         // now append the detailed error message below

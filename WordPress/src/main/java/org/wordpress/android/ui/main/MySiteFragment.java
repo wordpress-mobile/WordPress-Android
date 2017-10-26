@@ -511,7 +511,17 @@ public class MySiteFragment extends Fragment
         else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), true,
-                    event.mediaModelList, event.errorMessage);
+                    event.mediaModelList, site, event.errorMessage);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
+        SiteModel site = getSelectedSite();
+        if (site != null && event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), false,
+                    event.mediaModelList, site, event.successMessage);
         }
     }
 

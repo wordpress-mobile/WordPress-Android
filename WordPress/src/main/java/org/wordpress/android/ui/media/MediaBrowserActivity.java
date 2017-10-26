@@ -1064,7 +1064,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(this,
                     findViewById(R.id.tab_layout), true,
-                    event.mediaModelList, event.errorMessage);
+                    event.mediaModelList, mSite, event.errorMessage);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(this,
+                    findViewById(R.id.tab_layout), false,
+                    event.mediaModelList, mSite, event.successMessage);
         }
     }
 

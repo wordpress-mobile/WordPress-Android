@@ -168,6 +168,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
     public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
+    public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -185,6 +186,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private Handler mHandler;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
+    private boolean mMediaInsertedOnCreation;
 
     private List<String> mPendingVideoPressInfoRequests;
     private List<String> mAztecBackspaceDeletedMediaItemIds = new ArrayList<>();
@@ -321,6 +323,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // Load post passed in extras
                 initializePostObjects(extras.getInt(EXTRA_POST_LOCAL_ID));
             }
+
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
@@ -1453,13 +1456,21 @@ public class EditPostActivity extends AppCompatActivity implements
         return mMaxThumbWidth;
     }
 
-    private void addExistingMediaToEditor(long mediaId) {
+    private boolean addExistingMediaToEditor(long mediaId) {
         MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
-        if (media != null) {
-            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-            trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
-            String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
-            mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
+        if (media == null) {
+            return false;
+        }
+
+        MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
+        trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
+        String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
+        mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
+        return true;
+    }
+
+    private void addExistingMediaToEditorAndSave(long mediaId) {
+        if (addExistingMediaToEditor(mediaId)) {
             savePostAsync(null);
         }
     }
@@ -1645,6 +1656,7 @@ public class EditPostActivity extends AppCompatActivity implements
         for (Long id: idsList) {
             addExistingMediaToEditor(id);
         }
+        savePostAsync(null);
     }
 
     // TODO: Replace with contents of the updatePostContentNewEditor() method when legacy editor is dropped
@@ -1756,7 +1768,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
         boolean contentChanged;
-        if (compareCurrentMediaMarkedUploadingToOriginal(content)) {
+        if (mMediaInsertedOnCreation) {
+            mMediaInsertedOnCreation = false;
+            contentChanged = true;
+        } else if (compareCurrentMediaMarkedUploadingToOriginal(content)) {
             contentChanged = true;
         } else if (mEditorFragment instanceof AztecEditorFragment
                 && ((AztecEditorFragment) mEditorFragment).isHistoryEnabled()) {
@@ -2052,7 +2067,7 @@ public class EditPostActivity extends AppCompatActivity implements
             switch (requestCode) {
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
                     handleMediaPickerResult(data);
-                    // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditor
+                    // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditorAndSave
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     final Uri imageUri = data.getData();
@@ -2165,7 +2180,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // media dialog so the user can choose how to insert the items
         if (ids.size() == 1) {
             long mediaId = ids.get(0);
-            addExistingMediaToEditor(mediaId);
+            addExistingMediaToEditorAndSave(mediaId);
         } else {
             showInsertMediaDialog(ids);
         }
@@ -2190,6 +2205,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         for (Long id: mediaIds) {
                             addExistingMediaToEditor(id);
                         }
+                        savePostAsync(null);
                         break;
                 }
             }
@@ -2610,6 +2626,39 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onEditorFragmentInitialized() {
+        boolean shouldFinishInit = true;
+        // now that we have the Post object initialized,
+        // check whether we have media items to insert from the WRITE POST with media functionality
+        if (getIntent().hasExtra(EXTRA_INSERT_MEDIA)) {
+            List<MediaModel> mediaList = (List<MediaModel>) getIntent().getSerializableExtra(EXTRA_INSERT_MEDIA);
+            // removing this from the intent so it doesn't insert the media items again on each Acivity re-creation
+            getIntent().removeExtra(EXTRA_INSERT_MEDIA);
+            if (mediaList != null && !mediaList.isEmpty()) {
+                shouldFinishInit = false;
+                mMediaInsertedOnCreation = true;
+                for (MediaModel media : mediaList) {
+                    addExistingMediaToEditor(media.getMediaId());
+                }
+                savePostAsync(new AfterSavePostListener() {
+                    @Override
+                    public void onPostSave() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                onEditorFinalTouchesBeforeShowing();
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        if (shouldFinishInit) {
+            onEditorFinalTouchesBeforeShowing();
+        }
+    }
+
+    private void onEditorFinalTouchesBeforeShowing() {
         fillContentEditorFields();
         // Set the error listener
         if (mEditorFragment instanceof EditorFragment) {
