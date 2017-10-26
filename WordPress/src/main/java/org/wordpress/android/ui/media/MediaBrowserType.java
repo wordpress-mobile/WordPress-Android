@@ -10,6 +10,10 @@ public enum MediaBrowserType {
         return this != BROWSER;
     }
 
+    public boolean isBrowser() {
+        return this == BROWSER;
+    }
+
     public boolean isSingleImagePicker() {
         return this == FEATURED_IMAGE_PICKER || this == GRAVATAR_IMAGE_PICKER;
     }

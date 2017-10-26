@@ -200,7 +200,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
      * only show tabs when being used as a media browser rather than a media picker
      */
     private boolean shouldShowTabs() {
-        return mBrowserType == MediaBrowserType.BROWSER;
+        return mBrowserType.isBrowser();
     }
 
     private void enableTabs(boolean enable) {
@@ -554,7 +554,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         // show detail view when tapped if we're browsing media, when used as a picker show detail
         // when long tapped (to mimic native photo picker)
-        if (mBrowserType == MediaBrowserType.BROWSER && !isLongClick
+        if (mBrowserType.isBrowser() && !isLongClick
                 || mBrowserType.isPicker() && isLongClick) {
             showMediaSettings(media, sourceView);
         } else if (mBrowserType.isSingleImagePicker() && !isLongClick) {
