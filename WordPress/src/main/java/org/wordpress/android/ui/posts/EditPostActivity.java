@@ -2049,7 +2049,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.PHOTO_PICKER:
                     // user chose a featured image - pass it to the settings fragment
-                    // TODO
                     if (mEditPostSettingsFragment != null) {
                         mEditPostSettingsFragment.onActivityResult(requestCode, resultCode, data);
                     }

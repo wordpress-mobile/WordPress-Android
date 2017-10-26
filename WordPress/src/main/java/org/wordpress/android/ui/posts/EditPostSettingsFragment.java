@@ -39,8 +39,8 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -61,8 +61,8 @@ import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -71,7 +71,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GeocoderUtils;
-import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -414,15 +413,11 @@ public class EditPostSettingsFragment extends Fragment {
                     }
                     break;
                 case RequestCodes.PHOTO_PICKER:
-                case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
-                    if (resultCode == RESULT_OK) {
-                        ArrayList<Long> ids = ListUtils.
-                                fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
-                        if (ids == null || ids.size() == 0) {
-                            return;
-                        }
-                        updateFeaturedImage(ids.get(0));
+                    if (resultCode == RESULT_OK && data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                        long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
+                        updateFeaturedImage(mediaId);
                     }
+                    break;
             }
         }
     }
