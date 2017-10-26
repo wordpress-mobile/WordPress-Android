@@ -166,7 +166,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         setupTabs();
 
         MediaFilter filter;
-        if (mBrowserType.imagesOnly()) {
+        if (mBrowserType.isSingleImagePicker()) {
             filter = MediaFilter.FILTER_IMAGES;
         } else if (savedInstanceState != null) {
             filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
@@ -194,10 +194,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     /*
-     * only show tabs when being used as a media browser rather than a media picker
+     * only show tabs when the user can filter the media by type
      */
     private boolean shouldShowTabs() {
-        return mBrowserType == MediaBrowserType.BROWSER;
+        return mBrowserType.canFilter();
     }
 
     private void enableTabs(boolean enable) {
@@ -551,7 +551,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         // show detail view when tapped if we're browsing media, when used as a picker show detail
         // when long tapped (to mimic native photo picker)
-        if (mBrowserType == MediaBrowserType.BROWSER && !isLongClick
+        if (mBrowserType.isBrowser() && !isLongClick
                 || mBrowserType.isPicker() && isLongClick) {
             showMediaSettings(media, sourceView);
         } else if (mBrowserType.isSingleImagePicker() && !isLongClick) {
@@ -772,7 +772,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
     private void createAddMediaPopup() {
-        SimpleAdapter adapter = mBrowserType.imagesOnly()
+        SimpleAdapter adapter = mBrowserType.isSingleImagePicker()
                 ? getAddMenuSimpleAdapter(
                         AddMenuItem.ITEM_CAPTURE_PHOTO,
                         AddMenuItem.ITEM_CHOOSE_PHOTO)

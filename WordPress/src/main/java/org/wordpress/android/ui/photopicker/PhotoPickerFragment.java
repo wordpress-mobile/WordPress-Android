@@ -131,7 +131,7 @@ public class PhotoPickerFragment extends Fragment {
         mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mBrowserType.imagesOnly()) {
+                if (mBrowserType.isSingleImagePicker()) {
                     doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
                 } else {
                     showCameraPopupMenu(v);
@@ -141,7 +141,7 @@ public class PhotoPickerFragment extends Fragment {
         mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mBrowserType.imagesOnly()) {
+                if (mBrowserType.isSingleImagePicker()) {
                     doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
                 } else {
                     showPickerPopupMenu(v);

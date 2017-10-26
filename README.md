@@ -55,7 +55,7 @@ When creating your application, you should select "Native client" for the
 application type. The applications manager currently requires a "redirect URL",
 but this isn't used for mobile apps. Just use "https://localhost".
 
-Once you've created your application in the [applications manager][5], you'll
+Once you've created your application in the [applications manager](https://developer.wordpress.com/apps/), you'll
 need to edit the `./gradle.properties` file and change the
 `WP.OAUTH.APP_ID` and `WP.OAUTH.APP_SECRET` fields. Then you can compile and
 run the app on a device or an emulator and try to login with a WordPress.com
