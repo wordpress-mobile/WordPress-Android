@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -125,6 +126,42 @@ public class AnalyticsUtils {
             AnalyticsTracker.track(stat, properties);
         }
     }
+
+
+    /**
+     * Bump Analytics for comment reply, and add blog and comment details into properties.
+     *
+     * @param isQuickReply Whether is a quick reply or not
+     * @param site The site object
+     * @param comment The comment object
+     * @param properties Properties to attach to the event
+     */
+    public static void trackCommentReplyWithDetails(boolean isQuickReply, SiteModel site,
+                                                    CommentModel comment, Map<String, Object> properties) {
+        AnalyticsTracker.Stat stat = isQuickReply ? AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO :
+                AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO;
+
+        if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
+            AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack. Tracking analytics without blog info");
+            AnalyticsTracker.track(stat, properties);
+            return;
+        }
+
+        if (properties == null) {
+            properties = new HashMap<>();
+        }
+        properties.put(BLOG_ID_KEY, site.getSiteId());
+        properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
+        properties.put(POST_ID_KEY, comment.getRemotePostId());
+        properties.put(COMMENT_ID_KEY, comment.getRemoteCommentId());
+
+        if (properties == null) {
+            AnalyticsTracker.track(stat);
+        } else {
+            AnalyticsTracker.track(stat, properties);
+        }
+    }
+
 
     /**
      * Bump Analytics and add blog_id into properties
