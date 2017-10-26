@@ -2631,6 +2631,8 @@ public class EditPostActivity extends AppCompatActivity implements
         // check whether we have media items to insert from the WRITE POST with media functionality
         if (getIntent().hasExtra(EXTRA_INSERT_MEDIA)) {
             List<MediaModel> mediaList = (List<MediaModel>) getIntent().getSerializableExtra(EXTRA_INSERT_MEDIA);
+            // removing this from the intent so it doesn't insert the media items again on each Acivity re-creation
+            getIntent().removeExtra(EXTRA_INSERT_MEDIA);
             if (mediaList != null && !mediaList.isEmpty()) {
                 shouldFinishInit = false;
                 mMediaInsertedOnCreation = true;
