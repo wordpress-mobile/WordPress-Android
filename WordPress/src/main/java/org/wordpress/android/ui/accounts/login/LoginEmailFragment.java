@@ -101,8 +101,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
 
                 if (NetworkUtils.checkConnection(getActivity())) {
                     mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
-                    addGoogleFragment();
                     isSocialLogin = true;
+                    addGoogleFragment();
                 }
             }
         });
@@ -166,19 +166,20 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         }
     }
 
-    private LoginGoogleFragment addGoogleFragment() {
+    private void addGoogleFragment() {
         LoginGoogleFragment loginGoogleFragment;
         FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         loginGoogleFragment = (LoginGoogleFragment) fragmentManager.findFragmentByTag(LoginGoogleFragment.TAG);
 
-        if (loginGoogleFragment == null) {
-            loginGoogleFragment = new LoginGoogleFragment();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(loginGoogleFragment, LoginGoogleFragment.TAG);
-            fragmentTransaction.commit();
+        if (loginGoogleFragment != null) {
+            fragmentTransaction.remove(loginGoogleFragment);
         }
 
-        return loginGoogleFragment;
+        loginGoogleFragment = new LoginGoogleFragment();
+        loginGoogleFragment.setRetainInstance(true);
+        fragmentTransaction.add(loginGoogleFragment, LoginGoogleFragment.TAG);
+        fragmentTransaction.commit();
     }
 
     @Override
