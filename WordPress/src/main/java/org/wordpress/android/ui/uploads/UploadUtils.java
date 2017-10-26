@@ -203,9 +203,9 @@ public class UploadUtils {
                 .show();
     }
 
-    private static void showSnackbarSuccessAction(View view, String messageRes, int buttonTitleRes,
+    private static void showSnackbarSuccessAction(View view, String message, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        Snackbar.make(view, messageRes, 5000)
+        Snackbar.make(view, message, 5000)
                 .setAction(buttonTitleRes, onClickListener).
                 setActionTextColor(view.getResources().getColor(R.color.blue_medium))
                 .show();
