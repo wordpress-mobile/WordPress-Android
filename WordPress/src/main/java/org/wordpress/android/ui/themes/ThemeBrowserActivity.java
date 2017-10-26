@@ -201,6 +201,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemesChanged(ThemeStore.OnThemesChanged event) {
+        // always unset refreshing status to remove progress indicator
+        if (mThemeBrowserFragment != null) {
+            mThemeBrowserFragment.setRefreshing(false);
+            mThemeBrowserFragment.refreshView();
+        }
+
         if (event.origin == ThemeAction.FETCH_INSTALLED_THEMES) {
             mIsFetchingInstalledPlugins = false;
         }
@@ -211,14 +217,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             if (event.origin == ThemeAction.FETCH_WP_COM_THEMES) {
                 AppLog.d(T.THEMES, "WordPress.com Theme fetch successful!");
                 AppPrefs.setLastWpComThemeSync(System.currentTimeMillis());
-                if (mThemeBrowserFragment != null) {
-                    mThemeBrowserFragment.refreshView();
-                }
             } else if (event.origin == ThemeAction.FETCH_INSTALLED_THEMES) {
                 AppLog.d(T.THEMES, "Installed themes fetch successful!");
-                if (mThemeBrowserFragment != null) {
-                    mThemeBrowserFragment.refreshView();
-                }
             }
         }
     }
