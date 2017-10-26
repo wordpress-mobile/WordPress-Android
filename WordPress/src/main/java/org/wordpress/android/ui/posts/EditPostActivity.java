@@ -1768,12 +1768,14 @@ public class EditPostActivity extends AppCompatActivity implements
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
         boolean contentChanged;
-        if (compareCurrentMediaMarkedUploadingToOriginal(content)) {
+        if (mMediaInsertedOnCreation) {
+            mMediaInsertedOnCreation = false;
+            contentChanged = true;
+        } else if (compareCurrentMediaMarkedUploadingToOriginal(content)) {
             contentChanged = true;
         } else if (mEditorFragment instanceof AztecEditorFragment
                 && ((AztecEditorFragment) mEditorFragment).isHistoryEnabled()) {
-            contentChanged = ((AztecEditorFragment) mEditorFragment).hasHistory() || mMediaInsertedOnCreation;
-            mMediaInsertedOnCreation = false;
+            contentChanged = ((AztecEditorFragment) mEditorFragment).hasHistory();
         } else {
             contentChanged = mPost.getContent().compareTo(content) != 0;
         }
