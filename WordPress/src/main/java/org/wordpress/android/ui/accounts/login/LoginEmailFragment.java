@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         implements TextWatcher, OnEditorCommitListener {
+    private static final String KEY_GOOGLE_EMAIL = "KEY_GOOGLE_EMAIL";
     private static final String KEY_IS_SOCIAL = "KEY_IS_SOCIAL";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
@@ -195,6 +196,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         if (savedInstanceState != null) {
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
             mRequestedEmail = savedInstanceState.getString(KEY_REQUESTED_EMAIL);
+            mGoogleEmail = savedInstanceState.getString(KEY_GOOGLE_EMAIL);
             isSocialLogin = savedInstanceState.getBoolean(KEY_IS_SOCIAL);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
@@ -206,6 +208,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         super.onSaveInstanceState(outState);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
         outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);
+        outState.putString(KEY_GOOGLE_EMAIL, mGoogleEmail);
         outState.putBoolean(KEY_IS_SOCIAL, isSocialLogin);
     }
 
