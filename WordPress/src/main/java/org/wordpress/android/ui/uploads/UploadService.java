@@ -637,7 +637,7 @@ public class UploadService extends Service {
     private void aztecRetryUpload(PostModel post) {
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
-        mPostUploadNotifier.prepareForegroundNotificationForRetry(post, mediaToRetry);
+        mPostUploadNotifier.removePostInfoFromForegroundNotificationData(post, mediaToRetry);
         if (!failedMedia.isEmpty()) {
             // reset these media items to QUEUED
             for (MediaModel media : failedMedia) {

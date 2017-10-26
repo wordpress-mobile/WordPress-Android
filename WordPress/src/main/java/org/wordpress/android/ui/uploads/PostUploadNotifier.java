@@ -118,11 +118,7 @@ class PostUploadNotifier {
         }
     }
 
-    void prepareForegroundNotificationForRetry(@NonNull PostModel post, @Nullable List<MediaModel> media) {
-        removePostInfoFromForegroundNotificationData(post, media);
-    }
-
-    private void removePostInfoFromForegroundNotificationData(@NonNull PostModel post, @Nullable List<MediaModel> media) {
+    void removePostInfoFromForegroundNotificationData(@NonNull PostModel post, @Nullable List<MediaModel> media) {
         if (sNotificationData.totalPostItems > 0) {
             sNotificationData.totalPostItems--;
             if (post.isPage()) {
@@ -147,13 +143,7 @@ class PostUploadNotifier {
     }
 
     void removePostInfoFromForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
-        sNotificationData.totalPostItems--;
-        if (post.isPage()) {
-            sNotificationData.totalPageItemsIncludedInPostCount--;
-        }
-        if (media != null) {
-            removeMediaInfoFromForegroundNotification(media);
-        }
+        removePostInfoFromForegroundNotificationData(post, media);
         startOrUpdateForegroundNotification(post);
     }
 
