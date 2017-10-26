@@ -17,9 +17,5 @@ public enum MediaBrowserType {
     public boolean canMultiselect() {
         return this == EDITOR_PICKER;
     }
-
-    public boolean imagesOnly() {
-        return this == FEATURED_IMAGE_PICKER || this == GRAVATAR_IMAGE_PICKER;
-    }
 }
 

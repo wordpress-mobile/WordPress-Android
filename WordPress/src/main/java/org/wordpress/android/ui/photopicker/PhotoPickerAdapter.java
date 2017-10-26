@@ -394,7 +394,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             addMedia(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false);
 
             // videos
-            if (!mBrowserType.imagesOnly()) {
+            if (!mBrowserType.isSingleImagePicker()) {
                 addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
             }
 

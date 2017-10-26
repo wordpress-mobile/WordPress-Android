@@ -352,7 +352,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     mediaList.add(media);
                 }
             }
-        } else if (mBrowserType.imagesOnly()) {
+        } else if (mBrowserType.isSingleImagePicker()) {
             mediaList = mMediaStore.getSiteImages(mSite);
         } else {
             switch (mFilter) {
