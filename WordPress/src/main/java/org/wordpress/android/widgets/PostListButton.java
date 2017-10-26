@@ -83,6 +83,7 @@ public class PostListButton extends LinearLayout {
         mButtonType = buttonType;
         mTextView.setText(getButtonTextResId(buttonType));
         mImageView.setImageResource(getButtonIconResId(buttonType));
+        mTextView.setTextColor(getContext().getResources().getColor(getTextColorResId(buttonType)));
     }
 
     public static int getButtonTextResId(int buttonType) {
@@ -139,9 +140,18 @@ public class PostListButton extends LinearLayout {
             case BUTTON_BACK:
                 return R.drawable.ic_chevron_left_blue_wordpress_18dp;
             case BUTTON_RETRY:
-                return R.drawable.ic_refresh_blue_wordpress_18dp;
+                return R.drawable.ic_refresh_red_18dp;
             default:
                 return 0;
+        }
+    }
+
+    public static int getTextColorResId(int buttonType) {
+        switch (buttonType) {
+            case BUTTON_RETRY:
+                return R.color.alert_red;
+            default:
+                return R.color.blue_wordpress;
         }
     }
 }
