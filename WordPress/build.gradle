@@ -46,19 +46,16 @@ android {
 
         buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
         buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "false"
-        buildConfigField "boolean", "LOGIN_GOOGLE_ENABLED", "true"
     }
 
     productFlavors {
         vanilla { // used for release and beta
-            buildConfigField "boolean", "LOGIN_GOOGLE_ENABLED", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "true"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "LOGIN_GOOGLE_ENABLED", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
@@ -175,6 +172,11 @@ task copyGoogleServicesExampleFile(type: Copy) {
     rename('google-services.json-example', 'google-services.json')
 }
 
+task copyGoogleServicesBuddybuildFile(type: Copy) {
+    from(file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/google-services.json"))
+    into('.')
+}
+
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
     def inputFile = checkGradlePropertiesFile()
@@ -210,9 +212,15 @@ android.buildTypes.all { buildType ->
         }
     }
 
-    // Copy example if Google services file doesn't exist
+    // If Google services file doesn't exist...
     if (!file("google-services.json").exists()) {
-        tasks.copyGoogleServicesExampleFile.execute()
+        // ... copy example file.
+        if (!file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/google-services.json").exists()) {
+            tasks.copyGoogleServicesExampleFile.execute()
+        // ... copy Buddybuild file.
+        } else {
+            tasks.copyGoogleServicesBuddybuildFile.execute()
+        }
     }
 }
 
