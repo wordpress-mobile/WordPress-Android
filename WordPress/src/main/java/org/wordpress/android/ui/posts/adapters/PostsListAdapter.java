@@ -517,20 +517,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private void configurePostButtons(final PostViewHolder holder,
                                       final PostModel post) {
-        // posts with local changes have preview rather than view button
-        if (post.isLocalDraft() || post.isLocallyChanged()) {
-            holder.btnView.setButtonType(PostListButton.BUTTON_PREVIEW);
-        } else {
-            holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
-        }
-
         boolean canRetry = mUploadStore.getUploadErrorForPost(post) != null;
+        boolean canShowViewButton = !canRetry;
         boolean canShowStatsButton = canShowStatsForPost(post);
         boolean canShowPublishButton = canRetry || canPublishPost(post);
-
-        int numVisibleButtons = 3;
-        if (canShowPublishButton) numVisibleButtons++;
-        if (canShowStatsButton) numVisibleButtons++;
 
         // publish button is repurposed depending on the situation
         if (canShowPublishButton) {
@@ -545,9 +535,23 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
 
-        // edit / view are always visible
+        // posts with local changes have preview rather than view button
+        if (canShowViewButton) {
+            if (post.isLocalDraft() || post.isLocallyChanged()) {
+                holder.btnView.setButtonType(PostListButton.BUTTON_PREVIEW);
+            } else {
+                holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
+            }
+        }
+
+        // edit is always visible
         holder.btnEdit.setVisibility(View.VISIBLE);
-        holder.btnView.setVisibility(View.VISIBLE);
+        holder.btnView.setVisibility(canShowViewButton ? View.VISIBLE : View.GONE);
+
+        int numVisibleButtons = 2;
+        if (canShowViewButton) numVisibleButtons++;
+        if (canShowPublishButton) numVisibleButtons++;
+        if (canShowStatsButton) numVisibleButtons++;
 
         // if there's enough room to show all buttons then hide back/more and show stats/trash/publish,
         // otherwise show the more button and hide stats/trash/publish
