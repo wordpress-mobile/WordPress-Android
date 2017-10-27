@@ -43,7 +43,6 @@ import org.wordpress.android.util.ToastUtils;
 import javax.inject.Inject;
 
 public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment implements TextWatcher {
-
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
 

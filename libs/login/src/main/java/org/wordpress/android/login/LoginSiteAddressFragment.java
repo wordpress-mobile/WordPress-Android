@@ -57,7 +57,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
     private static final String MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_ID = "11";
 
     private static final String NO_SITE_HELPSHIFT_FAQ_SECTION = "10";
-    private static final String NO_SITE_HELPSHIFT_FAQ_ID = "2"; //using the same as in INVALID URL
+    private static final String NO_SITE_HELPSHIFT_FAQ_ID = "2"; // Using the same as in INVALID URL
 
     private WPLoginInputRow mSiteAddressInput;
 
@@ -340,7 +340,8 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
                 return;
             } else {
-                AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name() + " - " + event.error.toString());
+                AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name()
+                        + " - " + event.error.toString());
                 handleDiscoveryError(event.error, event.failedEndpoint);
                 return;
             }
