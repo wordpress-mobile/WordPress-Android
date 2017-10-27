@@ -118,11 +118,7 @@ class PostUploadNotifier {
         }
     }
 
-    void prepareForegroundNotificationForRetry(@NonNull PostModel post, @Nullable List<MediaModel> media) {
-        removePostInfoFromForegroundNotificationData(post, media);
-    }
-
-    private void removePostInfoFromForegroundNotificationData(@NonNull PostModel post, @Nullable List<MediaModel> media) {
+    void removePostInfoFromForegroundNotificationData(@NonNull PostModel post, @Nullable List<MediaModel> media) {
         if (sNotificationData.totalPostItems > 0) {
             sNotificationData.totalPostItems--;
             if (post.isPage()) {
@@ -143,6 +139,11 @@ class PostUploadNotifier {
         if (media != null) {
             addMediaInfoToForegroundNotification(media);
         }
+        startOrUpdateForegroundNotification(post);
+    }
+
+    void removePostInfoFromForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
+        removePostInfoFromForegroundNotificationData(post, media);
         startOrUpdateForegroundNotification(post);
     }
 
@@ -232,8 +233,10 @@ class PostUploadNotifier {
 
     // cancels the error or success notification (only one of these exist per Post at any given
     // time
-    void cancelFinalNotification(@NonNull PostModel post) {
-        mNotificationManager.cancel((int)getNotificationIdForPost(post));
+    public static void cancelFinalNotification(Context context, @NonNull PostModel post) {
+        NotificationManager notificationManager = (NotificationManager) SystemServiceFactory.get(context,
+                Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel((int)getNotificationIdForPost(post));
     }
 
     void cancelFinalNotificationForMedia(@NonNull SiteModel site) {
