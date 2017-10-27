@@ -95,7 +95,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private final boolean mIsPage;
     private final boolean mIsStatsSupported;
-    private final boolean mAlwaysShowAllButtons;
+    private final int mMaxButtonsPerRow;
 
     private boolean mIsLoadingPosts;
 
@@ -128,8 +128,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         // endlist indicator height is hard-coded here so that its horz line is in the middle of the fab
         mEndlistIndicatorHeight = DisplayUtils.dpToPx(context, mIsPage ? 82 : 74);
 
-        // on larger displays we can always show all buttons
-        mAlwaysShowAllButtons = (displayWidth >= 1080);
+        if (displayWidth >= 1080) {
+            mMaxButtonsPerRow = 6;
+        } else if (displayWidth >= 768) {
+            mMaxButtonsPerRow = 4;
+        } else {
+            mMaxButtonsPerRow = 3;
+        }
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {
@@ -545,8 +550,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.btnEdit.setVisibility(View.VISIBLE);
         holder.btnView.setVisibility(View.VISIBLE);
 
-        // if we have enough room to show all buttons, hide the back/more buttons and show stats/trash/publish
-        if (mAlwaysShowAllButtons || numVisibleButtons <= 3) {
+        // if there's enough room to show all buttons, hide the back/more buttons and show stats/trash/publish
+        if (numVisibleButtons <= mMaxButtonsPerRow) {
             holder.btnMore.setVisibility(View.GONE);
             holder.btnBack.setVisibility(View.GONE);
             holder.btnTrash.setVisibility(View.VISIBLE);
