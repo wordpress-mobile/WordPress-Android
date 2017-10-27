@@ -25,8 +25,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -95,7 +95,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private final boolean mIsPage;
     private final boolean mIsStatsSupported;
-    private final int mMaxButtonsPerRow;
+    private final boolean mShowAllButtons;
 
     private boolean mIsLoadingPosts;
 
@@ -128,13 +128,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         // endlist indicator height is hard-coded here so that its horz line is in the middle of the fab
         mEndlistIndicatorHeight = DisplayUtils.dpToPx(context, mIsPage ? 82 : 74);
 
-        if (displayWidth >= 1080) {
-            mMaxButtonsPerRow = 6;
-        } else if (displayWidth >= 768) {
-            mMaxButtonsPerRow = 4;
-        } else {
-            mMaxButtonsPerRow = 3;
-        }
+        // show all buttons if screen is wide enough
+        mShowAllButtons = displayWidth >= 780;
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {
@@ -529,38 +524,39 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
 
-        if (mUploadStore.getUploadErrorForPost(post) != null) {
-            holder.btnPublish.setButtonType(PostListButton.BUTTON_RETRY);
-        } else {
-            if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
+        boolean canRetry = mUploadStore.getUploadErrorForPost(post) != null;
+        boolean canShowStatsButton = canShowStatsForPost(post);
+        boolean canShowPublishButton = canRetry || canPublishPost(post);
+
+        int numVisibleButtons = 3;
+        if (canShowPublishButton) numVisibleButtons++;
+        if (canShowStatsButton) numVisibleButtons++;
+
+        // publish button is repurposed depending on the situation
+        if (canShowPublishButton) {
+            if (!mSite.getHasCapabilityPublishPosts()) {
+                holder.btnPublish.setButtonType(PostListButton.BUTTON_SUBMIT);
+            } else if (canRetry) {
+                holder.btnPublish.setButtonType(PostListButton.BUTTON_RETRY);
+            } else if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
                 holder.btnPublish.setButtonType(PostListButton.BUTTON_SYNC);
             } else {
                 holder.btnPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
             }
         }
 
-        boolean canShowStatsButton = canShowStatsForPost(post);
-        boolean canShowPublishButton = canPublishPost(post);
-
-        int numVisibleButtons = 3;
-        if (canShowPublishButton) numVisibleButtons++;
-        if (canShowStatsButton) numVisibleButtons++;
-
         // edit / view are always visible
         holder.btnEdit.setVisibility(View.VISIBLE);
         holder.btnView.setVisibility(View.VISIBLE);
 
-        // if there's enough room to show all buttons, hide the back/more buttons and show stats/trash/publish
-        if (numVisibleButtons <= mMaxButtonsPerRow) {
+        // if there's enough room to show all buttons then hide back/more and show stats/trash/publish,
+        // otherwise show the more button and hide stats/trash/publish
+        if (mShowAllButtons || numVisibleButtons <= 3) {
             holder.btnMore.setVisibility(View.GONE);
             holder.btnBack.setVisibility(View.GONE);
             holder.btnTrash.setVisibility(View.VISIBLE);
             holder.btnStats.setVisibility(canShowStatsButton ? View.VISIBLE : View.GONE);
             holder.btnPublish.setVisibility(canShowPublishButton ? View.VISIBLE : View.GONE);
-            if (!mSite.getHasCapabilityPublishPosts()) {
-                // Users with roles that lack permission to publish show Submit
-                holder.btnPublish.setButtonType(PostListButton.BUTTON_SUBMIT);
-            }
         } else {
             holder.btnMore.setVisibility(View.VISIBLE);
             holder.btnBack.setVisibility(View.GONE);
