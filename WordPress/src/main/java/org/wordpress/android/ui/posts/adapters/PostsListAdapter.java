@@ -128,8 +128,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         // endlist indicator height is hard-coded here so that its horz line is in the middle of the fab
         mEndlistIndicatorHeight = DisplayUtils.dpToPx(context, mIsPage ? 82 : 74);
 
-        // show all buttons if screen is wide enough
-        mShowAllButtons = displayWidth >= 780;
+        // on larger displays we can always show all buttons
+        mShowAllButtons = displayWidth >= 1080;
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {
