@@ -32,6 +32,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,12 +59,14 @@ import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropList
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorFragmentActivity;
+import org.wordpress.android.editor.EditorImageMetaData;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.editor.EditorWebViewCompatibility;
 import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
+import org.wordpress.android.editor.legacy.EditorImageSettingsListener;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -153,6 +156,7 @@ import de.greenrobot.event.EventBus;
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorBetaClickListener,
+        EditorImageSettingsListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
         EditorWebViewCompatibility.ReflectionFailureListener,
@@ -1015,6 +1019,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditorFragment instanceof AztecEditorFragment) {
             AztecEditorFragment aztecEditorFragment = (AztecEditorFragment)mEditorFragment;
             aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
+            aztecEditorFragment.setEditorImageSettingsListener(EditPostActivity.this);
 
             Drawable loadingImagePlaceholder = getResources().getDrawable(org.wordpress.android.editor.R.drawable.ic_gridicons_image);
             loadingImagePlaceholder.setBounds(0, 0,
@@ -1030,6 +1035,10 @@ public class EditPostActivity extends AppCompatActivity implements
             aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
             aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);
         }
+    }
+
+    @Override
+    public void onImageSettingsRequested(EditorImageMetaData editorImageMetaData) {
     }
 
     private interface AfterSavePostListener {
