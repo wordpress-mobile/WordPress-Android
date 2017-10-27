@@ -842,7 +842,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
 
             // Make sure we don't return any hidden posts
-            tmpPosts.removeAll(mHiddenPosts);
+            if (mHiddenPosts.size() > 0) {
+                tmpPosts.removeAll(mHiddenPosts);
+            }
 
             // Go no further if existing post list is the same
             if (mLoadMode == LoadMode.IF_CHANGED && PostUtils.postListsAreEqual(mPosts, tmpPosts)) {
