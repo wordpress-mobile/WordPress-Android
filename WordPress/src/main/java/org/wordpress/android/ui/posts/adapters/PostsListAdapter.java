@@ -522,7 +522,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         boolean canShowStatsButton = canShowStatsForPost(post);
         boolean canShowPublishButton = canRetry || canPublishPost(post);
 
-        // publish button is repurposed depending on the situation
+        // publish button is re-purposed depending on the situation
         if (canShowPublishButton) {
             if (!mSite.getHasCapabilityPublishPosts()) {
                 holder.btnPublish.setButtonType(PostListButton.BUTTON_SUBMIT);
@@ -842,9 +842,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
 
             // Make sure we don't return any hidden posts
-            for (PostModel hiddenPost : mHiddenPosts) {
-                tmpPosts.remove(hiddenPost);
-            }
+            tmpPosts.removeAll(mHiddenPosts);
 
             // Go no further if existing post list is the same
             if (mLoadMode == LoadMode.IF_CHANGED && PostUtils.postListsAreEqual(mPosts, tmpPosts)) {
