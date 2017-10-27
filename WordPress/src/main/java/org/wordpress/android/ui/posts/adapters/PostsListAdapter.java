@@ -415,6 +415,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
+        // first discard any progress updates if the post has any errors reported already
+        UploadError reason = mUploadStore.getUploadErrorForPost(post);
+        if (reason != null) {
+            view.setVisibility(View.GONE);
+            return;
+        }
+
         if (UploadService.isPostUploadingOrQueued(post) || UploadService.hasInProgressMediaUploadsForPost(post)) {
             view.setVisibility(View.VISIBLE);
             int overallProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100);
