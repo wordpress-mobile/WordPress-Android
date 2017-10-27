@@ -192,7 +192,6 @@ Language: sr_RS
 	<string name="ssl_certificate_details">Детаљи</string>
 	<string name="delete_sure_page">Обриши ову страну</string>
 	<string name="cab_selected">%d изабрано</string>
-	<string name="confirm_delete_media">Обрисати изабрану ставку?</string>
 	<string name="confirm_delete_multi_media">Обрисати изабране ставке?</string>
 	<string name="delete_sure">Обриши овај нацрт</string>
 	<string name="delete_sure_post">Обриши овај чланак</string>

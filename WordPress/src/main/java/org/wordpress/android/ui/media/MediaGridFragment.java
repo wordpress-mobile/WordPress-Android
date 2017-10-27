@@ -1,10 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,14 +35,13 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -151,8 +147,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private SiteModel mSite;
 
     public interface MediaGridListener {
-        void onMediaItemSelected(View sourceView, int localMediaId);
-        void onRetryUpload(int localMediaId);
+        void onMediaItemSelected(View sourceView, int localMediaId, boolean isLongClick);
+        void onMediaRequestRetry(int localMediaId);
+        void onMediaRequestDelete(int localMediaId);
     }
 
     public static MediaGridFragment newInstance(@NonNull SiteModel site,
@@ -181,10 +178,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
-        }
-
-        if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
-            SmartToast.show(getActivity(), SmartToast.SmartToastType.MEDIA_LONG_PRESS);
         }
     }
 
@@ -276,12 +269,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private MediaGridAdapter getAdapter() {
         if (!hasAdapter()) {
-            boolean canMultiSelect = mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
-                    && WPMediaUtils.currentUserCanDeleteMedia(mSite);
-            mGridAdapter = new MediaGridAdapter(getActivity(), mSite);
+            mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mBrowserType);
             mGridAdapter.setCallback(this);
-            mGridAdapter.setAllowMultiselect(canMultiSelect);
-            mGridAdapter.setShowPreviewIcon(mBrowserType.isPicker());
         }
         return mGridAdapter;
     }
@@ -316,10 +305,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     /*
-     * this method has two purposes: (1) make sure media that is being deleted still has the right UploadState,
-     * as it may have been overwritten by a refresh while deletion was still in progress, (2) remove any local
-     * files (ie: media not uploaded yet) that no longer exist (in case user deleted them from the device)
-     */
+      * this method has two purposes: (1) make sure media that is being deleted still has the right UploadState,
+      * as it may have been overwritten by a refresh while deletion was still in progress, (2) remove any local
+      * files (ie: media not uploaded yet) that no longer exist (in case user deleted them from the device)
+      */
     private void ensureCorrectState(List<MediaModel> mediaModels) {
         if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
             // we only need to check the deletion state if media are currently being deleted
@@ -354,18 +343,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         List<MediaModel> mediaList;
         if (!TextUtils.isEmpty(mSearchTerm)) {
             mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);
-        } else if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER) {
-            List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
-            mediaList = new ArrayList<>();
-            for (MediaModel media: allMedia) {
-                String mime = media.getMimeType();
-                if (mime != null && (mime.startsWith("image") || mime.startsWith("video"))) {
-                    mediaList.add(media);
-                }
-            }
-        } else if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+        } else if (mBrowserType.isSingleImagePicker()) {
             mediaList = mMediaStore.getSiteImages(mSite);
-        } else {
+        } else if (mBrowserType.canFilter()) {
             switch (mFilter) {
                 case FILTER_IMAGES:
                     mediaList = mMediaStore.getSiteImages(mSite);
@@ -382,6 +362,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 default:
                     mediaList = mMediaStore.getAllSiteMedia(mSite);
                     break;
+            }
+        } else {
+            List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
+            mediaList = new ArrayList<>();
+            for (MediaModel media : allMedia) {
+                String mime = media.getMimeType();
+                if (mime != null && (mime.startsWith("image") || mime.startsWith("video"))) {
+                    mediaList.add(media);
+                }
             }
         }
 
@@ -430,19 +419,14 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     @Override
-    public void onAdapterRetryUpload(int localMediaId) {
-        mListener.onRetryUpload(localMediaId);
-    }
-
-    @Override
-    public void onAdapterItemSelected(View sourceView, int position) {
+    public void onAdapterItemClicked(View sourceView, int position, boolean isLongPress) {
         int localMediaId = getAdapter().getLocalMediaIdAtPosition(position);
-        mListener.onMediaItemSelected(sourceView, localMediaId);
+        mListener.onMediaItemSelected(sourceView, localMediaId, isLongPress);
     }
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+        if (!mBrowserType.canMultiselect()) {
             return;
         }
 
@@ -453,6 +437,18 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         updateActionModeTitle(count);
+    }
+
+    @Override
+    public void onAdapterRequestRetry(int position) {
+        int localMediaId = getAdapter().getLocalMediaIdAtPosition(position);
+        mListener.onMediaRequestRetry(localMediaId);
+    }
+
+    @Override
+    public void onAdapterRequestDelete(int position) {
+        int localMediaId = getAdapter().getLocalMediaIdAtPosition(position);
+        mListener.onMediaRequestDelete(localMediaId);
     }
 
     @SuppressWarnings("unused")
@@ -595,28 +591,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
-    private void handleMultiSelectDelete() {
-        if (!isAdded()) return;
-
-        Builder builder = new AlertDialog.Builder(getActivity()).setMessage(R.string.confirm_delete_multi_media)
-                                                                .setCancelable(true).setPositiveButton(
-                        R.string.delete, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (getActivity() instanceof MediaBrowserActivity) {
-                                    ((MediaBrowserActivity) getActivity()).deleteMedia(
-                                            getAdapter().getSelectedItems());
-                                }
-                                getAdapter().clearSelection();
-                                if (mActionMode != null) {
-                                    mActionMode.finish();
-                                }
-                            }
-                        }).setNegativeButton(R.string.cancel, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
     private void restoreState(@NonNull Bundle savedInstanceState) {
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
         if (isInMultiSelectMode) {
@@ -673,6 +647,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         List<MediaModel> filteredMedia = getFilteredMedia();
+        ensureCorrectState(filteredMedia);
         getAdapter().setMediaList(filteredMedia);
 
         boolean hasRetrievedAll = !event.canLoadMore;
@@ -748,27 +723,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             inflater.inflate(R.menu.media_multiselect, menu);
             setSwipeToRefreshEnabled(false);
             getAdapter().setInMultiSelect(true);
+            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.grey_darken_30);
             updateActionModeTitle(selectCount);
-            SmartToast.disableSmartToast(SmartToast.SmartToastType.MEDIA_LONG_PRESS);
             return true;
         }
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            MenuItem mnuTrash = menu.findItem(R.id.media_multiselect_actionbar_trash);
-            mnuTrash.setVisible(!mBrowserType.isPicker());
-
             MenuItem mnuConfirm = menu.findItem(R.id.mnu_confirm_selection);
             mnuConfirm.setVisible(mBrowserType.isPicker());
-
             return true;
         }
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            if (item.getItemId() == R.id.media_multiselect_actionbar_trash) {
-                handleMultiSelectDelete();
-            } else if (item.getItemId() == R.id.mnu_confirm_selection) {
+            if (item.getItemId() == R.id.mnu_confirm_selection) {
                 setResultIdsAndFinish();
             }
             return true;
@@ -778,6 +747,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         public void onDestroyActionMode(ActionMode mode) {
             setSwipeToRefreshEnabled(true);
             getAdapter().setInMultiSelect(false);
+            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.status_bar_tint);
             mActionMode = null;
         }
     }

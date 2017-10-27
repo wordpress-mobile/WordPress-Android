@@ -187,7 +187,6 @@ Language: gd_GB
 	<string name="themes_fetching">A’ faighinn nan ùrlaran…</string>
 	<string name="ssl_certificate_details">Mion-fhiosrachadh</string>
 	<string name="cab_selected">%d air a thaghadh</string>
-	<string name="confirm_delete_media">A bheil thu airson an rud a thagh thu a sguabadh às?</string>
 	<string name="delete_sure">Sguab às an dreachd seo</string>
 	<string name="delete_sure_page">Sguab às an duilleag seo</string>
 	<string name="confirm_delete_multi_media">A bheil thu airson na rudan a thagh thu a sguabadh às?</string>

@@ -131,6 +131,7 @@ public class ReaderCommentService extends Service {
         String path = "sites/" + blogId + "/posts/" + postId + "/replies/"
                     + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
                     + "&meta=likes"
+                    + "&force=wpcom"
                     + "&hierarchical=true"
                     + "&order=ASC"
                     + "&page=" + pageNumber;

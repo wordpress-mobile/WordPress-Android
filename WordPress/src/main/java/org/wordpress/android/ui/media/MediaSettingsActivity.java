@@ -136,8 +136,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                                      @Nullable View sourceView) {
         // go directly to preview for local images, videos and audio (do nothing for local documents)
         if (MediaUtils.isLocalFile(media.getUploadState())) {
-            if (MediaUtils.isValidImage(media.getUrl())
-                    || MediaUtils.isAudio(media.getUrl())
+            if (MediaUtils.isValidImage(media.getFilePath())
+                    || MediaUtils.isAudio(media.getFilePath())
                     || media.isVideo()) {
                 MediaPreviewActivity.showPreview(activity, site, media.getFilePath());
             }
@@ -509,7 +509,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         txtFilename.setText(mMedia.getFileName());
 
         TextView txtFileType = (TextView) findViewById(R.id.text_filetype);
-        txtFileType.setText(mMedia.getFileExtension().toUpperCase());
+        txtFileType.setText(StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase());
 
         float mediaWidth = mMedia.getWidth();
         float mediaHeight = mMedia.getHeight();

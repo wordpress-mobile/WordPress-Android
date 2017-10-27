@@ -15,7 +15,7 @@
         android:id="@+id/learn_more_caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/site_settings_learn_more_caption"
+        android:visibility="gone"
         android:textSize="@dimen/text_sz_small"
         android:textColor="@color/grey_darken_10" />
 

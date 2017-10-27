@@ -103,6 +103,15 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     @Override
     public void upload(@NonNull PostModel post) {
         synchronized (sQueuedPostsList) {
+            // first check whether there was an old version of this Post still enqueued waiting
+            // for being uploaded
+            for (PostModel queuedPost : sQueuedPostsList) {
+                if (queuedPost.getId() == post.getId()) {
+                    // we found an older version, so let's remove it and replace it with the newest copy
+                    sQueuedPostsList.remove(queuedPost);
+                    break;
+                }
+            }
             sQueuedPostsList.add(post);
         }
         uploadNextPost();
