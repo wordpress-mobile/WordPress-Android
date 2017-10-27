@@ -139,7 +139,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         mUsernameInput = (WPLoginInputRow) rootView.findViewById(R.id.login_username_row);
         mUsernameInput.setText(mInputUsername);
         if (BuildConfig.DEBUG) {
-            mUsernameInput.getEditText().setText(BuildConfig.DEBUG_DOTCOM_LOGIN_USERNAME);
+            mUsernameInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_USERNAME);
         }
         mUsernameInput.addTextChangedListener(this);
         mUsernameInput.setOnEditorCommitListener(new OnEditorCommitListener() {
@@ -153,7 +153,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         mPasswordInput = (WPLoginInputRow) rootView.findViewById(R.id.login_password_row);
         mPasswordInput.setText(mInputPassword);
         if (BuildConfig.DEBUG) {
-            mPasswordInput.getEditText().setText(BuildConfig.DEBUG_DOTCOM_LOGIN_PASSWORD);
+            mPasswordInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_PASSWORD);
         }
         mPasswordInput.addTextChangedListener(this);
 

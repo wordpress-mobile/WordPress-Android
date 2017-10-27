@@ -146,7 +146,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 mPasswordInput.setText(mPassword);
             } else {
                 if (BuildConfig.DEBUG) {
-                    mPasswordInput.getEditText().setText(BuildConfig.DEBUG_DOTCOM_LOGIN_PASSWORD);
+                    mPasswordInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_PASSWORD);
                 }
             }
         } else {
