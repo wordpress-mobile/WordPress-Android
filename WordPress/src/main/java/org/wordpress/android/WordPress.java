@@ -275,6 +275,9 @@ public class WordPress extends MultiDexApplication {
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
+        // verify media is sanitized
+        sanitizeMediaUploadStateForSite();
+
         // setup the Credentials Client so we can clean it up on wpcom logout
         mCredentialsClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -284,6 +287,14 @@ public class WordPress extends MultiDexApplication {
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+    }
+
+    private void sanitizeMediaUploadStateForSite() {
+        int siteLocalId = AppPrefs.getSelectedSite();
+        SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+        if (selectedSite != null) {
+            UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
+        }
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -665,14 +676,6 @@ public class WordPress extends MultiDexApplication {
             if (isPushNotificationPingNeeded() && mAccountStore.hasAccessToken()) {
                 // Register for Cloud messaging
                 startService(new Intent(getContext(), GCMRegistrationIntentService.class));
-            }
-        }
-
-        private void sanitizeMediaUploadStateForSite() {
-            int siteLocalId = AppPrefs.getSelectedSite();
-            SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-            if (selectedSite != null) {
-                UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
             }
         }
 
