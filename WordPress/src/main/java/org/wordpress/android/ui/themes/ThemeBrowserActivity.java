@@ -24,6 +24,8 @@ import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
+import org.wordpress.android.fluxc.store.ThemeStore.SearchThemesPayload;
+import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
@@ -229,6 +231,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             AppLog.e(T.THEMES, "Error fetching current theme: " + event.error.message);
             ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
 
+            // set the new current theme to update header
             if (mCurrentTheme != null && mThemeBrowserFragment != null) {
                 if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
                     mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
@@ -315,7 +318,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (TextUtils.isEmpty(searchTerm)) {
             return;
         }
-        ThemeStore.SearchThemesPayload payload = new ThemeStore.SearchThemesPayload(searchTerm);
+        SearchThemesPayload payload = new SearchThemesPayload(searchTerm);
         mDispatcher.dispatch(ThemeActionBuilder.newSearchThemesAction(payload));
     }
 
@@ -340,7 +343,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     public void activateTheme(String themeId) {
         ThemeModel theme = new ThemeModel();
         theme.setThemeId(themeId);
-        ThemeStore.ActivateThemePayload payload = new ThemeStore.ActivateThemePayload(mSite, theme);
+        ActivateThemePayload payload = new ActivateThemePayload(mSite, theme);
 
         if (mSite.isJetpackConnected() && mThemeStore.getInstalledThemeByThemeId(themeId) == null) {
             // first install the theme, then activate it
