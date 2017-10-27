@@ -59,6 +59,8 @@ dependencies {
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     compile "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
     compile "org.jsoup:jsoup:1.10.3"
+
+    compile 'com.google.code.gson:gson:2.6.+'
 }
 
 signing {
