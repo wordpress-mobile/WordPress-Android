@@ -509,9 +509,14 @@ public class PostsListFragment extends Fragment
                 }
                 ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 break;
+            case PostListButton.BUTTON_RETRY:
+                // restart the UploadService with retry parameters
+                Intent intent = UploadService.getUploadPostServiceIntent(
+                        getActivity(), post, PostUtils.isFirstTimePublish(post), false, true);
+                getActivity().startService(intent);
+                break;
             case PostListButton.BUTTON_SUBMIT:
             case PostListButton.BUTTON_SYNC:
-            case PostListButton.BUTTON_RETRY:
             case PostListButton.BUTTON_PUBLISH:
                 UploadUtils.publishPost(getActivity(), post, mSite, mDispatcher);
                 break;
