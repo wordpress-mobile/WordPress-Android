@@ -61,7 +61,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -172,15 +172,25 @@ public class EditPostSettingsFragment extends Fragment {
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSite(),
                 new SiteSettingsListener() {
                     @Override
-                    public void onSettingsUpdated(Exception error) {
-                        // EditPostActivityHook will be null if the fragment is detached
-                        if (error == null && getEditPostActivityHook() != null) {
+                    public void onSaveError(Exception error) {
+                        // no-op
+                    }
+
+                    @Override
+                    public void onFetchError(Exception error) {
+                        // no-op
+                    }
+
+                    @Override
+                    public void onSettingsUpdated() {
+                        // mEditPostActivityHook will be null if the fragment is detached
+                        if (getEditPostActivityHook() != null) {
                             updatePostFormat(mSiteSettings.getDefaultPostFormat());
                         }
                     }
 
                     @Override
-                    public void onSettingsSaved(Exception error) {
+                    public void onSettingsSaved() {
                         // no-op
                     }
 
@@ -893,7 +903,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, getSite());
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.FEATURED_IMAGE_PICKER);
         startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
     }
 

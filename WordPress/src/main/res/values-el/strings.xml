@@ -497,8 +497,6 @@ Language: el_GR
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Οι σελίδες που ακολουθείτε δεν έχουν δημοσιεύσει κάτι πρόσφατα</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Καμία πρόσφατη δημοσίευση</string>
 	<string name="edit_media">Επεξεργασία πολυμέσου</string>
-	<string name="media_details_copy_url_toast">Η διεύθυνση αντιγράφτηκε στο πρόχειρο</string>
-	<string name="media_details_copy_url">Αντιγραφή διεύθυνσης</string>
 	<string name="media_details_label_date_uploaded">Ανέβηκε</string>
 	<string name="media_details_label_date_added">Προστέθηκε</string>
 	<string name="selected_theme">Επιλεγμένο Θέμα</string>
@@ -748,7 +746,6 @@ Language: el_GR
 	<string name="themes_fetching">Λήψη θεμάτων...</string>
 	<string name="ssl_certificate_details">Λεπτομέρειες</string>
 	<string name="cab_selected">%d επιλεγμένα</string>
-	<string name="confirm_delete_media">Διαγραφή επιλεγμένου αντικειμένου;</string>
 	<string name="confirm_delete_multi_media">Διαγραφή επιλεγμένων αντικειμένων;</string>
 	<string name="delete_sure_page">Διαγραφή της σελίδας</string>
 	<string name="delete_sure">Διαγραφή αυτού του προσχεδίου</string>

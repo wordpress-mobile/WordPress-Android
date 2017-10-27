@@ -38,13 +38,14 @@
                     android:layout_toLeftOf="@+id/title_beta"
                     android:layout_toStartOf="@+id/title_beta"
                     android:layout_width="match_parent"
-                    android:padding="16dp"
+                    android:padding="@dimen/margin_extra_large"
                     android:fontFamily="serif"
                     android:textStyle="bold"
                     android:textSize="@dimen/aztec_title_size"
+                    android:imeOptions="flagNoExtractUi"
                     aztec:lineSpacingExtra="@dimen/spacing_extra_title"
                     aztec:textColor="@color/grey_dark"
-                    aztec:textColorHint="@color/hint_text" >
+                    aztec:textColorHint="@color/hint_text">
                 </org.wordpress.aztec.AztecText>
 
                 <ImageButton
@@ -54,10 +55,10 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:padding="@dimen/sourceview_side_margin"
-                    android:src="@drawable/ic_gridicons_help"
                     android:background="?android:attr/selectableItemBackground"
-                    android:contentDescription="@string/editor_title_beta">
+                    android:contentDescription="@string/editor_title_beta"
+                    android:padding="@dimen/margin_extra_large"
+                    android:src="@drawable/ic_gridicons_help">
                 </ImageButton>
 
             </RelativeLayout>
@@ -88,6 +89,7 @@
                     android:paddingTop="16dp"
                     android:scrollbars="vertical"
                     android:fontFamily="serif"
+                    android:imeOptions="flagNoExtractUi"
                     aztec:bulletColor="@color/bullet"
                     aztec:bulletMargin="@dimen/bullet_margin"
                     aztec:bulletPadding="@dimen/bullet_padding"
@@ -125,8 +127,8 @@
                     android:background="@null"
                     android:textSize="14sp"
                     android:visibility="gone"
-                    android:fontFamily="monospace">
-                </org.wordpress.aztec.source.SourceViewEditText>
+                    android:fontFamily="monospace"
+                    android:imeOptions="flagNoExtractUi" />
 
             </FrameLayout>
 

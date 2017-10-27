@@ -257,9 +257,7 @@ Language: eu_ES
 	<string name="reader_err_get_post_not_found">Bidalketa hau jada ez da existitzen</string>
 	<string name="reader_err_get_post_not_authorized">Ez daukazu bidalketa hau ikusteko baimenik</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Ez dago bidalketa berririk</string>
-	<string name="media_details_copy_url_toast">URL-a arbelera kopiatu da</string>
 	<string name="edit_media">Editatu media</string>
-	<string name="media_details_copy_url">Kopiatu URL-a</string>
 	<string name="media_details_label_date_uploaded">Igota</string>
 	<string name="media_details_label_date_added">Gehituta</string>
 	<string name="selected_theme">Hautatutako itxura</string>
@@ -427,7 +425,6 @@ Language: eu_ES
 	<string name="delete_sure">Ezabatu zirriborro hau</string>
 	<string name="delete_sure_page">Ezabatu orrialde hau</string>
 	<string name="confirm_delete_multi_media">Ezabatu aukeratutako itemak?</string>
-	<string name="confirm_delete_media">Ezabatu aukeratutako itema?</string>
 	<string name="signing_out">Saioa ixten...</string>
 	<string name="more">Gehiago</string>
 	<string name="reader_label_comments_closed">Iruzkinak itxita daude</string>

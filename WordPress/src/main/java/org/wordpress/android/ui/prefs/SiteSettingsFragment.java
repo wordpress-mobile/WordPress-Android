@@ -43,6 +43,7 @@ import android.widget.NumberPicker.Formatter;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.helpshift.network.util.InetAddressUtils;
 import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -129,6 +130,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int CLOSE_AFTER_REQUEST_CODE = 4;
     private static final int MULTIPLE_LINKS_REQUEST_CODE = 5;
     private static final int DELETE_SITE_REQUEST_CODE = 6;
+    private static final int POSTS_PER_PAGE_REQUEST_CODE = 7;
     private static final String DELETE_SITE_TAG = "delete-site";
     private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
     private static final String PURCHASE_ACTIVE_KEY = "active";
@@ -165,7 +167,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Writing settings
     private DetailListPreference mCategoryPref;
     private DetailListPreference mFormatPref;
-    private Preference mRelatedPostsPref;
+    private DetailListPreference mTimezonePref;
+    private DetailListPreference mDateFormatPref;
+    private DetailListPreference mTimeFormatPref;
+    private DetailListPreference mWeekStartPref;
+    private Preference mPostsPerPagePref;
 
     // Discussion settings preview
     private WPSwitchPreference mAllowCommentsPref;
@@ -190,10 +196,25 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mModerationHoldPref;
     private Preference mBlacklistPref;
 
+    // Traffic
+    private Preference mRelatedPostsPref;
+    private WPSwitchPreference mAmpPref;
+
     // Advanced settings
     private Preference mStartOverPref;
     private Preference mExportSitePref;
     private Preference mDeleteSitePref;
+
+    // Jetpack settings
+    private PreferenceScreen mJpSecuritySettings;
+    private WPSwitchPreference mJpMonitorActivePref;
+    private WPSwitchPreference mJpMonitorEmailNotesPref;
+    private WPSwitchPreference mJpMonitorWpNotesPref;
+    private WPSwitchPreference mJpBruteForcePref;
+    private WPPreference mJpWhitelistPref;
+    private WPSwitchPreference mJpSsoPref;
+    private WPSwitchPreference mJpMatchEmailPref;
+    private WPSwitchPreference mJpUseTwoFactorPref;
 
     public boolean mEditingEnabled = true;
 
@@ -305,6 +326,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onDestroyView() {
         removeMoreScreenToolbar();
+        removeJetpackSecurityScreenToolbar();
         super.onDestroyView();
     }
 
@@ -345,6 +367,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                     if (numLinks < 0 || numLinks == mSiteSettings.getMultipleLinks()) return;
                     onPreferenceChange(mMultipleLinksPref, numLinks);
                     break;
+                case POSTS_PER_PAGE_REQUEST_CODE:
+                    int numPosts = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
+                    if (numPosts < 0 || numPosts == 10) return;
+                    onPreferenceChange(mPostsPerPagePref, numPosts);
+                    break;
             }
         } else {
             switch (requestCode) {
@@ -382,15 +409,20 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         removeMoreScreenToolbar();
+        removeJetpackSecurityScreenToolbar();
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         setupMorePreferenceScreen();
+        setupJetpackSecurityScreen();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) setupMorePreferenceScreen();
+        if (savedInstanceState != null) {
+            setupMorePreferenceScreen();
+            setupJetpackSecurityScreen();
+        }
     }
 
     @Override
@@ -422,6 +454,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                     AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED_MORE_SETTINGS, mSite);
 
             return setupMorePreferenceScreen();
+        } else if (preference == mJpSecuritySettings) {
+            setupJetpackSecurityScreen();
         } else if (preference == findPreference(getString(R.string.pref_key_site_start_over_screen))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (mSite == null || dialog == null) return false;
@@ -448,6 +482,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             showRelatedPostsDialog();
         } else if (preference == mMultipleLinksPref) {
             showMultipleLinksDialog();
+        } else if (preference == mPostsPerPagePref) {
+            showPostsPerPageDialog();
         } else if (preference == mModerationHoldPref) {
             mEditingList = mSiteSettings.getModerationKeys();
             showListEditorDialog(R.string.site_settings_moderation_hold_title,
@@ -456,6 +492,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             mEditingList = mSiteSettings.getBlacklistKeys();
             showListEditorDialog(R.string.site_settings_blacklist_title,
                     R.string.site_settings_blacklist_description);
+        } else if (preference == mJpWhitelistPref) {
+            mEditingList = mSiteSettings.getJetpackWhitelistKeys();
+            showListEditorDialog(R.string.jetpack_brute_force_whitelist_title,
+                    R.string.site_settings_jetpack_whitelist_description);
         } else if (preference == mStartOverPref) {
             handleStartOver();
         } else if (preference == mCloseAfterPref) {
@@ -510,7 +550,30 @@ public class SiteSettingsFragment extends PreferenceFragment
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (newValue == null || !mEditingEnabled) return false;
 
-        if (preference == mTitlePref) {
+        if (preference == mJpWhitelistPref) {
+            mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
+        } else if (preference == mJpMonitorActivePref) {
+            mJpMonitorActivePref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackMonitor((Boolean) newValue);
+        } else if (preference == mJpMonitorEmailNotesPref) {
+            mJpMonitorEmailNotesPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackMonitorEmailNotifications((Boolean) newValue);
+        } else if (preference == mJpMonitorWpNotesPref) {
+            mJpMonitorWpNotesPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackMonitorWpNotifications((Boolean) newValue);
+        } else if (preference == mJpBruteForcePref) {
+            mJpBruteForcePref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackProtect((Boolean) newValue);
+        } else if (preference == mJpSsoPref) {
+            mJpSsoPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackSso((Boolean) newValue);
+        } else if (preference == mJpMatchEmailPref) {
+            mJpMatchEmailPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackSsoMatchEmail((Boolean) newValue);
+        } else if (preference == mJpUseTwoFactorPref) {
+            mJpUseTwoFactorPref.setChecked((Boolean) newValue);
+            mSiteSettings.enableJetpackSsoTwoFactor((Boolean) newValue);
+        } else if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
             changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         } else if (preference == mTaglinePref) {
@@ -584,6 +647,19 @@ public class SiteSettingsFragment extends PreferenceFragment
             mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
         } else if (preference == mBlacklistPref) {
             mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        } else if (preference == mPostsPerPagePref) {
+            mPostsPerPagePref.setSummary(newValue.toString());
+            // TODO
+        } else if (preference == mAmpPref) {
+            // TODO
+        } else if (preference == mWeekStartPref) {
+            // TODO
+        } else if (preference == mDateFormatPref) {
+            // TODO
+        } else if (preference == mTimeFormatPref) {
+            // TODO
+        } else if (preference == mTimezonePref) {
+            // TODO
         } else {
             return false;
         }
@@ -625,30 +701,34 @@ public class SiteSettingsFragment extends PreferenceFragment
             onPreferenceChange(mModerationHoldPref, mEditingList.size());
         } else if (mEditingList == mSiteSettings.getBlacklistKeys()) {
             onPreferenceChange(mBlacklistPref, mEditingList.size());
+        } else if (mEditingList == mSiteSettings.getJetpackWhitelistKeys()) {
+            onPreferenceChange(mJpWhitelistPref, mEditingList.size());
         }
         mEditingList = null;
     }
 
     @Override
-    public void onSettingsUpdated(Exception error) {
-        if (error != null) {
-            ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
-            getActivity().finish();
-            return;
-        }
-
-        if (isAdded()) setPreferencesFromSiteSettings();
+    public void onSaveError(Exception error) {
+        ToastUtils.showToast(getActivity(), R.string.error_post_remote_site_settings);
+        getActivity().finish();
     }
 
     @Override
-    public void onSettingsSaved(Exception error) {
-        if (error != null) {
-            ToastUtils.showToast(WordPress.getContext(), R.string.error_post_remote_site_settings);
-            return;
+    public void onFetchError(Exception error) {
+        ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
+        getActivity().finish();
+    }
+
+    @Override
+    public void onSettingsUpdated() {
+        if (isAdded()) {
+            setPreferencesFromSiteSettings();
         }
+    }
 
+    @Override
+    public void onSettingsSaved() {
         mSite.setName(mSiteSettings.getTitle());
-
         // Locally save the site
         mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
     }
@@ -711,6 +791,21 @@ public class SiteSettingsFragment extends PreferenceFragment
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
+        mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
+        mTimezonePref = (DetailListPreference) getChangePref(R.string.pref_key_site_timezone);
+        mDateFormatPref = (DetailListPreference) getChangePref(R.string.pref_key_site_date_format);
+        mTimeFormatPref = (DetailListPreference) getChangePref(R.string.pref_key_site_time_format);
+        mWeekStartPref = (DetailListPreference) getChangePref(R.string.pref_key_site_week_start);
+        mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
+        mJpSecuritySettings = (PreferenceScreen) getClickPref(R.string.pref_key_jetpack_security_screen);
+        mJpMonitorActivePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_monitor_uptime);
+        mJpMonitorEmailNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_email_notifications);
+        mJpMonitorWpNotesPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_send_wp_notifications);
+        mJpSsoPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_allow_wpcom_sign_in);
+        mJpBruteForcePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_prevent_brute_force);
+        mJpMatchEmailPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_match_via_email);
+        mJpUseTwoFactorPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_require_two_factor);
+        mJpWhitelistPref = (WPPreference) getClickPref(R.string.pref_key_jetpack_brute_force_whitelist);
 
         sortLanguages();
 
@@ -736,15 +831,17 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     public void setEditingEnabled(boolean enabled) {
-        // excludes mAddressPref, mMorePreference
+        // excludes mAddressPref, mMorePreference, mJpSecuritySettings
         final Preference[] editablePreference = {
                 mTitlePref , mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
                 mPasswordPref, mCategoryPref, mFormatPref, mAllowCommentsPref,
                 mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
-                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref,
-                mDeleteSitePref
+                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref, mDeleteSitePref,
+                mPostsPerPagePref, mTimezonePref, mDateFormatPref, mTimeFormatPref, mAmpPref, mWeekStartPref,
+                mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref, mJpUseTwoFactorPref,
+                mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref
         };
 
         for (Preference preference : editablePreference) {
@@ -846,7 +943,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             public void onResponse(JSONObject response) {
                 dismissProgressDialog(progressDialog);
                 if (isAdded()) {
-                    showPurchasesOrDeleteSiteDialog(response, mSite);
+                    showPurchasesOrDeleteSiteDialog(response);
                 }
             }
         }, new RestRequest.ErrorListener() {
@@ -861,11 +958,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         });
     }
 
-    private void showPurchasesOrDeleteSiteDialog(JSONObject response, final SiteModel site) {
+    private void showPurchasesOrDeleteSiteDialog(JSONObject response) {
         try {
             JSONArray purchases = response.getJSONArray(PURCHASE_ORIGINAL_RESPONSE_KEY);
             if (hasActivePurchases(purchases)) {
-                showPurchasesDialog(site);
+                showPurchasesDialog();
             } else {
                 showDeleteSiteWarningDialog();
             }
@@ -874,7 +971,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    private void showPurchasesDialog(final SiteModel site) {
+    private void showPurchasesDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.premium_upgrades_title);
         builder.setMessage(R.string.premium_upgrades_message);
@@ -964,6 +1061,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         showNumberPickerDialog(args, MULTIPLE_LINKS_REQUEST_CODE, "multiple-links-dialog");
     }
 
+    private void showPostsPerPageDialog() {
+        Bundle args = new Bundle();
+        args.putBoolean(NumberPickerDialog.SHOW_SWITCH_KEY, false);
+        args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_posts_per_page_title));
+        args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 0);
+        args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.posts_per_page_limit));
+        args.putInt(NumberPickerDialog.CUR_VALUE_KEY, 10);
+        showNumberPickerDialog(args, POSTS_PER_PAGE_REQUEST_CODE, "posts-per-page-dialog");
+    }
+
     public void setPreferencesFromSiteSettings() {
         changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());
@@ -998,6 +1105,20 @@ public class SiteSettingsFragment extends PreferenceFragment
         mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
         mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
         mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        // TODO
+        mPostsPerPagePref.setSummary("10");
+        mWeekStartPref.setSummary("Monday");
+        mTimezonePref.setSummary("UTC+8");
+        mDateFormatPref.setSummary("December 31, 2017");
+        mTimeFormatPref.setSummary("23:59");
+        mJpMonitorActivePref.setChecked(mSiteSettings.isJetpackMonitorEnabled());
+        mJpMonitorEmailNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorEmailNotifications());
+        mJpMonitorWpNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorWpNotifications());
+        mJpBruteForcePref.setChecked(mSiteSettings.isJetpackProtectEnabled());
+        mJpSsoPref.setChecked(mSiteSettings.isJetpackSsoEnabled());
+        mJpMatchEmailPref.setChecked(mSiteSettings.isJetpackSsoMatchEmailEnabled());
+        mJpUseTwoFactorPref.setChecked(mSiteSettings.isJetpackSsoTwoFactorEnabled());
+        mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
     }
 
     private void setCategories() {
@@ -1233,6 +1354,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                     public void onClick(DialogInterface dialog, int which) {
                         String entry = input.getText().toString();
                         if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
+                            // don't modify mEditingList if it's not a reference to the JP whitelist keys
+                            if (mEditingList == mSiteSettings.getJetpackWhitelistKeys() && !isValidIpOrRange(entry)) {
+                                ToastUtils.showToast(getActivity(), R.string.invalid_ip_or_range);
+                                return;
+                            }
+
                             mEditingList.add(entry);
                             getAdapter().notifyItemInserted(getAdapter().getItemCount() - 1);
                             list.post(
@@ -1272,8 +1399,48 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
+    /**
+     * Verifies that a given string can correctly be interpreted as an IP address or an IP range.
+     */
+    private boolean isValidIpOrRange(String entry) {
+        // empty strings are not valid
+        if (TextUtils.isEmpty(entry)) {
+            return false;
+        }
+
+        // remove whitespace
+        entry = entry.replaceAll("\\s", "");
+
+        // if entry is a range it will be formatted as two IP addresses separated by a '-'
+        String[] ipStrings = entry.split("-");
+
+        // entry is not well-formed if there are more than 2 ipStrings (a range) or no ipStrings
+        if (ipStrings.length > 2 || ipStrings.length < 1) {
+            return false;
+        }
+
+        // if any IP string is not a valid IP address then entry is not valid
+        for (String ip : ipStrings) {
+            if (!InetAddressUtils.isIPv4Address(ip)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public boolean shouldShowListPreference(DetailListPreference preference) {
         return preference != null && preference.getEntries() != null && preference.getEntries().length > 0;
+    }
+
+    private void setupJetpackSecurityScreen() {
+        if (mJpSecuritySettings == null || !isAdded()) return;
+        String title = getString(R.string.jetpack_security_setting_title);
+        Dialog dialog = mJpSecuritySettings.getDialog();
+        if (dialog != null) {
+            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+        }
     }
 
     private boolean setupMorePreferenceScreen() {
@@ -1292,6 +1459,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mMorePreference == null || !isAdded()) return;
         Dialog moreDialog = mMorePreference.getDialog();
         WPActivityUtils.removeToolbarFromDialog(this, moreDialog);
+    }
+
+    private void removeJetpackSecurityScreenToolbar() {
+        if (mJpSecuritySettings == null || !isAdded()) return;
+        Dialog securityDialog = mJpSecuritySettings.getDialog();
+        WPActivityUtils.removeToolbarFromDialog(this, securityDialog);
     }
 
     private void hideAdminRequiredPreferences() {
@@ -1330,6 +1503,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void removeNonDotComPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
     }
 
     private Preference getChangePref(int id) {

@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-09-08 09:41:51+0000
+Translation-Revision-Date: 2017-10-12 12:46:05+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+	<string name="error_media_still_uploading">Lütfen yüklemenin bitmesini bekleyin</string>
+	<string name="deleting_media_dlg">Siliniyor</string>
+	<string name="confirm_delete_media_video">Bu video silinsin mi?</string>
+	<string name="confirm_delete_media_image">Bu görsel silinsin mi?</string>
+	<string name="media_title_document_details">Belge detayları</string>
+	<string name="media_title_audio_details">Ses detayları</string>
+	<string name="media_title_video_details">Video detayları</string>
+	<string name="media_title_image_details">Görsel detayları</string>
+	<string name="fab_content_description_preview">Ön izleme</string>
+	<string name="media_edit_upload_date_caption">Yükleme tarihi</string>
+	<string name="media_edit_duration_caption">Süre</string>
+	<string name="media_edit_video_dimensions_caption">Video ölçüleri</string>
+	<string name="media_edit_image_dimensions_caption">Görsel ölçüleri</string>
+	<string name="media_edit_filetype_caption">Dosya tipi</string>
+	<string name="media_edit_filename_caption">Dosya adı</string>
+	<string name="media_edit_url_caption">URL</string>
+	<string name="media_edit_card_caption">Dosya detayları</string>
+	<string name="copy">Kopyala</string>
+	<string name="connect_site">Site bağla</string>
+	<string name="notification_settings_item_sights_and_sounds_blink_light">Işığı yakıp söndür</string>
+	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Cihazı titreştir</string>
+	<string name="notification_settings_item_sights_and_sounds_choose_sound">Ses seç</string>
+	<string name="notification_settings_category_sights_and_sounds">Görüntüler ve sesler</string>
+	<string name="notification_settings_item_other_account_emails">WordPress.com tarafından gönderilen e-posta</string>
+	<string name="notification_settings_item_other_pending_drafts">Beklemedeki taslaklar hakkında bana bildirim gönder</string>
+	<string name="notification_settings_item_other_comments_other_blogs">Diğer sitelerdeki yorumlar</string>
+	<string name="notification_settings_category_other">Diğer</string>
+	<string name="notification_settings_item_your_sites_all_your_sites">Tüm sitelerim</string>
+	<string name="notification_settings_category_your_sites">Siteleriniz</string>
+	<string name="notification_settings_master_off_message">Bildirim Ayarlarını devre dışı bırakmak, bu uygulamada türüne bakılmaksızın tüm bildirimleri devre dışı bırakır. Bildirim Ayarlarını açtıktan sonra almak istediğiniz bildirim türlerini ayarlayabilirsiniz.</string>
+	<string name="notification_settings_master_off_title">Bu cihazda bildirim almak için Bildirim Ayarlarını etkinleştirin.</string>
+	<string name="notification_settings_master_hint_off">Bildirimleri etkinleştir</string>
+	<string name="notification_settings_master_hint_on">Bildirimleri devre dışı bırak</string>
+	<string name="notification_settings_master_status_off">Kapalı</string>
+	<string name="notification_settings_master_status_on">Açık</string>
+	<string name="max_video_resolution">Azami video boyutu</string>
+	<string name="max_thumbnail_px_size">Asgari görsel boyutu</string>
 	<string name="error_media_recover_post">Bu yazının ortam dosyasını yükleyemedik. Lütfen tekrar denemek için yazıyı düzenleyin.</string>
 	<string name="error_page_does_not_exist">Bu sayfa artık mevcut değil</string>
 	<string name="error_upload_post_media_param">Bu yazıya ortam dosyası yüklenirken bir hata oluştu: %s.</string>
@@ -737,8 +774,7 @@ Language: tr
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Takip ettiğiniz siteler yakın tarihte herhangi bir gönderi yapmadı</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Yeni yazı yok</string>
 	<string name="edit_media">Ortamı düzenle</string>
-	<string name="media_details_copy_url_toast">Adres panoya kopyalandı</string>
-	<string name="media_details_copy_url">Adresi kopyala</string>
+	<string name="media_edit_copy_url_toast">Adres panoya kopyalandı</string>
 	<string name="media_details_label_date_uploaded">Yüklendi</string>
 	<string name="media_details_label_date_added">Eklendi</string>
 	<string name="selected_theme">Seçili tema</string>
@@ -830,6 +866,7 @@ Language: tr
 	<string name="notifications_tab">Bildirimler sekmesi</string>
 	<string name="app_notifications">Uygulama bildirimleri</string>
 	<string name="notifications_wpcom_updates">WordPress.com güncellemeleri</string>
+	<string name="notification_settings_item_other_account_emails_summary">Hesabınızla ilgili önemli e-postaları her zaman göndereceğiz, ayrıca bazı yardımcı içerikler de alabilirsiniz.</string>
 	<string name="stats_insights_latest_post_trend">%2$s yayımlandığından beri %1$s geçti. İşte yazının bugüne kadarki performansı...</string>
 	<string name="stats_insights_latest_post_summary">Son yazılar özeti</string>
 	<string name="button_revert">Geri Çevir</string>
@@ -998,7 +1035,6 @@ Language: tr
 	<string name="themes_fetching">Temalar alınıyor…</string>
 	<string name="ssl_certificate_details">Detaylar</string>
 	<string name="cab_selected">%d seçili</string>
-	<string name="confirm_delete_media">Seçili öge silinsin mi?</string>
 	<string name="confirm_delete_multi_media">Seçili ögeler silinsin mi?</string>
 	<string name="delete_sure_page">Bu sayfayı sil</string>
 	<string name="delete_sure">Bu taslağı sil</string>
