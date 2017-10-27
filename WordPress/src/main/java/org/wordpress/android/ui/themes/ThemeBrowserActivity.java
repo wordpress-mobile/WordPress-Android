@@ -74,9 +74,15 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            if (mSite != null) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_ACCESSED_THEMES_BROWSER, mSite);
+                mThemeBrowserFragment = ThemeBrowserFragment.newInstance(mSite);
+                mThemeSearchFragment = ThemeSearchFragment.newInstance(mSite);
+                addBrowserFragment();
+            }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mIsInSearchMode = savedInstanceState.getBoolean(IS_IN_SEARCH_MODE);
+            setIsInSearchMode(savedInstanceState.getBoolean(IS_IN_SEARCH_MODE));
         }
 
         if (mSite == null) {
@@ -86,13 +92,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
 
         setContentView(R.layout.theme_browser_activity);
-
-        if (savedInstanceState == null) {
-            AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_ACCESSED_THEMES_BROWSER, mSite);
-            mThemeBrowserFragment = ThemeBrowserFragment.newInstance(mSite);
-            mThemeSearchFragment = ThemeSearchFragment.newInstance(mSite);
-            addBrowserFragment();
-        }
 
         // fetch most recent themes data
         if (!mIsInSearchMode) {
@@ -188,7 +187,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onSearchClicked() {
-        mIsInSearchMode = true;
+        setIsInSearchMode(true);
         AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_ACCESSED_SEARCH, mSite);
         addSearchFragment();
     }
