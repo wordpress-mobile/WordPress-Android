@@ -360,6 +360,7 @@ public class UploadStore extends Store {
             case MediaUploadModel.FAILED:
                 if (newUploadState == MediaUploadState.UPLOADING || newUploadState == MediaUploadState.QUEUED) {
                     mediaUploadModel.setUploadState(MediaUploadModel.UPLOADING);
+                    mediaUploadModel.setMediaError(null); // clear any previous errors
                     UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
                 }
                 break;
