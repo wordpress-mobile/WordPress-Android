@@ -57,6 +57,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String SHARING_LIKES_DISABLED_KEY = "disabled_likes";
     public static final String SHARING_COMMENT_LIKES_KEY = "jetpack_comment_likes_enabled";
     public static final String TWITTER_USERNAME_KEY = "twitter_via";
+    public static final String TIMEZONE_KEY = "timezone_string";
+    public static final String DATE_FORMAT_KEY = "date_format";
+    public static final String TIME_FORMAT_KEY = "time_format";
+    public static final String START_OF_WEEK_KEY = "start_of_week";
+    public static final String POSTS_PER_PAGE_KEY = "posts_per_page";
+    public static final String AMP_SUPPORTED_KEY = "amp_supported";
+    public static final String AMP_ENABLED_KEY = "amp_enabled";
 
     // WP.com REST keys used to GET certain site settings
     public static final String GET_TITLE_KEY = "name";
@@ -205,13 +212,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, DEFAULT_SHARING_BUTTON_STYLE);
         mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(SHARING_COMMENT_LIKES_KEY, false);
         mRemoteSettings.twitterUsername = settingsObject.optString(TWITTER_USERNAME_KEY, "");
-        mRemoteSettings.timezone = settingsObject.optString("timezone_string", "");
-        mRemoteSettings.dateFormat = settingsObject.optString("date_format", "");
-        mRemoteSettings.timeFormat = settingsObject.optString("time_format", "");
-        mRemoteSettings.startOfWeek = settingsObject.optString("start_of_week", "");
-        mRemoteSettings.postsPerPage = settingsObject.optInt("posts_per_page", 0);
-        mRemoteSettings.ampSupported = settingsObject.optBoolean("amp_supported", false);
-        mRemoteSettings.ampEnabled = settingsObject.optBoolean("amp_enabled", false);
+        mRemoteSettings.timezone = settingsObject.optString(TIMEZONE_KEY, "");
+        mRemoteSettings.dateFormat = settingsObject.optString(DATE_FORMAT_KEY, "");
+        mRemoteSettings.timeFormat = settingsObject.optString(TIME_FORMAT_KEY, "");
+        mRemoteSettings.startOfWeek = settingsObject.optString(START_OF_WEEK_KEY, "");
+        mRemoteSettings.postsPerPage = settingsObject.optInt(POSTS_PER_PAGE_KEY, 0);
+        mRemoteSettings.ampSupported = settingsObject.optBoolean(AMP_SUPPORTED_KEY, false);
+        mRemoteSettings.ampEnabled = settingsObject.optBoolean(AMP_ENABLED_KEY, false);
 
         boolean reblogsDisabled = settingsObject.optBoolean(SHARING_REBLOGS_DISABLED_KEY, false);
         boolean likesDisabled = settingsObject.optBoolean(SHARING_LIKES_DISABLED_KEY, false);
@@ -364,25 +371,25 @@ class DotComSiteSettings extends SiteSettingsInterface {
             params.put(TWITTER_USERNAME_KEY, mSettings.twitterUsername);
         }
         if (!StringUtils.equals(mSettings.timezone, mRemoteSettings.timezone)) {
-            params.put("timezone_string", mSettings.timezone);
+            params.put(TIMEZONE_KEY, mSettings.timezone);
         }
         if (!StringUtils.equals(mSettings.dateFormat, mRemoteSettings.dateFormat)) {
-            params.put("date_format", mSettings.dateFormat);
+            params.put(DATE_FORMAT_KEY, mSettings.dateFormat);
         }
         if (!StringUtils.equals(mSettings.timeFormat, mRemoteSettings.timeFormat)) {
-            params.put("time_format", mSettings.timeFormat);
+            params.put(TIME_FORMAT_KEY, mSettings.timeFormat);
         }
         if (!StringUtils.equals(mSettings.startOfWeek, mRemoteSettings.startOfWeek)) {
-            params.put("start_of_week", mSettings.startOfWeek);
+            params.put(START_OF_WEEK_KEY, mSettings.startOfWeek);
         }
         if (mSettings.postsPerPage != mRemoteSettings.postsPerPage) {
-            params.put("posts_per_page", String.valueOf(mSettings.postsPerPage));
+            params.put(POSTS_PER_PAGE_KEY, String.valueOf(mSettings.postsPerPage));
         }
         if (mSettings.ampSupported != mRemoteSettings.ampSupported) {
-            params.put("amp_supported", String.valueOf(mSettings.ampSupported));
+            params.put(AMP_SUPPORTED_KEY, String.valueOf(mSettings.ampSupported));
         }
         if (mSettings.ampEnabled != mRemoteSettings.ampEnabled) {
-            params.put("amp_enabled", String.valueOf(mSettings.ampEnabled));
+            params.put(AMP_ENABLED_KEY, String.valueOf(mSettings.ampEnabled));
         }
 
         return params;

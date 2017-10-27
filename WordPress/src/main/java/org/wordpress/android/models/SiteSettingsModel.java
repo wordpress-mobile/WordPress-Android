@@ -57,6 +57,13 @@ public class SiteSettingsModel {
     public static final String ALLOW_LIKE_BUTTON_COLUMN_NAME = "allowLikeButton";
     public static final String ALLOW_COMMENT_LIKES_COLUMN_NAME = "allowCommentLikes";
     public static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
+    public static final String TIMEZONE_COLUMN_NAME = "siteTimezone";
+    public static final String DATE_FORMAT_COLUMN_NAME = "dateFormat";
+    public static final String TIME_FORMAT_COLUMN_NAME = "timeFormat";
+    public static final String START_OF_WEEK_COLUMN_NAME = "startOfWeek";
+    public static final String POSTS_PER_PAGE_COLUMN_NAME = "postsPerPage";
+    public static final String AMP_SUPPORTED_COLUMN_NAME = "ampSupported";
+    public static final String AMP_ENABLED_COLUMN_NAME = "ampEnabled";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
 
@@ -323,13 +330,13 @@ public class SiteSettingsModel {
         commentsRequireIdentity = getBooleanFromCursor(cursor, IDENTITY_REQUIRED_COLUMN_NAME);
         commentsRequireUserAccount = getBooleanFromCursor(cursor, USER_ACCOUNT_REQUIRED_COLUMN_NAME);
         commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, WHITELIST_COLUMN_NAME);
-        timezone = getStringFromCursor(cursor, "siteTimezone");
-        dateFormat = getStringFromCursor(cursor, "dateFormat");
-        timeFormat = getStringFromCursor(cursor, "timeFormat");
-        startOfWeek = getStringFromCursor(cursor, "startOfWeek");
-        postsPerPage = getIntFromCursor(cursor, "postsPerPage");
-        ampSupported = getBooleanFromCursor(cursor, "ampSupported");
-        ampEnabled = getBooleanFromCursor(cursor, "ampEnabled");
+        timezone = getStringFromCursor(cursor, TIMEZONE_COLUMN_NAME);
+        dateFormat = getStringFromCursor(cursor, DATE_FORMAT_COLUMN_NAME);
+        timeFormat = getStringFromCursor(cursor, TIME_FORMAT_COLUMN_NAME);
+        startOfWeek = getStringFromCursor(cursor, START_OF_WEEK_COLUMN_NAME);
+        postsPerPage = getIntFromCursor(cursor, POSTS_PER_PAGE_COLUMN_NAME);
+        ampSupported = getBooleanFromCursor(cursor, AMP_SUPPORTED_COLUMN_NAME);
+        ampEnabled = getBooleanFromCursor(cursor, AMP_ENABLED_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
@@ -412,13 +419,13 @@ public class SiteSettingsModel {
         values.put(IDENTITY_REQUIRED_COLUMN_NAME, commentsRequireIdentity);
         values.put(USER_ACCOUNT_REQUIRED_COLUMN_NAME, commentsRequireUserAccount);
         values.put(WHITELIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
-        values.put("siteTimezone", timezone);
-        values.put("dateFormat", dateFormat);
-        values.put("timeFormat", timeFormat);
-        values.put("startOfWeek", startOfWeek);
-        values.put("postsPerPage", postsPerPage);
-        values.put("ampSupported", ampSupported);
-        values.put("ampEnabled", ampEnabled);
+        values.put(TIMEZONE_COLUMN_NAME, timezone);
+        values.put(DATE_FORMAT_COLUMN_NAME, dateFormat);
+        values.put(TIME_FORMAT_COLUMN_NAME, timeFormat);
+        values.put(START_OF_WEEK_COLUMN_NAME, startOfWeek);
+        values.put(POSTS_PER_PAGE_COLUMN_NAME, postsPerPage);
+        values.put(AMP_SUPPORTED_COLUMN_NAME, ampSupported);
+        values.put(AMP_ENABLED_COLUMN_NAME, ampEnabled);
 
         String moderationKeys = "";
         if (holdForModeration != null) {
