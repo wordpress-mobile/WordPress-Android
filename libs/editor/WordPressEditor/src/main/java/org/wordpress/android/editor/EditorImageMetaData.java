@@ -7,16 +7,16 @@ public class EditorImageMetaData {
 
     @SerializedName("align")
     @Expose
-    private String mAlign;
+    private String align;
     @SerializedName("alt")
     @Expose
-    private String mAlt;
+    private String alt;
     @SerializedName("attachment_id")
     @Expose
-    private String mAttachmentId;
+    private String attachmentId;
     @SerializedName("caption")
     @Expose
-    private String mCaption;
+    private String caption;
     @SerializedName("captionClassName")
     @Expose
     private String captionClassName;
@@ -63,37 +63,38 @@ public class EditorImageMetaData {
     private boolean mCanBeFeatured;
     private boolean mIsFeatured;
     private String mBlogMaxImageWidth;
+    private int mLocalId;
 
     public String getAlign() {
-        return mAlign;
+        return align;
     }
 
     public void setAlign(String align) {
-        this.mAlign = align;
+        this.align = align;
     }
 
     public String getAlt() {
-        return mAlt;
+        return alt;
     }
 
     public void setAlt(String alt) {
-        this.mAlt = alt;
+        this.alt = alt;
     }
 
     public String getAttachmentId() {
-        return mAttachmentId;
+        return attachmentId;
     }
 
     public void setAttachmentId(String attachmentId) {
-        this.mAttachmentId = attachmentId;
+        this.attachmentId = attachmentId;
     }
 
     public String getCaption() {
-        return mCaption;
+        return caption;
     }
 
     public void setCaption(String caption) {
-        this.mCaption = caption;
+        this.caption = caption;
     }
 
     public String getCaptionClassName() {
@@ -230,5 +231,13 @@ public class EditorImageMetaData {
 
     public void setBlogMaxImageWidth(String blogMaxImageWidth) {
         mBlogMaxImageWidth = blogMaxImageWidth;
+    }
+
+    public int getLocalId() {
+        return mLocalId;
+    }
+
+    public void setLocalId(int localId) {
+        mLocalId = localId;
     }
 }
