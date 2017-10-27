@@ -144,7 +144,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         mUsernameInput.addTextChangedListener(this);
         mUsernameInput.setOnEditorCommitListener(new OnEditorCommitListener() {
             @Override
-            public void OnEditorCommit() {
+            public void onEditorCommit() {
                 showError(null);
                 mPasswordInput.getEditText().requestFocus();
             }
@@ -287,7 +287,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     }
 
     @Override
-    public void OnEditorCommit() {
+    public void onEditorCommit() {
         showError(null);
         next();
     }

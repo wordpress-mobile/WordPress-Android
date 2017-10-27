@@ -30,7 +30,7 @@ import java.util.List;
 public class WPLoginInputRow extends RelativeLayout {
 
     public interface OnEditorCommitListener {
-        void OnEditorCommit();
+        void onEditorCommit();
     }
 
     private ImageView mIcon;
@@ -183,7 +183,7 @@ public class WPLoginInputRow extends RelativeLayout {
                         (event != null
                                 && event.getAction() == KeyEvent.ACTION_UP
                                 && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    listener.OnEditorCommit();
+                    listener.onEditorCommit();
                 }
 
                 // always consume the event so the focus stays in the EditText

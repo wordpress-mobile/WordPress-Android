@@ -185,7 +185,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     }
 
     @Override
-    public void OnEditorCommit() {
+    public void onEditorCommit() {
         next(getCleanedEmail());
     }
 

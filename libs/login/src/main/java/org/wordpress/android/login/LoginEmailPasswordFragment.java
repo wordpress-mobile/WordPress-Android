@@ -178,7 +178,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     @Override
-    public void OnEditorCommit() {
+    public void onEditorCommit() {
         mPasswordInput.setError(null);
         next();
     }
