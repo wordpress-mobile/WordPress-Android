@@ -341,6 +341,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     public void activateTheme(String themeId) {
+        if (!mSite.isUsingWpComRestApi()) {
+            AppLog.i(T.THEMES, "Theme activation requires a site using WP.com REST API. Aborting request.");
+            return;
+        }
+
         ThemeModel theme = new ThemeModel();
         theme.setThemeId(themeId);
         ActivateThemePayload payload = new ActivateThemePayload(mSite, theme);
