@@ -57,6 +57,13 @@ public class SiteSettingsModel {
     private static final String ALLOW_LIKE_BUTTON_COLUMN_NAME = "allowLikeButton";
     private static final String ALLOW_COMMENT_LIKES_COLUMN_NAME = "allowCommentLikes";
     private static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
+    private static final String TIMEZONE_COLUMN_NAME = "siteTimezone";
+    private static final String DATE_FORMAT_COLUMN_NAME = "dateFormat";
+    private static final String TIME_FORMAT_COLUMN_NAME = "timeFormat";
+    private static final String START_OF_WEEK_COLUMN_NAME = "startOfWeek";
+    private static final String POSTS_PER_PAGE_COLUMN_NAME = "postsPerPage";
+    private static final String AMP_SUPPORTED_COLUMN_NAME = "ampSupported";
+    private static final String AMP_ENABLED_COLUMN_NAME = "ampEnabled";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
 
@@ -72,6 +79,20 @@ public class SiteSettingsModel {
             " add " + ALLOW_COMMENT_LIKES_COLUMN_NAME + " BOOLEAN;";
     public static final String ADD_TWITTER_USERNAME = "alter table " + SETTINGS_TABLE_NAME +
             " add " + TWITTER_USERNAME_COLUMN_NAME + " TEXT;";
+    public static final String ADD_TIMEZONE = "alter table " + SETTINGS_TABLE_NAME +
+            " add siteTimezone TEXT;";
+    public static final String ADD_DATE_FORMAT = "alter table " + SETTINGS_TABLE_NAME +
+            " add dateFormat TEXT;";
+    public static final String ADD_TIME_FORMAT = "alter table " + SETTINGS_TABLE_NAME +
+            " add timeFormat TEXT;";
+    public static final String ADD_START_OF_WEEK = "alter table " + SETTINGS_TABLE_NAME +
+            " add startOfWeek TEXT;";
+    public static final String ADD_POSTS_PER_PAGE = "alter table " + SETTINGS_TABLE_NAME +
+            " add postsPerPage INTEGER;";
+    public static final String ADD_AMP_SUPPORTED = "alter table " + SETTINGS_TABLE_NAME +
+            " add ampSupported BOOLEAN;";
+    public static final String ADD_AMP_ENABLED = "alter table " + SETTINGS_TABLE_NAME +
+            " add ampEnabled BOOLEAN;";
 
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
@@ -152,6 +173,13 @@ public class SiteSettingsModel {
     public boolean allowLikeButton;
     public boolean allowCommentLikes;
     public String twitterUsername;
+    public String timezone;
+    public String dateFormat;
+    public String timeFormat;
+    public String startOfWeek;
+    public int postsPerPage;
+    public boolean ampSupported;
+    public boolean ampEnabled;
 
     @Override
     public boolean equals(Object other) {
@@ -165,6 +193,10 @@ public class SiteSettingsModel {
                 equals(title, otherModel.title) &&
                 equals(tagline, otherModel.tagline) &&
                 equals(defaultPostFormat, otherModel.defaultPostFormat) &&
+                equals(startOfWeek, otherModel.startOfWeek) &&
+                equals(timeFormat, otherModel.timeFormat) &&
+                equals(dateFormat, otherModel.dateFormat) &&
+                equals(timezone, otherModel.timezone) &&
                 languageId == otherModel.languageId &&
                 privacy == otherModel.privacy &&
                 location == otherModel.location &&
@@ -193,6 +225,9 @@ public class SiteSettingsModel {
                 allowReblogButton == otherModel.allowReblogButton &&
                 allowLikeButton == otherModel.allowLikeButton &&
                 allowCommentLikes == otherModel.allowCommentLikes &&
+                postsPerPage == otherModel.postsPerPage &&
+                ampEnabled == otherModel.ampEnabled &&
+                ampSupported == otherModel.ampSupported &&
                 twitterUsername != null && twitterUsername.equals(otherModel.twitterUsername);
     }
 
@@ -254,6 +289,13 @@ public class SiteSettingsModel {
         if (other.twitterUsername != null) {
             twitterUsername = other.twitterUsername;
         }
+        timezone = other.timezone;
+        dateFormat = other.dateFormat;
+        timeFormat = other.timeFormat;
+        startOfWeek = other.startOfWeek;
+        postsPerPage = other.postsPerPage;
+        ampSupported = other.ampSupported;
+        ampEnabled = other.ampEnabled;
     }
 
     /**
@@ -288,6 +330,13 @@ public class SiteSettingsModel {
         commentsRequireIdentity = getBooleanFromCursor(cursor, IDENTITY_REQUIRED_COLUMN_NAME);
         commentsRequireUserAccount = getBooleanFromCursor(cursor, USER_ACCOUNT_REQUIRED_COLUMN_NAME);
         commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, WHITELIST_COLUMN_NAME);
+        timezone = getStringFromCursor(cursor, TIMEZONE_COLUMN_NAME);
+        dateFormat = getStringFromCursor(cursor, DATE_FORMAT_COLUMN_NAME);
+        timeFormat = getStringFromCursor(cursor, TIME_FORMAT_COLUMN_NAME);
+        startOfWeek = getStringFromCursor(cursor, START_OF_WEEK_COLUMN_NAME);
+        postsPerPage = getIntFromCursor(cursor, POSTS_PER_PAGE_COLUMN_NAME);
+        ampSupported = getBooleanFromCursor(cursor, AMP_SUPPORTED_COLUMN_NAME);
+        ampEnabled = getBooleanFromCursor(cursor, AMP_ENABLED_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
@@ -370,6 +419,13 @@ public class SiteSettingsModel {
         values.put(IDENTITY_REQUIRED_COLUMN_NAME, commentsRequireIdentity);
         values.put(USER_ACCOUNT_REQUIRED_COLUMN_NAME, commentsRequireUserAccount);
         values.put(WHITELIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
+        values.put(TIMEZONE_COLUMN_NAME, timezone);
+        values.put(DATE_FORMAT_COLUMN_NAME, dateFormat);
+        values.put(TIME_FORMAT_COLUMN_NAME, timeFormat);
+        values.put(START_OF_WEEK_COLUMN_NAME, startOfWeek);
+        values.put(POSTS_PER_PAGE_COLUMN_NAME, postsPerPage);
+        values.put(AMP_SUPPORTED_COLUMN_NAME, ampSupported);
+        values.put(AMP_ENABLED_COLUMN_NAME, ampEnabled);
 
         String moderationKeys = "";
         if (holdForModeration != null) {

@@ -47,6 +47,18 @@ public final class SiteSettingsTable {
         }
     }
 
+    public static void addMissingSettingsForBetterJetpackXp(SQLiteDatabase db) {
+        if (db != null) {
+            db.execSQL(SiteSettingsModel.ADD_TIMEZONE);
+            db.execSQL(SiteSettingsModel.ADD_DATE_FORMAT);
+            db.execSQL(SiteSettingsModel.ADD_TIME_FORMAT);
+            db.execSQL(SiteSettingsModel.ADD_START_OF_WEEK);
+            db.execSQL(SiteSettingsModel.ADD_POSTS_PER_PAGE);
+            db.execSQL(SiteSettingsModel.ADD_AMP_SUPPORTED);
+            db.execSQL(SiteSettingsModel.ADD_AMP_ENABLED);
+        }
+    }
+
     public static Map<Integer, CategoryModel> getAllCategories() {
         String sqlCommand = sqlSelectAllCategories() + ";";
         Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
