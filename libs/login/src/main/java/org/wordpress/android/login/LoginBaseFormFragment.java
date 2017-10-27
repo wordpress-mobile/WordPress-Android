@@ -43,7 +43,6 @@ import org.wordpress.android.util.ToastUtils;
 import javax.inject.Inject;
 
 public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment implements TextWatcher {
-
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
 
@@ -93,9 +92,9 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
 
     protected ViewGroup createMainView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_form_screen, container, false);
-        ViewStub form_container = ((ViewStub) rootView.findViewById(R.id.login_form_content_stub));
-        form_container.setLayoutResource(getContentLayout());
-        form_container.inflate();
+        ViewStub formContainer = ((ViewStub) rootView.findViewById(R.id.login_form_content_stub));
+        formContainer.setLayoutResource(getContentLayout());
+        formContainer.inflate();
         return rootView;
     }
 

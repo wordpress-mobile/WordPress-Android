@@ -20,7 +20,7 @@
     <color name="light_gray">@color/grey_lighten_30</color>
     <color name="gray">@color/grey_lighten_20</color>
     <color name="white">#FFFFFF</color>
-    <color name="white_dotorg_back">#F1F1F1</color>
+    <color name="white_self_hosted_back">#F1F1F1</color>
     <!-- note that black should NOT be used for text - use grey_dark instead -->
     <color name="black">#000000</color>
     <color name="default_background">@color/grey_lighten_30</color>
