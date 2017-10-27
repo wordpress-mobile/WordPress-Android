@@ -32,7 +32,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -93,6 +92,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
@@ -1039,6 +1039,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onImageSettingsRequested(EditorImageMetaData editorImageMetaData) {
+        MediaSettingsActivity.showForResult(this, mSite, editorImageMetaData, null);
     }
 
     private interface AfterSavePostListener {

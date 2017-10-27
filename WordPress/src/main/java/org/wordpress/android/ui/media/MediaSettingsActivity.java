@@ -51,6 +51,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.editor.EditorImageMetaData;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
@@ -151,6 +152,36 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         if (mediaIdList != null) {
             intent.putExtra(ARG_ID_LIST, mediaIdList);
         }
+
+        ActivityOptionsCompat options;
+
+        if (sourceView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String sharedElementName = activity.getString(R.string.shared_element_media);
+            sourceView.setTransitionName(sharedElementName);
+            options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sourceView, sharedElementName);
+        } else {
+            options = ActivityOptionsCompat.makeCustomAnimation(
+                    activity,
+                    R.anim.activity_slide_up_from_bottom,
+                    R.anim.do_nothing);
+        }
+        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.MEDIA_SETTINGS, options.toBundle());
+    }
+
+    /**
+     * @param activity    calling activity
+     * @param site        site this media is associated with
+     * @param media       media model to display
+     * @param sourceView  optional view to use in shared element transition
+     */
+    public static void showForResult(@NonNull Activity activity,
+                                     @NonNull SiteModel site,
+                                     @NonNull EditorImageMetaData media,
+                                     @Nullable View sourceView) {
+
+        Intent intent = new Intent(activity, MediaSettingsActivity.class);
+        intent.putExtra(ARG_MEDIA_LOCAL_ID, media.getLocalId());
+        intent.putExtra(WordPress.SITE, site);
 
         ActivityOptionsCompat options;
 
