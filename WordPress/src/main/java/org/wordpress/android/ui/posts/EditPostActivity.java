@@ -90,10 +90,10 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
@@ -137,7 +137,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -632,9 +631,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // size the picker before creating the fragment to avoid having it load media now
         resizePhotoPicker();
 
-        EnumSet<PhotoPickerOption> options =
-                EnumSet.of(PhotoPickerOption.ALLOW_MULTI_SELECT);
-        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, options);
+        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, MediaBrowserType.EDITOR_PICKER, getSite());
 
         getFragmentManager()
                 .beginTransaction()
@@ -757,7 +754,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 launchVideoLibrary();
                 break;
             case WP_MEDIA:
-                ActivityLauncher.viewMediaPickerForResult(this, mSite);
+                ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
                 break;
         }
     }
@@ -2069,6 +2066,12 @@ public class EditPostActivity extends AppCompatActivity implements
                     handleMediaPickerResult(data);
                     // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditorAndSave
                     break;
+                case RequestCodes.PHOTO_PICKER:
+                    // user chose a featured image - pass it to the settings fragment
+                    if (mEditPostSettingsFragment != null) {
+                        mEditPostSettingsFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                    break;
                 case RequestCodes.PICTURE_LIBRARY:
                     final Uri imageUri = data.getData();
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
@@ -2418,7 +2421,7 @@ public class EditPostActivity extends AppCompatActivity implements
             showPhotoPicker();
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
-            ActivityLauncher.viewMediaPickerForResult(this, mSite);
+            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         }
     }
 

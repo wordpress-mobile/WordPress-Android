@@ -1,12 +1,9 @@
 package org.wordpress.android.ui.photopicker;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Outline;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -14,12 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -44,7 +41,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     /*
      * used by this adapter to communicate with the owning fragment
      */
-    protected interface PhotoPickerAdapterListener {
+    interface PhotoPickerAdapterListener {
         void onItemTapped(Uri mediaUri);
         void onSelectedCountChanged(int count);
         void onAdapterLoaded(boolean isEmpty);
@@ -73,9 +70,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private int mThumbWidth;
     private int mThumbHeight;
 
-    private boolean mAllowMultiSelect;
     private boolean mIsMultiSelectEnabled;
-    private boolean mPhotosOnly;
     private boolean mIsListTaskRunning;
     private boolean mDisableImageReset;
     private boolean mLoadThumbnails = true;
@@ -83,15 +78,18 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private final ThumbnailLoader mThumbnailLoader;
     private final PhotoPickerAdapterListener mListener;
     private final LayoutInflater mInflater;
+    private final MediaBrowserType mBrowserType;
 
     private final ArrayList<PhotoPickerItem> mMediaList = new ArrayList<>();
 
     public PhotoPickerAdapter(Context context,
+                              MediaBrowserType browserType,
                               PhotoPickerAdapterListener listener) {
         super();
         mContext = context;
         mListener = listener;
         mInflater = LayoutInflater.from(context);
+        mBrowserType = browserType;
         mThumbnailLoader = new ThumbnailLoader(context);
 
         setHasStableIds(true);
@@ -137,7 +135,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         }
     }
 
-    public boolean isEmpty() {
+    private boolean isEmpty() {
         return mMediaList.size() == 0;
     }
 
@@ -165,7 +163,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         }
 
         int selectedIndex = mIsMultiSelectEnabled ? mSelectedUris.indexOfUri(item.uri) : -1;
-        if (mAllowMultiSelect) {
+        if (mBrowserType.canMultiselect()) {
             if (selectedIndex > -1) {
                 holder.txtSelectionCount.setSelected(true);
                 holder.txtSelectionCount.setText(Integer.toString(selectedIndex + 1));
@@ -211,14 +209,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
     private boolean isValidPosition(int position) {
         return position >= 0 && position < mMediaList.size();
-    }
-
-    void setAllowMultiSelect(boolean allow) {
-        mAllowMultiSelect = allow;
-    }
-
-    void setShowPhotosOnly(boolean value) {
-        mPhotosOnly = value;
     }
 
     void setMultiSelectEnabled(boolean enabled) {
@@ -326,7 +316,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position)) {
-                        if (mAllowMultiSelect) {
+                        if (mBrowserType.canMultiselect()) {
                             if (!mIsMultiSelectEnabled) {
                                 setMultiSelectEnabled(true);
                             }
@@ -404,7 +394,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             addMedia(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false);
 
             // videos
-            if (!mPhotosOnly) {
+            if (!mBrowserType.isSingleImagePicker()) {
                 addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
             }
 
