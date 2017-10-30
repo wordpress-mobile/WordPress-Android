@@ -157,7 +157,7 @@ class PostUploadNotifier {
 
     void removeOneMediaItemInfoFromForegroundNotification() {
         if (sNotificationData.totalMediaItems >= 1) {
-            sNotificationData.totalMediaItems --;
+            sNotificationData.totalMediaItems--;
             // update Notification now
             updateForegroundNotification(null);
         }
