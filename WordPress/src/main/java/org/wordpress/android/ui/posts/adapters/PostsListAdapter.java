@@ -446,7 +446,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError);
                 }
-                statusIconResId = R.drawable.ic_notice_48dp;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
                 statusColorResId = R.color.alert_red;
             } else if (UploadService.isPostUploading(post)) {
                 statusTextResId = R.string.post_uploading;
