@@ -291,9 +291,14 @@ public class WordPress extends MultiDexApplication {
 
     private void sanitizeMediaUploadStateForSite() {
         int siteLocalId = AppPrefs.getSelectedSite();
-        SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+        final SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
         if (selectedSite != null) {
-            UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
+                }
+            }).start();
         }
     }
 
