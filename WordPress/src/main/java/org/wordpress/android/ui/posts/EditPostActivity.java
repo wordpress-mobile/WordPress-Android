@@ -2341,42 +2341,14 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private MediaModel buildMediaModel(Uri uri, String mimeType, MediaUploadState startingState) {
-        String path = MediaUtils.getRealPathFromURI(this, uri);
 
-        MediaModel media = mMediaStore.instantiateMediaModel();
-        AppLog.i(T.MEDIA, "New media instantiated localId=" + media.getId());
-        String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
-        String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
-
-        // Try to get mimetype if none was passed to this method
-        if (mimeType == null) {
-            mimeType = getContentResolver().getType(uri);
-            if (mimeType == null) {
-                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
-            }
-            if (mimeType == null) {
-                // Default to image jpeg
-                mimeType = "image/jpeg";
-            }
-        }
-        // If file extension is null, upload won't work on wordpress.com
-        if (fileExtension == null) {
-            fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
-            filename += "." + fileExtension;
-        }
-
-        if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(mimeType)) {
+        MediaModel media = FluxCUtils.mediaModelFromLocalUri(this, uri, mimeType, mMediaStore, mSite.getId());
+        if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(media.getMimeType())) {
+            String path = MediaUtils.getRealPathFromURI(this, uri);
             media.setThumbnailUrl(getVideoThumbnail(path));
         }
 
-        media.setFileName(filename);
-        media.setTitle(filename);
-        media.setFilePath(path);
-        media.setLocalSiteId(mSite.getId());
-        media.setFileExtension(fileExtension);
-        media.setMimeType(mimeType);
         media.setUploadState(startingState);
-        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
         if (!mPost.isLocalDraft()) {
             media.setPostId(mPost.getRemotePostId());
         }

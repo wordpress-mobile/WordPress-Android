@@ -31,6 +31,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -289,7 +290,7 @@ public class PhotoPickerActivity extends AppCompatActivity
 
         showUploadProgressDialog();
 
-        MediaModel media = WPMediaUtils.mediaModelFromLocalUri(this, mediaUri, null, mMediaStore, mSite.getId());
+        MediaModel media = FluxCUtils.mediaModelFromLocalUri(this, mediaUri, null, mMediaStore, mSite.getId());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         ArrayList<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(media);
