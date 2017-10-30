@@ -624,7 +624,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // size the picker before creating the fragment to avoid having it load media now
         resizePhotoPicker();
 
-        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, MediaBrowserType.EDITOR_PICKER);
+        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, MediaBrowserType.EDITOR_PICKER, getSite());
 
         getFragmentManager()
                 .beginTransaction()
@@ -747,7 +747,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 launchVideoLibrary();
                 break;
             case WP_MEDIA:
-                ActivityLauncher.viewMediaPickerForResult(this, mSite);
+                ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
                 break;
         }
     }
@@ -2047,6 +2047,12 @@ public class EditPostActivity extends AppCompatActivity implements
                     handleMediaPickerResult(data);
                     // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditor
                     break;
+                case RequestCodes.PHOTO_PICKER:
+                    // user chose a featured image - pass it to the settings fragment
+                    if (mEditPostSettingsFragment != null) {
+                        mEditPostSettingsFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                    break;
                 case RequestCodes.PICTURE_LIBRARY:
                     final Uri imageUri = data.getData();
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
@@ -2395,7 +2401,7 @@ public class EditPostActivity extends AppCompatActivity implements
             showPhotoPicker();
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
-            ActivityLauncher.viewMediaPickerForResult(this, mSite);
+            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         }
     }
 

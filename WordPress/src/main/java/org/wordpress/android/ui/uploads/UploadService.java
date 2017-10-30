@@ -390,7 +390,7 @@ public class UploadService extends Service {
     }
 
     private void showNotificationForPostWithPendingMedia(PostModel post) {
-        mPostUploadNotifier.showForegroundNotificationForPost(post, getString(R.string.uploading_post_media));
+        mPostUploadNotifier.showForegroundNotificationForPost(post, getString(R.string.uploading_media));
     }
 
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
