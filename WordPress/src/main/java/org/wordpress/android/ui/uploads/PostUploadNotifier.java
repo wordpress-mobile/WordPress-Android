@@ -150,6 +150,16 @@ class PostUploadNotifier {
     void removeMediaInfoFromForegroundNotification(@NonNull List<MediaModel> mediaList) {
         if (sNotificationData.totalMediaItems >= mediaList.size()) {
             sNotificationData.totalMediaItems -= mediaList.size();
+            // update Notification now
+            updateForegroundNotification(null);
+        }
+    }
+
+    void removeOneMediaItemInfoFromForegroundNotification() {
+        if (sNotificationData.totalMediaItems >= 1) {
+            sNotificationData.totalMediaItems--;
+            // update Notification now
+            updateForegroundNotification(null);
         }
     }
 
