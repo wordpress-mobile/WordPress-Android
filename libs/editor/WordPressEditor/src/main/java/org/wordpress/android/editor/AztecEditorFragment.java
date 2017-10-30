@@ -1402,7 +1402,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 Gson gson = new Gson();
 
                 EditorImageMetaData metaData = gson.fromJson(meta.toString(), EditorImageMetaData.class);
-                metaData.setLocalId(Integer.parseInt(attrs.getValue(ATTR_ID_WP)));
+//                metaData.setLocalId(Integer.parseInt(attrs.getValue(ATTR_ID_WP)));
                 metaData.setBlogMaxImageWidth(mBlogSettingMaxImageWidth);
                 metaData.setCanBeFeatured(mFeaturedImageSupported);
 

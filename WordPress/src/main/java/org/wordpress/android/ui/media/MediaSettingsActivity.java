@@ -87,6 +87,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_ID_LIST = "id_list";
+    private static final String ARG_EDITOR_IMAGE_METADATA = "editor_image_metadata";
     public static final int RESULT_MEDIA_DELETED = RESULT_FIRST_USER;
 
     private long mDownloadId;
@@ -107,6 +108,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private FloatingActionButton mFabView;
 
     private ProgressDialog mProgressDialog;
+
+    private EditorImageMetaData mEditorImageMetaData;
 
     private enum MediaType {
         IMAGE,
@@ -180,8 +183,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                                      @Nullable View sourceView) {
 
         Intent intent = new Intent(activity, MediaSettingsActivity.class);
-        intent.putExtra(ARG_MEDIA_LOCAL_ID, media.getLocalId());
         intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(ARG_EDITOR_IMAGE_METADATA,media);
 
         ActivityOptionsCompat options;
 
@@ -228,12 +231,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         int mediaId;
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mEditorImageMetaData = savedInstanceState.getParcelable(ARG_EDITOR_IMAGE_METADATA);
             mediaId = savedInstanceState.getInt(ARG_MEDIA_LOCAL_ID);
             if (savedInstanceState.containsKey(ARG_ID_LIST)) {
                 mMediaIdList = savedInstanceState.getStringArrayList(ARG_ID_LIST);
             }
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            mEditorImageMetaData = getIntent().getParcelableExtra(ARG_EDITOR_IMAGE_METADATA);
             mediaId = getIntent().getIntExtra(ARG_MEDIA_LOCAL_ID, 0);
             if (getIntent().hasExtra(ARG_ID_LIST)) {
                 mMediaIdList = getIntent().getStringArrayListExtra(ARG_ID_LIST);
@@ -300,7 +305,20 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private boolean loadMediaId(int mediaId) {
-        MediaModel media = mMediaStore.getMediaWithLocalId(mediaId);
+        MediaModel media;
+        if(mEditorImageMetaData != null){
+            media = new MediaModel();
+            media.setUrl(mEditorImageMetaData.getSrc());
+            media.setTitle(mEditorImageMetaData.getTitle());
+            media.setCaption(mEditorImageMetaData.getCaption());
+            media.setAlt(mEditorImageMetaData.getAlt());
+            media.setFileName(mEditorImageMetaData.getSrc().substring(mEditorImageMetaData.getSrc().lastIndexOf("/") + 1));
+            media.setWidth(Integer.parseInt(mEditorImageMetaData.getWidth()));
+            media.setHeight(Integer.parseInt(mEditorImageMetaData.getHeight()));
+        }else{
+            media = mMediaStore.getMediaWithLocalId(mediaId);
+        }
+
         if (media == null) {
             return false;
         }
@@ -477,7 +495,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean showSaveMenu = mSite != null && !mSite.isPrivate();
         boolean showShareMenu = mSite != null && !mSite.isPrivate();
-        boolean showTrashMenu = mSite != null;
+        boolean showTrashMenu = mSite != null && mEditorImageMetaData == null;
 
         MenuItem mnuSave = menu.findItem(R.id.menu_save);
         mnuSave.setVisible(showSaveMenu);
@@ -531,7 +549,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mTitleView.setText(mMedia.getTitle());
         mCaptionView.setText(mMedia.getCaption());
         mAltTextView.setText(mMedia.getAlt());
-        mDescriptionView.setText(mMedia.getDescription());
+
+        if(TextUtils.isEmpty(mMedia.getDescription())){
+            mDescriptionView.setVisibility(View.GONE);
+        }else{
+            mDescriptionView.setText(mMedia.getDescription());
+        }
+
 
         TextView txtUrl = (TextView) findViewById(R.id.text_url);
         txtUrl.setText(mMedia.getUrl());
@@ -776,29 +800,36 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private void saveChanges() {
         if (isFinishing()) return;
 
-        MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());
-        if (media == null) {
-            AppLog.w(AppLog.T.MEDIA, "MediaSettingsActivity > Cannot save null media");
-            ToastUtils.showToast(this, R.string.media_edit_failure);
-            return;
-        }
-
         String thisTitle = EditTextUtils.getText(mTitleView);
         String thisCaption = EditTextUtils.getText(mCaptionView);
         String thisAltText = EditTextUtils.getText(mAltTextView);
         String thisDescription = EditTextUtils.getText(mDescriptionView);
 
-        boolean hasChanged = !StringUtils.equals(media.getTitle(), thisTitle)
-                || !StringUtils.equals(media.getCaption(), thisCaption)
-                || !StringUtils.equals(media.getAlt(), thisAltText)
-                || !StringUtils.equals(media.getDescription(), thisDescription);
-        if (hasChanged) {
-            AppLog.d(AppLog.T.MEDIA, "MediaSettingsActivity > Saving changes");
-            media.setTitle(thisTitle);
-            media.setCaption(thisCaption);
-            media.setAlt(thisAltText);
-            media.setDescription(thisDescription);
-            mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaStore.MediaPayload(mSite, media)));
+        if(mEditorImageMetaData == null){
+            MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());
+            if (media == null) {
+                AppLog.w(AppLog.T.MEDIA, "MediaSettingsActivity > Cannot save null media");
+                ToastUtils.showToast(this, R.string.media_edit_failure);
+                return;
+            }
+
+            boolean hasChanged = !StringUtils.equals(media.getTitle(), thisTitle)
+                    || !StringUtils.equals(media.getCaption(), thisCaption)
+                    || !StringUtils.equals(media.getAlt(), thisAltText)
+                    || !StringUtils.equals(media.getDescription(), thisDescription);
+            if (hasChanged) {
+                AppLog.d(AppLog.T.MEDIA, "MediaSettingsActivity > Saving changes");
+                media.setTitle(thisTitle);
+                media.setCaption(thisCaption);
+                media.setAlt(thisAltText);
+                media.setDescription(thisDescription);
+                mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaStore.MediaPayload(mSite, media)));
+            }
+        }else{
+            mEditorImageMetaData.setTitle(thisTitle);
+            mEditorImageMetaData.setCaption(thisCaption);
+            mEditorImageMetaData.setAlt(thisAltText);
+
         }
     }
 
