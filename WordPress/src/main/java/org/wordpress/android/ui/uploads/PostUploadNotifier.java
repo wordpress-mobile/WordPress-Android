@@ -68,7 +68,7 @@ class PostUploadNotifier {
         mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                 Context.NOTIFICATION_SERVICE);
         mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext());
-        mNotificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp)
+        mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload)
                 .setColor(context.getResources().getColor(R.color.blue_wordpress));
     }
 
@@ -433,8 +433,7 @@ class PostUploadNotifier {
                 (int)notificationId,
                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
-        notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
+        notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
 
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
         String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), postTitle);
@@ -481,8 +480,7 @@ class PostUploadNotifier {
                 (int)notificationId,
                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
-        notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
+        notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
 
         String siteName = TextUtils.isEmpty(site.getName()) ? mContext.getString(R.string.untitled) : site.getName();
         String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), siteName);
