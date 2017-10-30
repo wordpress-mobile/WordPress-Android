@@ -368,10 +368,12 @@ public class UploadService extends Service {
 
     public static void cancelQueuedPostUploadAndRelatedMedia(Context context, PostModel post) {
         if (post != null) {
-            PostUploadNotifier.cancelFinalNotification(context, post);
             if (sInstance != null) {
+                PostUploadNotifier.cancelFinalNotification(sInstance, post);
                 sInstance.mPostUploadNotifier.removePostInfoFromForegroundNotification(
                         post, sInstance.mMediaStore.getMediaForPost(post));
+            } else {
+                PostUploadNotifier.cancelFinalNotification(context, post);
             }
             cancelQueuedPostUpload(post);
             EventBus.getDefault().post(new PostEvents.PostMediaCanceled(post));
