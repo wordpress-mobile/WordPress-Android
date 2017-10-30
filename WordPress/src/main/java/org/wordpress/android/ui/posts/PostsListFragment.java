@@ -618,7 +618,7 @@ public class PostsListFragment extends Fragment
                     // delete the pending draft notification if available
                     mShouldCancelPendingDraftNotification = false;
                     int pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.getId());
-                    NativeNotificationsUtils.dismissNotification(pushId, getActivity());
+                    NativeNotificationsUtils.dismissNotification(pushId, WordPress.getContext());
                 } else {
                     mDispatcher.dispatch(PostActionBuilder.newDeletePostAction(new RemotePostPayload(post, mSite)));
                 }
