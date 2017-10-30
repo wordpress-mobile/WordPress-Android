@@ -99,14 +99,8 @@ public class FluxCUtils {
             if (mimeType == null) {
                 mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
                 if (mimeType == null) {
-                    mimeType = context.getContentResolver().getType(uri);
-                    if (mimeType == null) {
-                        mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
-                    }
-                    if (mimeType == null) {
-                        // Default to image jpeg
-                        mimeType = "image/jpeg";
-                    }
+                    // Default to image jpeg
+                    mimeType = "image/jpeg";
                 }
             }
         }
