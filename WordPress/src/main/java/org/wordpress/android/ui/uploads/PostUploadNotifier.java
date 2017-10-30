@@ -244,9 +244,11 @@ class PostUploadNotifier {
     // cancels the error or success notification (only one of these exist per Post at any given
     // time
     public static void cancelFinalNotification(Context context, @NonNull PostModel post) {
-        NotificationManager notificationManager = (NotificationManager) SystemServiceFactory.get(context,
-                Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel((int)getNotificationIdForPost(post));
+        if (context != null) {
+            NotificationManager notificationManager = (NotificationManager) SystemServiceFactory.get(context,
+                    Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel((int)getNotificationIdForPost(post));
+        }
     }
 
     void cancelFinalNotificationForMedia(@NonNull SiteModel site) {
