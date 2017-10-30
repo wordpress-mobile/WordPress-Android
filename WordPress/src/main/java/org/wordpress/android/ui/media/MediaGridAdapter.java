@@ -22,7 +22,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -185,7 +184,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.fileTypeImageView.setImageResource(placeholderResId);
         }
 
-        if (canMultiSelect() && canSelect) {
+        if (mBrowserType.canMultiselect() && canSelect) {
             holder.selectionCountTextView.setVisibility(View.VISIBLE);
             holder.selectionCountTextView.setSelected(isSelected);
             if (isSelected) {
@@ -366,7 +365,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     toggleItemSelected(GridViewHolder.this, position);
                 }
             } else {
-                if (canMultiSelect() && canSelectPosition(position) && !isLongClick) {
+                if (mBrowserType.canMultiselect() && canSelectPosition(position) && !isLongClick) {
                     setInMultiSelect(true);
                     toggleItemSelected(GridViewHolder.this, position);
                 }
@@ -375,13 +374,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 }
             }
         }
-    }
-
-    /*
-     * multiselect is only availble when inserting into the editor
-     */
-    boolean canMultiSelect() {
-        return mBrowserType == MediaBrowserType.EDITOR_PICKER;
     }
 
     public boolean isInMultiSelect() {

@@ -35,7 +35,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.util.AppLog;
@@ -344,18 +343,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         List<MediaModel> mediaList;
         if (!TextUtils.isEmpty(mSearchTerm)) {
             mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);
-        } else if (mBrowserType == MediaBrowserType.EDITOR_PICKER) {
-            List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
-            mediaList = new ArrayList<>();
-            for (MediaModel media: allMedia) {
-                String mime = media.getMimeType();
-                if (mime != null && (mime.startsWith("image") || mime.startsWith("video"))) {
-                    mediaList.add(media);
-                }
-            }
-        } else if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
+        } else if (mBrowserType.isSingleImagePicker()) {
             mediaList = mMediaStore.getSiteImages(mSite);
-        } else {
+        } else if (mBrowserType.canFilter()) {
             switch (mFilter) {
                 case FILTER_IMAGES:
                     mediaList = mMediaStore.getSiteImages(mSite);
@@ -372,6 +362,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 default:
                     mediaList = mMediaStore.getAllSiteMedia(mSite);
                     break;
+            }
+        } else {
+            List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
+            mediaList = new ArrayList<>();
+            for (MediaModel media : allMedia) {
+                String mime = media.getMimeType();
+                if (mime != null && (mime.startsWith("image") || mime.startsWith("video"))) {
+                    mediaList.add(media);
+                }
             }
         }
 
@@ -427,7 +426,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
+        if (!mBrowserType.canMultiselect()) {
             return;
         }
 

@@ -415,14 +415,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
-        // first discard any progress updates if the post has any errors reported already
-        UploadError reason = mUploadStore.getUploadErrorForPost(post);
-        if (reason != null) {
-            view.setVisibility(View.GONE);
-            return;
-        }
-
-        if (UploadService.isPostUploadingOrQueued(post) || UploadService.hasInProgressMediaUploadsForPost(post)) {
+        if (!mUploadStore.isFailedPost(post) &&
+                (UploadService.isPostUploadingOrQueued(post) || UploadService.hasInProgressMediaUploadsForPost(post))) {
             view.setVisibility(View.VISIBLE);
             int overallProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100);
             // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
@@ -453,13 +447,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError);
                 }
-                statusIconResId = R.drawable.ic_notice_48dp;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
                 statusColorResId = R.color.alert_red;
             } else if (UploadService.isPostUploading(post)) {
                 statusTextResId = R.string.post_uploading;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if (UploadService.hasInProgressMediaUploadsForPost(post)) {
-                statusTextResId = R.string.uploading_post_media;
+                statusTextResId = R.string.uploading_media;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if(UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
                 // the Post (or its related media if such a thing exist) *is strictly* queued
