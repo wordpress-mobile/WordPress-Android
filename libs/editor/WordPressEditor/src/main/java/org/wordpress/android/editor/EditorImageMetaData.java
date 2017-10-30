@@ -1,9 +1,12 @@
 package org.wordpress.android.editor;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class EditorImageMetaData {
+public class EditorImageMetaData implements Parcelable {
 
     @SerializedName("align")
     @Expose
@@ -240,4 +243,73 @@ public class EditorImageMetaData {
     public void setLocalId(int localId) {
         mLocalId = localId;
     }
+
+    protected EditorImageMetaData(Parcel in) {
+        align = in.readString();
+        alt = in.readString();
+        attachmentId = in.readString();
+        caption = in.readString();
+        captionClassName = in.readString();
+        captionId = in.readString();
+        classes = in.readString();
+        height = in.readString();
+        linkClassName = in.readString();
+        linkRel = in.readString();
+        linkTargetBlank = in.readByte() != 0x00;
+        linkUrl = in.readString();
+        size = in.readString();
+        src = in.readString();
+        title = in.readString();
+        width = in.readString();
+        naturalWidth = in.readInt();
+        mNaturalHeight = in.readInt();
+        mCanBeFeatured = in.readByte() != 0x00;
+        mIsFeatured = in.readByte() != 0x00;
+        mBlogMaxImageWidth = in.readString();
+        mLocalId = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(align);
+        dest.writeString(alt);
+        dest.writeString(attachmentId);
+        dest.writeString(caption);
+        dest.writeString(captionClassName);
+        dest.writeString(captionId);
+        dest.writeString(classes);
+        dest.writeString(height);
+        dest.writeString(linkClassName);
+        dest.writeString(linkRel);
+        dest.writeByte((byte) (linkTargetBlank ? 0x01 : 0x00));
+        dest.writeString(linkUrl);
+        dest.writeString(size);
+        dest.writeString(src);
+        dest.writeString(title);
+        dest.writeString(width);
+        dest.writeInt(naturalWidth);
+        dest.writeInt(mNaturalHeight);
+        dest.writeByte((byte) (mCanBeFeatured ? 0x01 : 0x00));
+        dest.writeByte((byte) (mIsFeatured ? 0x01 : 0x00));
+        dest.writeString(mBlogMaxImageWidth);
+        dest.writeInt(mLocalId);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<EditorImageMetaData> CREATOR = new Parcelable.Creator<EditorImageMetaData>() {
+        @Override
+        public EditorImageMetaData createFromParcel(Parcel in) {
+            return new EditorImageMetaData(in);
+        }
+
+        @Override
+        public EditorImageMetaData[] newArray(int size) {
+            return new EditorImageMetaData[size];
+        }
+    };
 }
