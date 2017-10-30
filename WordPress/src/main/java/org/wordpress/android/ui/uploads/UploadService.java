@@ -492,6 +492,11 @@ public class UploadService extends Service {
                 mediaStore.getSiteMediaWithState(site, MediaModel.MediaUploadState.UPLOADING);
         List<MediaModel> queuedMedia =
                 mediaStore.getSiteMediaWithState(site, MediaModel.MediaUploadState.QUEUED);
+
+        if (uploadingMedia.isEmpty() && queuedMedia.isEmpty()) {
+            return;
+        }
+
         List<MediaModel> uploadingOrQueuedMedia = new ArrayList<>();
         uploadingOrQueuedMedia.addAll(uploadingMedia);
         uploadingOrQueuedMedia.addAll(queuedMedia);
