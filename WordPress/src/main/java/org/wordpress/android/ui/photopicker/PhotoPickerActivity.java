@@ -48,6 +48,7 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
+    private static final String EXTRA_SHOW_PROGRESS_DIALOG = "show_progress_dialog";
 
     public static final String EXTRA_MEDIA_URI = "media_uri";
     public static final String EXTRA_MEDIA_ID = "media_id";
@@ -103,6 +104,9 @@ public class PhotoPickerActivity extends AppCompatActivity
         } else {
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(PhotoPickerFragment.ARG_BROWSER_TYPE);
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            if (savedInstanceState.getBoolean(EXTRA_SHOW_PROGRESS_DIALOG)) {
+                showUploadProgressDialog();
+            }
         }
 
         PhotoPickerFragment fragment = getPickerFragment();
@@ -146,6 +150,9 @@ public class PhotoPickerActivity extends AppCompatActivity
         }
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(KEY_MEDIA_CAPTURE_PATH, mMediaCapturePath);
+        }
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            outState.putBoolean(EXTRA_SHOW_PROGRESS_DIALOG, true);
         }
     }
 
