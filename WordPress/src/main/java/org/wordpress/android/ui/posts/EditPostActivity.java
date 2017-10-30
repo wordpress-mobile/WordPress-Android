@@ -93,10 +93,10 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
@@ -140,7 +140,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -629,9 +628,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // size the picker before creating the fragment to avoid having it load media now
         resizePhotoPicker();
 
-        EnumSet<PhotoPickerOption> options =
-                EnumSet.of(PhotoPickerOption.ALLOW_MULTI_SELECT);
-        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, options);
+        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, MediaBrowserType.EDITOR_PICKER);
 
         getFragmentManager()
                 .beginTransaction()

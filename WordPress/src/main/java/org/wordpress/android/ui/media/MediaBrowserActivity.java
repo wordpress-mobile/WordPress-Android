@@ -94,16 +94,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         OnQueryTextListener, OnActionExpandListener,
         WPMediaUtils.LaunchCameraCallback {
 
-    public enum MediaBrowserType {
-        BROWSER,                   // browse & manage media
-        EDITOR_PICKER,             // select multiple images or videos to insert into a post
-        FEATURED_IMAGE_PICKER;     // select a single image to use as a post's featured image
-
-        public boolean isPicker() {
-            return this == EDITOR_PICKER || this == FEATURED_IMAGE_PICKER;
-        }
-    }
-
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_FILTER = "filter";
     public static final String RESULT_IDS = "result_ids";
@@ -179,7 +169,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         setupTabs();
 
         MediaFilter filter;
-        if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
+        if (mBrowserType.isSingleImagePicker()) {
             filter = MediaFilter.FILTER_IMAGES;
         } else if (savedInstanceState != null) {
             filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
@@ -207,13 +197,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     /*
-     * only show tabs when being used as a media browser rather than a media picker
+     * only show tabs when the user can filter the media by type
      */
     private boolean shouldShowTabs() {
-        return mBrowserType == MediaBrowserType.BROWSER;
+        return mBrowserType.canFilter();
     }
 
-    public void enableTabs(boolean enable) {
+    private void enableTabs(boolean enable) {
         if (!shouldShowTabs()) return;
 
         if (enable && mTabLayout.getVisibility() != View.VISIBLE) {
@@ -452,7 +442,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         // hide "add media" if the user doesn't have upload permission or this is a multiselect picker
-        if (mBrowserType == MediaBrowserType.EDITOR_PICKER
+        if (mBrowserType.canMultiselect()
                 || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
         }
@@ -564,11 +554,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         // show detail view when tapped if we're browsing media, when used as a picker show detail
         // when long tapped (to mimic native photo picker)
-        if (mBrowserType == MediaBrowserType.BROWSER && !isLongClick
+        if (mBrowserType.isBrowser() && !isLongClick
                 || mBrowserType.isPicker() && isLongClick) {
             showMediaSettings(media, sourceView);
-        } else if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER && !isLongClick) {
-            // if we're picking a featured image, we're done
+        } else if (mBrowserType.isSingleImagePicker() && !isLongClick) {
+            // if we're picking a single image, we're done
             Intent intent = new Intent();
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
             remoteMediaIds.add(media.getMediaId());
@@ -691,7 +681,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     // TODO: in a future PR this and startMediaDeleteService() can be simplified since multiselect delete was dropped
-    public void deleteMedia(final ArrayList<Integer> ids) {
+    private void deleteMedia(final ArrayList<Integer> ids) {
         final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
         int processedItemCount = 0;
 
@@ -785,7 +775,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
     private void createAddMediaPopup() {
-        SimpleAdapter adapter = mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER
+        SimpleAdapter adapter = mBrowserType.isSingleImagePicker()
                 ? getAddMenuSimpleAdapter(
                         AddMenuItem.ITEM_CAPTURE_PHOTO,
                         AddMenuItem.ITEM_CHOOSE_PHOTO)
