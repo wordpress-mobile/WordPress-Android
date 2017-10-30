@@ -714,6 +714,10 @@ public class UploadService extends Service {
         }
 
         if (event.canceled) {
+            // remove this media item from the progress notification
+            if (sInstance != null) {
+                sInstance.mPostUploadNotifier.removeOneMediaItemInfoFromForegroundNotification();
+            }
             if (event.media.getLocalPostId() > 0) {
                 AppLog.i(T.MAIN, "UploadService > Upload cancelled for post with id " + event.media.getLocalPostId()
                         + " - a media upload for this post has been cancelled, id: " + event.media.getId());
