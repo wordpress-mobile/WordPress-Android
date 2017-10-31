@@ -407,7 +407,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
-        content.fromHtml(text.toString());
+        content.fromHtml(removeVisualEditorProgressTag(text.toString()));
 
         updateFailedMediaList();
         overlayFailedMedia();
@@ -416,6 +416,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         overlayProgressingMedia();
 
         mAztecReady = true;
+    }
+
+    /*
+    * TODO: REMOVE THIS ONCE AZTEC COMPLETELY REPLACES THE VISUAL EDITOR IN WPANDROID APP
+     */
+    private String removeVisualEditorProgressTag(String originalText) {
+        String regex = "<span.*\\/progress>|<\\/span>";
+        return originalText.replaceAll(regex, "");
     }
 
     /**
