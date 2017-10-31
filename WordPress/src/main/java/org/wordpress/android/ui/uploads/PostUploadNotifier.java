@@ -68,7 +68,7 @@ class PostUploadNotifier {
         mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                 Context.NOTIFICATION_SERVICE);
         mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext());
-        mNotificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp)
+        mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload)
                 .setColor(context.getResources().getColor(R.color.blue_wordpress));
     }
 
@@ -150,6 +150,16 @@ class PostUploadNotifier {
     void removeMediaInfoFromForegroundNotification(@NonNull List<MediaModel> mediaList) {
         if (sNotificationData.totalMediaItems >= mediaList.size()) {
             sNotificationData.totalMediaItems -= mediaList.size();
+            // update Notification now
+            updateForegroundNotification(null);
+        }
+    }
+
+    void removeOneMediaItemInfoFromForegroundNotification() {
+        if (sNotificationData.totalMediaItems >= 1) {
+            sNotificationData.totalMediaItems--;
+            // update Notification now
+            updateForegroundNotification(null);
         }
     }
 
@@ -234,9 +244,11 @@ class PostUploadNotifier {
     // cancels the error or success notification (only one of these exist per Post at any given
     // time
     public static void cancelFinalNotification(Context context, @NonNull PostModel post) {
-        NotificationManager notificationManager = (NotificationManager) SystemServiceFactory.get(context,
-                Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel((int)getNotificationIdForPost(post));
+        if (context != null) {
+            NotificationManager notificationManager = (NotificationManager) SystemServiceFactory.get(context,
+                    Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel((int)getNotificationIdForPost(post));
+        }
     }
 
     void cancelFinalNotificationForMedia(@NonNull SiteModel site) {
@@ -423,8 +435,7 @@ class PostUploadNotifier {
                 (int)notificationId,
                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
-        notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
+        notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
 
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
         String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), postTitle);
@@ -471,8 +482,7 @@ class PostUploadNotifier {
                 (int)notificationId,
                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
-        notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
+        notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
 
         String siteName = TextUtils.isEmpty(site.getName()) ? mContext.getString(R.string.untitled) : site.getName();
         String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), siteName);

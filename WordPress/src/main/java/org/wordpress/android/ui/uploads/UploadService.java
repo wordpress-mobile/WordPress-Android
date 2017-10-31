@@ -368,10 +368,12 @@ public class UploadService extends Service {
 
     public static void cancelQueuedPostUploadAndRelatedMedia(Context context, PostModel post) {
         if (post != null) {
-            PostUploadNotifier.cancelFinalNotification(context, post);
             if (sInstance != null) {
+                PostUploadNotifier.cancelFinalNotification(sInstance, post);
                 sInstance.mPostUploadNotifier.removePostInfoFromForegroundNotification(
                         post, sInstance.mMediaStore.getMediaForPost(post));
+            } else {
+                PostUploadNotifier.cancelFinalNotification(context, post);
             }
             cancelQueuedPostUpload(post);
             EventBus.getDefault().post(new PostEvents.PostMediaCanceled(post));
@@ -714,6 +716,10 @@ public class UploadService extends Service {
         }
 
         if (event.canceled) {
+            // remove this media item from the progress notification
+            if (sInstance != null) {
+                sInstance.mPostUploadNotifier.removeOneMediaItemInfoFromForegroundNotification();
+            }
             if (event.media.getLocalPostId() > 0) {
                 AppLog.i(T.MAIN, "UploadService > Upload cancelled for post with id " + event.media.getLocalPostId()
                         + " - a media upload for this post has been cancelled, id: " + event.media.getId());
