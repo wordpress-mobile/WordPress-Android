@@ -426,8 +426,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         // as produced by the Visual Editor. Note that we don't care about closing </span> tags
         // as the AztecParser takes care of that, and it would be very difficult to accomplish with a
         // regex (and using a proper XML crawler would be particularly overkill)
-        String regex = "<progress.*?><\\/progress>|<span id=\"img_container.*?>";
-        return originalText.replaceAll(regex, "");
+        if (originalText != null && originalText.contains("<progress")) {
+            String regex = "<progress.*?><\\/progress>|<span id=\"img_container.*?>";
+            return originalText.replaceAll(regex, "");
+        } else {
+            return originalText;
+        }
     }
 
     /**
