@@ -1195,6 +1195,7 @@
     <string name="error_post_my_profile_no_connection">No connection, couldn\'t save your profile</string>
     <string name="error_post_account_settings">Couldn\'t save your account settings</string>
     <string name="error_generic">An error occurred</string>
+    <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
@@ -1936,6 +1937,7 @@
     <string name="login_magic_links_sent_description">Magic link sent illustration</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
+    <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
     <string name="connect_more">Connect Another Site</string>
     <string name="connect_site">Connect Site</string>
     <string name="login_continue">Continue</string>
@@ -1959,7 +1961,14 @@
     <string name="login_logged_in_as">Logged in as</string>
     <string name="login_epilogue_mysites_one">My site</string>
     <string name="login_epilogue_mysites_other">My sites</string>
+    <string name="login_google_button_prefix">Or you can</string>
+    <string name="login_google_button_suffix">Log in with Google.</string>
+    <string name="login_error_button">Close</string>
+    <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
+    <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
+    <string name="login_error_suffix">\nMaybe try a different account?</string>
 
     <!-- shared element names -->
     <string name="shared_element_media" translatable="false">media</string>
+
 </resources>

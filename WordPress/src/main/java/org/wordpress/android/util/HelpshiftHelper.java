@@ -68,6 +68,7 @@ public class HelpshiftHelper {
         ORIGIN_LOGIN_EMAIL_PASSWORD("origin:login-wpcom-password"),
         ORIGIN_LOGIN_2FA("origin:login-2fa"),
         ORIGIN_LOGIN_SITE_ADDRESS("origin:login-site-address"),
+        ORIGIN_LOGIN_SOCIAL("origin:login-social"),
         ORIGIN_LOGIN_USERNAME_PASSWORD("origin:login-username-password"),
         CONNECTING_JETPACK("connecting_jetpack");
 
