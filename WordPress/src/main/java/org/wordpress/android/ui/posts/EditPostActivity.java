@@ -926,12 +926,12 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this);
+        WPMediaUtils.launchPictureLibrary(this, true);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this);
+        WPMediaUtils.launchVideoLibrary(this, true);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 

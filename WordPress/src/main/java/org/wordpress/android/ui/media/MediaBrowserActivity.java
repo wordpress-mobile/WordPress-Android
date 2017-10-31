@@ -870,10 +870,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     WPMediaUtils.launchVideoCamera(this);
                     break;
                 case ITEM_CHOOSE_PHOTO:
-                    WPMediaUtils.launchPictureLibrary(this);
+                    WPMediaUtils.launchPictureLibrary(this, true);
                     break;
                 case ITEM_CHOOSE_VIDEO:
-                    WPMediaUtils.launchVideoLibrary(this);
+                    WPMediaUtils.launchVideoLibrary(this, true);
                     break;
             }
         }
