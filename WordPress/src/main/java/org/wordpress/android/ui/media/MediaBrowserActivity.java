@@ -351,6 +351,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
+    private void getMediaFromDeviceAndTrack(Uri imageUri, int requestCode) {
+        String mimeType = getContentResolver().getType(imageUri);
+        fetchMedia(imageUri, mimeType);
+        trackAddMediaFromDeviceEvents(
+                false,
+                requestCode == RequestCodes.VIDEO_LIBRARY,
+                imageUri
+        );
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -363,15 +373,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     if (clipData != null) {
                         for (int i = 0; i < clipData.getItemCount(); i++) {
                             ClipData.Item item = clipData.getItemAt(i);
-                            Uri imageUri = item.getUri();
-                            String mimeType = getContentResolver().getType(imageUri);
-                            fetchMedia(imageUri, mimeType);
-                            trackAddMediaFromDeviceEvents(
-                                    false,
-                                    requestCode == RequestCodes.VIDEO_LIBRARY,
-                                    imageUri
-                            );
+                            getMediaFromDeviceAndTrack(item.getUri(), requestCode);
                         }
+                    } else {
+                        getMediaFromDeviceAndTrack(data.getData(), requestCode);
                     }
                 }
                 break;
