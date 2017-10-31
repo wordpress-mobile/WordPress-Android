@@ -2605,6 +2605,10 @@ public class EditPostActivity extends AppCompatActivity implements
         // now that we have the Post object initialized,
         // check whether we have media items to insert from the WRITE POST with media functionality
         if (getIntent().hasExtra(EXTRA_INSERT_MEDIA)) {
+
+            // Bump analytics
+            AnalyticsTracker.track(Stat.NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST);
+
             List<MediaModel> mediaList = (List<MediaModel>) getIntent().getSerializableExtra(EXTRA_INSERT_MEDIA);
             // removing this from the intent so it doesn't insert the media items again on each Acivity re-creation
             getIntent().removeExtra(EXTRA_INSERT_MEDIA);
