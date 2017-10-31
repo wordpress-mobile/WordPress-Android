@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -358,14 +359,20 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    Uri imageUri = data.getData();
-                    String mimeType = getContentResolver().getType(imageUri);
-                    fetchMedia(imageUri, mimeType);
-                    trackAddMediaFromDeviceEvents(
-                            false,
-                            requestCode == RequestCodes.VIDEO_LIBRARY,
-                            imageUri
-                    );
+                    ClipData clipData = data.getClipData();
+                    if (clipData != null) {
+                        for (int i = 0; i < clipData.getItemCount(); i++) {
+                            ClipData.Item item = clipData.getItemAt(i);
+                            Uri imageUri = item.getUri();
+                            String mimeType = getContentResolver().getType(imageUri);
+                            fetchMedia(imageUri, mimeType);
+                            trackAddMediaFromDeviceEvents(
+                                    false,
+                                    requestCode == RequestCodes.VIDEO_LIBRARY,
+                                    imageUri
+                            );
+                        }
+                    }
                 }
                 break;
             case RequestCodes.TAKE_PHOTO:
