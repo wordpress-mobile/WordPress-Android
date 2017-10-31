@@ -83,11 +83,12 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
+
 public class MediaSettingsActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_ID_LIST = "id_list";
-    private static final String ARG_EDITOR_IMAGE_METADATA = "editor_image_metadata";
     public static final int RESULT_MEDIA_DELETED = RESULT_FIRST_USER;
 
     private long mDownloadId;
@@ -117,6 +118,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         AUDIO,
         DOCUMENT
     }
+
     private MediaType mMediaType;
 
     @Inject
@@ -172,10 +174,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     /**
-     * @param activity    calling activity
-     * @param site        site this media is associated with
-     * @param media       media model to display
-     * @param sourceView  optional view to use in shared element transition
+     * @param activity   calling activity
+     * @param site       site this media is associated with
+     * @param media      media model to display
+     * @param sourceView optional view to use in shared element transition
      */
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
@@ -184,7 +186,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         Intent intent = new Intent(activity, MediaSettingsActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(ARG_EDITOR_IMAGE_METADATA,media);
+        intent.putExtra(ARG_EDITOR_IMAGE_METADATA, media);
 
         ActivityOptionsCompat options;
 
@@ -306,7 +308,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     private boolean loadMediaId(int mediaId) {
         MediaModel media;
-        if(mEditorImageMetaData != null){
+        if (mEditorImageMetaData != null) {
             media = new MediaModel();
             media.setUrl(mEditorImageMetaData.getSrc());
             media.setTitle(mEditorImageMetaData.getTitle());
@@ -315,7 +317,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             media.setFileName(mEditorImageMetaData.getSrc().substring(mEditorImageMetaData.getSrc().lastIndexOf("/") + 1));
             media.setWidth(Integer.parseInt(mEditorImageMetaData.getWidth()));
             media.setHeight(Integer.parseInt(mEditorImageMetaData.getHeight()));
-        }else{
+        } else {
             media = mMediaStore.getMediaWithLocalId(mediaId);
         }
 
@@ -386,6 +388,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(ARG_MEDIA_LOCAL_ID, mMedia.getId());
+        outState.putParcelable(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
@@ -493,8 +496,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean showSaveMenu = mSite != null && !mSite.isPrivate();
-        boolean showShareMenu = mSite != null && !mSite.isPrivate();
+        boolean showSaveMenu = mSite != null && !mSite.isPrivate() && mEditorImageMetaData == null;
+        boolean showShareMenu = mSite != null && !mSite.isPrivate() && mEditorImageMetaData == null;
         boolean showTrashMenu = mSite != null && mEditorImageMetaData == null;
 
         MenuItem mnuSave = menu.findItem(R.id.menu_save);
@@ -547,15 +550,15 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     private void showMetaData() {
         mTitleView.setText(mMedia.getTitle());
-        mCaptionView.setText(mMedia.getCaption());
         mAltTextView.setText(mMedia.getAlt());
 
-        if(TextUtils.isEmpty(mMedia.getDescription())){
+        if (mEditorImageMetaData != null) {
             mDescriptionView.setVisibility(View.GONE);
-        }else{
+            mCaptionView.setVisibility(View.GONE);
+        } else {
             mDescriptionView.setText(mMedia.getDescription());
+            mCaptionView.setText(mMedia.getCaption());
         }
-
 
         TextView txtUrl = (TextView) findViewById(R.id.text_url);
         txtUrl.setText(mMedia.getUrl());
@@ -745,7 +748,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia, mMediaIdList);
+                if (mEditorImageMetaData == null) {
+                    MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia, mMediaIdList);
+                } else {
+                    MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mEditorImageMetaData.getSrc());
+                }
+
             }
         }, 200);
     }
@@ -805,7 +813,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         String thisAltText = EditTextUtils.getText(mAltTextView);
         String thisDescription = EditTextUtils.getText(mDescriptionView);
 
-        if(mEditorImageMetaData == null){
+        if (mEditorImageMetaData == null) {
             MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());
             if (media == null) {
                 AppLog.w(AppLog.T.MEDIA, "MediaSettingsActivity > Cannot save null media");
@@ -817,6 +825,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                     || !StringUtils.equals(media.getCaption(), thisCaption)
                     || !StringUtils.equals(media.getAlt(), thisAltText)
                     || !StringUtils.equals(media.getDescription(), thisDescription);
+
             if (hasChanged) {
                 AppLog.d(AppLog.T.MEDIA, "MediaSettingsActivity > Saving changes");
                 media.setTitle(thisTitle);
@@ -825,10 +834,21 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 media.setDescription(thisDescription);
                 mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaStore.MediaPayload(mSite, media)));
             }
-        }else{
-            mEditorImageMetaData.setTitle(thisTitle);
-            mEditorImageMetaData.setCaption(thisCaption);
-            mEditorImageMetaData.setAlt(thisAltText);
+        } else {
+            boolean hasChanged = !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
+                    || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText);
+
+            if (hasChanged) {
+                mEditorImageMetaData.setTitle(thisTitle);
+                mEditorImageMetaData.setAlt(thisAltText);
+
+                Intent intent = new Intent();
+                intent.putExtra(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
+
+                this.setResult(Activity.RESULT_OK, intent);
+            }else{
+                this.setResult(Activity.RESULT_CANCELED);
+            }
 
         }
     }
