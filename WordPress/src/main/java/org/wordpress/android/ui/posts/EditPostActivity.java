@@ -39,7 +39,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.MimeTypeMap;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -92,8 +91,8 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
@@ -2102,6 +2101,13 @@ public class EditPostActivity extends AppCompatActivity implements
                         ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                     }
                     break;
+                case RequestCodes.MEDIA_SETTINGS:
+                    if (mEditorFragment instanceof AztecEditorFragment) {
+                        mEditorFragment.onActivityResult(
+                                ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE, Activity.RESULT_OK, data);
+                    }
+                    break;
+
             }
         }
     }
