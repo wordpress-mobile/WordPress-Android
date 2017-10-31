@@ -422,7 +422,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     * TODO: REMOVE THIS ONCE AZTEC COMPLETELY REPLACES THE VISUAL EDITOR IN WPANDROID APP
      */
     private String removeVisualEditorProgressTag(String originalText) {
-        String regex = "<span.*\\/progress>|<\\/span>";
+        String regex = "<progress.*?><\\/progress>|<span id=\"img_container.*?>";
         return originalText.replaceAll(regex, "");
     }
 
