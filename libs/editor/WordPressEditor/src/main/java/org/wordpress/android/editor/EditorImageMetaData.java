@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class EditorImageMetaData implements Parcelable {
 
+    public static final String ARG_EDITOR_IMAGE_METADATA = "editor_image_metadata";
+
     @SerializedName("align")
     @Expose
     private String align;

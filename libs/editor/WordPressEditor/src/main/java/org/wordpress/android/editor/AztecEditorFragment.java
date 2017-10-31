@@ -47,7 +47,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -85,6 +84,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
 
 
 public class AztecEditorFragment extends EditorFragmentAbstract implements
@@ -1419,67 +1420,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 String authHeader = mEditorFragmentListener.onAuthHeaderRequested(UrlUtils.makeHttps(imageSrc));
                 if (authHeader.length() > 0) {
                     metaData.setSrc(UrlUtils.makeHttps(imageSrc));
-//                        meta.put(ATTR_SRC, UrlUtils.makeHttps(imageSrc));
                 }
-
 
                 mEditorImageSettingsListener.onImageSettingsRequested(metaData);
 
-                // Only show image options fragment for image taps
-//                FragmentManager fragmentManager = getFragmentManager();
-//
-//                if (fragmentManager.findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG) != null) {
-//                    return;
-//                }
-//                mEditorFragmentListener.onTrackableEvent(TrackableEvent.IMAGE_EDITED);
-//                ImageSettingsDialogFragment imageSettingsDialogFragment = new ImageSettingsDialogFragment();
-//                imageSettingsDialogFragment.setImageLoader(mImageLoader);
-//                imageSettingsDialogFragment.setTargetFragment(this,
-//                        ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE);
-//
-//                Bundle dialogBundle = new Bundle();
-//
-//                dialogBundle.putString(EXTRA_MAX_WIDTH, mBlogSettingMaxImageWidth);
-//                dialogBundle.putBoolean(EXTRA_IMAGE_FEATURED, mFeaturedImageSupported);
-//                dialogBundle.putBoolean(EXTRA_ENABLED_AZTEC, true);
-//
-//
-//                try {
-//                    // Use https:// when requesting the auth header, in case the image is incorrectly using http://
-//                    // If an auth header is returned, force https:// for the actual HTTP request
-//                    final String imageSrc = meta.getString(ATTR_SRC);
-//                    String authHeader = mEditorFragmentListener.onAuthHeaderRequested(UrlUtils.makeHttps(imageSrc));
-//                    if (authHeader.length() > 0) {
-//                        meta.put(ATTR_SRC, UrlUtils.makeHttps(imageSrc));
-//                    }
-//                } catch (JSONException e) {
-//                    AppLog.e(AppLog.T.EDITOR, "Could not retrieve image url from JSON metadata");
-//                }
-//
-//                dialogBundle.putString(EXTRA_IMAGE_META, meta.toString());
-//
-//                String imageId = JSONUtils.getString(meta, ATTR_ID_ATTACHMENT);
-//                if (!imageId.isEmpty()) {
-//                    dialogBundle.putBoolean(EXTRA_FEATURED, mFeaturedImageId == Integer.parseInt(imageId));
-//                }
-//
-//
-//
-//                imageSettingsDialogFragment.setArguments(dialogBundle);
-//
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//
-//                fragmentTransaction.add(android.R.id.content, imageSettingsDialogFragment,
-//                        ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG)
-//                        .addToBackStack(null)
-//                        .commit();
                 break;
         }
-    }
-
-    public void onSettingsUpdated(JSONObject editorImageMetaData) {
-
     }
 
     @Override
@@ -1488,6 +1434,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
             if (mTappedMediaPredicate != null) {
+                //changing image settings should be recorded in history
+                if (isHistoryEnabled()) {
+                    content.history.beforeTextChanged(content.toPlainHtml(false));
+                }
+
                 AztecAttributes attributes = content.getElementAttributes(mTappedMediaPredicate);
                 attributes.removeAttribute(TEMP_IMAGE_ID);
 
@@ -1497,27 +1448,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     return;
                 }
 
-                Bundle extras = data.getExtras();
-                JSONObject meta;
 
-                try {
-                    meta = new JSONObject(StringUtils.notNullStr(extras.getString(EXTRA_IMAGE_META)));
-                } catch (JSONException e) {
-                    return;
-                }
+                EditorImageMetaData metaData = data.getParcelableExtra(ARG_EDITOR_IMAGE_METADATA);
 
-                attributes.setValue(ATTR_SRC, JSONUtils.getString(meta, ATTR_SRC));
+                attributes.setValue(ATTR_SRC, metaData.getSrc());
+                attributes.setValue(ATTR_TITLE, metaData.getTitle());
 
-                if (!TextUtils.isEmpty(JSONUtils.getString(meta, ATTR_TITLE))) {
-                    attributes.setValue(ATTR_TITLE, JSONUtils.getString(meta, ATTR_TITLE));
-                }
-
-                attributes.setValue(ATTR_DIMEN_WIDTH, JSONUtils.getString(meta, ATTR_DIMEN_WIDTH));
-                attributes.setValue(ATTR_DIMEN_HEIGHT, JSONUtils.getString(meta, ATTR_DIMEN_HEIGHT));
-
-                if (!TextUtils.isEmpty(JSONUtils.getString(meta, ATTR_ALT))) {
-                    attributes.setValue(ATTR_ALT, JSONUtils.getString(meta, ATTR_ALT));
-                }
+                attributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
+                attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
+                attributes.setValue(ATTR_ALT, metaData.getAlt());
 
                 AttributesWithClass attributesWithClass = getAttributesWithClass(attributes);
 
@@ -1527,17 +1466,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 attributesWithClass.removeClassStartingWith(ATTR_IMAGE_WP_DASH);
 
                 // only add align attribute if there is no caption since alignment is sent with shortcode
-                if (!TextUtils.isEmpty(JSONUtils.getString(meta, ATTR_ALIGN)) &&
-                        TextUtils.isEmpty(JSONUtils.getString(meta, ATTR_CAPTION))) {
-                    attributesWithClass.addClass(ATTR_ALIGN_DASH + JSONUtils.getString(meta, ATTR_ALIGN));
+                if (!TextUtils.isEmpty(metaData.getAlign()) &&
+                        TextUtils.isEmpty(metaData.getCaption())) {
+                    attributesWithClass.addClass(ATTR_ALIGN_DASH + metaData.getAlign());
                 }
 
-                if (!TextUtils.isEmpty(JSONUtils.getString(meta, ATTR_SIZE))) {
-                    attributesWithClass.addClass(ATTR_SIZE_DASH + JSONUtils.getString(meta, ATTR_SIZE));
+                if (!TextUtils.isEmpty(metaData.getSize())) {
+                    attributesWithClass.addClass(ATTR_SIZE_DASH + metaData.getSize());
                 }
 
-                if (!TextUtils.isEmpty(JSONUtils.getString(meta, ATTR_ID_ATTACHMENT))) {
-                    attributesWithClass.addClass(ATTR_IMAGE_WP_DASH + JSONUtils.getString(meta, ATTR_ID_ATTACHMENT));
+                if (!TextUtils.isEmpty(metaData.getAttachmentId())) {
+                    attributesWithClass.addClass(ATTR_IMAGE_WP_DASH + metaData.getAttachmentId());
                 }
 
 //                TODO: Add shortcode support to allow captions.
@@ -1548,8 +1487,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 //                https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
 //                String link = JSONUtils.getString(meta, ATTR_URL_LINK);
 
-                final int imageRemoteId = extras.getInt(ATTR_ID_IMAGE_REMOTE);
-                final boolean isFeaturedImage = extras.getBoolean(EXTRA_FEATURED);
+//                final int imageRemoteId = extras.getInt(ATTR_ID_IMAGE_REMOTE);
+                final int imageRemoteId;
+                if (TextUtils.isEmpty(metaData.getAttachmentId())) {
+                    imageRemoteId = 0;
+                } else {
+                    imageRemoteId = Integer.parseInt(metaData.getAttachmentId());
+                }
+                final boolean isFeaturedImage = metaData.isFeatured();
 
                 if (imageRemoteId != 0) {
                     if (isFeaturedImage) {
@@ -1565,6 +1510,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
 
                 mTappedMediaPredicate = null;
+
+                if (isHistoryEnabled()) {
+                    content.history.handleHistory(content);
+                }
             }
         }
     }
