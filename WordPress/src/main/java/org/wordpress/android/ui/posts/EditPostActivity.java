@@ -628,7 +628,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // size the picker before creating the fragment to avoid having it load media now
         resizePhotoPicker();
 
-        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, MediaBrowserType.EDITOR_PICKER);
+        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, MediaBrowserType.EDITOR_PICKER, getSite());
 
         getFragmentManager()
                 .beginTransaction()
@@ -751,7 +751,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 launchVideoLibrary();
                 break;
             case WP_MEDIA:
-                ActivityLauncher.viewMediaPickerForResult(this, mSite);
+                ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
                 break;
         }
     }
@@ -2057,6 +2057,12 @@ public class EditPostActivity extends AppCompatActivity implements
                     handleMediaPickerResult(data);
                     // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditor
                     break;
+                case RequestCodes.PHOTO_PICKER:
+                    // user chose a featured image - pass it to the settings fragment
+                    if (mEditPostSettingsFragment != null) {
+                        mEditPostSettingsFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                    break;
                 case RequestCodes.PICTURE_LIBRARY:
                     final Uri imageUri = data.getData();
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
@@ -2345,42 +2351,14 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private MediaModel buildMediaModel(Uri uri, String mimeType, MediaUploadState startingState) {
-        String path = MediaUtils.getRealPathFromURI(this, uri);
 
-        MediaModel media = mMediaStore.instantiateMediaModel();
-        AppLog.i(T.MEDIA, "New media instantiated localId=" + media.getId());
-        String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
-        String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
-
-        // Try to get mimetype if none was passed to this method
-        if (mimeType == null) {
-            mimeType = getContentResolver().getType(uri);
-            if (mimeType == null) {
-                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
-            }
-            if (mimeType == null) {
-                // Default to image jpeg
-                mimeType = "image/jpeg";
-            }
-        }
-        // If file extension is null, upload won't work on wordpress.com
-        if (fileExtension == null) {
-            fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
-            filename += "." + fileExtension;
-        }
-
-        if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(mimeType)) {
+        MediaModel media = FluxCUtils.mediaModelFromLocalUri(this, uri, mimeType, mMediaStore, mSite.getId());
+        if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(media.getMimeType())) {
+            String path = MediaUtils.getRealPathFromURI(this, uri);
             media.setThumbnailUrl(getVideoThumbnail(path));
         }
 
-        media.setFileName(filename);
-        media.setTitle(filename);
-        media.setFilePath(path);
-        media.setLocalSiteId(mSite.getId());
-        media.setFileExtension(fileExtension);
-        media.setMimeType(mimeType);
         media.setUploadState(startingState);
-        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
         if (!mPost.isLocalDraft()) {
             media.setPostId(mPost.getRemotePostId());
         }
@@ -2405,7 +2383,7 @@ public class EditPostActivity extends AppCompatActivity implements
             showPhotoPicker();
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
-            ActivityLauncher.viewMediaPickerForResult(this, mSite);
+            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         }
     }
 

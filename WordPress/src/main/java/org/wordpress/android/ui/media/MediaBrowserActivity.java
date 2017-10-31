@@ -36,7 +36,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
@@ -69,8 +68,8 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -79,7 +78,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -953,48 +951,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {
-        // It is a regular local media file
-        String path = MediaUtils.getRealPathFromURI(this,uri);
-
-        if (TextUtils.isEmpty(path)) {
+        MediaModel media = FluxCUtils.mediaModelFromLocalUri(this, uri, mimeType, mMediaStore, mSite.getId());
+        if (media == null) {
             ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
             return;
         }
 
-        File file = new File(path);
-        if (!file.exists()) {
-            return;
-        }
-
-        MediaModel media = mMediaStore.instantiateMediaModel();
-        String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
-        String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
-
-        // Try to get mime type if none was passed to this method
-        if (mimeType == null) {
-            mimeType = getContentResolver().getType(uri);
-            if (mimeType == null) {
-                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
-            }
-            if (mimeType == null) {
-                // Default to image jpeg
-                mimeType = "image/jpeg";
-            }
-        }
-        // If file extension is null, upload won't work on wordpress.com
-        if (fileExtension == null) {
-            fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
-            filename += "." + fileExtension;
-        }
-
-        media.setFileName(filename);
-        media.setTitle(filename);
-        media.setFilePath(path);
-        media.setLocalSiteId(mSite.getId());
-        media.setFileExtension(fileExtension);
-        media.setMimeType(mimeType);
-        media.setUploadState(MediaUploadState.QUEUED);
-        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         addMediaToUploadService(media);
 

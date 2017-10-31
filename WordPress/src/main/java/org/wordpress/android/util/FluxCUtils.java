@@ -1,9 +1,18 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
+
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.helpers.MediaFile;
+
+import java.io.File;
 
 public class FluxCUtils {
     /**
@@ -61,4 +70,57 @@ public class FluxCUtils {
         mediaFile.setWidth(media.getWidth());
         return mediaFile;
     }
+
+    /*
+     * returns a MediaModel from a device media URI
+     */
+    public static MediaModel mediaModelFromLocalUri(@NonNull Context context,
+                                                    @NonNull Uri uri,
+                                                    @Nullable String mimeType,
+                                                    @NonNull org.wordpress.android.fluxc.store.MediaStore mediaStore,
+                                                    int localSiteId) {
+        String path = MediaUtils.getRealPathFromURI(context, uri);
+
+        if (TextUtils.isEmpty(path)) {
+            return null;
+        }
+
+        File file = new File(path);
+        if (!file.exists()) {
+            return null;
+        }
+
+        MediaModel media = mediaStore.instantiateMediaModel();
+        String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
+        String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
+
+        if (TextUtils.isEmpty(mimeType)) {
+            mimeType = context.getContentResolver().getType(uri);
+            if (mimeType == null) {
+                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+                if (mimeType == null) {
+                    // Default to image jpeg
+                    mimeType = "image/jpeg";
+                }
+            }
+        }
+
+        // If file extension is null, upload won't work on wordpress.com
+        if (fileExtension == null) {
+            fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+            filename += "." + fileExtension;
+        }
+
+        media.setFileName(filename);
+        media.setTitle(filename);
+        media.setFilePath(path);
+        media.setLocalSiteId(localSiteId);
+        media.setFileExtension(fileExtension);
+        media.setMimeType(mimeType);
+        media.setUploadState(MediaModel.MediaUploadState.QUEUED);
+        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
+
+        return media;
+    }
+
 }
