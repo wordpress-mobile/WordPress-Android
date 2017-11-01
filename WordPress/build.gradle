@@ -7,6 +7,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.google.gms:google-services:3.1.0'
     }
 }
 
@@ -54,6 +55,7 @@ android {
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "true"
+            buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
@@ -163,6 +165,18 @@ configurations.all {
     exclude group: 'org.wordpress', module: 'analytics'
 }
 
+task copyGoogleServicesExampleFile(type: Copy) {
+    from('.')
+    into('.')
+    include('google-services.json-example')
+    rename('google-services.json-example', 'google-services.json')
+}
+
+task copyGoogleServicesBuddybuildFile(type: Copy) {
+    from(file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/google-services.json"))
+    into('.')
+}
+
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
     def inputFile = checkGradlePropertiesFile()
@@ -183,8 +197,8 @@ android.applicationVariants.all { variant ->
     variant.generateBuildConfig.dependsOn(generateCrashlyticsConfig)
 }
 
-// Add properties named "wp.xxx" to our BuildConfig
 android.buildTypes.all { buildType ->
+    // Add properties named "wp.xxx" to our BuildConfig
     def inputFile = checkGradlePropertiesFile()
     def properties = loadPropertiesFromFile(inputFile)
     properties.any { property ->
@@ -195,6 +209,17 @@ android.buildTypes.all { buildType ->
         if (property.key.toLowerCase().startsWith("wp.res.")) {
             buildType.resValue "string", property.key.replace("wp.res.", "").replace(".", "_").toLowerCase(),
                     "${property.value}"
+        }
+    }
+
+    // If Google services file doesn't exist...
+    if (!file("google-services.json").exists()) {
+        // ... copy example file.
+        if (!file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/google-services.json").exists()) {
+            tasks.copyGoogleServicesExampleFile.execute()
+        // ... copy Buddybuild file.
+        } else {
+            tasks.copyGoogleServicesBuddybuildFile.execute()
         }
     }
 }
@@ -233,3 +258,6 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
 }
+
+// Keep this at the bottom (https://stackoverflow.com/a/37565535)
+apply plugin: 'com.google.gms.google-services'
