@@ -230,8 +230,12 @@ public class EditorImageMetaData implements Parcelable {
         mIsFeatured = featured;
     }
 
-    public String getBlogMaxImageWidth() {
-        return mBlogMaxImageWidth;
+    public int getBlogMaxImageWidth() {
+        try{
+            return Integer.parseInt(mBlogMaxImageWidth);
+        }catch (NumberFormatException ex){
+            return 9999;
+        }
     }
 
     public void setBlogMaxImageWidth(String blogMaxImageWidth) {
