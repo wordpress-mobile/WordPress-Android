@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,7 +40,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.MimeTypeMap;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -2052,6 +2052,32 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
     }
 
+    private void addMediaItemGroupOrSingleItem(Intent data) {
+        ClipData clipData = data.getClipData();
+        if (clipData != null) {
+            for (int i = 0; i < clipData.getItemCount(); i++) {
+                ClipData.Item item = clipData.getItemAt(i);
+                addMedia(item.getUri(), false);
+            }
+        } else {
+            addMedia(data.getData(), false);
+        }
+    }
+
+    private void advertiseImageOptimisationAndAddMedia(final Intent data) {
+        if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
+            WPMediaUtils.advertiseImageOptimization(this,
+                    new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                        @Override
+                        public void done() {
+                            addMediaItemGroupOrSingleItem(data);
+                        }
+                    });
+        } else {
+            addMediaItemGroupOrSingleItem(data);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -2073,18 +2099,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
-                    final Uri imageUri = data.getData();
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this,
-                                new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
-                                    @Override
-                                    public void done() {
-                                        addMedia(imageUri, false);
-                                    }
-                                });
-                    } else {
-                        addMedia(imageUri, false);
-                    }
+                    advertiseImageOptimisationAndAddMedia(data);
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
@@ -2100,8 +2115,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
-                    Uri videoUri = data.getData();
-                    addMedia(videoUri, false);
+                    addMediaItemGroupOrSingleItem(data);
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
