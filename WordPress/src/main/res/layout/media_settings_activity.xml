@@ -162,6 +162,38 @@
 
 
                         <LinearLayout
+                            android:layout_marginTop="@dimen/margin_large"
+                            android:id="@+id/image_alignment_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_marginBottom="@dimen/margin_small"
+                                android:id="@+id/alignment_spinner_label"
+                                style="@style/TextAppearance.Design.Hint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/margin_small"
+                                android:layout_marginStart="@dimen/margin_small"
+                                android:text="@string/image_alignment"
+                                android:textColor="@color/grey_500"/>
+
+                            <Spinner
+                                android:layout_marginTop="@dimen/margin_small"
+                                android:id="@+id/alignment_spinner"
+                                style="@style/ImageOptionsDialogInput"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/image_settings_dialog_input_field_start_margin"
+                                android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
+                                android:entries="@array/alignment_array"
+                                android:prompt="@string/image_alignment"/>
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
                             android:id="@+id/image_width_container"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -172,11 +204,10 @@
                                 style="@style/TextAppearance.Design.Hint"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/margin_medium"
                                 android:layout_marginLeft="@dimen/margin_small"
+                                android:layout_marginStart="@dimen/margin_small"
                                 android:text="@string/image_width"
-                                android:textColor="@color/grey_500"
-                                android:layout_marginStart="@dimen/margin_small"/>
+                                android:textColor="@color/grey_500"/>
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -188,20 +219,20 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentLeft="true"
+                                    android:layout_alignParentStart="true"
                                     android:layout_centerVertical="true"
                                     android:layout_marginTop="@dimen/margin_large"
                                     android:layout_toLeftOf="@+id/image_width_value_container"
-                                    android:layout_alignParentStart="true"
                                     android:layout_toStartOf="@+id/image_width_value_container"/>
 
                                 <LinearLayout
                                     android:id="@+id/image_width_value_container"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
-                                    android:orientation="horizontal"
-                                    android:layout_alignParentEnd="true">
+                                    android:orientation="horizontal">
 
                                     <android.support.design.widget.TextInputEditText
                                         android:id="@+id/edit_image_width"

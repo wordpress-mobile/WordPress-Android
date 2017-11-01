@@ -43,6 +43,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -81,6 +82,7 @@ import org.wordpress.android.util.WPPermissionUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -110,6 +112,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private EditText mDescriptionView;
     private EditText mImageWidthView;
     private SeekBar mImageWidthSeekBar;
+    private Spinner mAlignmentSpinner;
+    private String[] mAlignmentKeyArray;
     private FloatingActionButton mFabView;
 
     private ProgressDialog mProgressDialog;
@@ -234,6 +238,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mDescriptionView = (EditText) findViewById(R.id.edit_description);
         mImageWidthView = (EditText) findViewById(R.id.edit_image_width);
         mImageWidthSeekBar = (SeekBar) findViewById(R.id.image_width_seekbar);
+        mAlignmentSpinner = (Spinner) findViewById(org.wordpress.android.editor.R.id.alignment_spinner);
         mFabView = (FloatingActionButton) findViewById(R.id.fab_button);
 
         int mediaId;
@@ -563,6 +568,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             mDescriptionView.setVisibility(View.GONE);
             mCaptionView.setVisibility(View.GONE);
             setupWidthSeekBar();
+
+            String alignment = mEditorImageMetaData.getAlign();
+            mAlignmentKeyArray = getResources().getStringArray(org.wordpress.android.editor.R.array.alignment_key_array);
+            int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
+            mAlignmentSpinner.setSelection(alignmentIndex == -1 ? 0 : alignmentIndex);
         } else {
             mDescriptionView.setText(mMedia.getDescription());
             mCaptionView.setText(mMedia.getCaption());
@@ -902,10 +912,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             }
         } else {
             String imageWidth = EditTextUtils.getText(mImageWidthView);
+            String alignment = mAlignmentKeyArray[mAlignmentSpinner.getSelectedItemPosition()];
+
 
             boolean hasChanged = !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
-                    || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText) ||
-                    !StringUtils.equals(mEditorImageMetaData.getWidth(), imageWidth);
+                    || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText)
+                    || !StringUtils.equals(mEditorImageMetaData.getWidth(), imageWidth)
+                    || !StringUtils.equals(mEditorImageMetaData.getAlign(), alignment);
 
             if (hasChanged) {
                 String imageHeight = String.valueOf(getRelativeHeightFromWidth(Integer.parseInt(imageWidth)));
@@ -914,6 +927,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 mEditorImageMetaData.setAlt(thisAltText);
                 mEditorImageMetaData.setWidth(imageWidth);
                 mEditorImageMetaData.setHeight(imageHeight);
+                mEditorImageMetaData.setAlign(alignment);
 
                 Intent intent = new Intent();
                 intent.putExtra(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
