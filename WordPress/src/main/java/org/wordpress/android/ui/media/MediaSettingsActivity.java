@@ -40,7 +40,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -563,10 +562,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         if (mEditorImageMetaData != null) {
             mDescriptionView.setVisibility(View.GONE);
             mCaptionView.setVisibility(View.GONE);
-            setupWidthSeekBar(mImageWidthSeekBar, mImageWidthView, mMedia.getWidth());
+            setupWidthSeekBar();
         } else {
             mDescriptionView.setText(mMedia.getDescription());
             mCaptionView.setText(mMedia.getCaption());
+            findViewById(R.id.image_width_container).setVisibility(View.GONE);
         }
 
         TextView txtUrl = (TextView) findViewById(R.id.text_url);
@@ -642,15 +642,15 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     /**
      * Initialize the image width SeekBar and accompanying EditText
      */
-    private void setupWidthSeekBar(final SeekBar widthSeekBar, final EditText widthText, int imageWidth) {
-        widthSeekBar.setMax(mEditorImageMetaData.getBlogMaxImageWidth() / 10);
+    private void setupWidthSeekBar() {
+        mImageWidthSeekBar.setMax(mEditorImageMetaData.getNaturalWidth());
 
-        if (imageWidth != 0) {
-            widthSeekBar.setProgress(imageWidth / 10);
-            widthText.setText(String.valueOf(imageWidth));
+        if (mMedia.getWidth() != 0) {
+            mImageWidthSeekBar.setProgress(mMedia.getWidth());
+            mImageWidthView.setText(String.valueOf(mMedia.getWidth()));
         }
 
-        widthSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mImageWidthSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
@@ -664,62 +664,34 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 if (progress == 0) {
                     progress = 1;
                 }
-                widthText.setText(String.valueOf(progress * 10));
+                mImageWidthView.setText(String.valueOf(progress));
             }
         });
 
-        widthText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    widthText.setText("");
-                }
-            }
-        });
-
-        widthText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mImageWidthView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                int width = getEditTextIntegerClamped(widthText, 10, Integer.MAX_VALUE);
-
-                int progress = width / 10;
-
-                //OnSeekBarChangeListener will not be triggered if progress have not changed
-                if (widthSeekBar.getProgress() == progress) {
-                    widthText.setText(String.valueOf(progress * 10));
+                int widthValue;
+                if (TextUtils.isEmpty(EditTextUtils.getText(mImageWidthView))) {
+                    widthValue = mImageWidthSeekBar.getProgress();
                 } else {
-                    widthSeekBar.setProgress(progress);
+                    widthValue = Integer.parseInt(EditTextUtils.getText(mImageWidthView));
                 }
 
-                widthText.setSelection((String.valueOf(width).length()));
+                int width = Math.min(mEditorImageMetaData.getNaturalWidth(), Math.max(widthValue, 1));
 
-                InputMethodManager imm = (InputMethodManager) MediaSettingsActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(widthText.getWindowToken(),
-                        InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                //OnSeekBarChangeListener will not be triggered if progress have not changed
+                if (mImageWidthSeekBar.getProgress() == width) {
+                    mImageWidthView.setText(String.valueOf(width));
+                } else {
+                    mImageWidthSeekBar.setProgress(width);
+                }
 
-                return true;
+                mImageWidthView.setSelection((String.valueOf(width).length()));
+
+                return false;
             }
         });
-    }
-
-
-    /**
-     * Return the integer value of the width EditText, adjusted to be within the given min and max, and stripped of the
-     * 'px' units
-     */
-    private int getEditTextIntegerClamped(EditText editText, int minWidth, int maxWidth) {
-        int width = 10;
-
-        try {
-            if (editText.getText() != null)
-                width = Integer.parseInt(editText.getText().toString().replace("px", ""));
-        } catch (NumberFormatException e) {
-            AppLog.e(AppLog.T.EDITOR, e);
-        }
-
-        width = Math.min(maxWidth, Math.max(width, minWidth));
-
-        return width;
     }
 
     /*
@@ -906,6 +878,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         String thisAltText = EditTextUtils.getText(mAltTextView);
         String thisDescription = EditTextUtils.getText(mDescriptionView);
 
+
         if (mEditorImageMetaData == null) {
             MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());
             if (media == null) {
@@ -928,12 +901,19 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaStore.MediaPayload(mSite, media)));
             }
         } else {
+            String imageWidth = EditTextUtils.getText(mImageWidthView);
+
             boolean hasChanged = !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
-                    || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText);
+                    || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText) ||
+                    !StringUtils.equals(mEditorImageMetaData.getWidth(), imageWidth);
 
             if (hasChanged) {
+                String imageHeight = String.valueOf(getRelativeHeightFromWidth(Integer.parseInt(imageWidth)));
+
                 mEditorImageMetaData.setTitle(thisTitle);
                 mEditorImageMetaData.setAlt(thisAltText);
+                mEditorImageMetaData.setWidth(imageWidth);
+                mEditorImageMetaData.setHeight(imageHeight);
 
                 Intent intent = new Intent();
                 intent.putExtra(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
@@ -944,6 +924,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             }
 
         }
+    }
+
+    private int getRelativeHeightFromWidth(int width) {
+        int naturalHeight = mEditorImageMetaData.getNaturalHeight();
+        int naturalWidth = mEditorImageMetaData.getNaturalWidth();
+
+        float ratio = (float) naturalHeight / naturalWidth;
+        return (int) (ratio * width);
     }
 
     /*

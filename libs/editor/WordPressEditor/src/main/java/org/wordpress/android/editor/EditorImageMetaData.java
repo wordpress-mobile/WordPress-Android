@@ -55,13 +55,16 @@ public class EditorImageMetaData implements Parcelable {
     @SerializedName("title")
     @Expose
     private String title;
+
     @SerializedName("width")
     @Expose
     private String width;
+
     @SerializedName("naturalWidth")
     @Expose
     private int naturalWidth;
-    @SerializedName("mNaturalHeight")
+
+    @SerializedName("naturalHeight")
     @Expose
     private int mNaturalHeight;
 
