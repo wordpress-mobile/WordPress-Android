@@ -668,7 +668,7 @@ class PostUploadNotifier {
     }
 
     private String buildNotificationTitleForMedia() {
-        return mContext.getString(R.string.uploading_post_media);
+        return mContext.getString(R.string.uploading_media);
     }
 
     private String buildNotificationTitleForMixedContent() {
