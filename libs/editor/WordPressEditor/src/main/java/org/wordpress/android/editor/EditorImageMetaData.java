@@ -74,6 +74,9 @@ public class EditorImageMetaData implements Parcelable {
     private int mLocalId;
 
     public String getAlign() {
+        if (align.startsWith("align")) {
+            return align.substring("align".length(), align.length());
+        }
         return align;
     }
 
@@ -234,9 +237,9 @@ public class EditorImageMetaData implements Parcelable {
     }
 
     public int getBlogMaxImageWidth() {
-        try{
+        try {
             return Integer.parseInt(mBlogMaxImageWidth);
-        }catch (NumberFormatException ex){
+        } catch (NumberFormatException ex) {
             return 9999;
         }
     }

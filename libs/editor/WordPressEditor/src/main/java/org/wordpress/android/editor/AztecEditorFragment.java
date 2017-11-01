@@ -98,7 +98,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         IAztecToolbarClickListener,
         IHistoryListener {
 
-    private static final String ATTR_ALIGN_DASH = "align-";
+    private static final String ATTR_ALIGN = "align";
     private static final String ATTR_CLASS = "class";
     private static final String ATTR_ID_WP = "data-wpid";
     private static final String ATTR_IMAGE_WP_DASH = "wp-image-";
@@ -1461,14 +1461,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 AttributesWithClass attributesWithClass = getAttributesWithClass(attributes);
 
                 // remove previously set class attributes to add updated values
-                attributesWithClass.removeClassStartingWith(ATTR_ALIGN_DASH);
+                attributesWithClass.removeClassStartingWith(ATTR_ALIGN);
                 attributesWithClass.removeClassStartingWith(ATTR_SIZE_DASH);
                 attributesWithClass.removeClassStartingWith(ATTR_IMAGE_WP_DASH);
 
                 // only add align attribute if there is no caption since alignment is sent with shortcode
                 if (!TextUtils.isEmpty(metaData.getAlign()) &&
                         TextUtils.isEmpty(metaData.getCaption())) {
-                    attributesWithClass.addClass(ATTR_ALIGN_DASH + metaData.getAlign());
+                    attributesWithClass.addClass(ATTR_ALIGN + metaData.getAlign());
                 }
 
                 if (!TextUtils.isEmpty(metaData.getSize())) {
@@ -1478,6 +1478,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 if (!TextUtils.isEmpty(metaData.getAttachmentId())) {
                     attributesWithClass.addClass(ATTR_IMAGE_WP_DASH + metaData.getAttachmentId());
                 }
+
+                attributes.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
 
 //                TODO: Add shortcode support to allow captions.
 //                https://github.com/wordpress-mobile/AztecEditor-Android/issues/17
