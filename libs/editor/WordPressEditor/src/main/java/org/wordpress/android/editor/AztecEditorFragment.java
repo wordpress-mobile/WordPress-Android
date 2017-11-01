@@ -427,7 +427,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         // as the AztecParser takes care of that, and it would be very difficult to accomplish with a
         // regex (and using a proper XML crawler would be particularly overkill)
         if (originalText != null && originalText.contains("<progress")) {
-            String regex = "<progress.*?><\\/progress>|<span id=\"img_container.*?>";
+            String regex = "<progress.*?><\\/progress>|<span id=\"img_container.*? class=\"img_container\" contenteditable=\"false\">";
             return originalText.replaceAll(regex, "");
         } else {
             return originalText;
