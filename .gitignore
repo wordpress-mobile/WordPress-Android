@@ -52,3 +52,6 @@ WordPress/src/androidTest/monkeys/*.png
 
 # Windows Backup
 *.bak
+
+# Google services configuration
+google-services.json
