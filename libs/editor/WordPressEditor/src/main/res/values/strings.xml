@@ -46,6 +46,9 @@
     <string name="image_settings_dismiss_dialog_title">Discard unsaved changes?</string>
     <string name="image_settings_save_toast">Changes saved</string>
 
+    <string name="image_width_edit_text_hint_placeholder">0000</string>
+
+    <string name="pixel_abbr">px</string>
     <string name="pixel_suffix">%dpx</string>
 
     <string name="image_caption">Caption</string>
