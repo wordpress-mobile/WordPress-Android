@@ -320,11 +320,14 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         // Response returns error for non-existing account and existing account not connected.
         if (event.isError()) {
             AppLog.e(T.API, "LoginEmailFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
-                    event.error.type.toString(), event.error.message);
 
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, event.getClass().getSimpleName(),
-                    event.error.type.toString(), event.error.message);
+            if (event.error.type != AccountStore.AccountSocialErrorType.USER_EXISTS) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+                        event.error.type.toString(), event.error.message);
+
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, event.getClass().getSimpleName(),
+                        event.error.type.toString(), event.error.message);
+            }
 
             switch (event.error.type) {
                 // WordPress account exists with input email address, but not connected.

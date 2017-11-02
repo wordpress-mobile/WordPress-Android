@@ -210,6 +210,15 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     private void handleAuthError(AccountStore.AuthenticationErrorType error, String errorMessage) {
+
+        if (error != AccountStore.AuthenticationErrorType.NEEDS_2FA) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, error.getClass().getSimpleName(), error.toString(), errorMessage);
+
+            if (isSocialLogin) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, error.getClass().getSimpleName(), error.toString(), errorMessage);
+            }
+        }
+
         switch (error) {
             case INCORRECT_USERNAME_OR_PASSWORD:
             case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
@@ -246,13 +255,6 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             endProgress();
 
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
-                    event.error.type.toString(), event.error.message);
-
-            if (isSocialLogin) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, event.getClass().getSimpleName(),
-                        event.error.type.toString(), event.error.message);
-            }
 
             if (isAdded()) {
                 handleAuthError(event.error.type, event.error.message);
@@ -299,6 +301,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
         if (isSocialLogin) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_SUCCESS);
             mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
         } else {
             mLoginListener.loggedInViaPassword(mOldSitesIDs);
