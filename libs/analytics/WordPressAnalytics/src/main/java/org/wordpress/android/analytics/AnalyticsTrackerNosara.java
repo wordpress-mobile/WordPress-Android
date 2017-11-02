@@ -738,8 +738,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_social_2fa_needed";
             case LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING:
                 return "login_social_accounts_need_connecting";
-            case LOGIN_SOCIAL_ERROR_ACCOUNT_ALREADY_CONNECTED:
-                return "login_social_account_already_connected";
             case LOGIN_SOCIAL_ERROR_UNKNOWN_USER:
                 return "login_social_unknown_user";
             case PERSON_REMOVED:
