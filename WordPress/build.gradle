@@ -5,7 +5,6 @@ buildscript {
     }
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.google.gms:google-services:3.1.0'
     }
 }
@@ -20,7 +19,6 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     useLibrary 'org.apache.http.legacy'
@@ -123,7 +121,7 @@ dependencies {
     }
 
     compile 'com.github.bumptech.glide:glide:4.1.1'
-    apt 'com.github.bumptech.glide:compiler:4.1.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
     compile 'com.github.bumptech.glide:volley-integration:4.1.1@aar'
 
     testCompile 'junit:junit:4.12'
@@ -141,10 +139,10 @@ dependencies {
 
     // Dagger
     compile 'com.google.dagger:dagger:2.11'
-    apt 'com.google.dagger:dagger-compiler:2.11'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.google.dagger:dagger-android-support:2.11'
-    apt 'com.google.dagger:dagger-android-processor:2.11'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
 
     compile ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion") {
         exclude group: "com.android.volley"
