@@ -456,7 +456,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 statusTextResId = R.string.post_uploading;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if (UploadService.hasInProgressMediaUploadsForPost(post)) {
-                statusTextResId = R.string.uploading_post_media;
+                statusTextResId = R.string.uploading_media;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if(UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
                 // the Post (or its related media if such a thing exist) *is strictly* queued
