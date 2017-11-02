@@ -126,11 +126,14 @@
                     android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentEnd="false"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     app:srcCompat="@drawable/ic_user_black_24dp"
                     android:tint="@color/grey_darken_10" />
             </RelativeLayout>
@@ -156,11 +159,14 @@
                     android:id="@+id/imageView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentEnd="false"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     app:srcCompat="@drawable/ic_lock_black_24dp"
                     android:tint="@color/grey_darken_10" />
 
@@ -168,12 +174,14 @@
                     android:id="@+id/password_visibility"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="false"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentEnd="false"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
                     app:srcCompat="@drawable/ic_visible_off_black_24dp"
                     android:tint="@color/nux_eye_icon_color_closed" />
             </RelativeLayout>
@@ -219,11 +227,14 @@
                     android:id="@+id/imageView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentEnd="false"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     app:srcCompat="@drawable/ic_globe_black_24dp"
                     android:tint="@color/grey_darken_10" />
             </RelativeLayout>
@@ -335,7 +346,7 @@
                 android:layout_marginRight="16dp"
                 android:gravity="center"
                 android:text="@string/nux_add_selfhosted_blog" />
-a
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"

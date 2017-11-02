@@ -1,6 +1,7 @@
 package org.wordpress.android.util.widgets;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -16,7 +17,7 @@ import android.widget.TextView;
  * See http://stackoverflow.com/a/5535672
  *
  */
-public class AutoResizeTextView extends TextView {
+public class AutoResizeTextView extends AppCompatTextView {
     // Minimum text size for this text view
     private static final float MIN_TEXT_SIZE = 20;
 

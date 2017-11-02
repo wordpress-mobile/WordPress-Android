@@ -26,6 +26,7 @@ import org.wordpress.android.ui.accounts.login.Login2FaFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
+import org.wordpress.android.ui.accounts.login.LoginGoogleFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressHelpDialogFragment;
@@ -56,6 +57,7 @@ import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -127,7 +129,6 @@ public interface AppComponent {
     void inject(SignInFragment object);
     void inject(NewBlogFragment object);
     void inject(SignInDialogFragment object);
-    void inject(LoginEpilogueFragment object);
     void inject(NewUserFragment object);
 
     void inject(UploadService object);
@@ -137,12 +138,14 @@ public interface AppComponent {
     void inject(LoginActivity object);
     void inject(LoginMagicLinkRequestFragment object);
     void inject(LoginEmailFragment object);
+    void inject(LoginGoogleFragment object);
     void inject(LoginEmailPasswordFragment object);
     void inject(Login2FaFragment object);
     void inject(LoginSiteAddressFragment object);
     void inject(LoginSiteAddressHelpDialogFragment object);
     void inject(LoginUsernamePasswordFragment object);
     void inject(LoginEpilogueActivity object);
+    void inject(LoginEpilogueFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsWidgetConfigureAdapter object);
@@ -190,6 +193,7 @@ public interface AppComponent {
     void inject(MediaPreviewActivity object);
     void inject(MediaPreviewFragment object);
     void inject(MediaSettingsActivity object);
+    void inject(PhotoPickerActivity object);
 
     void inject(PublicizeListActivity object);
     void inject(PublicizeWebViewFragment object);
