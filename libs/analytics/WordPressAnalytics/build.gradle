@@ -27,7 +27,7 @@ android {
     publishNonDefault true
 
     compileSdkVersion 26
-    buildToolsVersion "25.0.3"
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         versionName "1.3.0"
