@@ -249,6 +249,11 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
+            if (isSocialLogin) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, event.getClass().getSimpleName(),
+                        event.error.type.toString(), event.error.message);
+            }
+
             if (isAdded()) {
                 handleAuthError(event.error.type, event.error.message);
             }

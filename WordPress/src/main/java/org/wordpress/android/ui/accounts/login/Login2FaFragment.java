@@ -217,6 +217,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_TWO_FACTOR_FORM_VIEWED);
+            if (mService != null) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
+            }
         }
 
         super.onActivityCreated(savedInstanceState);
@@ -370,6 +373,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
+
+            if (isSocialLogin) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, event.getClass().getSimpleName(),
+                        event.error.type.toString(), event.error.message);
+            }
 
             if (isAdded()) {
                 handleAuthError(event.error.type, event.error.message);
