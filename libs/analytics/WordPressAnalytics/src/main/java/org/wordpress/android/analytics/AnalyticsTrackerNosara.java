@@ -739,7 +739,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING:
                 return "login_social_accounts_need_connecting";
             case LOGIN_SOCIAL_ERROR_UNKNOWN_USER:
-                return "login_social_unknown_user";
+                return "login_social_error_unknown_user";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
