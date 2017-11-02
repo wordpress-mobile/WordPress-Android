@@ -275,6 +275,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void loggedInViaSocialAccount(ArrayList<Integer> oldSitesIds) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_GOOGLE_SUCCEEDED);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_SUCCESS);
         loggedInAndFinish(oldSitesIds);
     }
 
