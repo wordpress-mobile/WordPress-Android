@@ -134,32 +134,25 @@ public class AnalyticsUtils {
      * @param isQuickReply Whether is a quick reply or not
      * @param site The site object
      * @param comment The comment object
-     * @param properties Properties to attach to the event
      */
     public static void trackCommentReplyWithDetails(boolean isQuickReply, SiteModel site,
-                                                    CommentModel comment, Map<String, Object> properties) {
+                                                    CommentModel comment) {
         AnalyticsTracker.Stat stat = isQuickReply ? AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO :
                 AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO;
 
         if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack. Tracking analytics without blog info");
-            AnalyticsTracker.track(stat, properties);
+            AnalyticsTracker.track(stat);
             return;
         }
 
-        if (properties == null) {
-            properties = new HashMap<>();
-        }
+        Map<String, Object> properties = new HashMap<>();
         properties.put(BLOG_ID_KEY, site.getSiteId());
         properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
         properties.put(POST_ID_KEY, comment.getRemotePostId());
         properties.put(COMMENT_ID_KEY, comment.getRemoteCommentId());
 
-        if (properties == null) {
-            AnalyticsTracker.track(stat);
-        } else {
-            AnalyticsTracker.track(stat, properties);
-        }
+        AnalyticsTracker.track(stat, properties);
     }
 
 

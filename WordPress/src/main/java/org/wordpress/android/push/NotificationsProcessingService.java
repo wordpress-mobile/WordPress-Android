@@ -533,7 +533,7 @@ public class NotificationsProcessingService extends Service {
                 mDispatcher.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
 
                 // Bump analytics
-                AnalyticsUtils.trackCommentReplyWithDetails(true, site, comment, null);
+                AnalyticsUtils.trackCommentReplyWithDetails(true, site, comment);
             } else {
                 //cancel the current notification
                 NativeNotificationsUtils.dismissNotification(mPushId, mContext);

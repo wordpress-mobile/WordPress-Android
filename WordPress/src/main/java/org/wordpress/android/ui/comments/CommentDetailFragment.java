@@ -876,7 +876,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mIsSubmittingReply = true;
 
-        AnalyticsUtils.trackCommentReplyWithDetails(false, mSite, mComment, null);
+        AnalyticsUtils.trackCommentReplyWithDetails(false, mSite, mComment);
 
         // Pseudo comment reply
         CommentModel reply = new CommentModel();
