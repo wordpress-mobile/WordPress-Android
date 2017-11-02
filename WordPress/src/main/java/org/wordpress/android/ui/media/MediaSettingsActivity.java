@@ -182,32 +182,23 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     /**
-     * @param activity   calling activity
-     * @param site       site this media is associated with
-     * @param media      media model to display
-     * @param sourceView optional view to use in shared element transition
+     * @param activity calling activity
+     * @param site     site this media is associated with
+     * @param media    media model to display
      */
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
-                                     @NonNull EditorImageMetaData media,
-                                     @Nullable View sourceView) {
+                                     @NonNull EditorImageMetaData media) {
 
         Intent intent = new Intent(activity, MediaSettingsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ARG_EDITOR_IMAGE_METADATA, media);
 
-        ActivityOptionsCompat options;
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                activity,
+                R.anim.activity_slide_up_from_bottom,
+                R.anim.do_nothing);
 
-        if (sourceView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            String sharedElementName = activity.getString(R.string.shared_element_media);
-            sourceView.setTransitionName(sharedElementName);
-            options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sourceView, sharedElementName);
-        } else {
-            options = ActivityOptionsCompat.makeCustomAnimation(
-                    activity,
-                    R.anim.activity_slide_up_from_bottom,
-                    R.anim.do_nothing);
-        }
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.MEDIA_SETTINGS, options.toBundle());
     }
 
@@ -314,21 +305,18 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
     }
 
+    private boolean isEditorMedia() {
+        return mEditorImageMetaData != null;
+    }
+
     private void reloadMedia() {
         loadMediaId(mMedia.getId());
     }
 
     private boolean loadMediaId(int mediaId) {
         MediaModel media;
-        if (mEditorImageMetaData != null) {
-            media = new MediaModel();
-            media.setUrl(mEditorImageMetaData.getSrc());
-            media.setTitle(mEditorImageMetaData.getTitle());
-            media.setCaption(mEditorImageMetaData.getCaption());
-            media.setAlt(mEditorImageMetaData.getAlt());
-            media.setFileName(mEditorImageMetaData.getSrc().substring(mEditorImageMetaData.getSrc().lastIndexOf("/") + 1));
-            media.setWidth(Integer.parseInt(mEditorImageMetaData.getWidth()));
-            media.setHeight(Integer.parseInt(mEditorImageMetaData.getHeight()));
+        if (isEditorMedia()) {
+            media = convertEditorImageMetaDataToMediaModel(mEditorImageMetaData);
         } else {
             media = mMediaStore.getMediaWithLocalId(mediaId);
         }
@@ -374,6 +362,18 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         return true;
+    }
+
+    private MediaModel convertEditorImageMetaDataToMediaModel(@NonNull EditorImageMetaData editorImageMetaData) {
+        MediaModel mediaModel = new MediaModel();
+        mediaModel.setUrl(editorImageMetaData.getSrc());
+        mediaModel.setTitle(editorImageMetaData.getTitle());
+        mediaModel.setCaption(editorImageMetaData.getCaption());
+        mediaModel.setAlt(editorImageMetaData.getAlt());
+        mediaModel.setFileName(editorImageMetaData.getSrc().substring(editorImageMetaData.getSrc().lastIndexOf("/") + 1));
+        mediaModel.setWidth(Integer.parseInt(editorImageMetaData.getWidth()));
+        mediaModel.setHeight(Integer.parseInt(editorImageMetaData.getHeight()));
+        return mediaModel;
     }
 
     @Override
@@ -508,9 +508,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean showSaveMenu = mSite != null && !mSite.isPrivate() && mEditorImageMetaData == null;
-        boolean showShareMenu = mSite != null && !mSite.isPrivate() && mEditorImageMetaData == null;
-        boolean showTrashMenu = mSite != null && mEditorImageMetaData == null;
+        boolean showSaveMenu = mSite != null && !mSite.isPrivate() && !isEditorMedia();
+        boolean showShareMenu = mSite != null && !mSite.isPrivate() && !isEditorMedia();
+        boolean showTrashMenu = mSite != null && !isEditorMedia();
 
         MenuItem mnuSave = menu.findItem(R.id.menu_save);
         mnuSave.setVisible(showSaveMenu);
@@ -564,19 +564,17 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mTitleView.setText(mMedia.getTitle());
         mAltTextView.setText(mMedia.getAlt());
 
-        if (mEditorImageMetaData != null) {
+        if (isEditorMedia()) {
             mDescriptionView.setVisibility(View.GONE);
             mCaptionView.setVisibility(View.GONE);
-            setupWidthSeekBar();
 
-            String alignment = mEditorImageMetaData.getAlign();
-            mAlignmentKeyArray = getResources().getStringArray(org.wordpress.android.editor.R.array.alignment_key_array);
-            int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
-            mAlignmentSpinner.setSelection(alignmentIndex == -1 ? 0 : alignmentIndex);
+            setupWidthSeekBar();
+            setupAlignmentSpinner();
         } else {
             mDescriptionView.setText(mMedia.getDescription());
             mCaptionView.setText(mMedia.getCaption());
-            findViewById(R.id.image_width_container).setVisibility(View.GONE);
+
+            findViewById(R.id.editor_image_medatadata_container).setVisibility(View.GONE);
         }
 
         TextView txtUrl = (TextView) findViewById(R.id.text_url);
@@ -648,7 +646,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
     }
 
-
     /**
      * Initialize the image width SeekBar and accompanying EditText
      */
@@ -702,6 +699,16 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 return false;
             }
         });
+    }
+
+    /**
+     * Initialize the image alignment spinner
+     */
+    private void setupAlignmentSpinner(){
+        String alignment = mEditorImageMetaData.getAlign();
+        mAlignmentKeyArray = getResources().getStringArray(org.wordpress.android.editor.R.array.alignment_key_array);
+        int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
+        mAlignmentSpinner.setSelection(alignmentIndex == -1 ? 0 : alignmentIndex);
     }
 
     /*
@@ -823,10 +830,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mEditorImageMetaData == null) {
-                    MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia, mMediaIdList);
-                } else {
+                if (isEditorMedia()) {
                     MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mEditorImageMetaData.getSrc());
+                } else {
+                    MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia, mMediaIdList);
                 }
 
             }
@@ -888,8 +895,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         String thisAltText = EditTextUtils.getText(mAltTextView);
         String thisDescription = EditTextUtils.getText(mDescriptionView);
 
-
-        if (mEditorImageMetaData == null) {
+        if (!isEditorMedia()) {
             MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());
             if (media == null) {
                 AppLog.w(AppLog.T.MEDIA, "MediaSettingsActivity > Cannot save null media");
@@ -913,7 +919,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         } else {
             String imageWidth = EditTextUtils.getText(mImageWidthView);
             String alignment = mAlignmentKeyArray[mAlignmentSpinner.getSelectedItemPosition()];
-
 
             boolean hasChanged = !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
                     || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText)

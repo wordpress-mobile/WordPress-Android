@@ -1035,7 +1035,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onImageSettingsRequested(EditorImageMetaData editorImageMetaData) {
-        MediaSettingsActivity.showForResult(this, mSite, editorImageMetaData, null);
+        MediaSettingsActivity.showForResult(this, mSite, editorImageMetaData);
     }
 
     private interface AfterSavePostListener {

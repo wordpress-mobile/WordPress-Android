@@ -1403,7 +1403,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 Gson gson = new Gson();
 
                 EditorImageMetaData metaData = gson.fromJson(meta.toString(), EditorImageMetaData.class);
-//                metaData.setLocalId(Integer.parseInt(attrs.getValue(ATTR_ID_WP)));
                 metaData.setBlogMaxImageWidth(mBlogSettingMaxImageWidth);
                 metaData.setCanBeFeatured(mFeaturedImageSupported);
 
@@ -1411,7 +1410,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 String attachmentId = metaData.getAttachmentId();
                 if (!attachmentId.isEmpty()) {
                     metaData.setFeatured(mFeaturedImageId == Integer.parseInt(attachmentId));
-//                    dialogBundle.putBoolean(EXTRA_FEATURED, mFeaturedImageId == Integer.parseInt(imageId));
                 }
 
                 // Use https:// when requesting the auth header, in case the image is incorrectly using http://
@@ -1447,7 +1445,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 if (data == null || data.getExtras() == null) {
                     return;
                 }
-
 
                 EditorImageMetaData metaData = data.getParcelableExtra(ARG_EDITOR_IMAGE_METADATA);
 
