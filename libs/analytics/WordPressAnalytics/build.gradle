@@ -19,8 +19,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.automattic:tracks:1.1.2'
-    compile 'org.wordpress:utils:1.18.1'
+    implementation 'com.automattic:tracks:1.1.2'
+    implementation 'org.wordpress:utils:1.18.1'
 }
 
 android {

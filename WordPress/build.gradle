@@ -82,73 +82,73 @@ android {
 }
 
 dependencies {
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
 
     // Provided by maven central
-    compile 'com.google.code.gson:gson:2.6.+'
-    compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
+    implementation 'com.google.code.gson:gson:2.6.+'
+    implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
-    compile 'com.android.support:support-compat:26.1.0'
-    compile 'com.android.support:support-core-ui:26.1.0'
-    compile 'com.android.support:support-fragment:26.1.0'
+    implementation 'com.android.support:support-compat:26.1.0'
+    implementation 'com.android.support:support-core-ui:26.1.0'
+    implementation 'com.android.support:support-fragment:26.1.0'
 
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:cardview-v7:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support:percent:26.1.0'
-    compile 'com.android.support:preference-v7:26.1.0'
+    implementation 'com.android.support:multidex:1.0.1'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:cardview-v7:26.1.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:percent:26.1.0'
+    implementation 'com.android.support:preference-v7:26.1.0'
 
-    compile 'com.google.android.gms:play-services-gcm:10.0.1'
-    compile 'com.google.android.gms:play-services-auth:10.0.1'
-    compile 'com.google.android.gms:play-services-places:10.0.1'
-    compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile 'com.helpshift:android-helpshift-aar:6.4.1'
-    compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.automattic:rest:1.0.7'
-    compile 'org.wordpress:graphview:3.4.0'
-    compile 'org.wordpress:persistentedittext:1.0.2'
-    compile 'org.wordpress:emailchecker2:1.1.0'
-    compile 'com.squareup.okio:okio:1.13.0'
-    compile 'org.apache.commons:commons-text:1.1'
-    compile 'com.airbnb.android:lottie:2.0.0-rc2'
+    implementation 'com.google.android.gms:play-services-gcm:10.0.1'
+    implementation 'com.google.android.gms:play-services-auth:10.0.1'
+    implementation 'com.google.android.gms:play-services-places:10.0.1'
+    implementation 'com.github.chrisbanes.photoview:library:1.2.4'
+    implementation 'com.helpshift:android-helpshift-aar:6.4.1'
+    implementation 'de.greenrobot:eventbus:2.4.0'
+    implementation 'com.automattic:rest:1.0.7'
+    implementation 'org.wordpress:graphview:3.4.0'
+    implementation 'org.wordpress:persistentedittext:1.0.2'
+    implementation 'org.wordpress:emailchecker2:1.1.0'
+    implementation 'com.squareup.okio:okio:1.13.0'
+    implementation 'org.apache.commons:commons-text:1.1'
+    implementation 'com.airbnb.android:lottie:2.0.0-rc2'
 
-    compile ('com.yalantis:ucrop:2.2.0') {
+    implementation ('com.yalantis:ucrop:2.2.0') {
         exclude group: 'com.squareup.okhttp3'
     }
 
-    compile 'com.github.bumptech.glide:glide:4.1.1'
+    implementation 'com.github.bumptech.glide:glide:4.1.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
-    compile 'com.github.bumptech.glide:volley-integration:4.1.1@aar'
+    implementation 'com.github.bumptech.glide:volley-integration:4.1.1@aar'
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.3.2'
-    testCompile 'org.robolectric:shadows-multidex:3.3.2'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.robolectric:robolectric:3.3.2'
+    testImplementation 'org.robolectric:shadows-multidex:3.3.2'
 
-    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
-    androidTestCompile 'org.objenesis:objenesis:2.1'
-    androidTestCompile 'org.mockito:mockito-core:1.10.19'
-    androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
-    androidTestCompile 'com.squareup.okio:okio:1.13.0'
+    androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.0'
+    androidTestImplementation 'org.objenesis:objenesis:2.1'
+    androidTestImplementation 'org.mockito:mockito-core:1.10.19'
+    androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
+    androidTestImplementation 'com.squareup.okio:okio:1.13.0'
 
     // Provided by the WordPress-Android Repository
-    compile 'org.wordpress:passcodelock:1.5.1'
+    implementation 'org.wordpress:passcodelock:1.5.1'
 
     // Dagger
-    compile 'com.google.dagger:dagger:2.11'
+    implementation 'com.google.dagger:dagger:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
-    compile 'com.google.dagger:dagger-android-support:2.11'
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
+    implementation 'com.google.dagger:dagger-android-support:2.11'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
 
-    compile ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion") {
+    implementation ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion") {
         exclude group: "com.android.volley"
     }
 
-    compile ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
+    implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
     implementation project(path:':libs:utils:WordPressUtils')
     implementation project(path:':libs:networking:WordPressNetworking')
@@ -160,7 +160,7 @@ dependencies {
     }
 
     // Debug
-    debugCompile 'com.facebook.stetho:stetho:1.4.2'
+    debugImplementation 'com.facebook.stetho:stetho:1.4.2'
 }
 
 configurations.all {
