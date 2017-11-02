@@ -429,9 +429,13 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
             // Finish login on social connect error.
             if (isSocialLoginConnect) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_FAILURE);
                 doFinishLogin();
             }
         } else {
+            if (isSocialLoginConnect) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_SUCCESS);
+            }
             doFinishLogin();
         }
     }

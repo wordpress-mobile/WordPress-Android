@@ -276,6 +276,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSocialChanged(OnSocialChanged event) {
         if (event.isError()) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_FAILURE);
             switch (event.error.type) {
                 case UNABLE_CONNECT:
                     AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
@@ -288,6 +289,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
             doFinishLogin();
         } else if (!event.requiresTwoStepAuth) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_SUCCESS);
             doFinishLogin();
         }
     }
