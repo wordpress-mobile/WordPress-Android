@@ -47,17 +47,22 @@ android {
         buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
     }
 
+    flavorDimensions "buildType"
+
     productFlavors {
         vanilla { // used for release and beta
+            dimension "buildType"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
+            dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
+            dimension "buildType"
             minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
         }
     }
