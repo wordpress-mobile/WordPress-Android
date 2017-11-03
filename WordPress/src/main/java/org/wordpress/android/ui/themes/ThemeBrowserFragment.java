@@ -60,8 +60,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         ThemeModel getCurrentTheme();
     }
 
-    protected static final String BUNDLE_PAGE = "BUNDLE_PAGE";
-
     protected SwipeToRefreshHelper mSwipeToRefreshHelper;
     protected ThemeBrowserActivity mThemeBrowserActivity;
     private String mCurrentThemeId;
@@ -71,7 +69,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private TextView mCurrentThemeTextView;
     private ThemeBrowserAdapter mAdapter;
     private ThemeBrowserFragmentCallback mCallback;
-    private int mPage = 1;
     private boolean mShouldRefreshOnStart;
     private TextView mEmptyTextView;
     private ProgressBar mProgressBar;
@@ -148,9 +145,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         mAdapter = new ThemeBrowserAdapter(mThemeBrowserActivity, cursor, false, mCallback);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
-        if (savedInstanceState != null) {
-            mPage = savedInstanceState.getInt(BUNDLE_PAGE, 1);
-        }
     }
 
     @Override
@@ -162,9 +156,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mGridView != null) {
-            outState.putInt(BUNDLE_PAGE, mPage);
-        }
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
@@ -208,10 +199,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     public void setCurrentThemeId(String currentThemeId) {
         mCurrentThemeId = currentThemeId;
-    }
-
-    public int getPage() {
-        return mPage;
     }
 
     protected void addHeaderViews(LayoutInflater inflater) {
@@ -319,7 +306,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     private void setEmptyViewVisible(boolean visible) {
-        if (getView() == null || !isAdded()) {
+        if (!isAdded() || getView() == null) {
             return;
         }
         mEmptyView.setVisibility(visible ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
