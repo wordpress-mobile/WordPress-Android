@@ -179,7 +179,7 @@ public class UploadService extends Service {
                 // either from Media Browser or a RETRY from a notification.
                 // Otherwise, this flag should be true, and we need to keep the error notification as
                 // it might be a separate action (user is editing a Post and including media there)
-                mPostUploadNotifier.cancelFinalNotificationForMedia(
+                PostUploadNotifier.cancelFinalNotificationForMedia(this,
                         mSiteStore.getSiteByLocalId(mediaList.get(0).getLocalSiteId()));
 
                 // add these media items so we can use them in WRITE POST once they end up loading successfully
@@ -257,9 +257,11 @@ public class UploadService extends Service {
     public static void cancelFinalNotification(Context context, PostModel post){
         // cancel any outstanding "end" notification for this Post before we start processing it again
         // i.e. dismiss success or error notification for the post.
-        if (sInstance != null && sInstance.mPostUploadNotifier != null) {
-            sInstance.mPostUploadNotifier.cancelFinalNotification(context, post);
-        }
+        PostUploadNotifier.cancelFinalNotification(context, post);
+    }
+
+    public static void cancelFinalNotificationForMedia(Context context, SiteModel site) {
+        PostUploadNotifier.cancelFinalNotificationForMedia(context, site);
     }
 
     private void makePostPublishable(@NonNull PostModel post) {

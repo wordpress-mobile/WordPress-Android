@@ -2465,6 +2465,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         FluxCUtils.mediaFileFromMediaModel(media));
             }
         } else {
+
+            UploadService.cancelFinalNotification(this, mPost);
+            UploadService.cancelFinalNotificationForMedia(this, mSite);
             media.setUploadState(MediaUploadState.QUEUED);
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             startUploadService(media);

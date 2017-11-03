@@ -243,7 +243,7 @@ class PostUploadNotifier {
 
     // cancels the error or success notification (only one of these exist per Post at any given
     // time
-    public static void cancelFinalNotification(Context context, @NonNull PostModel post) {
+    static void cancelFinalNotification(Context context, @NonNull PostModel post) {
         if (context != null) {
             NotificationManager notificationManager = (NotificationManager) SystemServiceFactory.get(context,
                     Context.NOTIFICATION_SERVICE);
@@ -251,8 +251,12 @@ class PostUploadNotifier {
         }
     }
 
-    void cancelFinalNotificationForMedia(@NonNull SiteModel site) {
-        mNotificationManager.cancel((int)getNotificationIdForMedia(site));
+    static void cancelFinalNotificationForMedia(Context context, @NonNull SiteModel site) {
+        if (context != null) {
+            NotificationManager notificationManager = (NotificationManager) SystemServiceFactory.get(context,
+                    Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel((int)getNotificationIdForMedia(site));
+        }
     }
 
     void updateNotificationSuccessForPost(@NonNull PostModel post, @NonNull SiteModel site, boolean isFirstTimePublish) {
