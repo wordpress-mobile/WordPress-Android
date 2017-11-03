@@ -889,6 +889,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadRetry(String localId, MediaType mediaType) {
+        mFailedMediaIds.remove(localId);
         onMediaUploadReattached(localId, 0);
     }
 
