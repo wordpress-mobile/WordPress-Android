@@ -67,6 +67,8 @@ public class AccountRestClient extends BaseWPComRestClient {
     public static class AccountPushSocialResponsePayload extends Payload<AccountSocialError> {
         public AccountPushSocialResponsePayload(AccountSocialResponse response) {
             this.bearerToken = response.bearer_token;
+            this.phoneNumber = response.phone_number;
+            this.twoStepNonce = response.two_step_nonce;
             this.twoStepNonceAuthenticator = response.two_step_nonce_authenticator;
             this.twoStepNonceBackup = response.two_step_nonce_backup;
             this.twoStepNonceSms = response.two_step_nonce_sms;
@@ -81,6 +83,8 @@ public class AccountRestClient extends BaseWPComRestClient {
         }
         public List<String> twoStepTypes;
         public String bearerToken;
+        public String phoneNumber;
+        public String twoStepNonce;
         public String twoStepNonceAuthenticator;
         public String twoStepNonceBackup;
         public String twoStepNonceSms;
@@ -101,6 +105,10 @@ public class AccountRestClient extends BaseWPComRestClient {
             }
 
             return list;
+        }
+
+        public boolean hasPhoneNumber() {
+            return !TextUtils.isEmpty(this.phoneNumber);
         }
 
         public boolean hasToken() {
