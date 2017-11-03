@@ -692,10 +692,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_prologue_viewed";
             case LOGIN_EMAIL_FORM_VIEWED:
                 return "login_email_form_viewed";
-            case LOGIN_GOOGLE_SUCCEEDED:
-                return "login_google_succeeded";
-            case LOGIN_GOOGLE_TAPPED:
-                return "login_google_tapped";
             case LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED:
                 return "login_magic_link_open_email_client_viewed";
             case LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED:
