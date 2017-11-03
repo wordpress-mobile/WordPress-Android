@@ -185,6 +185,13 @@ public class UploadService extends Service {
                 mMediaBatchUploaded.addAll(mediaList);
             }
 
+            if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
+                // send event so Editors can handle clearing Failed statuses properly if Post is being edited right now
+                if (mediaList != null && !mediaList.isEmpty()) {
+                    EventBus.getDefault().post(new UploadService.UploadMediaRetryEvent(mediaList));
+                }
+            }
+
             for (MediaModel media : mediaList) {
                 mMediaUploadHandler.upload(media);
             }
@@ -613,9 +620,17 @@ public class UploadService extends Service {
         return updatedPost;
     }
 
-    private void cancelPostUploadMatchingMedia(@NonNull MediaModel media, String errorMessage, boolean showError) {
+    /*
+        returns true if Post canceled
+        returns false if Post can't be found or is not registered in the UploadStore
+     */
+    private boolean cancelPostUploadMatchingMedia(@NonNull MediaModel media, String errorMessage, boolean showError) {
         PostModel postToCancel = mPostStore.getPostByLocalPostId(media.getLocalPostId());
-        if (postToCancel == null) return;
+        if (postToCancel == null) return false;
+
+        if (!mUploadStore.isRegisteredPostModel(postToCancel)) {
+            return false;
+        }
 
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
         mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(postToCancel);
@@ -631,6 +646,7 @@ public class UploadService extends Service {
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
 
+        return true;
     }
 
     private void rebuildNotificationError(PostModel post, String errorMessage) {
@@ -684,12 +700,15 @@ public class UploadService extends Service {
         }
 
         if (event.isError()) {
+            boolean treatAsMediaError = true;
             if (event.media.getLocalPostId() > 0) {
                 AppLog.w(T.MAIN, "UploadService > Media upload failed for post " + event.media.getLocalPostId() + " : "
                         + event.error.type + ": " + event.error.message);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
-                cancelPostUploadMatchingMedia(event.media, errorMessage, true);
-            } else {
+                treatAsMediaError = !cancelPostUploadMatchingMedia(event.media, errorMessage, true);
+            }
+
+            if (treatAsMediaError){
                 // this media item doesn't belong to a Post
                 mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotification(event.media.getId());
                 // Only show the media upload error notification if the post is NOT registered in the UploadStore
@@ -819,4 +838,11 @@ public class UploadService extends Service {
         }
     }
 
+    public static class UploadMediaRetryEvent {
+        public final List<MediaModel> mediaModelList;
+
+        UploadMediaRetryEvent(List<MediaModel> mediaModelList) {
+            this.mediaModelList = mediaModelList;
+        }
+    }
 }

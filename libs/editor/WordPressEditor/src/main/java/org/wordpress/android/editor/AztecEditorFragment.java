@@ -888,6 +888,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public void onMediaUploadRetry(String localId, MediaType mediaType) {
+        onMediaUploadReattached(localId, 0);
+    }
+
+    @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
         if (!isAdded() || content == null || !mAztecReady) {
             return;
