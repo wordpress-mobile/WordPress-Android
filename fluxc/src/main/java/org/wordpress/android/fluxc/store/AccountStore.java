@@ -130,10 +130,12 @@ public class AccountStore extends Store {
 
     public static class OnSocialChanged extends OnChanged<AccountSocialError> {
         public List<String> twoStepTypes;
+        public String nonce;
         public String nonceAuthenticator;
         public String nonceBackup;
         public String nonceSms;
         public String notificationSent;
+        public String phoneNumber;
         public String userId;
         public boolean requiresTwoStepAuth;
 
@@ -142,10 +144,12 @@ public class AccountStore extends Store {
 
         public OnSocialChanged(@NonNull AccountPushSocialResponsePayload payload) {
             this.twoStepTypes = payload.twoStepTypes;
+            this.nonce = payload.twoStepNonce;
             this.nonceAuthenticator = payload.twoStepNonceAuthenticator;
             this.nonceBackup = payload.twoStepNonceBackup;
             this.nonceSms = payload.twoStepNonceSms;
             this.notificationSent = payload.twoStepNotificationSent;
+            this.phoneNumber = payload.phoneNumber;
             this.userId = payload.userId;
         }
     }
