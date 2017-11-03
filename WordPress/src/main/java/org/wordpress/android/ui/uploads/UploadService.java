@@ -11,6 +11,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
@@ -174,7 +175,7 @@ public class UploadService extends Service {
         List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(KEY_MEDIA_LIST);
         if (mediaList != null && !mediaList.isEmpty()) {
             if (!intent.getBooleanExtra(KEY_UPLOAD_MEDIA_FROM_EDITOR, false)) {
-                // only cancel the media error notification if we're triggering a new media pload
+                // only cancel the media error notification if we're triggering a new media upload
                 // either from Media Browser or a RETRY from a notification.
                 // Otherwise, this flag should be true, and we need to keep the error notification as
                 // it might be a separate action (user is editing a Post and including media there)
@@ -183,6 +184,11 @@ public class UploadService extends Service {
 
                 // add these media items so we can use them in WRITE POST once they end up loading successfully
                 mMediaBatchUploaded.addAll(mediaList);
+            }
+
+            if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
+                // Bump analytics
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_UPLOAD_MEDIA_ERROR_RETRY);
             }
 
             for (MediaModel media : mediaList) {
@@ -642,6 +648,8 @@ public class UploadService extends Service {
     }
 
     private void aztecRetryUpload(PostModel post) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_UPLOAD_POST_ERROR_RETRY);
+
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
         mPostUploadNotifier.removePostInfoFromForegroundNotificationData(post, mediaToRetry);
