@@ -40,6 +40,7 @@ import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -188,6 +189,10 @@ public class UploadService extends Service {
             if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
                 // send event so Editors can handle clearing Failed statuses properly if Post is being edited right now
                 if (mediaList != null && !mediaList.isEmpty()) {
+                    Set<PostModel> postsToRefresh = PostUtils.getListOfPostsThatIncludeMedia(mPostStore, mediaList);
+                    for (PostModel post : postsToRefresh) {
+                        mUploadStore.registerPostModel(post, mediaList);
+                    }
                     EventBus.getDefault().post(new UploadService.UploadMediaRetryEvent(mediaList));
                 }
             }
