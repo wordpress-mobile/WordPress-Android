@@ -443,6 +443,8 @@ public class AccountStore extends Store {
             case PUSH_SOCIAL_LOGIN:
                 createPushSocialLogin((PushSocialLoginPayload) payload);
                 break;
+            case PUSH_SOCIAL_SMS:
+                break;
             case UPDATE_ACCOUNT:
                 updateDefaultAccount((AccountModel) payload, AccountAction.UPDATE_ACCOUNT);
                 break;
