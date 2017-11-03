@@ -194,11 +194,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         addSearchFragment();
     }
 
-    @Override
-    public ThemeModel getCurrentTheme() {
-        return mCurrentTheme;
-    }
-
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemesChanged(ThemeStore.OnThemesChanged event) {

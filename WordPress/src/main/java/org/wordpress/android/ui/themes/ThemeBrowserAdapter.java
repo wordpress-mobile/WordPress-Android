@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.wellsql.generated.ThemeModelTable;
 
 import org.wordpress.android.R;
-import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -34,8 +33,9 @@ class ThemeBrowserAdapter extends CursorAdapter {
     private static final String THEME_IMAGE_PARAMETER = "?w=";
 
     static Cursor createHeaderCursor(String headerText, int count) {
-        MatrixCursor cursor =
-                new MatrixCursor(new String[] {"_id", ThemeModelTable.THEME_ID, ThemeModelTable.NAME, "count"});
+        MatrixCursor cursor = new MatrixCursor(new String[] {
+                ThemeModelTable.ID, ThemeModelTable.THEME_ID, ThemeModelTable.NAME, "count"
+        });
         cursor.addRow(new String[]{"0", HEADER_THEME_ID, headerText, String.valueOf(count)});
         return cursor;
     }
@@ -116,7 +116,7 @@ class ThemeBrowserAdapter extends CursorAdapter {
         final String themeId = cursor.getString(cursor.getColumnIndex(ThemeModelTable.THEME_ID));
         final String currency = cursor.getString(cursor.getColumnIndex(ThemeModelTable.CURRENCY));
         final float price = cursor.getFloat(cursor.getColumnIndex(ThemeModelTable.PRICE));
-        final boolean isCurrent = isCurrentTheme(themeId);
+        final boolean isCurrent = cursor.getInt(cursor.getColumnIndex(ThemeModelTable.ACTIVE)) > 0;
         final boolean isPremium = price > 0.f;
 
         themeViewHolder.nameView.setText(name);
@@ -254,12 +254,6 @@ class ThemeBrowserAdapter extends CursorAdapter {
             mViewWidth = imageWidth;
             AppPrefs.setThemeImageSizeWidth(mViewWidth);
         }
-    }
-
-    private boolean isCurrentTheme(String themeId) {
-        ThemeModel theme = mCallback.getCurrentTheme();
-        return !(themeId == null || theme == null || theme.getThemeId() == null) &&
-                theme.getThemeId().replace("-wpcom", "").equals(themeId.replace("-wpcom", ""));
     }
 
     private int getItemViewType(Cursor cursor) {

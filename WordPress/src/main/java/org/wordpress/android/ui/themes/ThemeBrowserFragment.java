@@ -57,7 +57,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         void onDetailsSelected(String themeId);
         void onSupportSelected(String themeId);
         void onSearchClicked();
-        ThemeModel getCurrentTheme();
     }
 
     protected SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -270,7 +269,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     private void setThemeNameIfAlreadyAvailable() {
-        ThemeModel currentTheme = mThemeBrowserActivity.getCurrentTheme();
+        ThemeModel currentTheme = mThemeStore.getActiveThemeForSite(mSite);
         if (currentTheme != null) {
             mCurrentThemeTextView.setText(currentTheme.getName());
         }
