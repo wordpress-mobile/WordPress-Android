@@ -79,6 +79,12 @@ android {
             ext.enableCrashlytics = false
         }
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -126,8 +132,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:volley-integration:4.1.1@aar'
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.robolectric:robolectric:3.3.2'
-    testImplementation 'org.robolectric:shadows-multidex:3.3.2'
+    testImplementation 'org.robolectric:robolectric:3.6.1'
+    testImplementation 'org.robolectric:shadows-multidex:3.6.1'
 
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestImplementation 'org.objenesis:objenesis:2.1'
