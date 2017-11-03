@@ -198,6 +198,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     public void setCurrentThemeId(String currentThemeId) {
         mCurrentThemeId = currentThemeId;
+        refreshView();
     }
 
     protected void addHeaderViews(LayoutInflater inflater) {
