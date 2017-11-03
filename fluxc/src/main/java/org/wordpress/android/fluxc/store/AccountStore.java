@@ -448,6 +448,7 @@ public class AccountStore extends Store {
                 createPushSocialLogin((PushSocialLoginPayload) payload);
                 break;
             case PUSH_SOCIAL_SMS:
+                createPushSocialSms((PushSocialAuthPayload) payload);
                 break;
             case UPDATE_ACCOUNT:
                 updateDefaultAccount((AccountModel) payload, AccountAction.UPDATE_ACCOUNT);
@@ -652,6 +653,10 @@ public class AccountStore extends Store {
 
     private void createPushSocialLogin(PushSocialLoginPayload payload) {
         mAccountRestClient.pushSocialLogin(payload.idToken, payload.service);
+    }
+
+    private void createPushSocialSms(PushSocialAuthPayload payload) {
+        mAccountRestClient.pushSocialSms(payload.userId, payload.nonce);
     }
 
     private void signOut() {
