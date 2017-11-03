@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.database.MergeCursor;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,8 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -322,7 +326,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
 
         if (mSite.isWPCom()) {
-            return mThemeStore.getWpComThemesCursor();
+            return createSortedWpComThemesCursor();
         }
 
         // this is a Jetpack site, show two sections with headers
@@ -353,6 +357,35 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
             int numberOfColumns = mGridView.getNumColumns();
             return lastVisibleCount >= totalItemCount - numberOfColumns;
         }
+    }
+
+    private Cursor createSortedWpComThemesCursor() {
+        final List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
+        final MatrixCursor cursor = new MatrixCursor(ThemeBrowserAdapter.THEME_COLUMNS);
+
+        if (!TextUtils.isEmpty(mCurrentThemeId)) {
+            // find the index of the active theme
+            int activeThemeIndex = 0;
+            for (ThemeModel wpComTheme : wpComThemes) {
+                if (mCurrentThemeId.equals(wpComTheme.getThemeId())) {
+                    wpComTheme.setActive(true);
+                    activeThemeIndex = wpComThemes.indexOf(wpComTheme);
+                    break;
+                }
+            }
+
+            // move active theme to front of list
+            if (activeThemeIndex > 0) {
+                wpComThemes.add(0, wpComThemes.remove(activeThemeIndex));
+            }
+        }
+
+        // convert list to cursor
+        for (ThemeModel wpComTheme : wpComThemes) {
+            cursor.addRow(ThemeBrowserAdapter.createThemeCursorRow(wpComTheme));
+        }
+
+        return cursor;
     }
 
     private Cursor getJetpackCursor() {

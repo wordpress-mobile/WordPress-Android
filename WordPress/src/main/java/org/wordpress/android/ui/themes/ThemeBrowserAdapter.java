@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +21,9 @@ import android.widget.TextView;
 import com.wellsql.generated.ThemeModelTable;
 
 import org.wordpress.android.R;
+import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
@@ -38,6 +41,17 @@ class ThemeBrowserAdapter extends CursorAdapter {
         });
         cursor.addRow(new String[]{"0", HEADER_THEME_ID, headerText, String.valueOf(count)});
         return cursor;
+    }
+
+    static final String[] THEME_COLUMNS = new String[] {
+            ThemeModelTable.ID, ThemeModelTable.THEME_ID, ThemeModelTable.NAME, ThemeModelTable.SCREENSHOT_URL,
+            ThemeModelTable.CURRENCY, ThemeModelTable.PRICE, ThemeModelTable.ACTIVE
+    };
+    static String[] createThemeCursorRow(@NonNull ThemeModel theme) {
+        return new String[] {
+                String.valueOf(theme.getId()), theme.getThemeId(), theme.getName(), theme.getScreenshotUrl(),
+                theme.getCurrency(), String.valueOf(theme.getPrice()), String.valueOf(theme.getActive())
+        };
     }
 
     private final LayoutInflater mInflater;
@@ -116,8 +130,9 @@ class ThemeBrowserAdapter extends CursorAdapter {
         final String themeId = cursor.getString(cursor.getColumnIndex(ThemeModelTable.THEME_ID));
         final String currency = cursor.getString(cursor.getColumnIndex(ThemeModelTable.CURRENCY));
         final float price = cursor.getFloat(cursor.getColumnIndex(ThemeModelTable.PRICE));
-        final boolean isCurrent = cursor.getInt(cursor.getColumnIndex(ThemeModelTable.ACTIVE)) > 0;
         final boolean isPremium = price > 0.f;
+        final boolean isCurrent =
+                StringUtils.equals("true", cursor.getString(cursor.getColumnIndex(ThemeModelTable.ACTIVE)));
 
         themeViewHolder.nameView.setText(name);
         if (isPremium) {
