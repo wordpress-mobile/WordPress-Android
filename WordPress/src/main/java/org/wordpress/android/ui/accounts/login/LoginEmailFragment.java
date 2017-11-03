@@ -98,7 +98,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
             @Override
             public void onClick(View view) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_CLICK);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_GOOGLE_TAPPED);
                 WPActivityUtils.hideKeyboard(getActivity().getCurrentFocus());
 
                 if (NetworkUtils.checkConnection(getActivity())) {

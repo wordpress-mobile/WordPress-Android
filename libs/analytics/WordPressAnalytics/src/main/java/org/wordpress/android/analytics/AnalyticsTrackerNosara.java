@@ -165,12 +165,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_AZTEC_PROMO_POSITIVE:
                 predefinedEventProperties.put("source", "promo_positive");
                 break;
-            case LOGIN_GOOGLE_SUCCEEDED:
-                predefinedEventProperties.put("source", "android");
-                break;
-            case LOGIN_GOOGLE_TAPPED:
-                predefinedEventProperties.put("source", "android");
-                break;
             case OPENED_POSTS:
                 predefinedEventProperties.put("menu_item", "posts");
                 break;
