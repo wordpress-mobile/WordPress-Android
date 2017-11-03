@@ -6,6 +6,8 @@ import org.wordpress.android.fluxc.network.Response;
 public class AccountSocialResponse implements Response {
     public JSONArray two_step_supported_auth_types;
     public String bearer_token;
+    public String phone_number;
+    public String two_step_nonce;
     public String two_step_nonce_authenticator;
     public String two_step_nonce_backup;
     public String two_step_nonce_sms;
