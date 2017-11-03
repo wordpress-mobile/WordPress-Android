@@ -165,12 +165,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_AZTEC_PROMO_POSITIVE:
                 predefinedEventProperties.put("source", "promo_positive");
                 break;
-            case LOGIN_GOOGLE_SUCCEEDED:
-                predefinedEventProperties.put("source", "android");
-                break;
-            case LOGIN_GOOGLE_TAPPED:
-                predefinedEventProperties.put("source", "android");
-                break;
             case OPENED_POSTS:
                 predefinedEventProperties.put("menu_item", "posts");
                 break;
@@ -704,10 +698,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_prologue_viewed";
             case LOGIN_EMAIL_FORM_VIEWED:
                 return "login_email_form_viewed";
-            case LOGIN_GOOGLE_SUCCEEDED:
-                return "login_google_succeeded";
-            case LOGIN_GOOGLE_TAPPED:
-                return "login_google_tapped";
             case LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED:
                 return "login_magic_link_open_email_client_viewed";
             case LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED:
@@ -728,6 +718,24 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_epilogue_viewed";
             case LOGIN_FORGOT_PASSWORD_CLICKED:
                 return "login_forgot_password_clicked";
+            case LOGIN_SOCIAL_BUTTON_CLICK:
+                return "login_social_button_click";
+            case LOGIN_SOCIAL_BUTTON_FAILURE:
+                return "login_social_button_failure";
+            case LOGIN_SOCIAL_CONNECT_SUCCESS:
+                return "login_social_connect_success";
+            case LOGIN_SOCIAL_CONNECT_FAILURE:
+                return "login_social_connect_failure";
+            case LOGIN_SOCIAL_SUCCESS:
+                return "login_social_success";
+            case LOGIN_SOCIAL_FAILURE:
+                return "login_social_failure";
+            case LOGIN_SOCIAL_2FA_NEEDED:
+                return "login_social_2fa_needed";
+            case LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING:
+                return "login_social_accounts_need_connecting";
+            case LOGIN_SOCIAL_ERROR_UNKNOWN_USER:
+                return "login_social_error_unknown_user";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
