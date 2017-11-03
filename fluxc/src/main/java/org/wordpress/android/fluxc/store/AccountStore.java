@@ -293,6 +293,10 @@ public class AccountStore extends Store {
     public enum AccountSocialErrorType {
         INVALID_TOKEN,
         INVALID_TWO_STEP_CODE,
+        INVALID_TWO_STEP_NONCE,
+        NO_PHONE_NUMBER_FOR_ACCOUNT,
+        SMS_AUTHENTICATION_UNAVAILABLE,
+        SMS_CODE_THROTTLED,
         UNABLE_CONNECT,
         UNKNOWN_USER,
         USER_ALREADY_ASSOCIATED,
