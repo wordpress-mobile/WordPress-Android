@@ -61,10 +61,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -781,7 +778,7 @@ public class PostsListFragment extends Fragment
 
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             // if there' a Post to which the retried media belongs, clear their status
-            Set<PostModel> postsToRefresh = PostUtils.getListOfPostsThatIncludeMedia(mPostStore, event.mediaModelList);
+            Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeThisMedia(mPostStore, event.mediaModelList);
             // now that we know which Posts  to refresh, let's do it
             for (PostModel post : postsToRefresh) {
                 if (post != null) {
