@@ -608,6 +608,10 @@ public class AccountStore extends Store {
             OnSocialChanged event = new OnSocialChanged();
             event.error = payload.error;
             emitChange(event);
+        // No error and two-factor authentication code sent via SMS; emit only social change.
+        } else if (payload.hasPhoneNumber()) {
+            OnSocialChanged event = new OnSocialChanged(payload);
+            emitChange(event);
         // No error, but either two-factor authentication or social connect is required; emit only social change.
         } else if (!payload.hasToken()) {
             OnSocialChanged event = new OnSocialChanged(payload);
