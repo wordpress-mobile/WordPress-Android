@@ -45,6 +45,7 @@ import javax.inject.Singleton;
 public class AccountRestClient extends BaseWPComRestClient {
     private static final String SOCIAL_AUTH_ENDPOINT_VERSION = "1";
     private static final String SOCIAL_LOGIN_ENDPOINT_VERSION = "1";
+    private static final String SOCIAL_SMS_ENDPOINT_VERSION = "1";
 
     private final AppSecrets mAppSecrets;
 
@@ -373,6 +374,49 @@ public class AccountRestClient extends BaseWPComRestClient {
                     }
                 }
         ));
+    }
+
+    /**
+     * Performs an HTTP POST call to https://wordpress.com/wp-login.php with send-sms-code-endpoint action.  Upon
+     * receiving a response (success or error) a {@link AccountAction#PUSHED_SOCIAL} action is dispatched with a
+     * payload of type {@link AccountPushSocialResponsePayload}.
+     *
+     * {@link AccountPushSocialResponsePayload#isError()} can be used to check the request result.
+     *
+     * No HTTP POST call is made if the given parameter map is null or contains no entries.
+     *
+     * @param userId    WordPress.com user identification number
+     * @param nonce     One-time-use token returned in {@link #pushSocialLogin(String, String)}} response
+     */
+    public void pushSocialSms(@NonNull String userId, @NonNull String nonce) {
+        String url = "https://wordpress.com/wp-login.php";
+
+        Map<String, String> params = new HashMap<>();
+        params.put("action", "send-sms-code-endpoint");
+        params.put("version", SOCIAL_SMS_ENDPOINT_VERSION);
+        params.put("user_id", userId);
+        params.put("two_step_nonce", nonce);
+        params.put("client_id", mAppSecrets.getAppId());
+        params.put("client_secret", mAppSecrets.getAppSecret());
+
+        AccountSocialRequest request = new AccountSocialRequest(url, params,
+                new Listener<AccountSocialResponse>() {
+                    @Override
+                    public void onResponse(AccountSocialResponse response) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(error);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                }
+        );
+        request.disableRetries();
+        addUnauthedRequest(request);
     }
 
     public void newAccount(@NonNull String username, @NonNull String password, @NonNull String email,
