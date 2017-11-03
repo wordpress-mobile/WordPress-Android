@@ -192,6 +192,9 @@ public class UploadService extends Service {
                     Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeThisMedia(mPostStore, mediaList);
                     for (PostModel post : postsToRefresh) {
                         mUploadStore.registerPostModel(post, mediaList);
+                        if (isThisPostTotallyNewOrFailed(post)) {
+                            mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
+                        }
                     }
                     EventBus.getDefault().post(new UploadService.UploadMediaRetryEvent(mediaList));
                 }
