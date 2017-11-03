@@ -2127,9 +2127,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
             }
         } catch (RuntimeException e) {
-            AppLog.e(T.POSTS, e);
+            AppLog.e(T.EDITOR, e);
         } catch (OutOfMemoryError e) {
-            AppLog.e(T.POSTS, e);
+            AppLog.e(T.EDITOR, e);
         }
     }
 
