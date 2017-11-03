@@ -148,7 +148,9 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         mAdapter = new ThemeBrowserAdapter(mThemeBrowserActivity, cursor, false, mCallback);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
-        restoreState(savedInstanceState);
+        if (savedInstanceState != null) {
+            mPage = savedInstanceState.getInt(BUNDLE_PAGE, 1);
+        }
     }
 
     @Override
@@ -314,12 +316,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
                 mCallback.onSearchClicked();
             }
         });
-    }
-
-    private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            mPage = savedInstanceState.getInt(BUNDLE_PAGE, 1);
-        }
     }
 
     private void setEmptyViewVisible(boolean visible) {
