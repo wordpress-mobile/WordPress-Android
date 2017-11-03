@@ -35,6 +35,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
@@ -663,7 +664,44 @@ public class UploadService extends Service {
 
     }
 
+    private void registerFailedMediaForThisPost(PostModel post) {
+        // there could be failed media in the post, that has not been registered in the UploadStore because
+        // the media was being uploaded separately (i.e. the user included media, started uploading within
+        // the editor, and such media failed _before_  exiting the eidtor, thus the registration never happened.
+        // We're recovering the information here so we make sure to rebuild the status only when the user taps
+        // on Retry.
+        List<String> mediaIds = AztecEditorFragment.getMediaMarkedFailedInPostContent(this, post.getContent());
+
+        if (mediaIds != null && !mediaIds.isEmpty()) {
+
+            ArrayList<MediaModel> mediaList = new ArrayList<>();
+            for (String mediaId : mediaIds) {
+                MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
+                if (media != null) {
+                    mediaList.add(media);
+                    // if this media item didn't have the Postid set, let's set it as we found it
+                    // in the Post body anyway. So let's fix that now.
+                    if (media.getLocalPostId() == 0 ) {
+                        media.setLocalPostId(post.getId());
+                        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+                    }
+                }
+            }
+
+            if (!mediaList.isEmpty()) {
+                // given we found failed media within this Post, let's also cancel the media error
+                mPostUploadNotifier.cancelFinalNotificationForMedia(this, mSiteStore.getSiteByLocalId(post.getLocalSiteId()));
+
+                // now we have a list. Let' register this list.
+                mUploadStore.registerPostModel(post, mediaList);
+            }
+        }
+    }
+
     private void aztecRetryUpload(PostModel post) {
+
+        registerFailedMediaForThisPost(post);
+
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
         mPostUploadNotifier.removePostInfoFromForegroundNotificationData(post, mediaToRetry);
