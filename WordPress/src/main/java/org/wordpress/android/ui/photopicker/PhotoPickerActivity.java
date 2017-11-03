@@ -227,7 +227,7 @@ public class PhotoPickerActivity extends AppCompatActivity
     }
 
     private void launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this);
+        WPMediaUtils.launchPictureLibrary(this, false);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 

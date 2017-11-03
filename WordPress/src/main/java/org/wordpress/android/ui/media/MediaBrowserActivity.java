@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -350,6 +351,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
+    private void getMediaFromDeviceAndTrack(Uri imageUri, int requestCode) {
+        String mimeType = getContentResolver().getType(imageUri);
+        fetchMedia(imageUri, mimeType);
+        trackAddMediaFromDeviceEvents(
+                false,
+                requestCode == RequestCodes.VIDEO_LIBRARY,
+                imageUri
+        );
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -358,14 +369,15 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    Uri imageUri = data.getData();
-                    String mimeType = getContentResolver().getType(imageUri);
-                    fetchMedia(imageUri, mimeType);
-                    trackAddMediaFromDeviceEvents(
-                            false,
-                            requestCode == RequestCodes.VIDEO_LIBRARY,
-                            imageUri
-                    );
+                    ClipData clipData = data.getClipData();
+                    if (clipData != null) {
+                        for (int i = 0; i < clipData.getItemCount(); i++) {
+                            ClipData.Item item = clipData.getItemAt(i);
+                            getMediaFromDeviceAndTrack(item.getUri(), requestCode);
+                        }
+                    } else {
+                        getMediaFromDeviceAndTrack(data.getData(), requestCode);
+                    }
                 }
                 break;
             case RequestCodes.TAKE_PHOTO:
@@ -870,10 +882,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     WPMediaUtils.launchVideoCamera(this);
                     break;
                 case ITEM_CHOOSE_PHOTO:
-                    WPMediaUtils.launchPictureLibrary(this);
+                    WPMediaUtils.launchPictureLibrary(this, true);
                     break;
                 case ITEM_CHOOSE_VIDEO:
-                    WPMediaUtils.launchVideoLibrary(this);
+                    WPMediaUtils.launchVideoLibrary(this, true);
                     break;
             }
         }

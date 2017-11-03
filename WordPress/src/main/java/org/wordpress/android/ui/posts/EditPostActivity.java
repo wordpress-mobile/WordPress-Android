@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -929,12 +930,12 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this);
+        WPMediaUtils.launchPictureLibrary(this, true);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this);
+        WPMediaUtils.launchVideoLibrary(this, true);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
@@ -2057,6 +2058,32 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
     }
 
+    private void addMediaItemGroupOrSingleItem(Intent data) {
+        ClipData clipData = data.getClipData();
+        if (clipData != null) {
+            for (int i = 0; i < clipData.getItemCount(); i++) {
+                ClipData.Item item = clipData.getItemAt(i);
+                addMedia(item.getUri(), false);
+            }
+        } else {
+            addMedia(data.getData(), false);
+        }
+    }
+
+    private void advertiseImageOptimisationAndAddMedia(final Intent data) {
+        if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
+            WPMediaUtils.advertiseImageOptimization(this,
+                    new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                        @Override
+                        public void done() {
+                            addMediaItemGroupOrSingleItem(data);
+                        }
+                    });
+        } else {
+            addMediaItemGroupOrSingleItem(data);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -2078,18 +2105,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
-                    final Uri imageUri = data.getData();
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this,
-                                new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
-                                    @Override
-                                    public void done() {
-                                        addMedia(imageUri, false);
-                                    }
-                                });
-                    } else {
-                        addMedia(imageUri, false);
-                    }
+                    advertiseImageOptimisationAndAddMedia(data);
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
@@ -2105,8 +2121,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
-                    Uri videoUri = data.getData();
-                    addMedia(videoUri, false);
+                    addMediaItemGroupOrSingleItem(data);
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
@@ -2613,6 +2628,10 @@ public class EditPostActivity extends AppCompatActivity implements
         // now that we have the Post object initialized,
         // check whether we have media items to insert from the WRITE POST with media functionality
         if (getIntent().hasExtra(EXTRA_INSERT_MEDIA)) {
+
+            // Bump analytics
+            AnalyticsTracker.track(Stat.NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST);
+
             List<MediaModel> mediaList = (List<MediaModel>) getIntent().getSerializableExtra(EXTRA_INSERT_MEDIA);
             // removing this from the intent so it doesn't insert the media items again on each Acivity re-creation
             getIntent().removeExtra(EXTRA_INSERT_MEDIA);
