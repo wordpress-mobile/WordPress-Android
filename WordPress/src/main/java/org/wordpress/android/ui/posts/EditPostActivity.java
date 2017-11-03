@@ -39,7 +39,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.MimeTypeMap;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -479,6 +478,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         EventBus.getDefault().register(this);
 
+        reattachUploadingMedia();
+    }
+
+    private void reattachUploadingMedia() {
         if (mEditorMediaUploadListener != null) {
             // UploadService.getPendingMediaForPost will be populated only when the user exits the editor
             // But if the user doesn't exit the editor and sends the app to the background, a reattachment
@@ -1422,6 +1425,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
                         // Set up custom headers for the visual editor's internal WebView
                         mEditorFragment.setCustomHttpHeader("User-Agent", WordPress.getUserAgent());
+
+                        reattachUploadingMedia();
                     }
                     break;
                 case 1:

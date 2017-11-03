@@ -134,8 +134,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private Handler invalidateOptionsHandler;
     private Runnable invalidateOptionsRunnable;
 
-    private HashMap<String, Float> mUploadingMediaProgressMax;
-    private Set<String> mFailedMediaIds;
+    private HashMap<String, Float> mUploadingMediaProgressMax = new HashMap<>();
+    private Set<String> mFailedMediaIds = new HashSet<>();
 
     private long mActionStartedAt = -1;
 
@@ -172,9 +172,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (getActivity() instanceof EditorFragmentActivity) {
             ((EditorFragmentActivity)getActivity()).initializeEditorFragment();
         }
-
-        mUploadingMediaProgressMax = new HashMap<>();
-        mFailedMediaIds = new HashSet<>();
 
         title = (AztecText) view.findViewById(R.id.title);
         content = (AztecText)view.findViewById(R.id.aztec);
@@ -622,6 +619,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void overlayProgressingMediaForMediaId(String localMediaId) {
+        if (content == null) {
+            // discard any events if Aztec hasn't been initialized
+            return;
+        }
+
         MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
         overlayProgressingMedia(predicate);
         // here check if this is a video uploading in progress or not; if it is, show the video play icon
