@@ -217,11 +217,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_TWO_FACTOR_FORM_VIEWED);
-            if (mService != null) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
-            }
         }
-
         super.onActivityCreated(savedInstanceState);
     }
 
