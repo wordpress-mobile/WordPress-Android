@@ -263,11 +263,16 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
-        if (isSocialLogin && !shouldSendTwoStepSMS) {
-            setAuthCodeTypeAndNonce(twoStepCode);
-            AccountStore.PushSocialAuthPayload payload = new AccountStore.PushSocialAuthPayload(mUserId, mType, mNonce,
-                    twoStepCode);
-            mDispatcher.dispatch(AccountActionBuilder.newPushSocialAuthAction(payload));
+        if (isSocialLogin) {
+            if (shouldSendTwoStepSMS) {
+                AccountStore.PushSocialAuthPayload payload = new AccountStore.PushSocialAuthPayload(mUserId, "", mNonceSms, "");
+                mDispatcher.dispatch(AccountActionBuilder.newPushSocialSmsAction(payload));
+            } else {
+                setAuthCodeTypeAndNonce(twoStepCode);
+                AccountStore.PushSocialAuthPayload payload = new AccountStore.PushSocialAuthPayload(mUserId, mType, mNonce,
+                        twoStepCode);
+                mDispatcher.dispatch(AccountActionBuilder.newPushSocialAuthAction(payload));
+            }
         } else {
             AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(mEmailAddress, mPassword);
             payload.twoStepCode = twoStepCode;
@@ -423,6 +428,10 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             if (isSocialLoginConnect) {
                 doFinishLogin();
             }
+        // Two-factor authentication code was sent via SMS to account phone number; replace SMS nonce with response.
+        } else if (!TextUtils.isEmpty(event.phoneNumber) && !TextUtils.isEmpty(event.nonce)) {
+            endProgress();
+            mNonceSms = event.nonce;
         } else {
             doFinishLogin();
         }
