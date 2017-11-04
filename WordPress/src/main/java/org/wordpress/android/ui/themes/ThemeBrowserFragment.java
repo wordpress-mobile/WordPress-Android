@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -36,6 +37,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -326,11 +328,11 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
 
         if (mSite.isWPCom()) {
-            return createSortedWpComThemesCursor();
+            return getSortedWpComThemesCursor();
         }
 
         // this is a Jetpack site, show two sections with headers
-        return getJetpackCursor();
+        return getSortedJetpackCursor();
     }
 
     protected void refreshView() {
@@ -359,51 +361,107 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
     }
 
-    private Cursor createSortedWpComThemesCursor() {
+    private Cursor getSortedWpComThemesCursor() {
         final List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
-        final MatrixCursor cursor = new MatrixCursor(ThemeBrowserAdapter.THEME_COLUMNS);
 
-        if (!TextUtils.isEmpty(mCurrentThemeId)) {
-            // find the index of the active theme
-            int activeThemeIndex = 0;
-            for (ThemeModel wpComTheme : wpComThemes) {
-                if (mCurrentThemeId.equals(wpComTheme.getThemeId())) {
-                    wpComTheme.setActive(true);
-                    activeThemeIndex = wpComThemes.indexOf(wpComTheme);
-                    break;
-                }
-            }
+        // first thing to do is attempt to find the active theme and move it to the front of the list
+        moveActiveThemeToFront(wpComThemes);
 
-            // move active theme to front of list
-            if (activeThemeIndex > 0) {
-                wpComThemes.add(0, wpComThemes.remove(activeThemeIndex));
-            }
-        }
+        // then remove all premium themes from the list with an exception for the active theme
+        removeNonActivePremiumThemes(wpComThemes);
 
-        // convert list to cursor
-        for (ThemeModel wpComTheme : wpComThemes) {
-            cursor.addRow(ThemeBrowserAdapter.createThemeCursorRow(wpComTheme));
-        }
-
-        return cursor;
+        // lastly convert the list into a Cursor for the adapter
+        return createCursorForThemesList(wpComThemes);
     }
 
-    private Cursor getJetpackCursor() {
+    private Cursor getSortedJetpackCursor() {
+        final List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
+        final List<ThemeModel> uploadedThemes = mThemeStore.getThemesForSite(mSite);
+
+        // put the active theme at the top of the uploaded themes list
+        moveActiveThemeToFront(uploadedThemes);
+
+        // remove all premium themes from the WP.com themes list
+        removeNonActivePremiumThemes(wpComThemes);
+
+        // remove uploaded themes from WP.com themes list (including active theme)
+        removeDuplicateThemes(wpComThemes, uploadedThemes);
+
         // 1. Uploaded header
         // 2. Uploaded themes
         // 3. WP.com header
         // 4. WP.com themes
         final Cursor[] cursors = new Cursor[4];
-        final Cursor uploadedThemes = mThemeStore.getThemesCursorForSite(mSite);
-        final Cursor wpComThemes = mThemeStore.getWpComThemesCursor();
+        final Cursor uploadedThemesCursor = createCursorForThemesList(uploadedThemes);
+        final Cursor wpComThemesCursor = createCursorForThemesList(wpComThemes);
 
         cursors[0] = ThemeBrowserAdapter.createHeaderCursor(
-                getString(R.string.uploaded_themes_header), uploadedThemes.getCount());
-        cursors[1] = uploadedThemes;
+                getString(R.string.uploaded_themes_header), uploadedThemesCursor.getCount());
+        cursors[1] = uploadedThemesCursor;
         cursors[2] = ThemeBrowserAdapter.createHeaderCursor(
-                getString(R.string.wpcom_themes_header), wpComThemes.getCount());
-        cursors[3] = wpComThemes;
+                getString(R.string.wpcom_themes_header), wpComThemesCursor.getCount());
+        cursors[3] = wpComThemesCursor;
 
         return new MergeCursor(cursors);
+    }
+
+    private void moveActiveThemeToFront(final List<ThemeModel> themes) {
+        if (themes == null || themes.isEmpty() || TextUtils.isEmpty(mCurrentThemeId)) {
+            return;
+        }
+
+        // find the index of the active theme
+        int activeThemeIndex = 0;
+        for (ThemeModel theme : themes) {
+            if (mCurrentThemeId.equals(theme.getThemeId())) {
+                theme.setActive(true);
+                activeThemeIndex = themes.indexOf(theme);
+                break;
+            }
+        }
+
+        // move active theme to front of list
+        if (activeThemeIndex > 0) {
+            themes.add(0, themes.remove(activeThemeIndex));
+        }
+    }
+
+    private void removeNonActivePremiumThemes(final List<ThemeModel> themes) {
+        if (themes == null || themes.isEmpty()) {
+            return;
+        }
+
+        Iterator<ThemeModel> iterator = themes.iterator();
+        while (iterator.hasNext()) {
+            ThemeModel theme = iterator.next();
+            if (theme.getPrice() > 0.f && !theme.getActive()) {
+                iterator.remove();
+            }
+        }
+    }
+
+    private void removeDuplicateThemes(final List<ThemeModel> wpComThemes, final List<ThemeModel> uploadedThemes) {
+        if (wpComThemes == null || wpComThemes.isEmpty() || uploadedThemes == null || uploadedThemes.isEmpty()) {
+            return;
+        }
+
+        for (ThemeModel uploadedTheme : uploadedThemes) {
+            Iterator<ThemeModel> wpComIterator = wpComThemes.iterator();
+            while (wpComIterator.hasNext()) {
+                ThemeModel wpComTheme = wpComIterator.next();
+                if (StringUtils.equals(wpComTheme.getThemeId(), uploadedTheme.getThemeId())) {
+                    wpComIterator.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    private Cursor createCursorForThemesList(List<ThemeModel> themes) {
+        final MatrixCursor cursor = new MatrixCursor(ThemeBrowserAdapter.THEME_COLUMNS);
+        for (ThemeModel theme : themes) {
+            cursor.addRow(ThemeBrowserAdapter.createThemeCursorRow(theme));
+        }
+        return cursor;
     }
 }
