@@ -50,6 +50,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private static final String KEY_NONCE_BACKUP = "KEY_NONCE_BACKUP";
     private static final String KEY_NONCE_SMS = "KEY_NONCE_SMS";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
+    private static final String KEY_SMS_NUMBER = "KEY_SMS_NUMBER";
+    private static final String KEY_SMS_SENT = "KEY_SMS_SENT";
 
     private static final String ARG_2FA_ID_TOKEN = "ARG_2FA_ID_TOKEN";
     private static final String ARG_2FA_IS_SOCIAL = "ARG_2FA_IS_SOCIAL";
@@ -215,6 +217,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             mNonceSms = savedInstanceState.getString(KEY_NONCE_SMS);
             // Restore set two-factor authentication type value on device rotation.
             mType = savedInstanceState.getString(KEY_2FA_TYPE);
+            mPhoneNumber = savedInstanceState.getString(KEY_SMS_NUMBER);
+            sentSmsCode = savedInstanceState.getBoolean(KEY_SMS_SENT);
         }
     }
 
@@ -242,6 +246,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         outState.putString(KEY_NONCE_BACKUP, mNonceBackup);
         outState.putString(KEY_NONCE_SMS, mNonceSms);
         outState.putString(KEY_2FA_TYPE, mType);
+        outState.putString(KEY_SMS_NUMBER, mPhoneNumber);
+        outState.putBoolean(KEY_SMS_SENT, sentSmsCode);
     }
 
     @Override
