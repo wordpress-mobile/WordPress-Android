@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -364,6 +366,14 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         }
     }
 
+    private void showErrorDialog(String message) {
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+                .setMessage(message)
+                .setPositiveButton(R.string.login_error_button, null)
+                .create();
+        dialog.show();
+    }
+
     // OnChanged events
 
     @SuppressWarnings("unused")
@@ -415,6 +425,16 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                     }
 
                     show2FaError(getString(R.string.invalid_verification_code));
+                    break;
+                // Two-factor authentication via SMS failed; show message, log error, and replace SMS nonce with response.
+                case INVALID_TWO_STEP_NONCE:
+                case NO_PHONE_NUMBER_FOR_ACCOUNT:
+                case SMS_AUTHENTICATION_UNAVAILABLE:
+                case SMS_CODE_THROTTLED:
+                    endProgress();
+                    showErrorDialog(event.error.message);
+                    AppLog.e(T.API, event.error.type + ": " + event.error.message);
+                    mNonceSms = event.error.nonce;
                     break;
                 case UNABLE_CONNECT:
                     AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
