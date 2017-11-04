@@ -76,6 +76,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private @StringRes int mInProgressMessageId;
     ArrayList<Integer> mOldSitesIDs;
 
+    private Button mSecondaryButton;
     private String mEmailAddress;
     private String mIdToken;
     private String mNonce;
@@ -83,11 +84,14 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private String mNonceBackup;
     private String mNonceSms;
     private String mPassword;
+    private String mPhoneNumber;
     private String mService;
     private String mType;
     private String mUserId;
+    private TextView mLabel;
     private boolean isSocialLogin;
     private boolean isSocialLoginConnect;
+    private boolean sentSmsCode;
 
     public static Login2FaFragment newInstance(String emailAddress, String password) {
         Login2FaFragment fragment = new Login2FaFragment();
@@ -140,7 +144,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     @Override
     protected void setupLabel(TextView label) {
-        // nothing special to do, just leave the string setup via the xml layout file
+        label.setText(sentSmsCode ? getString(R.string.enter_verification_code_sms, mPhoneNumber)
+                : getString(R.string.enter_verification_code));
+        mLabel = label;
     }
 
     @Override
@@ -164,6 +170,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 }
             }
         });
+        secondaryButton.setText(getString(sentSmsCode ? R.string.login_text_otp_another : R.string.login_text_otp));
+        mSecondaryButton = secondaryButton;
 
         primaryButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -451,7 +459,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         // Two-factor authentication code was sent via SMS to account phone number; replace SMS nonce with response.
         } else if (!TextUtils.isEmpty(event.phoneNumber) && !TextUtils.isEmpty(event.nonce)) {
             endProgress();
+            mPhoneNumber = event.phoneNumber;
             mNonceSms = event.nonce;
+            setTextForSms();
         } else {
             doFinishLogin();
         }
@@ -466,5 +476,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         } else {
             mLoginListener.loggedInViaPassword(mOldSitesIDs);
         }
+    }
+
+    private void setTextForSms() {
+        mLabel.setText(getString(R.string.enter_verification_code_sms, mPhoneNumber));
+        mSecondaryButton.setText(getString(R.string.login_text_otp_another));
+        sentSmsCode = true;
     }
 }
