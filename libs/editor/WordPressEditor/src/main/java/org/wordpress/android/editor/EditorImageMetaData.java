@@ -9,7 +9,6 @@ import com.google.gson.annotations.SerializedName;
 public class EditorImageMetaData implements Parcelable {
 
     public static final String ARG_EDITOR_IMAGE_METADATA = "editor_image_metadata";
-    public static final String ARG_EDITOR_IMAGE_REMOVED = "editor_image_removed";
 
     @SerializedName("align")
     @Expose
@@ -85,6 +84,8 @@ public class EditorImageMetaData implements Parcelable {
 
     private boolean mCanBeFeatured;
     private boolean mIsFeatured;
+    private boolean mIsRemoved;
+
     private String mBlogMaxImageWidth;
     private int mLocalId;
 
@@ -271,6 +272,14 @@ public class EditorImageMetaData implements Parcelable {
         mLocalId = localId;
     }
 
+    public boolean isRemoved() {
+        return mIsRemoved;
+    }
+
+    public void setRemoved(boolean removed) {
+        mIsRemoved = removed;
+    }
+
     protected EditorImageMetaData(Parcel in) {
         align = in.readString();
         alt = in.readString();
@@ -292,6 +301,7 @@ public class EditorImageMetaData implements Parcelable {
         mNaturalHeight = in.readInt();
         mCanBeFeatured = in.readByte() != 0x00;
         mIsFeatured = in.readByte() != 0x00;
+        mIsRemoved = in.readByte() != 0x00;
         mBlogMaxImageWidth = in.readString();
         mLocalId = in.readInt();
     }
@@ -323,6 +333,7 @@ public class EditorImageMetaData implements Parcelable {
         dest.writeInt(mNaturalHeight);
         dest.writeByte((byte) (mCanBeFeatured ? 0x01 : 0x00));
         dest.writeByte((byte) (mIsFeatured ? 0x01 : 0x00));
+        dest.writeByte((byte) (mIsRemoved ? 0x01 : 0x00));
         dest.writeString(mBlogMaxImageWidth);
         dest.writeInt(mLocalId);
     }

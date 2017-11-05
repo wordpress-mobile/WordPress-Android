@@ -86,8 +86,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
-import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_REMOVED;
-
 
 public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnImeBackListener,
@@ -1436,7 +1434,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     return;
                 }
 
-                if (data.getBooleanExtra(ARG_EDITOR_IMAGE_REMOVED, false)) {
+                EditorImageMetaData metaData = data.getParcelableExtra(ARG_EDITOR_IMAGE_METADATA);
+
+                if (metaData.isRemoved()) {
                     //History is not working as expected when calling removeMedia, so we are handling it manually here
                     String editorContentBeforeImageIsRemoved = "";
                     if (isHistoryEnabled()) {
@@ -1458,8 +1458,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     attributes.removeAttribute(TEMP_IMAGE_ID);
 
                     content.updateElementAttributes(mTappedMediaPredicate, attributes);
-
-                    EditorImageMetaData metaData = data.getParcelableExtra(ARG_EDITOR_IMAGE_METADATA);
 
                     attributes.setValue(ATTR_SRC, metaData.getSrc());
                     attributes.setValue(ATTR_TITLE, metaData.getTitle());

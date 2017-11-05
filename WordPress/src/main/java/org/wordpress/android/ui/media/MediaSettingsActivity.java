@@ -88,7 +88,6 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
-import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_REMOVED;
 
 public class MediaSettingsActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -1055,8 +1054,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void removeMediaFromPost() {
+        mEditorImageMetaData.setRemoved(true);
+
         Intent intent = new Intent();
-        intent.putExtra(ARG_EDITOR_IMAGE_REMOVED, true);
+        intent.putExtra(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
 
         this.setResult(Activity.RESULT_OK, intent);
 
