@@ -2107,7 +2107,6 @@ public class EditPostActivity extends AppCompatActivity implements
                                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE, Activity.RESULT_OK, data);
                     }
                     break;
-
             }
         }
     }

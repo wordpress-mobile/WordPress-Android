@@ -82,11 +82,7 @@ public class EditorImageMetaData implements Parcelable {
     @Expose
     private int mNaturalHeight;
 
-    private boolean mCanBeFeatured;
-    private boolean mIsFeatured;
     private boolean mIsRemoved;
-
-    private String mBlogMaxImageWidth;
     private int mLocalId;
 
     public String getAlign() {
@@ -110,10 +106,6 @@ public class EditorImageMetaData implements Parcelable {
 
     public String getAttachmentId() {
         return attachmentId;
-    }
-
-    public void setAttachmentId(String attachmentId) {
-        this.attachmentId = attachmentId;
     }
 
     public String getCaption() {
@@ -150,6 +142,14 @@ public class EditorImageMetaData implements Parcelable {
 
     public String getHeight() {
         return height;
+    }
+
+    public int getHeightInt() {
+        try {
+            return Integer.parseInt(height);
+        } catch (NumberFormatException ex) {
+            return 0;
+        }
     }
 
     public void setHeight(String height) {
@@ -216,6 +216,14 @@ public class EditorImageMetaData implements Parcelable {
         return width;
     }
 
+    public int getWidthInt() {
+        try {
+            return Integer.parseInt(width);
+        } catch (NumberFormatException ex) {
+            return 0;
+        }
+    }
+
     public void setWidth(String width) {
         this.width = width;
     }
@@ -224,44 +232,8 @@ public class EditorImageMetaData implements Parcelable {
         return naturalWidth;
     }
 
-    public void setNaturalWidth(int naturalWidth) {
-        this.naturalWidth = naturalWidth;
-    }
-
     public int getNaturalHeight() {
         return mNaturalHeight;
-    }
-
-    public void setNaturalHeight(int naturalHeight) {
-        this.mNaturalHeight = naturalHeight;
-    }
-
-    public boolean isCanBeFeatured() {
-        return mCanBeFeatured;
-    }
-
-    public void setCanBeFeatured(boolean canBeFeatured) {
-        mCanBeFeatured = canBeFeatured;
-    }
-
-    public boolean isFeatured() {
-        return mIsFeatured;
-    }
-
-    public void setFeatured(boolean featured) {
-        mIsFeatured = featured;
-    }
-
-    public int getBlogMaxImageWidth() {
-        try {
-            return Integer.parseInt(mBlogMaxImageWidth);
-        } catch (NumberFormatException ex) {
-            return 9999;
-        }
-    }
-
-    public void setBlogMaxImageWidth(String blogMaxImageWidth) {
-        mBlogMaxImageWidth = blogMaxImageWidth;
     }
 
     public int getLocalId() {
@@ -276,8 +248,8 @@ public class EditorImageMetaData implements Parcelable {
         return mIsRemoved;
     }
 
-    public void setRemoved(boolean removed) {
-        mIsRemoved = removed;
+    public void markAsRemoved() {
+        mIsRemoved = true;
     }
 
     protected EditorImageMetaData(Parcel in) {
@@ -299,10 +271,7 @@ public class EditorImageMetaData implements Parcelable {
         width = in.readString();
         naturalWidth = in.readInt();
         mNaturalHeight = in.readInt();
-        mCanBeFeatured = in.readByte() != 0x00;
-        mIsFeatured = in.readByte() != 0x00;
         mIsRemoved = in.readByte() != 0x00;
-        mBlogMaxImageWidth = in.readString();
         mLocalId = in.readInt();
     }
 
@@ -331,10 +300,7 @@ public class EditorImageMetaData implements Parcelable {
         dest.writeString(width);
         dest.writeInt(naturalWidth);
         dest.writeInt(mNaturalHeight);
-        dest.writeByte((byte) (mCanBeFeatured ? 0x01 : 0x00));
-        dest.writeByte((byte) (mIsFeatured ? 0x01 : 0x00));
         dest.writeByte((byte) (mIsRemoved ? 0x01 : 0x00));
-        dest.writeString(mBlogMaxImageWidth);
         dest.writeInt(mLocalId);
     }
 

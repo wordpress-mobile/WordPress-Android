@@ -101,11 +101,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String ATTR_CLASS = "class";
     private static final String ATTR_ID_WP = "data-wpid";
     private static final String ATTR_IMAGE_WP_DASH = "wp-image-";
-    private static final String ATTR_SIZE = "size";
     private static final String ATTR_SIZE_DASH = "size-";
     private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
     private static final String TEMP_VIDEO_UPLOADING_CLASS = "data-temp-aztec-video";
-
 
     private static final int MIN_BITMAP_DIMENSION_DP = 48;
     public static final int DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP = 196;
@@ -1401,14 +1399,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 Gson gson = new Gson();
 
                 EditorImageMetaData metaData = gson.fromJson(meta.toString(), EditorImageMetaData.class);
-                metaData.setBlogMaxImageWidth(mBlogSettingMaxImageWidth);
-                metaData.setCanBeFeatured(mFeaturedImageSupported);
-
-
-                String attachmentId = metaData.getAttachmentId();
-                if (!attachmentId.isEmpty()) {
-                    metaData.setFeatured(mFeaturedImageId == Integer.parseInt(attachmentId));
-                }
 
                 // Use https:// when requesting the auth header, in case the image is incorrectly using http://
                 // If an auth header is returned, force https:// for the actual HTTP request
@@ -1418,7 +1408,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     metaData.setSrc(UrlUtils.makeHttps(imageSrc));
                 }
 
-                mEditorImageSettingsListener.onImageSettingsRequested(metaData);
+                if (mEditorImageSettingsListener != null) {
+                    mEditorImageSettingsListener.onImageSettingsRequested(metaData);
+                }
 
                 break;
         }
@@ -1497,30 +1489,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 //                  https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
 //                  String link = JSONUtils.getString(meta, ATTR_URL_LINK);
 
-                    final int imageRemoteId;
-                    if (TextUtils.isEmpty(metaData.getAttachmentId())) {
-                        imageRemoteId = 0;
-                    } else {
-                        imageRemoteId = Integer.parseInt(metaData.getAttachmentId());
-                    }
-                    final boolean isFeaturedImage = metaData.isFeatured();
-
-                    if (imageRemoteId != 0) {
-                        if (isFeaturedImage) {
-                            mFeaturedImageId = imageRemoteId;
-                            mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
-                        } else {
-                            // if this image was unset as featured, clear the featured image id
-                            if (mFeaturedImageId == imageRemoteId) {
-                                mFeaturedImageId = 0;
-                                mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
-                            }
-                        }
-                    }
                 }
 
                 mTappedMediaPredicate = null;
-
 
                 if (isHistoryEnabled()) {
                     content.history.handleHistory(content);
@@ -1568,16 +1539,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    private static @NonNull
-    List<Attributes> getAllElementAttributes(Spanned content,
-                                             AztecText.AttributePredicate predicate) {
+    @NonNull
+    private static List<Attributes> getAllElementAttributes(Spanned content,
+                                                            AztecText.AttributePredicate predicate) {
         return getElementAttributes(content, predicate, false);
     }
 
-    private static @NonNull
-    List<Attributes> getElementAttributes(Spanned content,
-                                          AztecText.AttributePredicate predicate,
-                                          boolean returnFirstFoundOnly) {
+    @NonNull
+    private static List<Attributes> getElementAttributes(Spanned content,
+                                                         AztecText.AttributePredicate predicate,
+                                                         boolean returnFirstFoundOnly) {
         IAztecAttributedSpan[] spans = content.getSpans(0, content.length(), IAztecAttributedSpan.class);
         List<Attributes> allAttrs = new ArrayList<>();
         for (IAztecAttributedSpan span : spans) {
@@ -1589,10 +1560,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return allAttrs;
     }
 
-    private static @NonNull
-    List<IAztecAttributedSpan> getSpansForPredicate(Spanned content,
-                                                    AztecText.AttributePredicate predicate,
-                                                    boolean returnFirstFoundOnly) {
+    @NonNull
+    private static List<IAztecAttributedSpan> getSpansForPredicate(Spanned content,
+                                                                   AztecText.AttributePredicate predicate,
+                                                                   boolean returnFirstFoundOnly) {
         IAztecAttributedSpan[] spans = content.getSpans(0, content.length(), IAztecAttributedSpan.class);
         List<IAztecAttributedSpan> allMatchingSpans = new ArrayList<>();
         for (IAztecAttributedSpan span : spans) {

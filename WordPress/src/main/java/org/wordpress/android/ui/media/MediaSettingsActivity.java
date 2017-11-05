@@ -258,6 +258,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             int scrollRange = -1;
+
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (scrollRange == -1) {
@@ -369,8 +370,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mediaModel.setCaption(editorImageMetaData.getCaption());
         mediaModel.setAlt(editorImageMetaData.getAlt());
         mediaModel.setFileName(editorImageMetaData.getSrc().substring(editorImageMetaData.getSrc().lastIndexOf("/") + 1));
-        mediaModel.setWidth(Integer.parseInt(editorImageMetaData.getWidth()));
-        mediaModel.setHeight(Integer.parseInt(editorImageMetaData.getHeight()));
+        mediaModel.setWidth(editorImageMetaData.getWidthInt());
+        mediaModel.setHeight(editorImageMetaData.getHeightInt());
         return mediaModel;
     }
 
@@ -481,11 +482,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public void onBackPressed() {
         saveChanges();
-        // call finish() rather than super.onBackPressed() to enable skipping shared element transition
         finishActivity();
     }
 
     private void finishActivity() {
+        // call finish() rather than super.onBackPressed() to enable skipping shared element transition
         if (mOverrideClosingTransition) {
             finish();
         } else {
@@ -935,12 +936,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                     || !StringUtils.equals(mEditorImageMetaData.getAlign(), alignment);
 
             if (hasChanged) {
-                String imageHeight = String.valueOf(getRelativeHeightFromWidth(Integer.parseInt(imageWidth)));
+                if (!TextUtils.isEmpty(imageWidth)) {
+                    String imageHeight = String.valueOf(getRelativeHeightFromWidth(Integer.parseInt(imageWidth)));
+                    mEditorImageMetaData.setWidth(imageWidth);
+                    mEditorImageMetaData.setHeight(imageHeight);
+                }
 
                 mEditorImageMetaData.setTitle(thisTitle);
                 mEditorImageMetaData.setAlt(thisAltText);
-                mEditorImageMetaData.setWidth(imageWidth);
-                mEditorImageMetaData.setHeight(imageHeight);
                 mEditorImageMetaData.setAlign(alignment);
 
                 Intent intent = new Intent();
@@ -1054,7 +1057,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void removeMediaFromPost() {
-        mEditorImageMetaData.setRemoved(true);
+        mEditorImageMetaData.markAsRemoved();
 
         Intent intent = new Intent();
         intent.putExtra(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
