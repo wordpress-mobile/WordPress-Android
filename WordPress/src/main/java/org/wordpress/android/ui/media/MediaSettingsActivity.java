@@ -88,6 +88,7 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
+import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_REMOVED;
 
 public class MediaSettingsActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -484,6 +485,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public void onBackPressed() {
         saveChanges();
         // call finish() rather than super.onBackPressed() to enable skipping shared element transition
+        finishActivity();
+    }
+
+    private void finishActivity(){
         if (mOverrideClosingTransition) {
             finish();
         } else {
@@ -511,6 +516,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         boolean showSaveMenu = mSite != null && !mSite.isPrivate() && !isEditorMedia();
         boolean showShareMenu = mSite != null && !mSite.isPrivate() && !isEditorMedia();
         boolean showTrashMenu = mSite != null && !isEditorMedia();
+        boolean showRemoveImage = mSite != null && isEditorMedia();
 
         MenuItem mnuSave = menu.findItem(R.id.menu_save);
         mnuSave.setVisible(showSaveMenu);
@@ -521,6 +527,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         MenuItem mnuTrash = menu.findItem(R.id.menu_trash);
         mnuTrash.setVisible(showTrashMenu);
+
+        MenuItem mnuRemove = menu.findItem(R.id.menu_remove_image);
+        mnuRemove.setVisible(showRemoveImage);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -538,6 +547,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             return true;
         } else if (item.getItemId() == R.id.menu_trash) {
             deleteMediaWithConfirmation();
+            return true;
+        } else if (item.getItemId() == R.id.menu_remove_image) {
+            removeMediaFromPostWithConfirmation();
             return true;
         }
 
@@ -1029,6 +1041,28 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         AppLog.v(AppLog.T.MEDIA, "Deleting " + mMedia.getTitle() + " (id=" + mMedia.getMediaId() + ")");
         MediaStore.MediaPayload payload = new MediaStore.MediaPayload(mSite, mMedia);
         mDispatcher.dispatch(MediaActionBuilder.newDeleteMediaAction(payload));
+    }
+
+    private void removeMediaFromPostWithConfirmation() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage(R.string.confirm_remove_media_image)
+                .setCancelable(true).setPositiveButton(
+                        R.string.remove, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                removeMediaFromPost();
+                            }
+                        }).setNegativeButton(R.string.cancel, null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void removeMediaFromPost() {
+        Intent intent = new Intent();
+        intent.putExtra(ARG_EDITOR_IMAGE_REMOVED, true);
+
+        this.setResult(Activity.RESULT_OK, intent);
+
+        finishActivity();
     }
 
     @SuppressWarnings("unused")

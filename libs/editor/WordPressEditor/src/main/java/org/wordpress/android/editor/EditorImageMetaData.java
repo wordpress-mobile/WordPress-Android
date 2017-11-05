@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class EditorImageMetaData implements Parcelable {
 
     public static final String ARG_EDITOR_IMAGE_METADATA = "editor_image_metadata";
+    public static final String ARG_EDITOR_IMAGE_REMOVED = "editor_image_removed";
 
     @SerializedName("align")
     @Expose
