@@ -103,7 +103,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     private SiteModel mSite;
     private MediaModel mMedia;
+    private EditorImageMetaData mEditorImageMetaData;
     private ArrayList<String> mMediaIdList;
+    private String[] mAlignmentKeyArray;
 
     private ImageView mImageView;
     private ImageView mImagePlay;
@@ -112,14 +114,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private EditText mAltTextView;
     private EditText mDescriptionView;
     private EditText mImageWidthView;
-    private SeekBar mImageWidthSeekBar;
-    private Spinner mAlignmentSpinner;
-    private String[] mAlignmentKeyArray;
+    private SeekBar mImageWidthSeekBarView;
+    private Spinner mAlignmentSpinnerView;
     private FloatingActionButton mFabView;
 
     private ProgressDialog mProgressDialog;
-
-    private EditorImageMetaData mEditorImageMetaData;
 
     private enum MediaType {
         IMAGE,
@@ -185,7 +184,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     /**
      * @param activity calling activity
      * @param site     site this media is associated with
-     * @param media    media model to display
+     * @param media    editor image metadata
      */
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
@@ -229,8 +228,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mAltTextView = (EditText) findViewById(R.id.edit_alt_text);
         mDescriptionView = (EditText) findViewById(R.id.edit_description);
         mImageWidthView = (EditText) findViewById(R.id.edit_image_width);
-        mImageWidthSeekBar = (SeekBar) findViewById(R.id.image_width_seekbar);
-        mAlignmentSpinner = (Spinner) findViewById(org.wordpress.android.editor.R.id.alignment_spinner);
+        mImageWidthSeekBarView = (SeekBar) findViewById(R.id.image_width_seekbar);
+        mAlignmentSpinnerView = (Spinner) findViewById(org.wordpress.android.editor.R.id.alignment_spinner);
         mFabView = (FloatingActionButton) findViewById(R.id.fab_button);
 
         int mediaId;
@@ -260,7 +259,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             int scrollRange = -1;
-
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (scrollRange == -1) {
@@ -306,7 +304,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
     }
 
-    private boolean isEditorMedia() {
+    private boolean isMediaFromEditor() {
         return mEditorImageMetaData != null;
     }
 
@@ -316,7 +314,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     private boolean loadMediaId(int mediaId) {
         MediaModel media;
-        if (isEditorMedia()) {
+        if (isMediaFromEditor()) {
             media = convertEditorImageMetaDataToMediaModel(mEditorImageMetaData);
         } else {
             media = mMediaStore.getMediaWithLocalId(mediaId);
@@ -488,7 +486,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         finishActivity();
     }
 
-    private void finishActivity(){
+    private void finishActivity() {
         if (mOverrideClosingTransition) {
             finish();
         } else {
@@ -513,10 +511,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean showSaveMenu = mSite != null && !mSite.isPrivate() && !isEditorMedia();
-        boolean showShareMenu = mSite != null && !mSite.isPrivate() && !isEditorMedia();
-        boolean showTrashMenu = mSite != null && !isEditorMedia();
-        boolean showRemoveImage = mSite != null && isEditorMedia();
+        boolean showSaveMenu = mSite != null && !mSite.isPrivate() && !isMediaFromEditor();
+        boolean showShareMenu = mSite != null && !mSite.isPrivate() && !isMediaFromEditor();
+        boolean showTrashMenu = mSite != null && !isMediaFromEditor();
+        boolean showRemoveImage = mSite != null && isMediaFromEditor();
 
         MenuItem mnuSave = menu.findItem(R.id.menu_save);
         mnuSave.setVisible(showSaveMenu);
@@ -576,7 +574,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mTitleView.setText(mMedia.getTitle());
         mAltTextView.setText(mMedia.getAlt());
 
-        if (isEditorMedia()) {
+        if (isMediaFromEditor()) {
             mDescriptionView.setVisibility(View.GONE);
             mCaptionView.setVisibility(View.GONE);
 
@@ -662,14 +660,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
      * Initialize the image width SeekBar and accompanying EditText
      */
     private void setupWidthSeekBar() {
-        mImageWidthSeekBar.setMax(mEditorImageMetaData.getNaturalWidth());
+        mImageWidthSeekBarView.setMax(mEditorImageMetaData.getNaturalWidth());
 
         if (mMedia.getWidth() != 0) {
-            mImageWidthSeekBar.setProgress(mMedia.getWidth());
+            mImageWidthSeekBarView.setProgress(mMedia.getWidth());
             mImageWidthView.setText(String.valueOf(mMedia.getWidth()));
         }
 
-        mImageWidthSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mImageWidthSeekBarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
@@ -692,7 +690,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 int widthValue;
                 if (TextUtils.isEmpty(EditTextUtils.getText(mImageWidthView))) {
-                    widthValue = mImageWidthSeekBar.getProgress();
+                    widthValue = mImageWidthSeekBarView.getProgress();
                 } else {
                     widthValue = Integer.parseInt(EditTextUtils.getText(mImageWidthView));
                 }
@@ -700,10 +698,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 int width = Math.min(mEditorImageMetaData.getNaturalWidth(), Math.max(widthValue, 1));
 
                 //OnSeekBarChangeListener will not be triggered if progress have not changed
-                if (mImageWidthSeekBar.getProgress() == width) {
+                if (mImageWidthSeekBarView.getProgress() == width) {
                     mImageWidthView.setText(String.valueOf(width));
                 } else {
-                    mImageWidthSeekBar.setProgress(width);
+                    mImageWidthSeekBarView.setProgress(width);
                 }
 
                 mImageWidthView.setSelection((String.valueOf(width).length()));
@@ -716,11 +714,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     /**
      * Initialize the image alignment spinner
      */
-    private void setupAlignmentSpinner(){
+    private void setupAlignmentSpinner() {
         String alignment = mEditorImageMetaData.getAlign();
         mAlignmentKeyArray = getResources().getStringArray(org.wordpress.android.editor.R.array.alignment_key_array);
         int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
-        mAlignmentSpinner.setSelection(alignmentIndex == -1 ? 0 : alignmentIndex);
+        mAlignmentSpinnerView.setSelection(alignmentIndex == -1 ? 0 : alignmentIndex);
     }
 
     /*
@@ -842,7 +840,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (isEditorMedia()) {
+                if (isMediaFromEditor()) {
                     MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mEditorImageMetaData.getSrc());
                 } else {
                     MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia, mMediaIdList);
@@ -907,7 +905,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         String thisAltText = EditTextUtils.getText(mAltTextView);
         String thisDescription = EditTextUtils.getText(mDescriptionView);
 
-        if (!isEditorMedia()) {
+        if (!isMediaFromEditor()) {
             MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());
             if (media == null) {
                 AppLog.w(AppLog.T.MEDIA, "MediaSettingsActivity > Cannot save null media");
@@ -930,7 +928,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             }
         } else {
             String imageWidth = EditTextUtils.getText(mImageWidthView);
-            String alignment = mAlignmentKeyArray[mAlignmentSpinner.getSelectedItemPosition()];
+            String alignment = mAlignmentKeyArray[mAlignmentSpinnerView.getSelectedItemPosition()];
 
             boolean hasChanged = !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
                     || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText)

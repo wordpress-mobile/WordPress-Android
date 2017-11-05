@@ -14,45 +14,59 @@ public class EditorImageMetaData implements Parcelable {
     @SerializedName("align")
     @Expose
     private String align;
+
     @SerializedName("alt")
     @Expose
     private String alt;
+
     @SerializedName("attachment_id")
     @Expose
     private String attachmentId;
+
     @SerializedName("caption")
     @Expose
     private String caption;
+
     @SerializedName("captionClassName")
     @Expose
     private String captionClassName;
+
     @SerializedName("captionId")
     @Expose
     private String captionId;
+
     @SerializedName("classes")
     @Expose
     private String classes;
+
     @SerializedName("height")
     @Expose
     private String height;
+
     @SerializedName("linkClassName")
     @Expose
     private String linkClassName;
+
     @SerializedName("linkRel")
     @Expose
     private String linkRel;
+
     @SerializedName("linkTargetBlank")
     @Expose
     private boolean linkTargetBlank;
+
     @SerializedName("linkUrl")
     @Expose
     private String linkUrl;
+
     @SerializedName("size")
     @Expose
     private String size;
+
     @SerializedName("src")
     @Expose
     private String src;
+
     @SerializedName("title")
     @Expose
     private String title;

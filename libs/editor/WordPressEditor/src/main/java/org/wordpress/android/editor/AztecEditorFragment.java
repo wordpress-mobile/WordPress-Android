@@ -107,8 +107,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String ATTR_SIZE_DASH = "size-";
     private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
     private static final String TEMP_VIDEO_UPLOADING_CLASS = "data-temp-aztec-video";
-    public static final String ATTR_STATUS_FAILED = "failed";
-    public static final String ATTR_STATUS_UPLOADING = "uploading";
+
 
     private static final int MIN_BITMAP_DIMENSION_DP = 48;
     public static final int DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP = 196;
@@ -1500,7 +1499,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 //                  https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
 //                  String link = JSONUtils.getString(meta, ATTR_URL_LINK);
 
-//                  final int imageRemoteId = extras.getInt(ATTR_ID_IMAGE_REMOTE);
                     final int imageRemoteId;
                     if (TextUtils.isEmpty(metaData.getAttachmentId())) {
                         imageRemoteId = 0;
