@@ -86,6 +86,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
+import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_REMOVED;
 
 
 public class AztecEditorFragment extends EditorFragmentAbstract implements
@@ -1432,83 +1433,98 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
             if (mTappedMediaPredicate != null) {
-                //changing image settings should be recorded in history
-                if (isHistoryEnabled()) {
-                    content.history.beforeTextChanged(content.toPlainHtml(false));
-                }
-
-                AztecAttributes attributes = content.getElementAttributes(mTappedMediaPredicate);
-                attributes.removeAttribute(TEMP_IMAGE_ID);
-
-                content.updateElementAttributes(mTappedMediaPredicate, attributes);
-
                 if (data == null || data.getExtras() == null) {
                     return;
                 }
 
-                EditorImageMetaData metaData = data.getParcelableExtra(ARG_EDITOR_IMAGE_METADATA);
+                if (data.getBooleanExtra(ARG_EDITOR_IMAGE_REMOVED, false)) {
+                    //History is not working as expected when calling removeMedia, so we are handling it manually here
+                    String editorContentBeforeImageIsRemoved = "";
+                    if (isHistoryEnabled()) {
+                        editorContentBeforeImageIsRemoved = content.toFormattedHtml();
+                    }
 
-                attributes.setValue(ATTR_SRC, metaData.getSrc());
-                attributes.setValue(ATTR_TITLE, metaData.getTitle());
+                    content.removeMedia(mTappedMediaPredicate);
 
-                attributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
-                attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
-                attributes.setValue(ATTR_ALT, metaData.getAlt());
-
-                AttributesWithClass attributesWithClass = getAttributesWithClass(attributes);
-
-                // remove previously set class attributes to add updated values
-                attributesWithClass.removeClassStartingWith(ATTR_ALIGN);
-                attributesWithClass.removeClassStartingWith(ATTR_SIZE_DASH);
-                attributesWithClass.removeClassStartingWith(ATTR_IMAGE_WP_DASH);
-
-                // only add align attribute if there is no caption since alignment is sent with shortcode
-                if (!TextUtils.isEmpty(metaData.getAlign()) &&
-                        TextUtils.isEmpty(metaData.getCaption())) {
-                    attributesWithClass.addClass(ATTR_ALIGN + metaData.getAlign());
-                }
-
-                if (!TextUtils.isEmpty(metaData.getSize())) {
-                    attributesWithClass.addClass(ATTR_SIZE_DASH + metaData.getSize());
-                }
-
-                if (!TextUtils.isEmpty(metaData.getAttachmentId())) {
-                    attributesWithClass.addClass(ATTR_IMAGE_WP_DASH + metaData.getAttachmentId());
-                }
-
-                attributes.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
-
-//                TODO: Add shortcode support to allow captions.
-//                https://github.com/wordpress-mobile/AztecEditor-Android/issues/17
-//                String caption = JSONUtils.getString(meta, ATTR_CAPTION);
-
-//                TODO: Fix issue with image inside link.
-//                https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
-//                String link = JSONUtils.getString(meta, ATTR_URL_LINK);
-
-//                final int imageRemoteId = extras.getInt(ATTR_ID_IMAGE_REMOTE);
-                final int imageRemoteId;
-                if (TextUtils.isEmpty(metaData.getAttachmentId())) {
-                    imageRemoteId = 0;
+                    if (isHistoryEnabled()) {
+                        content.history.beforeTextChanged(editorContentBeforeImageIsRemoved);
+                    }
                 } else {
-                    imageRemoteId = Integer.parseInt(metaData.getAttachmentId());
-                }
-                final boolean isFeaturedImage = metaData.isFeatured();
+                    //changing image settings should be recorded in history
+                    if (isHistoryEnabled()) {
+                        content.history.beforeTextChanged(content.toFormattedHtml());
+                    }
 
-                if (imageRemoteId != 0) {
-                    if (isFeaturedImage) {
-                        mFeaturedImageId = imageRemoteId;
-                        mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                    AztecAttributes attributes = content.getElementAttributes(mTappedMediaPredicate);
+                    attributes.removeAttribute(TEMP_IMAGE_ID);
+
+                    content.updateElementAttributes(mTappedMediaPredicate, attributes);
+
+                    EditorImageMetaData metaData = data.getParcelableExtra(ARG_EDITOR_IMAGE_METADATA);
+
+                    attributes.setValue(ATTR_SRC, metaData.getSrc());
+                    attributes.setValue(ATTR_TITLE, metaData.getTitle());
+
+                    attributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
+                    attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
+                    attributes.setValue(ATTR_ALT, metaData.getAlt());
+
+                    AttributesWithClass attributesWithClass = getAttributesWithClass(attributes);
+
+                    // remove previously set class attributes to add updated values
+                    attributesWithClass.removeClassStartingWith(ATTR_ALIGN);
+                    attributesWithClass.removeClassStartingWith(ATTR_SIZE_DASH);
+                    attributesWithClass.removeClassStartingWith(ATTR_IMAGE_WP_DASH);
+
+                    // only add align attribute if there is no caption since alignment is sent with shortcode
+                    if (!TextUtils.isEmpty(metaData.getAlign()) &&
+                            TextUtils.isEmpty(metaData.getCaption())) {
+                        attributesWithClass.addClass(ATTR_ALIGN + metaData.getAlign());
+                    }
+
+                    if (!TextUtils.isEmpty(metaData.getSize())) {
+                        attributesWithClass.addClass(ATTR_SIZE_DASH + metaData.getSize());
+                    }
+
+                    if (!TextUtils.isEmpty(metaData.getAttachmentId())) {
+                        attributesWithClass.addClass(ATTR_IMAGE_WP_DASH + metaData.getAttachmentId());
+                    }
+
+                    attributes.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
+
+//                  TODO: Add shortcode support to allow captions.
+//                  https://github.com/wordpress-mobile/AztecEditor-Android/issues/17
+//                  String caption = JSONUtils.getString(meta, ATTR_CAPTION);
+
+//                  TODO: Fix issue with image inside link.
+//                  https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
+//                  String link = JSONUtils.getString(meta, ATTR_URL_LINK);
+
+//                  final int imageRemoteId = extras.getInt(ATTR_ID_IMAGE_REMOTE);
+                    final int imageRemoteId;
+                    if (TextUtils.isEmpty(metaData.getAttachmentId())) {
+                        imageRemoteId = 0;
                     } else {
-                        // if this image was unset as featured, clear the featured image id
-                        if (mFeaturedImageId == imageRemoteId) {
-                            mFeaturedImageId = 0;
+                        imageRemoteId = Integer.parseInt(metaData.getAttachmentId());
+                    }
+                    final boolean isFeaturedImage = metaData.isFeatured();
+
+                    if (imageRemoteId != 0) {
+                        if (isFeaturedImage) {
+                            mFeaturedImageId = imageRemoteId;
                             mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                        } else {
+                            // if this image was unset as featured, clear the featured image id
+                            if (mFeaturedImageId == imageRemoteId) {
+                                mFeaturedImageId = 0;
+                                mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                            }
                         }
                     }
                 }
 
                 mTappedMediaPredicate = null;
+
 
                 if (isHistoryEnabled()) {
                     content.history.handleHistory(content);
