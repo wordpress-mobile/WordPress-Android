@@ -338,7 +338,7 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.insertOrUpdateThemeForSite(payload.theme);
+            ThemeSqlUtils.insertOrReplaceActiveThemeForSite(payload.site, payload.theme);
         }
         emitChange(event);
     }
@@ -389,7 +389,11 @@ public class ThemeStore extends Store {
 
     private void handleThemeActivated(@NonNull ActivateThemePayload payload) {
         OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
-        event.error = payload.error;
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            ThemeSqlUtils.insertOrReplaceActiveThemeForSite(payload.site, payload.theme);
+        }
         emitChange(event);
     }
 
