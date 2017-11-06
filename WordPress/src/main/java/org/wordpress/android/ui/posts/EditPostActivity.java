@@ -2813,18 +2813,14 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadMediaRetryEvent event) {
-        if (!isFinishing()) {
-            if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-                for (MediaModel media : event.mediaModelList) {
-                    String localMediaId = String.valueOf(media.getId());
-                    if (mEditorMediaUploadListener != null) {
-                        EditorFragmentAbstract.MediaType mediaType = EditorFragmentAbstract.MediaType.IMAGE;
-                        if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(media.getMimeType())) {
-                            mediaType = EditorFragmentAbstract.MediaType.VIDEO;
-                        }
-                        mEditorMediaUploadListener.onMediaUploadRetry(localMediaId, mediaType);
-                    }
-                }
+        if (!isFinishing()
+                && event.mediaModelList != null
+                && mEditorMediaUploadListener != null) {
+            for (MediaModel media : event.mediaModelList) {
+                String localMediaId = String.valueOf(media.getId());
+                EditorFragmentAbstract.MediaType mediaType = media.isVideo() ?
+                        EditorFragmentAbstract.MediaType.VIDEO : EditorFragmentAbstract.MediaType.IMAGE;
+                mEditorMediaUploadListener.onMediaUploadRetry(localMediaId, mediaType);
             }
         }
     }
