@@ -227,9 +227,11 @@ public abstract class SiteSettingsInterface {
 
     public void saveSettings() {
         SiteSettingsTable.saveSettings(mSettings);
-        siteSettingsPreferences(mContext).edit().putString(LANGUAGE_PREF_KEY, mSettings.language).apply();
-        siteSettingsPreferences(mContext).edit().putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory).apply();
-        siteSettingsPreferences(mContext).edit().putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat).apply();
+        siteSettingsPreferences(mContext).edit()
+                .putString(LANGUAGE_PREF_KEY, mSettings.language)
+                .putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory)
+                .putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat)
+                .apply();
     }
 
     public @NonNull String getTitle() {
@@ -940,9 +942,7 @@ public abstract class SiteSettingsInterface {
     }
 
     protected void notifyFetchErrorOnUiThread(final Exception error) {
-        if (mContext == null
-                || (mContext instanceof Activity && ((Activity) mContext).isFinishing())
-                || mListener == null) {
+        if (mListener == null) {
             return;
         }
 
@@ -955,9 +955,7 @@ public abstract class SiteSettingsInterface {
     }
 
     protected void notifySaveErrorOnUiThread(final Exception error) {
-        if (mContext == null
-                || (mContext instanceof Activity && ((Activity) mContext).isFinishing())
-                || mListener == null) {
+        if (mListener == null) {
             return;
         }
 
@@ -973,9 +971,7 @@ public abstract class SiteSettingsInterface {
      * Notifies listener that settings have been updated with the latest remote data.
      */
     protected void notifyUpdatedOnUiThread() {
-        if (mContext == null
-                || (mContext instanceof Activity && ((Activity) mContext).isFinishing())
-                || mListener == null) {
+        if (mListener == null) {
             return;
         }
 
@@ -991,7 +987,9 @@ public abstract class SiteSettingsInterface {
      * Notifies listener that settings have been saved or an error occurred while saving.
      */
     protected void notifySavedOnUiThread() {
-        if (mContext == null || mListener == null) return;
+        if (mListener == null) {
+            return;
+        }
 
         new Handler().post(new Runnable() {
             @Override
