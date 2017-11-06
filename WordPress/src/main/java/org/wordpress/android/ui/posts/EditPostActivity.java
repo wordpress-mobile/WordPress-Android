@@ -330,8 +330,7 @@ public class EditPostActivity extends AppCompatActivity implements
             // after FETCH_POSTS
             if (savedInstanceState.containsKey(STATE_KEY_POST_REMOTE_ID)) {
                 initializePostObjectsWithRemoteId(savedInstanceState.getLong(STATE_KEY_POST_REMOTE_ID));
-            }
-            else if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
+            } else if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
                 initializePostObjectsWithLocalId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID));
             }
 
