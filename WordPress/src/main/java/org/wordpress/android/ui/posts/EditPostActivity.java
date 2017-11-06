@@ -549,7 +549,9 @@ public class EditPostActivity extends AppCompatActivity implements
         // Saves both post objects so we can restore them in onCreate()
         savePostAsync(null);
         outState.putInt(STATE_KEY_POST_LOCAL_ID, mPost.getId());
-        outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
+        if (!mPost.isLocalDraft()) {
+            outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
+        }
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putSerializable(WordPress.SITE, mSite);
 
