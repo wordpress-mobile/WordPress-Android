@@ -781,8 +781,9 @@ public class PostsListFragment extends Fragment
             Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeThisMedia(mPostStore, event.mediaModelList);
             // now that we know which Posts  to refresh, let's do it
             for (PostModel post : postsToRefresh) {
-                if (post != null) {
-                    getPostListAdapter().notifyItemChanged(getPostListAdapter().getPositionForPost(post));
+                int position = getPostListAdapter().getPositionForPost(post);
+                if (position > -1) {
+                    getPostListAdapter().notifyItemChanged(position);
                 }
             }
 
