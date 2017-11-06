@@ -293,7 +293,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             ToastUtils.showToast(this, R.string.theme_activation_error, ToastUtils.Duration.SHORT);
         } else {
             AppLog.d(T.THEMES, "Theme activation successful! New theme: " + event.theme.getName());
-            mCurrentTheme = event.theme;
+            mCurrentTheme = mThemeStore.getWpComThemeByThemeId(event.theme.getThemeId().replace("-wpcom", ""));
 
             Map<String, Object> themeProperties = new HashMap<>();
             themeProperties.put(THEME_ID, mCurrentTheme.getThemeId());
