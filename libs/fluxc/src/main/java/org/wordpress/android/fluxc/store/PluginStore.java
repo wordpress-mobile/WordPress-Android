@@ -36,6 +36,16 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class DeleteSitePluginPayload extends Payload<BaseNetworkError> {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public DeleteSitePluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+    }
+
     public static class FetchedSitePluginsPayload extends Payload<FetchSitePluginsError> {
         public SiteModel site;
         public List<PluginModel> plugins;
@@ -176,6 +186,9 @@ public class PluginStore extends Store {
             case UPDATE_SITE_PLUGIN:
                 updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
                 break;
+            case DELETE_SITE_PLUGIN:
+                deleteSitePlugin((DeleteSitePluginPayload) action.getPayload());
+                break;
             case FETCHED_SITE_PLUGINS:
                 fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
                 break;
@@ -221,6 +234,12 @@ public class PluginStore extends Store {
             UpdateSitePluginError error = new UpdateSitePluginError(UpdateSitePluginErrorType.NOT_AVAILABLE);
             UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site, error);
             updatedSitePlugin(errorPayload);
+        }
+    }
+
+    private void deleteSitePlugin(DeleteSitePluginPayload payload) {
+        if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
+            mPluginRestClient.deleteSitePlugin(payload.site, payload.plugin);
         }
     }
 
