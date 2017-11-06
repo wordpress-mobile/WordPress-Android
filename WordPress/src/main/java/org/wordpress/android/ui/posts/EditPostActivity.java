@@ -171,6 +171,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
+    private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
 
     private static int PAGE_CONTENT = 0;
@@ -319,14 +320,19 @@ public class EditPostActivity extends AppCompatActivity implements
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
             } else if (extras != null) {
                 // Load post passed in extras
-                initializePostObjects(extras.getInt(EXTRA_POST_LOCAL_ID));
+                initializePostObjectsWithLocalId(extras.getInt(EXTRA_POST_LOCAL_ID));
             }
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
 
-            if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
-                initializePostObjects(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID));
+            // if we have a remote id saved, let's first try with that, as the local Id might have changed
+            // after FETCH_POSTS
+            if (savedInstanceState.containsKey(STATE_KEY_POST_REMOTE_ID)) {
+                initializePostObjectsWithRemoteId(savedInstanceState.getLong(STATE_KEY_POST_REMOTE_ID));
+            }
+            else if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
+                initializePostObjectsWithLocalId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID));
             }
 
             mEditorFragment = (EditorFragmentAbstract) fragmentManager.getFragment(savedInstanceState, STATE_KEY_EDITOR_FRAGMENT);
@@ -404,16 +410,27 @@ public class EditPostActivity extends AppCompatActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
-    private void initializePostObjects(int localPostId) {
+    private void initializePostObjectsWithLocalId(int localPostId) {
         mPost = mPostStore.getPostByLocalPostId(localPostId);
         if (mPost != null) {
-            mOriginalPost = mPost.clone();
-            mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
-            mMediaMarkedUploadingOnStartIds =
-                    AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
-            Collections.sort(mMediaMarkedUploadingOnStartIds);
-            mIsPage = mPost.isPage();
+            initializePostObject();
         }
+    }
+
+    private void initializePostObjectsWithRemoteId(long remotePostId) {
+        mPost = mPostStore.getPostByRemotePostId(remotePostId, mSite);
+        if (mPost != null) {
+            initializePostObject();
+        }
+    }
+
+    private void initializePostObject() {
+        mOriginalPost = mPost.clone();
+        mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
+        mMediaMarkedUploadingOnStartIds =
+                AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
+        Collections.sort(mMediaMarkedUploadingOnStartIds);
+        mIsPage = mPost.isPage();
     }
 
     // this method aims at recovering the current state of media items if they're inconsistent within the PostModel.
@@ -532,6 +549,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Saves both post objects so we can restore them in onCreate()
         savePostAsync(null);
         outState.putInt(STATE_KEY_POST_LOCAL_ID, mPost.getId());
+        outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putSerializable(WordPress.SITE, mSite);
 
