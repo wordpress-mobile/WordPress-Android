@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -91,7 +92,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private Exception mSaveError = null;
 
     /** Only instantiated by {@link SiteSettingsInterface}. */
-    DotComSiteSettings(Activity host, SiteModel site, SiteSettingsListener listener) {
+    DotComSiteSettings(Context host, SiteModel site, SiteSettingsListener listener) {
         super(host, site, listener);
     }
 

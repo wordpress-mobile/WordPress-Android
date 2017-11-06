@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -66,7 +67,7 @@ import javax.inject.Inject;
  * This class is marked abstract. This is due to the fact that .org (self-hosted) and .com sites
  * expose different API's to query and edit their respective settings (even though the options
  * offered by each is roughly the same). To get an instance of this interface class use the
- * {@link SiteSettingsInterface#getInterface(Activity, SiteModel, SiteSettingsListener)} method.
+ * {@link SiteSettingsInterface#getInterface(Context, SiteModel, SiteSettingsListener)} method.
  */
 
 public abstract class SiteSettingsInterface {
@@ -125,7 +126,7 @@ public abstract class SiteSettingsInterface {
      * Instantiates the appropriate (self-hosted or .com) SiteSettingsInterface.
      */
     @Nullable
-    public static SiteSettingsInterface getInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
+    public static SiteSettingsInterface getInterface(Context host, SiteModel site, SiteSettingsListener listener) {
         if (host == null || site == null) return null;
 
         if (SiteUtils.isAccessedViaWPComRest(site)) {
@@ -193,7 +194,7 @@ public abstract class SiteSettingsInterface {
      */
     protected abstract void fetchRemoteData();
 
-    protected final Activity mActivity;
+    protected final Context mContext;
     protected final SiteModel mSite;
     protected final SiteSettingsListener mListener;
     protected final SiteSettingsModel mSettings;
@@ -205,10 +206,10 @@ public abstract class SiteSettingsInterface {
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
 
-    protected SiteSettingsInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
+    protected SiteSettingsInterface(Context host, SiteModel site, SiteSettingsListener listener) {
         ((WordPress) host.getApplicationContext()).component().inject(this);
         mDispatcher.register(this);
-        mActivity = host;
+        mContext = host;
         mSite = site;
         mListener = listener;
         mSettings = new SiteSettingsModel();
@@ -226,9 +227,11 @@ public abstract class SiteSettingsInterface {
 
     public void saveSettings() {
         SiteSettingsTable.saveSettings(mSettings);
-        siteSettingsPreferences(mActivity).edit().putString(LANGUAGE_PREF_KEY, mSettings.language).apply();
-        siteSettingsPreferences(mActivity).edit().putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory).apply();
-        siteSettingsPreferences(mActivity).edit().putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat).apply();
+        siteSettingsPreferences(mContext).edit()
+                .putString(LANGUAGE_PREF_KEY, mSettings.language)
+                .putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory)
+                .putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat)
+                .apply();
     }
 
     public @NonNull String getTitle() {
@@ -248,14 +251,14 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getPrivacyDescription() {
-        if (mActivity != null) {
+        if (mContext != null) {
             switch (getPrivacy()) {
                 case -1:
-                    return mActivity.getString(R.string.site_settings_privacy_private_summary);
+                    return mContext.getString(R.string.site_settings_privacy_private_summary);
                 case 0:
-                    return mActivity.getString(R.string.site_settings_privacy_hidden_summary);
+                    return mContext.getString(R.string.site_settings_privacy_hidden_summary);
                 case 1:
-                    return mActivity.getString(R.string.site_settings_privacy_public_summary);
+                    return mContext.getString(R.string.site_settings_privacy_public_summary);
             }
         }
         return "";
@@ -275,8 +278,8 @@ public abstract class SiteSettingsInterface {
 
     public @NonNull Map<String, String> getFormats() {
         mSettings.postFormats = new HashMap<>();
-        String[] postFormatDisplayNames = mActivity.getResources().getStringArray(R.array.post_format_display_names);
-        String[] postFormatKeys = mActivity.getResources().getStringArray(R.array.post_format_keys);
+        String[] postFormatDisplayNames = mContext.getResources().getStringArray(R.array.post_format_display_names);
+        String[] postFormatKeys = mContext.getResources().getStringArray(R.array.post_format_keys);
         // Add standard post format (only for .com)
         mSettings.postFormats.put(STANDARD_POST_FORMAT_KEY, STANDARD_POST_FORMAT);
         // Add default post formats
@@ -350,8 +353,8 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getRelatedPostsDescription() {
-        if (mActivity == null) return "";
-        String desc = mActivity.getString(getShowRelatedPosts() ? R.string.on : R.string.off);
+        if (mContext == null) return "";
+        String desc = mContext.getString(getShowRelatedPosts() ? R.string.on : R.string.off);
         return StringUtils.capitalize(desc);
     }
 
@@ -388,11 +391,11 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getCloseAfterDescriptionForPeriod(int period) {
-        if (mActivity == null) return "";
+        if (mContext == null) return "";
 
-        if (!getShouldCloseAfter()) return mActivity.getString(R.string.never);
+        if (!getShouldCloseAfter()) return mContext.getString(R.string.never);
 
-        return StringUtils.getQuantityString(mActivity, R.string.never, R.string.days_quantity_one,
+        return StringUtils.getQuantityString(mContext, R.string.never, R.string.days_quantity_one,
                 R.string.days_quantity_other, period);
     }
 
@@ -401,16 +404,16 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getSortingDescription() {
-        if (mActivity == null) return "";
+        if (mContext == null) return "";
 
         int order = getCommentSorting();
         switch (order) {
             case SiteSettingsInterface.ASCENDING_SORT:
-                return mActivity.getString(R.string.oldest_first);
+                return mContext.getString(R.string.oldest_first);
             case SiteSettingsInterface.DESCENDING_SORT:
-                return mActivity.getString(R.string.newest_first);
+                return mContext.getString(R.string.newest_first);
             default:
-                return mActivity.getString(R.string.unknown);
+                return mContext.getString(R.string.unknown);
         }
     }
 
@@ -431,10 +434,10 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getThreadingDescriptionForLevel(int level) {
-        if (mActivity == null) return "";
+        if (mContext == null) return "";
 
-        if (level <= 1) return mActivity.getString(R.string.none);
-        return String.format(mActivity.getString(R.string.site_settings_threading_summary), level);
+        if (level <= 1) return mContext.getString(R.string.none);
+        return String.format(mContext.getString(R.string.site_settings_threading_summary), level);
     }
 
     public boolean getShouldPageComments() {
@@ -450,14 +453,14 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getPagingDescription() {
-        if (mActivity == null) return "";
+        if (mContext == null) return "";
 
         if (!getShouldPageComments()) {
-            return mActivity.getString(R.string.disabled);
+            return mContext.getString(R.string.disabled);
         }
 
         int count = getPagingCountForDescription();
-        return StringUtils.getQuantityString(mActivity, R.string.none, R.string.site_settings_paging_summary_one,
+        return StringUtils.getQuantityString(mContext, R.string.none, R.string.site_settings_paging_summary_one,
                 R.string.site_settings_paging_summary_other, count);
     }
 
@@ -548,9 +551,9 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getKeysDescription(int count) {
-        if (mActivity == null) return "";
+        if (mContext == null) return "";
 
-        return StringUtils.getQuantityString(mActivity, R.string.site_settings_list_editor_no_items_text,
+        return StringUtils.getQuantityString(mContext, R.string.site_settings_list_editor_no_items_text,
                 R.string.site_settings_list_editor_summary_one,
                 R.string.site_settings_list_editor_summary_other, count);
     }
@@ -928,9 +931,9 @@ public abstract class SiteSettingsInterface {
      * Notifies listener that credentials have been validated or are incorrect.
      */
     private void notifyCredentialsVerifiedOnUiThread(final Exception error) {
-        if (mActivity == null || mListener == null) return;
+        if (mContext == null || mListener == null) return;
 
-        mActivity.runOnUiThread(new Runnable() {
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 mListener.onCredentialsValidated(error);
@@ -939,11 +942,11 @@ public abstract class SiteSettingsInterface {
     }
 
     protected void notifyFetchErrorOnUiThread(final Exception error) {
-        if (mActivity == null || mActivity.isFinishing() || mListener == null) {
+        if (mListener == null) {
             return;
         }
 
-        mActivity.runOnUiThread(new Runnable() {
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 mListener.onFetchError(error);
@@ -952,11 +955,11 @@ public abstract class SiteSettingsInterface {
     }
 
     protected void notifySaveErrorOnUiThread(final Exception error) {
-        if (mActivity == null || mActivity.isFinishing() || mListener == null) {
+        if (mListener == null) {
             return;
         }
 
-        mActivity.runOnUiThread(new Runnable() {
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 mListener.onSaveError(error);
@@ -968,9 +971,11 @@ public abstract class SiteSettingsInterface {
      * Notifies listener that settings have been updated with the latest remote data.
      */
     protected void notifyUpdatedOnUiThread() {
-        if (mActivity == null || mActivity.isFinishing() || mListener == null) return;
+        if (mListener == null) {
+            return;
+        }
 
-        mActivity.runOnUiThread(new Runnable() {
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 mListener.onSettingsUpdated();
@@ -982,9 +987,11 @@ public abstract class SiteSettingsInterface {
      * Notifies listener that settings have been saved or an error occurred while saving.
      */
     protected void notifySavedOnUiThread() {
-        if (mActivity == null || mListener == null) return;
+        if (mListener == null) {
+            return;
+        }
 
-        mActivity.runOnUiThread(new Runnable() {
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 mListener.onSettingsSaved();
