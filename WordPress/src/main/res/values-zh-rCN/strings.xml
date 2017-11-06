@@ -831,8 +831,6 @@ Language: zh_CN
 	<string name="view_in_browser">在浏览器中查看</string>
 	<string name="add_new_category">添加新分类</string>
 	<string name="category_name">分类名称</string>
-	<string name="share_action_post">新文章</string>
-	<string name="share_action_media">媒体库</string>
 	<string name="file_error_create">无法创建上传媒体所需的临时文件。请确保设备有足够的空闲空间.</string>
 	<string name="open_source_licenses">开源许可协议</string>
 	<string name="http_credentials">HTTP 登录凭据 (可选)</string>

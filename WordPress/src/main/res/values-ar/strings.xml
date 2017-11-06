@@ -863,8 +863,6 @@ Language: ar
 	<string name="invalid_site_url_message">تحقق من أن عنوان URL الذي تم إدخاله في الموقع صحيح</string>
 	<string name="open_source_licenses">رخص البرمجيات الحرة</string>
 	<string name="file_error_create">تعذر إنشاء ملف مؤقت لرفع الوسائط. تأكد من وجود مساحة حرة كافية على الجهاز.</string>
-	<string name="share_action_media">مكتبة الوسائط</string>
-	<string name="share_action_post">مقال جديد</string>
 	<string name="category_name">اسم التصنيف</string>
 	<string name="add_new_category">إضافة تصنيف جديد</string>
 	<string name="view_in_browser">عرض في المستعرض</string>
