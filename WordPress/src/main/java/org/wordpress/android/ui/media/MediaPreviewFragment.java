@@ -272,7 +272,12 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     /*
      * loads and displays a remote or local image
      */
-    private void loadImage(@NonNull String mediaUri) {
+    private void loadImage(String mediaUri) {
+        if (TextUtils.isEmpty(mediaUri)) {
+            showLoadingError();
+            return;
+        }
+
         mImageView.setVisibility(View.VISIBLE);
 
         int width = DisplayUtils.getDisplayPixelWidth(getActivity());
