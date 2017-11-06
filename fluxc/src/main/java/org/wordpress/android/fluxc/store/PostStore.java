@@ -333,6 +333,22 @@ public class PostStore extends Store {
         }
     }
 
+    /**
+     * Given a remote ID for a post and the site to which it belongs, returns that post as a {@link PostModel}.
+     */
+    public PostModel getPostByRemotePostId(long remoteId, SiteModel site) {
+        List<PostModel> result = WellSql.select(PostModel.class)
+                .where().equals(PostModelTable.REMOTE_POST_ID, remoteId)
+                .equals(PostModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
+                .getAsModel();
+
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            return result.get(0);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
