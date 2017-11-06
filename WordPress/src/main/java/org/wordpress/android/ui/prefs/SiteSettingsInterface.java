@@ -942,9 +942,7 @@ public abstract class SiteSettingsInterface {
     }
 
     protected void notifyFetchErrorOnUiThread(final Exception error) {
-        if (mContext == null
-                || (mContext instanceof Activity && ((Activity) mContext).isFinishing())
-                || mListener == null) {
+        if (mListener == null) {
             return;
         }
 
@@ -957,9 +955,7 @@ public abstract class SiteSettingsInterface {
     }
 
     protected void notifySaveErrorOnUiThread(final Exception error) {
-        if (mContext == null
-                || (mContext instanceof Activity && ((Activity) mContext).isFinishing())
-                || mListener == null) {
+        if (mListener == null) {
             return;
         }
 
@@ -975,9 +971,7 @@ public abstract class SiteSettingsInterface {
      * Notifies listener that settings have been updated with the latest remote data.
      */
     protected void notifyUpdatedOnUiThread() {
-        if (mContext == null
-                || (mContext instanceof Activity && ((Activity) mContext).isFinishing())
-                || mListener == null) {
+        if (mListener == null) {
             return;
         }
 
@@ -993,7 +987,9 @@ public abstract class SiteSettingsInterface {
      * Notifies listener that settings have been saved or an error occurred while saving.
      */
     protected void notifySavedOnUiThread() {
-        if (mContext == null || mListener == null) return;
+        if (mListener == null) {
+            return;
+        }
 
         new Handler().post(new Runnable() {
             @Override
