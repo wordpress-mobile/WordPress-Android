@@ -87,7 +87,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private int mSelectedItemPos;
 
     // show recently picked first if there are at least this many blogs
-    private static final int RECENTLY_PICKED_THRESHOLD = 15;
+    private static final int RECENTLY_PICKED_THRESHOLD = 11;
 
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_ITEM = 1;

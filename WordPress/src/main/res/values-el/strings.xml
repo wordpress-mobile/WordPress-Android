@@ -906,8 +906,6 @@ Language: el_GR
 	<string name="invalid_site_url_message">Βεβαιωθείτε ότι το URL του ιστότοπου που δώσατε είναι έγκυρο</string>
 	<string name="open_source_licenses">Άδειες ανοιχτού κώδικα</string>
 	<string name="file_error_create">Αδυναμία δημιουργίας προσωρινού αρχείου για μεταφόρτωση πολυμέσων. Βεβαιωθείτε ότι υπάρχει αρκετός ελεύθερος χώρος στη συσκευή σας.</string>
-	<string name="share_action_media">Βιβλιοθήκη πολυμέσων</string>
-	<string name="share_action_post">Νέα ανάρτηση</string>
 	<string name="category_name">Όνομα κατηγορίας</string>
 	<string name="add_new_category">Προσθήκη νέας κατηγορίας</string>
 	<string name="view_in_browser">Προβολή στον περιηγητή</string>

@@ -824,8 +824,6 @@ Language: gl_ES
 	<string name="reader_toast_err_add_tag">Non foi posible engadir esta etiqueta</string>
 	<string name="add_new_category">Engadir categoría nova</string>
 	<string name="category_name">Nome da categoría</string>
-	<string name="share_action_post">Artigo novo</string>
-	<string name="share_action_media">Biblioteca Multimedia</string>
 	<string name="file_error_create">Non foi posible crear o ficheiro temporal para a carga. Asegúrate de que haxa espazo libre suficiente no dispositivo.</string>
 	<string name="invalid_site_url_message">Comproba se a URL introducida é válida</string>
 	<string name="http_authorization_required">Necesítase autorización</string>

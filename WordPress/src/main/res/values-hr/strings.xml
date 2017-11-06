@@ -597,8 +597,6 @@ Language: hr
 	<string name="post_not_published">Status objave nije objavljen</string>
 	<string name="page_not_published">Status stranice nije objavljen</string>
 	<string name="view_in_browser">Pregled u pregledniku</string>
-	<string name="share_action_post">Nova objava</string>
-	<string name="share_action_media">Medijski zapisi</string>
 	<string name="new_post">Nova objava</string>
 	<string name="new_media">Novi medijski zapis</string>
 	<string name="local_changes">Lokalne promjene</string>

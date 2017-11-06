@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-11 11:31:06+0000
+Translation-Revision-Date: 2017-10-27 16:43:17+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="login_log_in_for_share_intent">Autentifică-te în WordPress.com pentru a-ți partaja conținutul.</string>
+	<string name="enter_site_address_share_intent">Introdu adresa sitului tău WordPress de pe care vrei să partajezi conținutul.</string>
+	<string name="jetpack_disconnect_error_toast">Eroare la deconectarea sitului</string>
+	<string name="jetpack_disconnect_success_toast">Sit deconectat</string>
+	<string name="jetpack_disconnect_confirm">Deconectează</string>
+	<string name="jetpack_disconnect_confirmation_message">Sigur vrei să deconectezi Jetpack de pe sit?</string>
+	<string name="jetpack_disconnect_pref_title">„Deconectează din WordPress.com”</string>
+	<string name="site_settings_jetpack_whitelist_description">Poți trece în lista albă o adresă IP sau o serie de adrese împiedicându-le de a fi blocate vreodată de către Jetpack. IPv4 și IPv6 sunt acceptate. Pentru a specifica un interval, introdu valoarea mică și valoarea mare separate printr-o liniuță. Exemplu: 12.12.12.1-12.12.12.100</string>
+	<string name="jetpack_require_two_factor_title">Necesită autentificare în doi-pași</string>
+	<string name="jetpack_match_wpcom_via_email_title">Leagă conturile folosind adrese de email</string>
+	<string name="jetpack_allow_wpcom_sign_in_title">Permite autentificarea WordPress.com</string>
+	<string name="jetpack_wpcom_sign_in_category_title">Autentificare WordPress.com</string>
+	<string name="jetpack_brute_force_whitelist_title">Adrese IP din lista albă</string>
+	<string name="jetpack_prevent_brute_force_title">Blochează încercări de autentificare rău intenționate</string>
+	<string name="jetpack_prevent_brute_force_category_title">Protecție împotriva atacurilor cu forță-brută</string>
+	<string name="jetpack_send_wp_notifications_title">Trimite notificări imediate</string>
+	<string name="jetpack_send_email_notifications_title">Trimite notificări prin email</string>
+	<string name="jetpack_monitor_uptime_title">Monitorizează timpul de funcționare al sitului tău</string>
+	<string name="jetpack_security_setting_title">Securitate</string>
+	<string name="jetpack_site_settings_category_title">Setări Jetpack</string>
+	<string name="share_intent_adding_to">Adaug la</string>
+	<string name="share_intent_pick_site">Alege situl</string>
+	<string name="share_action_media">Adaugă în biblioteca media</string>
+	<string name="share_action_post">Adaugă într-un articol nou</string>
+	<string name="share_media_permission_required">Permisiuni necesare pentru a partaja imagini sau videouri</string>
+	<string name="invalid_ip_or_range">IP sau interval de IP-uri invalid</string>
 	<string name="error_media_still_uploading">Te rog așteaptă să se termine încărcarea</string>
 	<string name="deleting_media_dlg">Ștergere</string>
 	<string name="confirm_delete_media_video">Ștergi acest video?</string>
@@ -447,7 +473,7 @@ Language: ro
 	<string name="format_bar_description_quote">Bloc de citate</string>
 	<string name="format_bar_description_strike">Barare</string>
 	<string name="format_bar_description_underline">Subliniere</string>
-	<string name="format_bar_description_italic">Italic</string>
+	<string name="format_bar_description_italic">Cursiv</string>
 	<string name="format_bar_description_bold">Aldin</string>
 	<string name="image_width">Lățime</string>
 	<string name="image_link_to">Legătură la</string>
@@ -1203,8 +1229,6 @@ Language: ro
 	<string name="invalid_site_url_message">Verifică dacă URL-ul de sit introdus e corect</string>
 	<string name="open_source_licenses">Licențe Open source</string>
 	<string name="file_error_create">Nu am putut crea fișierul temporar pentru a încărca media. Asigură-te că este destul spațiu liber pe dispozitiv.</string>
-	<string name="share_action_media">Bibliotecă media</string>
-	<string name="share_action_post">Articol nou</string>
 	<string name="category_name">Nume categorie</string>
 	<string name="add_new_category">Adaugă categorie nouă</string>
 	<string name="view_in_browser">Vezi în browser</string>
@@ -1324,7 +1348,7 @@ Language: ro
 	<string name="jetpack_not_found">Modulul Jetpack nu e găsit</string>
 	<string name="select_from_media_library">Selectează din biblioteca media</string>
 	<string name="empty_list_default">Această listă e goală</string>
-	<string name="media_add_popup_title">Adaugă la biblioteca media</string>
+	<string name="media_add_popup_title">Adaugă în biblioteca media</string>
 	<string name="passcode_turn_on">Pune blocarea PIN-ului</string>
 	<string name="passcode_turn_off">Scoate blocarea PIN-ului</string>
 	<string name="passcode_preference_title">PIN blocat</string>
