@@ -227,9 +227,11 @@ public abstract class SiteSettingsInterface {
 
     public void saveSettings() {
         SiteSettingsTable.saveSettings(mSettings);
-        siteSettingsPreferences(mContext).edit().putString(LANGUAGE_PREF_KEY, mSettings.language).apply();
-        siteSettingsPreferences(mContext).edit().putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory).apply();
-        siteSettingsPreferences(mContext).edit().putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat).apply();
+        siteSettingsPreferences(mContext).edit()
+                .putString(LANGUAGE_PREF_KEY, mSettings.language)
+                .putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory)
+                .putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat)
+                .apply();
     }
 
     public @NonNull String getTitle() {
