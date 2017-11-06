@@ -479,6 +479,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         EventBus.getDefault().register(this);
 
+        reattachUploadingMedia();
+    }
+
+    private void reattachUploadingMedia() {
         if (mEditorMediaUploadListener != null) {
             // UploadService.getPendingMediaForPost will be populated only when the user exits the editor
             // But if the user doesn't exit the editor and sends the app to the background, a reattachment
@@ -1422,6 +1426,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
                         // Set up custom headers for the visual editor's internal WebView
                         mEditorFragment.setCustomHttpHeader("User-Agent", WordPress.getUserAgent());
+
+                        reattachUploadingMedia();
                     }
                     break;
                 case 1:
@@ -2140,10 +2146,8 @@ public class EditPostActivity extends AppCompatActivity implements
             } else {
                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
             }
-        } catch (RuntimeException e) {
-            AppLog.e(T.POSTS, e);
-        } catch (OutOfMemoryError e) {
-            AppLog.e(T.POSTS, e);
+        } catch (RuntimeException | OutOfMemoryError e) {
+            AppLog.e(T.EDITOR, e);
         }
     }
 
@@ -2474,6 +2478,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         FluxCUtils.mediaFileFromMediaModel(media));
             }
         } else {
+
+            UploadService.cancelFinalNotification(this, mPost);
+            UploadService.cancelFinalNotificationForMedia(this, mSite);
             media.setUploadState(MediaUploadState.QUEUED);
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             startUploadService(media);
@@ -2801,6 +2808,20 @@ public class EditPostActivity extends AppCompatActivity implements
             // use upload progress rather than optimizer progress since the former includes upload+optimization
             float progress = UploadService.getUploadProgressForMedia(event.media);
             onUploadProgress(event.media, progress);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadMediaRetryEvent event) {
+        if (!isFinishing()
+                && event.mediaModelList != null
+                && mEditorMediaUploadListener != null) {
+            for (MediaModel media : event.mediaModelList) {
+                String localMediaId = String.valueOf(media.getId());
+                EditorFragmentAbstract.MediaType mediaType = media.isVideo() ?
+                        EditorFragmentAbstract.MediaType.VIDEO : EditorFragmentAbstract.MediaType.IMAGE;
+                mEditorMediaUploadListener.onMediaUploadRetry(localMediaId, mediaType);
+            }
         }
     }
 

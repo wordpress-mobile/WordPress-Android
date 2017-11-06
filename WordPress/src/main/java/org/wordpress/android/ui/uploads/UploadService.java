@@ -36,6 +36,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
@@ -179,7 +180,7 @@ public class UploadService extends Service {
                 // either from Media Browser or a RETRY from a notification.
                 // Otherwise, this flag should be true, and we need to keep the error notification as
                 // it might be a separate action (user is editing a Post and including media there)
-                mPostUploadNotifier.cancelFinalNotificationForMedia(
+                PostUploadNotifier.cancelFinalNotificationForMedia(this,
                         mSiteStore.getSiteByLocalId(mediaList.get(0).getLocalSiteId()));
 
                 // add these media items so we can use them in WRITE POST once they end up loading successfully
@@ -189,6 +190,18 @@ public class UploadService extends Service {
             if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
                 // Bump analytics
                 AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_UPLOAD_MEDIA_ERROR_RETRY);
+
+                // send event so Editors can handle clearing Failed statuses properly if Post is being edited right now
+                if (mediaList != null && !mediaList.isEmpty()) {
+                    Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeThisMedia(mPostStore, mediaList);
+                    for (PostModel post : postsToRefresh) {
+                        mUploadStore.registerPostModel(post, mediaList);
+                        if (isThisPostTotallyNewOrFailed(post)) {
+                            mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
+                        }
+                    }
+                    EventBus.getDefault().post(new UploadService.UploadMediaRetryEvent(mediaList));
+                }
             }
 
             for (MediaModel media : mediaList) {
@@ -251,9 +264,11 @@ public class UploadService extends Service {
     public static void cancelFinalNotification(Context context, PostModel post){
         // cancel any outstanding "end" notification for this Post before we start processing it again
         // i.e. dismiss success or error notification for the post.
-        if (sInstance != null && sInstance.mPostUploadNotifier != null) {
-            sInstance.mPostUploadNotifier.cancelFinalNotification(context, post);
-        }
+        PostUploadNotifier.cancelFinalNotification(context, post);
+    }
+
+    public static void cancelFinalNotificationForMedia(Context context, SiteModel site) {
+        PostUploadNotifier.cancelFinalNotificationForMedia(context, site);
     }
 
     private void makePostPublishable(@NonNull PostModel post) {
@@ -619,9 +634,17 @@ public class UploadService extends Service {
         return updatedPost;
     }
 
-    private void cancelPostUploadMatchingMedia(@NonNull MediaModel media, String errorMessage, boolean showError) {
+    /*
+        returns true if Post canceled
+        returns false if Post can't be found or is not registered in the UploadStore
+     */
+    private boolean cancelPostUploadMatchingMedia(@NonNull MediaModel media, String errorMessage, boolean showError) {
         PostModel postToCancel = mPostStore.getPostByLocalPostId(media.getLocalPostId());
-        if (postToCancel == null) return;
+        if (postToCancel == null) return false;
+
+        if (!mUploadStore.isRegisteredPostModel(postToCancel)) {
+            return false;
+        }
 
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
         mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(postToCancel);
@@ -637,6 +660,7 @@ public class UploadService extends Service {
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
 
+        return true;
     }
 
     private void rebuildNotificationError(PostModel post, String errorMessage) {
@@ -647,8 +671,44 @@ public class UploadService extends Service {
 
     }
 
+    private void registerFailedMediaForThisPost(PostModel post) {
+        // there could be failed media in the post, that has not been registered in the UploadStore because
+        // the media was being uploaded separately (i.e. the user included media, started uploading within
+        // the editor, and such media failed _before_  exiting the eidtor, thus the registration never happened.
+        // We're recovering the information here so we make sure to rebuild the status only when the user taps
+        // on Retry.
+        List<String> mediaIds = AztecEditorFragment.getMediaMarkedFailedInPostContent(this, post.getContent());
+
+        if (mediaIds != null && !mediaIds.isEmpty()) {
+
+            ArrayList<MediaModel> mediaList = new ArrayList<>();
+            for (String mediaId : mediaIds) {
+                MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
+                if (media != null) {
+                    mediaList.add(media);
+                    // if this media item didn't have the Postid set, let's set it as we found it
+                    // in the Post body anyway. So let's fix that now.
+                    if (media.getLocalPostId() == 0 ) {
+                        media.setLocalPostId(post.getId());
+                        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+                    }
+                }
+            }
+
+            if (!mediaList.isEmpty()) {
+                // given we found failed media within this Post, let's also cancel the media error
+                mPostUploadNotifier.cancelFinalNotificationForMedia(this, mSiteStore.getSiteByLocalId(post.getLocalSiteId()));
+
+                // now we have a list. Let' register this list.
+                mUploadStore.registerPostModel(post, mediaList);
+            }
+        }
+    }
+
     private void aztecRetryUpload(PostModel post) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_UPLOAD_POST_ERROR_RETRY);
+
+        registerFailedMediaForThisPost(post);
 
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
@@ -692,12 +752,15 @@ public class UploadService extends Service {
         }
 
         if (event.isError()) {
+            boolean treatAsMediaError = true;
             if (event.media.getLocalPostId() > 0) {
                 AppLog.w(T.MAIN, "UploadService > Media upload failed for post " + event.media.getLocalPostId() + " : "
                         + event.error.type + ": " + event.error.message);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
-                cancelPostUploadMatchingMedia(event.media, errorMessage, true);
-            } else {
+                treatAsMediaError = !cancelPostUploadMatchingMedia(event.media, errorMessage, true);
+            }
+
+            if (treatAsMediaError){
                 // this media item doesn't belong to a Post
                 mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotification(event.media.getId());
                 // Only show the media upload error notification if the post is NOT registered in the UploadStore
@@ -827,4 +890,11 @@ public class UploadService extends Service {
         }
     }
 
+    public static class UploadMediaRetryEvent {
+        public final List<MediaModel> mediaModelList;
+
+        UploadMediaRetryEvent(List<MediaModel> mediaModelList) {
+            this.mediaModelList = mediaModelList;
+        }
+    }
 }

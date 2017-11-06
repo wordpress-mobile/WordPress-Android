@@ -321,9 +321,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 totalMediaItems++;
             }
 
-            mPostUploadNotifier.setTotalMediaItems(mPost, totalMediaItems);
-
-            int mediaItemCount = 0;
             for (String tag : imageTags) {
                 Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
                 Matcher m = p.matcher(tag);
@@ -337,20 +334,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                         }
                         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
                         if (mediaFile != null) {
-                            // Get image thumbnail for notification icon
-                            Bitmap imageIcon = ImageUtils.getWPImageSpanThumbnailFromFilePath(
-                                    mContext,
-                                    imageUri,
-                                    DisplayUtils.dpToPx(mContext, 128)
-                            );
-
-                            // Crop the thumbnail to be squared in the center
-                            if (imageIcon != null) {
-                                int squaredSize = DisplayUtils.dpToPx(mContext, 64);
-                                imageIcon = ThumbnailUtils.extractThumbnail(imageIcon, squaredSize, squaredSize);
-                            }
-
-                            mediaItemCount++;
                             mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaModel);
 
                             String mediaUploadOutput;

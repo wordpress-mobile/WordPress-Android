@@ -63,6 +63,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -769,4 +770,23 @@ public class PostsListFragment extends Fragment
         }
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadMediaRetryEvent event) {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            // if there' a Post to which the retried media belongs, clear their status
+            Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeThisMedia(mPostStore, event.mediaModelList);
+            // now that we know which Posts  to refresh, let's do it
+            for (PostModel post : postsToRefresh) {
+                int position = getPostListAdapter().getPositionForPost(post);
+                if (position > -1) {
+                    getPostListAdapter().notifyItemChanged(position);
+                }
+            }
+
+        }
+    }
 }
