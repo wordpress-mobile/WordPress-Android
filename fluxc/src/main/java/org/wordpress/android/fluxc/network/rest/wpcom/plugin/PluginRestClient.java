@@ -129,6 +129,11 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void deleteSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
+
+    }
+
+
     private PluginModel pluginModelFromResponse(SiteModel siteModel, PluginWPComRestResponse response) {
         PluginModel pluginModel = new PluginModel();
         pluginModel.setLocalSiteId(siteModel.getId());
