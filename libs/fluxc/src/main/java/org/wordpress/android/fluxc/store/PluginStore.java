@@ -86,6 +86,16 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class DeletedSitePluginPayload extends Payload<DeleteSitePluginError> {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public DeletedSitePluginPayload(SiteModel site, DeleteSitePluginError error) {
+            this.site = site;
+            this.error = error;
+        }
+    }
+
     public static class FetchSitePluginsError implements OnChangedError {
         public FetchSitePluginsErrorType type;
         public String message;
@@ -117,6 +127,15 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class DeleteSitePluginError implements OnChangedError {
+        public DeleteSitePluginErrorType type;
+        public String message;
+
+        public DeleteSitePluginError(DeleteSitePluginErrorType type) {
+            this.type = type;
+        }
+    }
+
     public enum FetchSitePluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
@@ -132,6 +151,10 @@ public class PluginStore extends Store {
         UNAUTHORIZED,
         ACTIVATION_ERROR,
         DEACTIVATION_ERROR,
+        NOT_AVAILABLE // Return for non-jetpack sites
+    }
+
+    public enum DeleteSitePluginErrorType {
         NOT_AVAILABLE // Return for non-jetpack sites
     }
 
@@ -240,6 +263,10 @@ public class PluginStore extends Store {
     private void deleteSitePlugin(DeleteSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.deleteSitePlugin(payload.site, payload.plugin);
+        } else {
+            DeleteSitePluginError error = new DeleteSitePluginError(DeleteSitePluginErrorType.NOT_AVAILABLE);
+            DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site, error);
+            deletedSitePlugin(errorPayload);
         }
     }
 
@@ -274,5 +301,9 @@ public class PluginStore extends Store {
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
         }
         emitChange(event);
+    }
+
+    private void deletedSitePlugin(DeletedSitePluginPayload payload) {
+        // no-op
     }
 }
