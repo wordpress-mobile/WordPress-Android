@@ -82,6 +82,8 @@ public class EditorImageMetaData implements Parcelable {
     @Expose
     private int mNaturalHeight;
 
+    private int mMaxImageWidth;
+
     private boolean mIsRemoved;
     private int mLocalId;
 
@@ -228,20 +230,20 @@ public class EditorImageMetaData implements Parcelable {
         this.width = width;
     }
 
-    public int getNaturalWidth() {
-        return naturalWidth;
-    }
-
-    public int getNaturalHeight() {
-        return mNaturalHeight;
-    }
-
     public int getLocalId() {
         return mLocalId;
     }
 
     public void setLocalId(int localId) {
         mLocalId = localId;
+    }
+
+    public int getMaxImageWidth() {
+        return mMaxImageWidth;
+    }
+
+    public void setMaxImageWidth(int maxImageWidth) {
+        mMaxImageWidth = maxImageWidth;
     }
 
     public boolean isRemoved() {
@@ -271,6 +273,7 @@ public class EditorImageMetaData implements Parcelable {
         width = in.readString();
         naturalWidth = in.readInt();
         mNaturalHeight = in.readInt();
+        mMaxImageWidth = in.readInt();
         mIsRemoved = in.readByte() != 0x00;
         mLocalId = in.readInt();
     }
@@ -299,7 +302,7 @@ public class EditorImageMetaData implements Parcelable {
         dest.writeString(title);
         dest.writeString(width);
         dest.writeInt(naturalWidth);
-        dest.writeInt(mNaturalHeight);
+        dest.writeInt(mMaxImageWidth);
         dest.writeByte((byte) (mIsRemoved ? 0x01 : 0x00));
         dest.writeInt(mLocalId);
     }
