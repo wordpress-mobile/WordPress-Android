@@ -98,6 +98,15 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class PushSocialSmsPayload extends Payload<BaseNetworkError> {
+        public String nonce;
+        public String userId;
+        public PushSocialSmsPayload(@NonNull String userId, @NonNull String nonce) {
+            this.userId = userId;
+            this.nonce = nonce;
+        }
+    }
+
     public static class NewAccountPayload extends Payload<BaseNetworkError> {
         public String username;
         public String password;
@@ -452,7 +461,7 @@ public class AccountStore extends Store {
                 createPushSocialLogin((PushSocialLoginPayload) payload);
                 break;
             case PUSH_SOCIAL_SMS:
-                createPushSocialSms((PushSocialAuthPayload) payload);
+                createPushSocialSms((PushSocialSmsPayload) payload);
                 break;
             case UPDATE_ACCOUNT:
                 updateDefaultAccount((AccountModel) payload, AccountAction.UPDATE_ACCOUNT);
@@ -663,7 +672,7 @@ public class AccountStore extends Store {
         mAccountRestClient.pushSocialLogin(payload.idToken, payload.service);
     }
 
-    private void createPushSocialSms(PushSocialAuthPayload payload) {
+    private void createPushSocialSms(PushSocialSmsPayload payload) {
         mAccountRestClient.pushSocialSms(payload.userId, payload.nonce);
     }
 
