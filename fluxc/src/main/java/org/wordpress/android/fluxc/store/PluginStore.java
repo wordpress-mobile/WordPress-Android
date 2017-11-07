@@ -239,6 +239,9 @@ public class PluginStore extends Store {
             case DELETE_SITE_PLUGIN:
                 deleteSitePlugin((DeleteSitePluginPayload) action.getPayload());
                 break;
+            case INSTALL_SITE_PLUGIN:
+                installSitePlugin((InstallSitePluginPayload) action.getPayload());
+                break;
             case FETCHED_SITE_PLUGINS:
                 fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
                 break;
@@ -297,6 +300,12 @@ public class PluginStore extends Store {
             DeleteSitePluginError error = new DeleteSitePluginError(DeleteSitePluginErrorType.NOT_AVAILABLE);
             DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site, error);
             deletedSitePlugin(errorPayload);
+        }
+    }
+
+    private void installSitePlugin(InstallSitePluginPayload payload) {
+        if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
+            mPluginRestClient.installSitePlugin(payload.site, payload.pluginName);
         }
     }
 
