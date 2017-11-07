@@ -397,9 +397,9 @@ public class ThemeStore extends Store {
                 activatedTheme = getInstalledThemeByThemeId(payload.theme.getThemeId());
             } else {
                 activatedTheme = getWpComThemeByThemeId(payload.theme.getThemeId());
+                activatedTheme.setIsWpComTheme(false);
             }
             if (activatedTheme != null) {
-                activatedTheme.setActive(true);
                 setActiveThemeForSite(payload.site, payload.theme);
             }
         }
