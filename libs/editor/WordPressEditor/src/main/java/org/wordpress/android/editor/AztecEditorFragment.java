@@ -16,6 +16,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -104,9 +106,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String ATTR_SIZE_DASH = "size-";
     private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
     private static final String TEMP_VIDEO_UPLOADING_CLASS = "data-temp-aztec-video";
+    private static final String ATTR_TAPPED_MEDIA_PREDICATE = "tapped_media_predicate";
 
     private static final int MIN_BITMAP_DIMENSION_DP = 48;
     public static final int DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP = 196;
+
+    public static final int EDITOR_MEDIA_SETTINGS = 5;
 
     private static final int MAX_ACTION_TIME_MS = 2000;
 
@@ -163,6 +168,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         ProfilingUtils.start("Visual Editor Startup");
         ProfilingUtils.split("EditorFragment.onCreate");
+
+        if(savedInstanceState != null){
+            mTappedMediaPredicate = savedInstanceState.getParcelable(ATTR_TAPPED_MEDIA_PREDICATE);
+        }
     }
 
     @Override
@@ -304,6 +313,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void onSaveInstanceState(Bundle outState) {
         outState.putCharSequence(ATTR_TITLE, getTitle());
         outState.putCharSequence(ATTR_CONTENT, getContent());
+        outState.putParcelable(ATTR_TAPPED_MEDIA_PREDICATE, mTappedMediaPredicate);
     }
 
     @Override
@@ -938,7 +948,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    private static class MediaPredicate implements AztecText.AttributePredicate {
+    private static class MediaPredicate implements AztecText.AttributePredicate, Parcelable {
         private final String mId;
         private final String mAttributeName;
 
@@ -959,6 +969,35 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         public boolean matches(@NonNull Attributes attrs) {
             return attrs.getIndex(mAttributeName) > -1 && attrs.getValue(mAttributeName).equals(mId);
         }
+
+        protected MediaPredicate(Parcel in) {
+            mId = in.readString();
+            mAttributeName = in.readString();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(mId);
+            dest.writeString(mAttributeName);
+        }
+
+        @SuppressWarnings("unused")
+        public static final Parcelable.Creator<MediaPredicate> CREATOR = new Parcelable.Creator<MediaPredicate>() {
+            @Override
+            public MediaPredicate createFromParcel(Parcel in) {
+                return new MediaPredicate(in);
+            }
+
+            @Override
+            public MediaPredicate[] newArray(int size) {
+                return new MediaPredicate[size];
+            }
+        };
     }
 
     @Override
@@ -1420,7 +1459,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
+        if (requestCode == EDITOR_MEDIA_SETTINGS) {
             if (mTappedMediaPredicate != null) {
                 if (data == null || data.getExtras() == null) {
                     return;
