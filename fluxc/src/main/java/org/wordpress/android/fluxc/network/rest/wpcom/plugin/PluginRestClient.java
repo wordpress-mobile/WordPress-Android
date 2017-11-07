@@ -19,6 +19,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResponse.FetchPluginsResponse;
+import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginError;
+import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsError;
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
@@ -83,14 +86,7 @@ public class PluginRestClient extends BaseWPComRestClient {
     }
 
     public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
-        String name;
-        try {
-            // We need to encode plugin name otherwise names like "akismet/akismet" would fail
-            name = URLEncoder.encode(plugin.getName(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            name = plugin.getName();
-        }
-        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(name).getUrlV1_2();
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(getEncodedPluginName(plugin)).getUrlV1_2();
         Map<String, Object> params = paramsFromPluginModel(plugin);
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, params,
                 PluginWPComRestResponse.class,
@@ -112,6 +108,12 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 case "unauthorized":
                                     updatePluginError.type = UpdateSitePluginErrorType.UNAUTHORIZED;
                                     break;
+                                case "activation_error":
+                                    updatePluginError.type = UpdateSitePluginErrorType.ACTIVATION_ERROR;
+                                    break;
+                                case "deactivation_error":
+                                    updatePluginError.type = UpdateSitePluginErrorType.DEACTIVATION_ERROR;
+                                    break;
                             }
                         }
                         updatePluginError.message = networkError.message;
@@ -122,6 +124,44 @@ public class PluginRestClient extends BaseWPComRestClient {
         );
         add(request);
     }
+
+    public void deleteSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).
+                plugins.name(getEncodedPluginName(plugin)).delete.getUrlV1_2();
+        final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                PluginWPComRestResponse.class,
+                new Listener<PluginWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PluginWPComRestResponse response) {
+                        PluginModel pluginModel = pluginModelFromResponse(site, response);
+                        mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(
+                                new DeletedSitePluginPayload(site, pluginModel)));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                        DeleteSitePluginError deletePluginError
+                                = new DeleteSitePluginError(DeleteSitePluginErrorType.GENERIC_ERROR);
+                        if (networkError instanceof WPComGsonNetworkError) {
+                            switch (((WPComGsonNetworkError) networkError).apiError) {
+                                case "unauthorized":
+                                    deletePluginError.type = DeleteSitePluginErrorType.UNAUTHORIZED;
+                                    break;
+                                case "delete_plugin_error":
+                                    deletePluginError.type = DeleteSitePluginErrorType.DELETE_PLUGIN_ERROR;
+                                    break;
+                            }
+                        }
+                        deletePluginError.message = networkError.message;
+                        DeletedSitePluginPayload payload = new DeletedSitePluginPayload(site, deletePluginError);
+                        mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
 
     private PluginModel pluginModelFromResponse(SiteModel siteModel, PluginWPComRestResponse response) {
         PluginModel pluginModel = new PluginModel();
@@ -144,5 +184,14 @@ public class PluginRestClient extends BaseWPComRestClient {
         params.put("active", pluginModel.isActive());
         params.put("autoupdate", pluginModel.isAutoUpdateEnabled());
         return params;
+    }
+
+    private String getEncodedPluginName(PluginModel plugin) {
+        try {
+            // We need to encode plugin name otherwise names like "akismet/akismet" would fail
+            return URLEncoder.encode(plugin.getName(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return plugin.getName();
+        }
     }
 }
