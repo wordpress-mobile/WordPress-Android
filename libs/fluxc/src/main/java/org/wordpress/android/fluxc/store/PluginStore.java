@@ -36,6 +36,16 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class DeleteSitePluginPayload extends Payload<BaseNetworkError> {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public DeleteSitePluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+    }
+
     public static class FetchedSitePluginsPayload extends Payload<FetchSitePluginsError> {
         public SiteModel site;
         public List<PluginModel> plugins;
@@ -72,6 +82,22 @@ public class PluginStore extends Store {
         }
 
         public UpdatedSitePluginPayload(SiteModel site, UpdateSitePluginError error) {
+            this.site = site;
+            this.error = error;
+        }
+    }
+
+    public static class DeletedSitePluginPayload extends Payload<DeleteSitePluginError> {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public DeletedSitePluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+
+        public DeletedSitePluginPayload(SiteModel site, DeleteSitePluginError error) {
+            this.site = site;
             this.error = error;
         }
     }
@@ -107,6 +133,15 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class DeleteSitePluginError implements OnChangedError {
+        public DeleteSitePluginErrorType type;
+        public String message;
+
+        public DeleteSitePluginError(DeleteSitePluginErrorType type) {
+            this.type = type;
+        }
+    }
+
     public enum FetchSitePluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
@@ -120,6 +155,15 @@ public class PluginStore extends Store {
     public enum UpdateSitePluginErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
+        ACTIVATION_ERROR,
+        DEACTIVATION_ERROR,
+        NOT_AVAILABLE // Return for non-jetpack sites
+    }
+
+    public enum DeleteSitePluginErrorType {
+        GENERIC_ERROR,
+        UNAUTHORIZED,
+        DELETE_PLUGIN_ERROR,
         NOT_AVAILABLE // Return for non-jetpack sites
     }
 
@@ -138,6 +182,14 @@ public class PluginStore extends Store {
         public SiteModel site;
         public PluginModel plugin;
         public OnSitePluginChanged(SiteModel site) {
+            this.site = site;
+        }
+    }
+
+    public static class OnSitePluginDeleted extends OnChanged<DeleteSitePluginError> {
+        public SiteModel site;
+        public PluginModel plugin;
+        public OnSitePluginDeleted(SiteModel site) {
             this.site = site;
         }
     }
@@ -174,6 +226,9 @@ public class PluginStore extends Store {
             case UPDATE_SITE_PLUGIN:
                 updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
                 break;
+            case DELETE_SITE_PLUGIN:
+                deleteSitePlugin((DeleteSitePluginPayload) action.getPayload());
+                break;
             case FETCHED_SITE_PLUGINS:
                 fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
                 break;
@@ -182,6 +237,9 @@ public class PluginStore extends Store {
                 break;
             case UPDATED_SITE_PLUGIN:
                 updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
+                break;
+            case DELETED_SITE_PLUGIN:
+                deletedSitePlugin((DeletedSitePluginPayload) action.getPayload());
                 break;
         }
     }
@@ -222,6 +280,16 @@ public class PluginStore extends Store {
         }
     }
 
+    private void deleteSitePlugin(DeleteSitePluginPayload payload) {
+        if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
+            mPluginRestClient.deleteSitePlugin(payload.site, payload.plugin);
+        } else {
+            DeleteSitePluginError error = new DeleteSitePluginError(DeleteSitePluginErrorType.NOT_AVAILABLE);
+            DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site, error);
+            deletedSitePlugin(errorPayload);
+        }
+    }
+
     private void fetchedSitePlugins(FetchedSitePluginsPayload payload) {
         OnSitePluginsChanged event = new OnSitePluginsChanged(payload.site);
         if (payload.isError()) {
@@ -251,6 +319,18 @@ public class PluginStore extends Store {
             payload.plugin.setLocalSiteId(payload.site.getId());
             event.plugin = payload.plugin;
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
+        }
+        emitChange(event);
+    }
+
+    private void deletedSitePlugin(DeletedSitePluginPayload payload) {
+        OnSitePluginDeleted event = new OnSitePluginDeleted(payload.site);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            payload.plugin.setLocalSiteId(payload.site.getId());
+            event.plugin = payload.plugin;
+            PluginSqlUtils.deleteSitePlugin(payload.plugin);
         }
         emitChange(event);
     }
