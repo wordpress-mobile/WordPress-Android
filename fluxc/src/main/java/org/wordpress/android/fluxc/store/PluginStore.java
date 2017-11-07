@@ -156,6 +156,9 @@ public class PluginStore extends Store {
     }
 
     public enum DeleteSitePluginErrorType {
+        GENERIC_ERROR,
+        UNAUTHORIZED,
+        DELETE_PLUGIN_ERROR,
         NOT_AVAILABLE // Return for non-jetpack sites
     }
 
@@ -221,6 +224,9 @@ public class PluginStore extends Store {
                 break;
             case UPDATED_SITE_PLUGIN:
                 updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
+                break;
+            case DELETED_SITE_PLUGIN:
+                deletedSitePlugin((DeletedSitePluginPayload) action.getPayload());
                 break;
         }
     }
