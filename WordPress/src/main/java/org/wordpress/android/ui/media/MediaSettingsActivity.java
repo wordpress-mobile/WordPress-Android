@@ -93,6 +93,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_ID_LIST = "id_list";
+    private static final String ARG_DELETE_MEDIA_DIALOG_VISIBLE = "delete_media_dialog_visible";
+    private static final String ARG_REMOVE_IAMGE_FROM_POST_DIALOG_VISIBLE = "remove_image_from_post_dialog_visible";
     public static final int RESULT_MEDIA_DELETED = RESULT_FIRST_USER;
 
     private long mDownloadId;
@@ -116,6 +118,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private SeekBar mImageWidthSeekBarView;
     private Spinner mAlignmentSpinnerView;
     private FloatingActionButton mFabView;
+
+    private AlertDialog mDeleteImageConfirmationDialog;
+    private AlertDialog mRemoveImageConfirmationDialog;
 
     private ProgressDialog mProgressDialog;
 
@@ -239,6 +244,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             if (savedInstanceState.containsKey(ARG_ID_LIST)) {
                 mMediaIdList = savedInstanceState.getStringArrayList(ARG_ID_LIST);
             }
+
+            if (savedInstanceState.getBoolean(ARG_REMOVE_IAMGE_FROM_POST_DIALOG_VISIBLE, false)) {
+                removeMediaFromPostWithConfirmation();
+            } else if (savedInstanceState.getBoolean(ARG_DELETE_MEDIA_DIALOG_VISIBLE, false)) {
+                deleteMediaWithConfirmation();
+            }
+
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mEditorImageMetaData = getIntent().getParcelableExtra(ARG_EDITOR_IMAGE_METADATA);
@@ -401,6 +413,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         super.onSaveInstanceState(outState);
         outState.putInt(ARG_MEDIA_LOCAL_ID, mMedia.getId());
         outState.putParcelable(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
+
+        if(mRemoveImageConfirmationDialog != null){
+            outState.putBoolean(ARG_REMOVE_IAMGE_FROM_POST_DIALOG_VISIBLE, mRemoveImageConfirmationDialog.isShowing());
+        }
+
+        if(mDeleteImageConfirmationDialog != null){
+            outState.putBoolean(ARG_DELETE_MEDIA_DIALOG_VISIBLE, mDeleteImageConfirmationDialog.isShowing());
+        }
 
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
@@ -601,9 +621,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         TextView txtFileType = (TextView) findViewById(R.id.text_filetype);
         txtFileType.setText(StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase());
 
-        if (isMediaFromEditor() && isRealImageSizeKnown()){
+        if (isMediaFromEditor() && isRealImageSizeKnown()) {
             showImageDimensions(mEditorImageMetaData.getMaxWidth(), mEditorImageMetaData.getMaxHeight());
-        }else{
+        } else {
             showImageDimensions(mMedia.getWidth(), mMedia.getHeight());
         }
 
@@ -1050,6 +1070,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void deleteMediaWithConfirmation() {
+        if (mDeleteImageConfirmationDialog != null) {
+            mDeleteImageConfirmationDialog.show();
+            return;
+        }
+
         @StringRes int resId = isVideo() ? R.string.confirm_delete_media_video : R.string.confirm_delete_media_image;
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage(resId)
                 .setCancelable(true).setPositiveButton(
@@ -1059,8 +1084,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                                 deleteMedia();
                             }
                         }).setNegativeButton(R.string.cancel, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        mDeleteImageConfirmationDialog = builder.create();
+        mDeleteImageConfirmationDialog.show();
     }
 
     private void deleteMedia() {
@@ -1078,6 +1103,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void removeMediaFromPostWithConfirmation() {
+        if (mRemoveImageConfirmationDialog != null) {
+            mRemoveImageConfirmationDialog.show();
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage(R.string.confirm_remove_media_image)
                 .setCancelable(true).setPositiveButton(
                         R.string.remove, new DialogInterface.OnClickListener() {
@@ -1086,8 +1116,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                                 removeMediaFromPost();
                             }
                         }).setNegativeButton(R.string.cancel, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        mRemoveImageConfirmationDialog = builder.create();
+        mRemoveImageConfirmationDialog.show();
     }
 
     private void removeMediaFromPost() {

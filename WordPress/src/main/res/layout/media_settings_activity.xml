@@ -206,6 +206,7 @@
                                 android:prompt="@string/image_alignment"/>
 
                             <FrameLayout
+                                android:layout_marginTop="@dimen/margin_large"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 
@@ -220,6 +221,7 @@
                                     android:textColor="@color/grey_500"/>
 
                                 <RelativeLayout
+                                    android:layout_marginTop="@dimen/margin_large"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal">
@@ -231,7 +233,6 @@
                                         android:layout_alignParentLeft="true"
                                         android:layout_alignParentStart="true"
                                         android:layout_centerVertical="true"
-                                        android:layout_marginTop="@dimen/margin_large"
                                         android:layout_toLeftOf="@+id/image_width_value_container"
                                         android:layout_toStartOf="@+id/image_width_value_container"/>
 
@@ -446,7 +447,7 @@
             </android.support.v7.widget.CardView>
 
         </RelativeLayout>
-        
+
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
