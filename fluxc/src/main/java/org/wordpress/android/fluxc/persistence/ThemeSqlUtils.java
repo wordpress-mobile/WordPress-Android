@@ -67,8 +67,9 @@ public class ThemeSqlUtils {
             }
         }
 
-        // make sure active flag is set then add to db
+        // make sure active flag and local site ID are set then add to db
         theme.setActive(true);
+        theme.setLocalSiteId(site.getId());
         insertOrUpdateThemeForSite(theme);
     }
 
