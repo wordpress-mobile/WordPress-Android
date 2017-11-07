@@ -2103,8 +2103,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.MEDIA_SETTINGS:
                     if (mEditorFragment instanceof AztecEditorFragment) {
-                        mEditorFragment.onActivityResult(
-                                ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE, Activity.RESULT_OK, data);
+                        mEditorFragment.onActivityResult(AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
+                                Activity.RESULT_OK, data);
                     }
                     break;
             }

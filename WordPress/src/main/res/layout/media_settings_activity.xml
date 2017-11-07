@@ -190,63 +190,76 @@
                                 android:entries="@array/alignment_array"
                                 android:prompt="@string/image_alignment"/>
 
-                            <TextView
-                                android:id="@+id/width_hint"
-                                style="@style/TextAppearance.Design.Hint"
+                            <FrameLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/margin_small"
-                                android:layout_marginStart="@dimen/margin_small"
-                                android:text="@string/image_width"
-                                android:textColor="@color/grey_500"/>
+                                android:layout_height="wrap_content">
 
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <SeekBar
-                                    android:id="@+id/image_width_seekbar"
+                                <TextView
+                                    android:id="@+id/width_hint"
+                                    style="@style/TextAppearance.Design.Hint"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentLeft="true"
-                                    android:layout_alignParentStart="true"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginTop="@dimen/margin_large"
-                                    android:layout_toLeftOf="@+id/image_width_value_container"
-                                    android:layout_toStartOf="@+id/image_width_value_container"/>
+                                    android:layout_marginLeft="@dimen/margin_small"
+                                    android:layout_marginStart="@dimen/margin_small"
+                                    android:text="@string/image_width"
+                                    android:textColor="@color/grey_500"/>
 
-                                <LinearLayout
-                                    android:id="@+id/image_width_value_container"
-                                    android:layout_width="wrap_content"
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
                                     android:orientation="horizontal">
 
-                                    <android.support.design.widget.TextInputEditText
-                                        android:id="@+id/edit_image_width"
+                                    <SeekBar
+                                        android:id="@+id/image_width_seekbar"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:gravity="top|start"
-                                        android:hint="@string/image_width_edit_text_hint_placeholder"
-                                        android:inputType="number"
-                                        android:lines="1"
-                                        android:maxLength="4"
-                                        android:selectAllOnFocus="true"
-                                        android:textColorHint="#00FFFFFF"
-                                        tools:text="1234"/>
+                                        android:layout_alignParentLeft="true"
+                                        android:layout_alignParentStart="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginTop="@dimen/margin_large"
+                                        android:layout_toLeftOf="@+id/image_width_value_container"
+                                        android:layout_toStartOf="@+id/image_width_value_container"/>
 
-                                    <TextView
+                                    <LinearLayout
+                                        android:id="@+id/image_width_value_container"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@string/pixel_abbr"/>
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:orientation="horizontal">
 
-                                </LinearLayout>
+                                        <android.support.design.widget.TextInputEditText
+                                            android:id="@+id/edit_image_width"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="top|start"
+                                            android:hint="@string/image_width_edit_text_hint_placeholder"
+                                            android:inputType="number"
+                                            android:lines="1"
+                                            android:maxLength="4"
+                                            android:selectAllOnFocus="true"
+                                            android:textColorHint="#00FFFFFF"
+                                            tools:text="1234"/>
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/pixel_abbr"/>
+
+                                    </LinearLayout>
 
 
-                            </RelativeLayout>
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/disabled_width_selector_overlay"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@color/white_translucent_65"
+                                    android:clickable="true"
+                                    android:focusable="true"/>
+                            </FrameLayout>
                         </LinearLayout>
 
 

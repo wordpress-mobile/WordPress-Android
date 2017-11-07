@@ -370,6 +370,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mediaModel.setCaption(editorImageMetaData.getCaption());
         mediaModel.setAlt(editorImageMetaData.getAlt());
         mediaModel.setFileName(editorImageMetaData.getSrc().substring(editorImageMetaData.getSrc().lastIndexOf("/") + 1));
+        mediaModel.setFileExtension(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(editorImageMetaData.getSrc()));
         mediaModel.setWidth(editorImageMetaData.getWidthInt());
         mediaModel.setHeight(editorImageMetaData.getHeightInt());
         return mediaModel;
@@ -578,7 +579,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             mDescriptionView.setVisibility(View.GONE);
             mCaptionView.setVisibility(View.GONE);
 
-            setupWidthSeekBar();
             setupAlignmentSpinner();
         } else {
             mDescriptionView.setText(mMedia.getDescription());
@@ -660,11 +660,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
      * Initialize the image width SeekBar and accompanying EditText
      */
     private void setupWidthSeekBar() {
-        mImageWidthSeekBarView.setMax(mEditorImageMetaData.getNaturalWidth());
+        mImageWidthSeekBarView.setMax(mEditorImageMetaData.getMaxImageWidth());
 
-        if (mMedia.getWidth() != 0) {
+        if (mMedia.getWidth() != 0 && mMedia.getWidth() <= mEditorImageMetaData.getMaxImageWidth()) {
             mImageWidthSeekBarView.setProgress(mMedia.getWidth());
             mImageWidthView.setText(String.valueOf(mMedia.getWidth()));
+        } else {
+            mImageWidthSeekBarView.setProgress(mEditorImageMetaData.getMaxImageWidth());
+            mImageWidthView.setText(String.valueOf(mEditorImageMetaData.getMaxImageWidth()));
         }
 
         mImageWidthSeekBarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -695,7 +698,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                     widthValue = Integer.parseInt(EditTextUtils.getText(mImageWidthView));
                 }
 
-                int width = Math.min(mEditorImageMetaData.getNaturalWidth(), Math.max(widthValue, 1));
+                int width = Math.min(mEditorImageMetaData.getMaxImageWidth(), Math.max(widthValue, 1));
 
                 //OnSeekBarChangeListener will not be triggered if progress have not changed
                 if (mImageWidthSeekBarView.getProgress() == width) {
@@ -709,6 +712,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 return false;
             }
         });
+
+        findViewById(R.id.disabled_width_selector_overlay).setVisibility(View.GONE);
     }
 
     /**
@@ -757,6 +762,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                     if (!isFinishing() && response.getBitmap() != null) {
                         showProgress(false);
                         mImageView.setImageBitmap(response.getBitmap());
+                        if (isMediaFromEditor() && !isMaxImageWidthKnown()) {
+                            mEditorImageMetaData.setMaxImageWidth(response.getBitmap().getWidth());
+                            setupWidthSeekBar();
+                        }
                     }
                 }
 
@@ -772,6 +781,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         } else {
             new LocalImageTask(mediaUri, size).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
+    }
+
+    private boolean isMaxImageWidthKnown() {
+        return isMediaFromEditor() && mEditorImageMetaData.getMaxImageWidth() > 0;
     }
 
     /*
@@ -927,18 +940,24 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaStore.MediaPayload(mSite, media)));
             }
         } else {
-            String imageWidth = EditTextUtils.getText(mImageWidthView);
+            String newImageWidth = EditTextUtils.getText(mImageWidthView);
             String alignment = mAlignmentKeyArray[mAlignmentSpinnerView.getSelectedItemPosition()];
 
             boolean hasChanged = !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
                     || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText)
-                    || !StringUtils.equals(mEditorImageMetaData.getWidth(), imageWidth)
+                    || (mImageWidthView.isEnabled() && !StringUtils.equals(mEditorImageMetaData.getWidth(), newImageWidth))
                     || !StringUtils.equals(mEditorImageMetaData.getAlign(), alignment);
 
             if (hasChanged) {
-                if (!TextUtils.isEmpty(imageWidth)) {
-                    String imageHeight = String.valueOf(getRelativeHeightFromWidth(Integer.parseInt(imageWidth)));
-                    mEditorImageMetaData.setWidth(imageWidth);
+                //do not update image dimensions if image have not loaded yet or no value is set
+                if (!TextUtils.isEmpty(newImageWidth) && mImageWidthView.isEnabled()) {
+                    int newImageWidthInt = Integer.parseInt(newImageWidth);
+                    if (newImageWidthInt > mEditorImageMetaData.getMaxImageWidth()) {
+                        newImageWidthInt = mEditorImageMetaData.getMaxImageWidth();
+                    }
+
+                    String imageHeight = String.valueOf(getRelativeHeightFromWidth(newImageWidthInt));
+                    mEditorImageMetaData.setWidth(newImageWidth);
                     mEditorImageMetaData.setHeight(imageHeight);
                 }
 
@@ -958,8 +977,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private int getRelativeHeightFromWidth(int width) {
-        int naturalHeight = mEditorImageMetaData.getNaturalHeight();
-        int naturalWidth = mEditorImageMetaData.getNaturalWidth();
+        int naturalHeight = mEditorImageMetaData.getWidthInt();
+        int naturalWidth = mEditorImageMetaData.getWidthInt();
 
         float ratio = (float) naturalHeight / naturalWidth;
         return (int) (ratio * width);

@@ -302,6 +302,7 @@ public class EditorImageMetaData implements Parcelable {
         dest.writeString(title);
         dest.writeString(width);
         dest.writeInt(naturalWidth);
+        dest.writeInt(mNaturalHeight);
         dest.writeInt(mMaxImageWidth);
         dest.writeByte((byte) (mIsRemoved ? 0x01 : 0x00));
         dest.writeInt(mLocalId);
