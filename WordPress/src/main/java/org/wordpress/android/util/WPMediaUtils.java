@@ -201,6 +201,8 @@ public class WPMediaUtils {
                 return context.getString(R.string.media_error_exceeds_memory_limit);
             case PARSE_ERROR:
                 return context.getString(R.string.error_media_parse_error);
+            case GENERIC_ERROR:
+                return context.getString(R.string.error_generic_error);
         }
 
         return null;
