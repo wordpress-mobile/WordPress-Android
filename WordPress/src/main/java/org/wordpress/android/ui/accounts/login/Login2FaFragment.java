@@ -281,7 +281,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         if (isSocialLogin) {
             if (shouldSendTwoStepSMS) {
-                AccountStore.PushSocialAuthPayload payload = new AccountStore.PushSocialAuthPayload(mUserId, "", mNonceSms, "");
+                AccountStore.PushSocialSmsPayload payload = new AccountStore.PushSocialSmsPayload(mUserId, mNonceSms);
                 mDispatcher.dispatch(AccountActionBuilder.newPushSocialSmsAction(payload));
             } else {
                 setAuthCodeTypeAndNonce(twoStepCode);
