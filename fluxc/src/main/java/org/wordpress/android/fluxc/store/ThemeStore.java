@@ -392,7 +392,16 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.insertOrReplaceActiveThemeForSite(payload.site, payload.theme);
+            ThemeModel activatedTheme;
+            if (payload.site.isJetpackConnected()) {
+                activatedTheme = getInstalledThemeByThemeId(payload.theme.getThemeId());
+            } else {
+                activatedTheme = getWpComThemeByThemeId(payload.theme.getThemeId());
+            }
+            if (activatedTheme != null) {
+                activatedTheme.setActive(true);
+                setActiveThemeForSite(payload.site, payload.theme);
+            }
         }
         emitChange(event);
     }
