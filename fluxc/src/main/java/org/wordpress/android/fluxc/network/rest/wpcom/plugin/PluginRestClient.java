@@ -19,6 +19,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResponse.FetchPluginsResponse;
+import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginError;
+import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsError;
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
@@ -135,6 +138,21 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                        DeleteSitePluginError deletePluginError
+                                = new DeleteSitePluginError(DeleteSitePluginErrorType.GENERIC_ERROR);
+                        if (networkError instanceof WPComGsonNetworkError) {
+                            switch (((WPComGsonNetworkError) networkError).apiError) {
+                                case "unauthorized":
+                                    deletePluginError.type = DeleteSitePluginErrorType.UNAUTHORIZED;
+                                    break;
+                                case "delete_plugin_error":
+                                    deletePluginError.type = DeleteSitePluginErrorType.DELETE_PLUGIN_ERROR;
+                                    break;
+                            }
+                        }
+                        deletePluginError.message = networkError.message;
+                        DeletedSitePluginPayload payload = new DeletedSitePluginPayload(site, deletePluginError);
+                        mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(payload));
                     }
                 }
         );
