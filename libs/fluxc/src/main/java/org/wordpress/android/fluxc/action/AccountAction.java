@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.AccountStore.NewAccountPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialLoginPayload;
+import org.wordpress.android.fluxc.store.AccountStore.PushSocialSmsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 
 @ActionEnum
@@ -32,7 +33,7 @@ public enum AccountAction implements IAction {
     PUSH_SOCIAL_CONNECT,    // request social connect remotely
     @Action(payloadType = PushSocialLoginPayload.class)
     PUSH_SOCIAL_LOGIN,      // request social login remotely
-    @Action(payloadType = PushSocialAuthPayload.class)
+    @Action(payloadType = PushSocialSmsPayload.class)
     PUSH_SOCIAL_SMS,      // request social sms remotely
     @Action(payloadType = NewAccountPayload.class)
     CREATE_NEW_ACCOUNT,     // create a new account (can be used to validate the account before creating it)
