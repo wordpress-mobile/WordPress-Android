@@ -235,14 +235,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             }
         } else {
             AppLog.d(T.THEMES, "Current Theme fetch successful!");
-            mCurrentTheme = event.theme;
-
-            if (mThemeBrowserFragment != null) {
-                if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
-                    mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
-                    mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getThemeId());
-                }
-            }
+            mCurrentTheme = mThemeStore.getActiveThemeForSite(event.site);
+            AppLog.d(T.THEMES, "Current theme is " + mCurrentTheme.getName());
+            updateCurrentThemeView();
 
             if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
                 mThemeSearchFragment.setRefreshing(false);
@@ -293,7 +288,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             ToastUtils.showToast(this, R.string.theme_activation_error, ToastUtils.Duration.SHORT);
         } else {
             AppLog.d(T.THEMES, "Theme activation successful! New theme: " + event.theme.getName());
-            mCurrentTheme = mThemeStore.getWpComThemeByThemeId(event.theme.getThemeId().replace("-wpcom", ""));
+
+            mCurrentTheme = mThemeStore.getActiveThemeForSite(event.site);
+            updateCurrentThemeView();
 
             Map<String, Object> themeProperties = new HashMap<>();
             themeProperties.put(THEME_ID, mCurrentTheme.getThemeId());
@@ -302,6 +299,14 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             if (!isFinishing()) {
                 showAlertDialogOnNewSettingNewTheme(mCurrentTheme);
             }
+        }
+    }
+
+    private void updateCurrentThemeView() {
+        if (mCurrentTheme != null && mThemeBrowserFragment != null && mThemeBrowserFragment.getCurrentThemeTextView() != null) {
+            String text = TextUtils.isEmpty(mCurrentTheme.getName()) ? getString(R.string.unknown) : mCurrentTheme.getName();
+            mThemeBrowserFragment.getCurrentThemeTextView().setText(text);
+            mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getThemeId());
         }
     }
 
@@ -341,16 +346,22 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             return;
         }
 
-        ThemeModel theme = new ThemeModel();
-        theme.setThemeId(themeId);
-        ActivateThemePayload payload = new ActivateThemePayload(mSite, theme);
+        ThemeModel theme = mThemeStore.getInstalledThemeByThemeId(themeId);
+        if (theme == null) {
+            theme = mThemeStore.getWpComThemeByThemeId(themeId);
+            if (theme == null) {
+                AppLog.w(T.THEMES, "Theme unavailable to activate. Fetch it and try again.");
+                return;
+            }
 
-        if (mSite.isJetpackConnected() && mThemeStore.getInstalledThemeByThemeId(themeId) == null) {
-            // first install the theme, then activate it
-            mDispatcher.dispatch(ThemeActionBuilder.newInstallThemeAction(payload));
-        } else {
-            mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(payload));
+            if (mSite.isJetpackConnected()) {
+                // first install the theme, then activate it
+                mDispatcher.dispatch(ThemeActionBuilder.newInstallThemeAction(new ActivateThemePayload(mSite, theme)));
+                return;
+            }
         }
+
+        mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(new ActivateThemePayload(mSite, theme)));
     }
 
     protected void setThemeBrowserFragment(ThemeBrowserFragment themeBrowserFragment) {
