@@ -96,7 +96,7 @@ public class UploadService extends Service {
         }
 
         // Update posts with any completed AND failed uploads in our post->media map
-        updatePostModelsWithCompletedAndFailedUploads();
+        doFinalProcessingOfPosts();
 
         for (PostModel pendingPost : mUploadStore.getPendingPosts()) {
             cancelQueuedPostUpload(pendingPost);
@@ -585,11 +585,14 @@ public class UploadService extends Service {
             verifyMediaOnlyUploadsAndNotify();
         }
 
-        if (!mUploadStore.getPendingPosts().isEmpty()) {
+        if (doFinalProcessingOfPosts()) {
+            // when more Posts have been re-enqueued, don't stop the service just yet.
             return;
         }
 
-        updatePostModelsWithCompletedAndFailedUploads();
+        if (!mUploadStore.getPendingPosts().isEmpty()) {
+            return;
+        }
 
         AppLog.i(T.MAIN, "UploadService > Completed");
         stopSelf();
@@ -617,15 +620,6 @@ public class UploadService extends Service {
         }
     }
 
-    private void updatePostModelsWithCompletedAndFailedUploads(){
-        for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
-            // For each post with completed media uploads, update the content with the new remote URLs
-            // This is done in a batch when all media is complete to prevent conflicts by updating separate images
-            // at a time simultaneously for the same post
-            updateOnePostModelWithCompletedAndFailedUploads(postModel);
-        }
-    }
-
     private PostModel updateOnePostModelWithCompletedAndFailedUploads(PostModel postModel) {
         PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(postModel);
         // also do the same now with failed uploads
@@ -635,6 +629,17 @@ public class UploadService extends Service {
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
         }
         return updatedPost;
+    }
+
+    private boolean mediaBelongsToAPost(MediaModel media) {
+        PostModel postToCancel = mPostStore.getPostByLocalPostId(media.getLocalPostId());
+        if (postToCancel == null) return false;
+
+        if (!mUploadStore.isRegisteredPostModel(postToCancel)) {
+            return false;
+        }
+
+        return true;
     }
 
     /*
@@ -755,15 +760,16 @@ public class UploadService extends Service {
         }
 
         if (event.isError()) {
-            boolean treatAsMediaError = true;
             if (event.media.getLocalPostId() > 0) {
                 AppLog.w(T.MAIN, "UploadService > Media upload failed for post " + event.media.getLocalPostId() + " : "
                         + event.error.type + ": " + event.error.message);
                 String errorMessage = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
-                treatAsMediaError = !cancelPostUploadMatchingMedia(event.media, errorMessage, true);
+
+                cancelPostUploadMatchingMedia(event.media, errorMessage, true);
             }
 
-            if (treatAsMediaError){
+
+            if (!mediaBelongsToAPost(event.media)){
                 // this media item doesn't belong to a Post
                 mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotification(event.media.getId());
                 // Only show the media upload error notification if the post is NOT registered in the UploadStore
@@ -773,6 +779,7 @@ public class UploadService extends Service {
 
                 int siteLocalId = AppPrefs.getSelectedSite();
                 SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+
 
                 List<MediaModel> failedStandAloneMedia = getRetriableStandaloneMedia(selectedSite);
                 if (failedStandAloneMedia.isEmpty()) {
@@ -807,25 +814,6 @@ public class UploadService extends Service {
             if (event.media.getLocalPostId() != 0) {
                 AppLog.i(T.MAIN, "UploadService > Processing completed media with id " + event.media.getId()
                         + " and local post id " + event.media.getLocalPostId());
-                // If this was the last media upload a post was waiting for, update the post content
-                // This done for pending as well as cancelled and failed posts
-                for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
-                    if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
-                        // Replace local with remote media in the post content
-                        PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(postModel);
-                        // also do the same now with failed uploads
-                        updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
-                        // finally, save the PostModel
-                        if (updatedPost != null) {
-                            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
-                            if (mUploadStore.isPendingPost(postModel)) {
-                                // TODO Should do some extra validation here
-                                // e.g. what if the post has local media URLs but no pending media uploads?
-                                mPostUploadHandler.upload(updatedPost);
-                            }
-                        }
-                    }
-                }
             }
             mPostUploadNotifier.incrementUploadedMediaCountFromProgressNotification(event.media.getId());
             stopServiceIfUploadsComplete();
@@ -835,6 +823,46 @@ public class UploadService extends Service {
             mPostUploadNotifier.updateNotificationProgressForMedia(event.media, event.progress);
         }
     }
+
+    private boolean doFinalProcessingOfPosts() {
+        // If this was the last media upload a post was waiting for, update the post content
+        // This done for pending as well as cancelled and failed posts
+        for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
+            if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
+                // Replace local with remote media in the post content
+                PostModel updatedPost = updateOnePostModelWithCompletedAndFailedUploads(postModel);
+                if (updatedPost != null) {
+//                    if (mUploadStore.isPendingPost(postModel)) {
+                        // here let's check if there are any failed media
+                        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(postModel);
+                        if (failedMedia != null && !failedMedia.isEmpty()) {
+                            // this Post has failed media, don't upload it just yet,
+                            // but tell the user about the error
+                            cancelQueuedPostUpload(postModel);
+//                                    cancelPostUploadMatchingMedia();
+
+                            // update error notification for Post
+                            SiteModel site = mSiteStore.getSiteByLocalId(postModel.getLocalSiteId());
+                            String message = UploadUtils.getErrorMessage(this, postModel, getString(R.string.error_generic_error), true);
+                            mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message);
+
+                            mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel);
+                            EventBus.getDefault().post(
+                                    new PostEvents.PostUploadCanceled(postModel.getLocalSiteId()));
+
+                        } else {
+                            // TODO Should do some extra validation here
+                            // e.g. what if the post has local media URLs but no pending media uploads?
+                            mPostUploadHandler.upload(updatedPost);
+                            return true;
+                        }
+//                    }
+                }
+            }
+        }
+        return false;
+    }
+
 
     private List<MediaModel> getRetriableStandaloneMedia(SiteModel selectedSite) {
         // get all retriable media ? To retry or not to retry, that is the question
