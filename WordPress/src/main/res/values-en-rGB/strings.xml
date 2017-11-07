@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-10 20:33:47+0000
+Translation-Revision-Date: 2017-10-25 09:05:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
+	<string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
+	<string name="jetpack_disconnect_error_toast">Error disconnecting site</string>
+	<string name="jetpack_disconnect_success_toast">Site disconnected</string>
+	<string name="jetpack_disconnect_confirm">Disconnect</string>
+	<string name="jetpack_disconnect_confirmation_message">Are you sure you want to disconnect Jetpack from the site?</string>
+	<string name="jetpack_disconnect_pref_title">"Disconnect from WordPress.com"</string>
+	<string name="site_settings_jetpack_whitelist_description">You may whitelist an IP address or series of addresses preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
+	<string name="jetpack_require_two_factor_title">Require two-step authentication</string>
+	<string name="jetpack_match_wpcom_via_email_title">Match accounts using email</string>
+	<string name="jetpack_allow_wpcom_sign_in_title">Allow WordPress.com login</string>
+	<string name="jetpack_wpcom_sign_in_category_title">WordPress.com login</string>
+	<string name="jetpack_brute_force_whitelist_title">Whitelisted IP addresses</string>
+	<string name="jetpack_prevent_brute_force_title">Block malicious login attempts</string>
+	<string name="jetpack_prevent_brute_force_category_title">Brute force attack protection</string>
+	<string name="jetpack_send_wp_notifications_title">Send push notifications</string>
+	<string name="jetpack_send_email_notifications_title">Send notifications by email</string>
+	<string name="jetpack_monitor_uptime_title">Monitor your site\'s uptime</string>
+	<string name="jetpack_security_setting_title">Security</string>
+	<string name="jetpack_site_settings_category_title">Jetpack Settings</string>
+	<string name="share_intent_adding_to">Adding to</string>
+	<string name="share_intent_pick_site">Pick site</string>
+	<string name="share_action_media">Add to media library</string>
+	<string name="share_action_post">Add to new post</string>
+	<string name="share_media_permission_required">Permissions required in order to share images or videos</string>
+	<string name="invalid_ip_or_range">Invalid IP or IP range</string>
 	<string name="error_media_still_uploading">Please wait for the upload to finish</string>
 	<string name="deleting_media_dlg">Deleting</string>
 	<string name="confirm_delete_media_video">Delete this video?</string>
@@ -1203,8 +1229,6 @@ Language: en_GB
 	<string name="invalid_site_url_message">Check that the site URL entered is valid</string>
 	<string name="open_source_licenses">Open source licenses</string>
 	<string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
-	<string name="share_action_media">Media library</string>
-	<string name="share_action_post">New post</string>
 	<string name="category_name">Category name</string>
 	<string name="add_new_category">Add new category</string>
 	<string name="view_in_browser">View in browser</string>

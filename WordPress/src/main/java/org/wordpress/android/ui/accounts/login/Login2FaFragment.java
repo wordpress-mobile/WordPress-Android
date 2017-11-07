@@ -232,7 +232,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_TWO_FACTOR_FORM_VIEWED);
         }
-
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -400,6 +399,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
+            if (isSocialLogin) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, event.getClass().getSimpleName(),
+                        event.error.type.toString(), event.error.message);
+            }
+
             if (isAdded()) {
                 handleAuthError(event.error.type, event.error.message);
             }
@@ -460,6 +464,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
             // Finish login on social connect error.
             if (isSocialLoginConnect) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_FAILURE);
                 doFinishLogin();
             }
         // Two-factor authentication code was sent via SMS to account phone number; replace SMS nonce with response.
@@ -469,6 +474,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             mNonceSms = event.nonce;
             setTextForSms();
         } else {
+            if (isSocialLoginConnect) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_SUCCESS);
+            }
             doFinishLogin();
         }
     }

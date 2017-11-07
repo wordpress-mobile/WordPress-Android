@@ -582,8 +582,6 @@ Language: eu_ES
 	<string name="sure_to_cancel_edit_comment">Iruzkin honen edizioa ezeztatu?</string>
 	<string name="preview_page">Aurreikusi orrialdea</string>
 	<string name="preview_post">Aurreikusi bidalketa</string>
-	<string name="share_action_post">Bidalketa berria</string>
-	<string name="share_action_media">Media bilduma</string>
 	<string name="file_error_create">Ezin izan da media fitxategia igotzeko behin-behineko fitxategia sortu. Ziurtatu zaitez gailuak behar haina toki duela.</string>
 	<string name="open_source_licenses">Kode irekiko lizentziak</string>
 	<string name="new_post">Bidalketa berria</string>

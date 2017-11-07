@@ -65,6 +65,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -875,7 +876,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mIsSubmittingReply = true;
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
+        AnalyticsUtils.trackCommentReplyWithDetails(false, mSite, mComment);
 
         // Pseudo comment reply
         CommentModel reply = new CommentModel();
