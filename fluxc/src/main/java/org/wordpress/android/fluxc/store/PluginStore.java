@@ -91,6 +91,11 @@ public class PluginStore extends Store {
         public SiteModel site;
         public PluginModel plugin;
 
+        public DeletedSitePluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+
         public DeletedSitePluginPayload(SiteModel site, DeleteSitePluginError error) {
             this.site = site;
             this.error = error;
