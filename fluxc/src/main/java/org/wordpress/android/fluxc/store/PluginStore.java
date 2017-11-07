@@ -186,6 +186,14 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class OnSitePluginDeleted extends OnChanged<DeleteSitePluginError> {
+        public SiteModel site;
+        public PluginModel plugin;
+        public OnSitePluginDeleted(SiteModel site) {
+            this.site = site;
+        }
+    }
+
     private final PluginRestClient mPluginRestClient;
     private final PluginWPOrgClient mPluginWPOrgClient;
 
@@ -316,6 +324,14 @@ public class PluginStore extends Store {
     }
 
     private void deletedSitePlugin(DeletedSitePluginPayload payload) {
-        // no-op
+        OnSitePluginDeleted event = new OnSitePluginDeleted(payload.site);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            payload.plugin.setLocalSiteId(payload.site.getId());
+            event.plugin = payload.plugin;
+            PluginSqlUtils.deleteSitePlugin(payload.plugin);
+        }
+        emitChange(event);
     }
 }
