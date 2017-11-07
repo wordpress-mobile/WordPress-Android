@@ -188,15 +188,15 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     /**
      * @param activity calling activity
      * @param site     site this media is associated with
-     * @param media    editor image metadata
+     * @param editorMedia    editor image metadata
      */
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
-                                     @NonNull EditorImageMetaData media) {
+                                     @NonNull EditorImageMetaData editorMedia) {
 
         Intent intent = new Intent(activity, MediaSettingsActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(ARG_EDITOR_IMAGE_METADATA, media);
+        intent.putExtra(ARG_EDITOR_IMAGE_METADATA, editorMedia);
 
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
@@ -327,7 +327,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private boolean loadMediaId(int mediaId) {
         MediaModel media;
         if (isMediaFromEditor()) {
-            media = convertEditorImageMetaDataToMediaModel(mEditorImageMetaData);
+            media = getMediaModelFromEditorImageMetaData();
         } else {
             media = mMediaStore.getMediaWithLocalId(mediaId);
         }
@@ -375,16 +375,16 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         return true;
     }
 
-    private MediaModel convertEditorImageMetaDataToMediaModel(@NonNull EditorImageMetaData editorImageMetaData) {
+    private MediaModel getMediaModelFromEditorImageMetaData() {
         MediaModel mediaModel = new MediaModel();
-        mediaModel.setUrl(editorImageMetaData.getSrc());
-        mediaModel.setTitle(editorImageMetaData.getTitle());
-        mediaModel.setCaption(editorImageMetaData.getCaption());
-        mediaModel.setAlt(editorImageMetaData.getAlt());
-        mediaModel.setFileName(editorImageMetaData.getSrc().substring(editorImageMetaData.getSrc().lastIndexOf("/") + 1));
-        mediaModel.setFileExtension(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(editorImageMetaData.getSrc()));
-        mediaModel.setWidth(editorImageMetaData.getWidthInt());
-        mediaModel.setHeight(editorImageMetaData.getHeightInt());
+        mediaModel.setUrl(mEditorImageMetaData.getSrc());
+        mediaModel.setTitle(mEditorImageMetaData.getTitle());
+        mediaModel.setCaption(mEditorImageMetaData.getCaption());
+        mediaModel.setAlt(mEditorImageMetaData.getAlt());
+        mediaModel.setFileName(mEditorImageMetaData.getSrc().substring(mEditorImageMetaData.getSrc().lastIndexOf("/") + 1));
+        mediaModel.setFileExtension(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(mEditorImageMetaData.getSrc()));
+        mediaModel.setWidth(mEditorImageMetaData.getWidthInt());
+        mediaModel.setHeight(mEditorImageMetaData.getHeightInt());
         return mediaModel;
     }
 
@@ -604,7 +604,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             if (isRealImageSizeKnown()) {
                 setupWidthSeekBar();
             }
-
         } else {
             mDescriptionView.setText(mMedia.getDescription());
             mCaptionView.setText(mMedia.getCaption());
@@ -722,7 +721,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                     mImageWidthSeekBarView.setProgress(width);
                 }
 
-                mImageWidthView.setSelection((String.valueOf(width).length()));
+                mImageWidthView.setSelection(mImageWidthView.length());
 
                 return false;
             }
