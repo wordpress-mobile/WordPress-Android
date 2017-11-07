@@ -578,8 +578,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         if (isMediaFromEditor()) {
             mDescriptionView.setVisibility(View.GONE);
             mCaptionView.setVisibility(View.GONE);
-
             setupAlignmentSpinner();
+
+            if (isRealImageSizeKnown()) {
+                setupWidthSeekBar();
+            }
+
         } else {
             mDescriptionView.setText(mMedia.getDescription());
             mCaptionView.setText(mMedia.getCaption());
@@ -596,22 +600,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         TextView txtFileType = (TextView) findViewById(R.id.text_filetype);
         txtFileType.setText(StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase());
 
-        float mediaWidth = mMedia.getWidth();
-        float mediaHeight = mMedia.getHeight();
-        TextView txtDimensions = (TextView) findViewById(R.id.text_image_dimensions);
-        TextView txtDimensionsLabel = (TextView) findViewById(R.id.text_image_dimensions_label);
-        if (mediaWidth > 0 && mediaHeight > 0) {
-            txtDimensions.setVisibility(View.VISIBLE);
-            txtDimensionsLabel.setVisibility(View.VISIBLE);
-            txtDimensionsLabel.setText(isVideo() ? R.string.media_edit_video_dimensions_caption : R.string
-                    .media_edit_image_dimensions_caption);
-            String dimens = (int) mediaWidth + " x " + (int) mediaHeight;
-            txtDimensions.setText(dimens);
-        } else {
-            txtDimensions.setVisibility(View.GONE);
-            txtDimensionsLabel.setVisibility(View.GONE);
-            findViewById(R.id.divider_dimensions).setVisibility(View.GONE);
+        if (isMediaFromEditor() && isRealImageSizeKnown()){
+            setImageDimensions(mEditorImageMetaData.getMaxWidth(), mEditorImageMetaData.getMaxHeight());
+        }else{
+            setImageDimensions(mMedia.getWidth(), mMedia.getHeight());
         }
+
 
         String uploadDate = null;
         if (mMedia.getUploadDate() != null) {
@@ -660,14 +654,14 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
      * Initialize the image width SeekBar and accompanying EditText
      */
     private void setupWidthSeekBar() {
-        mImageWidthSeekBarView.setMax(mEditorImageMetaData.getMaxImageWidth());
+        mImageWidthSeekBarView.setMax(mEditorImageMetaData.getMaxWidth());
 
-        if (mMedia.getWidth() != 0 && mMedia.getWidth() <= mEditorImageMetaData.getMaxImageWidth()) {
+        if (mMedia.getWidth() != 0 && mMedia.getWidth() <= mEditorImageMetaData.getMaxWidth()) {
             mImageWidthSeekBarView.setProgress(mMedia.getWidth());
             mImageWidthView.setText(String.valueOf(mMedia.getWidth()));
         } else {
-            mImageWidthSeekBarView.setProgress(mEditorImageMetaData.getMaxImageWidth());
-            mImageWidthView.setText(String.valueOf(mEditorImageMetaData.getMaxImageWidth()));
+            mImageWidthSeekBarView.setProgress(mEditorImageMetaData.getMaxWidth());
+            mImageWidthView.setText(String.valueOf(mEditorImageMetaData.getMaxWidth()));
         }
 
         mImageWidthSeekBarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -698,7 +692,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                     widthValue = Integer.parseInt(EditTextUtils.getText(mImageWidthView));
                 }
 
-                int width = Math.min(mEditorImageMetaData.getMaxImageWidth(), Math.max(widthValue, 1));
+                int width = Math.min(mEditorImageMetaData.getMaxWidth(), Math.max(widthValue, 1));
 
                 //OnSeekBarChangeListener will not be triggered if progress have not changed
                 if (mImageWidthSeekBarView.getProgress() == width) {
@@ -714,6 +708,23 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         });
 
         findViewById(R.id.disabled_width_selector_overlay).setVisibility(View.GONE);
+    }
+
+    private void setImageDimensions(int width, int height) {
+        TextView txtDimensions = (TextView) findViewById(R.id.text_image_dimensions);
+        TextView txtDimensionsLabel = (TextView) findViewById(R.id.text_image_dimensions_label);
+        if (width > 0 && height > 0) {
+            txtDimensions.setVisibility(View.VISIBLE);
+            txtDimensionsLabel.setVisibility(View.VISIBLE);
+            txtDimensionsLabel.setText(isVideo() ? R.string.media_edit_video_dimensions_caption : R.string
+                    .media_edit_image_dimensions_caption);
+            String dimens = width + " x " + height;
+            txtDimensions.setText(dimens);
+        } else {
+            txtDimensions.setVisibility(View.GONE);
+            txtDimensionsLabel.setVisibility(View.GONE);
+            findViewById(R.id.divider_dimensions).setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -762,9 +773,13 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                     if (!isFinishing() && response.getBitmap() != null) {
                         showProgress(false);
                         mImageView.setImageBitmap(response.getBitmap());
-                        if (isMediaFromEditor() && !isMaxImageWidthKnown()) {
-                            mEditorImageMetaData.setMaxImageWidth(response.getBitmap().getWidth());
+                        if (isMediaFromEditor() && !isRealImageSizeKnown()) {
+                            int bitmapWidth = response.getBitmap().getWidth();
+                            int bitmapHeight = response.getBitmap().getHeight();
+                            mEditorImageMetaData.setMaxWidth(bitmapWidth);
+                            mEditorImageMetaData.setMaxHeight(bitmapHeight);
                             setupWidthSeekBar();
+                            setImageDimensions(bitmapWidth, bitmapHeight);
                         }
                     }
                 }
@@ -783,8 +798,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
     }
 
-    private boolean isMaxImageWidthKnown() {
-        return isMediaFromEditor() && mEditorImageMetaData.getMaxImageWidth() > 0;
+    private boolean isRealImageSizeKnown() {
+        return isMediaFromEditor() && mEditorImageMetaData.getMaxWidth() > 0 && mEditorImageMetaData.getMaxHeight() > 0;
     }
 
     /*
@@ -952,8 +967,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 //do not update image dimensions if image have not loaded yet or no value is set
                 if (!TextUtils.isEmpty(newImageWidth) && mImageWidthView.isEnabled()) {
                     int newImageWidthInt = Integer.parseInt(newImageWidth);
-                    if (newImageWidthInt > mEditorImageMetaData.getMaxImageWidth()) {
-                        newImageWidthInt = mEditorImageMetaData.getMaxImageWidth();
+                    if (newImageWidthInt > mEditorImageMetaData.getMaxWidth()) {
+                        newImageWidthInt = mEditorImageMetaData.getMaxWidth();
                     }
 
                     String imageHeight = String.valueOf(getRelativeHeightFromWidth(newImageWidthInt));
