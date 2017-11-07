@@ -133,6 +133,9 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new Listener<PluginWPComRestResponse>() {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
+                        PluginModel pluginModel = pluginModelFromResponse(site, response);
+                        mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(
+                                new DeletedSitePluginPayload(site, pluginModel)));
                     }
                 },
                 new BaseErrorListener() {
