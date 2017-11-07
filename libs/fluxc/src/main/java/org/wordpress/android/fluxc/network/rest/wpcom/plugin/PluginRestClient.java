@@ -83,14 +83,7 @@ public class PluginRestClient extends BaseWPComRestClient {
     }
 
     public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
-        String name;
-        try {
-            // We need to encode plugin name otherwise names like "akismet/akismet" would fail
-            name = URLEncoder.encode(plugin.getName(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            name = plugin.getName();
-        }
-        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(name).getUrlV1_2();
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(getEncodedPluginName(plugin)).getUrlV1_2();
         Map<String, Object> params = paramsFromPluginModel(plugin);
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, params,
                 PluginWPComRestResponse.class,
@@ -130,7 +123,22 @@ public class PluginRestClient extends BaseWPComRestClient {
     }
 
     public void deleteSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
-
+        String url = WPCOMREST.sites.site(site.getSiteId()).
+                plugins.name(getEncodedPluginName(plugin)).delete.getUrlV1_2();
+        final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                PluginWPComRestResponse.class,
+                new Listener<PluginWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PluginWPComRestResponse response) {
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                    }
+                }
+        );
+        add(request);
     }
 
 
@@ -155,5 +163,14 @@ public class PluginRestClient extends BaseWPComRestClient {
         params.put("active", pluginModel.isActive());
         params.put("autoupdate", pluginModel.isAutoUpdateEnabled());
         return params;
+    }
+
+    private String getEncodedPluginName(PluginModel plugin) {
+        try {
+            // We need to encode plugin name otherwise names like "akismet/akismet" would fail
+            return URLEncoder.encode(plugin.getName(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return plugin.getName();
+        }
     }
 }
