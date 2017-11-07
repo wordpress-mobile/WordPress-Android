@@ -99,6 +99,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         IAztecToolbarClickListener,
         IHistoryListener {
 
+    private static final String ATTR_TAPPED_MEDIA_PREDICATE = "tapped_media_predicate";
+
     private static final String ATTR_ALIGN = "align";
     private static final String ATTR_CLASS = "class";
     private static final String ATTR_ID_WP = "data-wpid";
@@ -106,12 +108,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String ATTR_SIZE_DASH = "size-";
     private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
     private static final String TEMP_VIDEO_UPLOADING_CLASS = "data-temp-aztec-video";
-    private static final String ATTR_TAPPED_MEDIA_PREDICATE = "tapped_media_predicate";
 
     private static final int MIN_BITMAP_DIMENSION_DP = 48;
     public static final int DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP = 196;
 
-    public static final int EDITOR_MEDIA_SETTINGS = 5;
+    public static final int EDITOR_MEDIA_SETTINGS = 55;
 
     private static final int MAX_ACTION_TIME_MS = 2000;
 

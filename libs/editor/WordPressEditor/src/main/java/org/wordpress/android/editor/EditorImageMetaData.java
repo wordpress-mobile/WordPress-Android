@@ -6,77 +6,79 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ALIGN;
+
 public class EditorImageMetaData implements Parcelable {
 
     public static final String ARG_EDITOR_IMAGE_METADATA = "editor_image_metadata";
 
     @SerializedName("align")
     @Expose
-    private String align;
+    private String mAlign;
 
     @SerializedName("alt")
     @Expose
-    private String alt;
+    private String mAlt;
 
     @SerializedName("attachment_id")
     @Expose
-    private String attachmentId;
+    private String mAttachmentId;
 
     @SerializedName("caption")
     @Expose
-    private String caption;
+    private String mCaption;
 
     @SerializedName("captionClassName")
     @Expose
-    private String captionClassName;
+    private String mCaptionClassName;
 
     @SerializedName("captionId")
     @Expose
-    private String captionId;
+    private String mCaptionId;
 
     @SerializedName("classes")
     @Expose
-    private String classes;
+    private String mClasses;
 
     @SerializedName("height")
     @Expose
-    private String height;
+    private String mHeight;
 
     @SerializedName("linkClassName")
     @Expose
-    private String linkClassName;
+    private String mLinkClassName;
 
     @SerializedName("linkRel")
     @Expose
-    private String linkRel;
+    private String mLinkRel;
 
     @SerializedName("linkTargetBlank")
     @Expose
-    private boolean linkTargetBlank;
+    private boolean mLinkTargetBlank;
 
     @SerializedName("linkUrl")
     @Expose
-    private String linkUrl;
+    private String mLinkUrl;
 
     @SerializedName("size")
     @Expose
-    private String size;
+    private String mSize;
 
     @SerializedName("src")
     @Expose
-    private String src;
+    private String mSrc;
 
     @SerializedName("title")
     @Expose
-    private String title;
+    private String mTitle;
 
     @SerializedName("width")
     @Expose
-    private String width;
+    private String mWidth;
 
     @SerializedName("naturalWidth")
     @Expose
-    private int naturalWidth;
+    private int mNaturalWidth;
 
     @SerializedName("naturalHeight")
     @Expose
@@ -89,146 +91,146 @@ public class EditorImageMetaData implements Parcelable {
     private int mLocalId;
 
     public String getAlign() {
-        if (align.startsWith("align")) {
-            return align.substring("align".length(), align.length());
+        if (mAlign.startsWith(ATTR_ALIGN)) {
+            return mAlign.substring(ATTR_ALIGN.length(), mAlign.length());
         }
-        return align;
+        return mAlign;
     }
 
     public void setAlign(String align) {
-        this.align = align;
+        this.mAlign = align;
     }
 
     public String getAlt() {
-        return alt;
+        return mAlt;
     }
 
     public void setAlt(String alt) {
-        this.alt = alt;
+        this.mAlt = alt;
     }
 
     public String getAttachmentId() {
-        return attachmentId;
+        return mAttachmentId;
     }
 
     public String getCaption() {
-        return caption;
+        return mCaption;
     }
 
     public void setCaption(String caption) {
-        this.caption = caption;
+        this.mCaption = caption;
     }
 
     public String getCaptionClassName() {
-        return captionClassName;
+        return mCaptionClassName;
     }
 
     public void setCaptionClassName(String captionClassName) {
-        this.captionClassName = captionClassName;
+        this.mCaptionClassName = captionClassName;
     }
 
     public String getCaptionId() {
-        return captionId;
+        return mCaptionId;
     }
 
     public void setCaptionId(String captionId) {
-        this.captionId = captionId;
+        this.mCaptionId = captionId;
     }
 
     public String getClasses() {
-        return classes;
+        return mClasses;
     }
 
     public void setClasses(String classes) {
-        this.classes = classes;
+        this.mClasses = classes;
     }
 
     public String getHeight() {
-        return height;
+        return mHeight;
     }
 
     public int getHeightInt() {
         try {
-            return Integer.parseInt(height);
+            return Integer.parseInt(mHeight);
         } catch (NumberFormatException ex) {
             return 0;
         }
     }
 
     public void setHeight(String height) {
-        this.height = height;
+        this.mHeight = height;
     }
 
     public String getLinkClassName() {
-        return linkClassName;
+        return mLinkClassName;
     }
 
     public void setLinkClassName(String linkClassName) {
-        this.linkClassName = linkClassName;
+        this.mLinkClassName = linkClassName;
     }
 
     public String getLinkRel() {
-        return linkRel;
+        return mLinkRel;
     }
 
     public void setLinkRel(String linkRel) {
-        this.linkRel = linkRel;
+        this.mLinkRel = linkRel;
     }
 
     public boolean isLinkTargetBlank() {
-        return linkTargetBlank;
+        return mLinkTargetBlank;
     }
 
     public void setLinkTargetBlank(boolean linkTargetBlank) {
-        this.linkTargetBlank = linkTargetBlank;
+        this.mLinkTargetBlank = linkTargetBlank;
     }
 
     public String getLinkUrl() {
-        return linkUrl;
+        return mLinkUrl;
     }
 
     public void setLinkUrl(String linkUrl) {
-        this.linkUrl = linkUrl;
+        this.mLinkUrl = linkUrl;
     }
 
     public String getSize() {
-        return size;
+        return mSize;
     }
 
     public void setSize(String size) {
-        this.size = size;
+        this.mSize = size;
     }
 
     public String getSrc() {
-        return src;
+        return mSrc;
     }
 
     public void setSrc(String src) {
-        this.src = src;
+        this.mSrc = src;
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.mTitle = title;
     }
 
     public String getWidth() {
-        return width;
+        return mWidth;
     }
 
     public int getWidthInt() {
         try {
-            return Integer.parseInt(width);
+            return Integer.parseInt(mWidth);
         } catch (NumberFormatException ex) {
             return 0;
         }
     }
 
     public void setWidth(String width) {
-        this.width = width;
+        this.mWidth = width;
     }
 
     public int getLocalId() {
@@ -264,23 +266,23 @@ public class EditorImageMetaData implements Parcelable {
     }
 
     protected EditorImageMetaData(Parcel in) {
-        align = in.readString();
-        alt = in.readString();
-        attachmentId = in.readString();
-        caption = in.readString();
-        captionClassName = in.readString();
-        captionId = in.readString();
-        classes = in.readString();
-        height = in.readString();
-        linkClassName = in.readString();
-        linkRel = in.readString();
-        linkTargetBlank = in.readByte() != 0x00;
-        linkUrl = in.readString();
-        size = in.readString();
-        src = in.readString();
-        title = in.readString();
-        width = in.readString();
-        naturalWidth = in.readInt();
+        mAlign = in.readString();
+        mAlt = in.readString();
+        mAttachmentId = in.readString();
+        mCaption = in.readString();
+        mCaptionClassName = in.readString();
+        mCaptionId = in.readString();
+        mClasses = in.readString();
+        mHeight = in.readString();
+        mLinkClassName = in.readString();
+        mLinkRel = in.readString();
+        mLinkTargetBlank = in.readByte() != 0x00;
+        mLinkUrl = in.readString();
+        mSize = in.readString();
+        mSrc = in.readString();
+        mTitle = in.readString();
+        mWidth = in.readString();
+        mNaturalWidth = in.readInt();
         mNaturalHeight = in.readInt();
         mMaxImageWidth = in.readInt();
         mMaxImageHeight = in.readInt();
@@ -295,23 +297,23 @@ public class EditorImageMetaData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(align);
-        dest.writeString(alt);
-        dest.writeString(attachmentId);
-        dest.writeString(caption);
-        dest.writeString(captionClassName);
-        dest.writeString(captionId);
-        dest.writeString(classes);
-        dest.writeString(height);
-        dest.writeString(linkClassName);
-        dest.writeString(linkRel);
-        dest.writeByte((byte) (linkTargetBlank ? 0x01 : 0x00));
-        dest.writeString(linkUrl);
-        dest.writeString(size);
-        dest.writeString(src);
-        dest.writeString(title);
-        dest.writeString(width);
-        dest.writeInt(naturalWidth);
+        dest.writeString(mAlign);
+        dest.writeString(mAlt);
+        dest.writeString(mAttachmentId);
+        dest.writeString(mCaption);
+        dest.writeString(mCaptionClassName);
+        dest.writeString(mCaptionId);
+        dest.writeString(mClasses);
+        dest.writeString(mHeight);
+        dest.writeString(mLinkClassName);
+        dest.writeString(mLinkRel);
+        dest.writeByte((byte) (mLinkTargetBlank ? 0x01 : 0x00));
+        dest.writeString(mLinkUrl);
+        dest.writeString(mSize);
+        dest.writeString(mSrc);
+        dest.writeString(mTitle);
+        dest.writeString(mWidth);
+        dest.writeInt(mNaturalWidth);
         dest.writeInt(mNaturalHeight);
         dest.writeInt(mMaxImageWidth);
         dest.writeInt(mMaxImageHeight);

@@ -401,6 +401,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         super.onSaveInstanceState(outState);
         outState.putInt(ARG_MEDIA_LOCAL_ID, mMedia.getId());
         outState.putParcelable(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
+
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
@@ -588,7 +589,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             mDescriptionView.setText(mMedia.getDescription());
             mCaptionView.setText(mMedia.getCaption());
 
-            findViewById(R.id.editor_image_medatadata_container).setVisibility(View.GONE);
+            findViewById(R.id.editor_image_metadadata_container).setVisibility(View.GONE);
         }
 
         TextView txtUrl = (TextView) findViewById(R.id.text_url);
@@ -601,9 +602,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         txtFileType.setText(StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase());
 
         if (isMediaFromEditor() && isRealImageSizeKnown()){
-            setImageDimensions(mEditorImageMetaData.getMaxWidth(), mEditorImageMetaData.getMaxHeight());
+            showImageDimensions(mEditorImageMetaData.getMaxWidth(), mEditorImageMetaData.getMaxHeight());
         }else{
-            setImageDimensions(mMedia.getWidth(), mMedia.getHeight());
+            showImageDimensions(mMedia.getWidth(), mMedia.getHeight());
         }
 
 
@@ -710,7 +711,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         findViewById(R.id.disabled_width_selector_overlay).setVisibility(View.GONE);
     }
 
-    private void setImageDimensions(int width, int height) {
+    private void showImageDimensions(int width, int height) {
         TextView txtDimensions = (TextView) findViewById(R.id.text_image_dimensions);
         TextView txtDimensionsLabel = (TextView) findViewById(R.id.text_image_dimensions_label);
         if (width > 0 && height > 0) {
@@ -732,7 +733,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
      */
     private void setupAlignmentSpinner() {
         String alignment = mEditorImageMetaData.getAlign();
-        mAlignmentKeyArray = getResources().getStringArray(org.wordpress.android.editor.R.array.alignment_key_array);
+        mAlignmentKeyArray = getResources().getStringArray(R.array.alignment_key_array);
         int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
         mAlignmentSpinnerView.setSelection(alignmentIndex == -1 ? 0 : alignmentIndex);
     }
@@ -779,7 +780,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                             mEditorImageMetaData.setMaxWidth(bitmapWidth);
                             mEditorImageMetaData.setMaxHeight(bitmapHeight);
                             setupWidthSeekBar();
-                            setImageDimensions(bitmapWidth, bitmapHeight);
+                            showImageDimensions(bitmapWidth, bitmapHeight);
                         }
                     }
                 }
@@ -960,12 +961,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
             boolean hasChanged = !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
                     || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText)
-                    || (mImageWidthView.isEnabled() && !StringUtils.equals(mEditorImageMetaData.getWidth(), newImageWidth))
+                    || (isRealImageSizeKnown() && !StringUtils.equals(mEditorImageMetaData.getWidth(), newImageWidth))
                     || !StringUtils.equals(mEditorImageMetaData.getAlign(), alignment);
 
             if (hasChanged) {
-                //do not update image dimensions if image have not loaded yet or no value is set
-                if (!TextUtils.isEmpty(newImageWidth) && mImageWidthView.isEnabled()) {
+                //do not update image dimensions if we don't know it's real size or no width value was entered
+                if (!TextUtils.isEmpty(newImageWidth) && isRealImageSizeKnown()) {
                     int newImageWidthInt = Integer.parseInt(newImageWidth);
                     if (newImageWidthInt > mEditorImageMetaData.getMaxWidth()) {
                         newImageWidthInt = mEditorImageMetaData.getMaxWidth();
@@ -987,7 +988,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             } else {
                 this.setResult(Activity.RESULT_CANCELED);
             }
-
         }
     }
 

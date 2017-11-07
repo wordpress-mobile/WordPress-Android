@@ -162,7 +162,7 @@
 
 
                         <LinearLayout
-                            android:id="@+id/editor_image_medatadata_container"
+                            android:id="@+id/editor_image_metadadata_container"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_large"
@@ -184,8 +184,6 @@
                                 style="@style/ImageOptionsDialogInput"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/image_settings_dialog_input_field_start_margin"
-                                android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
                                 android:layout_marginTop="@dimen/margin_small"
                                 android:entries="@array/alignment_array"
                                 android:prompt="@string/image_alignment"/>
