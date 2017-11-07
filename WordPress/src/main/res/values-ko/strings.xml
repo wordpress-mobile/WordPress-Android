@@ -809,7 +809,6 @@ Language: ko_KR
 	<string name="error_refresh_stats">통계를 다시 로드 할 수 없습니다.</string>
 	<string name="invalid_url_message">입력한 URL이 올바른지 확인합니다.</string>
 	<string name="media_error_no_permission">미디어 라이브러리를 볼 수 있는 권한이 없습니다</string>
-	<string name="share_action_media">미디어 라이브러리</string>
 	<string name="page_settings">페이지 설정</string>
 	<string name="post_settings">작성 설정</string>
 	<string name="error_blog_hidden">이 블로그는 비공개 설정이되어 로드 할 수 없습니다. 설정 화면에서 다시 활성하고 다시 시도하십시오.</string>
@@ -829,7 +828,6 @@ Language: ko_KR
 	<string name="themes_live_preview">실시간 미리보기</string>
 	<string name="theme_current_theme">현재 테마</string>
 	<string name="theme_premium_theme">프리미엄 테마</string>
-	<string name="share_action_post">새 게시물</string>
 	<string name="new_media">새 미디어</string>
 	<string name="comment_added">댓글 추가에 성공했습니다</string>
 	<string name="add_comment">댓글을 추가</string>

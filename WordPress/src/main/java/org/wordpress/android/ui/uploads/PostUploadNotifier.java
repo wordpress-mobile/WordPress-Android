@@ -178,39 +178,41 @@ class PostUploadNotifier {
     void updateNotificationError(PostModel post, SiteModel site, String errorMessage) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationError: " + errorMessage);
 
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext.getApplicationContext());
-
-        long notificationId = getNotificationIdForPost(post);
-        // Tap notification intent (open the post list)
-        Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        notificationIntent.putExtra(WordPress.SITE, site);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
-        notificationIntent.putExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
-        notificationIntent.setAction(String.valueOf(notificationId));
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
-                (int)notificationId,
-                notificationIntent, PendingIntent.FLAG_ONE_SHOT);
-
-        notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
-
-        String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
-        String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), postTitle);
-        notificationBuilder.setContentTitle(notificationTitle);
-
-        notificationBuilder.setContentText(errorMessage);
-        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(errorMessage));
-        notificationBuilder.setContentIntent(pendingIntent);
-        notificationBuilder.setAutoCancel(true);
-
         NotificationData notificationData = sPostIdToNotificationData.get(post.getId());
-        if (notificationData.notificationErrorId == 0) {
-            notificationData.notificationErrorId = notificationData.notificationId + (new Random()).nextInt();
+        if (notificationData != null) {
+            NotificationCompat.Builder notificationBuilder =
+                    new NotificationCompat.Builder(mContext.getApplicationContext());
+
+            long notificationId = getNotificationIdForPost(post);
+            // Tap notification intent (open the post list)
+            Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            notificationIntent.putExtra(WordPress.SITE, site);
+            notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+            notificationIntent.putExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
+            notificationIntent.setAction(String.valueOf(notificationId));
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
+                    (int)notificationId,
+                    notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+
+            notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
+
+            String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
+            String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), postTitle);
+            notificationBuilder.setContentTitle(notificationTitle);
+
+            notificationBuilder.setContentText(errorMessage);
+            notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(errorMessage));
+            notificationBuilder.setContentIntent(pendingIntent);
+            notificationBuilder.setAutoCancel(true);
+
+            if (notificationData.notificationErrorId == 0) {
+                notificationData.notificationErrorId = notificationData.notificationId + (new Random()).nextInt();
+            }
+            doNotify(notificationData.notificationErrorId, notificationBuilder.build());
         }
-        doNotify(notificationData.notificationErrorId, notificationBuilder.build());
     }
 
     void updateNotificationProgress(PostModel post, float progress) {

@@ -28,6 +28,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialLoginPayload;
@@ -240,6 +241,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
                             showErrorDialog(getString(R.string.login_error_generic));
                         }
                     } else {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
                         switch (signInResult.getStatus().getStatusCode()) {
                             // Internal error.
                             case GoogleSignInStatusCodes.INTERNAL_ERROR:
@@ -279,8 +281,10 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
                         }
                     }
                 } else if (result == RESULT_CANCELED) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
                     AppLog.e(T.NUX, "Google Sign-in Failed: cancelled by user.");
                 } else {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
                     AppLog.e(T.NUX, "Google Sign-in Failed: result was not OK or CANCELED.");
                     showErrorDialog(getString(R.string.login_error_generic));
                 }
@@ -298,6 +302,10 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
             AppLog.e(T.API, "LoginEmailFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
+
+            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, event.getClass().getSimpleName(),
+                    event.error.type.toString(), event.error.message);
+
             showErrorDialog(getString(R.string.login_error_generic));
         } else {
             AppLog.i(T.NUX, "LoginEmailFragment.onAuthenticationChanged: " + event.toString());
@@ -313,16 +321,24 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         // Response returns error for non-existing account and existing account not connected.
         if (event.isError()) {
             AppLog.e(T.API, "LoginEmailFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
-                    event.error.type.toString(), event.error.message);
+
+            if (event.error.type != AccountStore.AccountSocialErrorType.USER_EXISTS) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+                        event.error.type.toString(), event.error.message);
+
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, event.getClass().getSimpleName(),
+                        event.error.type.toString(), event.error.message);
+            }
 
             switch (event.error.type) {
                 // WordPress account exists with input email address, but not connected.
                 case USER_EXISTS:
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING);
                     mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
                     break;
                 // WordPress account does not exist with input email address.
                 case UNKNOWN_USER:
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_ERROR_UNKNOWN_USER);
                     showErrorDialog(getString(R.string.login_error_email_not_found, mGoogleEmail));
                     break;
                 // Unknown error.

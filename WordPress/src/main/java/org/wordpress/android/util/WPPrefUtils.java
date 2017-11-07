@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -202,9 +203,9 @@ public class WPPrefUtils {
     /**
      * Creates a map from language codes to WordPress language IDs.
      */
-    public static Map<String, String> generateLanguageMap(Activity activity) {
-        String[] languageIds = activity.getResources().getStringArray(R.array.lang_ids);
-        String[] languageCodes = activity.getResources().getStringArray(R.array.language_codes);
+    public static Map<String, String> generateLanguageMap(Context context) {
+        String[] languageIds = context.getResources().getStringArray(R.array.lang_ids);
+        String[] languageCodes = context.getResources().getStringArray(R.array.language_codes);
 
         Map<String, String> languageMap = new HashMap<>();
         for (int i = 0; i < languageIds.length && i < languageCodes.length; ++i) {

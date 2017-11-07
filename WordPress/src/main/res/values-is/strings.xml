@@ -901,8 +901,6 @@ Language: is
 	<string name="invalid_site_url_message">Athugaðu að innslegið veffang sé gilt</string>
 	<string name="open_source_licenses">Opin hugbúnaðarleyfi</string>
 	<string name="file_error_create">Gat ekki búið til tímabundna skrá fyrir skráarupphal. Vinsamlegast gakktu úr skugga um að það sé nægilegt geymslupláss eftir á tækinu þínu.</string>
-	<string name="share_action_media">Skráarsafn</string>
-	<string name="share_action_post">Ný færsla</string>
 	<string name="category_name">Heiti flokks</string>
 	<string name="add_new_category">Bæta við nýjum flokki</string>
 	<string name="view_in_browser">Skoða í vafra</string>

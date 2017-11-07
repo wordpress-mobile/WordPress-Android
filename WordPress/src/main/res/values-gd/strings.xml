@@ -344,8 +344,6 @@ Language: gd_GB
 	<string name="http_credentials">Ainm ’s facal-faire HTTP (roghainneil)</string>
 	<string name="open_source_licenses">Ceadachasan Open Source</string>
 	<string name="file_error_create">Cha b’ urrainn dhuinn am faidhle sealach a chruthachadh gus meadhan a luchdadh suas. Dèan cinnteach gu bheil rum gu leòr air an uidheam agad.</string>
-	<string name="share_action_post">Post ùr</string>
-	<string name="share_action_media">Leabhar-lann nam meadhanan</string>
 	<string name="category_name">Ainm na roinne-seòrsa</string>
 	<string name="add_new_category">Cuir roinn-seòrsa ùr ris</string>
 	<string name="view_in_browser">Seall sa bhrabhsair</string>

@@ -910,8 +910,6 @@ Language: id
 	<string name="view_in_browser">Tampilkan di peramban</string>
 	<string name="add_new_category">Tambahkan kategori baru</string>
 	<string name="category_name">Nama kategori</string>
-	<string name="share_action_post">Pos baru</string>
-	<string name="share_action_media">Pustaka media</string>
 	<string name="file_error_create">Tidak bisa membuat berkas temporer untuk pengunggahan media. Pastikan masih cukup ruang di perangkat Anda.</string>
 	<string name="open_source_licenses">Lisensi sumber terbuka</string>
 	<string name="http_credentials">HTTP credentials (opsional)</string>

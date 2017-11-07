@@ -955,8 +955,6 @@ Language: zh_TW
 	<string name="view_in_browser">在瀏覽器中檢視</string>
 	<string name="add_new_category">新增類別</string>
 	<string name="category_name">類別名稱</string>
-	<string name="share_action_post">新文章</string>
-	<string name="share_action_media">媒體庫</string>
 	<string name="file_error_create">無法建立暫存檔進行媒體上傳。確認裝置上有足夠的可用空間。</string>
 	<string name="open_source_licenses">開啟來源授權</string>
 	<string name="http_credentials">HTTP 憑證 (選填)</string>

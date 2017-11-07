@@ -1032,7 +1032,6 @@ Language: bg
 	<string name="hint_comment_content">Коментар</string>
 	<string name="saving_changes">Промените се запазват</string>
 	<string name="page_not_published">Статусът на страницата не е публикуван</string>
-	<string name="share_action_post">Нова публикация</string>
 	<string name="new_post">Нова публикация</string>
 	<string name="add_account_blog_url">Адрес на блога</string>
 	<string name="http_credentials">HTTP удостоверение за самоличност (по-избор)</string>
@@ -1066,7 +1065,6 @@ Language: bg
 	<string name="image_settings">Настройки на изображението</string>
 	<string name="category_name">Име на категорията</string>
 	<string name="media_gallery_type_thumbnail_grid">Решетка с малки изображения</string>
-	<string name="share_action_media">Библиотека с файлове</string>
 	<string name="xmlrpc_error">Връзката не беше осъществена. Въведете пълният път до xmlrpc.php на вашия уебсайт и опитайте отново.</string>
 	<string name="account_details">Информация за потребителя</string>
 	<string name="edit_post">Редактиране на публикацията</string>
