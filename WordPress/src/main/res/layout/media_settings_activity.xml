@@ -264,7 +264,6 @@
 
                                     </LinearLayout>
 
-
                                 </RelativeLayout>
 
                                 <RelativeLayout
@@ -275,9 +274,13 @@
                                     android:clickable="true"
                                     android:focusable="true"/>
                             </FrameLayout>
+
                         </LinearLayout>
+
                     </LinearLayout>
+
                 </LinearLayout>
+
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
@@ -443,6 +446,7 @@
             </android.support.v7.widget.CardView>
 
         </RelativeLayout>
+        
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
