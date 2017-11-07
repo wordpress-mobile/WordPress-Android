@@ -128,6 +128,7 @@
                         </android.support.design.widget.TextInputLayout>
 
                         <android.support.design.widget.TextInputLayout
+                            android:id="@+id/edit_caption_container"
                             style="@style/MediaSettings.TextInputStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -161,6 +162,7 @@
                         </android.support.design.widget.TextInputLayout>
 
                         <android.support.design.widget.TextInputLayout
+                            android:id="@+id/edit_description_container"
                             style="@style/MediaSettings.TextInputStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -206,7 +208,6 @@
                                 android:prompt="@string/image_alignment"/>
 
                             <FrameLayout
-                                android:layout_marginTop="@dimen/margin_large"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 

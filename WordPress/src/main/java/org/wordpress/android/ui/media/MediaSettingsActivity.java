@@ -597,8 +597,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mAltTextView.setText(mMedia.getAlt());
 
         if (isMediaFromEditor()) {
-            mDescriptionView.setVisibility(View.GONE);
-            mCaptionView.setVisibility(View.GONE);
+            findViewById(R.id.edit_description_container).setVisibility(View.GONE);
+            findViewById(R.id.edit_caption_container).setVisibility(View.GONE);
             setupAlignmentSpinner();
 
             if (isRealImageSizeKnown()) {
