@@ -46,6 +46,16 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class InstallSitePluginPayload extends Payload<BaseNetworkError> {
+        public SiteModel site;
+        public String pluginName;
+
+        public InstallSitePluginPayload(SiteModel site, String pluginName) {
+            this.site = site;
+            this.pluginName = pluginName;
+        }
+    }
+
     public static class FetchedSitePluginsPayload extends Payload<FetchSitePluginsError> {
         public SiteModel site;
         public List<PluginModel> plugins;
