@@ -162,6 +162,9 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void installSitePlugin(@NonNull final SiteModel site, String pluginName) {
+
+    }
 
     private PluginModel pluginModelFromResponse(SiteModel siteModel, PluginWPComRestResponse response) {
         PluginModel pluginModel = new PluginModel();
