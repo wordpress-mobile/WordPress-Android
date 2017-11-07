@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -512,9 +513,9 @@ public class UploadService extends Service {
     public static void sanitizeMediaUploadStateForSite(@NonNull MediaStore mediaStore, @NonNull Dispatcher dispatcher,
                                                        @NonNull SiteModel site) {
         List<MediaModel> uploadingMedia =
-                mediaStore.getSiteMediaWithState(site, MediaModel.MediaUploadState.UPLOADING);
+                mediaStore.getSiteMediaWithState(site, MediaUploadState.UPLOADING);
         List<MediaModel> queuedMedia =
-                mediaStore.getSiteMediaWithState(site, MediaModel.MediaUploadState.QUEUED);
+                mediaStore.getSiteMediaWithState(site, MediaUploadState.QUEUED);
 
         if (uploadingMedia.isEmpty() && queuedMedia.isEmpty()) {
             return;
@@ -527,7 +528,7 @@ public class UploadService extends Service {
         for (final MediaModel media : uploadingOrQueuedMedia) {
             if (!UploadService.isPendingOrInProgressMediaUpload(media)) {
                 // it is NOT being uploaded or queued in the actual UploadService, mark it failed
-                media.setUploadState(MediaModel.MediaUploadState.FAILED);
+                media.setUploadState(MediaUploadState.FAILED);
                 dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             }
         }
@@ -716,7 +717,7 @@ public class UploadService extends Service {
         if (!failedMedia.isEmpty()) {
             // reset these media items to QUEUED
             for (MediaModel media : failedMedia) {
-                media.setUploadState(MediaModel.MediaUploadState.QUEUED);
+                media.setUploadState(MediaUploadState.QUEUED);
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             }
 
@@ -839,7 +840,7 @@ public class UploadService extends Service {
         List<MediaModel> failedStandAloneMedia = new ArrayList<>();
         if (selectedSite != null) {
             failedMedia = mMediaStore.getSiteMediaWithState(
-                    selectedSite, MediaModel.MediaUploadState.FAILED);
+                    selectedSite, MediaUploadState.FAILED);
         }
 
         // only take into account those media items that do not belong to any Post
