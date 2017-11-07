@@ -112,6 +112,16 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class InstalledSitePluginPayload extends Payload<InstallSitePluginError> {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public InstalledSitePluginPayload(SiteModel site, InstallSitePluginError error) {
+            this.site = site;
+            this.error = error;
+        }
+    }
+
     public static class FetchSitePluginsError implements OnChangedError {
         public FetchSitePluginsErrorType type;
         public String message;
@@ -152,6 +162,15 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class InstallSitePluginError implements OnChangedError {
+        public InstallSitePluginErrorType type;
+        public String message;
+
+        public InstallSitePluginError(InstallSitePluginErrorType type) {
+            this.type = type;
+        }
+    }
+
     public enum FetchSitePluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
@@ -174,6 +193,10 @@ public class PluginStore extends Store {
         GENERIC_ERROR,
         UNAUTHORIZED,
         DELETE_PLUGIN_ERROR,
+        NOT_AVAILABLE // Return for non-jetpack sites
+    }
+
+    public enum InstallSitePluginErrorType {
         NOT_AVAILABLE // Return for non-jetpack sites
     }
 
@@ -306,6 +329,10 @@ public class PluginStore extends Store {
     private void installSitePlugin(InstallSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.installSitePlugin(payload.site, payload.pluginName);
+        } else {
+            InstallSitePluginError error = new InstallSitePluginError(InstallSitePluginErrorType.NOT_AVAILABLE);
+            InstalledSitePluginPayload errorPayload = new InstalledSitePluginPayload(payload.site, error);
+            installedSitePlugin(errorPayload);
         }
     }
 
@@ -352,5 +379,9 @@ public class PluginStore extends Store {
             PluginSqlUtils.deleteSitePlugin(payload.plugin);
         }
         emitChange(event);
+    }
+
+    private void installedSitePlugin(InstalledSitePluginPayload payload) {
+
     }
 }
