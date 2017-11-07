@@ -53,6 +53,16 @@ public class PluginSqlUtils {
         }
     }
 
+    public static int deleteSitePlugin(PluginModel plugin) {
+        if (plugin == null) {
+            return 0;
+        }
+        return WellSql.delete(PluginModel.class)
+                .where()
+                .equals(PluginModelTable.ID, plugin.getId())
+                .endWhere().execute();
+    }
+
     public static int insertOrUpdatePluginInfo(PluginInfoModel pluginInfo) {
         if (pluginInfo == null) {
             return 0;
