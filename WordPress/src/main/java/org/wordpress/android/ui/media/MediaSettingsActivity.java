@@ -186,9 +186,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     /**
-     * @param activity calling activity
-     * @param site     site this media is associated with
-     * @param editorMedia    editor image metadata
+     * @param activity    calling activity
+     * @param site        site this media is associated with
+     * @param editorMedia editor image metadata
      */
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
@@ -260,7 +260,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             }
         }
 
-        if (!loadMediaId(mediaId)) {
+        if (isMediaFromEditor() ? !loadMediaWithId(mediaId) : loadMediaFromEditor()) {
             delayedFinishWithError();
             return;
         }
@@ -321,17 +321,20 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void reloadMedia() {
-        loadMediaId(mMedia.getId());
+        loadMediaWithId(mMedia.getId());
     }
 
-    private boolean loadMediaId(int mediaId) {
-        MediaModel media;
-        if (isMediaFromEditor()) {
-            media = getMediaModelFromEditorImageMetaData();
-        } else {
-            media = mMediaStore.getMediaWithLocalId(mediaId);
-        }
+    private boolean loadMediaWithId(int mediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(mediaId);
+        return loadMedia(media);
+    }
 
+    private boolean loadMediaFromEditor() {
+        MediaModel media = getMediaModelFromEditorImageMetaData();
+        return loadMedia(media);
+    }
+
+    private boolean loadMedia(MediaModel media) {
         if (media == null) {
             return false;
         }
@@ -414,11 +417,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         outState.putInt(ARG_MEDIA_LOCAL_ID, mMedia.getId());
         outState.putParcelable(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
 
-        if(mRemoveImageConfirmationDialog != null){
+        if (mRemoveImageConfirmationDialog != null) {
             outState.putBoolean(ARG_REMOVE_IAMGE_FROM_POST_DIALOG_VISIBLE, mRemoveImageConfirmationDialog.isShowing());
         }
 
-        if(mDeleteImageConfirmationDialog != null){
+        if (mDeleteImageConfirmationDialog != null) {
             outState.putBoolean(ARG_DELETE_MEDIA_DIALOG_VISIBLE, mDeleteImageConfirmationDialog.isShowing());
         }
 
@@ -504,11 +507,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public void onBackPressed() {
         saveChanges();
+        // call finish() rather than super.onBackPressed() to enable skipping shared element transition
         finishActivity();
     }
 
     private void finishActivity() {
-        // call finish() rather than super.onBackPressed() to enable skipping shared element transition
         if (mOverrideClosingTransition) {
             finish();
         } else {
@@ -1155,7 +1158,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaPreviewSwiped(MediaPreviewSwiped event) {
         if (event.mediaId != mMedia.getId()) {
-            loadMediaId(event.mediaId);
+            loadMediaWithId(event.mediaId);
             // set the flag to prevent the shared element transition when exiting this activity - otherwise the
             // user will see a shared element transition back to the original image selected in the media browser
             mOverrideClosingTransition = true;
