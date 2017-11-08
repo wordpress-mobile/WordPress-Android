@@ -819,6 +819,25 @@ public class UploadService extends Service {
         }
     }
 
+    /*
+     * This method will make sure to keep the bodies of all Posts registered (*) in the UploadStore
+     * up-to-date with their corresponding media item upload statuses (i.e. marking them failed or
+     * successfully uploaded in the actual Post content to reflect what the UploadStore says).
+     *
+     * Finally, it will either cancel the Post upload from the queue and create an error notification
+     * for the user if there are any failed media items for such a Post, or upload the Post if it's
+     * in good shape.
+     *
+     * This method returns:
+     * - `false` if all registered posts have no in-progress items, and at least one or more retriable
+     *      (failed) items are found in them (this, in other words, means all registered posts are found
+     *      in a `finalized` state other than "UPLOADED").
+     * - `true` if at least one registered Post is found that is in good conditions to be uploaded.
+     *
+     *
+     * (*)`Registered` posts are posts that had media in them and are waiting to be uploaded once
+     * their corresponding associated media is uploaded first.
+    */
     private boolean doFinalProcessingOfPosts() {
         // If this was the last media upload a post was waiting for, update the post content
         // This done for pending as well as cancelled and failed posts
