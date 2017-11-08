@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.wordpress.android.util.StringUtils;
+
 import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ALIGN;
 
 public class EditorImageMetaData implements Parcelable {
@@ -150,11 +152,7 @@ public class EditorImageMetaData implements Parcelable {
     }
 
     public int getHeightInt() {
-        try {
-            return Integer.parseInt(mHeight);
-        } catch (NumberFormatException ex) {
-            return 0;
-        }
+        return StringUtils.stringToInt(mHeight);
     }
 
     public void setHeight(String height) {
@@ -222,11 +220,7 @@ public class EditorImageMetaData implements Parcelable {
     }
 
     public int getWidthInt() {
-        try {
-            return Integer.parseInt(mWidth);
-        } catch (NumberFormatException ex) {
-            return 0;
-        }
+        return StringUtils.stringToInt(mWidth);
     }
 
     public void setWidth(String width) {
