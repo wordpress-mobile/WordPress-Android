@@ -116,6 +116,11 @@ public class PluginStore extends Store {
         public SiteModel site;
         public PluginModel plugin;
 
+        public InstalledSitePluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+
         public InstalledSitePluginPayload(SiteModel site, InstallSitePluginError error) {
             this.site = site;
             this.error = error;
