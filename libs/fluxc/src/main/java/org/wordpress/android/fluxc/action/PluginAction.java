@@ -16,26 +16,26 @@ import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
 @ActionEnum
 public enum PluginAction implements IAction {
     // Remote actions
-    @Action(payloadType = SiteModel.class)
-    FETCH_SITE_PLUGINS,
-    @Action(payloadType = String.class)
-    FETCH_PLUGIN_INFO,
-    @Action(payloadType = UpdateSitePluginPayload.class)
-    UPDATE_SITE_PLUGIN,
     @Action(payloadType = DeleteSitePluginPayload.class)
     DELETE_SITE_PLUGIN,
+    @Action(payloadType = String.class)
+    FETCH_PLUGIN_INFO,
+    @Action(payloadType = SiteModel.class)
+    FETCH_SITE_PLUGINS,
     @Action(payloadType = InstallSitePluginPayload.class)
     INSTALL_SITE_PLUGIN,
+    @Action(payloadType = UpdateSitePluginPayload.class)
+    UPDATE_SITE_PLUGIN,
 
     // Remote responses
-    @Action(payloadType = FetchedSitePluginsPayload.class)
-    FETCHED_SITE_PLUGINS,
-    @Action(payloadType = FetchedPluginInfoPayload.class)
-    FETCHED_PLUGIN_INFO,
-    @Action(payloadType = UpdatedSitePluginPayload.class)
-    UPDATED_SITE_PLUGIN,
     @Action(payloadType = DeletedSitePluginPayload.class)
     DELETED_SITE_PLUGIN,
+    @Action(payloadType = FetchedPluginInfoPayload.class)
+    FETCHED_PLUGIN_INFO,
+    @Action(payloadType = FetchedSitePluginsPayload.class)
+    FETCHED_SITE_PLUGINS,
     @Action(payloadType = InstalledSitePluginPayload.class)
-    INSTALLED_SITE_PLUGIN
+    INSTALLED_SITE_PLUGIN,
+    @Action(payloadType = UpdatedSitePluginPayload.class)
+    UPDATED_SITE_PLUGIN
 }
