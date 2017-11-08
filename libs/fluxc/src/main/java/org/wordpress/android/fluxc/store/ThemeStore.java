@@ -393,6 +393,7 @@ public class ThemeStore extends Store {
             event.error = payload.error;
         } else {
             ThemeModel activatedTheme;
+            // payload theme doesn't have all the data so we grab a copy of the database theme and update active flag
             if (payload.site.isJetpackConnected()) {
                 activatedTheme = getInstalledThemeByThemeId(payload.theme.getThemeId());
             } else {
