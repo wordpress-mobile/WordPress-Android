@@ -98,6 +98,15 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class PushSocialSmsPayload extends Payload<BaseNetworkError> {
+        public String nonce;
+        public String userId;
+        public PushSocialSmsPayload(@NonNull String userId, @NonNull String nonce) {
+            this.userId = userId;
+            this.nonce = nonce;
+        }
+    }
+
     public static class NewAccountPayload extends Payload<BaseNetworkError> {
         public String username;
         public String password;
@@ -130,10 +139,12 @@ public class AccountStore extends Store {
 
     public static class OnSocialChanged extends OnChanged<AccountSocialError> {
         public List<String> twoStepTypes;
+        public String nonce;
         public String nonceAuthenticator;
         public String nonceBackup;
         public String nonceSms;
         public String notificationSent;
+        public String phoneNumber;
         public String userId;
         public boolean requiresTwoStepAuth;
 
@@ -142,10 +153,12 @@ public class AccountStore extends Store {
 
         public OnSocialChanged(@NonNull AccountPushSocialResponsePayload payload) {
             this.twoStepTypes = payload.twoStepTypes;
+            this.nonce = payload.twoStepNonce;
             this.nonceAuthenticator = payload.twoStepNonceAuthenticator;
             this.nonceBackup = payload.twoStepNonceBackup;
             this.nonceSms = payload.twoStepNonceSms;
             this.notificationSent = payload.twoStepNotificationSent;
+            this.phoneNumber = payload.phoneNumber;
             this.userId = payload.userId;
         }
     }
@@ -293,6 +306,10 @@ public class AccountStore extends Store {
     public enum AccountSocialErrorType {
         INVALID_TOKEN,
         INVALID_TWO_STEP_CODE,
+        INVALID_TWO_STEP_NONCE,
+        NO_PHONE_NUMBER_FOR_ACCOUNT,
+        SMS_AUTHENTICATION_UNAVAILABLE,
+        SMS_CODE_THROTTLED,
         UNABLE_CONNECT,
         UNKNOWN_USER,
         USER_ALREADY_ASSOCIATED,
@@ -442,6 +459,9 @@ public class AccountStore extends Store {
                 break;
             case PUSH_SOCIAL_LOGIN:
                 createPushSocialLogin((PushSocialLoginPayload) payload);
+                break;
+            case PUSH_SOCIAL_SMS:
+                createPushSocialSms((PushSocialSmsPayload) payload);
                 break;
             case UPDATE_ACCOUNT:
                 updateDefaultAccount((AccountModel) payload, AccountAction.UPDATE_ACCOUNT);
@@ -597,6 +617,10 @@ public class AccountStore extends Store {
             OnSocialChanged event = new OnSocialChanged();
             event.error = payload.error;
             emitChange(event);
+        // No error and two-factor authentication code sent via SMS; emit only social change.
+        } else if (payload.hasPhoneNumber()) {
+            OnSocialChanged event = new OnSocialChanged(payload);
+            emitChange(event);
         // No error, but either two-factor authentication or social connect is required; emit only social change.
         } else if (!payload.hasToken()) {
             OnSocialChanged event = new OnSocialChanged(payload);
@@ -646,6 +670,10 @@ public class AccountStore extends Store {
 
     private void createPushSocialLogin(PushSocialLoginPayload payload) {
         mAccountRestClient.pushSocialLogin(payload.idToken, payload.service);
+    }
+
+    private void createPushSocialSms(PushSocialSmsPayload payload) {
+        mAccountRestClient.pushSocialSms(payload.userId, payload.nonce);
     }
 
     private void signOut() {

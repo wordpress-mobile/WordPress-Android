@@ -192,6 +192,17 @@ public class PostStoreUnitTest {
     }
 
     @Test
+    public void testGetPostByRemoteId() {
+        PostModel post = PostTestUtils.generateSampleUploadedPost();
+        PostSqlUtils.insertPostForResult(post);
+
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        assertEquals(post, mPostStore.getPostByRemotePostId(post.getRemotePostId(), site));
+    }
+
+    @Test
     public void testDeleteUploadedPosts() {
         SiteModel site = new SiteModel();
         site.setId(6);
