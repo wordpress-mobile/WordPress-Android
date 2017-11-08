@@ -398,6 +398,7 @@ public class ThemeStore extends Store {
                 activatedTheme = getInstalledThemeByThemeId(payload.theme.getThemeId());
             } else {
                 activatedTheme = getWpComThemeByThemeId(payload.theme.getThemeId());
+                // Remove WP.com flag to store as site-associate theme
                 activatedTheme.setIsWpComTheme(false);
             }
             if (activatedTheme != null) {
