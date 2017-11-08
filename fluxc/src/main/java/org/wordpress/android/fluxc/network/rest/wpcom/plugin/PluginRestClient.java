@@ -172,25 +172,28 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new Listener<PluginWPComRestResponse>() {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
+                        PluginModel pluginModel = pluginModelFromResponse(site, response);
+                        mDispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(
+                                new InstalledSitePluginPayload(site, pluginModel)));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        InstallSitePluginError installSitePluginError
+                        InstallSitePluginError installPluginError
                                 = new InstallSitePluginError(InstallSitePluginErrorType.GENERIC_ERROR);
                         if (networkError instanceof WPComGsonNetworkError) {
                             switch (((WPComGsonNetworkError) networkError).apiError) {
                                 case "unauthorized":
-                                    installSitePluginError.type = InstallSitePluginErrorType.UNAUTHORIZED;
+                                    installPluginError.type = InstallSitePluginErrorType.UNAUTHORIZED;
                                     break;
                                 case "install_failure":
-                                    installSitePluginError.type = InstallSitePluginErrorType.INSTALL_FAILURE;
+                                    installPluginError.type = InstallSitePluginErrorType.INSTALL_FAILURE;
                                     break;
                             }
                         }
-                        installSitePluginError.message = networkError.message;
-                        InstalledSitePluginPayload payload = new InstalledSitePluginPayload(site, installSitePluginError);
+                        installPluginError.message = networkError.message;
+                        InstalledSitePluginPayload payload = new InstalledSitePluginPayload(site, installPluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload));
                     }
                 }
