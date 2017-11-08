@@ -260,7 +260,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             }
         }
 
-        if (isMediaFromEditor() ? !loadMediaWithId(mediaId) : loadMediaFromEditor()) {
+        if (isMediaFromEditor() ? loadMediaFromEditor() : !loadMediaWithId(mediaId)) {
             delayedFinishWithError();
             return;
         }
@@ -384,7 +384,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mediaModel.setTitle(mEditorImageMetaData.getTitle());
         mediaModel.setCaption(mEditorImageMetaData.getCaption());
         mediaModel.setAlt(mEditorImageMetaData.getAlt());
-        mediaModel.setFileName(mEditorImageMetaData.getSrc().substring(mEditorImageMetaData.getSrc().lastIndexOf("/") + 1));
+        if(!TextUtils.isEmpty(mEditorImageMetaData.getSrc())){
+            mediaModel.setFileName(mEditorImageMetaData.getSrc().substring(mEditorImageMetaData.getSrc().lastIndexOf("/") + 1));
+        }
         mediaModel.setFileExtension(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(mEditorImageMetaData.getSrc()));
         mediaModel.setWidth(mEditorImageMetaData.getWidthInt());
         mediaModel.setHeight(mEditorImageMetaData.getHeightInt());
