@@ -2,6 +2,7 @@ package org.wordpress.android.editor;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -93,7 +94,7 @@ public class EditorImageMetaData implements Parcelable {
     private int mLocalId;
 
     public String getAlign() {
-        if (mAlign.startsWith(ATTR_ALIGN)) {
+        if (!TextUtils.isEmpty(mAlign) && mAlign.startsWith(ATTR_ALIGN)) {
             return mAlign.substring(ATTR_ALIGN.length(), mAlign.length());
         }
         return mAlign;
