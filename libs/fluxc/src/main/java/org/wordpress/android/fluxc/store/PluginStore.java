@@ -197,6 +197,9 @@ public class PluginStore extends Store {
     }
 
     public enum InstallSitePluginErrorType {
+        GENERIC_ERROR,
+        UNAUTHORIZED,
+        INSTALL_FAILURE,
         NOT_AVAILABLE // Return for non-jetpack sites
     }
 

@@ -25,6 +25,9 @@ import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsError;
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
+import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError;
+import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
@@ -163,7 +166,36 @@ public class PluginRestClient extends BaseWPComRestClient {
     }
 
     public void installSitePlugin(@NonNull final SiteModel site, String pluginName) {
-
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(pluginName).install.getUrlV1_1();
+        final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                PluginWPComRestResponse.class,
+                new Listener<PluginWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PluginWPComRestResponse response) {
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                        InstallSitePluginError installSitePluginError
+                                = new InstallSitePluginError(InstallSitePluginErrorType.GENERIC_ERROR);
+                        if (networkError instanceof WPComGsonNetworkError) {
+                            switch (((WPComGsonNetworkError) networkError).apiError) {
+                                case "unauthorized":
+                                    installSitePluginError.type = InstallSitePluginErrorType.UNAUTHORIZED;
+                                    break;
+                                case "install_failure":
+                                    installSitePluginError.type = InstallSitePluginErrorType.INSTALL_FAILURE;
+                                    break;
+                            }
+                        }
+                        installSitePluginError.message = networkError.message;
+                        InstalledSitePluginPayload payload = new InstalledSitePluginPayload(site, installSitePluginError);
+                        mDispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload));
+                    }
+                }
+        );
+        add(request);
     }
 
     private PluginModel pluginModelFromResponse(SiteModel siteModel, PluginWPComRestResponse response) {
