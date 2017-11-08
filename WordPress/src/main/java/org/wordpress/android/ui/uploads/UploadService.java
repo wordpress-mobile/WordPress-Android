@@ -670,7 +670,7 @@ public class UploadService extends Service {
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         mPostUploadNotifier.setTotalMediaItems(post, failedMedia.size());
         mPostUploadNotifier.updateNotificationErrorForPost(post,
-                mSiteStore.getSiteByLocalId(post.getLocalSiteId()), errorMessage, PostUploadNotifier.K_DONT_OVERRIDE_MEDIA_COUNT);
+                mSiteStore.getSiteByLocalId(post.getLocalSiteId()), errorMessage, 0);
 
     }
 
@@ -837,8 +837,7 @@ public class UploadService extends Service {
                         // update error notification for Post
                         SiteModel site = mSiteStore.getSiteByLocalId(postModel.getLocalSiteId());
                         String message = UploadUtils.getErrorMessage(this, postModel, getString(R.string.error_generic_error), true);
-                        mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message,
-                                PostUploadNotifier.K_DONT_OVERRIDE_MEDIA_COUNT);
+                        mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message, 0);
 
                         mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel);
                         EventBus.getDefault().post(
