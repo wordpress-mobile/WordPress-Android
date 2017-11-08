@@ -154,7 +154,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         MatrixCursor cursor = new MatrixCursor(ThemeBrowserAdapter.THEME_COLUMNS);
         for (ThemeModel theme : mSearchResults) {
             Object[] values = new Object[] {
-                    theme.getId(), theme.getName(), theme.getThemeId(), theme.getScreenshotUrl(),
+                    theme.getId(), theme.getThemeId(), theme.getName(), theme.getScreenshotUrl(),
                     theme.getCurrency(), theme.getPrice(), theme.getActive()
             };
             cursor.addRow(values);
