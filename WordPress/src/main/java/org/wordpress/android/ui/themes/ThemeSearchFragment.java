@@ -11,8 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.wellsql.generated.ThemeModelTable;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -148,21 +146,16 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         refreshView();
     }
 
-    private static final String[] CURSOR_COLUMNS = new String[] {
-            "_id", ThemeModelTable.NAME, ThemeModelTable.THEME_ID, ThemeModelTable.CURRENCY, ThemeModelTable.PRICE,
-            ThemeModelTable.SCREENSHOT_URL, ThemeModelTable.AUTHOR_NAME, ThemeModelTable.IS_WP_COM_THEME
-    };
-
     private Cursor createResultsCursor() {
         if (mSearchResults == null) {
             return mThemeStore.getWpComThemesCursor();
         }
 
-        MatrixCursor cursor = new MatrixCursor(CURSOR_COLUMNS);
+        MatrixCursor cursor = new MatrixCursor(ThemeBrowserAdapter.THEME_COLUMNS);
         for (ThemeModel theme : mSearchResults) {
             Object[] values = new Object[] {
-                    0, theme.getName(), theme.getThemeId(), theme.getCurrency(), theme.getPrice(),
-                    theme.getScreenshotUrl(), theme.getAuthorName(), theme.isWpComTheme()
+                    theme.getId(), theme.getName(), theme.getThemeId(), theme.getScreenshotUrl(),
+                    theme.getCurrency(), theme.getPrice(), theme.getActive()
             };
             cursor.addRow(values);
         }
@@ -171,7 +164,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     private void search(String searchTerm) {
         mLastSearch = searchTerm;
-
         if (NetworkUtils.isNetworkAvailable(mThemeBrowserActivity)) {
             mThemeBrowserActivity.searchThemes(searchTerm);
         } else {
