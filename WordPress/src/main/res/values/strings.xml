@@ -1147,6 +1147,29 @@
         <item>@string/alignment_right</item>
     </string-array>
 
+
+    <!-- Image Size -->
+    <string name="image_size">Size</string>
+
+    <string name="size_thumbnail">Thumbnail</string>
+    <string name="size_medium">Medium</string>
+    <string name="size_large">Large</string>
+    <string name="size_full">Full Size</string>
+
+    <string-array name="image_size_key_array" translatable="false">
+        <item>size-thumbnail</item>
+        <item>size-medium</item>
+        <item>size-large</item>
+        <item>size-full</item>
+    </string-array>
+
+    <string-array name="image_size_label_array" translatable="false">
+        <item>@string/size_thumbnail</item>
+        <item>@string/size_medium</item>
+        <item>@string/size_large</item>
+        <item>@string/size_full</item>
+    </string-array>
+
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
     <string name="publisher">Publisher:</string>

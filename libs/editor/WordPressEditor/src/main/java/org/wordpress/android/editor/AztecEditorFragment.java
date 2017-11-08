@@ -1512,7 +1512,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     if (!TextUtils.isEmpty(metaData.getSize())) {
-                        attributesWithClass.addClass(ATTR_SIZE_DASH + metaData.getSize());
+                        attributesWithClass.addClass(metaData.getSize());
                     }
 
                     if (!TextUtils.isEmpty(metaData.getAttachmentId())) {
@@ -1556,7 +1556,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AttributesWithClass attrs = getAttributesWithClass(attributes);
         if (!attrs.hasClassStartingWith("size")) {
             attrs.addClass("size-full");
-        }
+    }
         attributes.setValue(ATTR_CLASS, attrs.getAttributes().getValue(ATTR_CLASS));
     }
 
