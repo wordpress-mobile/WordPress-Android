@@ -69,6 +69,16 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class AuthEmailPayload extends Payload<BaseNetworkError> {
+        public String email;
+        public boolean isSignup;
+
+        public AuthEmailPayload(String email, boolean isSignup) {
+            this.email = email;
+            this.isSignup = isSignup;
+        }
+    }
+
     public static class PushAccountSettingsPayload extends Payload<BaseNetworkError> {
         public Map<String, Object> params;
         public PushAccountSettingsPayload() {
@@ -506,7 +516,7 @@ public class AccountStore extends Store {
                 discoveryResult((DiscoveryResultPayload) payload);
                 break;
             case SEND_AUTH_EMAIL:
-                mAuthenticator.sendAuthEmail((String) payload);
+                mAuthenticator.sendAuthEmail((AuthEmailPayload) payload);
                 break;
             case SENT_AUTH_EMAIL:
                 handleSentAuthEmail((AuthEmailResponsePayload) payload);
