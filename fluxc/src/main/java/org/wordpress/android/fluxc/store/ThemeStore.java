@@ -400,7 +400,7 @@ public class ThemeStore extends Store {
                 activatedTheme.setIsWpComTheme(false);
             }
             if (activatedTheme != null) {
-                setActiveThemeForSite(payload.site, payload.theme);
+                setActiveThemeForSite(payload.site, activatedTheme);
             }
         }
         emitChange(event);
