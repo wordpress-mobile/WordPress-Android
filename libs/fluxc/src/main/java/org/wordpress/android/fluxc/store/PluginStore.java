@@ -235,6 +235,14 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class OnSitePluginInstalled extends OnChanged<InstallSitePluginError> {
+        public SiteModel site;
+        public PluginModel plugin;
+        public OnSitePluginInstalled(SiteModel site) {
+            this.site = site;
+        }
+    }
+
     private final PluginRestClient mPluginRestClient;
     private final PluginWPOrgClient mPluginWPOrgClient;
 
@@ -284,6 +292,9 @@ public class PluginStore extends Store {
                 break;
             case DELETED_SITE_PLUGIN:
                 deletedSitePlugin((DeletedSitePluginPayload) action.getPayload());
+                break;
+            case INSTALLED_SITE_PLUGIN:
+                installedSitePlugin((InstalledSitePluginPayload) action.getPayload());
                 break;
         }
     }
@@ -390,6 +401,14 @@ public class PluginStore extends Store {
     }
 
     private void installedSitePlugin(InstalledSitePluginPayload payload) {
-
+        OnSitePluginInstalled event = new OnSitePluginInstalled(payload.site);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            payload.plugin.setLocalSiteId(payload.site.getId());
+            event.plugin = payload.plugin;
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
+        }
+        emitChange(event);
     }
 }
