@@ -633,13 +633,7 @@ public class UploadService extends Service {
 
     private boolean mediaBelongsToAPost(MediaModel media) {
         PostModel postToCancel = mPostStore.getPostByLocalPostId(media.getLocalPostId());
-        if (postToCancel == null) return false;
-
-        if (!mUploadStore.isRegisteredPostModel(postToCancel)) {
-            return false;
-        }
-
-        return true;
+        return (postToCancel != null && mUploadStore.isRegisteredPostModel(postToCancel));
     }
 
     /*
