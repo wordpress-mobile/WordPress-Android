@@ -2,8 +2,6 @@ package org.wordpress.android.ui.uploads;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore.Images;
@@ -36,9 +34,7 @@ import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
-import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -203,7 +199,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 // This block only runs if the PUSH_POST action was never dispatched - if it was dispatched, any error
                 // will be handled in OnPostChanged instead of here
                 mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost);
-                mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage);
+                mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage, 0);
                 finishUpload();
             }
         }
@@ -548,7 +544,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
-            mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage);
+            mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);
             sFirstPublishPosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
@@ -599,7 +595,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String notificationMessage =
                     UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage, true);
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(sCurrentUploadingPost);
-            mPostUploadNotifier.updateNotificationErrorForPost(sCurrentUploadingPost, site, notificationMessage);
+            mPostUploadNotifier.updateNotificationErrorForPost(sCurrentUploadingPost, site, notificationMessage, 0);
             sFirstPublishPosts.remove(sCurrentUploadingPost.getId());
             finishUpload();
             return;

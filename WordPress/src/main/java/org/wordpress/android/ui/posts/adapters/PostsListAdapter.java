@@ -440,7 +440,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             String errorMessage = null;
 
             UploadError reason = mUploadStore.getUploadErrorForPost(post);
-            if (reason != null) {
+            if (reason != null && !UploadService.hasInProgressMediaUploadsForPost(post)) {
                 if (reason.mediaError != null) {
                     errorMessage = context.getString(post.isPage() ? R.string.error_media_recover_page
                             : R.string.error_media_recover_post);
@@ -518,7 +518,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private void configurePostButtons(final PostViewHolder holder,
                                       final PostModel post) {
-        boolean canRetry = mUploadStore.getUploadErrorForPost(post) != null;
+        boolean canRetry = mUploadStore.getUploadErrorForPost(post) != null
+                && !UploadService.hasInProgressMediaUploadsForPost(post);
         boolean canShowViewButton = !canRetry;
         boolean canShowStatsButton = canShowStatsForPost(post);
         boolean canShowPublishButton = canRetry || canPublishPost(post);

@@ -419,7 +419,16 @@ class PostUploadNotifier {
         }
     }
 
-    void updateNotificationErrorForPost(@NonNull PostModel post, @NonNull SiteModel site, String errorMessage) {
+    /*
+     * This method will create an error notification with the description of the *final state* of the queue
+     * for this  Post (i.e. how many media items have been uploaded successfully and how many failed, as well
+     * as the information for the Post itself if we couldn't upload it).
+     *
+     * In order to give the user a description of the *current state* of failed media items, you can pass a value
+     * other than zero (0) in overrideMediaNotUploadedCount and this value will be shown instead.
+     */
+    void updateNotificationErrorForPost(@NonNull PostModel post, @NonNull SiteModel site, String errorMessage,
+                                        int overrideMediaNotUploadedCount) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationErrorForPost: " + errorMessage);
 
         NotificationCompat.Builder notificationBuilder =
@@ -444,7 +453,7 @@ class PostUploadNotifier {
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
         String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), postTitle);
 
-        String newErrorMessage = buildErrorMessageMixed();
+        String newErrorMessage = buildErrorMessageMixed(overrideMediaNotUploadedCount);
         String snackbarMessage = buildSnackbarErrorMessage(newErrorMessage, errorMessage);
 
         notificationBuilder.setContentTitle(notificationTitle);
@@ -516,12 +525,14 @@ class PostUploadNotifier {
         doNotify(notificationId, notificationBuilder.build());
     }
 
-    private String buildErrorMessageMixed() {
+    private String buildErrorMessageMixed(int overrideMediaNotUploadedCount) {
         // first we build a summary of what failed and what went OK, like this:
         // i.e. "1 post, 3 media files not uploaded (9 successfully uploaded)"
         String newErrorMessage = "";
-        int postItemsNotUploaded = sNotificationData.totalPostItems > 0 ? sNotificationData.totalPostItems - getCurrentPostItem() : 0;
-        int mediaItemsNotUploaded = sNotificationData.totalMediaItems - getCurrentMediaItem();
+        int postItemsNotUploaded = sNotificationData.totalPostItems > 0 ?
+                sNotificationData.totalPostItems - getCurrentPostItem() : 0;
+        int mediaItemsNotUploaded = overrideMediaNotUploadedCount > 0 ?
+                overrideMediaNotUploadedCount : sNotificationData.totalMediaItems - getCurrentMediaItem();
         if (postItemsNotUploaded > 0) {
             newErrorMessage += postItemsNotUploaded + " " + getPagesAndOrPostsString(postItemsNotUploaded);
             if (mediaItemsNotUploaded > 0) {
