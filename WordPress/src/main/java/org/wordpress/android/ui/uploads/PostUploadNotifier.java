@@ -37,6 +37,7 @@ import java.util.Random;
 import de.greenrobot.event.EventBus;
 
 class PostUploadNotifier {
+    public static final int K_DONT_OVERRIDE_MEDIA_COUNT = 0;
     private final Context mContext;
     private final UploadService mService;
 
@@ -419,7 +420,8 @@ class PostUploadNotifier {
         }
     }
 
-    void updateNotificationErrorForPost(@NonNull PostModel post, @NonNull SiteModel site, String errorMessage) {
+    void updateNotificationErrorForPost(@NonNull PostModel post, @NonNull SiteModel site, String errorMessage,
+                                        int overrideMediaNotUploadedCount) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationErrorForPost: " + errorMessage);
 
         NotificationCompat.Builder notificationBuilder =
@@ -444,7 +446,7 @@ class PostUploadNotifier {
         String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
         String notificationTitle = String.format(mContext.getString(R.string.upload_failed_param), postTitle);
 
-        String newErrorMessage = buildErrorMessageMixed();
+        String newErrorMessage = buildErrorMessageMixed(overrideMediaNotUploadedCount);
         String snackbarMessage = buildSnackbarErrorMessage(newErrorMessage, errorMessage);
 
         notificationBuilder.setContentTitle(notificationTitle);
@@ -516,12 +518,14 @@ class PostUploadNotifier {
         doNotify(notificationId, notificationBuilder.build());
     }
 
-    private String buildErrorMessageMixed() {
+    private String buildErrorMessageMixed(int overrideMediaNotUploadedCount) {
         // first we build a summary of what failed and what went OK, like this:
         // i.e. "1 post, 3 media files not uploaded (9 successfully uploaded)"
         String newErrorMessage = "";
-        int postItemsNotUploaded = sNotificationData.totalPostItems > 0 ? sNotificationData.totalPostItems - getCurrentPostItem() : 0;
-        int mediaItemsNotUploaded = sNotificationData.totalMediaItems - getCurrentMediaItem();
+        int postItemsNotUploaded = sNotificationData.totalPostItems > 0 ?
+                sNotificationData.totalPostItems - getCurrentPostItem() : 0;
+        int mediaItemsNotUploaded = overrideMediaNotUploadedCount > 0 ?
+                overrideMediaNotUploadedCount : sNotificationData.totalMediaItems - getCurrentMediaItem();
         if (postItemsNotUploaded > 0) {
             newErrorMessage += postItemsNotUploaded + " " + getPagesAndOrPostsString(postItemsNotUploaded);
             if (mediaItemsNotUploaded > 0) {

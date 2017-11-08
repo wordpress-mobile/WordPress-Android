@@ -662,7 +662,8 @@ public class UploadService extends Service {
             // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
             // the user actively cancelled it. No need to show an error then.
             String message = UploadUtils.getErrorMessage(this, postToCancel, errorMessage, true);
-            mPostUploadNotifier.updateNotificationErrorForPost(postToCancel, site, message);
+            mPostUploadNotifier.updateNotificationErrorForPost(postToCancel, site, message,
+                    mUploadStore.getFailedMediaForPost(postToCancel).size());
         }
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
@@ -675,7 +676,7 @@ public class UploadService extends Service {
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         mPostUploadNotifier.setTotalMediaItems(post, failedMedia.size());
         mPostUploadNotifier.updateNotificationErrorForPost(post,
-                mSiteStore.getSiteByLocalId(post.getLocalSiteId()), errorMessage);
+                mSiteStore.getSiteByLocalId(post.getLocalSiteId()), errorMessage, PostUploadNotifier.K_DONT_OVERRIDE_MEDIA_COUNT);
 
     }
 
@@ -832,31 +833,29 @@ public class UploadService extends Service {
                 // Replace local with remote media in the post content
                 PostModel updatedPost = updateOnePostModelWithCompletedAndFailedUploads(postModel);
                 if (updatedPost != null) {
-//                    if (mUploadStore.isPendingPost(postModel)) {
-                        // here let's check if there are any failed media
-                        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(postModel);
-                        if (failedMedia != null && !failedMedia.isEmpty()) {
-                            // this Post has failed media, don't upload it just yet,
-                            // but tell the user about the error
-                            cancelQueuedPostUpload(postModel);
-//                                    cancelPostUploadMatchingMedia();
+                    // here let's check if there are any failed media
+                    Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(postModel);
+                    if (failedMedia != null && !failedMedia.isEmpty()) {
+                        // this Post has failed media, don't upload it just yet,
+                        // but tell the user about the error
+                        cancelQueuedPostUpload(postModel);
 
-                            // update error notification for Post
-                            SiteModel site = mSiteStore.getSiteByLocalId(postModel.getLocalSiteId());
-                            String message = UploadUtils.getErrorMessage(this, postModel, getString(R.string.error_generic_error), true);
-                            mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message);
+                        // update error notification for Post
+                        SiteModel site = mSiteStore.getSiteByLocalId(postModel.getLocalSiteId());
+                        String message = UploadUtils.getErrorMessage(this, postModel, getString(R.string.error_generic_error), true);
+                        mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message,
+                                PostUploadNotifier.K_DONT_OVERRIDE_MEDIA_COUNT);
 
-                            mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel);
-                            EventBus.getDefault().post(
-                                    new PostEvents.PostUploadCanceled(postModel.getLocalSiteId()));
+                        mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel);
+                        EventBus.getDefault().post(
+                                new PostEvents.PostUploadCanceled(postModel.getLocalSiteId()));
 
-                        } else {
-                            // TODO Should do some extra validation here
-                            // e.g. what if the post has local media URLs but no pending media uploads?
-                            mPostUploadHandler.upload(updatedPost);
-                            return true;
-                        }
-//                    }
+                    } else {
+                        // TODO Should do some extra validation here
+                        // e.g. what if the post has local media URLs but no pending media uploads?
+                        mPostUploadHandler.upload(updatedPost);
+                        return true;
+                    }
                 }
             }
         }

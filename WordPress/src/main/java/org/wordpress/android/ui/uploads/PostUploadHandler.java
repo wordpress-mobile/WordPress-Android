@@ -199,7 +199,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 // This block only runs if the PUSH_POST action was never dispatched - if it was dispatched, any error
                 // will be handled in OnPostChanged instead of here
                 mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost);
-                mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage);
+                mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage,
+                        PostUploadNotifier.K_DONT_OVERRIDE_MEDIA_COUNT);
                 finishUpload();
             }
         }
@@ -544,7 +545,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
-            mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage);
+            mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage,
+                    PostUploadNotifier.K_DONT_OVERRIDE_MEDIA_COUNT);
             sFirstPublishPosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
@@ -595,7 +597,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String notificationMessage =
                     UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage, true);
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(sCurrentUploadingPost);
-            mPostUploadNotifier.updateNotificationErrorForPost(sCurrentUploadingPost, site, notificationMessage);
+            mPostUploadNotifier.updateNotificationErrorForPost(sCurrentUploadingPost, site, notificationMessage,
+                    PostUploadNotifier.K_DONT_OVERRIDE_MEDIA_COUNT);
             sFirstPublishPosts.remove(sCurrentUploadingPost.getId());
             finishUpload();
             return;
