@@ -6,9 +6,11 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
-import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginInfoPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
+import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
 
 @ActionEnum
@@ -22,6 +24,8 @@ public enum PluginAction implements IAction {
     UPDATE_SITE_PLUGIN,
     @Action(payloadType = DeleteSitePluginPayload.class)
     DELETE_SITE_PLUGIN,
+    @Action(payloadType = InstallSitePluginPayload.class)
+    INSTALL_SITE_PLUGIN,
 
     // Remote responses
     @Action(payloadType = FetchedSitePluginsPayload.class)
@@ -31,5 +35,7 @@ public enum PluginAction implements IAction {
     @Action(payloadType = UpdatedSitePluginPayload.class)
     UPDATED_SITE_PLUGIN,
     @Action(payloadType = DeletedSitePluginPayload.class)
-    DELETED_SITE_PLUGIN
+    DELETED_SITE_PLUGIN,
+    @Action(payloadType = InstalledSitePluginPayload.class)
+    INSTALLED_SITE_PLUGIN
 }
