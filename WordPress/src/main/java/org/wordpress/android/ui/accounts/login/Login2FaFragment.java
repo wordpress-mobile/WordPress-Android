@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.login;
 import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
@@ -145,7 +146,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     }
 
     @Override
-    protected void setupLabel(TextView label) {
+    protected void setupLabel(@NonNull TextView label) {
         label.setText(sentSmsCode ? getString(R.string.enter_verification_code_sms, mPhoneNumber)
                 : getString(R.string.enter_verification_code));
         mLabel = label;
