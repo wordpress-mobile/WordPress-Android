@@ -25,17 +25,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PluginStore extends Store {
-    // Payloads
-    public static class UpdateSitePluginPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
-        public PluginModel plugin;
-
-        public UpdateSitePluginPayload(SiteModel site, PluginModel plugin) {
-            this.site = site;
-            this.plugin = plugin;
-        }
-    }
-
+    // Request payloads
     public static class DeleteSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public PluginModel plugin;
@@ -56,17 +46,30 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class FetchedSitePluginsPayload extends Payload<FetchSitePluginsError> {
+    public static class UpdateSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
-        public List<PluginModel> plugins;
+        public PluginModel plugin;
 
-        public FetchedSitePluginsPayload(FetchSitePluginsError error) {
-            this.error = error;
+        public UpdateSitePluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+    }
+
+    // Response payloads
+
+    public static class DeletedSitePluginPayload extends Payload<DeleteSitePluginError> {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public DeletedSitePluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
         }
 
-        public FetchedSitePluginsPayload(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
+        public DeletedSitePluginPayload(SiteModel site, DeleteSitePluginError error) {
             this.site = site;
-            this.plugins = plugins;
+            this.error = error;
         }
     }
 
@@ -82,33 +85,17 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class UpdatedSitePluginPayload extends Payload<UpdateSitePluginError> {
+    public static class FetchedSitePluginsPayload extends Payload<FetchSitePluginsError> {
         public SiteModel site;
-        public PluginModel plugin;
+        public List<PluginModel> plugins;
 
-        public UpdatedSitePluginPayload(SiteModel site, PluginModel plugin) {
-            this.site = site;
-            this.plugin = plugin;
-        }
-
-        public UpdatedSitePluginPayload(SiteModel site, UpdateSitePluginError error) {
-            this.site = site;
+        public FetchedSitePluginsPayload(FetchSitePluginsError error) {
             this.error = error;
         }
-    }
 
-    public static class DeletedSitePluginPayload extends Payload<DeleteSitePluginError> {
-        public SiteModel site;
-        public PluginModel plugin;
-
-        public DeletedSitePluginPayload(SiteModel site, PluginModel plugin) {
+        public FetchedSitePluginsPayload(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
             this.site = site;
-            this.plugin = plugin;
-        }
-
-        public DeletedSitePluginPayload(SiteModel site, DeleteSitePluginError error) {
-            this.site = site;
-            this.error = error;
+            this.plugins = plugins;
         }
     }
 
@@ -127,6 +114,40 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class UpdatedSitePluginPayload extends Payload<UpdateSitePluginError> {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public UpdatedSitePluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+
+        public UpdatedSitePluginPayload(SiteModel site, UpdateSitePluginError error) {
+            this.site = site;
+            this.error = error;
+        }
+    }
+
+    // Errors
+
+    public static class DeleteSitePluginError implements OnChangedError {
+        public DeleteSitePluginErrorType type;
+        public String message;
+
+        public DeleteSitePluginError(DeleteSitePluginErrorType type) {
+            this.type = type;
+        }
+    }
+
+    public static class FetchPluginInfoError implements OnChangedError {
+        public FetchPluginInfoErrorType type;
+
+        public FetchPluginInfoError(FetchPluginInfoErrorType type) {
+            this.type = type;
+        }
+    }
+
     public static class FetchSitePluginsError implements OnChangedError {
         public FetchSitePluginsErrorType type;
         public String message;
@@ -141,10 +162,11 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class FetchPluginInfoError implements OnChangedError {
-        public FetchPluginInfoErrorType type;
+    public static class InstallSitePluginError implements OnChangedError {
+        public InstallSitePluginErrorType type;
+        public String message;
 
-        public FetchPluginInfoError(FetchPluginInfoErrorType type) {
+        public InstallSitePluginError(InstallSitePluginErrorType type) {
             this.type = type;
         }
     }
@@ -158,27 +180,12 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class DeleteSitePluginError implements OnChangedError {
-        public DeleteSitePluginErrorType type;
-        public String message;
+    // Error types
 
-        public DeleteSitePluginError(DeleteSitePluginErrorType type) {
-            this.type = type;
-        }
-    }
-
-    public static class InstallSitePluginError implements OnChangedError {
-        public InstallSitePluginErrorType type;
-        public String message;
-
-        public InstallSitePluginError(InstallSitePluginErrorType type) {
-            this.type = type;
-        }
-    }
-
-    public enum FetchSitePluginsErrorType {
+    public enum DeleteSitePluginErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
+        DELETE_PLUGIN_ERROR,
         NOT_AVAILABLE // Return for non-jetpack sites
     }
 
@@ -186,18 +193,9 @@ public class PluginStore extends Store {
         GENERIC_ERROR
     }
 
-    public enum UpdateSitePluginErrorType {
+    public enum FetchSitePluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
-        ACTIVATION_ERROR,
-        DEACTIVATION_ERROR,
-        NOT_AVAILABLE // Return for non-jetpack sites
-    }
-
-    public enum DeleteSitePluginErrorType {
-        GENERIC_ERROR,
-        UNAUTHORIZED,
-        DELETE_PLUGIN_ERROR,
         NOT_AVAILABLE // Return for non-jetpack sites
     }
 
@@ -208,15 +206,26 @@ public class PluginStore extends Store {
         NOT_AVAILABLE // Return for non-jetpack sites
     }
 
-    public static class OnSitePluginsChanged extends OnChanged<FetchSitePluginsError> {
-        public SiteModel site;
-        public OnSitePluginsChanged(SiteModel site) {
-            this.site = site;
-        }
+    public enum UpdateSitePluginErrorType {
+        GENERIC_ERROR,
+        UNAUTHORIZED,
+        ACTIVATION_ERROR,
+        DEACTIVATION_ERROR,
+        NOT_AVAILABLE // Return for non-jetpack sites
     }
+
+    // OnChanged Events
 
     public static class OnPluginInfoChanged extends OnChanged<FetchPluginInfoError> {
         public PluginInfoModel pluginInfo;
+    }
+
+    public static class OnSitePluginDeleted extends OnChanged<DeleteSitePluginError> {
+        public SiteModel site;
+        public PluginModel plugin;
+        public OnSitePluginDeleted(SiteModel site) {
+            this.site = site;
+        }
     }
 
     public static class OnSitePluginChanged extends OnChanged<UpdateSitePluginError> {
@@ -227,10 +236,9 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class OnSitePluginDeleted extends OnChanged<DeleteSitePluginError> {
+    public static class OnSitePluginsChanged extends OnChanged<FetchSitePluginsError> {
         public SiteModel site;
-        public PluginModel plugin;
-        public OnSitePluginDeleted(SiteModel site) {
+        public OnSitePluginsChanged(SiteModel site) {
             this.site = site;
         }
     }
