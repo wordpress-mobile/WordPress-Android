@@ -938,8 +938,6 @@ Language: sq_AL
 	<string name="view_in_browser">Shiheni në shfletues</string>
 	<string name="add_new_category">Shtoni kategori të re</string>
 	<string name="category_name">Emër kategorie</string>
-	<string name="share_action_post">Postim i ri</string>
-	<string name="share_action_media">Bibliotekë media</string>
 	<string name="open_source_licenses">Licenca burimi të hapur</string>
 	<string name="new_post">Postim i ri</string>
 	<string name="new_media">Media e re</string>

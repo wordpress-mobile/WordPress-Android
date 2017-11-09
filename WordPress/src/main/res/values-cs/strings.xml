@@ -890,7 +890,6 @@ Language: cs_CZ
 	<string name="dlg_trashing_comments">Přesunuji do koše</string>
 	<string name="dlg_confirm_trash_comments">Přesunout do koše?</string>
 	<string name="sure_to_cancel_edit_comment">Ukončit úpravy tohoto komentáře?</string>
-	<string name="share_action_post">Nový příspěvek</string>
 	<string name="image_settings">Vlastnosti obrázku</string>
 	<string name="fatal_db_error">Vyskytla se chyba při vytváření databáze aplikace. Zkuste přeinstalovat tuto aplikaci.</string>
 	<string name="jetpack_message_not_admin">Plugin Jetpack je pro statistiky vyžadován. Kontaktujte administrátora webu.</string>
@@ -907,7 +906,6 @@ Language: cs_CZ
 	<string name="blog_title_invalid">Neplatný popis webu</string>
 	<string name="blog_name_must_include_letters">Webová adresa musí mít alespoň 1 písmeno (a-z)</string>
 	<string name="blog_name_invalid">Neplatná adresa webu</string>
-	<string name="share_action_media">Knihovna médií</string>
 	<string name="notifications_empty_all">Doposud nejsou k dispozici žádná oznámení.</string>
 	<string name="error_blog_hidden">Tento web je skrytý a proto nemohl být načten. Zpřístupněte jej v nastavení a zkuste to znovu.</string>
 	<string name="file_error_create">Nepodařilo se vytvořit soubor temp pro nahrávání. Ujistěte se, že máte na svém zařízení dostatek volného místa.</string>

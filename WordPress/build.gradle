@@ -36,8 +36,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-83"
-        versionCode 484
+        versionName "alpha-84"
+        versionCode 487
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -135,8 +135,8 @@ dependencies {
     compile 'org.wordpress:passcodelock:1.5.1'
 
     // Dagger
-    compile 'com.google.dagger:dagger:2.0.2'
-    apt 'com.google.dagger:dagger-compiler:2.0.2'
+    compile 'com.google.dagger:dagger:2.11'
+    apt 'com.google.dagger:dagger-compiler:2.11'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
     compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:d88adb749e92df3e2125948ec1c6998060b10bd1') {

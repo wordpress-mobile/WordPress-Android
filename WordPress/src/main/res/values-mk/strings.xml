@@ -271,7 +271,6 @@ Language: mk
 	<string name="scaled_image_error">Воведете валидни намелени ширини</string>
 	<string name="add_new_category">Додади нова категорија</string>
 	<string name="category_name">Име на категорија</string>
-	<string name="share_action_post">Нов напис</string>
 	<string name="new_media">Нова медиа</string>
 	<string name="view_site">Види страница</string>
 	<string name="comment_status_trash">Исфрлени</string>
@@ -281,7 +280,6 @@ Language: mk
 	<string name="mnu_comment_unapprove">Не одобрувај</string>
 	<string name="dlg_unapproving_comments">Не се одобрува</string>
 	<string name="open_source_licenses">Отворен код лиценци</string>
-	<string name="share_action_media">Медиа библиотека</string>
 	<string name="file_error_create">Неможе да се созададе темп архива за медиа испраќање. Ве волиме да обезбедите доволоно простор на вашиот уред</string>
 	<string name="http_credentials">HTTP акредитиви (опционален)</string>
 	<string name="new_post">Нов напис</string>
