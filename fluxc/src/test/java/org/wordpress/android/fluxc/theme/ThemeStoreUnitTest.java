@@ -165,7 +165,7 @@ public class ThemeStoreUnitTest {
     }
 
     @Test
-    public void testRemoveSiteThemes() throws SiteSqlUtils.DuplicateSiteException {
+    public void testRemoveInstalledSiteThemes() throws SiteSqlUtils.DuplicateSiteException {
         final SiteModel site = SiteUtils.generateJetpackSiteOverRestOnly();
         SiteSqlUtils.insertOrUpdateSite(site);
 
