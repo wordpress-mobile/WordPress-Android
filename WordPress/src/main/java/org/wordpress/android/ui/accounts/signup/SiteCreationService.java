@@ -2,11 +2,9 @@ package org.wordpress.android.ui.accounts.signup;
 
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
@@ -26,17 +24,16 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
-import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationPhase;
+import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreationStateUpdated;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
-import org.wordpress.android.util.AutoForeground.AutoForegroundListener;
 import org.wordpress.android.util.LanguageUtils;
 
 import javax.inject.Inject;
 
-public class SiteCreationService extends Service implements AutoForegroundListener<SiteCreationPhase> {
+public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdated> {
 
     private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
     private static final String ARG_SITE_TAGLINE = "ARG_SITE_TAGLINE";
@@ -53,12 +50,19 @@ public class SiteCreationService extends Service implements AutoForegroundListen
         FAILURE
     }
 
+    public static class OnSiteCreationStateUpdated {
+        public final SiteCreationPhase state;
+
+        public OnSiteCreationStateUpdated(SiteCreationPhase state) {
+            this.state = state;
+        }
+    }
+
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
     private SiteCreationPhase mSiteCreationPhase = SiteCreationPhase.IDLE;
-    private AutoForeground<SiteCreationPhase> mAutoForeground = new AutoForeground<>(this);
 
     private String mSiteTagline;
     private String mSiteTheme;
@@ -78,34 +82,38 @@ public class SiteCreationService extends Service implements AutoForegroundListen
         context.startService(intent);
     }
 
-    @Override
-    public SiteCreationPhase getCurrentState() {
-        return mSiteCreationPhase;
+    public SiteCreationService() {
+        super(OnSiteCreationStateUpdated.class);
     }
 
     @Override
-    public boolean isInProgress(SiteCreationPhase siteCreationPhase) {
-        return siteCreationPhase != SiteCreationPhase.IDLE
-                && siteCreationPhase != SiteCreationPhase.SUCCESS
-                && siteCreationPhase != SiteCreationPhase.FAILURE;
+    protected OnSiteCreationStateUpdated getCurrentStateEvent() {
+        return new OnSiteCreationStateUpdated(mSiteCreationPhase);
     }
 
     @Override
-    public boolean isError(SiteCreationPhase siteCreationPhase) {
-        return siteCreationPhase == SiteCreationPhase.FAILURE;
+    public boolean isInProgress() {
+        return mSiteCreationPhase != SiteCreationPhase.IDLE
+                && mSiteCreationPhase != SiteCreationPhase.SUCCESS
+                && mSiteCreationPhase != SiteCreationPhase.FAILURE;
     }
 
     @Override
-    public Notification getNotification(SiteCreationPhase siteCreationPhase) {
-        switch (siteCreationPhase) {
+    public boolean isError() {
+        return mSiteCreationPhase == SiteCreationPhase.FAILURE;
+    }
+
+    @Override
+    public Notification getNotification() {
+        switch (mSiteCreationPhase) {
             case NEW_SITE:
-                return getProgressNotification(25, "Site creation in: " + siteCreationPhase.name());
+                return getProgressNotification(25, "Site creation in: " + mSiteCreationPhase.name());
             case FETCHING_NEW_SITE:
-                return getProgressNotification(50, "Site creation in: " + siteCreationPhase.name());
+                return getProgressNotification(50, "Site creation in: " + mSiteCreationPhase.name());
             case SET_TAGLINE:
-                return getProgressNotification(75, "Site creation in: " + siteCreationPhase.name());
+                return getProgressNotification(75, "Site creation in: " + mSiteCreationPhase.name());
             case SET_THEME:
-                return getProgressNotification(100, "Site creation in: " + siteCreationPhase.name());
+                return getProgressNotification(100, "Site creation in: " + mSiteCreationPhase.name());
             case SUCCESS:
                 return getSuccessNotification("Site created!");
             case FAILURE:
@@ -115,9 +123,9 @@ public class SiteCreationService extends Service implements AutoForegroundListen
         return null;
     }
 
-    private void notifyState(SiteCreationPhase siteCreationPhase) {
+    private void setState(SiteCreationPhase siteCreationPhase) {
         mSiteCreationPhase = siteCreationPhase;
-        mAutoForeground.notifyState(siteCreationPhase);
+        notifyState();
 
         if (siteCreationPhase == SiteCreationPhase.FAILURE || siteCreationPhase == SiteCreationPhase.SUCCESS) {
             stopSelf();
@@ -140,12 +148,6 @@ public class SiteCreationService extends Service implements AutoForegroundListen
         mDispatcher.unregister(this);
         AppLog.i(T.MAIN, "SiteCreationService > Destroyed");
         super.onDestroy();
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mAutoForeground.getBinder();
     }
 
     private Intent getPendingIntent() {
@@ -204,7 +206,7 @@ public class SiteCreationService extends Service implements AutoForegroundListen
             return START_NOT_STICKY;
         }
 
-        notifyState(SiteCreationPhase.NEW_SITE);
+        setState(SiteCreationPhase.NEW_SITE);
 
         final String siteTitle = intent.getStringExtra(ARG_SITE_TITLE);
         final String siteSlug = intent.getStringExtra(ARG_SITE_SLUG);
@@ -231,12 +233,12 @@ public class SiteCreationService extends Service implements AutoForegroundListen
             public void onResponse(JSONObject response) {
                 ThemeTable.setCurrentTheme(WordPress.wpDB.getDatabase(), String.valueOf(site.getSiteId()), themeId);
 
-                notifyState(SiteCreationPhase.SUCCESS);
+                setState(SiteCreationPhase.SUCCESS);
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                notifyState(SiteCreationPhase.FAILURE);
+                setState(SiteCreationPhase.FAILURE);
 //                ToastUtils.showToast(ThemeBrowserActivity.this, R.string.theme_activation_error,
 //                        ToastUtils.Duration.SHORT);
             }
@@ -250,14 +252,14 @@ public class SiteCreationService extends Service implements AutoForegroundListen
     public void onNewSiteCreated(SiteStore.OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
-            notifyState(SiteCreationPhase.FAILURE);
+            setState(SiteCreationPhase.FAILURE);
 //            showError(event.error.type, event.error.message);
             return;
         }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
 
-        notifyState(SiteCreationPhase.FETCHING_NEW_SITE);
+        setState(SiteCreationPhase.FETCHING_NEW_SITE);
 
         mNewSiteRemoteId = event.newSiteRemoteId;
 
@@ -281,23 +283,23 @@ public class SiteCreationService extends Service implements AutoForegroundListen
         if (mSiteCreationPhase == SiteCreationPhase.FETCHING_NEW_SITE) {
             Intent intent = new Intent();
             if (site == null) {
-                notifyState(SiteCreationPhase.FAILURE);
+                setState(SiteCreationPhase.FAILURE);
                 //            ToastUtils.showToast(getActivity(), R.string.error_fetch_site_after_creation, ToastUtils.Duration.LONG);
                 return;
             }
 
-            notifyState(SiteCreationPhase.SET_TAGLINE);
+            setState(SiteCreationPhase.SET_TAGLINE);
 
             SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, site,
                     new SiteSettingsInterface.SiteSettingsListener() {
                         @Override
                         public void onSaveError(Exception error) {
-                            notifyState(SiteCreationPhase.FAILURE);
+                            setState(SiteCreationPhase.FAILURE);
                         }
 
                         @Override
                         public void onFetchError(Exception error) {
-                            notifyState(SiteCreationPhase.FAILURE);
+                            setState(SiteCreationPhase.FAILURE);
                         }
 
                         @Override
@@ -307,7 +309,7 @@ public class SiteCreationService extends Service implements AutoForegroundListen
 
                         @Override
                         public void onSettingsSaved() {
-                            notifyState(SiteCreationPhase.SET_THEME);
+                            setState(SiteCreationPhase.SET_THEME);
                             SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
                             activateTheme(site, mSiteTheme);
                         }
@@ -315,13 +317,13 @@ public class SiteCreationService extends Service implements AutoForegroundListen
                         @Override
                         public void onCredentialsValidated(Exception error) {
                             if (error != null) {
-                                notifyState(SiteCreationPhase.FAILURE);
+                                setState(SiteCreationPhase.FAILURE);
                             }
                         }
                     });
 
             if (siteSettings == null) {
-                notifyState(SiteCreationPhase.FAILURE);
+                setState(SiteCreationPhase.FAILURE);
                 return;
             }
 
@@ -329,7 +331,7 @@ public class SiteCreationService extends Service implements AutoForegroundListen
             siteSettings.setTagline(mSiteTagline);
             siteSettings.saveSettings();
         } else if (mSiteCreationPhase == SiteCreationPhase.SET_TAGLINE) {
-            notifyState(SiteCreationPhase.SET_THEME);
+            setState(SiteCreationPhase.SET_THEME);
             activateTheme(site, mSiteTheme);
         }
     }

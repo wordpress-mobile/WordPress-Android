@@ -2,199 +2,104 @@ package org.wordpress.android.util;
 
 import android.app.Notification;
 import android.app.Service;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.os.Binder;
 import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
 import android.support.annotation.CallSuper;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 
-import java.util.ArrayList;
+import org.greenrobot.eventbus.EventBus;
 
-public class AutoForeground<State> implements WeakHandler.MessageListener {
+public abstract class AutoForeground<EventClass> extends Service {
 
     public static final int NOTIFICATION_ID_PROGRESS = 1;
     public static final int NOTIFICATION_ID_SUCCESS = 2;
     public static final int NOTIFICATION_ID_FAILURE = 3;
 
-    public static final int MSG_REGISTER_CLIENT = 1;
-    public static final int MSG_UNREGISTER_CLIENT = 2;
+    private class LocalBinder extends Binder {}
 
-    public static final int MSG_CURRENT_STATE = 4;
+    private final IBinder mBinder = new LocalBinder();
 
-    public static class ServiceClient {
-        private ServiceConnection mServiceConnection;
-        private final Messenger mClient;
-        private Messenger mService;
+    private final Class<EventClass> mEventClass;
 
-        public ServiceClient(Context context, Class<? extends AutoForegroundListener<?>> clazz,
-                WeakHandler.MessageListener clientListener) {
-            mClient = new Messenger(new WeakHandler(clientListener));
-            connect(context, clazz);
-        }
+    protected abstract EventClass getCurrentStateEvent();
+    protected abstract Notification getNotification();
+    protected abstract boolean isInProgress();
+    protected abstract boolean isError();
 
-        private void connect(Context context, Class<? extends AutoForegroundListener<?>> clazz) {
-            mServiceConnection = new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                    mService = new Messenger(iBinder);
-                    registerClient();
-                }
-
-                @Override
-                public void onServiceDisconnected(ComponentName componentName) {
-                    // nothing here
-                }
-            };
-
-            context.bindService(new Intent(context, clazz), mServiceConnection, Context.BIND_AUTO_CREATE);
-        }
-
-        public void disconnect(Context context) {
-            unregisterClient();
-
-            context.unbindService(mServiceConnection);
-        }
-
-        private void registerClient() {
-            Message msg = Message.obtain(null, AutoForeground.MSG_REGISTER_CLIENT);
-            msg.replyTo = mClient;
-            try {
-                mService.send(msg);
-                requestCurrentState();
-            } catch (RemoteException e) {
-                // In this case the service has crashed before we could even
-                // do anything with it; we can count on soon being
-                // disconnected (and then reconnected if it can be restarted)
-                // so there is no need to do anything special here.
-                e.printStackTrace();
-            }
-        }
-
-        private void unregisterClient() {
-            Message msg = Message.obtain(null, AutoForeground.MSG_UNREGISTER_CLIENT);
-            msg.replyTo = mClient;
-            try {
-                mService.send(msg);
-            } catch (RemoteException e) {
-                // In this case the service has crashed before we could even
-                // do anything with it; we can count on soon being
-                // disconnected (and then reconnected if it can be restarted)
-                // so there is no need to do anything special here.
-                e.printStackTrace();
-            }
-        }
-
-        public void requestCurrentState() {
-            Message msg = Message.obtain(null, AutoForeground.MSG_CURRENT_STATE);
-            msg.replyTo = mClient;
-            try {
-                mService.send(msg);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
+    protected AutoForeground(Class<EventClass> eventClass) {
+        mEventClass = eventClass;
     }
 
-    public interface AutoForegroundListener<State> {
-        State getCurrentState();
-        Notification getNotification(State state);
-        boolean isInProgress(State state);
-        boolean isError(State state);
-    }
-
-    private final AutoForegroundListener<State> mAutoForegroundListener;
-    private final Service mService;
-
-    private ArrayList<Messenger> mConnectedClients = new ArrayList<>();
-
-    private final Messenger mMessenger = new Messenger(new WeakHandler(this));
-
-    public <T extends Service & AutoForegroundListener> AutoForeground(T service) {
-        mAutoForegroundListener = service;
-        mService = service;
-    }
-
-    @Override
+    @Nullable
     @CallSuper
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-            case MSG_REGISTER_CLIENT:
-                mConnectedClients.add(msg.replyTo);
-                background();
-                break;
-            case MSG_UNREGISTER_CLIENT:
-                mConnectedClients.remove(msg.replyTo);
-                if (mConnectedClients.size() == 0) {
-                    promoteForeground();
-                }
-                break;
-            case MSG_CURRENT_STATE:
-                notifyState(mAutoForegroundListener.getCurrentState());
-                break;
-            default:
-                return false;
-        }
+    @Override
+    public IBinder onBind(Intent intent) {
+        notifyState();
 
-        return true;
+        return mBinder;
     }
 
-    private boolean notifyConnectedClients(State state) {
-        int validClients = 0;
+    @CallSuper
+    @Override
+    public void onRebind(Intent intent) {
+        super.onRebind(intent);
 
-        for (int i = mConnectedClients.size() - 1; i >= 0; i--) {
-            try {
-                mConnectedClients.get(i).send(Message.obtain(null, MSG_CURRENT_STATE, state));
-                validClients++;
-            } catch (RemoteException e) {
-                // The client is dead.  Remove it from the list;
-                // we are going through the list from back to front
-                // so this is safe to do inside the loop.
-                mConnectedClients.remove(i);
-            }
-        }
-
-        return validClients > 0;
+        notifyState();
     }
 
-    public IBinder getBinder() {
-        return mMessenger.getBinder();
+    @CallSuper
+    @Override
+    public boolean onUnbind(Intent intent) {
+        promoteForeground();
+
+        return true; // call onRebind() if new clients connect
+    }
+
+    private EventBus getEventBus() {
+        return EventBus.getDefault();
+    }
+
+    private boolean hasConnectedClients() {
+        return getEventBus().hasSubscriberForEvent(mEventClass);
     }
 
     private void promoteForeground() {
-        State state = mAutoForegroundListener.getCurrentState();
-        if (mAutoForegroundListener.isInProgress(state)) {
-            mService.startForeground(NOTIFICATION_ID_PROGRESS, mAutoForegroundListener.getNotification(state));
+        if (isInProgress()) {
+            startForeground(NOTIFICATION_ID_PROGRESS, getNotification());
         }
     }
 
     private void background() {
-        mService.stopForeground(true);
+        stopForeground(true);
     }
 
     @CallSuper
-    public void notifyState(State state) {
-        boolean hasValidClients = false;
-        if (mConnectedClients.size() > 0) {
-            hasValidClients = notifyConnectedClients(state);
+    protected void notifyState() {
+        if (hasConnectedClients()) {
+            // just send a message to the connected clients
+            getEventBus().post(getCurrentStateEvent());
+            return;
         }
 
-        if (!hasValidClients) {
-            if (mAutoForegroundListener.isInProgress(state)) {
-                NotificationManagerCompat.from(mService).notify(NOTIFICATION_ID_PROGRESS,
-                        mAutoForegroundListener.getNotification(state));
-            } else {
-                background();
-                NotificationManagerCompat.from(mService).cancel(NOTIFICATION_ID_PROGRESS);
+        // ok, no connected clients so, update will be redirected to a notification
 
-                NotificationManagerCompat.from(mService).notify(
-                        mAutoForegroundListener.isError(state) ? NOTIFICATION_ID_FAILURE : NOTIFICATION_ID_SUCCESS,
-                        mAutoForegroundListener.getNotification(state));
-            }
+        if (isInProgress()) {
+            // operation still is progress so, update the notification
+            NotificationManagerCompat.from(this).notify(NOTIFICATION_ID_PROGRESS, getNotification());
+            return;
         }
+
+        // operation has ended so, demote the Service to a background one
+        background();
+
+        // dismiss the sticky notification
+        NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID_PROGRESS);
+
+        // put out a simple success/failure notification
+        NotificationManagerCompat.from(this).notify(
+                isError() ? NOTIFICATION_ID_FAILURE : NOTIFICATION_ID_SUCCESS,
+                getNotification());
     }
 }
