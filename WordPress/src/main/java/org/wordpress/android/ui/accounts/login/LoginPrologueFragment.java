@@ -18,7 +18,6 @@ public class LoginPrologueFragment extends Fragment {
     public static final String TAG = "login_prologue_fragment_tag";
 
     LoginListener mLoginListener;
-    LoginProloguePagerAdapter mPagerAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,7 +48,7 @@ public class LoginPrologueFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-                switch (mPagerAdapter.getTag(position)) {
+                switch (LoginProloguePagerAdapter.getTag(position)) {
                     case LoginProloguePagerAdapter.LOGIN_PROLOGUE_POST_TAG:
                         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED_POST);
                         break;
@@ -76,8 +75,8 @@ public class LoginPrologueFragment extends Fragment {
         };
 
         WPViewPager pager = (WPViewPager) view.findViewById(R.id.intros_pager);
-        mPagerAdapter = new LoginProloguePagerAdapter(getChildFragmentManager());
-        pager.setAdapter(mPagerAdapter);
+        LoginProloguePagerAdapter adapter = new LoginProloguePagerAdapter(getChildFragmentManager());
+        pager.setAdapter(adapter);
         pager.addOnPageChangeListener(listener);
 
         // Using a TabLayout for simulating a page indicator strip
