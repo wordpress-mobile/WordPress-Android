@@ -608,7 +608,6 @@ Language: sk
 	<string name="dlg_approving_comments">Schvaľovanie</string>
 	<string name="new_media">Nový súbor</string>
 	<string name="media_error_no_permission">Nemáte práva na zobrazenie knižnice súborov</string>
-	<string name="share_action_media">Knižnica súborov</string>
 	<string name="fatal_db_error">Počas vytvárania databázy sa vyskytla chyba. Preinštalujte aplikáciu.</string>
 	<string name="privacy_policy">Ochrana osobných údajov</string>
 	<string name="local_changes">Miestne zmeny</string>
@@ -630,7 +629,6 @@ Language: sk
 	<string name="http_authorization_required">Požaduje sa autorizácia</string>
 	<string name="view_site">Pozrieť stránku</string>
 	<string name="new_post">Nový príspevok</string>
-	<string name="share_action_post">Nový príspevok</string>
 	<string name="view_in_browser">Pozrieť v prehliadači</string>
 	<string name="add_new_category">Pridať novú kategóriu</string>
 	<string name="category_name">Názov kategórie</string>

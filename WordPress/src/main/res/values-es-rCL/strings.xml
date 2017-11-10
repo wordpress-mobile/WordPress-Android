@@ -422,8 +422,6 @@ Language: es_CL
 	<string name="view_in_browser">Ver en el navegador</string>
 	<string name="add_new_category">Añadir nueva categoría</string>
 	<string name="category_name">Nombre de la categoría</string>
-	<string name="share_action_post">Nueva entrada</string>
-	<string name="share_action_media">Librería multimedia</string>
 	<string name="file_error_create">No se pudo crear un archivo temporal para subir el archivo multimedia. Asegúrate que haya suficiente espacio libre en tu dispositivo.</string>
 	<string name="open_source_licenses">Licencias Open source</string>
 	<string name="http_credentials">Credenciales HTTP (opcional)</string>

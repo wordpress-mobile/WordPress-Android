@@ -339,7 +339,6 @@ Language: sr_RS
 	<string name="blog_title_invalid">Неисправан наслов веб места</string>
 	<string name="blog_name_invalid">Неисправна адреса веб места</string>
 	<string name="email_hint">Адреса е-поште</string>
-	<string name="share_action_post">Нови чланак</string>
 	<string name="add_new_category">Додај нову категорију</string>
 	<string name="category_name">Име категорије</string>
 	<string name="post_not_published">Стање чланка није објављено</string>
@@ -381,7 +380,6 @@ Language: sr_RS
 	<string name="author_name">Име аутора</string>
 	<string name="trash_no">Не шаљи на отпад</string>
 	<string name="delete_post">Обриши чланак</string>
-	<string name="share_action_media">Библиотека медија</string>
 	<string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
 	<string name="xmlrpc_error">Није могуће повезати се. Унесите пуну путању до xmlrpc.php на свом веб месту и покушајте поново.</string>
 	<string name="email_reserved">Та адреса веб-поште је већ у употреби. Проверите своје поштанско сандуче за поруку за активацију. Уколико не активирате, постаће доступна за неколико дана.</string>

@@ -119,7 +119,6 @@ Language: hu
 	<string name="author_email">Szerző e-mail</string>
 	<string name="mnu_comment_trash">Lomtár</string>
 	<string name="media_error_no_permission">Nincs elég jogosultság a médiatár megtekitéséhez</string>
-	<string name="share_action_post">Új bejegyzés</string>
 	<string name="post_settings">Bejegyzés beálitások</string>
 	<string name="upload_failed">Sikertelen feltöltés</string>
 	<string name="edit_comment">Hozzászólás szerkesztése</string>
