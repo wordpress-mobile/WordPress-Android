@@ -52,7 +52,9 @@ public abstract class AutoForeground<EventClass> extends Service {
     @CallSuper
     @Override
     public boolean onUnbind(Intent intent) {
-        promoteForeground();
+        if (!hasConnectedClients()) {
+            promoteForeground();
+        }
 
         return true; // call onRebind() if new clients connect
     }
