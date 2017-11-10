@@ -151,10 +151,7 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
     }
 
     private Intent getPendingIntent() {
-        Intent intent = new Intent(this, NewBlogActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        return intent;
+        return new Intent(this, NewBlogActivity.class);
     }
 
     private Notification getProgressNotification(int progress, String content) {
@@ -239,8 +236,6 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
             @Override
             public void onErrorResponse(VolleyError error) {
                 setState(SiteCreationPhase.FAILURE);
-//                ToastUtils.showToast(ThemeBrowserActivity.this, R.string.theme_activation_error,
-//                        ToastUtils.Duration.SHORT);
             }
         });
     }
@@ -253,7 +248,6 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
             setState(SiteCreationPhase.FAILURE);
-//            showError(event.error.type, event.error.message);
             return;
         }
 
@@ -284,7 +278,6 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
             Intent intent = new Intent();
             if (site == null) {
                 setState(SiteCreationPhase.FAILURE);
-                //            ToastUtils.showToast(getActivity(), R.string.error_fetch_site_after_creation, ToastUtils.Duration.LONG);
                 return;
             }
 
