@@ -19,7 +19,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreationStateUpdated;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ServiceEventConnection;
+import org.wordpress.android.util.AutoForeground.ServiceEventConnection;
 
 public class SiteCreatingFragment extends Fragment  {
     public static final String TAG = "site_creating_fragment_tag";
