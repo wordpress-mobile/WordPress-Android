@@ -441,4 +441,5 @@ public class WPMediaUtils {
     public static int getFlingDistanceToDisableThumbLoading(@NonNull Context context) {
         return ViewConfiguration.get(context).getScaledMaximumFlingVelocity() / 2;
     }
+
 }

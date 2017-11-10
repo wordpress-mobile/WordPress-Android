@@ -319,8 +319,6 @@ Language: da_DK
 	<string name="cancel_edit">Fortryd redigering</string>
 	<string name="theme_premium_theme">Premium tema</string>
 	<string name="open_source_licenses">Open source-licenser</string>
-	<string name="share_action_media">Mediebibliotek</string>
-	<string name="share_action_post">Nyt indlæg</string>
 	<string name="local_draft">Lokal kladde</string>
 	<string name="toast_comment_unedited">Kommentar er ikke ændret</string>
 	<string name="required_field">Påkrævet felt</string>

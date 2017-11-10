@@ -27,7 +27,7 @@ import java.util.List;
 public class AppPrefs {
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
     private static final int MAX_PENDING_DRAFTS_AMOUNT = 100;
-    public static final int MAX_RECENTLY_PICKED_SITES = 4;
+    public static final int MAX_RECENTLY_PICKED_SITES = 5;
 
     public interface PrefKey {
         String name();
@@ -147,8 +147,6 @@ public class AppPrefs {
         SWIPE_TO_NAVIGATE_READER,
 
         // smart toast counters
-        SMART_TOAST_MEDIA_LONG_PRESS_USAGE_COUNTER,
-        SMART_TOAST_MEDIA_LONG_PRESS_TOAST_COUNTER,
         SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
         SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER,
 

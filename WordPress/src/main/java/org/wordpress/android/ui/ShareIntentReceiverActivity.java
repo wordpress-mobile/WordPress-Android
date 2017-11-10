@@ -21,6 +21,7 @@ import org.wordpress.android.ui.ShareIntentReceiverFragment.ShareAction;
 import org.wordpress.android.ui.ShareIntentReceiverFragment.ShareIntentFragmentListener;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -187,7 +188,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
 
         intent.putExtra(WordPress.SITE, mSiteStore.getSiteByLocalId(mSelectedSiteLocalId));
 
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserActivity.MediaBrowserType.BROWSER);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.BROWSER);
         intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
         intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra(Intent.EXTRA_SUBJECT));
 

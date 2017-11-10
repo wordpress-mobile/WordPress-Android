@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
@@ -30,19 +29,12 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.SimpleAdapter;
+import android.widget.PopupMenu;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -69,8 +61,8 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -79,9 +71,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,16 +83,6 @@ import javax.inject.Inject;
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         OnQueryTextListener, OnActionExpandListener,
         WPMediaUtils.LaunchCameraCallback {
-
-    public enum MediaBrowserType {
-        BROWSER,                              // browse & manage media
-        MULTI_SELECT_IMAGE_AND_VIDEO_PICKER,  // select multiple images or videos
-        SINGLE_SELECT_IMAGE_PICKER;           // select a single image
-
-        public boolean isPicker() {
-            return this == MULTI_SELECT_IMAGE_AND_VIDEO_PICKER || this == SINGLE_SELECT_IMAGE_PICKER;
-        }
-    }
 
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_FILTER = "filter";
@@ -117,8 +97,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private SiteModel mSite;
 
     private MediaGridFragment mMediaGridFragment;
-    private PopupWindow mAddMediaPopup;
-
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
     private Menu mMenu;
@@ -131,6 +109,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private String mMediaCapturePath;
     private MediaBrowserType mBrowserType;
     private AddMenuItem mLastAddMediaItemClicked;
+
+    private enum AddMenuItem {
+        ITEM_CAPTURE_PHOTO,
+        ITEM_CAPTURE_VIDEO,
+        ITEM_CHOOSE_PHOTO,
+        ITEM_CHOOSE_VIDEO
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -179,7 +164,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         setupTabs();
 
         MediaFilter filter;
-        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
+        if (mBrowserType.isSingleImagePicker()) {
             filter = MediaFilter.FILTER_IMAGES;
         } else if (savedInstanceState != null) {
             filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
@@ -207,13 +192,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     /*
-     * only show tabs when being used as a media browser rather than a media picker
+     * only show tabs when the user can filter the media by type
      */
     private boolean shouldShowTabs() {
-        return mBrowserType == MediaBrowserType.BROWSER;
+        return mBrowserType.canFilter();
     }
 
-    public void enableTabs(boolean enable) {
+    private void enableTabs(boolean enable) {
         if (!shouldShowTabs()) return;
 
         if (enable && mTabLayout.getVisibility() != View.VISIBLE) {
@@ -452,21 +437,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         // hide "add media" if the user doesn't have upload permission or this is a multiselect picker
-        if (mBrowserType == MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER
+        if (mBrowserType.canMultiselect()
                 || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
         }
 
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mAddMediaPopup != null && mAddMediaPopup.isShowing()) {
-            mAddMediaPopup.dismiss();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -476,11 +452,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 onBackPressed();
                 return true;
             case R.id.menu_new_media:
-                if (isAddMediaPopupShowing()) {
-                    hideAddMediaPopup();
-                } else {
-                    showAddMediaPopup();
-                }
+                showAddMediaPopup();
                 return true;
             case R.id.menu_search:
                 mSearchMenuItem = item;
@@ -549,7 +521,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onMediaItemSelected(View sourceView, int localMediaId) {
+    public void onMediaItemSelected(View sourceView, int localMediaId, boolean isLongClick) {
         MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
         if (media == null) {
             AppLog.w(AppLog.T.MEDIA, "Media browser > unable to load localMediaId = " + localMediaId);
@@ -557,24 +529,42 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             return;
         }
 
-        boolean isLocalFile = MediaUtils.isLocalFile(media.getUploadState());
+        // do nothing for failed uploads
+        if (MediaUploadState.fromString(media.getUploadState()) == MediaUploadState.FAILED) {
+            return;
+        }
 
-        // if this is being used as a media picker return the selected item and finish, otherwise
-        // preview the selected item
-        if (mBrowserType.isPicker()) {
-            if (isLocalFile) {
-                ToastUtils.showToast(this, R.string.error_media_still_uploading);
-                return;
-            }
+        // show detail view when tapped if we're browsing media, when used as a picker show detail
+        // when long tapped (to mimic native photo picker)
+        if (mBrowserType.isBrowser() && !isLongClick
+                || mBrowserType.isPicker() && isLongClick) {
+            showMediaSettings(media, sourceView);
+        } else if (mBrowserType.isSingleImagePicker() && !isLongClick) {
+            // if we're picking a single image, we're done
             Intent intent = new Intent();
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
             remoteMediaIds.add(media.getMediaId());
             intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
             setResult(RESULT_OK, intent);
             finish();
-        } else {
-            showMediaSettings(media, sourceView);
         }
+    }
+
+    @Override
+    public void onMediaRequestRetry(int localMediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
+        if (media != null) {
+            addMediaToUploadService(media);
+        } else {
+            ToastUtils.showToast(this, R.string.error_media_not_found);
+        }
+    }
+
+    @Override
+    public void onMediaRequestDelete(int localMediaId) {
+        ArrayList<Integer> ids = new ArrayList<>();
+        ids.add(localMediaId);
+        deleteMedia(ids);
     }
 
     private void showMediaSettings(@NonNull MediaModel media, View sourceView) {
@@ -589,16 +579,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public void onMediaCapturePathReady(String mediaCapturePath) {
         mMediaCapturePath = mediaCapturePath;
-    }
-
-    @Override
-    public void onRetryUpload(int localMediaId) {
-        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
-        if (media == null) {
-            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
-            return;
-        }
-        addMediaToUploadService(media);
     }
 
     private void showMediaToastError(@StringRes int message, @Nullable String messageDetail) {
@@ -682,7 +662,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         enableTabs(true);
     }
 
-    public void deleteMedia(final ArrayList<Integer> ids) {
+    // TODO: in a future PR this and startMediaDeleteService() can be simplified since multiselect delete was dropped
+    private void deleteMedia(final ArrayList<Integer> ids) {
         final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
         int processedItemCount = 0;
 
@@ -774,96 +755,51 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     };
 
-    /** Setup the popup that allows you to add new media from camera, video camera or local files **/
-    private void createAddMediaPopup() {
-        SimpleAdapter adapter = mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER
-                ? getAddMenuSimpleAdapter(
-                        AddMenuItem.ITEM_CAPTURE_PHOTO,
-                        AddMenuItem.ITEM_CHOOSE_PHOTO)
-                : getAddMenuSimpleAdapter(
-                        AddMenuItem.ITEM_CAPTURE_PHOTO,
-                        AddMenuItem.ITEM_CAPTURE_VIDEO,
-                        AddMenuItem.ITEM_CHOOSE_PHOTO,
-                        AddMenuItem.ITEM_CHOOSE_VIDEO);
-
-        @SuppressLint("InflateParams")
-        View menuView = getLayoutInflater().inflate(R.layout.actionbar_add_media, null, false);
-        ListView listView = (ListView) menuView.findViewById(R.id.actionbar_add_media_listview);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                @SuppressWarnings("unchecked")
-                HashMap<String, Object> map = (HashMap<String, Object>) parent.getAdapter().getItem(position);
-                doAddMediaItemClicked((AddMenuItem) map.get(ITEM));
-                mAddMediaPopup.dismiss();
-            }
-        });
-
-        int width = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_width);
-        mAddMediaPopup = new PopupWindow(menuView, width, ViewGroup.LayoutParams.WRAP_CONTENT, false);
-        mAddMediaPopup.setFocusable(false);
-        mAddMediaPopup.setOutsideTouchable(true);
-    }
-
-    private boolean isAddMediaPopupShowing() {
-        return mAddMediaPopup != null && mAddMediaPopup.isShowing();
-    }
-
-    private void hideAddMediaPopup() {
-        if (mAddMediaPopup != null) {
-            mAddMediaPopup.dismiss();
-        }
-    }
-
     private void showAddMediaPopup() {
-        if (mAddMediaPopup == null) {
-            createAddMediaPopup();
+        View anchor = findViewById(R.id.menu_new_media);
+        PopupMenu popup = new PopupMenu(this, anchor);
+
+        popup.getMenu().add(R.string.photo_picker_capture_photo).setOnMenuItemClickListener(
+                new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        doAddMediaItemClicked(AddMenuItem.ITEM_CAPTURE_PHOTO);
+                        return true;
+                    }
+                });
+
+        if (!mBrowserType.isSingleImagePicker()) {
+            popup.getMenu().add(R.string.photo_picker_capture_video).setOnMenuItemClickListener(
+                    new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            doAddMediaItemClicked(AddMenuItem.ITEM_CAPTURE_VIDEO);
+                            return true;
+                        }
+                    });
         }
 
-        View view = findViewById(R.id.menu_new_media);
-        if (view != null) {
-            int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
-            int[] loc = new int[2];
-            view.getLocationOnScreen(loc);
-            mAddMediaPopup.showAtLocation(
-                    view,
-                    Gravity.TOP | Gravity.START,
-                    loc[0],
-                    loc[1] + view.getHeight() + y_offset);
-        } else {
-            // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
-            View gridView = findViewById(R.id.recycler);
-            mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
-        }
-    }
+        popup.getMenu().add(R.string.photo_picker_choose_photo).setOnMenuItemClickListener(
+                new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_PHOTO);
+                        return true;
+                    }
+                });
 
-    private enum AddMenuItem {
-        ITEM_CAPTURE_PHOTO(R.string.photo_picker_capture_photo),
-        ITEM_CAPTURE_VIDEO(R.string.photo_picker_capture_video),
-        ITEM_CHOOSE_PHOTO(R.string.photo_picker_choose_photo),
-        ITEM_CHOOSE_VIDEO(R.string.photo_picker_choose_video);
-
-        @StringRes private final int resource;
-
-        AddMenuItem(@StringRes int resource) {
-            this.resource = resource;
-        }
-    }
-
-    private static final String ITEM = "item";
-
-    private SimpleAdapter getAddMenuSimpleAdapter(AddMenuItem... addMenuItems) {
-        ArrayList<HashMap<String, Object>> itemsList = new ArrayList<>();
-
-        for (AddMenuItem addMenuItem : addMenuItems) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("text", getString(addMenuItem.resource));
-            hashMap.put(ITEM, addMenuItem);
-            itemsList.add(hashMap);
+        if (!mBrowserType.isSingleImagePicker()) {
+            popup.getMenu().add(R.string.photo_picker_choose_video).setOnMenuItemClickListener(
+                    new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_VIDEO);
+                            return true;
+                        }
+                    });
         }
 
-        return new SimpleAdapter(this, itemsList, R.layout.actionbar_add_media_cell, new String[]{"text"},
-                new int[]{R.id.text});
+        popup.show();
     }
 
     private void doAddMediaItemClicked(@NonNull AddMenuItem item) {
@@ -954,48 +890,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {
-        // It is a regular local media file
-        String path = MediaUtils.getRealPathFromURI(this,uri);
-
-        if (TextUtils.isEmpty(path)) {
+        MediaModel media = FluxCUtils.mediaModelFromLocalUri(this, uri, mimeType, mMediaStore, mSite.getId());
+        if (media == null) {
             ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
             return;
         }
 
-        File file = new File(path);
-        if (!file.exists()) {
-            return;
-        }
-
-        MediaModel media = mMediaStore.instantiateMediaModel();
-        String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
-        String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
-
-        // Try to get mime type if none was passed to this method
-        if (mimeType == null) {
-            mimeType = getContentResolver().getType(uri);
-            if (mimeType == null) {
-                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
-            }
-            if (mimeType == null) {
-                // Default to image jpeg
-                mimeType = "image/jpeg";
-            }
-        }
-        // If file extension is null, upload won't work on wordpress.com
-        if (fileExtension == null) {
-            fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
-            filename += "." + fileExtension;
-        }
-
-        media.setFileName(filename);
-        media.setTitle(filename);
-        media.setFilePath(path);
-        media.setLocalSiteId(mSite.getId());
-        media.setFileExtension(fileExtension);
-        media.setMimeType(mimeType);
-        media.setUploadState(MediaUploadState.QUEUED);
-        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         addMediaToUploadService(media);
 

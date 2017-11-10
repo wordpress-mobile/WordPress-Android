@@ -21,9 +21,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -40,11 +42,30 @@ import java.util.regex.Pattern;
 import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher, OnEditorCommitListener {
+    private static final String KEY_2FA_TYPE = "KEY_2FA_TYPE";
     private static final String KEY_IN_PROGRESS_MESSAGE_ID = "KEY_IN_PROGRESS_MESSAGE_ID";
+    private static final String KEY_NONCE_AUTHENTICATOR = "KEY_NONCE_AUTHENTICATOR";
+    private static final String KEY_NONCE_BACKUP = "KEY_NONCE_BACKUP";
+    private static final String KEY_NONCE_SMS = "KEY_NONCE_SMS";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
 
+    private static final String ARG_2FA_ID_TOKEN = "ARG_2FA_ID_TOKEN";
+    private static final String ARG_2FA_IS_SOCIAL = "ARG_2FA_IS_SOCIAL";
+    private static final String ARG_2FA_IS_SOCIAL_CONNECT = "ARG_2FA_IS_SOCIAL_CONNECT";
+    private static final String ARG_2FA_NONCE_AUTHENTICATOR = "ARG_2FA_NONCE_AUTHENTICATOR";
+    private static final String ARG_2FA_NONCE_BACKUP = "ARG_2FA_NONCE_BACKUP";
+    private static final String ARG_2FA_NONCE_SMS = "ARG_2FA_NONCE_SMS";
+    private static final String ARG_2FA_SOCIAL_SERVICE = "ARG_2FA_SOCIAL_SERVICE";
+    private static final String ARG_2FA_USER_ID = "ARG_2FA_USER_ID";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
+    private static final int LENGTH_NONCE_AUTHENTICATOR = 6;
+    private static final int LENGTH_NONCE_BACKUP = 8;
+    private static final int LENGTH_NONCE_SMS = 7;
+
+    private static final String TWO_FACTOR_TYPE_AUTHENTICATOR = "authenticator";
+    private static final String TWO_FACTOR_TYPE_BACKUP = "backup";
+    private static final String TWO_FACTOR_TYPE_SMS = "sms";
 
     public static final String TAG = "login_2fa_fragment_tag";
 
@@ -54,13 +75,53 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     ArrayList<Integer> mOldSitesIDs;
 
     private String mEmailAddress;
+    private String mIdToken;
+    private String mNonce;
+    private String mNonceAuthenticator;
+    private String mNonceBackup;
+    private String mNonceSms;
     private String mPassword;
+    private String mService;
+    private String mType;
+    private String mUserId;
+    private boolean isSocialLogin;
+    private boolean isSocialLoginConnect;
 
     public static Login2FaFragment newInstance(String emailAddress, String password) {
         Login2FaFragment fragment = new Login2FaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
         args.putString(ARG_PASSWORD, password);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static Login2FaFragment newInstanceSocial(String emailAddress, String userId,
+                                                     String nonceAuthenticator, String nonceBackup,
+                                                     String nonceSms) {
+        Login2FaFragment fragment = new Login2FaFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_EMAIL_ADDRESS, emailAddress);
+        args.putString(ARG_2FA_USER_ID, userId);
+        args.putString(ARG_2FA_NONCE_AUTHENTICATOR, nonceAuthenticator);
+        args.putString(ARG_2FA_NONCE_BACKUP, nonceBackup);
+        args.putString(ARG_2FA_NONCE_SMS, nonceSms);
+        args.putBoolean(ARG_2FA_IS_SOCIAL, true);
+        // Social account connected, connect call not needed.
+        args.putBoolean(ARG_2FA_IS_SOCIAL_CONNECT, false);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static Login2FaFragment newInstanceSocialConnect(String emailAddress, String password,
+                                                            String idToken, String service) {
+        Login2FaFragment fragment = new Login2FaFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_EMAIL_ADDRESS, emailAddress);
+        args.putString(ARG_PASSWORD, password);
+        args.putString(ARG_2FA_ID_TOKEN, idToken);
+        args.putBoolean(ARG_2FA_IS_SOCIAL_CONNECT, true);
+        args.putString(ARG_2FA_SOCIAL_SERVICE, service);
         fragment.setArguments(args);
         return fragment;
     }
@@ -128,6 +189,23 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
         mPassword = getArguments().getString(ARG_PASSWORD);
+        mNonceAuthenticator = getArguments().getString(ARG_2FA_NONCE_AUTHENTICATOR);
+        mNonceBackup = getArguments().getString(ARG_2FA_NONCE_BACKUP);
+        mNonceSms = getArguments().getString(ARG_2FA_NONCE_SMS);
+        mUserId = getArguments().getString(ARG_2FA_USER_ID);
+        mIdToken = getArguments().getString(ARG_2FA_ID_TOKEN);
+        isSocialLogin = getArguments().getBoolean(ARG_2FA_IS_SOCIAL);
+        isSocialLoginConnect = getArguments().getBoolean(ARG_2FA_IS_SOCIAL_CONNECT);
+        mService = getArguments().getString(ARG_2FA_SOCIAL_SERVICE);
+
+        if (savedInstanceState != null) {
+            // Overwrite argument nonce values with saved state values on device rotation.
+            mNonceAuthenticator = savedInstanceState.getString(KEY_NONCE_AUTHENTICATOR);
+            mNonceBackup = savedInstanceState.getString(KEY_NONCE_BACKUP);
+            mNonceSms = savedInstanceState.getString(KEY_NONCE_SMS);
+            // Restore set two-factor authentication type value on device rotation.
+            mType = savedInstanceState.getString(KEY_2FA_TYPE);
+        }
     }
 
     @Override
@@ -140,7 +218,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_TWO_FACTOR_FORM_VIEWED);
         }
-
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -150,6 +227,10 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         outState.putInt(KEY_IN_PROGRESS_MESSAGE_ID, mInProgressMessageId);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
+        outState.putString(KEY_NONCE_AUTHENTICATOR, mNonceAuthenticator);
+        outState.putString(KEY_NONCE_BACKUP, mNonceBackup);
+        outState.putString(KEY_NONCE_SMS, mNonceSms);
+        outState.putString(KEY_2FA_TYPE, mType);
     }
 
     @Override
@@ -181,10 +262,17 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
-        AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(mEmailAddress, mPassword);
-        payload.twoStepCode = twoStepCode;
-        payload.shouldSendTwoStepSms = shouldSendTwoStepSMS;
-        mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+        if (isSocialLogin && !shouldSendTwoStepSMS) {
+            setAuthCodeTypeAndNonce(twoStepCode);
+            AccountStore.PushSocialAuthPayload payload = new AccountStore.PushSocialAuthPayload(mUserId, mType, mNonce,
+                    twoStepCode);
+            mDispatcher.dispatch(AccountActionBuilder.newPushSocialAuthAction(payload));
+        } else {
+            AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(mEmailAddress, mPassword);
+            payload.twoStepCode = twoStepCode;
+            payload.shouldSendTwoStepSms = shouldSendTwoStepSMS;
+            mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+        }
     }
 
     private String getAuthCodeFromClipboard() {
@@ -204,6 +292,23 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         }
 
         return "";
+    }
+
+    private void setAuthCodeTypeAndNonce(String twoStepCode) {
+        switch(twoStepCode.length()) {
+            case LENGTH_NONCE_AUTHENTICATOR:
+                mType = TWO_FACTOR_TYPE_AUTHENTICATOR;
+                mNonce = mNonceAuthenticator;
+                break;
+            case LENGTH_NONCE_BACKUP:
+                mType = TWO_FACTOR_TYPE_BACKUP;
+                mNonce = mNonceBackup;
+                break;
+            case LENGTH_NONCE_SMS:
+                mType = TWO_FACTOR_TYPE_SMS;
+                mNonce = mNonceSms;
+                break;
+        }
     }
 
     @Override
@@ -265,6 +370,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
+            if (isSocialLogin) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, event.getClass().getSimpleName(),
+                        event.error.type.toString(), event.error.message);
+            }
+
             if (isAdded()) {
                 handleAuthError(event.error.type, event.error.message);
             }
@@ -274,13 +384,66 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
-        doFinishLogin();
+        if (isSocialLoginConnect) {
+            AccountStore.PushSocialLoginPayload payload = new AccountStore.PushSocialLoginPayload(mIdToken, mService);
+            mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
+        } else {
+            doFinishLogin();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSocialChanged(OnSocialChanged event) {
+        if (event.isError()) {
+            switch (event.error.type) {
+                // Two-factor authentication code was incorrect; save new nonce for another try.
+                case INVALID_TWO_STEP_CODE:
+                    endProgress();
+
+                    switch (mType) {
+                        case TWO_FACTOR_TYPE_AUTHENTICATOR:
+                            mNonceAuthenticator = event.error.nonce;
+                            break;
+                        case TWO_FACTOR_TYPE_BACKUP:
+                            mNonceBackup = event.error.nonce;
+                            break;
+                        case TWO_FACTOR_TYPE_SMS:
+                            mNonceSms = event.error.nonce;
+                            break;
+                    }
+
+                    show2FaError(getString(R.string.invalid_verification_code));
+                    break;
+                case UNABLE_CONNECT:
+                    AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
+                    break;
+                case USER_ALREADY_ASSOCIATED:
+                    AppLog.e(T.API, "This social account is already associated with a WordPress.com account.");
+                    break;
+            }
+
+            // Finish login on social connect error.
+            if (isSocialLoginConnect) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_FAILURE);
+                doFinishLogin();
+            }
+        } else {
+            if (isSocialLoginConnect) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_SUCCESS);
+            }
+            doFinishLogin();
+        }
     }
 
     @Override
     protected void onLoginFinished() {
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
-        mLoginListener.loggedInViaPassword(mOldSitesIDs);
+        if (isSocialLogin) {
+            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
+        } else {
+            mLoginListener.loggedInViaPassword(mOldSitesIDs);
+        }
     }
 }

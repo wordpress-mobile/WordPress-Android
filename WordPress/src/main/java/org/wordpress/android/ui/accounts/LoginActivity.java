@@ -23,6 +23,7 @@ import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.Login2FaFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
+import org.wordpress.android.ui.accounts.login.LoginGoogleFragment.GoogleLoginListener;
 import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
@@ -38,7 +39,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener {
+        Callback, LoginListener, GoogleLoginListener {
     private static final String KEY_SMARTLOCK_COMPLETED = "KEY_SMARTLOCK_COMPLETED";
 
     private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
@@ -241,7 +242,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void newUserCreatedButErrored(String email, String password) {
-        LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, password);
+        LoginEmailPasswordFragment loginEmailPasswordFragment =
+                LoginEmailPasswordFragment.newInstance(email, password, null, null, false);
         slideInFragment(loginEmailPasswordFragment, false, LoginEmailPasswordFragment.TAG);
     }
 
@@ -251,7 +253,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
             LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(email);
             slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
         } else {
-            LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, null);
+            LoginEmailPasswordFragment loginEmailPasswordFragment =
+                    LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
             slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
         }
     }
@@ -260,6 +263,19 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void loginViaSiteAddress() {
         LoginSiteAddressFragment loginSiteAddressFragment = new LoginSiteAddressFragment();
         slideInFragment(loginSiteAddressFragment, true, LoginSiteAddressFragment.TAG);
+    }
+
+    @Override
+    public void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired) {
+        LoginEmailPasswordFragment loginEmailPasswordFragment =
+                LoginEmailPasswordFragment.newInstance(email, null, idToken, service, isPasswordRequired);
+        slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
+    }
+
+    @Override
+    public void loggedInViaSocialAccount(ArrayList<Integer> oldSitesIds) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_SUCCESS);
+        loggedInAndFinish(oldSitesIds);
     }
 
     @Override
@@ -286,7 +302,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void usePasswordInstead(String email) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
-        LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email, null);
+        LoginEmailPasswordFragment loginEmailPasswordFragment =
+                LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
     }
 
@@ -299,6 +316,22 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void needs2fa(String email, String password) {
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, password);
+        slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
+    }
+
+    @Override
+    public void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
+                               String nonceSms) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
+        Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
+                nonceAuthenticator, nonceBackup, nonceSms);
+        slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
+    }
+
+    @Override
+    public void needs2faSocialConnect(String email, String password, String idToken, String service) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
+        Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocialConnect(email, password, idToken, service);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
     }
 
@@ -352,6 +385,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void helpEmailScreen(String email) {
         launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_EMAIL);
+    }
+
+    @Override
+    public void helpSocialEmailScreen(String email) {
+        launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_SOCIAL);
     }
 
     @Override
@@ -431,5 +469,21 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onConnectionSuspended(int i) {
         AppLog.d(AppLog.T.NUX, "Google API client connection suspended");
+    }
+
+    // GoogleLoginListener
+
+    @Override
+    public void onGoogleEmailSelected(String email) {
+        LoginEmailFragment loginEmailFragment =
+                (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
+        loginEmailFragment.setGoogleEmail(email);
+    }
+
+    @Override
+    public void onGoogleLoginFinished() {
+        LoginEmailFragment loginEmailFragment =
+                (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
+        loginEmailFragment.finishLogin();
     }
 }

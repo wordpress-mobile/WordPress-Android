@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Files coming from GlotPress are utf-8 encoded
+export LANG=UTF-8
+
 LANG_FILE=tools/release-notes-language-codes.csv
 TMPDIR=/tmp/release-notes
 OUTFILE=$TMPDIR/release-notes.xml
@@ -20,7 +23,7 @@ function cleanup() {
   | sed  's/<[^>]*>//g' \
   | sed 's/|*$//g' \
   | tr '|' '\n' \
-  | sed -e 's/\\'/'/g' \
+  | sed 's/\\'/'/g' \
   | sed 's/^[[:space:]]*//g' \
   | sed 's/[[:space:]]*$//g'
 }

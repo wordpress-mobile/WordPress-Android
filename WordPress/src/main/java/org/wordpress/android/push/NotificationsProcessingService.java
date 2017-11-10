@@ -40,6 +40,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -511,9 +512,6 @@ public class NotificationsProcessingService extends Service {
                 return;
             }
 
-            // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO);
-
             if (!TextUtils.isEmpty(mReplyText)) {
                 SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
                 if (site == null) {
@@ -533,6 +531,9 @@ public class NotificationsProcessingService extends Service {
                 // Push the reply
                 RemoteCreateCommentPayload payload = new RemoteCreateCommentPayload(site, comment, reply);
                 mDispatcher.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
+
+                // Bump analytics
+                AnalyticsUtils.trackCommentReplyWithDetails(true, site, comment);
             } else {
                 //cancel the current notification
                 NativeNotificationsUtils.dismissNotification(mPushId, mContext);
