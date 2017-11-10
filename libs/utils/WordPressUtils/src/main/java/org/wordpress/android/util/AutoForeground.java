@@ -46,6 +46,7 @@ public abstract class AutoForeground<EventClass> extends Service {
     public void onRebind(Intent intent) {
         super.onRebind(intent);
 
+        background();
         notifyState();
     }
 
