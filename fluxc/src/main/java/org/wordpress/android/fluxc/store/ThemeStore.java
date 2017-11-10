@@ -157,6 +157,14 @@ public class ThemeStore extends Store {
         }
     }
 
+    public static class OnThemeRemoved extends OnChanged<ThemesError> {
+        public ThemeModel theme;
+
+        public OnThemeRemoved(ThemeModel theme) {
+            this.theme = theme;
+        }
+    }
+
     public static class OnThemeDeleted extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -239,6 +247,12 @@ public class ThemeStore extends Store {
                 break;
             case DELETED_THEME:
                 handleThemeDeleted((ActivateThemePayload) action.getPayload());
+                break;
+            case REMOVE_THEME:
+                removeTheme((ThemeModel) action.getPayload());
+                break;
+            case REMOVE_SITE_THEMES:
+                removeSiteThemes((SiteModel) action.getPayload());
                 break;
         }
     }
@@ -425,5 +439,22 @@ public class ThemeStore extends Store {
             ThemeSqlUtils.removeTheme(payload.theme);
         }
         emitChange(event);
+    }
+
+    private void removeTheme(ThemeModel theme) {
+        if (theme != null) {
+            ThemeSqlUtils.removeTheme(theme);
+        }
+        emitChange(new OnThemeRemoved(theme));
+    }
+
+    private void removeSiteThemes(SiteModel site) {
+        final List<ThemeModel> themes = getThemesForSite(site);
+        if (!themes.isEmpty()) {
+            for (ThemeModel theme : themes) {
+                ThemeSqlUtils.removeTheme(theme);
+            }
+        }
+        emitChange(new OnThemesChanged(site));
     }
 }
