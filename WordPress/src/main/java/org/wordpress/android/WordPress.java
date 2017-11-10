@@ -42,6 +42,7 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
@@ -124,7 +125,6 @@ public class WordPress extends MultiDexApplication {
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
-
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -480,6 +480,10 @@ public class WordPress extends MultiDexApplication {
 
         // reset default account
         mDispatcher.dispatch(AccountActionBuilder.newSignOutAction());
+        // delete site-associated themes (keep WP.com themes cached)
+        for (SiteModel site : mSiteStore.getSites()) {
+            mDispatcher.dispatch(ThemeActionBuilder.newRemoveSiteThemesAction(site));
+        }
         // delete wpcom and jetpack sites
         mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
 
