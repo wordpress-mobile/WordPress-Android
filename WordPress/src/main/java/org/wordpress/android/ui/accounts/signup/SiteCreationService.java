@@ -157,7 +157,8 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
     private Notification getProgressNotification(int progress, String content) {
         return new NotificationCompat.Builder(this)
                 .setContentTitle(content)
-                .setSmallIcon(R.mipmap.app_icon)
+                .setSmallIcon(R.drawable.ic_my_sites_24dp)
+                .setColor(getResources().getColor(R.color.blue_wordpress))
                 .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
                         R.mipmap.app_icon))
                 .setAutoCancel(true)
@@ -172,7 +173,8 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
     private Notification getSuccessNotification(String content) {
         return new NotificationCompat.Builder(this)
                 .setContentTitle(content)
-                .setSmallIcon(R.mipmap.app_icon)
+                .setSmallIcon(R.drawable.ic_my_sites_24dp)
+                .setColor(getResources().getColor(R.color.blue_wordpress))
                 .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
                         R.mipmap.app_icon))
                 .setAutoCancel(true)
@@ -186,7 +188,8 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
     private Notification getFailureNotification(String content) {
         return new NotificationCompat.Builder(this)
                 .setContentTitle(content)
-                .setSmallIcon(R.mipmap.app_icon)
+                .setSmallIcon(R.drawable.ic_my_sites_24dp)
+                .setColor(getResources().getColor(R.color.blue_wordpress))
                 .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
                         R.mipmap.app_icon))
                 .setAutoCancel(true)
