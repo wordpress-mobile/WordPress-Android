@@ -3,12 +3,15 @@ package org.wordpress.android.ui.accounts.login;
 import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -48,6 +51,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private static final String KEY_NONCE_BACKUP = "KEY_NONCE_BACKUP";
     private static final String KEY_NONCE_SMS = "KEY_NONCE_SMS";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
+    private static final String KEY_SMS_NUMBER = "KEY_SMS_NUMBER";
+    private static final String KEY_SMS_SENT = "KEY_SMS_SENT";
 
     private static final String ARG_2FA_ID_TOKEN = "ARG_2FA_ID_TOKEN";
     private static final String ARG_2FA_IS_SOCIAL = "ARG_2FA_IS_SOCIAL";
@@ -74,6 +79,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private @StringRes int mInProgressMessageId;
     ArrayList<Integer> mOldSitesIDs;
 
+    private Button mSecondaryButton;
     private String mEmailAddress;
     private String mIdToken;
     private String mNonce;
@@ -81,11 +87,14 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private String mNonceBackup;
     private String mNonceSms;
     private String mPassword;
+    private String mPhoneNumber;
     private String mService;
     private String mType;
     private String mUserId;
+    private TextView mLabel;
     private boolean isSocialLogin;
     private boolean isSocialLoginConnect;
+    private boolean sentSmsCode;
 
     public static Login2FaFragment newInstance(String emailAddress, String password) {
         Login2FaFragment fragment = new Login2FaFragment();
@@ -137,8 +146,10 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     }
 
     @Override
-    protected void setupLabel(TextView label) {
-        // nothing special to do, just leave the string setup via the xml layout file
+    protected void setupLabel(@NonNull TextView label) {
+        label.setText(sentSmsCode ? getString(R.string.enter_verification_code_sms, mPhoneNumber)
+                : getString(R.string.enter_verification_code));
+        mLabel = label;
     }
 
     @Override
@@ -162,6 +173,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 }
             }
         });
+        secondaryButton.setText(getString(sentSmsCode ? R.string.login_text_otp_another : R.string.login_text_otp));
+        mSecondaryButton = secondaryButton;
 
         primaryButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -205,6 +218,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             mNonceSms = savedInstanceState.getString(KEY_NONCE_SMS);
             // Restore set two-factor authentication type value on device rotation.
             mType = savedInstanceState.getString(KEY_2FA_TYPE);
+            mPhoneNumber = savedInstanceState.getString(KEY_SMS_NUMBER);
+            sentSmsCode = savedInstanceState.getBoolean(KEY_SMS_SENT);
         }
     }
 
@@ -231,6 +246,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         outState.putString(KEY_NONCE_BACKUP, mNonceBackup);
         outState.putString(KEY_NONCE_SMS, mNonceSms);
         outState.putString(KEY_2FA_TYPE, mType);
+        outState.putString(KEY_SMS_NUMBER, mPhoneNumber);
+        outState.putBoolean(KEY_SMS_SENT, sentSmsCode);
     }
 
     @Override
@@ -262,11 +279,16 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
-        if (isSocialLogin && !shouldSendTwoStepSMS) {
-            setAuthCodeTypeAndNonce(twoStepCode);
-            AccountStore.PushSocialAuthPayload payload = new AccountStore.PushSocialAuthPayload(mUserId, mType, mNonce,
-                    twoStepCode);
-            mDispatcher.dispatch(AccountActionBuilder.newPushSocialAuthAction(payload));
+        if (isSocialLogin) {
+            if (shouldSendTwoStepSMS) {
+                AccountStore.PushSocialSmsPayload payload = new AccountStore.PushSocialSmsPayload(mUserId, mNonceSms);
+                mDispatcher.dispatch(AccountActionBuilder.newPushSocialSmsAction(payload));
+            } else {
+                setAuthCodeTypeAndNonce(twoStepCode);
+                AccountStore.PushSocialAuthPayload payload = new AccountStore.PushSocialAuthPayload(mUserId, mType, mNonce,
+                        twoStepCode);
+                mDispatcher.dispatch(AccountActionBuilder.newPushSocialAuthAction(payload));
+            }
         } else {
             AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(mEmailAddress, mPassword);
             payload.twoStepCode = twoStepCode;
@@ -358,6 +380,14 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         }
     }
 
+    private void showErrorDialog(String message) {
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+                .setMessage(message)
+                .setPositiveButton(R.string.login_error_button, null)
+                .create();
+        dialog.show();
+    }
+
     // OnChanged events
 
     @SuppressWarnings("unused")
@@ -415,6 +445,16 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
                     show2FaError(getString(R.string.invalid_verification_code));
                     break;
+                // Two-factor authentication via SMS failed; show message, log error, and replace SMS nonce with response.
+                case INVALID_TWO_STEP_NONCE:
+                case NO_PHONE_NUMBER_FOR_ACCOUNT:
+                case SMS_AUTHENTICATION_UNAVAILABLE:
+                case SMS_CODE_THROTTLED:
+                    endProgress();
+                    showErrorDialog(event.error.message);
+                    AppLog.e(T.API, event.error.type + ": " + event.error.message);
+                    mNonceSms = event.error.nonce;
+                    break;
                 case UNABLE_CONNECT:
                     AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
                     break;
@@ -428,6 +468,12 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_FAILURE);
                 doFinishLogin();
             }
+        // Two-factor authentication code was sent via SMS to account phone number; replace SMS nonce with response.
+        } else if (!TextUtils.isEmpty(event.phoneNumber) && !TextUtils.isEmpty(event.nonce)) {
+            endProgress();
+            mPhoneNumber = event.phoneNumber;
+            mNonceSms = event.nonce;
+            setTextForSms();
         } else {
             if (isSocialLoginConnect) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_SUCCESS);
@@ -445,5 +491,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         } else {
             mLoginListener.loggedInViaPassword(mOldSitesIDs);
         }
+    }
+
+    private void setTextForSms() {
+        mLabel.setText(getString(R.string.enter_verification_code_sms, mPhoneNumber));
+        mSecondaryButton.setText(getString(R.string.login_text_otp_another));
+        sentSmsCode = true;
     }
 }

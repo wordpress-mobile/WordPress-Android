@@ -1954,9 +1954,11 @@
     <string name="enter_username_instead">Log in with username instead.</string>
     <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
+    <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="login_text_otp">Text me a code instead.</string>
+    <string name="login_text_otp_another">Text me another code instead.</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
-    <string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
+    <string name="email_not_registered_wpcom">Hmm, this email address isn\'t registered with WordPress.com.\nAre you trying to access a self-hosted site? Log in using the link at the bottom of this screen.</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
     <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
