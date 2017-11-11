@@ -115,11 +115,12 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private EditText mCaptionView;
     private EditText mAltTextView;
     private EditText mDescriptionView;
+    private TextView mImageSizeView;
     private SeekBar mImageSizeSeekBarView;
     private Spinner mAlignmentSpinnerView;
     private FloatingActionButton mFabView;
 
-    private AlertDialog mDelteMediaConfirmationDialog;
+    private AlertDialog mDeleteMediaConfirmationDialog;
 
     private ProgressDialog mProgressDialog;
 
@@ -230,6 +231,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mCaptionView = (EditText) findViewById(R.id.edit_caption);
         mAltTextView = (EditText) findViewById(R.id.edit_alt_text);
         mDescriptionView = (EditText) findViewById(R.id.edit_description);
+        mImageSizeView = (TextView) findViewById(R.id.image_size_hint);
         mImageSizeSeekBarView = (SeekBar) findViewById(R.id.image_size_seekbar);
         mAlignmentSpinnerView = (Spinner) findViewById(org.wordpress.android.editor.R.id.alignment_spinner);
         mFabView = (FloatingActionButton) findViewById(R.id.fab_button);
@@ -415,8 +417,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         outState.putInt(ARG_MEDIA_LOCAL_ID, mMedia.getId());
         outState.putParcelable(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
 
-        if (mDelteMediaConfirmationDialog != null) {
-            outState.putBoolean(ARG_DELETE_MEDIA_DIALOG_VISIBLE, mDelteMediaConfirmationDialog.isShowing());
+        if (mDeleteMediaConfirmationDialog != null) {
+            outState.putBoolean(ARG_DELETE_MEDIA_DIALOG_VISIBLE, mDeleteMediaConfirmationDialog.isShowing());
         }
 
         if (mSite != null) {
@@ -593,6 +595,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         if (isMediaFromEditor()) {
             findViewById(R.id.edit_description_container).setVisibility(View.GONE);
             findViewById(R.id.edit_caption_container).setVisibility(View.GONE);
+            findViewById(R.id.divider_dimensions).setVisibility(View.GONE);
+
             setupAlignmentSpinner();
             setupImageSizeSeekBar();
         } else {
@@ -665,7 +669,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mImageSizeLabelArray = getResources().getStringArray(R.array.image_size_label_array);
 
         if (mImageSizeKeyArray.length != mImageSizeLabelArray.length) {
-            throw new RuntimeException("Image Size Key and Label arrays have different length");
+            throw new RuntimeException("Length of Image Size Key and Label arrays is not same");
         }
 
         int imageSizeKey = Arrays.asList(mImageSizeKeyArray).indexOf(mEditorImageMetaData.getSize());
@@ -673,7 +677,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mImageSizeSeekBarView.setMax(mImageSizeLabelArray.length - 1);
         mImageSizeSeekBarView.setProgress(imageSizeKey);
 
-        ((TextView) findViewById(R.id.image_size_hint)).setText(mImageSizeLabelArray[imageSizeKey]);
+        mImageSizeView.setText(mImageSizeLabelArray[imageSizeKey]);
 
         mImageSizeSeekBarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -686,7 +690,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ((TextView) findViewById(R.id.image_size_hint)).setText(mImageSizeLabelArray[progress]);
+                mImageSizeView.setText(mImageSizeLabelArray[progress]);
             }
         });
     }
@@ -711,13 +715,15 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     /**
      * Initialize the image alignment spinner
      */
-    private void setupAlignmentSpinner() {
+        private void setupAlignmentSpinner() {
         String alignment = mEditorImageMetaData.getAlign();
         mAlignmentKeyArray = getResources().getStringArray(R.array.alignment_key_array);
         int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.alignment_array, R.layout.media_settings_alignment_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.alignment_array,
+                R.layout.media_settings_alignment_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         mAlignmentSpinnerView.setAdapter(adapter);
         mAlignmentSpinnerView.setSelection(alignmentIndex == -1 ? 0 : alignmentIndex);
     }
@@ -1017,8 +1023,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     * Depending on the media source it either removes it from post or deletes it from MediaBrowser
     */
     private void deleteMediaWithConfirmation() {
-        if (mDelteMediaConfirmationDialog != null) {
-            mDelteMediaConfirmationDialog.show();
+        if (mDeleteMediaConfirmationDialog != null) {
+            mDeleteMediaConfirmationDialog.show();
             return;
         }
 
@@ -1046,8 +1052,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                             }
                         }).setNegativeButton(R.string.cancel, null);
 
-        mDelteMediaConfirmationDialog = builder.create();
-        mDelteMediaConfirmationDialog.show();
+        mDeleteMediaConfirmationDialog = builder.create();
+        mDeleteMediaConfirmationDialog.show();
     }
 
     private void deleteMedia() {
