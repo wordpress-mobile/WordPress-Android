@@ -48,7 +48,7 @@ Language: fr
 	<string name="media_edit_filetype_caption">Type de fichier</string>
 	<string name="media_edit_filename_caption">Nom du fichier</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_card_caption">Détails du fichier</string>
+	<string name="media_edit_file_details_card_caption">Détails du fichier</string>
 	<string name="media_edit_alttext_text">Texte alternatif</string>
 	<string name="copy">Copier</string>
 	<string name="notification_settings_item_sights_and_sounds_blink_light">Faire clignoter la lumière</string>

@@ -48,7 +48,7 @@ Language: ro
 	<string name="media_edit_filetype_caption">Tip de fișier</string>
 	<string name="media_edit_filename_caption">Nume fișier</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_card_caption">Detalii fișier</string>
+	<string name="media_edit_file_details_card_caption">Detalii fișier</string>
 	<string name="media_edit_alttext_text">Text alternativ</string>
 	<string name="copy">Copiază</string>
 	<string name="connect_site">Conectează situl</string>

@@ -48,7 +48,7 @@ Language: en_AU
 	<string name="media_edit_filetype_caption">File Type</string>
 	<string name="media_edit_filename_caption">File Name</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_card_caption">File Details</string>
+	<string name="media_edit_file_details_card_caption">File Details</string>
 	<string name="media_edit_alttext_text">Alt text</string>
 	<string name="copy">Copy</string>
 	<string name="connect_site">Connect Site</string>
