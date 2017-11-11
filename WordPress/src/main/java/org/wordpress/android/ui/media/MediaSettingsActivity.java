@@ -39,6 +39,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -598,7 +599,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             mDescriptionView.setText(mMedia.getDescription());
             mCaptionView.setText(mMedia.getCaption());
 
-            findViewById(R.id.editor_image_metadadata_container).setVisibility(View.GONE);
+            findViewById(R.id.card1).setVisibility(View.GONE);
         }
 
         TextView txtUrl = (TextView) findViewById(R.id.text_url);
@@ -655,6 +656,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
     }
 
+
     /**
      * Initialize the image width SeekBar and accompanying EditText
      */
@@ -671,7 +673,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mImageSizeSeekBarView.setMax(mImageSizeLabelArray.length - 1);
         mImageSizeSeekBarView.setProgress(imageSizeKey);
 
-        ((TextView) findViewById(R.id.image_size_hint)).setText("Size - " + mImageSizeLabelArray[imageSizeKey]);
+        ((TextView) findViewById(R.id.image_size_hint)).setText(mImageSizeLabelArray[imageSizeKey]);
 
         mImageSizeSeekBarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -684,7 +686,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ((TextView) findViewById(R.id.image_size_hint)).setText("Size - " + mImageSizeLabelArray[progress]);
+                ((TextView) findViewById(R.id.image_size_hint)).setText(mImageSizeLabelArray[progress]);
             }
         });
     }
@@ -713,6 +715,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         String alignment = mEditorImageMetaData.getAlign();
         mAlignmentKeyArray = getResources().getStringArray(R.array.alignment_key_array);
         int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.alignment_array, R.layout.media_settings_alignment_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mAlignmentSpinnerView.setAdapter(adapter);
         mAlignmentSpinnerView.setSelection(alignmentIndex == -1 ? 0 : alignmentIndex);
     }
 

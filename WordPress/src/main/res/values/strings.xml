@@ -185,7 +185,8 @@
     <string name="media_edit_failure">Failed to update</string>
     <string name="saving">Saving…</string>
     <string name="confirm_discard_changes">Discard unsaved changes?</string>
-    <string name="media_edit_card_caption">File Details</string>
+    <string name="media_edit_file_details_card_caption">File Details</string>
+    <string name="media_edit_customize_card_caption">Customize</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_filename_caption">File Name</string>
     <string name="media_edit_filetype_caption">File Type</string>
