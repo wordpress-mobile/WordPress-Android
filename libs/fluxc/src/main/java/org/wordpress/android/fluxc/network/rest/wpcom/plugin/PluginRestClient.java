@@ -184,11 +184,14 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 = new InstallSitePluginError(InstallSitePluginErrorType.GENERIC_ERROR);
                         if (networkError instanceof WPComGsonNetworkError) {
                             switch (((WPComGsonNetworkError) networkError).apiError) {
-                                case "unauthorized":
-                                    installPluginError.type = InstallSitePluginErrorType.UNAUTHORIZED;
-                                    break;
                                 case "install_failure":
                                     installPluginError.type = InstallSitePluginErrorType.INSTALL_FAILURE;
+                                    break;
+                                case "plugin_already_installed":
+                                    installPluginError.type = InstallSitePluginErrorType.ALREADY_INSTALLED;
+                                    break;
+                                case "unauthorized":
+                                    installPluginError.type = InstallSitePluginErrorType.UNAUTHORIZED;
                                     break;
                             }
                         }
