@@ -124,8 +124,8 @@ class ThemeBrowserAdapter extends CursorAdapter {
             return;
         }
 
+        String screenshotURL = cursor.getString(cursor.getColumnIndex(ThemeModelTable.SCREENSHOT_URL));
         final ThemeViewHolder themeViewHolder = (ThemeViewHolder) view.getTag();
-        final String screenshotURL = cursor.getString(cursor.getColumnIndex(ThemeModelTable.SCREENSHOT_URL));
         final String name = cursor.getString(cursor.getColumnIndex(ThemeModelTable.NAME));
         final String themeId = cursor.getString(cursor.getColumnIndex(ThemeModelTable.THEME_ID));
         final String currency = cursor.getString(cursor.getColumnIndex(ThemeModelTable.CURRENCY));
@@ -141,6 +141,16 @@ class ThemeBrowserAdapter extends CursorAdapter {
             themeViewHolder.priceView.setVisibility(View.VISIBLE);
         } else {
             themeViewHolder.priceView.setVisibility(View.GONE);
+        }
+
+        // catch the case where a URL has no protocol
+        if (!screenshotURL.startsWith("http")) {
+            // some APIs return a URL starting with // so the protocol can be supplied by the client
+            // strip // before adding the protocol
+            if (screenshotURL.startsWith("//")) {
+                screenshotURL = screenshotURL.substring(2);
+            }
+            screenshotURL = "https://" + screenshotURL;
         }
 
         configureImageView(themeViewHolder, screenshotURL, themeId, isCurrent);
