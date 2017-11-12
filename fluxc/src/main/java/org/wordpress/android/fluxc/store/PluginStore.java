@@ -201,10 +201,13 @@ public class PluginStore extends Store {
 
     public enum InstallSitePluginErrorType {
         GENERIC_ERROR,
-        UNAUTHORIZED,
-        ALREADY_INSTALLED,
         INSTALL_FAILURE,
-        NOT_AVAILABLE // Return for non-jetpack sites
+        LOCAL_FILE_DOES_NOT_EXIST,
+        NO_PACKAGE,
+        NO_PLUGIN_INSTALLED,
+        NOT_AVAILABLE, // Return for non-jetpack sites
+        PLUGIN_ALREADY_INSTALLED,
+        UNAUTHORIZED
     }
 
     public enum UpdateSitePluginErrorType {
