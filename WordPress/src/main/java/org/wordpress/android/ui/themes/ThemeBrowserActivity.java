@@ -454,7 +454,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         String toastText = getString(R.string.no_network_message);
 
         if (NetworkUtils.isNetworkAvailable(this)) {
-            ThemeModel theme = TextUtils.isEmpty(themeId) ? null : mThemeStore.getWpComThemeByThemeId(themeId);
+            ThemeModel theme = TextUtils.isEmpty(themeId) ? null : mThemeStore.getWpComThemeByThemeId(themeId.replace("-wpcom", ""));
             if (theme != null) {
                 Map<String, Object> themeProperties = new HashMap<>();
                 themeProperties.put(THEME_ID, themeId);
