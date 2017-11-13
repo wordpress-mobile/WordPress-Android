@@ -282,7 +282,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
                     }
                 } else if (result == RESULT_CANCELED) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
-                    AppLog.e(T.NUX, "Google Sign-in Failed: cancelled by user.");
+                    AppLog.e(T.NUX, "Google Sign-in Failed: result was CANCELED.");
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
                     AppLog.e(T.NUX, "Google Sign-in Failed: result was not OK or CANCELED.");
