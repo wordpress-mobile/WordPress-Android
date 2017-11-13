@@ -286,14 +286,14 @@
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
-    <string name="media_files_not_uploaded">%d media files not uploaded</string>
-    <string name="media_files_uploaded">%d media files uploaded</string>
-    <string name="media_file_not_uploaded">1 media file not uploaded</string>
-    <string name="media_file_uploaded">1 media file uploaded</string>
+    <string name="media_files_not_uploaded">%d files not uploaded</string>
+    <string name="media_files_uploaded">%d files uploaded</string>
+    <string name="media_file_not_uploaded">1 file not uploaded</string>
+    <string name="media_file_uploaded">1 file uploaded</string>
     <string name="media_files_uploaded_succcessfully">(%d successfully uploaded)</string>
     <string name="media_all_files_uploaded_succcessfully">%d files uploaded successfully</string>
     <string name="retry_needs_aztec" translatable="false">Retry only available in the Beta editor</string>
-    <string name="media_file_missing_for_retry">Retry not possible - some media files in this Post are missing from your device</string>
+    <string name="media_file_missing_for_retry">Retry not possible - some files in this Post are missing from your device</string>
     <string name="media_files_uploaded_write_post">Write Post</string>
 
     <!-- post view -->
@@ -312,7 +312,7 @@
     <string name="featured">Use as featured image</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="out_of_memory">Device out of memory</string>
-    <string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
+    <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
     <string name="download">Downloading media</string>
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
@@ -433,11 +433,11 @@
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content…</string>
     <string name="uploading_title">Uploading…</string>
-    <string name="uploading_subtitle_mixed">%1$d %2$s, %3$d of %4$d media files remaining</string>
-    <string name="uploading_subtitle_mixed_one">%1$d %2$s, 1 media file remaining</string>
+    <string name="uploading_subtitle_mixed">%1$d %2$s, %3$d of %4$d files remaining</string>
+    <string name="uploading_subtitle_mixed_one">%1$d %2$s, 1 file remaining</string>
     <string name="uploading_subtitle_posts_only">%1$d %2$s remaining</string>
-    <string name="uploading_subtitle_media_only">%1$d of %2$d media files remaining</string>
-    <string name="uploading_subtitle_media_only_one">1 media file remaining</string>
+    <string name="uploading_subtitle_media_only">%1$d of %2$d files remaining</string>
+    <string name="uploading_subtitle_media_only_one">1 file remaining</string>
     <string name="uploading_total">Uploading %1$d of %2$d</string>
     <string name="uploading_media">Uploading media…</string>
 
