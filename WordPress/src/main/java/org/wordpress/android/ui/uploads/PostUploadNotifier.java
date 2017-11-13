@@ -527,31 +527,34 @@ class PostUploadNotifier {
 
     private String buildErrorMessageMixed(int overrideMediaNotUploadedCount) {
         // first we build a summary of what failed and what went OK, like this:
-        // i.e. "1 post, 3 media files not uploaded (9 successfully uploaded)"
+        // i.e. "1 post, with 3 media files not uploaded (9 successfully uploaded)"
         String newErrorMessage = "";
         int postItemsNotUploaded = sNotificationData.totalPostItems > 0 ?
                 sNotificationData.totalPostItems - getCurrentPostItem() : 0;
         int mediaItemsNotUploaded = overrideMediaNotUploadedCount > 0 ?
                 overrideMediaNotUploadedCount : sNotificationData.totalMediaItems - getCurrentMediaItem();
-        if (postItemsNotUploaded > 0) {
-            newErrorMessage += postItemsNotUploaded + " " + getPagesAndOrPostsString(postItemsNotUploaded);
-            if (mediaItemsNotUploaded > 0) {
-                newErrorMessage += ", ";
+
+
+        if (postItemsNotUploaded > 0 && mediaItemsNotUploaded > 0) {
+            newErrorMessage = String.format(mContext.getString(R.string.media_file_post_mixed_not_uploaded),
+                    postItemsNotUploaded, getPagesAndOrPostsString(postItemsNotUploaded), mediaItemsNotUploaded);
+        }
+        else if (postItemsNotUploaded > 0) {
+            newErrorMessage = postItemsNotUploaded + " " + getPagesAndOrPostsString(postItemsNotUploaded);
+        }
+        else if (mediaItemsNotUploaded > 0) {
+            if (mediaItemsNotUploaded == 1) {
+                newErrorMessage = mContext.getString(R.string.media_file_not_uploaded);
+            } else {
+                newErrorMessage = String.format(mContext.getString(R.string.media_files_not_uploaded), mediaItemsNotUploaded);
             }
         }
 
-        if (mediaItemsNotUploaded > 0) {
-            if (mediaItemsNotUploaded == 1) {
-                newErrorMessage += mContext.getString(R.string.media_file_not_uploaded);
-            } else {
-                newErrorMessage += String.format(mContext.getString(R.string.media_files_not_uploaded), mediaItemsNotUploaded);
-            }
-
-            if (mediaItemsNotUploaded <= sNotificationData.currentMediaItem) {
-                // some media items were uploaded successfully
-                newErrorMessage += " " + String.format(mContext.getString(R.string.media_files_uploaded_succcessfully),
-                        sNotificationData.currentMediaItem);
-            }
+        if (mediaItemsNotUploaded > 0 &&
+                (getCurrentMediaItem()) > 0) {
+            // some media items were uploaded successfully
+            newErrorMessage += String.format(mContext.getString(R.string.media_files_uploaded_succcessfully),
+                    sNotificationData.currentMediaItem);
         }
 
         return newErrorMessage;
