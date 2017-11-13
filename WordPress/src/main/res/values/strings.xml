@@ -433,8 +433,8 @@
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content…</string>
     <string name="uploading_title">Uploading…</string>
-    <string name="uploading_subtitle_mixed">%1$d %2$s, %3$d of %4$d files remaining</string>
-    <string name="uploading_subtitle_mixed_one">%1$d %2$s, 1 file remaining</string>
+    <string name="uploading_subtitle_mixed">%1$d %2$s, and %3$d of %4$d files remaining</string>
+    <string name="uploading_subtitle_mixed_one">%1$d %2$s, and 1 file remaining</string>
     <string name="uploading_subtitle_posts_only">%1$d %2$s remaining</string>
     <string name="uploading_subtitle_media_only">%1$d of %2$d files remaining</string>
     <string name="uploading_subtitle_media_only_one">1 file remaining</string>
