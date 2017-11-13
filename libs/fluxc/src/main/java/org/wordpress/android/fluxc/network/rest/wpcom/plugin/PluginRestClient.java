@@ -130,7 +130,7 @@ public class PluginRestClient extends BaseWPComRestClient {
 
     public void deleteSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
         String url = WPCOMREST.sites.site(site.getSiteId()).
-                plugins.name(getEncodedPluginName(plugin)).delete.getUrlV1_1();
+                plugins.name(getEncodedPluginName(plugin)).delete.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 PluginWPComRestResponse.class,
                 new Listener<PluginWPComRestResponse>() {
@@ -166,7 +166,7 @@ public class PluginRestClient extends BaseWPComRestClient {
     }
 
     public void installSitePlugin(@NonNull final SiteModel site, String pluginName) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(pluginName).install.getUrlV1_1();
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(pluginName).install.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 PluginWPComRestResponse.class,
                 new Listener<PluginWPComRestResponse>() {
