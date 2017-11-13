@@ -69,7 +69,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
@@ -716,7 +715,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // mUsername and mPassword are null when the user log in with a magic link
         if (smartLockHelper != null && mUsername != null && mPassword != null) {
             smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword,
-                    HtmlUtils.fastUnescapeHtml(mAccountStore.getAccount().getDisplayName()),
+                    mAccountStore.getAccount().getDisplayName(),
                     Uri.parse(mAccountStore.getAccount().getAvatarUrl()));
         }
     }

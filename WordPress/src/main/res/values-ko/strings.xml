@@ -22,7 +22,6 @@ Language: ko_KR
 	<string name="start_over_email_body">%s 사이트를 처음부터 다시 시작합니다.</string>
 	<string name="start_over_email_subject">%s 사이트를 처음부터 다시 시작합니다.</string>
 	<string name="site_picker_remove_site_error">사이트 제거 중 오류가 발생했습니다. 나중에 다시 시도하세요.</string>
-	<string name="editor_post_saved_locally_unfinished_media">글에 완료되지 않은 미디어 업로드가 있어 글이 로컬에 저장되었습니다.</string>
 	<string name="sure_to_remove_account">앱에서 이 사이트를 제거할까요?</string>
 	<string name="photo_picker_title">사진 선택</string>
 	<string name="error_publish_no_network">기기가 오프라인 상태입니다. 변경사항이 로컬로 저장되었습니다.</string>
@@ -43,9 +42,7 @@ Language: ko_KR
 	<string name="keep_editing">계속 편집하기</string>
 	<string name="error_all_media_upload_canceled">알 수 없는 오류로 인해 모든 미디어 업로드가 취소되었습니다. 업로드를 다시 시도하세요.</string>
 	<string name="error_unknown_post_type">알 수 없는 글 형식입니다.</string>
-	<string name="error_unknown_post">알 수 없는 글로 인해 이 글의 로컬 복사본을 서버와 동기화할 수 없습니다.</string>
 	<string name="error_fetch_site_after_creation">사이트가 생성되면 사이트 선택 도구에서 사이트를 새로 고쳐야 할 수 있습니다.</string>
-	<string name="error_upload_params">%1$s을(를) 업로드하는 동안 다음 오류가 발생했습니다. %2$s</string>
 	<string name="submit_for_review">제출하기</string>
 	<string name="invalid_verification_code_format">반드시 6자리 숫자이어야 함</string>
 	<string name="confirm_discard_changes">저장하지 않은 변경사항을 버리시겠습니까?</string>
@@ -399,7 +396,6 @@ Language: ko_KR
 	<string name="site_settings_address_title">주소</string>
 	<string name="site_settings_title_title">사이트 제목</string>
 	<string name="site_settings_tagline_title">태그라인</string>
-	<string name="site_settings_this_device_header">이 기기</string>
 	<string name="site_settings_discussion_new_posts_header">새 글에 대한 기본값</string>
 	<string name="site_settings_account_header">계정</string>
 	<string name="site_settings_writing_header">쓰기</string>
@@ -421,9 +417,7 @@ Language: ko_KR
 	<string name="invalid_username_no_spaces">사용자명에 공백을 포함할 수 없습니다.</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">팔로우하는 사이트에 최근 게시된 글이 없습니다.</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">최근 글 없음</string>
-	<string name="media_details_copy_url_toast">URL이 클립보드에 복사됨</string>
 	<string name="edit_media">미디어 편집</string>
-	<string name="media_details_copy_url">URL 복사</string>
 	<string name="media_details_label_date_uploaded">업로드됨</string>
 	<string name="media_details_label_date_added">추가됨</string>
 	<string name="selected_theme">선택된 테마</string>
@@ -513,13 +507,7 @@ Language: ko_KR
 	<string name="app_notifications">앱 알림</string>
 	<string name="notifications_tab">알림 탭</string>
 	<string name="email">이메일</string>
-	<string name="notifications_comments_other_blogs">다른 사이트의 댓글</string>
 	<string name="notifications_wpcom_updates">워드프레스닷컴 소식</string>
-	<string name="notifications_other">기타</string>
-	<string name="notifications_account_emails">워드프레스닷컴 소식</string>
-	<string name="notifications_account_emails_summary">사용자 계정에 관한 중요 이메일을 항상 보내 드리며, 유용한 정보도 받으실 수 있습니다.</string>
-	<string name="notifications_sights_and_sounds">보기 및 사운드</string>
-	<string name="your_sites">내 사이트</string>
 	<string name="stats_insights_latest_post_trend">%2$s이(가) 발행된 후 %1$s일이 지났습니다. 지금까지 글의 성과입니다.</string>
 	<string name="stats_insights_latest_post_summary">최신 글 요약</string>
 	<string name="button_revert">되돌리기</string>
@@ -625,7 +613,6 @@ Language: ko_KR
 	<string name="stats_overall">전체</string>
 	<string name="stats_period">기간</string>
 	<string name="logs_copied_to_clipboard">애플리케이션 로그가 클립보드에 복사되었습니다.</string>
-	<string name="post_uploading">업로드</string>
 	<string name="reader_label_new_posts">새 게시물</string>
 	<string name="stats_comments_total_comments_followers">댓글 팔로워 수를 포함한 총 게시글 수: %1$s</string>
 	<string name="stats_timeframe_years">년</string>
@@ -690,7 +677,6 @@ Language: ko_KR
 	<string name="delete_sure">이 임시 글을 삭제하기</string>
 	<string name="delete_sure_page">이 페이지를 삭제하기</string>
 	<string name="confirm_delete_multi_media">선택된 아이템을 삭제될까요?</string>
-	<string name="confirm_delete_media">선택된 아이템을 삭제될까요?</string>
 	<string name="cab_selected">%d개 선택함</string>
 	<string name="reader_empty_followed_blogs_title">아직 팔로우하는 블로그가 없습니다.</string>
 	<string name="reader_empty_posts_liked">좋아하는 게시물이 없군요.</string>
@@ -718,7 +704,6 @@ Language: ko_KR
 	<string name="older_two_days">2일 이전</string>
 	<string name="older_last_week">1주일 이전</string>
 	<string name="stats_no_blog">요청한 블로그에 대해 통계 자료를 로드할 수 없습니다.</string>
-	<string name="sending_content">%s 콘텐츠 업로딩</string>
 	<string name="uploading_total">%1$d/%2$d 업로딩</string>
 	<string name="mnu_comment_liked">좋아함</string>
 	<string name="comment">댓글</string>
@@ -726,7 +711,6 @@ Language: ko_KR
 	<string name="posts_empty_list">아직 글이 없습니다. 하나 만들어보세요!</string>
 	<string name="comment_reply_to_user">%s에 응답</string>
 	<string name="pages_empty_list">페이지가 없습니다. 하나 만들어보세요!</string>
-	<string name="posting_post">"%s" 게시</string>
 	<string name="reader_label_liked_by">좋아요를 표시한 회원:</string>
 	<string name="signing_out">로그아웃…</string>
 	<string name="reader_toast_err_generic">이 작업을 실행할 수 없습니다</string>
@@ -774,7 +758,6 @@ Language: ko_KR
 	<string name="username_or_password_incorrect">입력된 사용자 이름이나 암호가 잘못되었습니다.</string>
 	<string name="invalid_username_too_long">사용자 이름에는 최대 64 자 이하로 되어야 함.</string>
 	<string name="invalid_username_too_short">사용자 이름은 4자 이상입니다.</string>
-	<string name="wait_until_upload_completes">업로드가 완료 될 때까지 기다리십시오.</string>
 	<string name="blog_name_reserved_but_may_be_available">이 사이트 이름은 예약 중입니다만, 며칠 동안 사용 가능하게 될지도 모릅니다.</string>
 	<string name="comments_empty_list">댓글이 없습니다.</string>
 	<string name="notifications_empty_list">알림이 없습니다.</string>
@@ -821,13 +804,11 @@ Language: ko_KR
 	<string name="cat_name_required">카테고리 이름은 필수 항목입니다.</string>
 	<string name="adding_cat_success">카테고리를 추가했습니다.</string>
 	<string name="adding_cat_failed">카테고리 추가에 실패했습니다.</string>
-	<string name="error_delete_post">%s를 삭제하는 동안 에러가 발생했습니다.</string>
 	<string name="error_moderate_comment">진행중에 에러가 발생했습니다.</string>
 	<string name="could_not_remove_account">사이트를 제거할 수 없습니다.</string>
 	<string name="error_refresh_stats">통계를 다시 로드 할 수 없습니다.</string>
 	<string name="invalid_url_message">입력한 URL이 올바른지 확인합니다.</string>
 	<string name="media_error_no_permission">미디어 라이브러리를 볼 수 있는 권한이 없습니다</string>
-	<string name="share_action_media">미디어 라이브러리</string>
 	<string name="page_settings">페이지 설정</string>
 	<string name="post_settings">작성 설정</string>
 	<string name="error_blog_hidden">이 블로그는 비공개 설정이되어 로드 할 수 없습니다. 설정 화면에서 다시 활성하고 다시 시도하십시오.</string>
@@ -847,7 +828,6 @@ Language: ko_KR
 	<string name="themes_live_preview">실시간 미리보기</string>
 	<string name="theme_current_theme">현재 테마</string>
 	<string name="theme_premium_theme">프리미엄 테마</string>
-	<string name="share_action_post">새 게시물</string>
 	<string name="new_media">새 미디어</string>
 	<string name="comment_added">댓글 추가에 성공했습니다</string>
 	<string name="add_comment">댓글을 추가</string>
@@ -1063,7 +1043,6 @@ Language: ko_KR
 	<string name="version">버전</string>
 	<string name="tos">이용 약관</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="max_thumbnail_px_width">기본 이미지 너비</string>
 	<string name="image_alignment">배치</string>
 	<string name="refresh">다시 로드</string>
 	<string name="untitled">제목 미설정</string>
@@ -1081,9 +1060,6 @@ Language: ko_KR
 	<string name="title">제목</string>
 	<string name="categories">카테고리</string>
 	<string name="dlg_deleting_comments">댓글 삭제 중</string>
-	<string name="notification_blink">알림빛을 깜빡임</string>
-	<string name="notification_vibrate">바이브</string>
-	<string name="notification_sound">알림 소리</string>
 	<string name="sdcard_title">SD카드가 필요합니다</string>
 	<string name="media">미디어</string>
 	<string name="approve">승인</string>

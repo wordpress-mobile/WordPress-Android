@@ -21,7 +21,6 @@ Language: az
 	<string name="reader_short_comment_count_one">1 Şərh</string>
 	<string name="reader_short_like_count_multi">%s Bəyənmə</string>
 	<string name="email">E-poçt</string>
-	<string name="notifications_other">Digər</string>
 	<string name="days_ago">%d gün öncə</string>
 	<string name="connectionbar_no_connection">Qoşulma yoxdur</string>
 	<string name="page_trashed">Səhifəni zibil qutusuna göndər</string>
@@ -103,7 +102,6 @@ Language: az
 	<string name="toast_err_post_uploading">Yazı yüklənərkən açılmır</string>
 	<string name="posts_fetching">Yazılar alınır...</string>
 	<string name="media_fetching">Media faylı alınır...</string>
-	<string name="post_uploading">Yüklənir</string>
 	<string name="stats_total">Cəmi</string>
 	<string name="stats_overall">Əsas</string>
 	<string name="stats_period">Dövr</string>
@@ -177,7 +175,6 @@ Language: az
 	<string name="delete_sure">Bu qaralamanı sil</string>
 	<string name="delete_sure_page">Bu səhifəni sil</string>
 	<string name="confirm_delete_multi_media">Seçilmiş maddələr silinsinmi?</string>
-	<string name="confirm_delete_media">Seçilmiş maddə silinsinmi?</string>
 	<string name="cab_selected">%d seçildi</string>
 	<string name="faq_button">ÇVS</string>
 	<string name="create_new_blog_wpcom">WordPress.com bloqu yarat</string>
@@ -207,12 +204,10 @@ Language: az
 	<string name="older_two_days">2 gündən əski</string>
 	<string name="older_last_week">1 həftədən əski</string>
 	<string name="stats_no_blog">İstənən bloq üçün statistiklar yüklənmir</string>
-	<string name="sending_content">%s içəriyi yüklənir</string>
 	<string name="uploading_total">%1$d / %2$d yüklənir</string>
 	<string name="posts_empty_list">Hələlik yazı yoxdur. Bir yazı yaratmağa nə deyərsiniz?</string>
 	<string name="comment_reply_to_user">Bunu cavabla: %s</string>
 	<string name="pages_empty_list">Hələlik səhifə yoxdur. Bir səhifə yaratmağa nə deyərsiniz?</string>
-	<string name="posting_post">Yazılan: "%s"</string>
 	<string name="reader_empty_followed_blogs_title">Hələki heç bir sayt izləmirsiniz</string>
 	<string name="reader_toast_err_generic">Bu hərəkət həyata keçirilə bilmir</string>
 	<string name="reader_toast_err_block_blog">Bu bloq əngəllənə bilmir</string>
@@ -254,7 +249,6 @@ Language: az
 	<string name="no_network_message">Uyğun vəziyyətdə şəbəkə yoxdur</string>
 	<string name="gallery_error">Media maddəsi bərpa edilə bilmədi</string>
 	<string name="blog_not_found">Bu bloqla əlaqə qurularkən bir xəta ilə qarşılaşıldı</string>
-	<string name="wait_until_upload_completes">Yükləmə bitənə qədər gözləyin</string>
 	<string name="theme_fetch_failed">Mövzuları qəbul etmək mümkün olmadı</string>
 	<string name="theme_set_failed">Mövzunu qurmaq mümkün olmadı</string>
 	<string name="theme_auth_error_message">Mövzu qurma səlahiyyətinə sahib olduğunuzdan əmin olun</string>
@@ -268,7 +262,6 @@ Language: az
 	<string name="stats_bar_graph_empty">Baxılacaq statistika yoxdur</string>
 	<string name="reply_failed">Caavab yazma baş tutmadı</string>
 	<string name="notifications_empty_list">Bildirş yoxdur</string>
-	<string name="error_delete_post">%s silinərkən xəta ilə qarşılaşıldı</string>
 	<string name="error_refresh_posts">Yazılar hazırda təzələnə bilmir</string>
 	<string name="error_refresh_pages">Səhifələr hazırda təzələnə bilmir</string>
 	<string name="error_refresh_notifications">Bildirişlər hazırda təzələnə bilmir</string>
@@ -340,8 +333,6 @@ Language: az
 	<string name="view_in_browser">Brauzerdə bax</string>
 	<string name="add_new_category">Yeni kateqoriya əlavə et</string>
 	<string name="category_name">Kateqoriya adı</string>
-	<string name="share_action_post">Yeni yazı</string>
-	<string name="share_action_media">Media kitabxanası</string>
 	<string name="file_error_create">Müvəqqəti media faylı yaradıla bilmir. Cihazınızda yetərli böş sahə olduğundan əmin olun.</string>
 	<string name="open_source_licenses">Açıq mənbə lisenziyaları</string>
 	<string name="xmlrpc_error">Əlaqə qurula bilmədi. Saytınızdakı xmlrpc.php-nin tam yolunu daxil edib təkrar yoxlayın</string>
@@ -550,8 +541,6 @@ Language: az
 	<string name="upload_full_size_image">Yüklə və tam təsvirə bağlantı ver</string>
 	<string name="categories">Kateqoriyalar</string>
 	<string name="title">Başlıq</string>
-	<string name="notification_vibrate">Vibrasiya</string>
-	<string name="notification_blink">Məlumatlandırma işığını parlat</string>
 	<string name="sdcard_title">SD Kart Gərəkdir</string>
 	<string name="media">Media</string>
 	<string name="delete">Sil</string>

@@ -34,13 +34,7 @@ Language: sr_RS
 	<string name="email">Е-пошта</string>
 	<string name="app_notifications">Обавештења апликације</string>
 	<string name="notifications_tab">Језичак обавештења</string>
-	<string name="notifications_comments_other_blogs">Коментари на другим веб местима</string>
 	<string name="notifications_wpcom_updates">WordPress.com ажурирања</string>
-	<string name="notifications_other">Друго</string>
-	<string name="notifications_account_emails">Е-пошта од WordPress.com</string>
-	<string name="notifications_account_emails_summary">Увек ћемо слати важну е-пошту везану за ваш налог, али такође можете да добијете неку додатну помоћ.</string>
-	<string name="your_sites">Ваша веб места</string>
-	<string name="notifications_sights_and_sounds">Слике и звуци</string>
 	<string name="stats_insights_latest_post_trend">Прошло је %1$s од када је %2$s је објављен. Ево какав је учинак чланка до сада…</string>
 	<string name="stats_insights_latest_post_summary">Резиме последњег чланка</string>
 	<string name="button_revert">Врати</string>
@@ -136,7 +130,6 @@ Language: sr_RS
 	<string name="stats_period">Период</string>
 	<string name="stats_overall">Просек</string>
 	<string name="stats_total">Укупно</string>
-	<string name="post_uploading">Отпремљујем</string>
 	<string name="reader_page_recommended_blogs">Веб места која би могла да вам се свиде</string>
 	<string name="stats_empty_referrers_desc">Сазнајте више о видљивости свог веб места пратећи веб претраживаче и друга веб места која вам шаљу највише посетилаца</string>
 	<string name="stats_empty_publicize_desc">Пратите своје пратиоце са разних друштвених мрежа користећи Publicize.</string>
@@ -199,7 +192,6 @@ Language: sr_RS
 	<string name="ssl_certificate_details">Детаљи</string>
 	<string name="delete_sure_page">Обриши ову страну</string>
 	<string name="cab_selected">%d изабрано</string>
-	<string name="confirm_delete_media">Обрисати изабрану ставку?</string>
 	<string name="confirm_delete_multi_media">Обрисати изабране ставке?</string>
 	<string name="delete_sure">Обриши овај нацрт</string>
 	<string name="delete_sure_post">Обриши овај чланак</string>
@@ -209,14 +201,12 @@ Language: sr_RS
 	<string name="pages_empty_list">Не постоји ниједна страна. Зашто не бисте направили нову?</string>
 	<string name="reader_empty_posts_liked">Нисте означили да вам се свиђа ниједан чланак</string>
 	<string name="error_refresh_unauthorized_pages">Немате дозволу да прегледате или уређујете стране</string>
-	<string name="posting_post">Објављивање "%s"</string>
 	<string name="comment_reply_to_user">Одговор %s</string>
 	<string name="comment_trashed">Коментар померен на отпад</string>
 	<string name="posts_empty_list">Не постоје чланци. Зашто не бисте направили нови?</string>
 	<string name="comment">Коментар</string>
 	<string name="mnu_comment_liked">Свиђа се</string>
 	<string name="uploading_total">Отпремљивање %1$d од %2$d</string>
-	<string name="sending_content">Отпремљивање %s садржаја</string>
 	<string name="stats_no_blog">Статистике не могу бити учитане за тражени блог</string>
 	<string name="older_two_days">Старије од два дана</string>
 	<string name="older_last_week">Старије од недељу дана</string>
@@ -312,13 +302,11 @@ Language: sr_RS
 	<string name="error_generic">Дошло је до грешке</string>
 	<string name="error_refresh_comments">Коментари тренутно не могу бити освежени</string>
 	<string name="error_refresh_notifications">Обавештења тренутно не могу бити освежена</string>
-	<string name="error_delete_post">Дошло је до грешке током брисања %s</string>
 	<string name="error_refresh_pages">Стране тренутно не могу бити освежене</string>
 	<string name="comments_empty_list">Нема коментара</string>
 	<string name="theme_auth_error_message">Потврдите да имате дозволу да постављате теме</string>
 	<string name="theme_set_failed">Неуспешно постављање теме</string>
 	<string name="theme_fetch_failed">Неуспешно добављање тема</string>
-	<string name="wait_until_upload_completes">Сачекајте да се отпремање заврши</string>
 	<string name="blog_not_found">Дошло је до грешке током приступања овом блогу</string>
 	<string name="gallery_error">Медијска ставка не може бити повраћена</string>
 	<string name="no_network_message">Нема доступне мреже</string>
@@ -351,7 +339,6 @@ Language: sr_RS
 	<string name="blog_title_invalid">Неисправан наслов веб места</string>
 	<string name="blog_name_invalid">Неисправна адреса веб места</string>
 	<string name="email_hint">Адреса е-поште</string>
-	<string name="share_action_post">Нови чланак</string>
 	<string name="add_new_category">Додај нову категорију</string>
 	<string name="category_name">Име категорије</string>
 	<string name="post_not_published">Стање чланка није објављено</string>
@@ -393,7 +380,6 @@ Language: sr_RS
 	<string name="author_name">Име аутора</string>
 	<string name="trash_no">Не шаљи на отпад</string>
 	<string name="delete_post">Обриши чланак</string>
-	<string name="share_action_media">Библиотека медија</string>
 	<string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
 	<string name="xmlrpc_error">Није могуће повезати се. Унесите пуну путању до xmlrpc.php на свом веб месту и покушајте поново.</string>
 	<string name="email_reserved">Та адреса веб-поште је већ у употреби. Проверите своје поштанско сандуче за поруку за активацију. Уколико не активирате, постаће доступна за неколико дана.</string>
@@ -574,8 +560,6 @@ Language: sr_RS
 	<string name="upload_full_size_image">Отпреми и повежи са целокупном сликом</string>
 	<string name="categories">Категорије</string>
 	<string name="title">Наслов</string>
-	<string name="notification_vibrate">Вибрирај</string>
-	<string name="notification_blink">Трепћи светло за обавештење</string>
 	<string name="sdcard_title">SD картица неопходна</string>
 	<string name="media">Медији</string>
 	<string name="delete">Обриши</string>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
@@ -30,7 +31,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.SimpleDateFormat;
@@ -275,6 +275,11 @@ public class PeopleListFragment extends Fragment {
 
     // Refresh the role display names after user roles is fetched
     public void refreshUserRoles() {
+        if (mFilteredRecyclerView == null) {
+            // bail when list is not available
+            return;
+        }
+
         PeopleAdapter peopleAdapter = (PeopleAdapter) mFilteredRecyclerView.getAdapter();
         if (peopleAdapter != null) {
             peopleAdapter.refreshUserRoles();
@@ -370,7 +375,7 @@ public class PeopleListFragment extends Fragment {
             if (person != null) {
                 String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
                 peopleViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-                peopleViewHolder.txtDisplayName.setText(StringUtils.unescapeHTML(person.getDisplayName()));
+                peopleViewHolder.txtDisplayName.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));
                 if (person.getRole() != null) {
                     peopleViewHolder.txtRole.setVisibility(View.VISIBLE);
                     peopleViewHolder.txtRole.setText(RoleUtils.getDisplayName(person.getRole(), mUserRoles));

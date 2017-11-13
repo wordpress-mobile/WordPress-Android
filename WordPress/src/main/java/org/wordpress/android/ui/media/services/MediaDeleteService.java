@@ -128,6 +128,21 @@ public class MediaDeleteService extends Service {
         return mCompletedItems;
     }
 
+    public boolean isMediaBeingDeleted(@NonNull MediaModel media) {
+        if (mDeleteQueue != null) {
+            for (MediaModel deletingMedia : mDeleteQueue) {
+                if (deletingMedia.getId() == media.getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isAnyMediaBeingDeleted() {
+        return mDeleteQueue != null && mDeleteQueue.size() > 0;
+    }
+
     private void handleMediaChangedSuccess(@NonNull OnMediaChanged event) {
         switch (event.cause) {
             case DELETE_MEDIA:

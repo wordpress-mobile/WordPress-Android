@@ -114,7 +114,6 @@ Language: da_DK
 	<string name="reader_empty_posts_in_blog">Denne blog er tom</string>
 	<string name="stats_average_per_day">Dagligt gennemsnit</string>
 	<string name="stats_period">Periode</string>
-	<string name="post_uploading">Overfører</string>
 	<string name="reader_page_recommended_blogs">Websteder du måske vil synes om</string>
 	<string name="stats_followers_total_email">Total antal følgere på email: %1$s</string>
 	<string name="stats_followers_total_wpcom">Totale antal følgere på WordPress.com: %1$s</string>
@@ -178,14 +177,11 @@ Language: da_DK
 	<string name="delete_sure">Slet denne kladde</string>
 	<string name="delete_sure_page">Slet denne side</string>
 	<string name="confirm_delete_multi_media">Slet markerede elementer</string>
-	<string name="confirm_delete_media">Slet markerede element?</string>
 	<string name="cab_selected">%d markeret</string>
 	<string name="mnu_comment_liked">Synes godt om</string>
 	<string name="stats_no_blog">Statistiken kunne ikke hentes for den valgte blog</string>
 	<string name="pages_empty_list">Endnu ingen sider! Hvorfor ikke lave en?</string>
 	<string name="posts_empty_list">Ingen indlæg endnu! Hvorfor ikke skabe et?</string>
-	<string name="posting_post">Sender "%s"</string>
-	<string name="sending_content">Overfører %s indhold</string>
 	<string name="uploading_total">Overfører %1$d af %2$d</string>
 	<string name="comment_reply_to_user">Besvar %s</string>
 	<string name="older_month">Ældre end en måned</string>
@@ -285,13 +281,11 @@ Language: da_DK
 	<string name="stats_bar_graph_empty">Ingen statistik er tilgængelig</string>
 	<string name="stats_empty_comments">Ingen kommentarer endnu</string>
 	<string name="reply_failed">Svar fejlede</string>
-	<string name="error_delete_post">Der skete en fejl mens %s blev slettet</string>
 	<string name="error_refresh_posts">Indlæg kunne ikke genindlæses </string>
 	<string name="error_refresh_pages">Sider kunne ikke genindlæses</string>
 	<string name="error_refresh_notifications">Beskeder kunne ikke genindlæses</string>
 	<string name="error_refresh_comments">Kommentarer kunne ikke genindlæses</string>
 	<string name="blog_not_found">Der skete en fejl ved tilgangen til denne blog</string>
-	<string name="wait_until_upload_completes">Vent venligst til overførslen er færdig</string>
 	<string name="blog_name_exists">Webstedet eksisterer allerede</string>
 	<string name="error_generic">Der opstod en fejl</string>
 	<string name="adding_cat_success">Kategori tilføjet</string>
@@ -325,8 +319,6 @@ Language: da_DK
 	<string name="cancel_edit">Fortryd redigering</string>
 	<string name="theme_premium_theme">Premium tema</string>
 	<string name="open_source_licenses">Open source-licenser</string>
-	<string name="share_action_media">Mediebibliotek</string>
-	<string name="share_action_post">Nyt indlæg</string>
 	<string name="local_draft">Lokal kladde</string>
 	<string name="toast_comment_unedited">Kommentar er ikke ændret</string>
 	<string name="required_field">Påkrævet felt</string>
@@ -520,7 +512,6 @@ Language: da_DK
 	<string name="version">Version</string>
 	<string name="app_title">WordPress til Android</string>
 	<string name="tos">Brugskrav</string>
-	<string name="max_thumbnail_px_width">Standard billedbredde</string>
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Genindlæs</string>
 	<string name="untitled">Ikke-navngivet</string>
@@ -538,8 +529,6 @@ Language: da_DK
 	<string name="title">Titel</string>
 	<string name="categories">Kategorier</string>
 	<string name="dlg_deleting_comments">Sletter kommentarer</string>
-	<string name="notification_vibrate">Vibrer</string>
-	<string name="notification_blink">Blink beskedlys</string>
 	<string name="sdcard_title">SD-kort påkrævet</string>
 	<string name="media">Medier</string>
 	<string name="delete">Slet</string>

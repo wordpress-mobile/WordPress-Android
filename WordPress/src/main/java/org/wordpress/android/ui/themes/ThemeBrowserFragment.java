@@ -35,6 +35,8 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 /**
  * A fragment display the themes on a grid view.
  */
@@ -187,21 +189,23 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     protected void configureSwipeToRefresh(View view) {
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(mThemeBrowserActivity, (CustomSwipeRefreshLayout) view.findViewById(
-                R.id.ptr_layout), new RefreshListener() {
-            @Override
-            public void onRefreshStarted() {
-                if (!isAdded()) {
-                    return;
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!isAdded()) {
+                            return;
+                        }
+                        if (!NetworkUtils.checkConnection(mThemeBrowserActivity)) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            mEmptyTextView.setText(R.string.no_network_title);
+                            return;
+                        }
+                        mThemeBrowserActivity.fetchThemes();
+                    }
                 }
-                if (!NetworkUtils.checkConnection(mThemeBrowserActivity)) {
-                    mSwipeToRefreshHelper.setRefreshing(false);
-                    mEmptyTextView.setText(R.string.no_network_title);
-                    return;
-                }
-                mThemeBrowserActivity.fetchThemes();
-            }
-        });
+        );
         mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
     }
 

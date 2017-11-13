@@ -208,9 +208,7 @@ Language: sk
 	<string name="invalid_username_no_spaces">Používateľské meno nemôže obsahovať medzery</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Webové stránky, ktoré sledujete v poslednej dobe nezverejnili nič.</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Žiadne nové články</string>
-	<string name="media_details_copy_url_toast">URL adresa skopírovaná do schránky</string>
 	<string name="edit_media">Upraviť súbory</string>
-	<string name="media_details_copy_url">Kopírovať URL adresu</string>
 	<string name="media_details_label_date_uploaded">Nahraté</string>
 	<string name="media_details_label_date_added">Pridané</string>
 	<string name="selected_theme">Zvolená téma</string>
@@ -300,13 +298,7 @@ Language: sk
 	<string name="email">E-mail</string>
 	<string name="app_notifications">Upozornenia aplikácie</string>
 	<string name="notifications_tab">Záložka Upozornenia</string>
-	<string name="notifications_comments_other_blogs">Komentáre na ďalších webových stránkach</string>
 	<string name="notifications_wpcom_updates">Aktualizácie WordPress.com</string>
-	<string name="notifications_other">Iné</string>
-	<string name="notifications_account_emails">E-mail od WordPress.com</string>
-	<string name="notifications_account_emails_summary">Budeme vám posielať dôležité e-maily o vašom účte, ale rovnako môžete dostať aj iné, užitočné správy.</string>
-	<string name="your_sites">Vaše webové stránky</string>
-	<string name="notifications_sights_and_sounds">Sights and Sounds</string>
 	<string name="stats_insights_latest_post_trend">Prešlo %1$s od zverejnenia %2$s. Môžete vidieť ako doteraz príspevok obstál...</string>
 	<string name="stats_insights_latest_post_summary">Súhrn najnovších príspevkov</string>
 	<string name="button_revert">Vrátiť</string>
@@ -396,7 +388,6 @@ Language: sk
 	<string name="error_notification_open">Nie je možné otvoríť oznámenie</string>
 	<string name="logs_copied_to_clipboard">Záznamy aplikácie boli skopírované do schránky</string>
 	<string name="error_copy_to_clipboard">Pri kopírovaní textu do schránky nastala chyba </string>
-	<string name="post_uploading">Nahráva sa</string>
 	<string name="stats_recent_weeks">Posledné týždne</string>
 	<string name="stats_months_and_years">Mesiace a roky</string>
 	<string name="reader_empty_posts_in_blog">Tento blog je prázdny</string>
@@ -469,7 +460,6 @@ Language: sk
 	<string name="delete_sure">Vymazať tento koncept</string>
 	<string name="delete_sure_post">Vymazať tento príspevok</string>
 	<string name="cab_selected">%d vybraných</string>
-	<string name="confirm_delete_media">Zmazať vybranú položku?</string>
 	<string name="confirm_delete_multi_media">Zmazať vybrané položky?</string>
 	<string name="posts_empty_list">Žiadne príspevky. Želáte si nejaký vytvoriť?</string>
 	<string name="reader_label_comment_count_multi">odpovedí: %,d</string>
@@ -479,8 +469,6 @@ Language: sk
 	<string name="error_refresh_unauthorized_comments">Nemáte oprávnenie prezerať alebo upravovať komentáre</string>
 	<string name="reader_label_comments_on">Komentáre k</string>
 	<string name="comment">Komentár</string>
-	<string name="sending_content">Nahrávanie obsahu %s</string>
-	<string name="posting_post">Publikuje sa "%s"</string>
 	<string name="agree_terms_of_service">Založením účtu súhlasíte s našimi okúzľujúcimi %1$sPodmienkami používania%2$s</string>
 	<string name="comment_reply_to_user">Odpovedať užívateľovi %s</string>
 	<string name="reader_empty_posts_in_tag">Neexistuje žiadny príspevok s touto značkou</string>
@@ -552,7 +540,6 @@ Language: sk
 	<string name="username_not_allowed">Používateľské meno nie je povolené</string>
 	<string name="blog_name_exists">Stránka už existuje</string>
 	<string name="nux_cannot_log_in">Prihlásenie nie je možné</string>
-	<string name="error_delete_post">Počas mazania %s nastala chyba</string>
 	<string name="blog_name_reserved">Táto adresa je obsadená</string>
 	<string name="out_of_memory">Nedostatok voľného miesta v pamäti</string>
 	<string name="blog_not_found">Počas prístupu k blogu sa vyskytla chyba</string>
@@ -589,7 +576,6 @@ Language: sk
 	<string name="comments_empty_list">Žiadne komentáre</string>
 	<string name="mnu_comment_unspam">Žiadny spam</string>
 	<string name="theme_set_failed">Nepodarilo sa nastaviť tému</string>
-	<string name="wait_until_upload_completes">Čakajte, kým bude nahrávanie dokončené</string>
 	<string name="no_network_message">Nie sú k dispozícii žiadne siete</string>
 	<string name="blog_name_required">Vložte adresu stránky</string>
 	<string name="username_must_include_letters">Používatelské meno musí obsahovať min. 1 písmeno (a-z)</string>
@@ -622,7 +608,6 @@ Language: sk
 	<string name="dlg_approving_comments">Schvaľovanie</string>
 	<string name="new_media">Nový súbor</string>
 	<string name="media_error_no_permission">Nemáte práva na zobrazenie knižnice súborov</string>
-	<string name="share_action_media">Knižnica súborov</string>
 	<string name="fatal_db_error">Počas vytvárania databázy sa vyskytla chyba. Preinštalujte aplikáciu.</string>
 	<string name="privacy_policy">Ochrana osobných údajov</string>
 	<string name="local_changes">Miestne zmeny</string>
@@ -644,7 +629,6 @@ Language: sk
 	<string name="http_authorization_required">Požaduje sa autorizácia</string>
 	<string name="view_site">Pozrieť stránku</string>
 	<string name="new_post">Nový príspevok</string>
-	<string name="share_action_post">Nový príspevok</string>
 	<string name="view_in_browser">Pozrieť v prehliadači</string>
 	<string name="add_new_category">Pridať novú kategóriu</string>
 	<string name="category_name">Názov kategórie</string>
@@ -845,8 +829,6 @@ Language: sk
 	<string name="upload_full_size_image">Nahrať a odkázať na obrázok v plnom rozlíšení</string>
 	<string name="categories">Kategórie</string>
 	<string name="title">Názov</string>
-	<string name="notification_vibrate">Vibrovať</string>
-	<string name="notification_blink">Blikať oznamovacie svetlo</string>
 	<string name="sdcard_title">Vyžadovaná SD karta</string>
 	<string name="media">Súbory</string>
 	<string name="delete">Zmazať</string>

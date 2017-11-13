@@ -68,6 +68,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
         PostsListAdapter.OnLoadMoreListener,
@@ -215,6 +217,11 @@ public class PostsListFragment extends Fragment
         final PostModel post = mPostStore.
                 getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
 
+        if (post == null) {
+            ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.LONG);
+            return;
+        }
+
         UploadUtils.handleEditPostResultSnackbars(getActivity(),
                 getActivity().findViewById(R.id.coordinator), resultCode, data, post, mSite,
                 new View.OnClickListener() {
@@ -226,8 +233,7 @@ public class PostsListFragment extends Fragment
     }
 
     private void initSwipeToRefreshHelper(View view) {
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
-                getActivity(),
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
@@ -242,7 +248,8 @@ public class PostsListFragment extends Fragment
                         }
                         requestPosts(false);
                     }
-                });
+                }
+        );
     }
 
     private @Nullable PostsListAdapter getPostListAdapter() {
@@ -660,8 +667,7 @@ public class PostsListFragment extends Fragment
                 break;
             case DELETE_POST:
                 if (event.isError()) {
-                    String postType = getString(mIsPage ? R.string.page : R.string.post).toLowerCase();
-                    String message = getString(R.string.error_delete_post, postType);
+                    String message = getString(mIsPage ? R.string.error_deleting_page : R.string.error_deleting_post);
                     ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
                     loadPosts(LoadMode.IF_CHANGED);
                 }

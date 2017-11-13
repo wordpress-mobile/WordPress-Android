@@ -5,13 +5,13 @@ import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseOkHttpClientModule;
-import org.wordpress.android.fluxc.module.ReleaseStoreModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
+import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -26,6 +26,7 @@ import org.wordpress.android.ui.accounts.login.Login2FaFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
+import org.wordpress.android.ui.accounts.login.LoginGoogleFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressHelpDialogFragment;
@@ -44,6 +45,8 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaEditFragment;
 import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
+import org.wordpress.android.ui.media.MediaPreviewFragment;
+import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -54,6 +57,7 @@ import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginListActivity;
 import org.wordpress.android.ui.posts.AddCategoryFragment;
@@ -115,7 +119,6 @@ import dagger.Component;
         ReleaseBaseModule.class,
         ReleaseOkHttpClientModule.class,
         ReleaseNetworkModule.class,
-        ReleaseStoreModule.class,
         LegacyModule.class,
         ReleaseToolsModule.class
 })
@@ -126,7 +129,6 @@ public interface AppComponent {
     void inject(SignInFragment object);
     void inject(NewBlogFragment object);
     void inject(SignInDialogFragment object);
-    void inject(LoginEpilogueFragment object);
     void inject(NewUserFragment object);
 
     void inject(UploadService object);
@@ -136,12 +138,14 @@ public interface AppComponent {
     void inject(LoginActivity object);
     void inject(LoginMagicLinkRequestFragment object);
     void inject(LoginEmailFragment object);
+    void inject(LoginGoogleFragment object);
     void inject(LoginEmailPasswordFragment object);
     void inject(Login2FaFragment object);
     void inject(LoginSiteAddressFragment object);
     void inject(LoginSiteAddressHelpDialogFragment object);
     void inject(LoginUsernamePasswordFragment object);
     void inject(LoginEpilogueActivity object);
+    void inject(LoginEpilogueFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsWidgetConfigureAdapter object);
@@ -154,6 +158,7 @@ public interface AppComponent {
     void inject(GCMRegistrationIntentService object);
     void inject(DeepLinkingIntentReceiverActivity object);
     void inject(ShareIntentReceiverActivity object);
+    void inject(ShareIntentReceiverFragment object);
     void inject(AddQuickPressShortcutActivity object);
 
     void inject(HelpActivity object);
@@ -186,6 +191,9 @@ public interface AppComponent {
     void inject(MediaGridFragment object);
     void inject(MediaEditFragment object);
     void inject(MediaPreviewActivity object);
+    void inject(MediaPreviewFragment object);
+    void inject(MediaSettingsActivity object);
+    void inject(PhotoPickerActivity object);
 
     void inject(PublicizeListActivity object);
     void inject(PublicizeWebViewFragment object);

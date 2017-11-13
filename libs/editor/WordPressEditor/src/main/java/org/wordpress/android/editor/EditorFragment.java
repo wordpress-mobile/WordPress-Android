@@ -1091,6 +1091,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void removeMedia(String mediaId) {
+        mWebView.execJavaScriptFromString("ZSSEditor.removeMedia('" + mediaId + "');");
+    }
+
+    @Override
     public Spanned getSpannedContent() {
         return null;
     }
@@ -1339,7 +1344,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.stop_upload_dialog_button_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mEditorFragmentListener.onMediaUploadCancelClicked(mediaId);
 
@@ -1360,7 +1365,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
                 });
 
-                builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.stop_upload_dialog_button_no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                     }
@@ -1375,24 +1380,25 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 }
 
                 // Retry media upload
-                mEditorFragmentListener.onMediaRetryClicked(mediaId);
-
-                mWebView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        switch (mediaType) {
-                            case IMAGE:
-                                mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId
-                                        + ");");
-                                break;
-                            case VIDEO:
-                                mWebView.execJavaScriptFromString("ZSSEditor.unmarkVideoUploadFailed(" + mediaId
-                                        + ");");
+                boolean successfullyRetried = mEditorFragmentListener.onMediaRetryClicked(mediaId);
+                if (successfullyRetried) {
+                    mWebView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            switch (mediaType) {
+                                case IMAGE:
+                                    mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId
+                                            + ");");
+                                    break;
+                                case VIDEO:
+                                    mWebView.execJavaScriptFromString("ZSSEditor.unmarkVideoUploadFailed(" + mediaId
+                                            + ");");
+                            }
+                            mFailedMediaIds.remove(mediaId);
+                            mUploadingMedia.put(mediaId, mediaType);
                         }
-                        mFailedMediaIds.remove(mediaId);
-                        mUploadingMedia.put(mediaId, mediaType);
-                    }
-                });
+                    });
+                }
                 break;
             default:
                 if (!mediaType.equals(MediaType.IMAGE)) {

@@ -1,12 +1,9 @@
 package org.wordpress.android.util.helpers;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.res.TypedArray;
+import android.support.annotation.ColorRes;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.util.TypedValue;
 
-import org.wordpress.android.util.R;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 public class SwipeToRefreshHelper implements OnRefreshListener {
@@ -18,19 +15,58 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
         public void onRefreshStarted();
     }
 
+    /**
+     * Helps {@link org.wordpress.android.util.widgets.CustomSwipeRefreshLayout} by passing the
+     * {@link android.support.v4.widget.SwipeRefreshLayout}, {@link RefreshListener}, and color.
+     *
+     * @param context               {@link Context} in which this layout is used.
+     * @param swipeRefreshLayout    {@link CustomSwipeRefreshLayout} for refreshing the contents
+     *                              of a view via a vertical swipe gesture.
+     * @param listener              {@link RefreshListener} notified when a refresh is triggered
+     *                              via the swipe gesture.
+     *
+     * @deprecated Use {@link #SwipeToRefreshHelper(CustomSwipeRefreshLayout, RefreshListener, int...)} instead.
+     */
+    @Deprecated
     public SwipeToRefreshHelper(Context context, CustomSwipeRefreshLayout swipeRefreshLayout, RefreshListener listener) {
-        init(context, swipeRefreshLayout, listener);
+        init(swipeRefreshLayout, listener, android.R.color.holo_blue_dark);
     }
 
-    public void init(Context context, CustomSwipeRefreshLayout swipeRefreshLayout, RefreshListener listener) {
+    /**
+     * Helps {@link org.wordpress.android.util.widgets.CustomSwipeRefreshLayout} by passing the
+     * {@link android.support.v4.widget.SwipeRefreshLayout}, {@link RefreshListener}, and color(s).
+     *
+     * @param swipeRefreshLayout    {@link CustomSwipeRefreshLayout} for refreshing the contents
+     *                              of a view via a vertical swipe gesture.
+     * @param listener              {@link RefreshListener} notified when a refresh is triggered
+     *                              via the swipe gesture.
+     * @param colorResIds           Comma-separated color resource integers used in the progress
+     *                              animation. The first color will also be the color of the bar
+     *                              that grows in response to a user swipe gesture.
+     */
+    public SwipeToRefreshHelper(CustomSwipeRefreshLayout swipeRefreshLayout, RefreshListener listener,
+                                @ColorRes int... colorResIds) {
+        init(swipeRefreshLayout, listener, colorResIds);
+    }
+
+    /**
+     * Initializes {@link org.wordpress.android.util.widgets.CustomSwipeRefreshLayout} by assigning
+     * {@link android.support.v4.widget.SwipeRefreshLayout}, {@link RefreshListener}, and color(s).
+     *
+     * @param swipeRefreshLayout    {@link CustomSwipeRefreshLayout} for refreshing the contents
+     *                              of a view via a vertical swipe gesture.
+     * @param listener              {@link RefreshListener} notified when a refresh is triggered
+     *                              via the swipe gesture.
+     * @param colorResIds           Comma-separated color resource integers used in the progress
+     *                              animation. The first color will also be the color of the bar
+     *                              that grows in response to a user swipe gesture.
+     */
+    public void init(CustomSwipeRefreshLayout swipeRefreshLayout, RefreshListener listener,
+                     @ColorRes int... colorResIds) {
         mRefreshListener = listener;
         mSwipeRefreshLayout = swipeRefreshLayout;
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        final TypedArray styleAttrs = obtainStyledAttrsFromThemeAttr(context, R.attr.swipeToRefreshStyle,
-                R.styleable.RefreshIndicator);
-        int color = styleAttrs.getColor(R.styleable.RefreshIndicator_refreshIndicatorColor, context.getResources()
-                .getColor(android.R.color.holo_blue_dark));
-        mSwipeRefreshLayout.setColorSchemeColors(color, color, color, color);
+        mSwipeRefreshLayout.setColorSchemeResources(colorResIds);
     }
 
     public void setRefreshing(boolean refreshing) {
@@ -61,12 +97,5 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
 
     public void setEnabled(boolean enabled) {
         mSwipeRefreshLayout.setEnabled(enabled);
-    }
-
-    public static TypedArray obtainStyledAttrsFromThemeAttr(Context context, int themeAttr, int[] styleAttrs) {
-        TypedValue outValue = new TypedValue();
-        context.getTheme().resolveAttribute(themeAttr, outValue, true);
-        int styleResId = outValue.resourceId;
-        return context.obtainStyledAttributes(styleResId, styleAttrs);
     }
 }

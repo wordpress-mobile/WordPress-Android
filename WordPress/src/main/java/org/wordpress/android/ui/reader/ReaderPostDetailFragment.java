@@ -24,6 +24,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -77,6 +78,8 @@ import java.util.EnumSet;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class ReaderPostDetailFragment extends Fragment
         implements WPMainActivity.OnActivityBackPressedListener,
@@ -211,16 +214,19 @@ public class ReaderPostDetailFragment extends Fragment
         int swipeToRefreshOffset = getResources().getDimensionPixelSize(R.dimen.toolbar_content_offset);
         swipeRefreshLayout.setProgressViewOffset(false, 0, swipeToRefreshOffset);
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), swipeRefreshLayout, new SwipeToRefreshHelper.RefreshListener() {
-            @Override
-            public void onRefreshStarted() {
-                if (!isAdded()) {
-                    return;
-                }
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                swipeRefreshLayout,
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!isAdded()) {
+                            return;
+                        }
 
-                updatePost();
-            }
-        });
+                        updatePost();
+                    }
+                }
+        );
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);
@@ -1288,8 +1294,11 @@ public class ReaderPostDetailFragment extends Fragment
         if (!mAccountStore.hasAccessToken()) {
             return mPost.numReplies > 0;
         }
+        // On Jetpack sites, if the feature flag is not enabled, we don't want to show the comment count
+        if (mPost.isJetpack && !BuildConfig.ENABLE_READER_COMMENTS_FOR_JETPACK_SITES) {
+            return false;
+        }
         return mPost.isWP()
-                && !mPost.isJetpack
                 && !mPost.isDiscoverPost()
                 && (mPost.isCommentsOpen || mPost.numReplies > 0);
     }

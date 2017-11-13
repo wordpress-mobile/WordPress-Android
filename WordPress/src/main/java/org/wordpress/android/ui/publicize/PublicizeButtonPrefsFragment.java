@@ -98,6 +98,12 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.publicize_button_prefs_fragment, container, false);
 
@@ -197,16 +203,18 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     private void toggleTwitterPreference() {
         if (!isAdded()) return;
 
-        View twitterCard = getView().findViewById(R.id.card_view_twitter);
-        for (int i = 0; i < mPublicizeButtons.size(); i++) {
-            PublicizeButton publicizeButton = mPublicizeButtons.get(i);
-            if (publicizeButton.getId().equals(TWITTER_ID) && publicizeButton.isEnabled()) {
-                twitterCard.setVisibility(View.VISIBLE);
-                return;
+        View view = getView();
+        if (view != null) {
+            View twitterCard = view.findViewById(R.id.card_view_twitter);
+            for (int i = 0; i < mPublicizeButtons.size(); i++) {
+                PublicizeButton publicizeButton = mPublicizeButtons.get(i);
+                if (publicizeButton.getId().equals(TWITTER_ID) && publicizeButton.isEnabled()) {
+                    twitterCard.setVisibility(View.VISIBLE);
+                    return;
+                }
             }
+            twitterCard.setVisibility(View.GONE);
         }
-
-        twitterCard.setVisibility(View.GONE);
     }
 
     /*
@@ -323,25 +331,35 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     }
 
     @Override
-    public void onSettingsUpdated(Exception error) {
-        if (!isAdded()) return;
-
-        if (error != null) {
+    public void onFetchError(Exception error) {
+        if (isAdded()) {
             ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
             getActivity().finish();
-        } else {
-            setPreferencesFromSiteSettings();
         }
     }
+
     @Override
-    public void onSettingsSaved(Exception error) {
-        if (isAdded() && error != null) {
+    public void onSaveError(Exception error) {
+        if (isAdded()) {
             ToastUtils.showToast(WordPress.getContext(), R.string.error_post_remote_site_settings);
         }
     }
+
+    @Override
+    public void onSettingsUpdated() {
+        if (isAdded()) {
+            setPreferencesFromSiteSettings();
+        }
+    }
+
+    @Override
+    public void onSettingsSaved() {
+        // no-op
+    }
+
     @Override
     public void onCredentialsValidated(Exception error) {
-        // noop
+        // no-op
     }
 
     @Override

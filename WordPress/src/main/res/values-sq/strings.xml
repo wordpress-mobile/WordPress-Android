@@ -32,7 +32,6 @@ Language: sq_AL
 	<string name="start_over_email_body">Dua t’ia filloj nga e para me sajtin %s</string>
 	<string name="start_over_email_subject">Fillojani nga e para me sajtin %s</string>
 	<string name="site_picker_remove_site_error">Gabim në heqjen e sajtit, riprovoni më vonë</string>
-	<string name="editor_post_saved_locally_unfinished_media">Postimi ka ngarkime mediash të papërfunduar dhe u ruajt lokalisht</string>
 	<string name="sure_to_remove_account">Të hiqet ky sajt nga aplikacioni?</string>
 	<string name="photo_picker_title">Zgjidhni foto</string>
 	<string name="error_publish_no_network">Pajisja është e palidhur në internet. Ndryshimet u ruajtën lokalisht.</string>
@@ -54,9 +53,7 @@ Language: sq_AL
 	<string name="keep_editing">Vazhdoni përpunimin</string>
 	<string name="error_all_media_upload_canceled">Krejt ngarkimet e mediave u anuluan për shkak të një gabimi të panjohur. Ju lutemi, riprovoni t’i ringarkoni</string>
 	<string name="error_unknown_post_type">Format i panjohur postimesh</string>
-	<string name="error_unknown_post">Postim i panjohur, kopja vendore e këtij postimi mund të jetë e panjëkohësuar me atë të shërbyesit</string>
 	<string name="error_fetch_site_after_creation">Sajti është krijuar, mund t’ju duhet të rifreskoni sajtet tuaj te zgjedhësi i sajteve.</string>
-	<string name="error_upload_params">Gabim teksa ngarkohej %1$s: %2$s</string>
 	<string name="submit_for_review">Parashtroje</string>
 	<string name="tell_me_more">Tregomëni më tepër</string>
 	<string name="duplicate_site_detected">U pikas një sajt i përsëdytur.</string>
@@ -95,11 +92,8 @@ Language: sq_AL
 	<string name="jetpack_stats_module_disabled_message">Shtojca Jetpack është e lidhur, por moduli Statistika s’është aktiv. Doni të aktivizohet Statistika?</string>
 	<string name="jetpack_info">Të dhëna mbi Jetpack-un</string>
 	<string name="reader_photo_by">Foto nga %s</string>
-	<string name="all_your_sites">Krejt Sajtet e Mi</string>
 	<string name="pending_draft_more">Keni skicuar %d postime, por s&amp;#8217;i botuat kurrë. Prekeni që të kontrolloni.</string>
 	<string name="reader_label_visit">Vizitë</string>
-	<string name="no_default_app_available_to_open_link">S’arrihet të hapet lidhja</string>
-	<string name="notification_pending_drafts">Njoftomë për skica në pritje të botimit</string>
 	<string name="invalid_verification_code_format">Duhet të jetë një numër me gjashtë shifra</string>
 	<string name="confirm_discard_changes">Të hidhen tej ndryshimet e paruajtura?</string>
 	<string name="swipe_for_more">Për më tepër, fërkojeni</string>
@@ -477,7 +471,6 @@ Language: sq_AL
 	<string name="site_settings_address_title">Adresë</string>
 	<string name="site_settings_title_title">Titull Sajti</string>
 	<string name="site_settings_tagline_title">Përmbledhtas</string>
-	<string name="site_settings_this_device_header">Këtë pajisje</string>
 	<string name="site_settings_discussion_new_posts_header">Parazgjedhje për postime të reja</string>
 	<string name="site_settings_account_header">Llogari</string>
 	<string name="site_settings_writing_header">Shkrim</string>
@@ -499,9 +492,7 @@ Language: sq_AL
 	<string name="invalid_username_no_spaces">Emri i përdoruesit s&amp;#8217;mund të përmbajë hapësira</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Sajtet që ndiqni s&amp;#8217;kanë postuar gjë tani afër</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Pa postime së fundi</string>
-	<string name="media_details_copy_url_toast">URL-ja u kopjua në të papastër</string>
 	<string name="edit_media">Përpunoni media</string>
-	<string name="media_details_copy_url">Kopjojei URL-në</string>
 	<string name="media_details_label_date_uploaded">U ngarkua</string>
 	<string name="media_details_label_date_added">U shtua</string>
 	<string name="selected_theme">Temë e Përzgjedhur</string>
@@ -591,13 +582,7 @@ Language: sq_AL
 	<string name="app_notifications">Njoftime aplikacioni</string>
 	<string name="notifications_tab">Skedë njoftimesh</string>
 	<string name="email">Email</string>
-	<string name="notifications_comments_other_blogs">Komente në sajte të tjera</string>
 	<string name="notifications_wpcom_updates">Përditësime WordPress.com</string>
-	<string name="notifications_other">Tjetër</string>
-	<string name="notifications_account_emails">Email nga WordPress.com</string>
-	<string name="notifications_account_emails_summary">Do të dërgojmë përherë email-e të rëndësishëm lidhur me llogarinë tuaj, por mundeni gjithashtu të merrni ca ekstra të dobishme.</string>
-	<string name="notifications_sights_and_sounds">Panorama dhe Tinguj</string>
-	<string name="your_sites">Sajtet Tuaj</string>
 	<string name="stats_insights_latest_post_trend">U bënë %1$s qëkur qe botuar %2$s. Ja se si ka ecur postimi deri tani…</string>
 	<string name="stats_insights_latest_post_summary">Përmbledhje Postimesh Më të Reja</string>
 	<string name="button_revert">Anuloji ndryshimet</string>
@@ -694,7 +679,6 @@ Language: sq_AL
 	<string name="error_notification_open">S&amp;#8217;u hap dot njoftimi</string>
 	<string name="stats_empty_search_terms">S&amp;#8217;ka terma kërkimesh të regjistruar</string>
 	<string name="toast_err_post_uploading">S&amp;#8217;arrin të hapë postim teksa ngarkohet</string>
-	<string name="post_uploading">Ngarkim</string>
 	<string name="stats_total">Gjithsej</string>
 	<string name="stats_overall">Gjithsej</string>
 	<string name="stats_period">Periudhë</string>
@@ -769,7 +753,6 @@ Language: sq_AL
 	<string name="delete_sure">Fshije këtë skicë</string>
 	<string name="delete_sure_page">Fshije këtë faqe</string>
 	<string name="confirm_delete_multi_media">Të fshihen objektet e përzgjedhur?</string>
-	<string name="confirm_delete_media">Të fshihet objekti i përzgjedhur?</string>
 	<string name="cab_selected">%d të përzgjedhur</string>
 	<string name="reader_empty_posts_liked">S\'keni pëlqyer ende ndonjë postim</string>
 	<string name="faq_button">FAQ</string>
@@ -796,9 +779,7 @@ Language: sq_AL
 	<string name="signing_out">Po dilet…</string>
 	<string name="nux_help_description">Vizitoni qendrën e ndihmës që të merrni përgjigje për pyetje të rëndomta, ose vizitoni forumet që të bëni pyetje të reja</string>
 	<string name="reader_title_photo_viewer">%1$d nga %2$d</string>
-	<string name="sending_content">Po ngarkohet lëndë %s</string>
 	<string name="mnu_comment_liked">U pëlqye</string>
-	<string name="posting_post">Po postohet "%s"</string>
 	<string name="agree_terms_of_service">Duke krijuar një llogari, pajtoheni me %1$sKushtet tërheqëse të Shërbimit%2$s</string>
 	<string name="more">Më tepër</string>
 	<string name="reader_empty_followed_blogs_title">S&amp;#8217;ndiqni ende ndonjë sajt</string>
@@ -846,7 +827,6 @@ Language: sq_AL
 	<string name="ssl_certificate_error">Dëshmi SSL e pavlefshme</string>
 	<string name="ssl_certificate_ask_trust">Nëse zakonisht lidheni te ky sajt pa probleme, ky gabim mund të thotë që dikush po provon të hiqet si ky sajt, dhe s&amp;#8217;duhet të vazhdoni. Doni të besohet dëshmia, sido qoftë?</string>
 	<string name="blog_not_found">Ndodhi një gabim gjatë hyrjes te ky blog</string>
-	<string name="wait_until_upload_completes">Pritni derisa të plotësohet ngarkimi</string>
 	<string name="theme_fetch_failed">Dështoi sjellja e temave</string>
 	<string name="theme_set_failed">Dështoi në caktim teme</string>
 	<string name="theme_auth_error_message">Sigurohuni që keni privilegje për caktim temash</string>
@@ -882,7 +862,6 @@ Language: sq_AL
 	<string name="blog_name_reserved_but_may_be_available">Hëpërhë ky sajt është ruajtur për dikë, por mund të jetë i lirë pas pak ditësh</string>
 	<string name="username_or_password_incorrect">Emri i përdoruesit apo fjalëkalimi që dhatë është i pasaktë</string>
 	<string name="email_exists">Ajo adresë email është tashmë në përdorim</string>
-	<string name="error_delete_post">Ndodhi një gabim teksa fshihej %s</string>
 	<string name="invalid_url_message">Kontrolloni nëse URL-ja e dhënë është e vlefshme</string>
 	<string name="out_of_memory">Mbarim kujtese te pajisja</string>
 	<string name="no_network_message">S&amp;#8217;ka rrjet gati</string>
@@ -959,8 +938,6 @@ Language: sq_AL
 	<string name="view_in_browser">Shiheni në shfletues</string>
 	<string name="add_new_category">Shtoni kategori të re</string>
 	<string name="category_name">Emër kategorie</string>
-	<string name="share_action_post">Postim i ri</string>
-	<string name="share_action_media">Bibliotekë media</string>
 	<string name="open_source_licenses">Licenca burimi të hapur</string>
 	<string name="new_post">Postim i ri</string>
 	<string name="new_media">Media e re</string>
@@ -1142,7 +1119,6 @@ Language: sq_AL
 	<string name="version">Version</string>
 	<string name="tos">Kushte Shërbimi</string>
 	<string name="app_title">WordPress për Android</string>
-	<string name="max_thumbnail_px_width">Gjerësi Parazgjedhje Figure</string>
 	<string name="image_alignment">Drejtim</string>
 	<string name="refresh">Rifresko</string>
 	<string name="untitled">Pa titull</string>
@@ -1160,9 +1136,6 @@ Language: sq_AL
 	<string name="title">Titull</string>
 	<string name="categories">Kategori</string>
 	<string name="dlg_deleting_comments">Po fshihen komente</string>
-	<string name="notification_blink">Xixëllo dritëzë njoftimesh</string>
-	<string name="notification_vibrate">Dridhu</string>
-	<string name="notification_sound">Tingull njoftimesh</string>
 	<string name="sdcard_title">Lypset Kartë SD</string>
 	<string name="media">Media</string>
 	<string name="delete">Fshije</string>

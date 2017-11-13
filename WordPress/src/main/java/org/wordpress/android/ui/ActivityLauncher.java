@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -26,9 +28,10 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginListActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -58,6 +61,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ActivityLauncher {
 
@@ -79,8 +83,14 @@ public class ActivityLauncher {
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
     }
 
-    public static void showPhotoPickerForResult(Activity activity) {
+    public static void showPhotoPickerForResult(Activity activity,
+                                                @NonNull MediaBrowserType browserType,
+                                                @Nullable SiteModel site) {
         Intent intent = new Intent(activity, PhotoPickerActivity.class);
+        intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
+        if (site != null) {
+            intent.putExtra(WordPress.SITE, site);
+        }
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
@@ -163,15 +173,18 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {
-        if (site == null) {
-            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            return;
-        }
-
         AnalyticsTracker.Stat stat = openFromHeader ? AnalyticsTracker.Stat.OPENED_VIEW_SITE_FROM_HEADER
                 : AnalyticsTracker.Stat.OPENED_VIEW_SITE;
         AnalyticsUtils.trackWithSiteDetails(stat, site);
-        openUrlExternal(context, site.getUrl());
+
+        if (site == null) {
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+        } else if (site.getUrl() == null) {
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            AppLog.w(AppLog.T.UTILS, "Site URL is null. Login URL: " + site.getLoginUrl());
+        } else {
+            openUrlExternal(context, site.getUrl());
+        }
     }
 
     public static void viewBlogAdmin(Context context, SiteModel site) {
@@ -322,11 +335,19 @@ public class ActivityLauncher {
         context.startActivity(statsPostViewIntent);
     }
 
-    public static void viewMediaPickerForResult(Activity activity, @NonNull SiteModel site) {
+    public static void viewMediaPickerForResult(Activity activity,
+                                                @NonNull SiteModel site,
+                                                @NonNull MediaBrowserType browserType) {
         Intent intent = new Intent(activity, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER);
-        activity.startActivityForResult(intent, RequestCodes.MULTI_SELECT_MEDIA_PICKER);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType);
+        int requestCode;
+        if (browserType.canMultiselect()) {
+            requestCode = RequestCodes.MULTI_SELECT_MEDIA_PICKER;
+        } else {
+            requestCode = RequestCodes.SINGLE_SELECT_MEDIA_PICKER;
+        }
+        activity.startActivityForResult(intent, requestCode);
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {
@@ -356,6 +377,19 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
+    public static void loginForShareIntent(Activity activity) {
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            Intent intent = new Intent(activity, LoginActivity.class);
+            LoginMode.SHARE_INTENT.putInto(intent);
+            activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+        } else {
+            ToastUtils.showToast(activity, R.string.no_account,
+                    ToastUtils.Duration.LONG);
+            activity.startActivity(new Intent(activity, SignInActivity.class));
+            activity.finish();
+        }
+    }
+
     public static void loginWithoutMagicLink(Activity activity) {
         Intent intent;
 
@@ -383,18 +417,32 @@ public class ActivityLauncher {
      * open the passed url in the device's external browser
      */
     public static void openUrlExternal(Context context, @NonNull String url) {
+        Uri uri = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
         try {
             // disable deeplinking activity so to not catch WP URLs
             WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
 
-            Uri uri = Uri.parse(url);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             context.startActivity(intent);
             AppLockManager.getInstance().setExtendedTimeout();
 
         } catch (ActivityNotFoundException e) {
-            ToastUtils.showToast(context, context.getString(R.string.no_default_app_available_to_open_link), ToastUtils.Duration.LONG);
+            ToastUtils.showToast(context, context.getString(R.string.cant_open_url), ToastUtils.Duration.LONG);
             AppLog.e(AppLog.T.UTILS, "No default app available on the device to open the link: " + url, e);
+        } catch (SecurityException se) {
+            AppLog.e(AppLog.T.UTILS, "Error opening url in default browser. Url: " + url, se);
+
+            List<ResolveInfo> infos = context.getPackageManager().queryIntentActivities(intent, 0);
+            if (infos.size() == 1) {
+                // there's only one handler and apparently it caused the exception so, just inform and bail
+                AppLog.d(AppLog.T.UTILS, "Only one url handler found so, bailing.");
+                ToastUtils.showToast(context, context.getString(R.string.cant_open_url));
+            } else {
+                Intent chooser = Intent.createChooser(intent, context.getString(R.string.error_please_choose_browser));
+                context.startActivity(chooser);
+                AppLockManager.getInstance().setExtendedTimeout();
+            }
         } finally {
             // re-enable deeplinking
             WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);

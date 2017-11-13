@@ -1,26 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-06 06:07:13+0000
+Translation-Revision-Date: 2017-09-21 19:36:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: el_GR
 -->
 <resources>
+	<string name="error_media_save">Αδυναμία αποθήκευσης πολυμέσων</string>
+	<string name="editor_scheduled_post_saved_online">Το άρθρο προγραμματίστηκε</string>
+	<string name="editor_draft_saved_locally">Το προσχέδιο αποθηκεύτηκε στη συσκευή</string>
+	<string name="editor_draft_saved_online">Το προσχέδιο αποθηκεύτηκε διαδικτυακά</string>
+	<string name="editor_post_saved_locally">Το άρθρο αποθηκεύτηκε στη συσκευή</string>
+	<string name="cant_share_unknown_action">Ζητήθηκε μη αναγνωρίσιμη ενέργεια, θα αγνοηθεί</string>
+	<string name="button_sync">Συγχρονισμός</string>
+	<string name="smart_toast_comments_long_press">Πατήστε και κρατήστε για να επιλέξετε πολλαπλά σχόλια</string>
+	<string name="smart_toast_photo_long_press">Πατήστε και κρατήστε για να επιλέξετε πολλαπλές φωτογραφίες</string>
+	<string name="photo_picker_choose_video">Επιλέξτε βίντεο από τη συσκευή</string>
+	<string name="photo_picker_choose_photo">Επιλέξτε φωτογραφία από τη συσκευή</string>
+	<string name="new_editor_promo_description">Η εφαρμογή του WordPress περιλαμβάνει τώρα έναν καινούριο όμορφο επεξεργαστή. Δοκιμάστε τον δημιουργώντας ένα νέο άρθρο.</string>
+	<string name="wp_media_title">Πολυμέσα του WordPress </string>
+	<string name="media_insert_as_gallery">Προσθήκη ως συλλογή</string>
+	<string name="media_insert_individually">Προσθήκη ανεξάρτητα</string>
+	<string name="media_insert_title">Προσθήκη πολλαπλών φωτογραφιών</string>
+	<string name="media_gallery_column_count_multi">%d στήλες</string>
+	<string name="media_gallery_column_count_single">1 στήλη</string>
+	<string name="editor_confirm_email_prompt_negative">Επαναποστολή email</string>
+	<string name="editor_confirm_email_prompt_message_with_email">Στείλαμε ένα email στο %s όταν εγγραφήκατε πρώτη φορά. Παρακαλούμε ανοίξτε το μήνυμα και πατήστε το μπλε κουμπί για να ενεργοποιήσετε τη δημοσίευση.</string>
+	<string name="editor_confirm_email_prompt_message">Σας στείλαμε ένα email όταν εγγραφήκατε πρώτη φορά. Παρακαλούμε ανοίξτε το μήνυμα και πατήστε το μπλε κουμπί για να ενεργοποιήσετε τη δημοσίευση. </string>
+	<string name="editor_confirm_email_prompt_title">Παρακαλούμε επιβεβαιώστε τη διεύθυνση του email σας</string>
+	<string name="toast_verification_email_send_error">Σφάλμα κατά την αποστολή του email επιβεβαίωσης. Το έχετε ήδη επιβεβαιώσει;</string>
+	<string name="toast_verification_email_sent">Το email επιβεβαίωσης στάλθηκε, ελέγξτε τα εισερχόμενά σας</string>
+	<string name="toast_saving_post_as_draft">Αποθήκευση άρθρου ως προσχέδιο</string>
+	<string name="photo_picker_capture_video">Λήψη βίντεο</string>
+	<string name="photo_picker_capture_photo">Λήψη φωτογραφίας</string>
+	<string name="delete_site_warning_subtitle">Προσοχή! Από τη στιγμή που διαγραφεί ένας ιστότοπος, δεν μπορεί να ανακτηθεί. Παρακαλούμε βεβαιωθείτε πριν προχωρήσετε.</string>
+	<string name="delete_site_warning">Όλα τα άρθρα, οι εικόνες και τα δεδομένα σας θα διαγραφούν. Και η διεύθυνση αυτού του ιστότοπου (%s) θα χαθεί.</string>
+	<string name="delete_site_warning_title">Διαγραφή ιστότοπου;</string>
+	<string name="start_over_email_intent_error">Αδυναμία αποστολής email</string>
+	<string name="start_over_email_body">Θέλω να αρχίσω από την αρχή με τον ιστότοπο %s</string>
+	<string name="start_over_email_subject">Αρχίστε από την αρχή με τον ιστότοπο %s</string>
+	<string name="site_picker_remove_site_error">Σφάλμα κατά την απομάκρυνση του ιστότοπου, προσπαθήστε ξανά αργότερα</string>
+	<string name="editor_post_saved_locally_failed_media">Το άρθρο έχει μη ολοκληρωμένες μεταφορτώσεις πολυμέσων και έχει αποθηκευτεί τοπικά.</string>
+	<string name="sure_to_remove_account">Αφαίρεση αυτού του ιστότοπου από την εφαρμογή;</string>
+	<string name="photo_picker_title">Επιλέξτε φωτογραφία</string>
+	<string name="error_publish_no_network">Η συσκευή είναι εκτός δικτύου. Οι αλλαγές αποθηκεύτηκαν τοπικά.</string>
+	<string name="editor_post_saved_online">Το άρθρο αποθηκεύτηκε διαδικτυακά</string>
+	<string name="site_settings_image_quality_hint">Ποιότητα εικόνων. Υψηλότερες τιμές σημαίνουν εικόνες καλύτερης ποιότητας.</string>
+	<string name="site_settings_optimize_images_summary">Ενεργοποιήστε για αλλαγή μεγέθους και συμπίεσης εικόνων</string>
+	<string name="media_encoder_quality_100">Μέγιστο</string>
+	<string name="media_encoder_quality_95">Πολύ Υψηλό</string>
+	<string name="media_encoder_quality_90">Υψηλό</string>
+	<string name="media_encoder_quality_85">Μεσαίο</string>
+	<string name="media_encoder_quality_80">Χαμηλό</string>
+	<string name="media_upload_state_uploaded">Μεταφορτώθηκε</string>
+	<string name="media_upload_state_failed">Απέτυχε</string>
+	<string name="media_upload_state_deleted">Διαγράφηκε</string>
+	<string name="media_upload_state_deleting">Γίνεται διαγραφή</string>
+	<string name="media_upload_state_uploading">Γίνεται μεταφόρτωση</string>
+	<string name="media_upload_state_queued">Σε αναμονή</string>
+	<string name="update_draft">Ενημέρωση προσχέδιου</string>
+	<string name="keep_editing">Συνέχεια επεξεργασίας</string>
+	<string name="image_quality">Ποιότητα εικόνας</string>
 	<string name="error_all_media_upload_canceled">Όλες οι μεταφορτώσεις πολυμέσων έχουν ακυρωθεί εξαιτίας άγνωστου σφάλματος. Παρακαλούμε δοκιμάστε ξανά να τα μεταφορτώσετε</string>
 	<string name="error_unknown_post_type">Άγνωστη μορφή άρθρου</string>
 	<string name="error_fetch_site_after_creation">Ο ιστότοπος έχει δημιουργηθεί, μπορεί να χρειάζεται ανανέωση των ιστοτόπων σας στον επιλογέα ιστοτόπων.</string>
-	<string name="error_upload_params">Σφάλμα κατά τη μεταφόρτωση του %1$s: %2$s</string>
 	<string name="submit_for_review">Υποβολή</string>
 	<string name="tell_me_more">Πείτε μου περισσότερα</string>
 	<string name="duplicate_site_detected">Ανιχνεύθηκε πανομοιότυπος ιστότοπος.</string>
+	<string name="cannot_add_duplicate_site">Ο ιστότοπος υπάρχιε ήδη στην εφαρμογή, δεν μπορείτε να τον προσθέσετε.</string>
 	<string name="already_logged_in_wpcom_same_username">Έχετε ήδη συνδεθεί στον λογαριασμό σας στο WordPress.com. Ο ιστότοπός σας θα πρέπει να εμφανίζεται στην επιλογή ιστοτόπων, βεβαιωθείτε πως δεν είναι κρυφός.</string>
 	<string name="already_logged_in_wpcom">Είστε ήδη συνδεδεμένος σε ένα λογαριασμό στο WordPress.com, δεν μπορείτε να προσθέσετε έναν ιστότοπο του WordPress.com που είναι συνδεδεμένος με άλλο λογαριασμό.</string>
 	<string name="checking_username">Έλεγχος ονόματος χρήστη</string>
 	<string name="jetpack_different_com_account">Ιστότοποι του Jetpack που ανήκουν σε διαφορετικούς λογαριασμούς του WordPress.com δεν υποστηρίζονται</string>
 	<string name="jetpack_use_com_account">Για να προσθέσετε τον ιστότοπό σας του Jetpack, συνδεθείτε στον λογαριασμό του WordPress.com που χρησιμοποιήσατε για να συνδεθείτε στο Jetpack.</string>
+	<string name="jetpack_message">Το πρόσθετο Jetpack πρέπει να εγκατασταθεί και να ενεργοποιηθεί. Θέλετε να εγκαταστήσετε και να ενεργοποιήσετε το Jetpack;</string>
 	<string name="error_media_load">Αδυναμία φόρτωσης πολυμέσων</string>
 	<string name="error_media_refresh_no_connection">Απαιτείται σύνδεση για ανανέωση της βιβλιοθήκης</string>
 	<string name="error_media_unauthorized">Δεν έχετε άδεια να δείτε ή επεξεργαστείτε πολυμέσα</string>
+	<string name="error_media_not_found">Δεν βρέθηκαν πολυμέσα</string>
 	<string name="site_settings_optimize_images">Βελτιστοποίηση εικόνων</string>
 	<string name="no_site_error">Αδυναμία σύνδεσης στον ιστότοπο WordPress. Δεν υπάρχει έγκυρος ιστότοπος του WordPress σε αυτή\nτη διεύθυνση. Ελέγξτε τη διεύθυνση ιστοτόπου (URL) που δώσατε.</string>
 	<string name="media_generic_error">Σφάλμα πολυμέσων</string>
@@ -30,6 +87,9 @@ Language: el_GR
 	<string name="xmlrpc_endpoint_forbidden_error">Αδυναμία σύνδεσης. Λάβαμε ένα σφάλμα 403 προσπαθώντας να προσπελάσουμε\nτο σημείο επαφής XMLRPC του ιστοτόπου σας. Η εφαρμογή το χρειάζεται ώστε επικοινωνήσει με τον ιστότοπό σας. Επικοινωνήστε με τον πάροχο φιλοξενίας σας για να λύσετε\nαυτό το πρόβλημα.</string>
 	<string name="xmlrpc_post_blocked_error">Αδυναμία σύνδεσης. Ο πάροχος φιλοξενίας σας μπλοκάρει τα αιτήματα POST και η εφαρμογή τα χρειάζεται\nώστε να επικοινωνήσει με τον ιστότοπό σας. Επικοινωνήστε με τον πάροχο φιλοξενίας σας για να λύσετε αυτό το πρόβλημα.</string>
 	<string name="reader_empty_followed_blogs_search_title">Δεν βρέθηκαν ιστότοποι να ταιριάζουν</string>
+	<string name="reader_hint_search_followed_sites">Αναζήτηση σε παρακολουθούμενους ιστότοπους.</string>
+	<string name="visual_editor_disabled">Ο Επεξεργαστής είναι απενεργοποημένος</string>
+	<string name="preference_editor_visual">Όπως Εμφανίζεται</string>
 	<string name="preference_editor_legacy">Παλαιού Τύπου</string>
 	<string name="preference_editor_type">Ορισμός τύπου επεξεργαστή</string>
 	<string name="pending_draft_one_generic">Μην το αφήνετε να εκκρεμεί! Το \'%1$s\' περιμένει να δημοσιευτεί.</string>
@@ -43,12 +103,10 @@ Language: el_GR
 	<string name="jetpack_info">Πληροφορίες για το Jetpack</string>
 	<string name="reader_photo_by">Φωτογραφία από %s</string>
 	<string name="reader_label_visit">Επισκεφθείτε</string>
-	<string name="all_your_sites">Όλοι οι ιστότοποί μου</string>
 	<string name="pending_draft_more">Έχετε %d προσχέδια άρθρων αλλά ποτέ δεν τα δημοσιεύσατε. Πατήστε για να τα ελέγξετε.</string>
-	<string name="no_default_app_available_to_open_link">Αδυναμία ανοίγματος του συνδέσμου</string>
-	<string name="notification_pending_drafts">Ειδοποιήστε με για εκκρεμή προσχέδια</string>
 	<string name="invalid_verification_code_format">Πρέπει να είναι εξαψήφιος αριθμός</string>
 	<string name="confirm_discard_changes">Απόρριψη μη αποθηκευμένων αλλαγών;</string>
+	<string name="swipe_for_more">Σαρώστε για περισσότερα</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Δεν είστε εγκεκριμένος να δείτε αυτό το άρθρο. Προσπαθήστε να συνδεθείτε στο WordPress.com πρώτα ή χρησιμοποιήστε το κουμπί στην μπάρα ενεργειών για να ανοίξετε έναν περιηγητή.</string>
 	<string name="reader_err_get_post_not_authorized_signin">Δεν είστε εξουσιοδοτημένος να δείτε αυτό το άρθρο. Δοκιμάστε να συνδεθείτε στο WordPress.com πρώτα.</string>
 	<string name="reader_err_get_post_not_authorized_fallback">Δεν είστε εγκεκριμένος να δείτε το άρθρο αυτό. Εναλλακτικά, χρησιμοποιήστε το κουμπί στην μπάρα ενεργειών για να ανοίξετε έναν περιηγητή.</string>
@@ -417,7 +475,6 @@ Language: el_GR
 	<string name="site_settings_address_title">Διεύθυνση</string>
 	<string name="site_settings_tagline_title">Γραμμή ετικετών</string>
 	<string name="site_settings_title_title">Τίτλος Ιστότοπου</string>
-	<string name="site_settings_this_device_header">Αυτή η συσκευή</string>
 	<string name="site_settings_discussion_new_posts_header">Προεπιλογές για νέα άρθρα</string>
 	<string name="site_settings_writing_header">Συγγραφή</string>
 	<string name="site_settings_account_header">Λογαριασμός</string>
@@ -440,8 +497,6 @@ Language: el_GR
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Οι σελίδες που ακολουθείτε δεν έχουν δημοσιεύσει κάτι πρόσφατα</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Καμία πρόσφατη δημοσίευση</string>
 	<string name="edit_media">Επεξεργασία πολυμέσου</string>
-	<string name="media_details_copy_url_toast">Η διεύθυνση αντιγράφτηκε στο πρόχειρο</string>
-	<string name="media_details_copy_url">Αντιγραφή διεύθυνσης</string>
 	<string name="media_details_label_date_uploaded">Ανέβηκε</string>
 	<string name="media_details_label_date_added">Προστέθηκε</string>
 	<string name="selected_theme">Επιλεγμένο Θέμα</string>
@@ -531,13 +586,7 @@ Language: el_GR
 	<string name="email">Email</string>
 	<string name="notifications_tab">Καρτέλα ειδοποιήσεων</string>
 	<string name="app_notifications">Ειδοποιήσεις εφαρμογής</string>
-	<string name="notifications_comments_other_blogs">Σχόλια σε άλλους ιστότοπους</string>
-	<string name="notifications_other">Άλλα</string>
 	<string name="notifications_wpcom_updates">Ενημερώσεις του WordPress.com</string>
-	<string name="notifications_account_emails">Μήνυμα από το WordPress.com</string>
-	<string name="notifications_account_emails_summary">Θα σας στέλνουμε πάντα σημαντικά email σχετικά με το λογαριασμό σας αλλά μπορείτε να λαμβάνετε και μερικά χρήσιμα επιπλέον.</string>
-	<string name="your_sites">Οι ιστότοποί σας</string>
-	<string name="notifications_sights_and_sounds">Εικόνες και Ήχοι</string>
 	<string name="stats_insights_latest_post_trend">Πέρασαν %1$s από τη δημοσίευση του %2$s. Να πως πήγε το άρθρο μέχρι στιγμής...</string>
 	<string name="stats_insights_latest_post_summary">Πιο πρόσφατη σύνοψη άρθρων</string>
 	<string name="button_revert">Επαναφορά</string>
@@ -637,7 +686,6 @@ Language: el_GR
 	<string name="stats_period">Περίοδος</string>
 	<string name="stats_overall">Συνολικά</string>
 	<string name="stats_total">Σύνολα</string>
-	<string name="post_uploading">Μεταφόρτωση</string>
 	<string name="stats_visitors">Επισκέπτες</string>
 	<string name="stats_views">Προβολές</string>
 	<string name="stats_timeframe_years">Χρόνια</string>
@@ -698,12 +746,10 @@ Language: el_GR
 	<string name="themes_fetching">Λήψη θεμάτων...</string>
 	<string name="ssl_certificate_details">Λεπτομέρειες</string>
 	<string name="cab_selected">%d επιλεγμένα</string>
-	<string name="confirm_delete_media">Διαγραφή επιλεγμένου αντικειμένου;</string>
 	<string name="confirm_delete_multi_media">Διαγραφή επιλεγμένων αντικειμένων;</string>
 	<string name="delete_sure_page">Διαγραφή της σελίδας</string>
 	<string name="delete_sure">Διαγραφή αυτού του προσχεδίου</string>
 	<string name="delete_sure_post">Διαγραφή αυτής της ανάρτησης</string>
-	<string name="posting_post">Δημοσίευση "%s"</string>
 	<string name="pages_empty_list">Δεν υπάρχουν σελίδες ακόμη. Γιατί να μη δημιουργήσετε μία;</string>
 	<string name="comment_reply_to_user">Απάντηση σε %s</string>
 	<string name="posts_empty_list">Δεν υπάρχουν άρθρα ακόμη. Γιατί να μη δημιουργήσετε ένα;</string>
@@ -711,7 +757,6 @@ Language: el_GR
 	<string name="comment">Σχόλιο</string>
 	<string name="mnu_comment_liked">Liked</string>
 	<string name="uploading_total">Μεταφόρτωση %1$d από %2$d</string>
-	<string name="sending_content">Μεταφόρτωση %s περιεχομένου</string>
 	<string name="stats_no_blog">Αδυναμία φόρτωσης στατιστικών για το ιστολόγιο αυτό</string>
 	<string name="older_last_week">Παλιότερο από 1 βδομάδα</string>
 	<string name="older_two_days">Παλιότερο από 2 μέρες</string>
@@ -813,7 +858,6 @@ Language: el_GR
 	<string name="error_refresh_notifications">Αδυναμία ανανέωσης ειδοποιήσεων αυτή τη στιγμή</string>
 	<string name="error_refresh_pages">Αδυναμία ανανέωσης σελίδων αυτή τη στιγμή</string>
 	<string name="error_refresh_posts">Αδυναμία ανανέωσης άρθρων αυτή τη στιγμή</string>
-	<string name="error_delete_post">Προέκυψε σφάλμα κατά τη διαγραφή του %s</string>
 	<string name="notifications_empty_list">Δεν υπάρχουν ειδοποιήσεις</string>
 	<string name="reply_failed">Αποτυχία απάντησης</string>
 	<string name="invalid_url_message">Ελέγξτε αν το URL που δώσατε είναι έγκυρο</string>
@@ -830,7 +874,6 @@ Language: el_GR
 	<string name="theme_auth_error_message">Βεβαιωθείτε ότι έχετε δικαίωμα ορισμού θεμάτων</string>
 	<string name="theme_set_failed">Αποτυχία ορισμού θέματος</string>
 	<string name="theme_fetch_failed">Αποτυχία λήψης θεμάτων</string>
-	<string name="wait_until_upload_completes">Περιμένετε μέχρι την ολοκλήρωση της μεταφόρτωσης</string>
 	<string name="blog_not_found">Προέκυψε σφάλμα κατά την πρόσβαση σε αυτό το ιστολόγιο</string>
 	<string name="gallery_error">Αδυναμία λήψης πολυμέσου</string>
 	<string name="could_not_remove_account">Η αφαίρεση της ιστοσελίδας δεν ήταν δυνατή</string>
@@ -863,8 +906,6 @@ Language: el_GR
 	<string name="invalid_site_url_message">Βεβαιωθείτε ότι το URL του ιστότοπου που δώσατε είναι έγκυρο</string>
 	<string name="open_source_licenses">Άδειες ανοιχτού κώδικα</string>
 	<string name="file_error_create">Αδυναμία δημιουργίας προσωρινού αρχείου για μεταφόρτωση πολυμέσων. Βεβαιωθείτε ότι υπάρχει αρκετός ελεύθερος χώρος στη συσκευή σας.</string>
-	<string name="share_action_media">Βιβλιοθήκη πολυμέσων</string>
-	<string name="share_action_post">Νέα ανάρτηση</string>
 	<string name="category_name">Όνομα κατηγορίας</string>
 	<string name="add_new_category">Προσθήκη νέας κατηγορίας</string>
 	<string name="view_in_browser">Προβολή στον περιηγητή</string>
@@ -1067,7 +1108,6 @@ Language: el_GR
 	<string name="app_title">WordPress για Android</string>
 	<string name="tos">Όροι Χρήσης</string>
 	<string name="version">Έκδοση</string>
-	<string name="max_thumbnail_px_width">Προεπιλεγμένο πλάτος εικόνας</string>
 	<string name="image_alignment">Στοίχιση</string>
 	<string name="refresh">Ανανέωση</string>
 	<string name="untitled">Χωρίς τίτλο</string>
@@ -1085,9 +1125,6 @@ Language: el_GR
 	<string name="categories">Κατηγορίες</string>
 	<string name="title">Τίτλος</string>
 	<string name="dlg_deleting_comments">Διαγραφή σχολίων</string>
-	<string name="notification_vibrate">Δόνηση</string>
-	<string name="notification_sound">Ήχος ειδοποιήσης</string>
-	<string name="notification_blink">Να αναβοσβήνει η ένδειξη ενημερώσεων</string>
 	<string name="sdcard_title">Κάρτα SD Είναι Απαραίτητη</string>
 	<string name="media">Πολυμέσα</string>
 	<string name="approve">Έγκριση</string>

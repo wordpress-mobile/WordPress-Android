@@ -23,7 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -65,6 +65,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -635,8 +636,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final TextView txtName = (TextView) getView().findViewById(R.id.text_name);
         final TextView txtDate = (TextView) getView().findViewById(R.id.text_date);
 
-        txtName.setText(mComment.getAuthorName() == null ? getString(R.string.anonymous) :
-                HtmlUtils.fastUnescapeHtml(mComment.getAuthorName()));
+        txtName.setText(mComment.getAuthorName() == null ? getString(R.string.anonymous) : mComment.getAuthorName());
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateFromIso8601(mComment.getDatePublished()),
                 WordPress.getContext()));
 
@@ -876,7 +876,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mIsSubmittingReply = true;
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
+        AnalyticsUtils.trackCommentReplyWithDetails(false, mSite, mComment);
 
         // Pseudo comment reply
         CommentModel reply = new CommentModel();

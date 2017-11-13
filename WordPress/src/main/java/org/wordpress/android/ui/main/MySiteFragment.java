@@ -70,14 +70,14 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogTitleTextView;
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
-    private RelativeLayout mThemesContainer;
-    private RelativeLayout mPeopleView;
+    private LinearLayout mThemesContainer;
+    private LinearLayout mPeopleView;
+    private LinearLayout mPageView;
+    private LinearLayout mPlanContainer;
     private RelativeLayout mPluginsView;
-    private RelativeLayout mPageView;
-    private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
-    private RelativeLayout mAdminView;
+    private LinearLayout mAdminView;
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
@@ -153,20 +153,20 @@ public class MySiteFragment extends Fragment
         mBlogTitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_title_label);
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
-        mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
-        mPeopleView = (RelativeLayout) rootView.findViewById(R.id.row_people);
+        mThemesContainer = (LinearLayout) rootView.findViewById(R.id.row_themes);
+        mPeopleView = (LinearLayout) rootView.findViewById(R.id.row_people);
+        mPlanContainer = (LinearLayout) rootView.findViewById(R.id.row_plan);
         mPluginsView = (RelativeLayout) rootView.findViewById(R.id.row_plugins);
-        mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
         mSharingView = rootView.findViewById(R.id.row_sharing);
-        mAdminView = (RelativeLayout) rootView.findViewById(R.id.row_admin);
+        mAdminView = (LinearLayout) rootView.findViewById(R.id.row_admin);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
         mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
-        mPageView = (RelativeLayout) rootView.findViewById(R.id.row_pages);
+        mPageView = (LinearLayout) rootView.findViewById(R.id.row_pages);
 
         // hide the FAB the first time the fragment is created in order to animate it in onResume()
         if (savedInstanceState == null) {
