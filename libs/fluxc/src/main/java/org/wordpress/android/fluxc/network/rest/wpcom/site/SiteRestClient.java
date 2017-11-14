@@ -505,6 +505,8 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled);
             site.setIsVideoPressSupported(from.options.videopress_enabled);
             site.setIsAutomatedTransfer(from.options.is_automated_transfer);
+            site.setIsWpComStore(from.options.is_wpcom_store);
+            site.setHasWooCommerce(from.options.woocommerce_is_active);
             site.setAdminUrl(from.options.admin_url);
             site.setLoginUrl(from.options.login_url);
             site.setTimezone(from.options.gmt_offset);
