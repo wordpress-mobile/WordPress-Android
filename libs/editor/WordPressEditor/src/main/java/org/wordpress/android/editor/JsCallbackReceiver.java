@@ -202,7 +202,10 @@ public class JsCallbackReceiver {
                 }
                 break;
             case CALLBACK_RESPONSE_STRING:
-                AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params);
+                // log the params unless they contain the post content
+                if (!params.contains("function=getHTMLForCallback~id=zss_field_content~contents=")) {
+                    AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params);
+                }
                 Set<String> responseDataSet;
                 if (params.startsWith("function=") && params.contains(JS_CALLBACK_DELIMITER)) {
                     String functionName = params.substring("function=".length(), params.indexOf(JS_CALLBACK_DELIMITER));
