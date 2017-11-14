@@ -91,7 +91,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private long mDownloadId;
     private String mTitle;
     private boolean mDidRegisterEventBus;
-    private boolean mOverrideClosingTransition;
 
     private SiteModel mSite;
     private MediaModel mMedia;
@@ -127,13 +126,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
      * @param site        site this media is associated with
      * @param media       media model to display
      * @param mediaIdList optional list of media IDs to page through in preview screen
-     * @param sourceView  optional view to use in shared element transition
      */
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
                                      @NonNull MediaModel media,
-                                     @Nullable ArrayList<String> mediaIdList,
-                                     @Nullable View sourceView) {
+                                     @Nullable ArrayList<String> mediaIdList) {
         // go directly to preview for local images, videos and audio (do nothing for local documents)
         if (MediaUtils.isLocalFile(media.getUploadState())) {
             if (MediaUtils.isValidImage(media.getFilePath())
@@ -152,18 +149,10 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             intent.putExtra(ARG_ID_LIST, mediaIdList);
         }
 
-        ActivityOptionsCompat options;
-
-        if (sourceView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            String sharedElementName = activity.getString(R.string.shared_element_media);
-            sourceView.setTransitionName(sharedElementName);
-            options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sourceView, sharedElementName);
-        } else {
-            options = ActivityOptionsCompat.makeCustomAnimation(
-                    activity,
-                    R.anim.activity_slide_up_from_bottom,
-                    R.anim.do_nothing);
-        }
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                activity,
+                R.anim.activity_slide_up_from_bottom,
+                R.anim.do_nothing);
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.MEDIA_SETTINGS, options.toBundle());
     }
 
@@ -181,10 +170,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         }
-
-        // on Lollipop and above we close with a shared element transition set in the intent, otherwise use a
-        // slide out transition when the activity finishes
-        mOverrideClosingTransition = Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
 
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mImagePlay = (ImageView) findViewById(R.id.image_play);
@@ -379,7 +364,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                doFinishAfterTransition();
+                finish();
             }
         }, 1500);
     }
@@ -387,9 +372,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public void finish() {
         super.finish();
-        if (mOverrideClosingTransition) {
-            overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_bottom);
-        }
+        overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_bottom);
     }
 
     /*
@@ -419,21 +402,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     @Override
     public void onBackPressed() {
         saveChanges();
-        // call finish() rather than super.onBackPressed() to enable skipping shared element transition
-        if (mOverrideClosingTransition) {
-            finish();
-        } else {
-            doFinishAfterTransition();
-        }
-    }
-
-    /*
-     * wrapper for supportFinishAfterTransition() which first hides the FAB to prevent it flickering
-     * during the shared element transition
-     */
-    private void doFinishAfterTransition() {
-        mFabView.setVisibility(View.GONE);
-        supportFinishAfterTransition();
+        super.onBackPressed();
     }
 
     @Override
@@ -860,7 +829,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 ToastUtils.showToast(this, R.string.error_generic);
             } else {
                 setResult(RESULT_MEDIA_DELETED);
-                doFinishAfterTransition();
+                finish();
             }
         } else if (!event.isError()) {
             reloadMedia();
@@ -875,9 +844,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     public void onMediaPreviewSwiped(MediaPreviewSwiped event) {
         if (event.mediaId != mMedia.getId()) {
             loadMediaId(event.mediaId);
-            // set the flag to prevent the shared element transition when exiting this activity - otherwise the
-            // user will see a shared element transition back to the original image selected in the media browser
-            mOverrideClosingTransition = true;
         }
     }
 
