@@ -407,7 +407,7 @@ public class PluginStore extends Store {
         } else {
             payload.plugin.setLocalSiteId(payload.site.getId());
             event.plugin = payload.plugin;
-            PluginSqlUtils.deleteSitePlugin(payload.plugin);
+            PluginSqlUtils.deleteSitePlugin(payload.site, payload.plugin);
         }
         emitChange(event);
     }
