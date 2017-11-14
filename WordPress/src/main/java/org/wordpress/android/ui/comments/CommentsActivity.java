@@ -1,19 +1,5 @@
 package org.wordpress.android.ui.comments;
 
-import android.app.Dialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.view.View;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -32,6 +18,20 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
+
+import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
 
 import javax.inject.Inject;
 
@@ -183,25 +183,11 @@ public class CommentsActivity extends AppCompatActivity
      */
     @Override
     public void onCommentSelected(long commentId) {
-        FragmentManager fm = getFragmentManager();
-        if (fm == null) {
-            return;
-        }
-
-        mComment = mCommentStore.getCommentBySiteAndRemoteId(mSite, commentId);
-
-        fm.executePendingTransactions();
-        CommentsListFragment listFragment = getListFragment();
-
-        FragmentTransaction ft = fm.beginTransaction();
-        String tagForFragment = getString(R.string.fragment_tag_comment_detail);
-        CommentDetailFragment detailFragment = CommentDetailFragment.newInstance(mSite, mComment);
-        ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment).addToBackStack(tagForFragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        if (listFragment != null) {
-            ft.hide(listFragment);
-        }
-        ft.commitAllowingStateLoss();
+        Intent detailIntent = new Intent(this, CommentsDetailActivity.class);
+        detailIntent.putExtra(CommentsDetailActivity.COMMENT_ID_EXTRA, commentId);
+        detailIntent.putExtra(CommentsDetailActivity.COMMENT_STATUS_FILTER_EXTRA, CommentStatus.ALL);
+        detailIntent.putExtra(WordPress.SITE, mSite);
+        startActivity(detailIntent);
     }
 
     /*

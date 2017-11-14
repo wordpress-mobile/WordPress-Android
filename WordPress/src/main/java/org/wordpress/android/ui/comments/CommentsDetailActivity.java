@@ -2,6 +2,7 @@ package org.wordpress.android.ui.comments;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore;
@@ -11,13 +12,16 @@ import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import javax.inject.Inject;
 
-public class CommentsDetailActivity extends AppCompatActivity {
+public class CommentsDetailActivity extends AppCompatActivity implements CommentAdapter.OnDataLoadedListener, CommentAdapter.OnLoadMoreListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
     public static final String COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter";
 
@@ -28,6 +32,8 @@ public class CommentsDetailActivity extends AppCompatActivity {
     private long mCommentId;
     private CommentStatus commentStatus;
     private SiteModel mSite;
+    private CommentDetailFragmentAdapter adapter;
+    private ViewPager.OnPageChangeListener mOnPageChangeListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,8 +66,10 @@ public class CommentsDetailActivity extends AppCompatActivity {
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
                                       new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
-        //TODO mCommentStore.getCommentBySiteAndRemoteId(mSite, mCommentId);
-        //TODO updateUI()
+
+        adapter = new CommentDetailFragmentAdapter(getFragmentManager(), mCommentStore, commentStatus, mSite, this, this);
+        mViewPager.setAdapter(adapter);
+        setProgressVisible(true);
     }
 
     @Override
@@ -72,6 +80,37 @@ public class CommentsDetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDataLoaded(boolean isEmpty) {
+        final int commentIndex = adapter.commentIndex(mCommentId);
+        if (commentIndex < 0) {
+            showErrorToastAndFinish();
+        }
+        if (mOnPageChangeListener != null) {
+            mViewPager.removeOnPageChangeListener(mOnPageChangeListener);
+        } else {
+            mOnPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    final CommentModel comment = adapter.getCommentAtPosition(position);
+                    if (comment != null) {
+                        mCommentId = comment.getId();
+                    }
+                }
+            };
+        }
+        mViewPager.setCurrentItem(commentIndex);
+
+        mViewPager.addOnPageChangeListener(mOnPageChangeListener);
+        setProgressVisible(false);
+    }
+
+    @Override
+    public void onLoadMore() {
+        //TODO add pagination
     }
 
     @Override
@@ -86,5 +125,13 @@ public class CommentsDetailActivity extends AppCompatActivity {
         AppLog.e(AppLog.T.COMMENTS, "Comment could not be found.");
         ToastUtils.showToast(this, R.string.error_load_comment);
         finish();
+    }
+
+    private void setProgressVisible(boolean visible) {
+        final ProgressBar progress =
+                (ProgressBar) findViewById(R.id.progress_loading);
+        if (progress != null) {
+            progress.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
     }
 }

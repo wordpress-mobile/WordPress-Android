@@ -190,7 +190,7 @@
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.comments.CommentsDetailActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/CalypsoTheme" />
 
         <!-- Posts activities -->
         <activity
