@@ -108,14 +108,14 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 = new UpdateSitePluginError(UpdateSitePluginErrorType.GENERIC_ERROR);
                         if (networkError instanceof WPComGsonNetworkError) {
                             switch (((WPComGsonNetworkError) networkError).apiError) {
-                                case "unauthorized":
-                                    updatePluginError.type = UpdateSitePluginErrorType.UNAUTHORIZED;
-                                    break;
                                 case "activation_error":
                                     updatePluginError.type = UpdateSitePluginErrorType.ACTIVATION_ERROR;
                                     break;
                                 case "deactivation_error":
                                     updatePluginError.type = UpdateSitePluginErrorType.DEACTIVATION_ERROR;
+                                    break;
+                                case "unauthorized":
+                                    updatePluginError.type = UpdateSitePluginErrorType.UNAUTHORIZED;
                                     break;
                             }
                         }
@@ -166,7 +166,7 @@ public class PluginRestClient extends BaseWPComRestClient {
     }
 
     public void installSitePlugin(@NonNull final SiteModel site, String pluginName) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(pluginName).install.getUrlV1_1();
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(pluginName).install.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 PluginWPComRestResponse.class,
                 new Listener<PluginWPComRestResponse>() {
@@ -184,11 +184,23 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 = new InstallSitePluginError(InstallSitePluginErrorType.GENERIC_ERROR);
                         if (networkError instanceof WPComGsonNetworkError) {
                             switch (((WPComGsonNetworkError) networkError).apiError) {
-                                case "unauthorized":
-                                    installPluginError.type = InstallSitePluginErrorType.UNAUTHORIZED;
-                                    break;
                                 case "install_failure":
                                     installPluginError.type = InstallSitePluginErrorType.INSTALL_FAILURE;
+                                    break;
+                                case "local_file_does_not_exist":
+                                    installPluginError.type = InstallSitePluginErrorType.LOCAL_FILE_DOES_NOT_EXIST;
+                                    break;
+                                case "no_package":
+                                    installPluginError.type = InstallSitePluginErrorType.NO_PACKAGE;
+                                    break;
+                                case "no_plugin_installed":
+                                    installPluginError.type = InstallSitePluginErrorType.NO_PLUGIN_INSTALLED;
+                                    break;
+                                case "plugin_already_installed":
+                                    installPluginError.type = InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED;
+                                    break;
+                                case "unauthorized":
+                                    installPluginError.type = InstallSitePluginErrorType.UNAUTHORIZED;
                                     break;
                             }
                         }
