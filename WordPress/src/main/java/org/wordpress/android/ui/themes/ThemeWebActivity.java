@@ -34,6 +34,13 @@ public class ThemeWebActivity extends WPWebViewActivity {
         SUPPORT
     }
 
+    public static String getSiteLoginUrl(SiteModel site) {
+        if (site.isJetpackConnected()) {
+            return WPCOM_LOGIN_URL;
+        }
+        return WPWebViewActivity.getSiteLoginUrl(site);
+    }
+
     public static void openTheme(Activity activity, SiteModel site, ThemeModel theme, ThemeWebActivityType type) {
         String url = getUrl(site, theme, type, false);
         if (type == ThemeWebActivityType.PREVIEW) {
