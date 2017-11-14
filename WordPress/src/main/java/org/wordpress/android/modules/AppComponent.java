@@ -1,5 +1,6 @@
 package org.wordpress.android.modules;
 
+import dagger.Component;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.module.ReleaseBaseModule;
@@ -11,8 +12,8 @@ import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
-import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
+import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.comments.CommentsDetailActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
@@ -109,8 +111,6 @@ import org.wordpress.android.util.WPWebViewClient;
 
 import javax.inject.Singleton;
 
-import dagger.Component;
-
 @Singleton
 @Component(modules = {
         AppContextModule.class,
@@ -167,6 +167,7 @@ public interface AppComponent {
     void inject(CommentAdapter object);
     void inject(CommentsListFragment object);
     void inject(CommentsActivity object);
+    void inject(CommentsDetailActivity object);
 
     void inject(MeFragment object);
     void inject(MyProfileActivity object);
