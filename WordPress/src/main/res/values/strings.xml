@@ -291,8 +291,8 @@
     <string name="media_files_uploaded">%d files uploaded</string>
     <string name="media_file_not_uploaded">1 file not uploaded</string>
     <string name="media_file_uploaded">1 file uploaded</string>
-    <string name="media_files_uploaded_succcessfully">, %d successfully uploaded</string>
-    <string name="media_all_files_uploaded_succcessfully">%d files uploaded successfully</string>
+    <string name="media_files_uploaded_successfully">, %d successfully uploaded</string>
+    <string name="media_all_files_uploaded_successfully">%d files uploaded successfully</string>
     <string name="retry_needs_aztec" translatable="false">Retry only available in the Beta editor</string>
     <string name="media_file_missing_for_retry">Retry not possible - some files in this Post are missing from your device</string>
     <string name="media_files_uploaded_write_post">Write Post</string>

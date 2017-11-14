@@ -553,7 +553,7 @@ class PostUploadNotifier {
         if (mediaItemsNotUploaded > 0 &&
                 (getCurrentMediaItem()) > 0) {
             // some media items were uploaded successfully
-            newErrorMessage += String.format(mContext.getString(R.string.media_files_uploaded_succcessfully),
+            newErrorMessage += String.format(mContext.getString(R.string.media_files_uploaded_successfully),
                     sNotificationData.currentMediaItem);
         }
 
@@ -571,7 +571,7 @@ class PostUploadNotifier {
 
             if (mediaItemsNotUploaded <= sNotificationData.currentMediaItem) {
                 // some media items were uploaded successfully
-                newErrorMessage += " " + String.format(mContext.getString(R.string.media_files_uploaded_succcessfully),
+                newErrorMessage += " " + String.format(mContext.getString(R.string.media_files_uploaded_successfully),
                         sNotificationData.currentMediaItem);
             }
         }
@@ -581,7 +581,7 @@ class PostUploadNotifier {
 
     private String buildSuccessMessageForMedia(int mediaItemsUploaded) {
         // all media items were uploaded successfully
-        String successMessage =  String.format(mContext.getString(R.string.media_all_files_uploaded_succcessfully),
+        String successMessage =  String.format(mContext.getString(R.string.media_all_files_uploaded_successfully),
                     mediaItemsUploaded);
         return successMessage;
     }
