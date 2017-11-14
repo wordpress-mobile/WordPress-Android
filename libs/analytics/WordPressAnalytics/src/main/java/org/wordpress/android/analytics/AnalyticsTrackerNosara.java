@@ -568,6 +568,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_comment_liked";
             case NOTIFICATION_UNLIKED:
                 return "notifications_comment_unliked";
+            case NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST:
+                return "notifications_upload_media_success_write_post";
+            case NOTIFICATION_UPLOAD_POST_ERROR_RETRY:
+                return "notifications_upload_post_error_retry";
+            case NOTIFICATION_UPLOAD_MEDIA_ERROR_RETRY:
+                return "notifications_upload_media_error_retry";
             case OPENED_POSTS:
                 return "site_menu_opened";
             case OPENED_PAGES:

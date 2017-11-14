@@ -201,6 +201,8 @@ public class WPMediaUtils {
                 return context.getString(R.string.media_error_exceeds_memory_limit);
             case PARSE_ERROR:
                 return context.getString(R.string.error_media_parse_error);
+            case GENERIC_ERROR:
+                return context.getString(R.string.error_generic_error);
         }
 
         return null;
@@ -219,15 +221,18 @@ public class WPMediaUtils {
         dialogBuilder.create().show();
     }
 
-    public static void launchVideoLibrary(Activity activity) {
+    public static void launchVideoLibrary(Activity activity, boolean multiSelect) {
         AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(prepareVideoLibraryIntent(activity),
+        activity.startActivityForResult(prepareVideoLibraryIntent(activity, multiSelect),
                 RequestCodes.VIDEO_LIBRARY);
     }
 
-    private static Intent prepareVideoLibraryIntent(Context context) {
+    private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
     }
 
@@ -240,15 +245,18 @@ public class WPMediaUtils {
         return new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
     }
 
-    public static void launchPictureLibrary(Activity activity) {
+    public static void launchPictureLibrary(Activity activity, boolean multiSelect) {
         AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(preparePictureLibraryIntent(activity.getString(R.string.pick_photo)),
+        activity.startActivityForResult(preparePictureLibraryIntent(activity.getString(R.string.pick_photo), multiSelect),
                 RequestCodes.PICTURE_LIBRARY);
     }
 
-    private static Intent preparePictureLibraryIntent(String title) {
+    private static Intent preparePictureLibraryIntent(String title, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
         return Intent.createChooser(intent, title);
     }
 

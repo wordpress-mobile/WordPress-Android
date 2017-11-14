@@ -1116,6 +1116,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void onMediaUploadRetry(String localId, MediaType mediaType) {
+        retryMediaUpload(localId, mediaType);
+    }
+
+    @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
         if(!isAdded()) {
             return;
@@ -1382,22 +1387,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // Retry media upload
                 boolean successfullyRetried = mEditorFragmentListener.onMediaRetryClicked(mediaId);
                 if (successfullyRetried) {
-                    mWebView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            switch (mediaType) {
-                                case IMAGE:
-                                    mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId
-                                            + ");");
-                                    break;
-                                case VIDEO:
-                                    mWebView.execJavaScriptFromString("ZSSEditor.unmarkVideoUploadFailed(" + mediaId
-                                            + ");");
-                            }
-                            mFailedMediaIds.remove(mediaId);
-                            mUploadingMedia.put(mediaId, mediaType);
-                        }
-                    });
+                    retryMediaUpload(mediaId, mediaType);
                 }
                 break;
             default:
@@ -1454,6 +1444,25 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.notifyVisibilityChanged(false);
                 break;
         }
+    }
+
+    private void retryMediaUpload(final String mediaId, final MediaType mediaType) {
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                switch (mediaType) {
+                    case IMAGE:
+                        mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId
+                                + ");");
+                        break;
+                    case VIDEO:
+                        mWebView.execJavaScriptFromString("ZSSEditor.unmarkVideoUploadFailed(" + mediaId
+                                + ");");
+                }
+                mFailedMediaIds.remove(mediaId);
+                mUploadingMedia.put(mediaId, mediaType);
+            }
+        });
     }
 
     public void onLinkTapped(String url, String title) {
