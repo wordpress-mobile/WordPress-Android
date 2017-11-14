@@ -1956,6 +1956,7 @@
     <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
     <string name="login_empty_site_url">Please enter a site address</string>
     <string name="login_empty_username">Please enter a username</string>
+    <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_logged_in_as">Logged in as</string>
