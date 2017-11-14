@@ -25,6 +25,7 @@ public class WordPressDB {
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
     private static final String NOTES_TABLE = "notes";
+    private static final String THEMES_TABLE = "themes";
 
     // add new table for QuickPress homescreen shortcuts
     private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS = "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
@@ -132,6 +133,7 @@ public class WordPressDB {
                 ctx.deleteDatabase("simperium-store");
                 currentVersion++;
             case 37:
+                db.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
                 currentVersion++;
             case 38:
                 currentVersion++;
