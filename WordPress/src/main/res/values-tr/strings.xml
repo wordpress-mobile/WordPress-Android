@@ -22,7 +22,7 @@ Language: tr
 	<string name="media_edit_filetype_caption">Dosya tipi</string>
 	<string name="media_edit_filename_caption">Dosya adı</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_card_caption">Dosya detayları</string>
+	<string name="media_edit_file_details_card_caption">Dosya detayları</string>
 	<string name="copy">Kopyala</string>
 	<string name="notification_settings_item_sights_and_sounds_blink_light">Işığı yakıp söndür</string>
 	<string name="connect_site">Site bağla</string>

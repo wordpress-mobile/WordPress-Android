@@ -185,7 +185,8 @@
     <string name="media_edit_failure">Failed to update</string>
     <string name="saving">Saving…</string>
     <string name="confirm_discard_changes">Discard unsaved changes?</string>
-    <string name="media_edit_card_caption">File Details</string>
+    <string name="media_edit_file_details_card_caption">File Details</string>
+    <string name="media_edit_customize_card_caption">Customize</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_filename_caption">File Name</string>
     <string name="media_edit_filetype_caption">File Type</string>
@@ -212,8 +213,10 @@
     <string name="media_empty_audio_list">You don\'t have any audio</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete_media_image">Delete this image?</string>
+    <string name="confirm_remove_media_image">Remove this image from the post?</string>
     <string name="confirm_delete_media_video">Delete this video?</string>
     <string name="deleting_media_dlg">Deleting</string>
+    <string name="remove_image_from_post">Remove from post</string>
 
     <!-- Media details -->
     <string name="media_details_label_date_added">Added</string>
@@ -1155,6 +1158,29 @@
         <item>@string/alignment_left</item>
         <item>@string/alignment_center</item>
         <item>@string/alignment_right</item>
+    </string-array>
+
+
+    <!-- Image Size -->
+    <string name="image_size">Size</string>
+
+    <string name="size_thumbnail">Thumbnail</string>
+    <string name="size_medium">Medium</string>
+    <string name="size_large">Large</string>
+    <string name="size_full">Full Size</string>
+
+    <string-array name="image_size_key_array" translatable="false">
+        <item>size-thumbnail</item>
+        <item>size-medium</item>
+        <item>size-large</item>
+        <item>size-full</item>
+    </string-array>
+
+    <string-array name="image_size_label_array" translatable="false">
+        <item>@string/size_thumbnail</item>
+        <item>@string/size_medium</item>
+        <item>@string/size_large</item>
+        <item>@string/size_full</item>
     </string-array>
 
     <!-- About View -->

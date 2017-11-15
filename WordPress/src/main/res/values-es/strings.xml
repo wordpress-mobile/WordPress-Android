@@ -48,7 +48,7 @@ Language: es
 	<string name="media_edit_filetype_caption">Tipo de archivo</string>
 	<string name="media_edit_filename_caption">Nombre del archivo</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_card_caption">Detalles de documentos</string>
+	<string name="media_edit_file_details_card_caption">Detalles de documentos</string>
 	<string name="media_edit_alttext_text">Texto alternativo</string>
 	<string name="copy">Copiar</string>
 	<string name="connect_site">Conectar el sitio</string>

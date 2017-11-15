@@ -58,12 +58,14 @@ import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropList
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorFragmentActivity;
+import org.wordpress.android.editor.EditorImageMetaData;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.editor.EditorWebViewCompatibility;
 import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
+import org.wordpress.android.editor.legacy.EditorImageSettingsListener;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -91,6 +93,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
@@ -152,6 +155,7 @@ import de.greenrobot.event.EventBus;
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorBetaClickListener,
+        EditorImageSettingsListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
         EditorWebViewCompatibility.ReflectionFailureListener,
@@ -1035,6 +1039,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditorFragment instanceof AztecEditorFragment) {
             AztecEditorFragment aztecEditorFragment = (AztecEditorFragment)mEditorFragment;
             aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
+            aztecEditorFragment.setEditorImageSettingsListener(EditPostActivity.this);
 
             Drawable loadingImagePlaceholder = getResources().getDrawable(org.wordpress.android.editor.R.drawable.ic_gridicons_image);
             loadingImagePlaceholder.setBounds(0, 0,
@@ -1050,6 +1055,11 @@ public class EditPostActivity extends AppCompatActivity implements
             aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
             aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);
         }
+    }
+
+    @Override
+    public void onImageSettingsRequested(EditorImageMetaData editorImageMetaData) {
+        MediaSettingsActivity.showForResult(this, mSite, editorImageMetaData);
     }
 
     private interface AfterSavePostListener {
@@ -2141,6 +2151,12 @@ public class EditPostActivity extends AppCompatActivity implements
                         AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW);
                     } else {
                         ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
+                    }
+                    break;
+                case RequestCodes.MEDIA_SETTINGS:
+                    if (mEditorFragment instanceof AztecEditorFragment) {
+                        mEditorFragment.onActivityResult(AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
+                                Activity.RESULT_OK, data);
                     }
                     break;
             }

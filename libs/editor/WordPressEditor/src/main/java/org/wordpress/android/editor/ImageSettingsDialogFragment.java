@@ -162,7 +162,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         mAltText = (EditText) view.findViewById(R.id.image_alt_text);
         mAlignmentSpinner = (Spinner) view.findViewById(R.id.alignment_spinner);
         mLinkTo = (EditText) view.findViewById(R.id.image_link_to);
-        SeekBar widthSeekBar = (SeekBar) view.findViewById(R.id.image_width_seekbar);
+        SeekBar widthSeekBar = (SeekBar) view.findViewById(R.id.image_size_seekbar);
         mWidthText = (EditText) view.findViewById(R.id.image_width_text);
         mFeaturedCheckBox = (CheckBox) view.findViewById(R.id.featuredImage);
 

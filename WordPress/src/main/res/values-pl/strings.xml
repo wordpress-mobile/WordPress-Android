@@ -47,7 +47,7 @@ Language: pl
 	<string name="media_edit_filetype_caption">Typ pliku</string>
 	<string name="media_edit_filename_caption">Nazwa pliku</string>
 	<string name="media_edit_url_caption">Adres URL </string>
-	<string name="media_edit_card_caption">Szczegóły pliku</string>
+	<string name="media_edit_file_details_card_caption">Szczegóły pliku</string>
 	<string name="media_edit_alttext_text">Tekst alternatywny</string>
 	<string name="copy">Kopia</string>
 	<string name="connect_site">Połącz witrynę</string>
