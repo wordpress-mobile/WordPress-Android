@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Random;
 
 @RunWith(RobolectricTestRunner.class)
-public class PluginSqlUtilsTests {
+public class PluginSqlUtilsTest {
     private static final int TEST_LOCAL_SITE_ID = 1;
 
     private Random mRandom = new Random(System.currentTimeMillis());
