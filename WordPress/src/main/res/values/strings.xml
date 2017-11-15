@@ -216,7 +216,7 @@
     <string name="confirm_remove_media_image">Remove this image from the post?</string>
     <string name="confirm_delete_media_video">Delete this video?</string>
     <string name="deleting_media_dlg">Deleting</string>
-    <string name="remove_image_from_post">Remove from the post</string>
+    <string name="remove_image_from_post">Remove from post</string>
 
     <!-- Media details -->
     <string name="media_details_label_date_added">Added</string>
