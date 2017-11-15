@@ -117,6 +117,9 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 case "unauthorized":
                                     updatePluginError.type = UpdateSitePluginErrorType.UNAUTHORIZED;
                                     break;
+                                case "unknown_plugin":
+                                    updatePluginError.type = UpdateSitePluginErrorType.UNKNOWN_PLUGIN;
+                                    break;
                             }
                         }
                         updatePluginError.message = networkError.message;
