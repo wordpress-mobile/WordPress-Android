@@ -241,9 +241,9 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class OnSitePluginsChanged extends OnChanged<FetchSitePluginsError> {
+    public static class OnSitePluginsFetched extends OnChanged<FetchSitePluginsError> {
         public SiteModel site;
-        public OnSitePluginsChanged(SiteModel site) {
+        public OnSitePluginsFetched(SiteModel site) {
             this.site = site;
         }
     }
@@ -369,7 +369,7 @@ public class PluginStore extends Store {
     }
 
     private void fetchedSitePlugins(FetchedSitePluginsPayload payload) {
-        OnSitePluginsChanged event = new OnSitePluginsChanged(payload.site);
+        OnSitePluginsFetched event = new OnSitePluginsFetched(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
