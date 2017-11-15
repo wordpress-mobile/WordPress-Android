@@ -43,13 +43,14 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
     private ProgressBar progressBar;
 
     private long mCommentId;
-    private CommentStatus commentStatus;
+    private CommentStatus mStatusFilter;
     private SiteModel mSite;
-    private CommentDetailFragmentAdapter adapter;
+    private CommentDetailFragmentAdapter mAdapter;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
 
-    private boolean isLoadingComments;
+    private boolean mIsLoadingComments;
     private boolean mIsUpdatingComments;
+    private boolean mCanLoadMoreComments = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,18 +72,17 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
         if (savedInstanceState == null) {
             mCommentId = getIntent().getLongExtra(COMMENT_ID_EXTRA, -1);
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            commentStatus = (CommentStatus) getIntent().getSerializableExtra(COMMENT_STATUS_FILTER_EXTRA);
+            mStatusFilter = (CommentStatus) getIntent().getSerializableExtra(COMMENT_STATUS_FILTER_EXTRA);
 
         } else {
             mCommentId = savedInstanceState.getLong(COMMENT_ID_EXTRA);
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            commentStatus = (CommentStatus) savedInstanceState.getSerializable(COMMENT_STATUS_FILTER_EXTRA);
+            mStatusFilter = (CommentStatus) savedInstanceState.getSerializable(COMMENT_STATUS_FILTER_EXTRA);
         }
 
         //set up the viewpager and adapter for lateral navigation
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
-        mViewPager.setPageTransformer(false,
-                                      new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+        mViewPager.setPageTransformer(false, new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
         progressBar = (ProgressBar) findViewById(R.id.progress_loading);
 
@@ -90,55 +90,17 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putLong(COMMENT_ID_EXTRA, mCommentId);
+        outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(COMMENT_STATUS_FILTER_EXTRA, mStatusFilter);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onDestroy() {
         mDispatcher.unregister(this);
         super.onDestroy();
-    }
-
-    private void loadDataInViewPager() {
-        if (isLoadingComments) {
-            AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
-        } else {
-            new LoadCommentsTask(mCommentStore, commentStatus, mSite, new LoadCommentsTask.LoadingCallback() {
-                @Override
-                public void isLoading(boolean loading) {
-                    setLoadingState(loading);
-                    isLoadingComments = loading;
-                }
-
-                @Override
-                public void loadingFinished(CommentList commentList) {
-                    loadViewPagerAdapter(commentList);
-                    setLoadingState(false);
-                }
-            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
-
-    private void loadViewPagerAdapter(CommentList commentList) {
-        adapter = new CommentDetailFragmentAdapter(getFragmentManager(), commentList, mSite, CommentsDetailActivity.this);
-        mViewPager.setAdapter(adapter);
-        final int commentIndex = adapter.commentIndex(mCommentId);
-        if (commentIndex < 0) {
-            showErrorToastAndFinish();
-        }
-        if (mOnPageChangeListener != null) {
-            mViewPager.removeOnPageChangeListener(mOnPageChangeListener);
-        } else {
-            mOnPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
-                @Override
-                public void onPageSelected(int position) {
-                    super.onPageSelected(position);
-                    final CommentModel comment = adapter.getCommentAtPosition(position);
-                    if (comment != null) {
-                        mCommentId = comment.getRemoteCommentId();
-                    }
-                }
-            };
-        }
-        mViewPager.setCurrentItem(commentIndex);
-
-        mViewPager.addOnPageChangeListener(mOnPageChangeListener);
     }
 
     @Override
@@ -159,9 +121,12 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
         } else if (!NetworkUtils.isNetworkAvailable(this)) {
             ToastUtils.showToast(this, getString(R.string.error_refresh_comments_showing_older));
             return;
+        } else if (!mCanLoadMoreComments) {
+            AppLog.w(AppLog.T.COMMENTS, "no more comments to be loaded");
+            return;
         }
 
-        mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(new CommentStore.FetchCommentsPayload(mSite, commentStatus, COMMENTS_PER_PAGE, adapter.getCount())));
+        mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(new CommentStore.FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, mAdapter.getCount())));
         mIsUpdatingComments = true;
     }
 
@@ -171,7 +136,11 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
         mIsUpdatingComments = false;
         // Don't refresh the list on push, we already updated comments
         if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
-            loadDataInViewPager();
+            if (event.changedCommentsLocalIds.size() > 0) {
+                loadDataInViewPager();
+            } else if (!event.isError()){
+                mCanLoadMoreComments = false;
+            }
         }
         if (event.isError()) {
             if (!TextUtils.isEmpty(event.error.message)) {
@@ -180,12 +149,50 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putLong(COMMENT_ID_EXTRA, mCommentId);
-        outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(COMMENT_STATUS_FILTER_EXTRA, commentStatus);
-        super.onSaveInstanceState(outState);
+    private void loadDataInViewPager() {
+        if (mIsLoadingComments) {
+            AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
+        } else {
+            new LoadCommentsTask(mCommentStore, mStatusFilter, mSite, new LoadCommentsTask.LoadingCallback() {
+                @Override
+                public void isLoading(boolean loading) {
+                    setLoadingState(loading);
+                    mIsLoadingComments = loading;
+                }
+
+                @Override
+                public void loadingFinished(CommentList commentList) {
+                    showCommentList(commentList);
+                    setLoadingState(false);
+                }
+            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    private void showCommentList(CommentList commentList) {
+        mAdapter = new CommentDetailFragmentAdapter(getFragmentManager(), commentList, mSite, CommentsDetailActivity.this);
+        mViewPager.setAdapter(mAdapter);
+        final int commentIndex = mAdapter.commentIndex(mCommentId);
+        if (commentIndex < 0) {
+            showErrorToastAndFinish();
+        }
+        if (mOnPageChangeListener != null) {
+            mViewPager.removeOnPageChangeListener(mOnPageChangeListener);
+        } else {
+            mOnPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    final CommentModel comment = mAdapter.getCommentAtPosition(position);
+                    if (comment != null) {
+                        mCommentId = comment.getRemoteCommentId();
+                    }
+                }
+            };
+        }
+        mViewPager.setCurrentItem(commentIndex);
+
+        mViewPager.addOnPageChangeListener(mOnPageChangeListener);
     }
 
     private void showErrorToastAndFinish() {
@@ -196,7 +203,7 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
 
     private void setLoadingState(boolean visible) {
         if (progressBar != null) {
-            boolean showProgressBar = visible && (adapter == null || adapter.isEmpty());
+            boolean showProgressBar = visible && (mAdapter == null || mAdapter.isEmpty());
             progressBar.setVisibility(showProgressBar ? View.VISIBLE : View.GONE);
         }
     }

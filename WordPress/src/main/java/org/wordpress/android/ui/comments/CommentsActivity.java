@@ -136,20 +136,6 @@ public class CommentsActivity extends AppCompatActivity
         AppLog.d(AppLog.T.COMMENTS, "comment activity new intent");
     }
 
-
-    private CommentDetailFragment getDetailFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(getString(
-                R.string.fragment_tag_comment_detail));
-        if (fragment == null) {
-            return null;
-        }
-        return (CommentDetailFragment) fragment;
-    }
-
-    private boolean hasDetailFragment() {
-        return (getDetailFragment() != null);
-    }
-
     private CommentsListFragment getListFragment() {
         Fragment fragment = getFragmentManager().findFragmentByTag(getString(
                 R.string.fragment_tag_comment_list));
@@ -173,8 +159,6 @@ public class CommentsActivity extends AppCompatActivity
         ft.add(R.id.layout_fragment_container, fragment, tagForFragment)
           .addToBackStack(tagForFragment)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        if (hasDetailFragment())
-            ft.hide(getDetailFragment());
         ft.commit();
     }
 
@@ -224,11 +208,7 @@ public class CommentsActivity extends AppCompatActivity
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putSerializable(WordPress.SITE, mSite);
 
-        // retain the id of the highlighted and selected comments
-        if (mComment != null && hasDetailFragment()) {
-            outState.putSerializable(KEY_SELECTED_COMMENT, mComment);
-        }
-
+        // retain the id of the highlighted comments
         if (hasListFragment()) {
             outState.putBoolean(KEY_AUTO_REFRESHED, getListFragment().mHasAutoRefreshedComments);
             outState.putString(KEY_EMPTY_VIEW_MESSAGE, getListFragment().getEmptyViewMessage());

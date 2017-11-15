@@ -4,7 +4,6 @@ import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DateTimeUtils;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -12,20 +11,13 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-
 public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
     private final SiteModel mSite;
     private final CommentAdapter.OnLoadMoreListener onLoadMoreListener;
     private final CommentList mComments;
 
-    CommentDetailFragmentAdapter(FragmentManager fm,
-                                 CommentList mComments,
-                                 SiteModel mSite,
-                                 CommentAdapter.OnLoadMoreListener onLoadMoreListener) {
+    CommentDetailFragmentAdapter(FragmentManager fm, CommentList mComments, SiteModel mSite, CommentAdapter.OnLoadMoreListener onLoadMoreListener) {
         super(fm);
         this.mSite = mSite;
         this.onLoadMoreListener = onLoadMoreListener;
@@ -37,11 +29,11 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
         return CommentDetailFragment.newInstance(mSite, getComment(position));
     }
 
-    public int commentIndex(long commentId) {
+    int commentIndex(long commentId) {
         return mComments.indexOfCommentId(commentId);
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return getCount() == 0;
     }
 
@@ -83,27 +75,7 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
         return bundle;
     }
 
-    public void onNewComments(CommentList commentList) {
-        if (!mComments.isSameList(commentList)) {
-            mComments.clear();
-            mComments.addAll(commentList);
-            // Sort by date
-            Collections.sort(mComments, new Comparator<CommentModel>() {
-                @Override
-                public int compare(CommentModel commentModel, CommentModel t1) {
-                    Date d0 = DateTimeUtils.dateFromIso8601(commentModel.getDatePublished());
-                    Date d1 = DateTimeUtils.dateFromIso8601(t1.getDatePublished());
-                    if (d0 == null || d1 == null) {
-                        return 0;
-                    }
-                    return d1.compareTo(d0);
-                }
-            });
-            notifyDataSetChanged();
-        }
-    }
-
-    public CommentModel getCommentAtPosition(int position){
+    CommentModel getCommentAtPosition(int position){
         if (isValidPosition(position))
             return mComments.get(position);
         else
