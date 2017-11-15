@@ -538,7 +538,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onMediaItemSelected(View sourceView, int localMediaId, boolean isLongClick) {
+    public void onMediaItemSelected(int localMediaId, boolean isLongClick) {
         MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
         if (media == null) {
             AppLog.w(AppLog.T.MEDIA, "Media browser > unable to load localMediaId = " + localMediaId);
@@ -555,7 +555,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         // when long tapped (to mimic native photo picker)
         if (mBrowserType.isBrowser() && !isLongClick
                 || mBrowserType.isPicker() && isLongClick) {
-            showMediaSettings(media, sourceView);
+            showMediaSettings(media);
         } else if (mBrowserType.isSingleImagePicker() && !isLongClick) {
             // if we're picking a single image, we're done
             Intent intent = new Intent();
@@ -584,13 +584,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         deleteMedia(ids);
     }
 
-    private void showMediaSettings(@NonNull MediaModel media, View sourceView) {
+    private void showMediaSettings(@NonNull MediaModel media) {
         List<MediaModel> mediaList = mMediaGridFragment.getFilteredMedia();
         ArrayList<String> idList = new ArrayList<>();
         for (MediaModel thisMedia: mediaList) {
             idList.add(Integer.toString(thisMedia.getId()));
         }
-        MediaSettingsActivity.showForResult(this, mSite, media, idList, sourceView);
+        MediaSettingsActivity.showForResult(this, mSite, media, idList);
     }
 
     @Override
