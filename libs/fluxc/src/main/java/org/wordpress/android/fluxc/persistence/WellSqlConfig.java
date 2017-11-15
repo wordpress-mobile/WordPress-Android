@@ -17,6 +17,8 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.Map;
 
 public class WellSqlConfig extends DefaultWellConfig {
+    public static final String ADDON_WOOCOMMERCE = "WC";
+
     public WellSqlConfig(Context context) {
         super(context);
     }
