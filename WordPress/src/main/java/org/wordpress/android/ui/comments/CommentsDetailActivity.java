@@ -86,6 +86,7 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
 
         progressBar = (ProgressBar) findViewById(R.id.progress_loading);
 
+        //Asynchronously loads comments and build the adapter
         loadDataInViewPager();
     }
 
@@ -128,17 +129,20 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
 
         mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(new CommentStore.FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, mAdapter.getCount())));
         mIsUpdatingComments = true;
+        setLoadingState(true);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCommentChanged(CommentStore.OnCommentChanged event) {
         mIsUpdatingComments = false;
+        setLoadingState(false);
         // Don't refresh the list on push, we already updated comments
         if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
             if (event.changedCommentsLocalIds.size() > 0) {
                 loadDataInViewPager();
-            } else if (!event.isError()){
+            } else if (!event.isError()) {
+                //There are no more comments to load
                 mCanLoadMoreComments = false;
             }
         }
@@ -163,7 +167,6 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
                 @Override
                 public void loadingFinished(CommentList commentList) {
                     showCommentList(commentList);
-                    setLoadingState(false);
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -211,8 +214,7 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
 
     private void setLoadingState(boolean visible) {
         if (progressBar != null) {
-            boolean showProgressBar = visible && (mAdapter == null || mAdapter.isEmpty());
-            progressBar.setVisibility(showProgressBar ? View.VISIBLE : View.GONE);
+            progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
     }
 }

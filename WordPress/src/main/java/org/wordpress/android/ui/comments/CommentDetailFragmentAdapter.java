@@ -43,11 +43,11 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
         return getCount() == 0;
     }
 
-    private CommentModel getComment(int position) {
-        if (position == mComments.size() - 1) {
-            onLoadMoreListener.onLoadMore();
-        }
-        return mComments.get(position);
+    CommentModel getCommentAtPosition(int position){
+        if (isValidPosition(position))
+            return mComments.get(position);
+        else
+            return null;
     }
 
     @Override
@@ -81,11 +81,11 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
         return bundle;
     }
 
-    CommentModel getCommentAtPosition(int position){
-        if (isValidPosition(position))
-            return mComments.get(position);
-        else
-            return null;
+    private CommentModel getComment(int position) {
+        if (position == getCount() - 1) {
+            onLoadMoreListener.onLoadMore();
+        }
+        return mComments.get(position);
     }
 
     private boolean isValidPosition(int position) {
