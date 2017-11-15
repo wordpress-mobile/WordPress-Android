@@ -124,9 +124,9 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 }));
     }
 
-    /** Endpoint: v1.1/themes */
+    /** [Undocumented!] Endpoint: v1.2/themes */
     public void fetchWpComThemes() {
-        String url = WPCOMREST.themes.getUrlV1_1();
+        String url = WPCOMREST.themes.getUrlV1_2() + "?number=500";
         add(WPComGsonRequest.buildGetRequest(url, null, MultipleWPComThemesResponse.class,
                 new Response.Listener<MultipleWPComThemesResponse>() {
                     @Override
@@ -220,7 +220,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 }));
     }
 
-    /** v1.2/themes?search=$term */
+    /** [Undocumented!] Endpoint: v1.2/themes?search=$term */
     public void searchThemes(@NonNull final String searchTerm) {
         String url = WPCOMREST.themes.getUrlV1_2() + "?search=" + searchTerm;
         add(WPComGsonRequest.buildGetRequest(url, null, ThemeArrayResponse.class,
