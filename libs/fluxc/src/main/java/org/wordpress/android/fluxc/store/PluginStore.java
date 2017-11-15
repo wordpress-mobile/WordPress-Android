@@ -186,7 +186,8 @@ public class PluginStore extends Store {
         GENERIC_ERROR,
         UNAUTHORIZED,
         DELETE_PLUGIN_ERROR,
-        NOT_AVAILABLE // Return for non-jetpack sites
+        NOT_AVAILABLE, // Return for non-jetpack sites
+        UNKNOWN_PLUGIN
     }
 
     public enum FetchPluginInfoErrorType {
@@ -212,11 +213,11 @@ public class PluginStore extends Store {
 
     public enum UpdateSitePluginErrorType {
         GENERIC_ERROR,
-        UNAUTHORIZED,
         ACTIVATION_ERROR,
         DEACTIVATION_ERROR,
-        UNKNOWN_PLUGIN,
-        NOT_AVAILABLE // Return for non-jetpack sites
+        NOT_AVAILABLE, // Return for non-jetpack sites
+        UNAUTHORIZED,
+        UNKNOWN_PLUGIN
     }
 
     // OnChanged Events
