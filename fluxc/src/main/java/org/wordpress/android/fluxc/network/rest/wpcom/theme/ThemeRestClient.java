@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.theme;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -257,9 +258,9 @@ public class ThemeRestClient extends BaseWPComRestClient {
         theme.setScreenshotUrl(response.screenshot);
         theme.setDescription(response.description);
         theme.setDownloadUrl(response.download_uri);
-        if (response.price != null) {
-            theme.setCurrency(response.price.currency);
-            theme.setPrice(response.price.value);
+        if (!TextUtils.isEmpty(response.price)) {
+            theme.setCurrency(response.price.substring(0, 1));
+            theme.setPrice(Integer.valueOf(response.price.substring(1)));
         }
         return theme;
     }
