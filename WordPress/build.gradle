@@ -45,7 +45,6 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
-        buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "false"
     }
 
     productFlavors {
@@ -54,14 +53,12 @@ android {
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
-            buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "true"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
-            buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "true"
         }
     }
 
