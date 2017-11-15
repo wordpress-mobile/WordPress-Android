@@ -70,8 +70,8 @@ dependencies {
     }
 
     // Custom WellSql version
-    api 'org.wordpress:wellsql:1.2.0'
-    kapt 'org.wordpress:wellsql-processor:1.2.0'
+    api 'com.github.wordpress-mobile.wellsql:wellsql:07933843555633ef4ea1b5e306a5581e6a34fb46'
+    kapt 'com.github.wordpress-mobile.wellsql:well-processor:07933843555633ef4ea1b5e306a5581e6a34fb46'
 
     // FluxC annotations
     api project(':fluxc-annotations')
