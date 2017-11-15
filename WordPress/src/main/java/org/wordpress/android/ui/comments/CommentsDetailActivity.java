@@ -1,13 +1,21 @@
 package org.wordpress.android.ui.comments;
 
+import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PER_PAGE;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.CommentAction;
+import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -17,6 +25,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -28,6 +37,7 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
     public static final String COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter";
 
     @Inject CommentStore mCommentStore;
+    @Inject Dispatcher mDispatcher;
 
     private WPViewPager mViewPager;
     private ProgressBar progressBar;
@@ -39,11 +49,13 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
 
     private boolean isLoadingComments;
+    private boolean mIsUpdatingComments;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
         AppLog.i(AppLog.T.COMMENTS, "Creating CommentsDetailActivity");
 
         setContentView(R.layout.comments_detail_activity);
@@ -77,6 +89,12 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
         loadDataInViewPager();
     }
 
+    @Override
+    public void onDestroy() {
+        mDispatcher.unregister(this);
+        super.onDestroy();
+    }
+
     private void loadDataInViewPager() {
         if (isLoadingComments) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
@@ -84,14 +102,14 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
             new LoadCommentsTask(mCommentStore, commentStatus, mSite, new LoadCommentsTask.LoadingCallback() {
                 @Override
                 public void isLoading(boolean loading) {
-                    setProgressVisible(loading);
+                    setLoadingState(loading);
                     isLoadingComments = loading;
                 }
 
                 @Override
                 public void loadingFinished(CommentList commentList) {
                     loadViewPagerAdapter(commentList);
-                    setProgressVisible(false);
+                    setLoadingState(false);
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -135,7 +153,31 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
 
     @Override
     public void onLoadMore() {
-        //TODO add pagination
+        if (mIsUpdatingComments) {
+            AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
+            return;
+        } else if (!NetworkUtils.isNetworkAvailable(this)) {
+            ToastUtils.showToast(this, getString(R.string.error_refresh_comments_showing_older));
+            return;
+        }
+
+        mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(new CommentStore.FetchCommentsPayload(mSite, commentStatus, COMMENTS_PER_PAGE, adapter.getCount())));
+        mIsUpdatingComments = true;
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCommentChanged(CommentStore.OnCommentChanged event) {
+        mIsUpdatingComments = false;
+        // Don't refresh the list on push, we already updated comments
+        if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
+            loadDataInViewPager();
+        }
+        if (event.isError()) {
+            if (!TextUtils.isEmpty(event.error.message)) {
+                ToastUtils.showToast(this, event.error.message);
+            }
+        }
     }
 
     @Override
@@ -152,9 +194,10 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
         finish();
     }
 
-    private void setProgressVisible(boolean visible) {
+    private void setLoadingState(boolean visible) {
         if (progressBar != null) {
-            progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+            boolean showProgressBar = visible && (adapter == null || adapter.isEmpty());
+            progressBar.setVisibility(showProgressBar ? View.VISIBLE : View.GONE);
         }
     }
 }

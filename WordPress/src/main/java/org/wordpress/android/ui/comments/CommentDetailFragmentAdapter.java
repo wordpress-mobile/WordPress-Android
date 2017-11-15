@@ -41,6 +41,10 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
         return mComments.indexOfCommentId(commentId);
     }
 
+    public boolean isEmpty() {
+        return getCount() == 0;
+    }
+
     private CommentModel getComment(int position) {
         if (position == mComments.size() - 1) {
             onLoadMoreListener.onLoadMore();
