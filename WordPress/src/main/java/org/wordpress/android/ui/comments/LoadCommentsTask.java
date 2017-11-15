@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.comments;
 
+import android.os.AsyncTask;
+
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.models.CommentList;
-
-import android.os.AsyncTask;
 
 import java.util.List;
 
@@ -20,23 +20,26 @@ class LoadCommentsTask extends AsyncTask<Void, Void, CommentList> {
     private final CommentStore mCommentStore;
     private final CommentStatus mStatusFilter;
     private final SiteModel mSite;
-    private final LoadingCallback loadingCallback;
+    private final LoadingCallback mLoadingCallback;
 
-    public LoadCommentsTask(CommentStore mCommentStore, CommentStatus statusFilter, SiteModel mSite, LoadingCallback loadingCallback) {
-        this.mCommentStore = mCommentStore;
+    LoadCommentsTask(CommentStore commentStore,
+                     CommentStatus statusFilter,
+                     SiteModel site,
+                     LoadingCallback loadingCallback) {
+        this.mCommentStore = commentStore;
         this.mStatusFilter = statusFilter;
-        this.mSite = mSite;
-        this.loadingCallback = loadingCallback;
+        this.mSite = site;
+        this.mLoadingCallback = loadingCallback;
     }
 
     @Override
     protected void onPreExecute() {
-        loadingCallback.isLoading(true);
+        mLoadingCallback.isLoading(true);
     }
 
     @Override
     protected void onCancelled() {
-        loadingCallback.isLoading(false);
+        mLoadingCallback.isLoading(false);
     }
 
     @Override
@@ -45,7 +48,7 @@ class LoadCommentsTask extends AsyncTask<Void, Void, CommentList> {
         if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL) {
             // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
             comments = mCommentStore.getCommentsForSite(mSite, false,
-                                                        CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
+                    CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
         } else {
             comments = mCommentStore.getCommentsForSite(mSite, false, mStatusFilter);
         }
@@ -57,8 +60,8 @@ class LoadCommentsTask extends AsyncTask<Void, Void, CommentList> {
     }
 
     @Override
-    protected void onPostExecute(CommentList result) {
-        loadingCallback.loadingFinished(result);
-        loadingCallback.isLoading(false);
+    protected void onPostExecute(CommentList loadedCommentList) {
+        mLoadingCallback.loadingFinished(loadedCommentList);
+        mLoadingCallback.isLoading(false);
     }
 }

@@ -1,5 +1,19 @@
 package org.wordpress.android.ui.comments;
 
+import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -18,20 +32,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
-
-import android.app.Dialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.view.View;
 
 import javax.inject.Inject;
 
@@ -154,8 +154,8 @@ public class CommentsActivity extends AppCompatActivity
         FragmentTransaction ft = fm.beginTransaction();
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         ft.add(R.id.layout_fragment_container, fragment, tagForFragment)
-          .addToBackStack(tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                .addToBackStack(tagForFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
     }
 
@@ -163,10 +163,10 @@ public class CommentsActivity extends AppCompatActivity
      * called from comment list when user taps a comment
      */
     @Override
-    public void onCommentSelected(long commentId, CommentStatus commentStatus) {
+    public void onCommentSelected(long commentId, CommentStatus statusFilter) {
         Intent detailIntent = new Intent(this, CommentsDetailActivity.class);
         detailIntent.putExtra(CommentsDetailActivity.COMMENT_ID_EXTRA, commentId);
-        detailIntent.putExtra(CommentsDetailActivity.COMMENT_STATUS_FILTER_EXTRA, commentStatus);
+        detailIntent.putExtra(CommentsDetailActivity.COMMENT_STATUS_FILTER_EXTRA, statusFilter);
         detailIntent.putExtra(WordPress.SITE, mSite);
         startActivity(detailIntent);
     }
@@ -241,7 +241,7 @@ public class CommentsActivity extends AppCompatActivity
 
             String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) :
                     newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed) :
-                            getString(R.string.comment_deleted_permanently)  );
+                            getString(R.string.comment_deleted_permanently));
             View.OnClickListener undoListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

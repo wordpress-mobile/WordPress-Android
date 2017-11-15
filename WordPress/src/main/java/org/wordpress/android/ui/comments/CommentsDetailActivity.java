@@ -1,6 +1,14 @@
 package org.wordpress.android.ui.comments;
 
-import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PER_PAGE;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -20,17 +28,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
-
 import javax.inject.Inject;
+
+import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PER_PAGE;
 
 public class CommentsDetailActivity extends AppCompatActivity implements CommentAdapter.OnLoadMoreListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
@@ -40,7 +40,7 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
     @Inject Dispatcher mDispatcher;
 
     private WPViewPager mViewPager;
-    private ProgressBar progressBar;
+    private ProgressBar mProgressBar;
 
     private long mCommentId;
     private CommentStatus mStatusFilter;
@@ -82,9 +82,10 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
 
         //set up the viewpager and adapter for lateral navigation
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
-        mViewPager.setPageTransformer(false, new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+        mViewPager.setPageTransformer(false,
+                new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
-        progressBar = (ProgressBar) findViewById(R.id.progress_loading);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_loading);
 
         //Asynchronously loads comments and build the adapter
         loadDataInViewPager();
@@ -110,7 +111,6 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
             finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -127,7 +127,8 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
             return;
         }
 
-        mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(new CommentStore.FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, mAdapter.getCount())));
+        mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
+                new CommentStore.FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, mAdapter.getCount())));
         mIsUpdatingComments = true;
         setLoadingState(true);
     }
@@ -174,7 +175,8 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
 
     private void showCommentList(CommentList commentList) {
         if (mAdapter == null) {
-            mAdapter = new CommentDetailFragmentAdapter(getFragmentManager(), commentList, mSite, CommentsDetailActivity.this);
+            mAdapter = new CommentDetailFragmentAdapter(getFragmentManager(), commentList, mSite,
+                    CommentsDetailActivity.this);
             mViewPager.setAdapter(mAdapter);
         } else {
             mAdapter.onNewItems(commentList);
@@ -213,8 +215,8 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
     }
 
     private void setLoadingState(boolean visible) {
-        if (progressBar != null) {
-            progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if (mProgressBar != null) {
+            mProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
     }
 }

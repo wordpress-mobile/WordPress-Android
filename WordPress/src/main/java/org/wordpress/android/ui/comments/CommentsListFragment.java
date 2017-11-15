@@ -1,5 +1,22 @@
 package org.wordpress.android.ui.comments;
 
+import android.app.AlertDialog;
+import android.app.Fragment;
+import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -24,27 +41,11 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.ToastUtils;
 
-import android.app.AlertDialog;
-import android.app.Fragment;
-import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.annotation.StringRes;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class CommentsListFragment extends Fragment {
     public static final int COMMENTS_PER_PAGE = 30;
@@ -136,7 +137,7 @@ public class CommentsListFragment extends Fragment {
 
     private CommentAdapter getAdapter() {
         if (mAdapter == null) {
-             // called after comments have been loaded
+            // called after comments have been loaded
             CommentAdapter.OnDataLoadedListener dataLoadedListener = new CommentAdapter.OnDataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
@@ -194,6 +195,7 @@ public class CommentsListFragment extends Fragment {
                         getAdapter().toggleItemSelected(position, view);
                     }
                 }
+
                 @Override
                 public void onCommentLongPressed(int position, View view) {
                     // enable CAB if it's not already enabled
@@ -280,7 +282,7 @@ public class CommentsListFragment extends Fragment {
 
             @Override
             public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener,
-                                               boolean refresh) {
+                                                         boolean refresh) {
             }
 
             @Override
@@ -363,7 +365,7 @@ public class CommentsListFragment extends Fragment {
         super.onResume();
         if (mFilteredCommentsView.getAdapter() == null) {
             mFilteredCommentsView.setAdapter(getAdapter());
-            if (!NetworkUtils.isNetworkAvailable(getActivity())){
+            if (!NetworkUtils.isNetworkAvailable(getActivity())) {
                 ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments_showing_older));
             }
             getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
@@ -478,7 +480,7 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void moderateComments(CommentList comments, CommentStatus status) {
-        for (CommentModel comment: comments) {
+        for (CommentModel comment : comments) {
             // Preemptive update
             comment.setStatus(status.toString());
             if (shouldRemoveCommentFromList(comment)) {
@@ -503,11 +505,11 @@ public class CommentsListFragment extends Fragment {
         getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
     }
 
-    void updateEmptyView(){
+    void updateEmptyView() {
         //this is called from CommentsActivity in the case the last moment for a given type has been changed from that
         //status, leaving the list empty, so we need to update the empty view. The method inside FilteredRecyclerView
         //does the handling itself, so we only check for null here.
-        if (mFilteredCommentsView != null){
+        if (mFilteredCommentsView != null) {
             mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
         }
     }
@@ -530,7 +532,7 @@ public class CommentsListFragment extends Fragment {
         }
 
         //immediately load/refresh whatever we have in our local db as we wait for the API call to get latest results
-        if (!loadMore){
+        if (!loadMore) {
             getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
         }
 

@@ -1,27 +1,30 @@
 package org.wordpress.android.ui.comments;
 
-import org.wordpress.android.fluxc.model.CommentModel;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.models.CommentList;
-import org.wordpress.android.util.AppLog;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
+import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.CommentList;
+import org.wordpress.android.util.AppLog;
+
 public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
     private final SiteModel mSite;
-    private final CommentAdapter.OnLoadMoreListener onLoadMoreListener;
-    private final CommentList mComments;
+    private final CommentAdapter.OnLoadMoreListener mOnLoadMoreListener;
+    private final CommentList mCommentList;
 
-    CommentDetailFragmentAdapter(FragmentManager fm, CommentList mComments, SiteModel mSite, CommentAdapter.OnLoadMoreListener onLoadMoreListener) {
+    CommentDetailFragmentAdapter(FragmentManager fm,
+                                 CommentList commentList,
+                                 SiteModel site,
+                                 CommentAdapter.OnLoadMoreListener onLoadMoreListener) {
         super(fm);
-        this.mSite = mSite;
-        this.onLoadMoreListener = onLoadMoreListener;
-        this.mComments = mComments;
+        this.mSite = site;
+        this.mOnLoadMoreListener = onLoadMoreListener;
+        this.mCommentList = commentList;
     }
 
     @Override
@@ -30,29 +33,29 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
     }
 
     void onNewItems(CommentList commentList) {
-        mComments.clear();
-        mComments.addAll(commentList);
+        mCommentList.clear();
+        mCommentList.addAll(commentList);
         notifyDataSetChanged();
     }
 
     int commentIndex(long commentId) {
-        return mComments.indexOfCommentId(commentId);
+        return mCommentList.indexOfCommentId(commentId);
     }
 
     boolean isEmpty() {
         return getCount() == 0;
     }
 
-    CommentModel getCommentAtPosition(int position){
+    CommentModel getCommentAtPosition(int position) {
         if (isValidPosition(position))
-            return mComments.get(position);
+            return mCommentList.get(position);
         else
             return null;
     }
 
     @Override
     public int getCount() {
-        return mComments.size();
+        return mCommentList.size();
     }
 
     @Override
@@ -83,9 +86,9 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
     private CommentModel getComment(int position) {
         if (position == getCount() - 1) {
-            onLoadMoreListener.onLoadMore();
+            mOnLoadMoreListener.onLoadMore();
         }
-        return mComments.get(position);
+        return mCommentList.get(position);
     }
 
     private boolean isValidPosition(int position) {
