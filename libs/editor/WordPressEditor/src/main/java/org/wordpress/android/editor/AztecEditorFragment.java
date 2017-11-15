@@ -170,7 +170,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         ProfilingUtils.start("Visual Editor Startup");
         ProfilingUtils.split("EditorFragment.onCreate");
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mTappedMediaPredicate = savedInstanceState.getParcelable(ATTR_TAPPED_MEDIA_PREDICATE);
         }
     }
@@ -1492,11 +1492,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     content.updateElementAttributes(mTappedMediaPredicate, attributes);
 
                     attributes.setValue(ATTR_SRC, metaData.getSrc());
-                    attributes.setValue(ATTR_TITLE, metaData.getTitle());
+
+                    if (!TextUtils.isEmpty(metaData.getTitle())) {
+                        attributes.setValue(ATTR_TITLE, metaData.getTitle());
+                    } else {
+                        attributes.removeAttribute(ATTR_TITLE);
+                    }
+
+                    if (!TextUtils.isEmpty(metaData.getAlt())) {
+                        attributes.setValue(ATTR_ALT, metaData.getAlt());
+                    } else {
+                        attributes.removeAttribute(ATTR_ALT);
+                    }
 
                     attributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
                     attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
-                    attributes.setValue(ATTR_ALT, metaData.getAlt());
+
 
                     AttributesWithClass attributesWithClass = getAttributesWithClass(attributes);
 
@@ -1556,7 +1567,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AttributesWithClass attrs = getAttributesWithClass(attributes);
         if (!attrs.hasClassStartingWith("size")) {
             attrs.addClass("size-full");
-    }
+        }
         attributes.setValue(ATTR_CLASS, attrs.getAttributes().getValue(ATTR_CLASS));
     }
 
