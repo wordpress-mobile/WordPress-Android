@@ -347,20 +347,9 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 // nothing special to do, we'll start the service on next()
                 break;
             case AUTHENTICATING:
-                if (!isInProgress()) {
-                    startProgress();
-                }
-                break;
+            case SOCIAL_LOGIN:
             case FETCHING_ACCOUNT:
-                if (!isInProgress()) {
-                    startProgress();
-                }
-                break;
             case FETCHING_SETTINGS:
-                if (!isInProgress()) {
-                    startProgress();
-                }
-                break;
             case FETCHING_SITES:
                 if (!isInProgress()) {
                     startProgress();

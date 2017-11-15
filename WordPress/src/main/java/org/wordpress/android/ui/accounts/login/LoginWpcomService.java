@@ -48,6 +48,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     public enum LoginPhase {
         IDLE,
         AUTHENTICATING,
+        SOCIAL_LOGIN,
         FETCHING_ACCOUNT,
         FETCHING_SETTINGS,
         FETCHING_SITES,
@@ -314,6 +315,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
         if (isSocialLogin) {
+            setState(LoginPhase.SOCIAL_LOGIN);
             AccountStore.PushSocialLoginPayload payload = new AccountStore.PushSocialLoginPayload(mIdToken, mService);
             mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
         } else {
