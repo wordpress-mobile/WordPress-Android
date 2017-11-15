@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -170,6 +171,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
     public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
+    public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -188,6 +190,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private Handler mHandler;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
+    private boolean mMediaInsertedOnCreation;
 
     private List<String> mPendingVideoPressInfoRequests;
     private List<String> mAztecBackspaceDeletedMediaItemIds = new ArrayList<>();
@@ -327,6 +330,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     initializePostObject();
                 }
             }
+
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
@@ -367,6 +371,10 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mIsNewPost) {
             trackEditorCreatedPost(action, getIntent());
         } else {
+            // if we are opening a Post for which an error notification exists, we need to remove
+            // it from the dashboard to prevent the user from tapping RETRY on a Post that is
+            // being currently edited
+            UploadService.cancelFinalNotification(this, mPost);
             resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued();
         }
 
@@ -484,6 +492,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         EventBus.getDefault().register(this);
 
+        reattachUploadingMedia();
+    }
+
+    private void reattachUploadingMedia() {
         if (mEditorMediaUploadListener != null) {
             // UploadService.getPendingMediaForPost will be populated only when the user exits the editor
             // But if the user doesn't exit the editor and sends the app to the background, a reattachment
@@ -934,12 +946,12 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this);
+        WPMediaUtils.launchPictureLibrary(this, true);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this);
+        WPMediaUtils.launchVideoLibrary(this, true);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
@@ -1436,6 +1448,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
                         // Set up custom headers for the visual editor's internal WebView
                         mEditorFragment.setCustomHttpHeader("User-Agent", WordPress.getUserAgent());
+
+                        reattachUploadingMedia();
                     }
                     break;
                 case 1:
@@ -1467,13 +1481,21 @@ public class EditPostActivity extends AppCompatActivity implements
         return mMaxThumbWidth;
     }
 
-    private void addExistingMediaToEditor(long mediaId) {
+    private boolean addExistingMediaToEditor(long mediaId) {
         MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
-        if (media != null) {
-            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-            trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
-            String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
-            mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
+        if (media == null) {
+            return false;
+        }
+
+        MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
+        trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
+        String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
+        mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
+        return true;
+    }
+
+    private void addExistingMediaToEditorAndSave(long mediaId) {
+        if (addExistingMediaToEditor(mediaId)) {
             savePostAsync(null);
         }
     }
@@ -1659,6 +1681,7 @@ public class EditPostActivity extends AppCompatActivity implements
         for (Long id: idsList) {
             addExistingMediaToEditor(id);
         }
+        savePostAsync(null);
     }
 
     // TODO: Replace with contents of the updatePostContentNewEditor() method when legacy editor is dropped
@@ -1770,7 +1793,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
         boolean contentChanged;
-        if (compareCurrentMediaMarkedUploadingToOriginal(content)) {
+        if (mMediaInsertedOnCreation) {
+            mMediaInsertedOnCreation = false;
+            contentChanged = true;
+        } else if (compareCurrentMediaMarkedUploadingToOriginal(content)) {
             contentChanged = true;
         } else if (mEditorFragment instanceof AztecEditorFragment
                 && ((AztecEditorFragment) mEditorFragment).isHistoryEnabled()) {
@@ -2054,6 +2080,32 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
     }
 
+    private void addMediaItemGroupOrSingleItem(Intent data) {
+        ClipData clipData = data.getClipData();
+        if (clipData != null) {
+            for (int i = 0; i < clipData.getItemCount(); i++) {
+                ClipData.Item item = clipData.getItemAt(i);
+                addMedia(item.getUri(), false);
+            }
+        } else {
+            addMedia(data.getData(), false);
+        }
+    }
+
+    private void advertiseImageOptimisationAndAddMedia(final Intent data) {
+        if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
+            WPMediaUtils.advertiseImageOptimization(this,
+                    new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                        @Override
+                        public void done() {
+                            addMediaItemGroupOrSingleItem(data);
+                        }
+                    });
+        } else {
+            addMediaItemGroupOrSingleItem(data);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -2066,7 +2118,7 @@ public class EditPostActivity extends AppCompatActivity implements
             switch (requestCode) {
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
                     handleMediaPickerResult(data);
-                    // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditor
+                    // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditorAndSave
                     break;
                 case RequestCodes.PHOTO_PICKER:
                     // user chose a featured image - pass it to the settings fragment
@@ -2075,18 +2127,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
-                    final Uri imageUri = data.getData();
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this,
-                                new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
-                                    @Override
-                                    public void done() {
-                                        addMedia(imageUri, false);
-                                    }
-                                });
-                    } else {
-                        addMedia(imageUri, false);
-                    }
+                    advertiseImageOptimisationAndAddMedia(data);
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
@@ -2102,8 +2143,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
-                    Uri videoUri = data.getData();
-                    addMedia(videoUri, false);
+                    addMediaItemGroupOrSingleItem(data);
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
@@ -2134,10 +2174,8 @@ public class EditPostActivity extends AppCompatActivity implements
             } else {
                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
             }
-        } catch (RuntimeException e) {
-            AppLog.e(T.POSTS, e);
-        } catch (OutOfMemoryError e) {
-            AppLog.e(T.POSTS, e);
+        } catch (RuntimeException | OutOfMemoryError e) {
+            AppLog.e(T.EDITOR, e);
         }
     }
 
@@ -2191,7 +2229,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // media dialog so the user can choose how to insert the items
         if (ids.size() == 1) {
             long mediaId = ids.get(0);
-            addExistingMediaToEditor(mediaId);
+            addExistingMediaToEditorAndSave(mediaId);
         } else {
             showInsertMediaDialog(ids);
         }
@@ -2216,6 +2254,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         for (Long id: mediaIds) {
                             addExistingMediaToEditor(id);
                         }
+                        savePostAsync(null);
                         break;
                 }
             }
@@ -2309,7 +2348,7 @@ public class EditPostActivity extends AppCompatActivity implements
         savePostAsync(new AfterSavePostListener() {
             @Override
             public void onPostSave() {
-                UploadService.uploadMedia(EditPostActivity.this, mediaList);
+                UploadService.uploadMediaFromEditor(EditPostActivity.this, mediaList);
             }
         });
     }
@@ -2467,6 +2506,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         FluxCUtils.mediaFileFromMediaModel(media));
             }
         } else {
+
+            UploadService.cancelFinalNotification(this, mPost);
+            UploadService.cancelFinalNotificationForMedia(this, mSite);
             media.setUploadState(MediaUploadState.QUEUED);
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             startUploadService(media);
@@ -2608,6 +2650,43 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onEditorFragmentInitialized() {
+        boolean shouldFinishInit = true;
+        // now that we have the Post object initialized,
+        // check whether we have media items to insert from the WRITE POST with media functionality
+        if (getIntent().hasExtra(EXTRA_INSERT_MEDIA)) {
+
+            // Bump analytics
+            AnalyticsTracker.track(Stat.NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST);
+
+            List<MediaModel> mediaList = (List<MediaModel>) getIntent().getSerializableExtra(EXTRA_INSERT_MEDIA);
+            // removing this from the intent so it doesn't insert the media items again on each Acivity re-creation
+            getIntent().removeExtra(EXTRA_INSERT_MEDIA);
+            if (mediaList != null && !mediaList.isEmpty()) {
+                shouldFinishInit = false;
+                mMediaInsertedOnCreation = true;
+                for (MediaModel media : mediaList) {
+                    addExistingMediaToEditor(media.getMediaId());
+                }
+                savePostAsync(new AfterSavePostListener() {
+                    @Override
+                    public void onPostSave() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                onEditorFinalTouchesBeforeShowing();
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        if (shouldFinishInit) {
+            onEditorFinalTouchesBeforeShowing();
+        }
+    }
+
+    private void onEditorFinalTouchesBeforeShowing() {
         fillContentEditorFields();
         // Set the error listener
         if (mEditorFragment instanceof EditorFragment) {
@@ -2757,6 +2836,20 @@ public class EditPostActivity extends AppCompatActivity implements
             // use upload progress rather than optimizer progress since the former includes upload+optimization
             float progress = UploadService.getUploadProgressForMedia(event.media);
             onUploadProgress(event.media, progress);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadMediaRetryEvent event) {
+        if (!isFinishing()
+                && event.mediaModelList != null
+                && mEditorMediaUploadListener != null) {
+            for (MediaModel media : event.mediaModelList) {
+                String localMediaId = String.valueOf(media.getId());
+                EditorFragmentAbstract.MediaType mediaType = media.isVideo() ?
+                        EditorFragmentAbstract.MediaType.VIDEO : EditorFragmentAbstract.MediaType.IMAGE;
+                mEditorMediaUploadListener.onMediaUploadRetry(localMediaId, mediaType);
+            }
         }
     }
 

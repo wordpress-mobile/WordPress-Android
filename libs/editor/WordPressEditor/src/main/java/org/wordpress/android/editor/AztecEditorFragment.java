@@ -140,8 +140,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private Handler invalidateOptionsHandler;
     private Runnable invalidateOptionsRunnable;
 
-    private HashMap<String, Float> mUploadingMediaProgressMax;
-    private Set<String> mFailedMediaIds;
+    private HashMap<String, Float> mUploadingMediaProgressMax = new HashMap<>();
+    private Set<String> mFailedMediaIds = new HashSet<>();
 
     private long mActionStartedAt = -1;
 
@@ -183,9 +183,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (getActivity() instanceof EditorFragmentActivity) {
             ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
         }
-
-        mUploadingMediaProgressMax = new HashMap<>();
-        mFailedMediaIds = new HashSet<>();
 
         title = (AztecText) view.findViewById(R.id.title);
         content = (AztecText) view.findViewById(R.id.aztec);
@@ -423,7 +420,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
-        content.fromHtml(text.toString());
+        content.fromHtml(removeVisualEditorProgressTag(text.toString()));
 
         updateFailedMediaList();
         overlayFailedMedia();
@@ -432,6 +429,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         overlayProgressingMedia();
 
         mAztecReady = true;
+    }
+
+    /*
+    * TODO: REMOVE THIS ONCE AZTEC COMPLETELY REPLACES THE VISUAL EDITOR IN WPANDROID APP
+     */
+    private String removeVisualEditorProgressTag(String originalText) {
+        // this regex picks any <progress> tags and any opening <span> tags for image containers
+        // as produced by the Visual Editor. Note that we don't care about closing </span> tags
+        // as the AztecParser takes care of that, and it would be very difficult to accomplish with a
+        // regex (and using a proper XML crawler would be particularly overkill)
+        if (originalText != null && originalText.contains("<progress")) {
+            String regex = "<progress.*?><\\/progress>|<span id=\"img_container.*? class=\"img_container\" contenteditable=\"false\">";
+            return originalText.replaceAll(regex, "");
+        } else {
+            return originalText;
+        }
     }
 
     /**
@@ -622,6 +635,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void overlayProgressingMediaForMediaId(String localMediaId) {
+        if (content == null) {
+            // discard any events if Aztec hasn't been initialized
+            return;
+        }
+
         MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
         overlayProgressingMedia(predicate);
         // here check if this is a video uploading in progress or not; if it is, show the video play icon
@@ -885,6 +903,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void onMediaUploadReattached(String localId, float currentProgress) {
         mUploadingMediaProgressMax.put(localId, currentProgress);
         overlayProgressingMediaForMediaId(localId);
+    }
+
+    @Override
+    public void onMediaUploadRetry(String localId, MediaType mediaType) {
+        mFailedMediaIds.remove(localId);
+        onMediaUploadReattached(localId, 0);
     }
 
     @Override
@@ -1745,11 +1769,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     public static List<String> getMediaMarkedUploadingInPostContent(Context context, @NonNull String postContent) {
+        return getMediaMarkedAsClassInPostContent(context, postContent, ATTR_STATUS_UPLOADING);
+    }
+
+    public static List<String> getMediaMarkedFailedInPostContent(Context context, @NonNull String postContent) {
+        return getMediaMarkedAsClassInPostContent(context, postContent, ATTR_STATUS_FAILED);
+    }
+
+    private static List<String> getMediaMarkedAsClassInPostContent(Context context, @NonNull String postContent, String classToUse) {
         ArrayList<String> mediaMarkedUploading = new ArrayList<>();
         // fill in Aztec with the post's content
         AztecParser parser = getAztecParserWithPlugins();
         Spanned content = parser.fromHtml(postContent, context);
-        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(ATTR_STATUS_UPLOADING);
+        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(classToUse);
         for (Attributes attrs : getAllElementAttributes(content, uploadingPredicate)) {
             String itemId = attrs.getValue(ATTR_ID_WP);
             if (!TextUtils.isEmpty(itemId)) {
@@ -1783,6 +1815,27 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         for (IAztecAttributedSpan span : getSpansForPredicate(content, statusPredicate, false)) {
             clearMediaUploadingAndSetToFailedIfLocal(span);
         }
+    }
+
+    public static String restartFailedMediaToUploading(Context context, String postContent) {
+        // fill in Aztec with the post's content
+        AztecParser parser = getAztecParserWithPlugins();
+        Spanned content = parser.fromHtml(postContent, context);
+
+        // get all items with class defined by the "status" variable
+        AztecText.AttributePredicate statusPredicate = getPredicateWithClass(ATTR_STATUS_FAILED);
+
+        // update all these items to UPLOADING
+        for (IAztecAttributedSpan span : getSpansForPredicate(content, statusPredicate, false)) {
+            AttributesWithClass attributesWithClass = getAttributesWithClass(span.getAttributes());
+            attributesWithClass.removeClass(ATTR_STATUS_FAILED);
+            attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
+            span.setAttributes(attributesWithClass.getAttributes());
+        }
+
+        // re-set the post content
+        postContent = parser.toHtml(content, false);
+        return postContent;
     }
 
     private static void clearMediaUploadingAndSetToFailedIfLocal(IAztecAttributedSpan span) {

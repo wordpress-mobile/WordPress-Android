@@ -240,15 +240,23 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         }
 
         if (TextUtils.isEmpty(getCleanedUsername())) {
-            showError(getString(R.string.login_empty_username));
+            showUsernameError(getString(R.string.login_empty_username));
             EditTextUtils.showSoftInput(mUsernameInput.getEditText());
+            return;
+        }
+
+        final String password = mPasswordInput.getEditText().getText().toString();
+
+        if (TextUtils.isEmpty(password)) {
+            showPasswordError(getString(R.string.login_empty_password));
+            EditTextUtils.showSoftInput(mPasswordInput.getEditText());
             return;
         }
 
         startProgress();
 
         mRequestedUsername = getCleanedUsername();
-        mRequestedPassword = mPasswordInput.getEditText().getText().toString();
+        mRequestedPassword = password;
 
         // clear up the authentication-failed flag before
         mAuthFailed = false;
@@ -291,20 +299,42 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         showError(null);
     }
 
+    private void showUsernameError(String errorMessage) {
+        mUsernameInput.setError(errorMessage);
+        mPasswordInput.setError(null);
+
+        if (errorMessage != null) {
+            requestScrollToView(mUsernameInput);
+        }
+    }
+
+    private void showPasswordError(String errorMessage) {
+        mUsernameInput.setError(null);
+        mPasswordInput.setError(errorMessage);
+
+        if (errorMessage != null) {
+            requestScrollToView(mPasswordInput);
+        }
+    }
+
     private void showError(String errorMessage) {
         mUsernameInput.setError(errorMessage != null ? " " : null);
         mPasswordInput.setError(errorMessage);
 
         if (errorMessage != null) {
-            mPasswordInput.post(new Runnable() {
-                @Override
-                public void run() {
-                    Rect rect = new Rect(); //coordinates to scroll to
-                    mPasswordInput.getHitRect(rect);
-                    mScrollView.requestChildRectangleOnScreen(mPasswordInput, rect, false);
-                }
-            });
+            requestScrollToView(mPasswordInput);
         }
+    }
+
+    private void requestScrollToView(final View view) {
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                Rect rect = new Rect(); //coordinates to scroll to
+                view.getHitRect(rect);
+                mScrollView.requestChildRectangleOnScreen(view, rect, false);
+            }
+        });
     }
 
     @Override
