@@ -6,11 +6,13 @@ import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore;
+import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -21,19 +23,22 @@ import android.widget.ProgressBar;
 
 import javax.inject.Inject;
 
-public class CommentsDetailActivity extends AppCompatActivity implements CommentAdapter.OnDataLoadedListener, CommentAdapter.OnLoadMoreListener {
+public class CommentsDetailActivity extends AppCompatActivity implements CommentAdapter.OnLoadMoreListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
     public static final String COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter";
 
     @Inject CommentStore mCommentStore;
 
     private WPViewPager mViewPager;
+    private ProgressBar progressBar;
 
     private long mCommentId;
     private CommentStatus commentStatus;
     private SiteModel mSite;
     private CommentDetailFragmentAdapter adapter;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
+
+    private boolean isLoadingComments;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,23 +72,34 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
         mViewPager.setPageTransformer(false,
                                       new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
-        adapter = new CommentDetailFragmentAdapter(getFragmentManager(), mCommentStore, commentStatus, mSite, this, this);
-        mViewPager.setAdapter(adapter);
-        setProgressVisible(true);
+        progressBar = (ProgressBar) findViewById(R.id.progress_loading);
+
+        loadDataInViewPager();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
+    private void loadDataInViewPager() {
+        if (isLoadingComments) {
+            AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
+        } else {
+            new LoadCommentsTask(mCommentStore, commentStatus, mSite, new LoadCommentsTask.LoadingCallback() {
+                @Override
+                public void isLoading(boolean loading) {
+                    setProgressVisible(loading);
+                    isLoadingComments = loading;
+                }
+
+                @Override
+                public void loadingFinished(CommentList commentList) {
+                    loadViewPagerAdapter(commentList);
+                    setProgressVisible(false);
+                }
+            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDataLoaded(boolean isEmpty) {
+    private void loadViewPagerAdapter(CommentList commentList) {
+        adapter = new CommentDetailFragmentAdapter(getFragmentManager(), commentList, mSite, CommentsDetailActivity.this);
+        mViewPager.setAdapter(adapter);
         final int commentIndex = adapter.commentIndex(mCommentId);
         if (commentIndex < 0) {
             showErrorToastAndFinish();
@@ -97,7 +113,7 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
                     super.onPageSelected(position);
                     final CommentModel comment = adapter.getCommentAtPosition(position);
                     if (comment != null) {
-                        mCommentId = comment.getId();
+                        mCommentId = comment.getRemoteCommentId();
                     }
                 }
             };
@@ -105,7 +121,16 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
         mViewPager.setCurrentItem(commentIndex);
 
         mViewPager.addOnPageChangeListener(mOnPageChangeListener);
-        setProgressVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -128,10 +153,8 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
     }
 
     private void setProgressVisible(boolean visible) {
-        final ProgressBar progress =
-                (ProgressBar) findViewById(R.id.progress_loading);
-        if (progress != null) {
-            progress.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if (progressBar != null) {
+            progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
     }
 }

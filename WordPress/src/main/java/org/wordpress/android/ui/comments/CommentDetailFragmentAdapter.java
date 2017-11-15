@@ -1,16 +1,13 @@
 package org.wordpress.android.ui.comments;
 
 import org.wordpress.android.fluxc.model.CommentModel;
-import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -21,26 +18,18 @@ import java.util.Date;
 
 public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
-    private final CommentStore mCommentStore;
-    private final CommentStatus statusFilter;
     private final SiteModel mSite;
-    private final CommentAdapter.OnDataLoadedListener onDataLoadedListener;
     private final CommentAdapter.OnLoadMoreListener onLoadMoreListener;
-    private final CommentList mComments = new CommentList();
+    private final CommentList mComments;
 
     CommentDetailFragmentAdapter(FragmentManager fm,
-                                 CommentStore mCommentStore,
-                                 CommentStatus statusFilter,
+                                 CommentList mComments,
                                  SiteModel mSite,
-                                 CommentAdapter.OnDataLoadedListener onDataLoadedListener,
                                  CommentAdapter.OnLoadMoreListener onLoadMoreListener) {
         super(fm);
-        this.mCommentStore = mCommentStore;
-        this.statusFilter = statusFilter;
         this.mSite = mSite;
-        this.onDataLoadedListener = onDataLoadedListener;
         this.onLoadMoreListener = onLoadMoreListener;
-        loadComments();
+        this.mComments = mComments;
     }
 
     @Override
@@ -90,6 +79,26 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
         return bundle;
     }
 
+    public void onNewComments(CommentList commentList) {
+        if (!mComments.isSameList(commentList)) {
+            mComments.clear();
+            mComments.addAll(commentList);
+            // Sort by date
+            Collections.sort(mComments, new Comparator<CommentModel>() {
+                @Override
+                public int compare(CommentModel commentModel, CommentModel t1) {
+                    Date d0 = DateTimeUtils.dateFromIso8601(commentModel.getDatePublished());
+                    Date d1 = DateTimeUtils.dateFromIso8601(t1.getDatePublished());
+                    if (d0 == null || d1 == null) {
+                        return 0;
+                    }
+                    return d1.compareTo(d0);
+                }
+            });
+            notifyDataSetChanged();
+        }
+    }
+
     public CommentModel getCommentAtPosition(int position){
         if (isValidPosition(position))
             return mComments.get(position);
@@ -99,50 +108,5 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
     private boolean isValidPosition(int position) {
         return (position >= 0 && position < getCount());
-    }
-
-    /*
-     * load comments using an AsyncTask
-     */
-    private void loadComments() {
-        if (mIsLoadTaskRunning) {
-            AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
-        } else {
-            new LoadCommentsTask(mCommentStore, statusFilter, mSite, new LoadCommentsCallback()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
-
-    /*
-     * AsyncTask to load comments from SQLite
-     */
-    private boolean mIsLoadTaskRunning = false;
-
-    private class LoadCommentsCallback implements LoadCommentsTask.LoadingCallback {
-        @Override
-        public void isLoading(boolean loading) {
-            mIsLoadTaskRunning = loading;
-        }
-
-        @Override
-        public void loadingFinished(CommentList commentList) {
-            if (!mComments.isSameList(commentList)) {
-                mComments.clear();
-                mComments.addAll(commentList);
-                // Sort by date
-                Collections.sort(mComments, new Comparator<CommentModel>() {
-                    @Override
-                    public int compare(CommentModel commentModel, CommentModel t1) {
-                        Date d0 = DateTimeUtils.dateFromIso8601(commentModel.getDatePublished());
-                        Date d1 = DateTimeUtils.dateFromIso8601(t1.getDatePublished());
-                        if (d0 == null || d1 == null) {
-                            return 0;
-                        }
-                        return d1.compareTo(d0);
-                    }
-                });
-                notifyDataSetChanged();
-                onDataLoadedListener.onDataLoaded(true);
-            }
-        }
     }
 }
