@@ -17,9 +17,14 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 
+import java.util.List;
+import java.util.Random;
+
 @RunWith(RobolectricTestRunner.class)
 public class PluginSqlUtilsTests {
     private static final int TEST_LOCAL_SITE_ID = 1;
+
+    private Random mRandom = new Random(System.currentTimeMillis());
 
     @Before
     public void setUp() {
@@ -35,6 +40,34 @@ public class PluginSqlUtilsTests {
         SiteModel site = getTestSiteWithLocalId(TEST_LOCAL_SITE_ID);
         Assert.assertEquals(0, PluginSqlUtils.insertOrUpdateSitePlugin(site, null));
         Assert.assertTrue(PluginSqlUtils.getSitePlugins(site).isEmpty());
+    }
+
+    @Test
+    public void testInsertSitePlugin() {
+        SiteModel site = getTestSiteWithLocalId(TEST_LOCAL_SITE_ID);
+        String name = randomString("name");
+        String slug = randomString("slug");
+
+        PluginModel plugin = getTestPlugin(name, slug);
+        Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(site, plugin));
+        List<PluginModel> sitePlugins = PluginSqlUtils.getSitePlugins(site);
+        Assert.assertEquals(1, sitePlugins.size());
+        PluginModel insertedPlugin = sitePlugins.get(0);
+        Assert.assertNotNull(insertedPlugin);
+        Assert.assertEquals(plugin.getName(), insertedPlugin.getName());
+        Assert.assertEquals(plugin.getSlug(), insertedPlugin.getSlug());
+    }
+
+    private PluginModel getTestPlugin(String name, String slug) {
+        PluginModel plugin = new PluginModel();
+        plugin.setLocalSiteId(TEST_LOCAL_SITE_ID);
+        plugin.setName(name);
+        plugin.setSlug(slug);
+        return plugin;
+    }
+
+    private String randomString(String prefix) {
+        return prefix + "-" + mRandom.nextInt();
     }
 
     private SiteModel getTestSiteWithLocalId(int localSiteId) {
