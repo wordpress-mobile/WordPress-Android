@@ -215,6 +215,7 @@ public class PluginStore extends Store {
         UNAUTHORIZED,
         ACTIVATION_ERROR,
         DEACTIVATION_ERROR,
+        UNKNOWN_PLUGIN,
         NOT_AVAILABLE // Return for non-jetpack sites
     }
 
