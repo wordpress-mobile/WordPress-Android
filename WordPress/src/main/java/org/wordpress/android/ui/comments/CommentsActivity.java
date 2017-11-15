@@ -40,7 +40,6 @@ public class CommentsActivity extends AppCompatActivity
                    NotificationFragment.OnPostClickListener,
                    CommentActions.OnCommentActionListener,
                    CommentActions.OnCommentChangeListener {
-    private static final String KEY_SELECTED_COMMENT = "selected_comment_id";
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private static final String SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type";
@@ -49,7 +48,6 @@ public class CommentsActivity extends AppCompatActivity
     private CommentStatus mCurrentCommentStatusType = CommentStatus.ALL;
 
     private SiteModel mSite;
-    private CommentModel mComment;
 
     @Inject Dispatcher mDispatcher;
     @Inject CommentStore mCommentStore;
@@ -101,7 +99,6 @@ public class CommentsActivity extends AppCompatActivity
         } else {
             getIntent().putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED));
             getIntent().putExtra(KEY_EMPTY_VIEW_MESSAGE, savedInstanceState.getString(KEY_EMPTY_VIEW_MESSAGE));
-            mComment = (CommentModel) savedInstanceState.getSerializable(KEY_SELECTED_COMMENT);
         }
     }
 

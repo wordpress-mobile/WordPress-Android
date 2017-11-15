@@ -29,6 +29,12 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
         return CommentDetailFragment.newInstance(mSite, getComment(position));
     }
 
+    void onNewItems(CommentList commentList) {
+        mComments.clear();
+        mComments.addAll(commentList);
+        notifyDataSetChanged();
+    }
+
     int commentIndex(long commentId) {
         return mComments.indexOfCommentId(commentId);
     }

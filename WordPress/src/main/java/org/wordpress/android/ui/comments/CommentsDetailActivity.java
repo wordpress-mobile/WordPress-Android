@@ -170,8 +170,13 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
     }
 
     private void showCommentList(CommentList commentList) {
-        mAdapter = new CommentDetailFragmentAdapter(getFragmentManager(), commentList, mSite, CommentsDetailActivity.this);
-        mViewPager.setAdapter(mAdapter);
+        if (mAdapter == null) {
+            mAdapter = new CommentDetailFragmentAdapter(getFragmentManager(), commentList, mSite, CommentsDetailActivity.this);
+            mViewPager.setAdapter(mAdapter);
+        } else {
+            mAdapter.onNewItems(commentList);
+        }
+
         final int commentIndex = mAdapter.commentIndex(mCommentId);
         if (commentIndex < 0) {
             showErrorToastAndFinish();
@@ -190,7 +195,10 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
                 }
             };
         }
-        mViewPager.setCurrentItem(commentIndex);
+
+        if (commentIndex != mViewPager.getCurrentItem()) {
+            mViewPager.setCurrentItem(commentIndex);
+        }
 
         mViewPager.addOnPageChangeListener(mOnPageChangeListener);
     }
