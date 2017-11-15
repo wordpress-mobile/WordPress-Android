@@ -37,6 +37,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -72,8 +73,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         FetchSitePluginsError fetchPluginsError
                                 = new FetchSitePluginsError(FetchSitePluginsErrorType.GENERIC_ERROR);
-                        fetchPluginsError.type = FetchSitePluginsErrorType.
-                                valueOf(((WPComGsonNetworkError) networkError).apiError.toUpperCase());
+                        fetchPluginsError.type = FetchSitePluginsErrorType.valueOf(((WPComGsonNetworkError)
+                                networkError).apiError.toUpperCase(Locale.ENGLISH));
                         fetchPluginsError.message = networkError.message;
                         FetchedSitePluginsPayload payload = new FetchedSitePluginsPayload(fetchPluginsError);
                         mDispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginsAction(payload));
@@ -101,8 +102,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         UpdateSitePluginError updatePluginError
                                 = new UpdateSitePluginError(UpdateSitePluginErrorType.GENERIC_ERROR);
-                        updatePluginError.type = UpdateSitePluginErrorType.
-                                valueOf(((WPComGsonNetworkError) networkError).apiError.toUpperCase());
+                        updatePluginError.type = UpdateSitePluginErrorType.valueOf(((WPComGsonNetworkError)
+                                networkError).apiError.toUpperCase(Locale.ENGLISH));
                         updatePluginError.message = networkError.message;
                         UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site, updatePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
@@ -130,8 +131,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         DeleteSitePluginError deletePluginError
                                 = new DeleteSitePluginError(DeleteSitePluginErrorType.GENERIC_ERROR);
-                        deletePluginError.type = DeleteSitePluginErrorType.
-                                valueOf(((WPComGsonNetworkError) networkError).apiError.toUpperCase());
+                        deletePluginError.type = DeleteSitePluginErrorType.valueOf(((WPComGsonNetworkError)
+                                networkError).apiError.toUpperCase(Locale.ENGLISH));
                         deletePluginError.message = networkError.message;
                         DeletedSitePluginPayload payload = new DeletedSitePluginPayload(site, deletePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(payload));
@@ -163,7 +164,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                             if (apiError.equals("local-file-does-not-exist")) {
                                 installPluginError.type = InstallSitePluginErrorType.LOCAL_FILE_DOES_NOT_EXIST;
                             } else {
-                                installPluginError.type = InstallSitePluginErrorType.valueOf(apiError.toUpperCase());
+                                installPluginError.type = InstallSitePluginErrorType
+                                        .valueOf(apiError.toUpperCase(Locale.ENGLISH));
                             }
                         }
                         installPluginError.message = networkError.message;
