@@ -50,7 +50,7 @@ public class CommentsListFragment extends Fragment {
     public static final int COMMENTS_PER_PAGE = 30;
 
     interface OnCommentSelectedListener {
-        void onCommentSelected(long commentId);
+        void onCommentSelected(long commentId, CommentStatus statusFilter);
     }
 
     public enum CommentStatusCriteria implements FilterCriteria {
@@ -188,7 +188,7 @@ public class CommentsListFragment extends Fragment {
                     if (mActionMode == null) {
                         mFilteredCommentsView.invalidate();
                         if (getActivity() instanceof OnCommentSelectedListener) {
-                            ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.getRemoteCommentId());
+                            ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.getRemoteCommentId(), mCommentStatusFilter.toCommentStatus());
                         }
                     } else {
                         getAdapter().toggleItemSelected(position, view);

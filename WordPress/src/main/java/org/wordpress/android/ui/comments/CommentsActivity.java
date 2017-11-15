@@ -182,10 +182,10 @@ public class CommentsActivity extends AppCompatActivity
      * called from comment list when user taps a comment
      */
     @Override
-    public void onCommentSelected(long commentId) {
+    public void onCommentSelected(long commentId, CommentStatus commentStatus) {
         Intent detailIntent = new Intent(this, CommentsDetailActivity.class);
         detailIntent.putExtra(CommentsDetailActivity.COMMENT_ID_EXTRA, commentId);
-        detailIntent.putExtra(CommentsDetailActivity.COMMENT_STATUS_FILTER_EXTRA, CommentStatus.ALL);
+        detailIntent.putExtra(CommentsDetailActivity.COMMENT_STATUS_FILTER_EXTRA, commentStatus);
         detailIntent.putExtra(WordPress.SITE, mSite);
         startActivity(detailIntent);
     }
