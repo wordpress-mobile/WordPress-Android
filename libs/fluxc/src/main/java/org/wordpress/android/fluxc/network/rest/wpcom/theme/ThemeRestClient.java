@@ -39,6 +39,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ThemeRestClient extends BaseWPComRestClient {
+    private static final String WP_THEME_FETCH_NUMBER_PARAM = "number=500";
+
     @Inject
     public ThemeRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                            AccessToken accessToken, UserAgent userAgent) {
@@ -126,7 +128,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
 
     /** [Undocumented!] Endpoint: v1.2/themes */
     public void fetchWpComThemes() {
-        String url = WPCOMREST.themes.getUrlV1_2() + "?number=500";
+        String url = WPCOMREST.themes.getUrlV1_2() + "?" + WP_THEME_FETCH_NUMBER_PARAM;
         add(WPComGsonRequest.buildGetRequest(url, null, ThemeArrayResponse.class,
                 new Response.Listener<ThemeArrayResponse>() {
                     @Override
