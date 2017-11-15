@@ -45,7 +45,7 @@ public class PluginStoreUnitTest {
     }
 
     @Test
-    public void testGetPlugins() throws DuplicateSiteException {
+    public void testGetSitePlugins() throws DuplicateSiteException {
         SiteModel site = SiteUtils.generateJetpackSiteOverRestOnly();
         SiteSqlUtils.insertOrUpdateSite(site);
 
@@ -63,7 +63,7 @@ public class PluginStoreUnitTest {
     }
 
     @Test
-    public void testGetPluginInfo() {
+    public void testGetPluginInfoBySlug() {
         String slug = "akismet";
         PluginSqlUtils.insertOrUpdatePluginInfo(generatePluginInfo(slug));
         PluginInfoModel pluginInfo = mPluginStore.getPluginInfoBySlug(slug);
@@ -71,7 +71,7 @@ public class PluginStoreUnitTest {
     }
 
     @Test
-    public void testGetPlugin() throws DuplicateSiteException {
+    public void testGetSitePluginByName() throws DuplicateSiteException {
         SiteModel site = SiteUtils.generateJetpackSiteOverRestOnly();
         SiteSqlUtils.insertOrUpdateSite(site);
 
