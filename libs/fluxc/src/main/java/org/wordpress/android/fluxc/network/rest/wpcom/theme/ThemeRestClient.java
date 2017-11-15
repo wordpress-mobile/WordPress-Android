@@ -127,13 +127,13 @@ public class ThemeRestClient extends BaseWPComRestClient {
     /** [Undocumented!] Endpoint: v1.2/themes */
     public void fetchWpComThemes() {
         String url = WPCOMREST.themes.getUrlV1_2() + "?number=500";
-        add(WPComGsonRequest.buildGetRequest(url, null, MultipleWPComThemesResponse.class,
-                new Response.Listener<MultipleWPComThemesResponse>() {
+        add(WPComGsonRequest.buildGetRequest(url, null, ThemeArrayResponse.class,
+                new Response.Listener<ThemeArrayResponse>() {
                     @Override
-                    public void onResponse(MultipleWPComThemesResponse response) {
+                    public void onResponse(ThemeArrayResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to WP.com themes fetch request.");
                         FetchedThemesPayload payload = new FetchedThemesPayload(null);
-                        payload.themes = createThemeListFromWPComResponse(response);
+                        payload.themes = createThemeListFromArrayResponse(response);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
