@@ -340,7 +340,7 @@ public class AccountStore extends Store {
     public enum AuthEmailErrorType {
         INVALID_INPUT,
         NO_SUCH_USER,
-        USER_ALREADY_REGISTERED,
+        USER_EXISTS,
         UNSUCCESSFUL,
         GENERIC_ERROR;
 
