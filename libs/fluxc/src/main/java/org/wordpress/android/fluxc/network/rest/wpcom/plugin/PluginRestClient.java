@@ -190,7 +190,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 case "install_failure":
                                     installPluginError.type = InstallSitePluginErrorType.INSTALL_FAILURE;
                                     break;
-                                case "local_file_does_not_exist":
+                                case "local-file-does-not-exist":
                                     installPluginError.type = InstallSitePluginErrorType.LOCAL_FILE_DOES_NOT_EXIST;
                                     break;
                                 case "no_package":
