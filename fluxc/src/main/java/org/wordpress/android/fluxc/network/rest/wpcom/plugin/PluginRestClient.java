@@ -72,13 +72,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         FetchSitePluginsError fetchPluginsError
                                 = new FetchSitePluginsError(FetchSitePluginsErrorType.GENERIC_ERROR);
-                        if (networkError instanceof WPComGsonNetworkError) {
-                            switch (((WPComGsonNetworkError) networkError).apiError) {
-                                case "unauthorized":
-                                    fetchPluginsError.type = FetchSitePluginsErrorType.UNAUTHORIZED;
-                                    break;
-                            }
-                        }
+                        fetchPluginsError.type = FetchSitePluginsErrorType.
+                                valueOf(((WPComGsonNetworkError) networkError).apiError.toUpperCase());
                         fetchPluginsError.message = networkError.message;
                         FetchedSitePluginsPayload payload = new FetchedSitePluginsPayload(fetchPluginsError);
                         mDispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginsAction(payload));
@@ -106,22 +101,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         UpdateSitePluginError updatePluginError
                                 = new UpdateSitePluginError(UpdateSitePluginErrorType.GENERIC_ERROR);
-                        if (networkError instanceof WPComGsonNetworkError) {
-                            switch (((WPComGsonNetworkError) networkError).apiError) {
-                                case "activation_error":
-                                    updatePluginError.type = UpdateSitePluginErrorType.ACTIVATION_ERROR;
-                                    break;
-                                case "deactivation_error":
-                                    updatePluginError.type = UpdateSitePluginErrorType.DEACTIVATION_ERROR;
-                                    break;
-                                case "unauthorized":
-                                    updatePluginError.type = UpdateSitePluginErrorType.UNAUTHORIZED;
-                                    break;
-                                case "unknown_plugin":
-                                    updatePluginError.type = UpdateSitePluginErrorType.UNKNOWN_PLUGIN;
-                                    break;
-                            }
-                        }
+                        updatePluginError.type = UpdateSitePluginErrorType.
+                                valueOf(((WPComGsonNetworkError) networkError).apiError.toUpperCase());
                         updatePluginError.message = networkError.message;
                         UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site, updatePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
@@ -149,16 +130,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         DeleteSitePluginError deletePluginError
                                 = new DeleteSitePluginError(DeleteSitePluginErrorType.GENERIC_ERROR);
-                        if (networkError instanceof WPComGsonNetworkError) {
-                            switch (((WPComGsonNetworkError) networkError).apiError) {
-                                case "unauthorized":
-                                    deletePluginError.type = DeleteSitePluginErrorType.UNAUTHORIZED;
-                                    break;
-                                case "delete_plugin_error":
-                                    deletePluginError.type = DeleteSitePluginErrorType.DELETE_PLUGIN_ERROR;
-                                    break;
-                            }
-                        }
+                        deletePluginError.type = DeleteSitePluginErrorType.
+                                valueOf(((WPComGsonNetworkError) networkError).apiError.toUpperCase());
                         deletePluginError.message = networkError.message;
                         DeletedSitePluginPayload payload = new DeletedSitePluginPayload(site, deletePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(payload));
@@ -186,25 +159,11 @@ public class PluginRestClient extends BaseWPComRestClient {
                         InstallSitePluginError installPluginError
                                 = new InstallSitePluginError(InstallSitePluginErrorType.GENERIC_ERROR);
                         if (networkError instanceof WPComGsonNetworkError) {
-                            switch (((WPComGsonNetworkError) networkError).apiError) {
-                                case "install_failure":
-                                    installPluginError.type = InstallSitePluginErrorType.INSTALL_FAILURE;
-                                    break;
-                                case "local-file-does-not-exist":
-                                    installPluginError.type = InstallSitePluginErrorType.LOCAL_FILE_DOES_NOT_EXIST;
-                                    break;
-                                case "no_package":
-                                    installPluginError.type = InstallSitePluginErrorType.NO_PACKAGE;
-                                    break;
-                                case "no_plugin_installed":
-                                    installPluginError.type = InstallSitePluginErrorType.NO_PLUGIN_INSTALLED;
-                                    break;
-                                case "plugin_already_installed":
-                                    installPluginError.type = InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED;
-                                    break;
-                                case "unauthorized":
-                                    installPluginError.type = InstallSitePluginErrorType.UNAUTHORIZED;
-                                    break;
+                            String apiError = ((WPComGsonNetworkError) networkError).apiError;
+                            if (apiError.equals("local-file-does-not-exist")) {
+                                installPluginError.type = InstallSitePluginErrorType.LOCAL_FILE_DOES_NOT_EXIST;
+                            } else {
+                                installPluginError.type = InstallSitePluginErrorType.valueOf(apiError.toUpperCase());
                             }
                         }
                         installPluginError.message = networkError.message;
