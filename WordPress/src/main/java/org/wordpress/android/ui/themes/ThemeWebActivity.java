@@ -70,7 +70,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
         intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
-        intent.putExtra(IS_PREMIUM_THEME, false);
+        intent.putExtra(IS_PREMIUM_THEME, theme.getPrice() > 0.f);
         intent.putExtra(IS_CURRENT_THEME, theme.getActive());
         intent.putExtra(THEME_NAME, theme.getName());
         intent.putExtra(ThemeBrowserActivity.THEME_ID, theme.getThemeId());
@@ -103,15 +103,9 @@ public class ThemeWebActivity extends WPWebViewActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.theme_web, menu);
-        Boolean isPremiumTheme = getIntent().getBooleanExtra(IS_PREMIUM_THEME, false);
-        Boolean isCurrentTheme = getIntent().getBooleanExtra(IS_CURRENT_THEME, false);
-
-        if (isPremiumTheme || isCurrentTheme) {
-            menu.findItem(R.id.action_activate).setVisible(false);
+        if (shouldShowActivateMenuItem()) {
+            getMenuInflater().inflate(R.menu.theme_web, menu);
         }
-
         return true;
     }
 
@@ -139,5 +133,12 @@ public class ThemeWebActivity extends WPWebViewActivity {
         if (getSupportActionBar() != null && themeName != null) {
             getSupportActionBar().setTitle(themeName);
         }
+    }
+
+    /** Show Activate in the Action Bar menu if the theme is free and not the current theme. */
+    private boolean shouldShowActivateMenuItem() {
+        Boolean isPremiumTheme = getIntent().getBooleanExtra(IS_PREMIUM_THEME, false);
+        Boolean isCurrentTheme = getIntent().getBooleanExtra(IS_CURRENT_THEME, false);
+        return !isCurrentTheme && !isPremiumTheme;
     }
 }
