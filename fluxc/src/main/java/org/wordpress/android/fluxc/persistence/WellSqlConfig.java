@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.persistence;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.support.annotation.StringDef;
 
 import com.yarolegovich.wellsql.DefaultWellConfig;
 import com.yarolegovich.wellsql.WellSql;
@@ -14,13 +15,26 @@ import com.yarolegovich.wellsql.mapper.SQLiteMapper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.lang.annotation.Retention;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 public class WellSqlConfig extends DefaultWellConfig {
+    @Retention(SOURCE)
+    @StringDef({ADDON_WOOCOMMERCE})
+    public @interface AddOn {}
     public static final String ADDON_WOOCOMMERCE = "WC";
 
     public WellSqlConfig(Context context) {
         super(context);
+    }
+
+    // TODO This can accept a Set<@AddOn String> directly when we enable Java 8
+    public WellSqlConfig(Context context, @AddOn String... addOns) {
+        super(context, new HashSet<>(Arrays.asList(addOns)));
     }
 
     @Override
