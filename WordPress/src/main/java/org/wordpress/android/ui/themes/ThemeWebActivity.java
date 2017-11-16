@@ -13,6 +13,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 
 public class ThemeWebActivity extends WPWebViewActivity {
     public static final String IS_CURRENT_THEME = "is_current_theme";
@@ -25,7 +26,6 @@ public class ThemeWebActivity extends WPWebViewActivity {
     private static final String THEME_URL_SUPPORT = "https://wordpress.com/theme/%s/support/?preview=true&iframe=true";
     private static final String THEME_URL_DETAILS = "https://wordpress.com/theme/%s/?preview=true&iframe=true";
     private static final String THEME_URL_DEMO_PARAMETER = "demo=true&iframe=true&theme_preview=true";
-    private static final String THEME_HTTPS_PREFIX = "https://";
 
     enum ThemeWebActivityType {
         PREVIEW,
@@ -78,12 +78,10 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     public static String getUrl(SiteModel site, ThemeModel theme, ThemeWebActivityType type, boolean isPremium) {
-        String homeURL = site.getUrl();
-        String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
-
         switch (type) {
             case PREVIEW:
-                return String.format(THEME_URL_PREVIEW, homeURL, domain, theme.getThemeId());
+                String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
+                return String.format(THEME_URL_PREVIEW, UrlUtils.getHost(site.getUrl()), domain, theme.getThemeId());
             case DEMO:
                 String url = theme.getDemoUrl();
                 if (url.contains("?")) {
