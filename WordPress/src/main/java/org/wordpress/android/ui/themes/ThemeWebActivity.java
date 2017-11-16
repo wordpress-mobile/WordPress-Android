@@ -21,9 +21,9 @@ public class ThemeWebActivity extends WPWebViewActivity {
 
     private static final String THEME_DOMAIN_PUBLIC = "pub";
     private static final String THEME_DOMAIN_PREMIUM = "premium";
-    private static final String THEME_URL_PREVIEW = "%s/wp-admin/customize.php?theme=%s/%s&hide_close=true";
-    private static final String THEME_URL_SUPPORT = "https://wordpress.com/themes/%s/support/?preview=true&iframe=true";
-    private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s/?preview=true&iframe=true";
+    private static final String THEME_URL_PREVIEW = "https://wordpress.com/customize/%s?theme=%s/%s&hide_close=true";
+    private static final String THEME_URL_SUPPORT = "https://wordpress.com/theme/%s/support/?preview=true&iframe=true";
+    private static final String THEME_URL_DETAILS = "https://wordpress.com/theme/%s/?preview=true&iframe=true";
     private static final String THEME_URL_DEMO_PARAMETER = "demo=true&iframe=true&theme_preview=true";
     private static final String THEME_HTTPS_PREFIX = "https://";
 
@@ -92,8 +92,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
                     return url + "?" + THEME_URL_DEMO_PARAMETER;
                 }
             case DETAILS:
-                String currentURL = homeURL.replaceFirst(THEME_HTTPS_PREFIX, "");
-                return String.format(THEME_URL_DETAILS, currentURL, theme.getThemeId());
+                return String.format(THEME_URL_DETAILS, theme.getThemeId());
             case SUPPORT:
                 return String.format(THEME_URL_SUPPORT, theme.getThemeId());
             default:
