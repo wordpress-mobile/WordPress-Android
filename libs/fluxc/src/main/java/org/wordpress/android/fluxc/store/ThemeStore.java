@@ -157,6 +157,14 @@ public class ThemeStore extends Store {
         }
     }
 
+    public static class OnThemeRemoved extends OnChanged<ThemesError> {
+        public ThemeModel theme;
+
+        public OnThemeRemoved(ThemeModel theme) {
+            this.theme = theme;
+        }
+    }
+
     public static class OnThemeDeleted extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -239,6 +247,12 @@ public class ThemeStore extends Store {
                 break;
             case DELETED_THEME:
                 handleThemeDeleted((ActivateThemePayload) action.getPayload());
+                break;
+            case REMOVE_THEME:
+                removeTheme((ThemeModel) action.getPayload());
+                break;
+            case REMOVE_SITE_THEMES:
+                removeSiteThemes((SiteModel) action.getPayload());
                 break;
         }
     }
@@ -338,7 +352,7 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.insertOrUpdateThemeForSite(payload.theme);
+            ThemeSqlUtils.insertOrReplaceActiveThemeForSite(payload.site, payload.theme);
         }
         emitChange(event);
     }
@@ -389,7 +403,22 @@ public class ThemeStore extends Store {
 
     private void handleThemeActivated(@NonNull ActivateThemePayload payload) {
         OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
-        event.error = payload.error;
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            ThemeModel activatedTheme;
+            // payload theme doesn't have all the data so we grab a copy of the database theme and update active flag
+            if (payload.site.isJetpackConnected()) {
+                activatedTheme = getInstalledThemeByThemeId(payload.theme.getThemeId());
+            } else {
+                activatedTheme = getWpComThemeByThemeId(payload.theme.getThemeId());
+                // Remove WP.com flag to store as site-associate theme
+                activatedTheme.setIsWpComTheme(false);
+            }
+            if (activatedTheme != null) {
+                setActiveThemeForSite(payload.site, activatedTheme);
+            }
+        }
         emitChange(event);
     }
 
@@ -410,5 +439,22 @@ public class ThemeStore extends Store {
             ThemeSqlUtils.removeTheme(payload.theme);
         }
         emitChange(event);
+    }
+
+    private void removeTheme(ThemeModel theme) {
+        if (theme != null) {
+            ThemeSqlUtils.removeTheme(theme);
+        }
+        emitChange(new OnThemeRemoved(theme));
+    }
+
+    private void removeSiteThemes(SiteModel site) {
+        final List<ThemeModel> themes = getThemesForSite(site);
+        if (!themes.isEmpty()) {
+            for (ThemeModel theme : themes) {
+                ThemeSqlUtils.removeTheme(theme);
+            }
+        }
+        emitChange(new OnThemesChanged(site));
     }
 }

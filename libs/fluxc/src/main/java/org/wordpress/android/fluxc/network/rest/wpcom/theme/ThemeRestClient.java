@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.theme;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -38,6 +39,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ThemeRestClient extends BaseWPComRestClient {
+    private static final String WP_THEME_FETCH_NUMBER_PARAM = "number=500";
+
     @Inject
     public ThemeRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                            AccessToken accessToken, UserAgent userAgent) {
@@ -123,16 +126,16 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 }));
     }
 
-    /** Endpoint: v1.1/themes */
+    /** [Undocumented!] Endpoint: v1.2/themes */
     public void fetchWpComThemes() {
-        String url = WPCOMREST.themes.getUrlV1_1();
-        add(WPComGsonRequest.buildGetRequest(url, null, MultipleWPComThemesResponse.class,
-                new Response.Listener<MultipleWPComThemesResponse>() {
+        String url = WPCOMREST.themes.getUrlV1_2() + "?" + WP_THEME_FETCH_NUMBER_PARAM;
+        add(WPComGsonRequest.buildGetRequest(url, null, ThemeArrayResponse.class,
+                new Response.Listener<ThemeArrayResponse>() {
                     @Override
-                    public void onResponse(MultipleWPComThemesResponse response) {
+                    public void onResponse(ThemeArrayResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to WP.com themes fetch request.");
                         FetchedThemesPayload payload = new FetchedThemesPayload(null);
-                        payload.themes = createThemeListFromWPComResponse(response);
+                        payload.themes = createThemeListFromArrayResponse(response);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
@@ -219,7 +222,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 }));
     }
 
-    /** v1.2/themes?search=$term */
+    /** [Undocumented!] Endpoint: v1.2/themes?search=$term */
     public void searchThemes(@NonNull final String searchTerm) {
         String url = WPCOMREST.themes.getUrlV1_2() + "?search=" + searchTerm;
         add(WPComGsonRequest.buildGetRequest(url, null, ThemeArrayResponse.class,
@@ -257,9 +260,9 @@ public class ThemeRestClient extends BaseWPComRestClient {
         theme.setScreenshotUrl(response.screenshot);
         theme.setDescription(response.description);
         theme.setDownloadUrl(response.download_uri);
-        if (response.price != null) {
-            theme.setCurrency(response.price.currency);
-            theme.setPrice(response.price.value);
+        if (!TextUtils.isEmpty(response.price)) {
+            theme.setCurrency(response.price.substring(0, 1));
+            theme.setPrice(Integer.valueOf(response.price.substring(1)));
         }
         return theme;
     }
