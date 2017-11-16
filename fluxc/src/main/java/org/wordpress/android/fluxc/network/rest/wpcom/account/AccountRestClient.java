@@ -77,7 +77,11 @@ public class AccountRestClient extends BaseWPComRestClient {
             this.userId = response.user_id;
         }
         public AccountPushSocialResponsePayload(BaseNetworkError error) {
-            this.error = new AccountSocialError(error.volleyError.networkResponse.data);
+            if (error.volleyError.networkResponse == null || error.volleyError.networkResponse.data == null) {
+                this.error = new AccountSocialError("generic_error", "");
+            } else {
+                this.error = new AccountSocialError(error.volleyError.networkResponse.data);
+            }
         }
         public AccountPushSocialResponsePayload() {
         }
