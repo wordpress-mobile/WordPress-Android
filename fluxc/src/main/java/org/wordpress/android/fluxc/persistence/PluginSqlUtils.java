@@ -53,6 +53,19 @@ public class PluginSqlUtils {
         }
     }
 
+    public static int deleteSitePlugin(SiteModel site, PluginModel plugin) {
+        if (plugin == null) {
+            return 0;
+        }
+        // The local id of the plugin might not be set if it's coming from a network request,
+        // using site id and slug is a safer approach here
+        return WellSql.delete(PluginModel.class)
+                .where()
+                .equals(PluginModelTable.SLUG, plugin.getSlug())
+                .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
+                .endWhere().execute();
+    }
+
     public static int insertOrUpdatePluginInfo(PluginInfoModel pluginInfo) {
         if (pluginInfo == null) {
             return 0;
