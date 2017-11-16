@@ -125,6 +125,22 @@ public class PluginSqlUtilsTest {
         Assert.assertEquals(onlyPluginFromUpdatedList.getName(), newSitePluginName);
     }
 
+    @Test
+    public void testDeleteSitePlugin() {
+        // Create site and plugin
+        SiteModel site = getTestSite();
+        String name = randomString("name");
+        PluginModel plugin = getTestPlugin(name);
+
+        // Insert the plugin and verify that site plugin size is 1
+        Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(site, plugin));
+        Assert.assertEquals(1, PluginSqlUtils.getSitePlugins(site).size());
+
+        // Delete the plugin and verify that site plugin list is empty
+        Assert.assertEquals(1, PluginSqlUtils.deleteSitePlugin(site, plugin));
+        Assert.assertTrue(PluginSqlUtils.getSitePlugins(site).isEmpty());
+    }
+
     // Helper methods
 
     private PluginModel getTestPlugin(String name) {
