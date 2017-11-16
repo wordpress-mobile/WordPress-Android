@@ -210,11 +210,15 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     }
 
     protected void startProgress() {
+        startProgress(true);
+    }
+
+    protected void startProgress(boolean cancellable) {
         mPrimaryButton.setEnabled(false);
         mSecondaryButton.setEnabled(false);
 
         mProgressDialog =
-                ProgressDialog.show(getActivity(), "", getActivity().getString(getProgressBarText()), true, true,
+                ProgressDialog.show(getActivity(), "", getActivity().getString(getProgressBarText()), true, cancellable,
                         new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialogInterface) {
