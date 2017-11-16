@@ -288,6 +288,11 @@ public class AccountStore extends Store {
             this.message = message;
         }
 
+        public AccountSocialError(@NonNull AccountSocialErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+
         public AccountSocialError(@NonNull byte[] response) {
             try {
                 String responseBody = new String(response, "UTF-8");
