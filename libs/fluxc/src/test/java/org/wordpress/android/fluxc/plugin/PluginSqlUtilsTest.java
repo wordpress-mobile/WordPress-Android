@@ -17,12 +17,14 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 @RunWith(RobolectricTestRunner.class)
 public class PluginSqlUtilsTest {
     private static final int TEST_LOCAL_SITE_ID = 1;
+    private static final int SMALL_TEST_POOL = 10;
 
     private Random mRandom = new Random(System.currentTimeMillis());
 
@@ -58,12 +60,39 @@ public class PluginSqlUtilsTest {
         Assert.assertEquals(plugin.getSlug(), insertedPlugin.getSlug());
     }
 
+    // Inserts 10 plugins with known IDs then retrieves all media and validates IDs
+    @Test
+    public void testGetSitePlugins() {
+        SiteModel site = getTestSiteWithLocalId(TEST_LOCAL_SITE_ID);
+        List<String> pluginNames = insertBasicTestPlugins(site, SMALL_TEST_POOL);
+        List<PluginModel> sitePlugins = PluginSqlUtils.getSitePlugins(site);
+        Assert.assertEquals(pluginNames.size(), sitePlugins.size());
+        for (int i = 0; i < pluginNames.size(); i++) {
+            PluginModel sitePlugin = sitePlugins.get(i);
+            Assert.assertNotNull(sitePlugin);
+            Assert.assertEquals(pluginNames.get(i), sitePlugin.getName());
+        }
+    }
+
+    // Helper methods
+
     private PluginModel getTestPlugin(String name, String slug) {
         PluginModel plugin = new PluginModel();
         plugin.setLocalSiteId(TEST_LOCAL_SITE_ID);
         plugin.setName(name);
         plugin.setSlug(slug);
         return plugin;
+    }
+
+    private List<String> insertBasicTestPlugins(SiteModel site, int numberOfPlugins) {
+        List<String> pluginNames = new ArrayList<>();
+        for (int i = 0; i < numberOfPlugins; ++i) {
+            String name = randomString("name");
+            pluginNames.add(name);
+            PluginModel plugin = getTestPlugin(name, null);
+            Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(site, plugin));
+        }
+        return pluginNames;
     }
 
     private String randomString(String prefix) {
