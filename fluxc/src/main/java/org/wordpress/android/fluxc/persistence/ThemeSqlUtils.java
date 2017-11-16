@@ -20,8 +20,10 @@ public class ThemeSqlUtils {
                 .endGroup().endWhere().getAsModel();
 
         if (existing.isEmpty()) {
+            // theme is not in the local DB so we insert it
             WellSql.insert(theme).asSingleTransaction(true).execute();
         } else {
+            // theme already exists in the local DB so we update the existing row with the passed theme
             WellSql.update(ThemeModel.class).whereId(existing.get(0).getId())
                     .put(theme, new UpdateAllExceptId<>(ThemeModel.class)).execute();
         }
@@ -65,8 +67,9 @@ public class ThemeSqlUtils {
             }
         }
 
-        // make sure active flag is set then add to db
+        // make sure active flag and local site ID are set then add to db
         theme.setActive(true);
+        theme.setLocalSiteId(site.getId());
         insertOrUpdateThemeForSite(theme);
     }
 
