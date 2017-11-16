@@ -367,24 +367,23 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 }
                 break;
             case FAILURE_EMAIL_WRONG_PASSWORD:
-                endProgress();
+                onLoginFinished(false);
                 showPasswordError();
                 break;
             case FAILURE_2FA:
-                endProgress();
+                onLoginFinished(false);
                 mLoginListener.needs2fa(mEmailAddress, mRequestedPassword);
                 break;
             case FAILURE_SOCIAL_2FA:
-                endProgress();
+                onLoginFinished(false);
                 mLoginListener.needs2faSocialConnect(mEmailAddress, mRequestedPassword, mIdToken, mService);
                 break;
             case FAILURE:
-                endProgress();
-
+                onLoginFinished(false);
                 showError(getString(R.string.error_generic));
                 break;
             case SUCCESS:
-                onLoginFinished();
+                onLoginFinished(true);
                 break;
         }
     }

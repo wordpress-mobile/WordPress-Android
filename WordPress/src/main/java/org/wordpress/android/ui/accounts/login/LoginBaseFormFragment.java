@@ -260,7 +260,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     protected void onLoginFinished() {
     }
 
-    private void onLoginFinished(boolean success) {
+    protected void onLoginFinished(boolean success) {
         mLoginFinished = true;
 
         if (!success) {
