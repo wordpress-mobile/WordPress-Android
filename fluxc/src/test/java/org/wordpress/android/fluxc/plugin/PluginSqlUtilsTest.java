@@ -74,6 +74,29 @@ public class PluginSqlUtilsTest {
         }
     }
 
+    @Test
+    public void testReplaceSitePlugins() {
+        // First insert small set of basic plugins and assert that
+        SiteModel site = getTestSiteWithLocalId(TEST_LOCAL_SITE_ID);
+        insertBasicTestPlugins(site, SMALL_TEST_POOL);
+        List<PluginModel> sitePlugins = PluginSqlUtils.getSitePlugins(site);
+        Assert.assertEquals(sitePlugins.size(), SMALL_TEST_POOL);
+
+        // Create a single plugin and update the site plugin list and assert that now we have a single plugin
+        List<PluginModel> newSitePlugins = new ArrayList<>();
+        String newSitePluginName = randomString("newPluginName");
+        String newSitePluginSlug = randomString("newPluginSlug");
+        PluginModel singleSitePlugin = getTestPlugin(newSitePluginName, newSitePluginSlug);
+        newSitePlugins.add(singleSitePlugin);
+        PluginSqlUtils.insertOrReplaceSitePlugins(site, newSitePlugins);
+
+        List<PluginModel> updatedSitePluginList = PluginSqlUtils.getSitePlugins(site);
+        Assert.assertEquals(1, updatedSitePluginList.size());
+        PluginModel onlyPluginFromUpdatedList = updatedSitePluginList.get(0);
+        Assert.assertEquals(onlyPluginFromUpdatedList.getName(), newSitePluginName);
+        Assert.assertEquals(onlyPluginFromUpdatedList.getSlug(), newSitePluginSlug);
+    }
+
     // Helper methods
 
     private PluginModel getTestPlugin(String name, String slug) {
@@ -86,7 +109,7 @@ public class PluginSqlUtilsTest {
 
     private List<String> insertBasicTestPlugins(SiteModel site, int numberOfPlugins) {
         List<String> pluginNames = new ArrayList<>();
-        for (int i = 0; i < numberOfPlugins; ++i) {
+        for (int i = 0; i < numberOfPlugins; i++) {
             String name = randomString("name");
             pluginNames.add(name);
             PluginModel plugin = getTestPlugin(name, null);
