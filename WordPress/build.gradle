@@ -219,6 +219,11 @@ android.buildTypes.all { buildType ->
             tasks.copyGoogleServicesBuddybuildFile.execute()
         }
     }
+
+    // Print warning message if example Google services file is used.
+    if ((new File('WordPress/google-services.json').text) == (new File('WordPress/google-services.json-example').text)) {
+        println("WARNING: You're using the example google-services.json file. Google login will fail.")
+    }
 }
 
 def checkGradlePropertiesFile() {
