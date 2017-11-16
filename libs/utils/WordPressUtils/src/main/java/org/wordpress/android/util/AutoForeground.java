@@ -66,6 +66,7 @@ public abstract class AutoForeground<EventClass> extends Service {
     @CallSuper
     @Override
     public IBinder onBind(Intent intent) {
+        clearAllNotifications();
         return mBinder;
     }
 
@@ -74,6 +75,7 @@ public abstract class AutoForeground<EventClass> extends Service {
     public void onRebind(Intent intent) {
         super.onRebind(intent);
 
+        clearAllNotifications();
         background();
     }
 
@@ -87,10 +89,10 @@ public abstract class AutoForeground<EventClass> extends Service {
         return true; // call onRebind() if new clients connect
     }
 
-    public static void clearAllNotifications(Context context) {
-        NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID_PROGRESS);
-        NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID_SUCCESS);
-        NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID_FAILURE);
+    protected void clearAllNotifications() {
+        NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID_PROGRESS);
+        NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID_SUCCESS);
+        NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID_FAILURE);
     }
 
     private EventBus getEventBus() {

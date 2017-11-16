@@ -384,7 +384,6 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 showError(getString(R.string.error_generic));
                 break;
             case SUCCESS:
-                LoginWpcomService.clearAllNotifications(getContext());
                 onLoginFinished();
                 break;
         }
