@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -458,6 +459,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             if (theme != null) {
                 Map<String, Object> themeProperties = new HashMap<>();
                 themeProperties.put(THEME_ID, themeId);
+                theme.setActive(isActiveThemeForSite(theme.getThemeId()));
 
                 switch (type) {
                     case PREVIEW:
@@ -481,5 +483,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
 
         ToastUtils.showToast(this, toastText, ToastUtils.Duration.SHORT);
+    }
+
+    private boolean isActiveThemeForSite(@NonNull String themeId) {
+        final ThemeModel storedActiveTheme = mThemeStore.getActiveThemeForSite(mSite);
+        return storedActiveTheme != null && themeId.equals(storedActiveTheme.getThemeId().replace("-wpcom", ""));
     }
 }
