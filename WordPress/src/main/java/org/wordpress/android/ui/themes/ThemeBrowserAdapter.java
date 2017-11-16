@@ -28,8 +28,6 @@ import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 
-import java.util.Currency;
-
 class ThemeBrowserAdapter extends CursorAdapter {
     private static final int HEADER_VIEW_TYPE = 1;
     private static final String HEADER_THEME_ID = "HEADER_THEME_ID";
@@ -136,7 +134,7 @@ class ThemeBrowserAdapter extends CursorAdapter {
 
         themeViewHolder.nameView.setText(name);
         if (isPremium) {
-            String priceText = Currency.getInstance(currency).getSymbol() + String.valueOf((int) price);
+            String priceText = currency + String.valueOf((int) price);
             themeViewHolder.priceView.setText(priceText);
             themeViewHolder.priceView.setVisibility(View.VISIBLE);
         } else {
