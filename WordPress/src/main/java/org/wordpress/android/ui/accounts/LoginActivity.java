@@ -318,6 +318,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void needs2fa(String email, String password) {
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, password);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
+        LoginEmailPasswordFragment.clearLoginServiceState();
     }
 
     @Override
@@ -327,6 +328,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
                 nonceAuthenticator, nonceBackup, nonceSms);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
+        LoginEmailPasswordFragment.clearLoginServiceState();
     }
 
     @Override
@@ -334,6 +336,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocialConnect(email, password, idToken, service);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
+        LoginEmailPasswordFragment.clearLoginServiceState();
     }
 
     @Override
