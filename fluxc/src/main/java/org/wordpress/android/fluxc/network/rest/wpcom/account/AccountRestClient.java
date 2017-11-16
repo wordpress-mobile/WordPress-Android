@@ -27,12 +27,14 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
+import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,9 +77,6 @@ public class AccountRestClient extends BaseWPComRestClient {
             this.twoStepNotificationSent = response.two_step_notification_sent;
             this.twoStepTypes = convertJsonArrayToStringList(response.two_step_supported_auth_types);
             this.userId = response.user_id;
-        }
-        public AccountPushSocialResponsePayload(BaseNetworkError error) {
-            this.error = new AccountSocialError(error.volleyError.networkResponse.data);
         }
         public AccountPushSocialResponsePayload() {
         }
@@ -291,7 +290,8 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(error);
+                        AccountPushSocialResponsePayload payload =
+                                volleyErrorToAccountSocialResponsePayload(error.volleyError);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
@@ -377,7 +377,8 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(error);
+                        AccountPushSocialResponsePayload payload =
+                                volleyErrorToAccountSocialResponsePayload(error.volleyError);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
@@ -418,7 +419,8 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(error);
+                        AccountPushSocialResponsePayload payload =
+                                volleyErrorToAccountSocialResponsePayload(error.volleyError);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
@@ -546,6 +548,29 @@ public class AccountRestClient extends BaseWPComRestClient {
                 // Do nothing (keep default error)
             }
         }
+        return payload;
+    }
+
+    private AccountPushSocialResponsePayload volleyErrorToAccountSocialResponsePayload(VolleyError error) {
+        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+        payload.error = new AccountSocialError(AccountSocialErrorType.GENERIC_ERROR, "");
+
+        if (error.networkResponse != null && error.networkResponse.data != null) {
+            AppLog.e(T.API, new String(error.networkResponse.data));
+
+            try {
+                String responseBody = new String(error.networkResponse.data, "UTF-8");
+                JSONObject object = new JSONObject(responseBody);
+                JSONObject data = object.getJSONObject("data");
+                payload.error.nonce = data.optString("two_step_nonce");
+                JSONArray errors = data.getJSONArray("errors");
+                payload.error.type = AccountSocialErrorType.fromString(errors.getJSONObject(0).getString("code"));
+                payload.error.message = errors.getJSONObject(0).getString("message");
+            } catch (UnsupportedEncodingException | JSONException exception) {
+                AppLog.e(T.API, "Unable to parse social error response: " + exception.getMessage());
+            }
+        }
+
         return payload;
     }
 
