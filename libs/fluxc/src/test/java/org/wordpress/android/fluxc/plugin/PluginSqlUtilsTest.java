@@ -141,6 +141,37 @@ public class PluginSqlUtilsTest {
         Assert.assertTrue(PluginSqlUtils.getSitePlugins(site).isEmpty());
     }
 
+    @Test
+    public void testGetSitePluginByName() {
+        // Create site and 2 plugins
+        SiteModel site = getTestSite();
+        String pluginName1 = randomString("name1");
+        String pluginName2 = randomString("name2");
+        String displayName1 = randomString("displayName1");
+        String displayName2 = randomString("displayName2");
+
+        PluginModel plugin1 = getTestPlugin(pluginName1);
+        plugin1.setDisplayName(displayName1);
+        PluginModel plugin2 = getTestPlugin(pluginName2);
+        plugin2.setDisplayName(displayName2);
+
+        // Insert the plugins and verify that site plugin size is 2
+        Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(site, plugin1));
+        Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(site, plugin2));
+        Assert.assertEquals(2, PluginSqlUtils.getSitePlugins(site).size());
+
+        // Assert that getSitePluginByName retrieves the correct plugins
+        PluginModel pluginByName1 = PluginSqlUtils.getSitePluginByName(site, pluginName1);
+        Assert.assertNotNull(pluginByName1);
+        Assert.assertEquals(pluginByName1.getName(), pluginName1);
+        Assert.assertEquals(pluginByName1.getDisplayName(), displayName1);
+
+        PluginModel pluginByName2 = PluginSqlUtils.getSitePluginByName(site, pluginName2);
+        Assert.assertNotNull(pluginByName2);
+        Assert.assertEquals(pluginByName2.getName(), pluginName2);
+        Assert.assertEquals(pluginByName2.getDisplayName(), displayName2);
+    }
+
     // Helper methods
 
     private PluginModel getTestPlugin(String name) {
