@@ -105,6 +105,7 @@ public class WordPress extends MultiDexApplication {
     public static final String SITE = "SITE";
     public static String versionName;
     public static WordPressDB wpDB;
+    public static boolean sAppIsInTheBackground;
 
     private static RestClientUtils sRestClientUtils;
     private static RestClientUtils sRestClientUtilsVersion1_1;
@@ -274,6 +275,9 @@ public class WordPress extends MultiDexApplication {
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
+        // verify media is sanitized
+        sanitizeMediaUploadStateForSite();
+
         // setup the Credentials Client so we can clean it up on wpcom logout
         mCredentialsClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -283,6 +287,19 @@ public class WordPress extends MultiDexApplication {
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+    }
+
+    private void sanitizeMediaUploadStateForSite() {
+        int siteLocalId = AppPrefs.getSelectedSite();
+        final SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+        if (selectedSite != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
+                }
+            }).start();
+        }
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -614,7 +631,6 @@ public class WordPress extends MultiDexApplication {
         private boolean mConnectionReceiverRegistered;
 
         boolean mFirstActivityResumed = true;
-        boolean mIsInBackground = true;
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
@@ -672,14 +688,6 @@ public class WordPress extends MultiDexApplication {
             }
         }
 
-        private void sanitizeMediaUploadStateForSite() {
-            int siteLocalId = AppPrefs.getSelectedSite();
-            SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-            if (selectedSite != null) {
-                UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
-            }
-        }
-
         /**
          * The two methods below (startActivityTransitionTimer and stopActivityTransitionTimer)
          * are used to track when the app goes to background.
@@ -709,7 +717,7 @@ public class WordPress extends MultiDexApplication {
 
         private void onAppGoesToBackground() {
             AppLog.i(T.UTILS, "App goes to background");
-            mIsInBackground = true;
+            sAppIsInTheBackground = true;
             String lastActivityString = AppPrefs.getLastActivityStr();
             ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
             Map<String, Object> properties = new HashMap<String, Object>();
@@ -739,7 +747,7 @@ public class WordPress extends MultiDexApplication {
                 this.mActivityTransitionTimer.cancel();
             }
 
-            mIsInBackground = false;
+            sAppIsInTheBackground = false;
         }
 
         /**
@@ -803,13 +811,13 @@ public class WordPress extends MultiDexApplication {
 
         @Override
         public void onActivityResumed(Activity activity) {
-            if (mIsInBackground) {
+            if (sAppIsInTheBackground) {
                 // was in background before
                 onAppComesFromBackground(activity);
             }
             stopActivityTransitionTimer();
 
-            mIsInBackground = false;
+            sAppIsInTheBackground = false;
             if (mFirstActivityResumed) {
                 deferredInit(activity);
             }

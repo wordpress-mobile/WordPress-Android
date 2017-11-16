@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -16,17 +17,22 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
-import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UploadUtils {
+
+    private static int K_SNACKBAR_WAIT_TIME_MS = 5000;
     /**
      * Returns a post-type specific error message string.
      */
@@ -143,7 +149,7 @@ public class UploadUtils {
             if (PostUtils.isPublishable(post)) {
                 // if the post is publishable, we offer the PUBLISH button
                 if (savedLocally) {
-                    showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally, R.string.button_publish,
+                    showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_locally, R.string.button_publish,
                             publishPostListener);
                 }
                 else {
@@ -151,7 +157,7 @@ public class UploadUtils {
                             UploadService.isPostUploadingOrQueued(post)) {
                         showSnackbar(snackbarAttachView, R.string.editor_uploading_post);
                     } else {
-                        showSnackbar(snackbarAttachView, R.string.editor_draft_saved_online, R.string.button_publish,
+                        showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online, R.string.button_publish,
                                 publishPostListener);
                     }
                 }
@@ -168,17 +174,43 @@ public class UploadUtils {
                         UploadService.isPostUploadingOrQueued(post)) {
                     showSnackbar(snackbarAttachView, R.string.editor_uploading_post);
                 } else {
-                    showSnackbar(snackbarAttachView, R.string.editor_post_saved_online, R.string.button_publish,
+                    showSnackbarSuccessAction(snackbarAttachView, R.string.editor_post_saved_online, R.string.button_publish,
                             publishPostListener);
                 }
             }
         }
     }
 
+    private static void showSnackbarError(View view, String message, int buttonTitleRes,
+                                          View.OnClickListener onClickListener) {
+        Snackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
+                .setAction(buttonTitleRes, onClickListener).show();
+    }
+
+    private static void showSnackbarError(View view, String message) {
+        Snackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).show();
+    }
+
     private static void showSnackbar(View view, int messageRes, int buttonTitleRes,
                                      View.OnClickListener onClickListener) {
         Snackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
                 .setAction(buttonTitleRes, onClickListener).show();
+    }
+
+    private static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
+                                                  View.OnClickListener onClickListener) {
+        Snackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
+                .setAction(buttonTitleRes, onClickListener).
+                setActionTextColor(view.getResources().getColor(R.color.blue_medium))
+                .show();
+    }
+
+    private static void showSnackbarSuccessAction(View view, String message, int buttonTitleRes,
+                                                  View.OnClickListener onClickListener) {
+        Snackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
+                .setAction(buttonTitleRes, onClickListener).
+                setActionTextColor(view.getResources().getColor(R.color.blue_medium))
+                .show();
     }
 
     private static void showSnackbar(View view, int messageRes) {
@@ -218,26 +250,102 @@ public class UploadUtils {
     }
 
     public static void onPostUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
-                                                     PostStore.OnPostUploaded event,
+                                                     boolean isError,
+                                                     final PostModel post,
+                                                     final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher) {
-        final PostModel post = event.post;
-        if (event.isError()) {
-            UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally);
-        } else {
-            boolean isDraft = PostStatus.fromPost(post) == PostStatus.DRAFT;
-            if (isDraft) {
-                View.OnClickListener publishPostListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UploadUtils.publishPost(activity, post, site, dispatcher);
-                    }
-                };
-                UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_online,
-                        R.string.button_publish, publishPostListener);
+        if (isError) {
+            if (errorMessage != null) {
+                // RETRY only available for Aztec
+                if (AppPrefs.isAztecEditorEnabled()) {
+                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = UploadService.getUploadPostServiceIntent(
+                                    activity, post, PostUtils.isFirstTimePublish(post), false, true);
+                            activity.startService(intent);
+                        }
+                    });
+                } else {
+                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage);
+                }
             } else {
-                int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
-                UploadUtils.showSnackbar(snackbarAttachView, messageRes);
+                UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_locally);
+            }
+        } else {
+            if (post != null) {
+                boolean isDraft = PostStatus.fromPost(post) == PostStatus.DRAFT;
+                if (isDraft) {
+                    View.OnClickListener publishPostListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            UploadUtils.publishPost(activity, post, site, dispatcher);
+                        }
+                    };
+                    UploadUtils.showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
+                            R.string.button_publish, publishPostListener);
+                } else {
+                    int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
+                    UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes,
+                            R.string.button_view, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // jump to Editor Preview mode to show this Post
+                                    ActivityLauncher.browsePostOrPage(activity, site, post);
+                                }
+                            });
+                }
             }
         }
     }
+
+    public static void onMediaUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
+                                                     boolean isError,
+                                                     final List<MediaModel> mediaList, final SiteModel site,
+                                                     final String messageForUser) {
+        if (isError) {
+            if (messageForUser != null) {
+                // RETRY only available for Aztec
+                if (mediaList != null && !mediaList.isEmpty()) {
+                    UploadUtils.showSnackbarError(snackbarAttachView, messageForUser, R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
+                            mediaListToRetry.addAll(mediaList);
+                            Intent retryIntent = UploadService.getUploadMediaServiceIntent(activity, mediaListToRetry, true);
+                            activity.startService(retryIntent);
+                        }
+                    });
+                } else {
+                    UploadUtils.showSnackbarError(snackbarAttachView, messageForUser);
+                }
+            } else {
+                UploadUtils.showSnackbarError(snackbarAttachView, activity.getString(R.string.error_media_upload));
+            }
+        } else {
+            if (mediaList == null || mediaList.isEmpty()) {
+                return;
+            }
+
+            // show success snackbar for media only items and offer the WRITE POST functionality)
+            UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageForUser,
+                    R.string.media_files_uploaded_write_post, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // WRITE POST functionality: show pre-populated Post
+                            ArrayList<MediaModel> mediaListToInsertInPost = new ArrayList<>();
+                            mediaListToInsertInPost.addAll(mediaList);
+
+                            Intent writePostIntent = new Intent(activity, EditPostActivity.class);
+                            writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            writePostIntent.putExtra(WordPress.SITE, site);
+                            writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+                            writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
+                            activity.startActivity(writePostIntent);
+                        }
+                    });
+        }
+    }
+
 }

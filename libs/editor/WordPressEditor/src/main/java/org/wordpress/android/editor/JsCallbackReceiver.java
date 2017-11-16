@@ -202,7 +202,12 @@ public class JsCallbackReceiver {
                 }
                 break;
             case CALLBACK_RESPONSE_STRING:
-                AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params);
+                // log the entire params unless they contain the post content
+                if (params.startsWith("function=getHTMLForCallback~id=zss_field_content~contents=")) {
+                    AppLog.d(AppLog.T.EDITOR, callbackId + ": function=getHTMLForCallback~id=zss_field_content~contents=(content not logged)");
+                } else {
+                    AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params);
+                }
                 Set<String> responseDataSet;
                 if (params.startsWith("function=") && params.contains(JS_CALLBACK_DELIMITER)) {
                     String functionName = params.substring("function=".length(), params.indexOf(JS_CALLBACK_DELIMITER));

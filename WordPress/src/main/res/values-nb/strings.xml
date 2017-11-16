@@ -48,7 +48,7 @@ Language: nb_NO
 	<string name="media_edit_filetype_caption">Filtype</string>
 	<string name="media_edit_filename_caption">Filnavn</string>
 	<string name="media_edit_url_caption">Nettadresse</string>
-	<string name="media_edit_card_caption">Fildetaljer</string>
+	<string name="media_edit_file_details_card_caption">Fildetaljer</string>
 	<string name="copy">Kopier</string>
 	<string name="media_edit_alttext_text">Alternativ tekst</string>
 	<string name="notification_settings_item_sights_and_sounds_blink_light">Lysblink</string>

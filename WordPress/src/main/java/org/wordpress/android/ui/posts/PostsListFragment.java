@@ -63,6 +63,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -509,9 +510,14 @@ public class PostsListFragment extends Fragment
                 }
                 ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 break;
+            case PostListButton.BUTTON_RETRY:
+                // restart the UploadService with retry parameters
+                Intent intent = UploadService.getUploadPostServiceIntent(
+                        getActivity(), post, PostUtils.isFirstTimePublish(post), false, true);
+                getActivity().startService(intent);
+                break;
             case PostListButton.BUTTON_SUBMIT:
             case PostListButton.BUTTON_SYNC:
-            case PostListButton.BUTTON_RETRY:
             case PostListButton.BUTTON_PUBLISH:
                 UploadUtils.publishPost(getActivity(), post, mSite, mDispatcher);
                 break;
@@ -605,7 +611,7 @@ public class PostsListFragment extends Fragment
                 mTrashedPosts.remove(post);
 
                 // here cancel all media uploads related to this Post
-                UploadService.cancelQueuedPostUploadAndRelatedMedia(post);
+                UploadService.cancelQueuedPostUploadAndRelatedMedia(WordPress.getContext(), post);
 
                 if (post.isLocalDraft()) {
                     mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(post));
@@ -613,7 +619,7 @@ public class PostsListFragment extends Fragment
                     // delete the pending draft notification if available
                     mShouldCancelPendingDraftNotification = false;
                     int pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.getId());
-                    NativeNotificationsUtils.dismissNotification(pushId, getActivity());
+                    NativeNotificationsUtils.dismissNotification(pushId, WordPress.getContext());
                 } else {
                     mDispatcher.dispatch(PostActionBuilder.newDeletePostAction(new RemotePostPayload(post, mSite)));
                 }
@@ -632,6 +638,8 @@ public class PostsListFragment extends Fragment
         outState.putSerializable(PostsListActivity.EXTRA_VIEW_PAGES, mIsPage);
         mRVScrollPositionSaver.onSaveInstanceState(outState, mRecyclerView);
     }
+
+    // FluxC events
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -682,7 +690,8 @@ public class PostsListFragment extends Fragment
         if (isAdded() && event.post != null && event.post.getLocalSiteId() == mSite.getId()) {
             loadPosts(LoadMode.FORCED);
             UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                    getActivity().findViewById(R.id.coordinator), event, mSite, mDispatcher);
+                    getActivity().findViewById(R.id.coordinator),
+                    event.isError(), event.post, null, mSite, mDispatcher);
         }
     }
 
@@ -736,6 +745,48 @@ public class PostsListFragment extends Fragment
             if (post != null) {
                 mPostsListAdapter.updateProgressForPost(post);
             }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadErrorEvent event) {
+        if (event.post != null) {
+            UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), true, event.post, event.errorMessage, mSite, mDispatcher);
+        }
+        else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), true,
+                    event.mediaModelList, mSite, event.errorMessage);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), false,
+                    event.mediaModelList, mSite, event.successMessage);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadMediaRetryEvent event) {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            // if there' a Post to which the retried media belongs, clear their status
+            Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeThisMedia(mPostStore, event.mediaModelList);
+            // now that we know which Posts  to refresh, let's do it
+            for (PostModel post : postsToRefresh) {
+                int position = getPostListAdapter().getPositionForPost(post);
+                if (position > -1) {
+                    getPostListAdapter().notifyItemChanged(position);
+                }
+            }
+
         }
     }
 }
