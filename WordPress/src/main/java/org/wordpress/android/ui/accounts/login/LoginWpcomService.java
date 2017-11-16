@@ -43,17 +43,23 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     private static final String ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE";
 
     public enum LoginPhase {
-        IDLE,
-        AUTHENTICATING,
-        SOCIAL_LOGIN,
-        FETCHING_ACCOUNT,
-        FETCHING_SETTINGS,
-        FETCHING_SITES,
-        SUCCESS,
-        FAILURE_EMAIL_WRONG_PASSWORD,
-        FAILURE_2FA,
-        FAILURE_SOCIAL_2FA,
-        FAILURE
+        IDLE(0),
+        AUTHENTICATING(25),
+        SOCIAL_LOGIN(25),
+        FETCHING_ACCOUNT(50),
+        FETCHING_SETTINGS(75),
+        FETCHING_SITES(100),
+        SUCCESS(100),
+        FAILURE_EMAIL_WRONG_PASSWORD(100),
+        FAILURE_2FA(100),
+        FAILURE_SOCIAL_2FA(100),
+        FAILURE(100);
+
+        public final int progressPercent;
+
+        LoginPhase(int progressPercent) {
+            this.progressPercent = progressPercent;
+        }
     }
 
     public static class OnLoginStateUpdated {
@@ -125,13 +131,10 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     public Notification getNotification() {
         switch (mLoginPhase) {
             case AUTHENTICATING:
-                return LoginNotification.progress(this, 25, "Login in: " + mLoginPhase.name());
             case FETCHING_ACCOUNT:
-                return LoginNotification.progress(this, 50, "Login in: " + mLoginPhase.name());
             case FETCHING_SETTINGS:
-                return LoginNotification.progress(this, 75, "Login in: " + mLoginPhase.name());
             case FETCHING_SITES:
-                return LoginNotification.progress(this, 100, "Login in: " + mLoginPhase.name());
+                return LoginNotification.progress(this, mLoginPhase.progressPercent, "Logging in...");
             case SUCCESS:
                 return LoginNotification.success(this, "Logged in!");
             case FAILURE_EMAIL_WRONG_PASSWORD:
