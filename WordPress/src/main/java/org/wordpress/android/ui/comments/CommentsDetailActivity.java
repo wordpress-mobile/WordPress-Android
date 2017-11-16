@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -21,6 +22,7 @@ import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore;
+import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -32,7 +34,10 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PER_PAGE;
 
-public class CommentsDetailActivity extends AppCompatActivity implements CommentAdapter.OnLoadMoreListener {
+public class CommentsDetailActivity extends AppCompatActivity
+        implements CommentAdapter.OnLoadMoreListener,
+        CommentActions.OnCommentActionListener,
+        CommentActions.OnCommentChangeListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
     public static final String COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter";
 
@@ -116,6 +121,10 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
 
     @Override
     public void onLoadMore() {
+        updateComments(true);
+    }
+
+    private void updateComments(boolean loadMore) {
         if (mIsUpdatingComments) {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
             return;
@@ -127,10 +136,13 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
             return;
         }
 
+        final int offset = loadMore ? mAdapter.getCount() : 0;
         mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
-                new CommentStore.FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, mAdapter.getCount())));
-        mIsUpdatingComments = true;
-        setLoadingState(true);
+                new FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, offset)));
+        if (loadMore) {
+            mIsUpdatingComments = true;
+            setLoadingState(true);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -217,6 +229,30 @@ public class CommentsDetailActivity extends AppCompatActivity implements Comment
     private void setLoadingState(boolean visible) {
         if (mProgressBar != null) {
             mProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+    }
+
+
+    @Override
+    public void onModerateComment(final SiteModel mSite,
+                                  final CommentModel comment,
+                                  final CommentStatus newStatus) {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_ID_EXTRA, comment.getRemoteCommentId());
+        resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA, newStatus.toString());
+        setResult(RESULT_OK, resultIntent);
+        finish();
+    }
+
+    @Override
+    public void onCommentChanged(CommentActions.ChangeType changeType) {
+        switch (changeType) {
+            case EDITED:
+                loadDataInViewPager();
+                break;
+            case REPLIED:
+                updateComments(false);
+                break;
         }
     }
 }

@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -37,12 +38,13 @@ import javax.inject.Inject;
 
 public class CommentsActivity extends AppCompatActivity
         implements OnCommentSelectedListener,
-                   NotificationFragment.OnPostClickListener,
-                   CommentActions.OnCommentActionListener,
-                   CommentActions.OnCommentChangeListener {
+        NotificationFragment.OnPostClickListener,
+        CommentActions.OnCommentChangeListener {
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private static final String SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type";
+    public static final String COMMENT_MODERATE_ID_EXTRA = "commentModerateId";
+    public static final String COMMENT_MODERATE_STATUS_EXTRA = "commentModerateStatus";
     private final CommentList mTrashedComments = new CommentList();
 
     private CommentStatus mCurrentCommentStatusType = CommentStatus.ALL;
@@ -168,7 +170,7 @@ public class CommentsActivity extends AppCompatActivity
         detailIntent.putExtra(CommentsDetailActivity.COMMENT_ID_EXTRA, commentId);
         detailIntent.putExtra(CommentsDetailActivity.COMMENT_STATUS_FILTER_EXTRA, statusFilter);
         detailIntent.putExtra(WordPress.SITE, mSite);
-        startActivity(detailIntent);
+        startActivityForResult(detailIntent, 1);
     }
 
     /*
@@ -222,12 +224,19 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onModerateComment(final SiteModel site, final CommentModel comment,
-                                  final CommentStatus newStatus) {
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            long commentId = data.getLongExtra(COMMENT_MODERATE_ID_EXTRA, -1);
+            String newStatus = data.getStringExtra(COMMENT_MODERATE_STATUS_EXTRA);
+            if (commentId >= 0 && !TextUtils.isEmpty(newStatus)) {
+                onModerateComment(mCommentStore.getCommentBySiteAndRemoteId(mSite, commentId),
+                        CommentStatus.fromString(newStatus));
+            }
         }
+    }
+
+    public void onModerateComment(final CommentModel comment,
+                                  final CommentStatus newStatus) {
 
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             getListFragment().updateEmptyView();
