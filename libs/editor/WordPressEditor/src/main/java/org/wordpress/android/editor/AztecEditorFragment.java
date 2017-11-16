@@ -252,7 +252,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .addPlugin(new AudioShortcodePlugin());
 
         new BlockElementWatcher(content)
-                .add(new CaptionHandler())
+                .add(new CaptionHandler(content))
                 .install(content);
 
         mEditorFragmentListener.onEditorFragmentInitialized();
