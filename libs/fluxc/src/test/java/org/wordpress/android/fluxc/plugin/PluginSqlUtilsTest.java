@@ -60,6 +60,33 @@ public class PluginSqlUtilsTest {
         Assert.assertEquals(plugin.getSlug(), insertedPlugin.getSlug());
     }
 
+    @Test
+    public void testUpdateSitePlugin() {
+        SiteModel site = getTestSiteWithLocalId(TEST_LOCAL_SITE_ID);
+        String name = randomString("name");
+        String displayName = randomString("displayName");
+
+        // First install a plugin and retrieve the DB copy
+        PluginModel plugin = getTestPlugin(name, null);
+        plugin.setDisplayName(displayName);
+        Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(site, plugin));
+        List<PluginModel> sitePlugins = PluginSqlUtils.getSitePlugins(site);
+        Assert.assertEquals(1, sitePlugins.size());
+        PluginModel insertedPlugin = sitePlugins.get(0);
+        Assert.assertEquals(insertedPlugin.getDisplayName(), displayName);
+
+        // Then, update the plugin's display name
+        String newDisplayName = randomString("newDisplayName");
+        insertedPlugin.setDisplayName(newDisplayName);
+        Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(site, insertedPlugin));
+
+        // Assert that we still have only one plugin in DB and it has the new name & slug
+        List<PluginModel> updatedSitePluginList = PluginSqlUtils.getSitePlugins(site);
+        Assert.assertEquals(1, updatedSitePluginList.size());
+        PluginModel updatedPlugin = updatedSitePluginList.get(0);
+        Assert.assertEquals(updatedPlugin.getDisplayName(), newDisplayName);
+    }
+
     // Inserts 10 plugins with known IDs then retrieves all media and validates IDs
     @Test
     public void testGetSitePlugins() {
