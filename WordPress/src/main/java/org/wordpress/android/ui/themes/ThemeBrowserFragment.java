@@ -11,11 +11,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -47,7 +45,7 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeBrowserFragment extends Fragment implements RecyclerListener, AbsListView.OnScrollListener {
+public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     public static ThemeBrowserFragment newInstance(SiteModel site) {
         ThemeBrowserFragment fragment = new ThemeBrowserFragment();
         Bundle bundle = new Bundle();
@@ -76,7 +74,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private ThemeBrowserFragmentCallback mCallback;
     private boolean mShouldRefreshOnStart;
     private TextView mEmptyTextView;
-    private ProgressBar mProgressBar;
     private SiteModel mSite;
 
     @Inject ThemeStore mThemeStore;
@@ -124,7 +121,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
         mEmptyTextView = (TextView) view.findViewById(R.id.text_empty);
         mEmptyView = (RelativeLayout) view.findViewById(R.id.empty_view);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.theme_loading_progress_bar);
 
         configureGridView(inflater, view);
         configureSwipeToRefresh(view);
@@ -187,17 +183,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
     }
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount) && NetworkUtils.isNetworkAvailable(getActivity())) {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-    }
-
     public TextView getCurrentThemeTextView() {
         return mCurrentThemeTextView;
     }
@@ -239,7 +224,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         mGridView = (HeaderGridView) view.findViewById(R.id.theme_listview);
         addHeaderViews(inflater);
         mGridView.setRecyclerListener(this);
-        mGridView.setOnScrollListener(this);
     }
 
     private void addMainHeader(LayoutInflater inflater) {
@@ -349,16 +333,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         mAdapter.changeCursor(cursor);
         mAdapter.notifyDataSetChanged();
         setEmptyViewVisible(mAdapter.getCount() == 0);
-        mProgressBar.setVisibility(View.GONE);
-    }
-
-    private boolean shouldFetchThemesOnScroll(int lastVisibleCount, int totalItemCount) {
-        if (totalItemCount < ThemeBrowserActivity.THEME_FETCH_MAX) {
-            return false;
-        } else {
-            int numberOfColumns = mGridView.getNumColumns();
-            return lastVisibleCount >= totalItemCount - numberOfColumns;
-        }
     }
 
     private Cursor getSortedWpComThemesCursor() {

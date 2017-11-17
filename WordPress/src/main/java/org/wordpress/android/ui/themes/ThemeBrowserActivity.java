@@ -48,7 +48,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         return site != null && site.isUsingWpComRestApi() && site.getHasCapabilityEditThemeOptions();
     }
 
-    public static final int THEME_FETCH_MAX = 100;
     public static final int ACTIVATE_THEME = 1;
     public static final String THEME_ID = "theme_id";
 
