@@ -73,7 +73,9 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
             return this == LoginPhase.FAILURE
                     || this == LoginPhase.FAILURE_EMAIL_WRONG_PASSWORD
                     || this == LoginPhase.FAILURE_2FA
-                    || this == LoginPhase.FAILURE_SOCIAL_2FA;
+                    || this == LoginPhase.FAILURE_SOCIAL_2FA
+                    || this == LoginPhase.FAILURE_FETCHING_ACCOUNT
+                    || this == LoginPhase.FAILURE_CANNOT_ADD_DUPLICATE_SITE;
         }
 
         public boolean isTerminal() {
