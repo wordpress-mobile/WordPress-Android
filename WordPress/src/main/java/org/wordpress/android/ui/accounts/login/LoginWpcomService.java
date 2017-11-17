@@ -47,7 +47,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         FETCHING_ACCOUNT(50),
         FETCHING_SETTINGS(75),
         FETCHING_SITES(100),
-        SUCCESS(100),
+        SUCCESS,
         FAILURE_EMAIL_WRONG_PASSWORD,
         FAILURE_2FA,
         FAILURE_SOCIAL_2FA,
