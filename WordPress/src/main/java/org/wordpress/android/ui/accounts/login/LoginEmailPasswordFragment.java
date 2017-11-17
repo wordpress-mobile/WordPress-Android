@@ -205,9 +205,6 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         LoginWpcomService.loginWithEmailAndPassword(getContext(), mEmailAddress, mRequestedPassword, mIdToken, mService,
                 isSocialLogin);
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
-
-//        AuthenticatePayload payload = new AuthenticatePayload(mEmailAddress, mRequestedPassword);
-//        mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
     @Override
@@ -245,93 +242,6 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             EventBus.getDefault().removeStickyEvent(OnLoginStateUpdated.class);
         }
     }
-
-//    private void handleAuthError(AccountStore.AuthenticationErrorType error, String errorMessage) {
-//
-//        if (error != AccountStore.AuthenticationErrorType.NEEDS_2FA) {
-//            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, error.getClass().getSimpleName(), error.toString(), errorMessage);
-//
-//            if (isSocialLogin) {
-//                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, error.getClass().getSimpleName(), error.toString(), errorMessage);
-//            }
-//        }
-//
-//        switch (error) {
-//            case INCORRECT_USERNAME_OR_PASSWORD:
-//            case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
-//                showPasswordError();
-//                break;
-//            case NEEDS_2FA:
-//                // login credentials were correct anyway so, offer to save to SmartLock
-//                saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mPassword);
-//
-//                if (isSocialLogin) {
-//                    mLoginListener.needs2faSocialConnect(mEmailAddress, mRequestedPassword, mIdToken, mService);
-//                } else {
-//                    mLoginListener.needs2fa(mEmailAddress, mRequestedPassword);
-//                }
-//
-//                break;
-//            case INVALID_REQUEST:
-//                // TODO: FluxC: could be specific?
-//            default:
-//                AppLog.e(T.NUX, "Server response: " + errorMessage);
-//
-//                ToastUtils.showToast(getActivity(),
-//                        errorMessage == null ? getString(R.string.error_generic) : errorMessage);
-//                break;
-//        }
-//    }
-
-    // OnChanged events
-
-//    @SuppressWarnings("unused")
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onAuthenticationChanged(OnAuthenticationChanged event) {
-//        if (event.isError()) {
-//            endProgress();
-//
-//            AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
-//
-//            if (isAdded()) {
-//                handleAuthError(event.error.type, event.error.message);
-//            }
-//
-//            return;
-//        }
-//
-//        AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
-//
-//        if (isSocialLogin) {
-//            AccountStore.PushSocialLoginPayload payload = new AccountStore.PushSocialLoginPayload(mIdToken, mService);
-//            mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
-//        } else {
-//            saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mEmailAddress, mRequestedPassword);
-//            doFinishLogin();
-//        }
-//    }
-//
-//    @SuppressWarnings("unused")
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onSocialChanged(OnSocialChanged event) {
-//        if (event.isError()) {
-//            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_FAILURE);
-//            switch (event.error.type) {
-//                case UNABLE_CONNECT:
-//                    AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
-//                    break;
-//                case USER_ALREADY_ASSOCIATED:
-//                    AppLog.e(T.API, "This social account is already associated with a WordPress.com account.");
-//                    break;
-//                // Ignore other error cases.  The above are the only two we have chosen to log.
-//            }
-//
-//            doFinishLogin();
-//        } else if (!event.requiresTwoStepAuth) {
-//            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_SUCCESS);
-//            doFinishLogin();
-//        }
-//    }
 
     @Override
     protected void onLoginFinished() {

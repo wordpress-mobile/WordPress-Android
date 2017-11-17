@@ -26,10 +26,8 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 
 import javax.inject.Inject;
@@ -43,21 +41,25 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     private static final String ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE";
 
     public enum LoginPhase {
-        IDLE(0),
+        IDLE,
         AUTHENTICATING(25),
         SOCIAL_LOGIN(25),
         FETCHING_ACCOUNT(50),
         FETCHING_SETTINGS(75),
         FETCHING_SITES(100),
         SUCCESS(100),
-        FAILURE_EMAIL_WRONG_PASSWORD(100),
-        FAILURE_2FA(100),
-        FAILURE_SOCIAL_2FA(100),
-        FAILURE_FETCHING_ACCOUNT(100),
-        FAILURE_CANNOT_ADD_DUPLICATE_SITE(100),
-        FAILURE(100);
+        FAILURE_EMAIL_WRONG_PASSWORD,
+        FAILURE_2FA,
+        FAILURE_SOCIAL_2FA,
+        FAILURE_FETCHING_ACCOUNT,
+        FAILURE_CANNOT_ADD_DUPLICATE_SITE,
+        FAILURE;
 
         public final int progressPercent;
+
+        LoginPhase() {
+            this.progressPercent = 0;
+        }
 
         LoginPhase(int progressPercent) {
             this.progressPercent = progressPercent;
