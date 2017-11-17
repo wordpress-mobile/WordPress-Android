@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.themes;
 
 import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -18,6 +17,7 @@ import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -101,7 +101,9 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
             mLastSearch = query;
             search(query);
         }
-        clearFocus(mSearchView);
+        if (mSearchView != null) {
+            mSearchView.clearFocus();
+        }
         return true;
     }
 
@@ -126,7 +128,22 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     protected Cursor fetchThemes() {
-        return createResultsCursor();
+        if (mSearchResults == null) {
+            return mThemeStore.getWpComThemesCursor();
+        }
+
+        // create a copy of the search results list to filter without changing results
+        List<ThemeModel> themes = new ArrayList<>(mSearchResults);
+
+        // move active theme to the top of the list if it's in the search results
+        moveActiveThemeToFront(themes);
+
+        // remove premium themes if plan doesn't support it
+        if (!shouldShowPremiumThemes()) {
+            removeNonActivePremiumThemes(themes);
+        }
+
+        return createCursorForThemesList(themes);
     }
 
     @Override
@@ -146,22 +163,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         refreshView();
     }
 
-    private Cursor createResultsCursor() {
-        if (mSearchResults == null) {
-            return mThemeStore.getWpComThemesCursor();
-        }
-
-        MatrixCursor cursor = new MatrixCursor(ThemeBrowserAdapter.THEME_COLUMNS);
-        for (ThemeModel theme : mSearchResults) {
-            Object[] values = new Object[] {
-                    theme.getId(), theme.getThemeId(), theme.getName(), theme.getScreenshotUrl(),
-                    theme.getCurrency(), theme.getPrice(), theme.getActive()
-            };
-            cursor.addRow(values);
-        }
-        return cursor;
-    }
-
     private void search(String searchTerm) {
         mLastSearch = searchTerm;
         if (NetworkUtils.isNetworkAvailable(mThemeBrowserActivity)) {
@@ -176,11 +177,5 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setQuery(mLastSearch, true);
         mSearchView.setMaxWidth(SEARCH_VIEW_MAX_WIDTH);
-    }
-
-    private void clearFocus(View view) {
-        if (view != null) {
-            view.clearFocus();
-        }
     }
 }

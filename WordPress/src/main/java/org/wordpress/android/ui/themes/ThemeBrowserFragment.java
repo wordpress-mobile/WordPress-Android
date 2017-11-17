@@ -11,11 +11,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,6 +26,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
+import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -47,7 +46,7 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeBrowserFragment extends Fragment implements RecyclerListener, AbsListView.OnScrollListener {
+public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     public static ThemeBrowserFragment newInstance(SiteModel site) {
         ThemeBrowserFragment fragment = new ThemeBrowserFragment();
         Bundle bundle = new Bundle();
@@ -76,7 +75,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private ThemeBrowserFragmentCallback mCallback;
     private boolean mShouldRefreshOnStart;
     private TextView mEmptyTextView;
-    private ProgressBar mProgressBar;
     private SiteModel mSite;
 
     @Inject ThemeStore mThemeStore;
@@ -124,7 +122,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
         mEmptyTextView = (TextView) view.findViewById(R.id.text_empty);
         mEmptyView = (RelativeLayout) view.findViewById(R.id.empty_view);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.theme_loading_progress_bar);
 
         configureGridView(inflater, view);
         configureSwipeToRefresh(view);
@@ -187,17 +184,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
     }
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount) && NetworkUtils.isNetworkAvailable(getActivity())) {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-    }
-
     public TextView getCurrentThemeTextView() {
         return mCurrentThemeTextView;
     }
@@ -239,7 +225,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         mGridView = (HeaderGridView) view.findViewById(R.id.theme_listview);
         addHeaderViews(inflater);
         mGridView.setRecyclerListener(this);
-        mGridView.setOnScrollListener(this);
     }
 
     private void addMainHeader(LayoutInflater inflater) {
@@ -349,16 +334,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         mAdapter.changeCursor(cursor);
         mAdapter.notifyDataSetChanged();
         setEmptyViewVisible(mAdapter.getCount() == 0);
-        mProgressBar.setVisibility(View.GONE);
-    }
-
-    private boolean shouldFetchThemesOnScroll(int lastVisibleCount, int totalItemCount) {
-        if (totalItemCount < ThemeBrowserActivity.THEME_FETCH_MAX) {
-            return false;
-        } else {
-            int numberOfColumns = mGridView.getNumColumns();
-            return lastVisibleCount >= totalItemCount - numberOfColumns;
-        }
     }
 
     private Cursor getSortedWpComThemesCursor() {
@@ -368,7 +343,9 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         moveActiveThemeToFront(wpComThemes);
 
         // then remove all premium themes from the list with an exception for the active theme
-        removeNonActivePremiumThemes(wpComThemes);
+        if (!shouldShowPremiumThemes()) {
+            removeNonActivePremiumThemes(wpComThemes);
+        }
 
         // lastly convert the list into a Cursor for the adapter
         return createCursorForThemesList(wpComThemes);
@@ -405,7 +382,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         return new MergeCursor(cursors);
     }
 
-    private void moveActiveThemeToFront(final List<ThemeModel> themes) {
+    protected void moveActiveThemeToFront(final List<ThemeModel> themes) {
         if (themes == null || themes.isEmpty() || TextUtils.isEmpty(mCurrentThemeId)) {
             return;
         }
@@ -426,7 +403,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
     }
 
-    private void removeNonActivePremiumThemes(final List<ThemeModel> themes) {
+    protected void removeNonActivePremiumThemes(final List<ThemeModel> themes) {
         if (themes == null || themes.isEmpty()) {
             return;
         }
@@ -449,7 +426,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
             Iterator<ThemeModel> wpComIterator = wpComThemes.iterator();
             while (wpComIterator.hasNext()) {
                 ThemeModel wpComTheme = wpComIterator.next();
-                if (StringUtils.equals(wpComTheme.getThemeId(), uploadedTheme.getThemeId())) {
+                if (StringUtils.equals(wpComTheme.getThemeId(), uploadedTheme.getThemeId().replace("-wpcom", ""))) {
                     wpComIterator.remove();
                     break;
                 }
@@ -457,7 +434,18 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
     }
 
-    private Cursor createCursorForThemesList(List<ThemeModel> themes) {
+    protected boolean shouldShowPremiumThemes() {
+        if (mSite == null) {
+            return false;
+        }
+        long planId = mSite.getPlanId();
+        return planId == PlansConstants.PREMIUM_PLAN_ID
+                || planId == PlansConstants.BUSINESS_PLAN_ID
+                || planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID
+                || planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID;
+    }
+
+    protected Cursor createCursorForThemesList(List<ThemeModel> themes) {
         final MatrixCursor cursor = new MatrixCursor(ThemeBrowserAdapter.THEME_COLUMNS);
         for (ThemeModel theme : themes) {
             cursor.addRow(ThemeBrowserAdapter.createThemeCursorRow(theme));

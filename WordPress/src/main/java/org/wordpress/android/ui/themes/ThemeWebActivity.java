@@ -19,6 +19,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
     public static final String IS_CURRENT_THEME = "is_current_theme";
     public static final String IS_PREMIUM_THEME = "is_premium_theme";
     public static final String THEME_NAME = "theme_name";
+    public static final String THEME_HTTP_PREFIX = "http";
+    public static final String THEME_HTTPS_PROTOCOL = "https://";
 
     private static final String THEME_DOMAIN_PUBLIC = "pub";
     private static final String THEME_DOMAIN_PREMIUM = "premium";
