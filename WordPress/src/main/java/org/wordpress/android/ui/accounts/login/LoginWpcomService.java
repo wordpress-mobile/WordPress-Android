@@ -182,14 +182,18 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         return new Intent(this, WPMainActivity.class);
     }
 
-    private Notification getProgressNotification(int progress, String content) {
+    private NotificationCompat.Builder getNotificationBuilder(String content) {
         return new NotificationCompat.Builder(this)
                 .setContentTitle(content)
                 .setSmallIcon(R.drawable.ic_my_sites_24dp)
                 .setColor(getResources().getColor(R.color.blue_wordpress))
                 .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
                         R.mipmap.app_icon))
-                .setAutoCancel(true)
+                .setAutoCancel(true);
+    }
+
+    private Notification getProgressNotification(int progress, String content) {
+        return getNotificationBuilder(content)
                 .setContentIntent(PendingIntent.getActivity(LoginWpcomService.this,
                         AutoForeground.NOTIFICATION_ID_PROGRESS,
                         getPendingIntent(),
@@ -199,13 +203,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     }
 
     private Notification getSuccessNotification(String content) {
-        return new NotificationCompat.Builder(this)
-                .setContentTitle(content)
-                .setSmallIcon(R.drawable.ic_my_sites_24dp)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                        R.mipmap.app_icon))
-                .setAutoCancel(true)
+        return getNotificationBuilder(content)
                 .setContentIntent(PendingIntent.getActivity(LoginWpcomService.this,
                         AutoForeground.NOTIFICATION_ID_SUCCESS,
                         getPendingIntent(),
@@ -214,13 +212,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     }
 
     private Notification getFailureNotification(String content) {
-        return new NotificationCompat.Builder(this)
-                .setContentTitle(content)
-                .setSmallIcon(R.drawable.ic_my_sites_24dp)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                        R.mipmap.app_icon))
-                .setAutoCancel(true)
+        return getNotificationBuilder(content)
                 .setContentIntent(PendingIntent.getActivity(LoginWpcomService.this,
                         AutoForeground.NOTIFICATION_ID_FAILURE,
                         getPendingIntent(),
@@ -266,7 +258,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         switch (error) {
             case INCORRECT_USERNAME_OR_PASSWORD:
             case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
-                setState(LoginPhase.FAILURE);
+                setState(LoginPhase.FAILURE_EMAIL_WRONG_PASSWORD);
                 break;
             case NEEDS_2FA:
                 // login credentials were correct anyway so, offer to save to SmartLock
