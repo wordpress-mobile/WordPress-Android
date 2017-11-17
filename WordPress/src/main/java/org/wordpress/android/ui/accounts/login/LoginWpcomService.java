@@ -276,7 +276,6 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     }
 
     private void fetchAccount() {
-        startPostLoginServices();
         setState(LoginPhase.FETCHING_ACCOUNT);
         mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
     }
