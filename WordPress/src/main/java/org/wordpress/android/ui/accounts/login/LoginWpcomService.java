@@ -1,12 +1,9 @@
 package org.wordpress.android.ui.accounts.login;
 
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -23,7 +20,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.login.LoginWpcomService.OnLoginStateUpdated;
-import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -129,23 +125,23 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     public Notification getNotification() {
         switch (mLoginPhase) {
             case AUTHENTICATING:
-                return getProgressNotification(25, "Login in: " + mLoginPhase.name());
+                return LoginNotification.progress(this, 25, "Login in: " + mLoginPhase.name());
             case FETCHING_ACCOUNT:
-                return getProgressNotification(50, "Login in: " + mLoginPhase.name());
+                return LoginNotification.progress(this, 50, "Login in: " + mLoginPhase.name());
             case FETCHING_SETTINGS:
-                return getProgressNotification(75, "Login in: " + mLoginPhase.name());
+                return LoginNotification.progress(this, 75, "Login in: " + mLoginPhase.name());
             case FETCHING_SITES:
-                return getProgressNotification(100, "Login in: " + mLoginPhase.name());
+                return LoginNotification.progress(this, 100, "Login in: " + mLoginPhase.name());
             case SUCCESS:
-                return getSuccessNotification("Logged in!");
+                return LoginNotification.success(this, "Logged in!");
             case FAILURE_EMAIL_WRONG_PASSWORD:
-                return getFailureNotification("Wrong password :(");
+                return LoginNotification.failure(this, "Wrong password :(");
             case FAILURE_2FA:
-                return getFailureNotification("Need to input a 2FA code to continue.");
+                return LoginNotification.failure(this, "Need to input a 2FA code to continue.");
             case FAILURE_SOCIAL_2FA:
-                return getFailureNotification("Need to input a 2FA code to continue.");
+                return LoginNotification.failure(this, "Need to input a 2FA code to continue.");
             case FAILURE:
-                return getFailureNotification("Login failed :(");
+                return LoginNotification.failure(this, "Login failed :(");
         }
 
         return null;
@@ -176,48 +172,6 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         mDispatcher.unregister(this);
         AppLog.i(T.MAIN, "LoginWpcomService > Destroyed");
         super.onDestroy();
-    }
-
-    private Intent getPendingIntent() {
-        return new Intent(this, WPMainActivity.class);
-    }
-
-    private NotificationCompat.Builder getNotificationBuilder(String content) {
-        return new NotificationCompat.Builder(this)
-                .setContentTitle(content)
-                .setSmallIcon(R.drawable.ic_my_sites_24dp)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                        R.mipmap.app_icon))
-                .setAutoCancel(true);
-    }
-
-    private Notification getProgressNotification(int progress, String content) {
-        return getNotificationBuilder(content)
-                .setContentIntent(PendingIntent.getActivity(LoginWpcomService.this,
-                        AutoForeground.NOTIFICATION_ID_PROGRESS,
-                        getPendingIntent(),
-                        PendingIntent.FLAG_ONE_SHOT))
-                .setProgress(100, progress, false)
-                .build();
-    }
-
-    private Notification getSuccessNotification(String content) {
-        return getNotificationBuilder(content)
-                .setContentIntent(PendingIntent.getActivity(LoginWpcomService.this,
-                        AutoForeground.NOTIFICATION_ID_SUCCESS,
-                        getPendingIntent(),
-                        PendingIntent.FLAG_ONE_SHOT))
-                .build();
-    }
-
-    private Notification getFailureNotification(String content) {
-        return getNotificationBuilder(content)
-                .setContentIntent(PendingIntent.getActivity(LoginWpcomService.this,
-                        AutoForeground.NOTIFICATION_ID_FAILURE,
-                        getPendingIntent(),
-                        PendingIntent.FLAG_ONE_SHOT))
-                .build();
     }
 
     @Override
