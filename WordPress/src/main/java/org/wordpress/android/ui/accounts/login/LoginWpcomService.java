@@ -128,6 +128,11 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     }
 
     @Override
+    public boolean isIdle() {
+        return mLoginPhase == LoginPhase.IDLE;
+    }
+
+    @Override
     public boolean isInProgress() {
         return mLoginPhase.isInProgress();
     }

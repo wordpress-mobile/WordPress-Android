@@ -55,11 +55,19 @@ public abstract class AutoForeground<EventClass> extends Service {
 
     protected abstract EventClass getCurrentStateEvent();
     protected abstract Notification getNotification();
+    protected abstract boolean isIdle();
     protected abstract boolean isInProgress();
     protected abstract boolean isError();
 
     protected AutoForeground(Class<EventClass> eventClass) {
         mEventClass = eventClass;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        notifyState();
     }
 
     @Nullable
@@ -124,6 +132,11 @@ public abstract class AutoForeground<EventClass> extends Service {
         }
 
         // ok, no connected clients so, update might need to be delivered to a notification as well
+
+        if (isIdle()) {
+            // no need to have a notification when idle
+            return;
+        }
 
         if (isInProgress()) {
             // operation still is progress so, update the notification
