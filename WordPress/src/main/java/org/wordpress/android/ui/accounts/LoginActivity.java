@@ -30,6 +30,7 @@ import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
+import org.wordpress.android.ui.accounts.login.LoginWpcomService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
@@ -305,7 +306,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         LoginEmailPasswordFragment loginEmailPasswordFragment =
                 LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
-        LoginEmailPasswordFragment.clearLoginServiceState();
+        LoginWpcomService.clearLoginServiceState();
     }
 
     @Override
@@ -318,7 +319,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void needs2fa(String email, String password) {
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, password);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
-        LoginEmailPasswordFragment.clearLoginServiceState();
+        LoginWpcomService.clearLoginServiceState();
     }
 
     @Override
@@ -335,7 +336,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocialConnect(email, password, idToken, service);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
-        LoginEmailPasswordFragment.clearLoginServiceState();
+        LoginWpcomService.clearLoginServiceState();
     }
 
     @Override

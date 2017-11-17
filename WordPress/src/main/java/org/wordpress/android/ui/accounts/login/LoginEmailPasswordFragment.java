@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -225,7 +224,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mPasswordInput.setError(null);
 
-        clearLoginServiceState();
+        LoginWpcomService.clearLoginServiceState();
     }
 
     private void showPasswordError() {
@@ -234,13 +233,6 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     private void showError(String error) {
         mPasswordInput.setError(error);
-    }
-
-    public static void clearLoginServiceState() {
-        OnLoginStateUpdated onLoginStateUpdated = EventBus.getDefault().removeStickyEvent(OnLoginStateUpdated.class);
-        if (onLoginStateUpdated != null && onLoginStateUpdated.state.isTerminal()) {
-            EventBus.getDefault().removeStickyEvent(OnLoginStateUpdated.class);
-        }
     }
 
     @Override

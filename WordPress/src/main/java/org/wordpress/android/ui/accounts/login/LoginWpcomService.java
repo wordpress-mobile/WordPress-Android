@@ -120,6 +120,13 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         context.startService(intent);
     }
 
+    public static void clearLoginServiceState() {
+        OnLoginStateUpdated onLoginStateUpdated = EventBus.getDefault().removeStickyEvent(OnLoginStateUpdated.class);
+        if (onLoginStateUpdated != null && onLoginStateUpdated.state.isTerminal()) {
+            EventBus.getDefault().removeStickyEvent(OnLoginStateUpdated.class);
+        }
+    }
+
     public LoginWpcomService() {
         super(OnLoginStateUpdated.class);
     }
