@@ -328,7 +328,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
                 nonceAuthenticator, nonceBackup, nonceSms);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
-        LoginEmailPasswordFragment.clearLoginServiceState();
     }
 
     @Override
