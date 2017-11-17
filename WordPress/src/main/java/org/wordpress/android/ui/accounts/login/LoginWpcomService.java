@@ -275,7 +275,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         NotificationsUpdateService.startService(getApplicationContext());
     }
 
-    private void doFinishLogin() {
+    private void fetchAccount() {
         startPostLoginServices();
         setState(LoginPhase.FETCHING_ACCOUNT);
         mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
@@ -308,7 +308,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
             mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
         } else {
             signalCredentialsOK();
-            doFinishLogin();
+            fetchAccount();
         }
     }
 
@@ -327,10 +327,10 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
                 // Ignore other error cases.  The above are the only two we have chosen to log.
             }
 
-            doFinishLogin();
+            fetchAccount();
         } else if (!event.requiresTwoStepAuth) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_SUCCESS);
-            doFinishLogin();
+            fetchAccount();
         }
     }
 
