@@ -121,10 +121,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     }
 
     public static void clearLoginServiceState() {
-        OnLoginStateUpdated onLoginStateUpdated = EventBus.getDefault().removeStickyEvent(OnLoginStateUpdated.class);
-        if (onLoginStateUpdated != null && onLoginStateUpdated.state.isTerminal()) {
-            EventBus.getDefault().removeStickyEvent(OnLoginStateUpdated.class);
-        }
+        EventBus.getDefault().removeStickyEvent(OnLoginStateUpdated.class);
     }
 
     public LoginWpcomService() {
