@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("WeakerAccess")
-public class ThemeWPComResponse {
-    public class MultipleWPComThemesResponse {
-        public Map<String, ThemeWPComResponse> themes;
+public class WPComThemeResponse {
+    public class WPComThemeMapResponse {
+        public Map<String, WPComThemeResponse> themes;
         public int count;
     }
 
-    public class ThemeArrayResponse {
-        public List<ThemeWPComResponse> themes;
+    public class ThemeListResponse {
+        public List<WPComThemeResponse> themes;
     }
 
     public String id;
