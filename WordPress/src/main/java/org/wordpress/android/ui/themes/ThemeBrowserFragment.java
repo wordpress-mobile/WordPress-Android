@@ -26,6 +26,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
+import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -342,7 +343,9 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         moveActiveThemeToFront(wpComThemes);
 
         // then remove all premium themes from the list with an exception for the active theme
-        removeNonActivePremiumThemes(wpComThemes);
+        if (!shouldShowPremiumThemes()) {
+            removeNonActivePremiumThemes(wpComThemes);
+        }
 
         // lastly convert the list into a Cursor for the adapter
         return createCursorForThemesList(wpComThemes);
@@ -379,7 +382,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         return new MergeCursor(cursors);
     }
 
-    private void moveActiveThemeToFront(final List<ThemeModel> themes) {
+    protected void moveActiveThemeToFront(final List<ThemeModel> themes) {
         if (themes == null || themes.isEmpty() || TextUtils.isEmpty(mCurrentThemeId)) {
             return;
         }
@@ -400,7 +403,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         }
     }
 
-    private void removeNonActivePremiumThemes(final List<ThemeModel> themes) {
+    protected void removeNonActivePremiumThemes(final List<ThemeModel> themes) {
         if (themes == null || themes.isEmpty()) {
             return;
         }
@@ -431,7 +434,18 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         }
     }
 
-    private Cursor createCursorForThemesList(List<ThemeModel> themes) {
+    protected boolean shouldShowPremiumThemes() {
+        if (mSite == null) {
+            return false;
+        }
+        long planId = mSite.getPlanId();
+        return planId == PlansConstants.PREMIUM_PLAN_ID
+                || planId == PlansConstants.BUSINESS_PLAN_ID
+                || planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID
+                || planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID;
+    }
+
+    protected Cursor createCursorForThemesList(List<ThemeModel> themes) {
         final MatrixCursor cursor = new MatrixCursor(ThemeBrowserAdapter.THEME_COLUMNS);
         for (ThemeModel theme : themes) {
             cursor.addRow(ThemeBrowserAdapter.createThemeCursorRow(theme));
