@@ -142,13 +142,13 @@ class ThemeBrowserAdapter extends CursorAdapter {
         }
 
         // catch the case where a URL has no protocol
-        if (!screenshotURL.startsWith("http")) {
+        if (!screenshotURL.startsWith(ThemeWebActivity.THEME_HTTP_PREFIX)) {
             // some APIs return a URL starting with // so the protocol can be supplied by the client
             // strip // before adding the protocol
             if (screenshotURL.startsWith("//")) {
                 screenshotURL = screenshotURL.substring(2);
             }
-            screenshotURL = "https://" + screenshotURL;
+            screenshotURL = ThemeWebActivity.THEME_HTTPS_PROTOCOL + screenshotURL;
         }
 
         configureImageView(themeViewHolder, screenshotURL, themeId, isCurrent);
