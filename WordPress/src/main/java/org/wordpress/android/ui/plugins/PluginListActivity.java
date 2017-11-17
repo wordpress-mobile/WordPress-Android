@@ -29,7 +29,7 @@ import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginInfoChanged;
-import org.wordpress.android.fluxc.store.PluginStore.OnPluginsChanged;
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginsChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -78,10 +78,10 @@ public class PluginListActivity extends AppCompatActivity {
         }
 
         mDispatcher.register(this);
-        mDispatcher.dispatch(PluginActionBuilder.newFetchPluginsAction(mSite));
+        mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mSite));
 
         setupViews();
-        if (mPluginStore.getPlugins(mSite).size() == 0) {
+        if (mPluginStore.getSitePlugins(mSite).size() == 0) {
             mProgressBar.setVisibility(View.VISIBLE);
         }
     }
@@ -117,15 +117,16 @@ public class PluginListActivity extends AppCompatActivity {
     }
 
     private void refreshPluginList() {
-        mAdapter.setPlugins(mPluginStore.getPlugins(mSite));
+        mAdapter.setPlugins(mPluginStore.getSitePlugins(mSite));
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPluginsChanged(OnPluginsChanged event) {
+    public void onSitePluginsChanged(OnSitePluginsChanged event) {
         mProgressBar.setVisibility(View.GONE);
         if (event.isError()) {
-            ToastUtils.showToast(this, "An error occurred while fetching the plugins: " + event.error.message);
+            ToastUtils.showToast(this, "An error occurred while fetching the plugins: "
+                    + event.error.message);
             return;
         }
         refreshPluginList();
