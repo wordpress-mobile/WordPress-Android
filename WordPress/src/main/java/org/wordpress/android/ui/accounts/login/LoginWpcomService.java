@@ -84,13 +84,13 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     public static class OnLoginStateUpdated {
         public final LoginPhase state;
 
-        public OnLoginStateUpdated(LoginPhase state) {
+        OnLoginStateUpdated(LoginPhase state) {
             this.state = state;
         }
     }
 
-    public static class OnCredentialsOK {
-        public OnCredentialsOK() {}
+    static class OnCredentialsOK {
+        OnCredentialsOK() {}
     }
 
     @Inject Dispatcher mDispatcher;
@@ -99,8 +99,6 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
 
     private LoginPhase mLoginPhase = LoginPhase.IDLE;
 
-    private String mEmail;
-    private String mPassword;
     private String mIdToken;
     private String mService;
     private boolean isSocialLogin;
@@ -200,16 +198,16 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
 
         setState(LoginPhase.AUTHENTICATING);
 
-        mEmail = intent.getStringExtra(ARG_EMAIL);
-        mPassword = intent.getStringExtra(ARG_PASSWORD);
+        String email = intent.getStringExtra(ARG_EMAIL);
+        String password = intent.getStringExtra(ARG_PASSWORD);
 
         mIdToken = intent.getStringExtra(ARG_SOCIAL_ID_TOKEN);
         mService = intent.getStringExtra(ARG_SOCIAL_SERVICE);
         isSocialLogin = intent.getBooleanExtra(ARG_SOCIAL_LOGIN, false);
 
-        AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(mEmail, mPassword);
+        AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(email, password);
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
-        AppLog.i(T.NUX, "User tries to log in wpcom. Email: " + mEmail);
+        AppLog.i(T.NUX, "User tries to log in wpcom. Email: " + email);
 
         return START_REDELIVER_INTENT;
     }
