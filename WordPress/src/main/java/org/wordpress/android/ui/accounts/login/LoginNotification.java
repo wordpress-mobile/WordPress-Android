@@ -22,8 +22,14 @@ class LoginNotification {
         return resumeIntent;
     }
 
-    private static NotificationCompat.Builder getNotificationBuilder(Context context, @StringRes int content) {
+    private static NotificationCompat.Builder getNotificationBuilder(Context context, @StringRes int title,
+            @StringRes int content) {
+        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+        bigTextStyle.setBigContentTitle(context.getString(title));
+        bigTextStyle.bigText(context.getString(content));
+
         return new NotificationCompat.Builder(context)
+                .setStyle(bigTextStyle)
                 .setSmallIcon(R.drawable.ic_my_sites_24dp)
                 .setColor(context.getResources().getColor(R.color.blue_wordpress))
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.app_icon))
@@ -31,7 +37,7 @@ class LoginNotification {
     }
 
     static Notification progress(Context context, int progress, @StringRes int content) {
-        return getNotificationBuilder(context, content)
+        return getNotificationBuilder(context, R.string.notification_login_title_in_progress, content)
                 .setContentIntent(PendingIntent.getActivity(
                         context,
                         AutoForeground.NOTIFICATION_ID_PROGRESS,
@@ -42,7 +48,7 @@ class LoginNotification {
     }
 
     static Notification success(Context context, @StringRes int content) {
-        return getNotificationBuilder(context, content)
+        return getNotificationBuilder(context, R.string.notification_login_title_success, content)
                 .setContentIntent(PendingIntent.getActivity(
                         context,
                         AutoForeground.NOTIFICATION_ID_SUCCESS,
@@ -52,12 +58,7 @@ class LoginNotification {
     }
 
     static Notification failure(Context context, @StringRes int content) {
-        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
-        bigTextStyle.setBigContentTitle(context.getString(R.string.notification_login_stopped));
-        bigTextStyle.bigText(context.getString(content));
-
-        return getNotificationBuilder(context, content)
-                .setStyle(bigTextStyle)
+        return getNotificationBuilder(context, R.string.notification_login_title_stopped, content)
                 .setContentIntent(PendingIntent.getActivity(
                         context,
                         AutoForeground.NOTIFICATION_ID_FAILURE,
