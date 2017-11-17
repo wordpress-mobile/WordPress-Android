@@ -277,12 +277,8 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
     }
 
-    private EventBus getEventBus() {
-        return EventBus.getDefault();
-    }
-
     private void signalCredentialsOK() {
-        getEventBus().post(new OnCredentialsOK());
+        EventBus.getDefault().post(new OnCredentialsOK());
     }
 
     // OnChanged events
