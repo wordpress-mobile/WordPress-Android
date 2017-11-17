@@ -31,7 +31,7 @@ android {
         dexInProcess = true
     }
 
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "25.0.3"
 
     defaultConfig {
