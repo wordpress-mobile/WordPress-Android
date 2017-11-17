@@ -84,7 +84,10 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         mService = getArguments().getString(ARG_SOCIAL_SERVICE);
         isSocialLogin = getArguments().getBoolean(ARG_SOCIAL_LOGIN);
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState == null) {
+            // cleanup the service state on first appearance
+            LoginWpcomService.clearLoginServiceState();
+        } else {
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
         }
     }
@@ -275,10 +278,16 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             case FAILURE_2FA:
                 onLoginFinished(false);
                 mLoginListener.needs2fa(mEmailAddress, mRequestedPassword);
+
+                // consume the state so we don't relauch the 2FA dialog if user backs up
+                LoginWpcomService.clearLoginServiceState();
                 break;
             case FAILURE_SOCIAL_2FA:
                 onLoginFinished(false);
                 mLoginListener.needs2faSocialConnect(mEmailAddress, mRequestedPassword, mIdToken, mService);
+
+                // consume the state so we don't relauch the 2FA dialog if user backs up
+                LoginWpcomService.clearLoginServiceState();
                 break;
             case FAILURE_FETCHING_ACCOUNT:
                 onLoginFinished(false);
