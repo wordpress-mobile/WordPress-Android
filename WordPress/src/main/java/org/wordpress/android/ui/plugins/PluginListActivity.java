@@ -29,7 +29,7 @@ import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginInfoChanged;
-import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginsChanged;
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginsFetched;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -122,7 +122,7 @@ public class PluginListActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSitePluginsChanged(OnSitePluginsChanged event) {
+    public void onSitePluginsFetched(OnSitePluginsFetched event) {
         mProgressBar.setVisibility(View.GONE);
         if (event.isError()) {
             ToastUtils.showToast(this, "An error occurred while fetching the plugins: "
