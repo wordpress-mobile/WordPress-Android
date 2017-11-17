@@ -426,7 +426,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
             Iterator<ThemeModel> wpComIterator = wpComThemes.iterator();
             while (wpComIterator.hasNext()) {
                 ThemeModel wpComTheme = wpComIterator.next();
-                if (StringUtils.equals(wpComTheme.getThemeId(), uploadedTheme.getThemeId())) {
+                if (StringUtils.equals(wpComTheme.getThemeId(), uploadedTheme.getThemeId().replace("-wpcom", ""))) {
                     wpComIterator.remove();
                     break;
                 }
