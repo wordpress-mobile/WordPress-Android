@@ -158,7 +158,10 @@ public class AppPrefs {
         ASKED_PERMISSION_LOCATION_FINE,
 
         // wizard style login flow active
-        LOGIN_WIZARD_STYLE_ACTIVE
+        LOGIN_WIZARD_STYLE_ACTIVE,
+
+        // Updated after WP.com themes have been fetched
+        LAST_WP_COM_THEMES_SYNC
     }
 
     private static SharedPreferences prefs() {
@@ -681,5 +684,13 @@ public class AppPrefs {
         // store in prefs
         String idsAsString = TextUtils.join(",", currentIds);
         setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
+    }
+
+    public static long getLastWpComThemeSync() {
+        return getLong(UndeletablePrefKey.LAST_WP_COM_THEMES_SYNC);
+    }
+
+    public static void setLastWpComThemeSync(long time) {
+        setLong(UndeletablePrefKey.LAST_WP_COM_THEMES_SYNC, time);
     }
 }
