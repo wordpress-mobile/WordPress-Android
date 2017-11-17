@@ -378,6 +378,14 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 onLoginFinished(false);
                 mLoginListener.needs2faSocialConnect(mEmailAddress, mRequestedPassword, mIdToken, mService);
                 break;
+            case FAILURE_FETCHING_ACCOUNT:
+                onLoginFinished(false);
+                showError(getString(R.string.error_fetch_my_profile));
+                break;
+            case FAILURE_CANNOT_ADD_DUPLICATE_SITE:
+                onLoginFinished(false);
+                showError(getString(R.string.cannot_add_duplicate_site));
+                break;
             case FAILURE:
                 onLoginFinished(false);
                 showError(getString(R.string.error_generic));

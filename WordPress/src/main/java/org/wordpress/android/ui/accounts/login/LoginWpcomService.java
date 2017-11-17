@@ -53,6 +53,8 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         FAILURE_EMAIL_WRONG_PASSWORD(100),
         FAILURE_2FA(100),
         FAILURE_SOCIAL_2FA(100),
+        FAILURE_FETCHING_ACCOUNT(100),
+        FAILURE_CANNOT_ADD_DUPLICATE_SITE(100),
         FAILURE(100);
 
         public final int progressPercent;
@@ -323,9 +325,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     public void onAccountChanged(AccountStore.OnAccountChanged event) {
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "onAccountChanged has error: " + event.error.type + " - " + event.error.message);
-//            ToastUtils.showToast(getContext(), R.string.error_fetch_my_profile);
-//            onLoginFinished(false);
-            setState(LoginPhase.FAILURE);
+            setState(LoginPhase.FAILURE_FETCHING_ACCOUNT);
             return;
         }
 
@@ -346,7 +346,6 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "onSiteChanged has error: " + event.error.type + " - " + event.error.toString());
             if (event.error.type != SiteStore.SiteErrorType.DUPLICATE_SITE) {
-//                onLoginFinished(false);
                 setState(LoginPhase.FAILURE);
                 return;
             }
@@ -354,14 +353,12 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
             if (event.rowsAffected == 0) {
                 // If there is a duplicate site and not any site has been added, show an error and
                 // stop the sign in process
-//                ToastUtils.showToast(getContext(), R.string.cannot_add_duplicate_site);
-//                onLoginFinished(false);
-                setState(LoginPhase.FAILURE);
+                setState(LoginPhase.FAILURE_CANNOT_ADD_DUPLICATE_SITE);
                 return;
             } else {
                 // If there is a duplicate site, notify the user something could be wrong,
                 // but continue the sign in process
-//                ToastUtils.showToast(getContext(), R.string.duplicate_site_detected);
+                ToastUtils.showToast(this, R.string.duplicate_site_detected);
             }
         }
 
