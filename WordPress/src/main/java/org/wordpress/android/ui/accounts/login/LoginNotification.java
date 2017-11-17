@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 
 import org.wordpress.android.R;
@@ -21,16 +22,15 @@ class LoginNotification {
         return resumeIntent;
     }
 
-    private static NotificationCompat.Builder getNotificationBuilder(Context context, String content) {
+    private static NotificationCompat.Builder getNotificationBuilder(Context context, @StringRes int content) {
         return new NotificationCompat.Builder(context)
-                .setContentTitle(content)
                 .setSmallIcon(R.drawable.ic_my_sites_24dp)
                 .setColor(context.getResources().getColor(R.color.blue_wordpress))
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.app_icon))
                 .setAutoCancel(true);
     }
 
-    static Notification progress(Context context, int progress, String content) {
+    static Notification progress(Context context, int progress, @StringRes int content) {
         return getNotificationBuilder(context, content)
                 .setContentIntent(PendingIntent.getActivity(
                         context,
@@ -41,7 +41,7 @@ class LoginNotification {
                 .build();
     }
 
-    static Notification success(Context context, String content) {
+    static Notification success(Context context, @StringRes int content) {
         return getNotificationBuilder(context, content)
                 .setContentIntent(PendingIntent.getActivity(
                         context,
@@ -51,8 +51,13 @@ class LoginNotification {
                 .build();
     }
 
-    static Notification failure(Context context, String content) {
+    static Notification failure(Context context, @StringRes int content) {
+        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+        bigTextStyle.setBigContentTitle(context.getString(R.string.notification_login_stopped));
+        bigTextStyle.bigText(context.getString(content));
+
         return getNotificationBuilder(context, content)
+                .setStyle(bigTextStyle)
                 .setContentIntent(PendingIntent.getActivity(
                         context,
                         AutoForeground.NOTIFICATION_ID_FAILURE,

@@ -2016,5 +2016,11 @@
     <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+    <string name="notification_logging_in">Logging in…</string>
+    <string name="notification_logged_in">Logged in successfully!</string>
+    <string name="notification_login_stopped">Login stopped</string>
+    <string name="notification_error_wrong_password">Please double check your password to continue.</string>
+    <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
+    <string name="notification_login_failed">An error has occurred.</string>
 
 </resources>

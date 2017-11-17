@@ -151,17 +151,17 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
             case FETCHING_ACCOUNT:
             case FETCHING_SETTINGS:
             case FETCHING_SITES:
-                return LoginNotification.progress(this, mLoginPhase.progressPercent, "Logging in...");
+                return LoginNotification.progress(this, mLoginPhase.progressPercent, R.string.notification_logging_in);
             case SUCCESS:
-                return LoginNotification.success(this, "Logged in!");
+                return LoginNotification.success(this, R.string.notification_logged_in);
             case FAILURE_EMAIL_WRONG_PASSWORD:
-                return LoginNotification.failure(this, "Wrong password :(");
+                return LoginNotification.failure(this, R.string.notification_error_wrong_password);
             case FAILURE_2FA:
-                return LoginNotification.failure(this, "Need to input a 2FA code to continue.");
+                return LoginNotification.failure(this, R.string.notification_2fa_needed);
             case FAILURE_SOCIAL_2FA:
-                return LoginNotification.failure(this, "Need to input a 2FA code to continue.");
+                return LoginNotification.failure(this, R.string.notification_2fa_needed);
             case FAILURE:
-                return LoginNotification.failure(this, "Login failed :(");
+                return LoginNotification.failure(this, R.string.notification_login_failed);
         }
 
         return null;
