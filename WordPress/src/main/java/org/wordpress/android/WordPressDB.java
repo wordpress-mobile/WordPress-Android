@@ -8,7 +8,6 @@ import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
-import org.wordpress.android.datasets.ThemeTable;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -21,11 +20,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 58;
+    private static final int DATABASE_VERSION = 59;
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
     private static final String NOTES_TABLE = "notes";
+    private static final String THEMES_TABLE = "themes";
 
     // add new table for QuickPress homescreen shortcuts
     private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS = "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
@@ -40,7 +40,6 @@ public class WordPressDB {
 
         // Create tables if they don't exist
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
-        ThemeTable.createTables(db);
         SiteSettingsTable.createTable(db);
         SuggestionTable.createTables(db);
         NotificationsTable.createTables(db);
@@ -134,7 +133,6 @@ public class WordPressDB {
                 ctx.deleteDatabase("simperium-store");
                 currentVersion++;
             case 37:
-                ThemeTable.resetTables(db);
                 currentVersion++;
             case 38:
                 currentVersion++;
@@ -192,6 +190,10 @@ public class WordPressDB {
             case 57:
                 // Migrate media optimization settings
                 SiteSettingsTable.migrateMediaOptimizeSettings(db);
+                currentVersion++;
+            case 58:
+                // ThemeStore merged, remove deprecated themes tables
+                db.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);

@@ -246,6 +246,8 @@
     <string name="theme_auth_error_message">Ensure you have the privilege to set themes</string>
     <string name="theme_current_theme">Current theme</string>
     <string name="theme_premium_theme">Premium theme</string>
+    <string name="uploaded_themes_header">Uploaded themes</string>
+    <string name="wpcom_themes_header">WordPress.com themes</string>
     <string name="theme_no_search_result_found">Sorry, no themes found.</string>
     <string name="theme_auth_error_authenticate">Failed to fetch themes: failed authenticate user</string>
 
@@ -1714,15 +1716,6 @@
     <string name="details">Details</string>
     <string name="support">Support</string>
     <string name="active">Active</string>
-
-    <string name="theme_free">Free</string>
-    <string name="theme_all">All</string>
-    <string name="theme_premium">Premium</string>
-    <string-array name="themes_filter_array" translatable="false">
-        <item>@string/theme_free</item>
-        <item>@string/theme_all</item>
-        <item>@string/theme_premium</item>
-    </string-array>
 
     <string name="title_activity_theme_support">Themes</string>
     <string name="theme_activate">Activate</string>

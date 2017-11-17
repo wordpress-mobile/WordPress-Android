@@ -3,6 +3,8 @@ package org.wordpress.android.ui.themes;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,23 +18,45 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.wellsql.generated.ThemeModelTable;
+
 import org.wordpress.android.R;
-import org.wordpress.android.models.Theme;
+import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 
-/**
- * Adapter for the {@link ThemeBrowserFragment}'s listview
- *
- */
-public class ThemeBrowserAdapter extends CursorAdapter {
+class ThemeBrowserAdapter extends CursorAdapter {
+    private static final int HEADER_VIEW_TYPE = 1;
+    private static final String HEADER_THEME_ID = "HEADER_THEME_ID";
     private static final String THEME_IMAGE_PARAMETER = "?w=";
+
+    static Cursor createHeaderCursor(String headerText, int count) {
+        MatrixCursor cursor = new MatrixCursor(new String[] {
+                ThemeModelTable.ID, ThemeModelTable.THEME_ID, ThemeModelTable.NAME, "count"
+        });
+        cursor.addRow(new String[]{"0", HEADER_THEME_ID, headerText, String.valueOf(count)});
+        return cursor;
+    }
+
+    static final String[] THEME_COLUMNS = new String[] {
+            ThemeModelTable.ID, ThemeModelTable.THEME_ID, ThemeModelTable.NAME, ThemeModelTable.SCREENSHOT_URL,
+            ThemeModelTable.CURRENCY, ThemeModelTable.PRICE, ThemeModelTable.ACTIVE
+    };
+    static String[] createThemeCursorRow(@NonNull ThemeModel theme) {
+        return new String[] {
+                String.valueOf(theme.getId()), theme.getThemeId(), theme.getName(), theme.getScreenshotUrl(),
+                theme.getCurrency(), String.valueOf(theme.getPrice()), String.valueOf(theme.getActive())
+        };
+    }
+
     private final LayoutInflater mInflater;
-    private final ThemeBrowserFragment.ThemeBrowserFragmentCallback mCallback;
+    private final ThemeBrowserFragmentCallback mCallback;
     private int mViewWidth;
 
-    public ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery, ThemeBrowserFragment.ThemeBrowserFragmentCallback callback) {
+    ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery, ThemeBrowserFragmentCallback callback) {
         super(context, c, autoRequery);
         mInflater = LayoutInflater.from(context);
         mCallback = callback;
@@ -61,36 +85,90 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         }
     }
 
+    private static class HeaderViewHolder {
+        private final TextView headerText;
+        private final TextView countText;
+
+        HeaderViewHolder(View view) {
+            headerText = (TextView) view.findViewById(R.id.section_header_text);
+            countText = (TextView) view.findViewById(R.id.section_header_count);
+        }
+    }
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.theme_grid_item, parent, false);
+        if (getItemViewType(cursor) == HEADER_VIEW_TYPE) {
+            View view = mInflater.inflate(R.layout.theme_section_header, parent, false);
+            HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
+            view.setTag(headerViewHolder);
+            return view;
+        }
 
+        View view = mInflater.inflate(R.layout.theme_grid_item, parent, false);
         configureThemeImageSize(parent);
         ThemeViewHolder themeViewHolder = new ThemeViewHolder(view);
         view.setTag(themeViewHolder);
-
         return view;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        final ThemeViewHolder themeViewHolder = (ThemeViewHolder) view.getTag();
+        if (getItemViewType(cursor) == HEADER_VIEW_TYPE) {
+            final HeaderViewHolder headerViewHolder = (HeaderViewHolder) view.getTag();
+            final String headerText = cursor.getString(cursor.getColumnIndex(ThemeModelTable.NAME));
+            final String countText = cursor.getString(cursor.getColumnIndex("count"));
+            headerViewHolder.headerText.setText(headerText);
+            headerViewHolder.countText.setText(countText);
+            return;
+        }
 
-        final String screenshotURL = cursor.getString(cursor.getColumnIndex(Theme.SCREENSHOT));
-        final String name = cursor.getString(cursor.getColumnIndex(Theme.NAME));
-        final String price = cursor.getString(cursor.getColumnIndex(Theme.PRICE));
-        final String themeId = cursor.getString(cursor.getColumnIndex(Theme.ID));
-        final boolean isCurrent = cursor.getInt(cursor.getColumnIndex(Theme.IS_CURRENT)) == 1;
-        final boolean isPremium = !price.isEmpty();
+        String screenshotURL = cursor.getString(cursor.getColumnIndex(ThemeModelTable.SCREENSHOT_URL));
+        final ThemeViewHolder themeViewHolder = (ThemeViewHolder) view.getTag();
+        final String name = cursor.getString(cursor.getColumnIndex(ThemeModelTable.NAME));
+        final String themeId = cursor.getString(cursor.getColumnIndex(ThemeModelTable.THEME_ID));
+        final String currency = cursor.getString(cursor.getColumnIndex(ThemeModelTable.CURRENCY));
+        final float price = cursor.getFloat(cursor.getColumnIndex(ThemeModelTable.PRICE));
+        final boolean isPremium = price > 0.f;
+        final boolean isCurrent =
+                StringUtils.equals("true", cursor.getString(cursor.getColumnIndex(ThemeModelTable.ACTIVE)));
 
         themeViewHolder.nameView.setText(name);
-        themeViewHolder.priceView.setText(price);
+        if (isPremium) {
+            String priceText = currency + String.valueOf((int) price);
+            themeViewHolder.priceView.setText(priceText);
+            themeViewHolder.priceView.setVisibility(View.VISIBLE);
+        } else {
+            themeViewHolder.priceView.setVisibility(View.GONE);
+        }
+
+        // catch the case where a URL has no protocol
+        if (!screenshotURL.startsWith(ThemeWebActivity.THEME_HTTP_PREFIX)) {
+            // some APIs return a URL starting with // so the protocol can be supplied by the client
+            // strip // before adding the protocol
+            if (screenshotURL.startsWith("//")) {
+                screenshotURL = screenshotURL.substring(2);
+            }
+            screenshotURL = ThemeWebActivity.THEME_HTTPS_PROTOCOL + screenshotURL;
+        }
 
         configureImageView(themeViewHolder, screenshotURL, themeId, isCurrent);
         configureImageButton(context, themeViewHolder, themeId, isPremium, isCurrent);
         configureCardView(context, themeViewHolder, isCurrent);
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        Cursor cursor = (Cursor) getItem(position);
+        return getItemViewType(cursor);
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        // standard theme item view and a header view for Jetpack sites to section Uploaded/WP.com themes
+        return 2;
+    }
+
+    @SuppressWarnings("deprecation")
     private void configureCardView(Context context, ThemeViewHolder themeViewHolder, boolean isCurrent) {
         Resources resources = context.getResources();
         if (isCurrent) {
@@ -199,5 +277,13 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             mViewWidth = imageWidth;
             AppPrefs.setThemeImageSizeWidth(mViewWidth);
         }
+    }
+
+    private int getItemViewType(Cursor cursor) {
+        String id = cursor.getString(cursor.getColumnIndex(ThemeModelTable.THEME_ID));
+        if (id.equals(HEADER_THEME_ID)) {
+            return HEADER_VIEW_TYPE;
+        }
+        return 0;
     }
 }
