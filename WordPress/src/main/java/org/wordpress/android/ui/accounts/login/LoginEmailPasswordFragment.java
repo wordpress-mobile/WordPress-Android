@@ -99,7 +99,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         // connect to the Service. We'll receive updates via EventBus.
         mServiceEventConnection = new AutoForeground.ServiceEventConnection(getContext(), LoginWpcomService.class, this);
 
-        // install the change listener as late as possible so the UI can be setup before triggering the
+        // install the change listener as late as possible so the UI can be setup (updated from the Service state)
+        //  before triggering the state cleanup happening in the change listener.
         mPasswordInput.addTextChangedListener(this);
     }
 
