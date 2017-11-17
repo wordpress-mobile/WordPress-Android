@@ -60,6 +60,21 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         LoginPhase(int progressPercent) {
             this.progressPercent = progressPercent;
         }
+
+        public boolean isInProgress() {
+            return this != LoginPhase.IDLE && !isTerminal();
+        }
+
+        public boolean isError() {
+            return this == LoginPhase.FAILURE
+                    || this == LoginPhase.FAILURE_EMAIL_WRONG_PASSWORD
+                    || this == LoginPhase.FAILURE_2FA
+                    || this == LoginPhase.FAILURE_SOCIAL_2FA;
+        }
+
+        public boolean isTerminal() {
+            return this == LoginPhase.SUCCESS || isError();
+        }
     }
 
     public static class OnLoginStateUpdated {
@@ -85,8 +100,6 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     private String mIdToken;
     private String mService;
     private boolean isSocialLogin;
-
-    private ArrayList<Integer> mOldSitesIDs;
 
     public static void loginWithEmailAndPassword(
             Context context,
@@ -114,17 +127,12 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
 
     @Override
     public boolean isInProgress() {
-        return mLoginPhase != LoginPhase.IDLE
-                && mLoginPhase != LoginPhase.SUCCESS
-                && !isError();
+        return mLoginPhase.isInProgress();
     }
 
     @Override
     public boolean isError() {
-        return mLoginPhase == LoginPhase.FAILURE
-                || mLoginPhase == LoginPhase.FAILURE_EMAIL_WRONG_PASSWORD
-                || mLoginPhase == LoginPhase.FAILURE_2FA
-                || mLoginPhase == LoginPhase.FAILURE_SOCIAL_2FA;
+        return mLoginPhase.isError();
     }
 
     @Override
@@ -151,10 +159,15 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     }
 
     private void setState(LoginPhase loginPhase) {
+        if (!mLoginPhase.isInProgress() && loginPhase.isInProgress()) {
+            mDispatcher.register(this);
+        }
+
         mLoginPhase = loginPhase;
         notifyState();
 
-        if (isError() || loginPhase == LoginPhase.SUCCESS) {
+        if (mLoginPhase.isTerminal()) {
+            mDispatcher.unregister(this);
             stopSelf();
         }
     }
@@ -165,14 +178,12 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         ((WordPress) getApplication()).component().inject(this);
 
         AppLog.i(T.MAIN, "LoginWpcomService > Created");
-        mDispatcher.register(this);
 
         // TODO: Recover any login attempts that were interrupted by the service being stopped?
     }
 
     @Override
     public void onDestroy() {
-        mDispatcher.unregister(this);
         AppLog.i(T.MAIN, "LoginWpcomService > Destroyed");
         super.onDestroy();
     }
@@ -191,8 +202,6 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         mIdToken = intent.getStringExtra(ARG_SOCIAL_ID_TOKEN);
         mService = intent.getStringExtra(ARG_SOCIAL_SERVICE);
         isSocialLogin = intent.getBooleanExtra(ARG_SOCIAL_LOGIN, false);
-
-        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
         AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(mEmail, mPassword);
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));

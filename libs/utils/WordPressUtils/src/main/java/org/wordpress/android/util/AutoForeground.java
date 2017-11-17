@@ -66,8 +66,6 @@ public abstract class AutoForeground<EventClass> extends Service {
     @CallSuper
     @Override
     public IBinder onBind(Intent intent) {
-        notifyState();
-
         return mBinder;
     }
 
@@ -77,7 +75,6 @@ public abstract class AutoForeground<EventClass> extends Service {
         super.onRebind(intent);
 
         background();
-        notifyState();
     }
 
     @CallSuper
@@ -88,6 +85,12 @@ public abstract class AutoForeground<EventClass> extends Service {
         }
 
         return true; // call onRebind() if new clients connect
+    }
+
+    public static void clearAllNotifications(Context context) {
+        NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID_PROGRESS);
+        NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID_SUCCESS);
+        NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID_FAILURE);
     }
 
     private EventBus getEventBus() {
@@ -110,13 +113,15 @@ public abstract class AutoForeground<EventClass> extends Service {
 
     @CallSuper
     protected void notifyState() {
+        // sticky emit the state. The stickiness serves as a state keeping mechanism for clients to re-read upon connect
+        getEventBus().postSticky(getCurrentStateEvent());
+
         if (hasConnectedClients()) {
-            // just send a message to the connected clients
-            getEventBus().post(getCurrentStateEvent());
+            // there are connected clients so, nothing more to do here
             return;
         }
 
-        // ok, no connected clients so, update will be redirected to a notification
+        // ok, no connected clients so, update might need to be delivered to a notification as well
 
         if (isInProgress()) {
             // operation still is progress so, update the notification
@@ -131,8 +136,7 @@ public abstract class AutoForeground<EventClass> extends Service {
         NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID_PROGRESS);
 
         // put out a simple success/failure notification
-        NotificationManagerCompat.from(this).notify(
-                isError() ? NOTIFICATION_ID_FAILURE : NOTIFICATION_ID_SUCCESS,
+        NotificationManagerCompat.from(this).notify(isError() ? NOTIFICATION_ID_FAILURE : NOTIFICATION_ID_SUCCESS,
                 getNotification());
     }
 }

@@ -8,12 +8,17 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.util.AutoForeground;
 
 class LoginNotification {
     private static Intent getPendingIntent(Context context) {
-        return new Intent(context, WPMainActivity.class);
+        Intent resumeIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+
+        // apparently, we need to null out the package name to make the intent resume the app
+        resumeIntent.setSelector(null);
+        resumeIntent.setPackage(null);
+
+        return resumeIntent;
     }
 
     private static NotificationCompat.Builder getNotificationBuilder(Context context, String content) {

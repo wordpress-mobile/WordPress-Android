@@ -305,6 +305,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         LoginEmailPasswordFragment loginEmailPasswordFragment =
                 LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
+        LoginEmailPasswordFragment.clearLoginServiceState();
     }
 
     @Override

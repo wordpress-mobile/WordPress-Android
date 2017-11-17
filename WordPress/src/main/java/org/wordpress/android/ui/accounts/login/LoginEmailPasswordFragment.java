@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -95,6 +96,9 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         // connect to the Service. We'll receive updates via EventBus.
         mServiceEventConnection = new AutoForeground.ServiceEventConnection(getContext(), LoginWpcomService.class, this);
+
+        // install the change listener as late as possible so the UI can be setup before triggering the
+        mPasswordInput.addTextChangedListener(this);
     }
 
     @Override
@@ -131,7 +135,6 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         ((TextView) rootView.findViewById(R.id.login_email)).setText(mEmailAddress);
 
         mPasswordInput = (WPLoginInputRow) rootView.findViewById(R.id.login_password_row);
-        mPasswordInput.addTextChangedListener(this);
         mPasswordInput.setOnEditorCommitListener(this);
     }
 
@@ -224,6 +227,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mPasswordInput.setError(null);
+
+        clearLoginServiceState();
     }
 
     private void showPasswordError() {
@@ -232,6 +237,13 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     private void showError(String error) {
         mPasswordInput.setError(error);
+    }
+
+    public static void clearLoginServiceState() {
+        OnLoginStateUpdated onLoginStateUpdated = EventBus.getDefault().removeStickyEvent(OnLoginStateUpdated.class);
+        if (onLoginStateUpdated != null && onLoginStateUpdated.state.isTerminal()) {
+            EventBus.getDefault().removeStickyEvent(OnLoginStateUpdated.class);
+        }
     }
 
 //    private void handleAuthError(AccountStore.AuthenticationErrorType error, String errorMessage) {
@@ -337,7 +349,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onLoginStateUpdated(OnLoginStateUpdated event) {
         AppLog.i(T.NUX, "Received state: " + event.state.name());
 
@@ -372,6 +384,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 showError(getString(R.string.error_generic));
                 break;
             case SUCCESS:
+                LoginWpcomService.clearAllNotifications(getContext());
                 onLoginFinished();
                 break;
         }
