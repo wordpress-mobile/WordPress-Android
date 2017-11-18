@@ -32,7 +32,6 @@ class LoginNotification {
                 .setStyle(bigTextStyle)
                 .setSmallIcon(R.drawable.ic_my_sites_24dp)
                 .setColor(context.getResources().getColor(R.color.blue_wordpress))
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.app_icon))
                 .setAutoCancel(true);
     }
 
