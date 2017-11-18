@@ -30,6 +30,7 @@ class LoginNotification {
 
         return new NotificationCompat.Builder(context)
                 .setStyle(bigTextStyle)
+                .setContentTitle(context.getString(title))
                 .setSmallIcon(R.drawable.ic_my_sites_24dp)
                 .setColor(context.getResources().getColor(R.color.blue_wordpress))
                 .setAutoCancel(true);
