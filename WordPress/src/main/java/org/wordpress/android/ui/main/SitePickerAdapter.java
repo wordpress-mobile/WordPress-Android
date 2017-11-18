@@ -492,7 +492,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (siteRecord.isHidden == makeVisible) {
                         changeSet.add(siteRecord);
                         siteRecord.isHidden = !makeVisible;
-                        if (recentIds.contains(siteRecord.localId)) {
+                        if (!makeVisible && recentIds.contains(siteRecord.localId)) {
                             AppPrefs.removeRecentlyPickedSiteId(siteRecord.localId);
                         }
                     }
