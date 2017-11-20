@@ -602,15 +602,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteVisibilityChanged.class);
     }
 
-    @SuppressWarnings("unused")
-    public void onEventMainThread(NotificationEvents.NoteModerationFailed event) {
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, Duration.LONG);
-        }
-
-        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationFailed.class);
-    }
-
     public SiteModel getSelectedSite() {
         if (getActivity() instanceof WPMainActivity) {
             WPMainActivity mainActivity = (WPMainActivity) getActivity();
