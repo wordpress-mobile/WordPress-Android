@@ -99,7 +99,7 @@ public class PluginSqlUtilsTest {
         SiteModel site = getTestSite();
         List<String> pluginNames = insertBasicTestPlugins(site, SMALL_TEST_POOL);
         List<PluginModel> sitePlugins = PluginSqlUtils.getSitePlugins(site);
-        Assert.assertEquals(pluginNames.size(), sitePlugins.size());
+        Assert.assertEquals(SMALL_TEST_POOL, sitePlugins.size());
 
         for (int i = 0; i < pluginNames.size(); i++) {
             PluginModel sitePlugin = sitePlugins.get(i);
