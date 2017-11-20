@@ -2,7 +2,6 @@ package org.wordpress.android.ui.comments;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
@@ -77,19 +76,6 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
         } catch (IllegalStateException e) {
             AppLog.e(AppLog.T.COMMENTS, e);
         }
-    }
-
-    @Override
-    public Parcelable saveState() {
-        AppLog.d(AppLog.T.COMMENTS, "comments pager > adapter saveState");
-        Bundle bundle = (Bundle) super.saveState();
-        if (bundle == null) {
-            bundle = new Bundle();
-        }
-        // This is a possible solution to https://github.com/wordpress-mobile/WordPress-Android/issues/5456
-        // See https://issuetracker.google.com/issues/37103380#comment77 for more details
-        bundle.putParcelableArray("states", null);
-        return bundle;
     }
 
     private CommentModel getComment(int position) {

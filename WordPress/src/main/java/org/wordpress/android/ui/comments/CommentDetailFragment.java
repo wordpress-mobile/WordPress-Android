@@ -51,9 +51,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
-import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
@@ -144,7 +142,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
-    private OnCommentChangeListener mOnCommentChangeListener;
     private OnPostClickListener mOnPostClickListener;
     private OnCommentActionListener mOnCommentActionListener;
     private OnNoteCommentActionListener mOnNoteCommentActionListener;
@@ -499,9 +496,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @SuppressWarnings("deprecation") // TODO: Remove when minSdkVersion >= 23
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof OnCommentChangeListener) {
-            mOnCommentChangeListener = (OnCommentChangeListener) activity;
-        }
         if (activity instanceof OnPostClickListener) {
             mOnPostClickListener = (OnPostClickListener) activity;
         }
@@ -548,9 +542,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
             reloadComment();
-            // tell the host to reload the comment list
-            if (mOnCommentChangeListener != null)
-                mOnCommentChangeListener.onCommentChanged(ChangeType.EDITED);
         }
     }
 
@@ -1186,9 +1177,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
 
-        if (mOnCommentChangeListener != null) {
-            mOnCommentChangeListener.onCommentChanged(ChangeType.REPLIED);
-        }
+        reloadComment();
 
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));

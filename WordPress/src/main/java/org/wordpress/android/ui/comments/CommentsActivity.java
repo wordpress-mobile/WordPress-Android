@@ -38,8 +38,7 @@ import javax.inject.Inject;
 
 public class CommentsActivity extends AppCompatActivity
         implements OnCommentSelectedListener,
-        NotificationFragment.OnPostClickListener,
-        CommentActions.OnCommentChangeListener {
+        NotificationFragment.OnPostClickListener {
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private static final String SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type";
@@ -289,18 +288,6 @@ public class CommentsActivity extends AppCompatActivity
             // Actual moderation (push the modified comment).
             comment.setStatus(newStatus.toString());
             mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, comment)));
-        }
-    }
-
-    @Override
-    public void onCommentChanged(CommentActions.ChangeType changeType) {
-        switch (changeType) {
-            case EDITED:
-                reloadCommentList();
-                break;
-            case REPLIED:
-                updateCommentList();
-                break;
         }
     }
 

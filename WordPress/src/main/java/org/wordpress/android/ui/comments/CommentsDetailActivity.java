@@ -36,13 +36,14 @@ import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PE
 
 public class CommentsDetailActivity extends AppCompatActivity
         implements CommentAdapter.OnLoadMoreListener,
-        CommentActions.OnCommentActionListener,
-        CommentActions.OnCommentChangeListener {
+                   CommentActions.OnCommentActionListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
     public static final String COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter";
 
-    @Inject CommentStore mCommentStore;
-    @Inject Dispatcher mDispatcher;
+    @Inject
+    CommentStore mCommentStore;
+    @Inject
+    Dispatcher mDispatcher;
 
     private WPViewPager mViewPager;
     private ProgressBar mProgressBar;
@@ -121,10 +122,10 @@ public class CommentsDetailActivity extends AppCompatActivity
 
     @Override
     public void onLoadMore() {
-        updateComments(true);
+        updateComments();
     }
 
-    private void updateComments(boolean loadMore) {
+    private void updateComments() {
         if (mIsUpdatingComments) {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
             return;
@@ -136,13 +137,11 @@ public class CommentsDetailActivity extends AppCompatActivity
             return;
         }
 
-        final int offset = loadMore ? mAdapter.getCount() : 0;
+        final int offset = mAdapter.getCount();
         mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
                 new FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, offset)));
-        if (loadMore) {
-            mIsUpdatingComments = true;
-            setLoadingState(true);
-        }
+        mIsUpdatingComments = true;
+        setLoadingState(true);
     }
 
     @SuppressWarnings("unused")
@@ -247,17 +246,5 @@ public class CommentsDetailActivity extends AppCompatActivity
         resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA, newStatus.toString());
         setResult(RESULT_OK, resultIntent);
         finish();
-    }
-
-    @Override
-    public void onCommentChanged(CommentActions.ChangeType changeType) {
-        switch (changeType) {
-            case EDITED:
-                loadDataInViewPager();
-                break;
-            case REPLIED:
-                updateComments(false);
-                break;
-        }
     }
 }
