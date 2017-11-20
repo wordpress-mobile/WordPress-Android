@@ -18,7 +18,7 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
-import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.ThemeListResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeListResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeMapResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.JetpackThemeResponse.JetpackThemeListResponse;
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError;
@@ -129,10 +129,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
     /** [Undocumented!] Endpoint: v1.2/themes */
     public void fetchWpComThemes() {
         String url = WPCOMREST.themes.getUrlV1_2() + "?" + WP_THEME_FETCH_NUMBER_PARAM;
-        add(WPComGsonRequest.buildGetRequest(url, null, ThemeListResponse.class,
-                new Response.Listener<ThemeListResponse>() {
+        add(WPComGsonRequest.buildGetRequest(url, null, WPComThemeListResponse.class,
+                new Response.Listener<WPComThemeListResponse>() {
                     @Override
-                    public void onResponse(ThemeListResponse response) {
+                    public void onResponse(WPComThemeListResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to WP.com themes fetch request.");
                         FetchedThemesPayload payload = new FetchedThemesPayload(null);
                         payload.themes = createThemeListFromArrayResponse(response);
@@ -225,10 +225,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
     /** [Undocumented!] Endpoint: v1.2/themes?search=$term */
     public void searchThemes(@NonNull final String searchTerm) {
         String url = WPCOMREST.themes.getUrlV1_2() + "?search=" + searchTerm;
-        add(WPComGsonRequest.buildGetRequest(url, null, ThemeListResponse.class,
-                new Response.Listener<ThemeListResponse>() {
+        add(WPComGsonRequest.buildGetRequest(url, null, WPComThemeListResponse.class,
+                new Response.Listener<WPComThemeListResponse>() {
                     @Override
-                    public void onResponse(ThemeListResponse response) {
+                    public void onResponse(WPComThemeListResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to search themes request.");
                         SearchedThemesPayload payload =
                                 new SearchedThemesPayload(searchTerm, createThemeListFromArrayResponse(response));
@@ -299,7 +299,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
         return themeList;
     }
 
-    private static List<ThemeModel> createThemeListFromArrayResponse(ThemeListResponse response) {
+    private static List<ThemeModel> createThemeListFromArrayResponse(WPComThemeListResponse response) {
         final List<ThemeModel> themeList = new ArrayList<>();
         for (WPComThemeResponse item : response.themes) {
             themeList.add(createThemeFromWPComResponse(item));
