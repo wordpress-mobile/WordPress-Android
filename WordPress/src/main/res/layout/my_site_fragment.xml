@@ -291,7 +291,7 @@
             </LinearLayout>
 
             <!--Plugin-->
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/row_plugins"
                 style="@style/MySiteListRowLayout">
 
@@ -305,10 +305,9 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_plugins_text_view"
                     style="@style/MySiteListRowTextView"
-                    android:layout_toRightOf="@id/my_site_plugins_icon"
                     android:text="@string/my_site_btn_plugins" />
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <!--Sharing-->
             <LinearLayout
