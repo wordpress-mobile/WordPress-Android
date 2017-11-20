@@ -8,7 +8,6 @@ Language: he_IL
 <resources>
 	<string name="async_promo_link">כיצד זה עובד?</string>
 	<string name="editor_uploading_post">הפוסט נטען</string>
-	<string name="uploading_post_media">מעלה מדיה...</string>
 	<string name="page_scheduled">העמוד תוזמן לפרסום</string>
 	<string name="post_draft_param">"%s" נשמר כטיוטה!</string>
 	<string name="post_scheduled">הפוסט תוזמן לפרסום</string>
@@ -130,7 +129,6 @@ Language: he_IL
 	<string name="media_encoder_quality_85">בינונית</string>
 	<string name="media_encoder_quality_80">נמוכה</string>
 	<string name="media_upload_state_uploaded">הועלה</string>
-	<string name="media_upload_state_failed">נכשל</string>
 	<string name="media_upload_state_deleted">נמחק</string>
 	<string name="media_upload_state_deleting">מוחק</string>
 	<string name="media_upload_state_uploading">מעלה</string>
@@ -845,7 +843,6 @@ Language: he_IL
 	<string name="stats_other_recent_stats_label">סטטיסטיקות אחרות מהזמן האחרון</string>
 	<string name="stats_followers_total_wpcom">סה"כ עוקבי וורדפרס.קום: %1$s</string>
 	<string name="ssl_certificate_details">פרטים</string>
-	<string name="confirm_delete_multi_media">מחיקת פריטים שנבחרו?</string>
 	<string name="cab_selected">%d נבחרו</string>
 	<string name="delete_sure_page">מחיקת עמוד</string>
 	<string name="delete_sure_post">מחיקת פוסט</string>
@@ -1106,7 +1103,6 @@ Language: he_IL
 	<string name="nux_oops_not_selfhosted_blog">התחבר לוורדפרס.קום</string>
 	<string name="media_add_popup_title">הוסף לספריית המדיה</string>
 	<string name="empty_list_default">רשימה זו ריקה</string>
-	<string name="select_from_media_library">בחר מתוך ספריית מדיה</string>
 	<string name="jetpack_not_found">התוסף Jetpack לא נמצא</string>
 	<string name="reader_untitled_post">(ללא כותרת)</string>
 	<string name="reader_btn_share">שתף</string>
