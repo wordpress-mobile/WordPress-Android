@@ -96,8 +96,6 @@ Language: ru
 	<string name="error_post_does_not_exist">Эта запись больше не существует</string>
 	<string name="error_media_recover_page">Не удалось загрузить медиафайл для этой записи. Отредактируйте запись, чтобы повторить попытку.</string>
 	<string name="error_media_canceled">Загрузка медиафайлов отменена</string>
-	<string name="error_upload_page_media_param">При загрузке медиафайла в %1$s произошла ошибка: %2$s.</string>
-	<string name="error_upload_page_param">При загрузке %1$s произошла ошибка: %2$s.</string>
 	<string name="async_promo_link">Как это работает?</string>
 	<string name="async_promo_description">Теперь можно выйти из редактора — ваша запись будет сохранена и опубликована без вашего участия! Попробуйте нажать!</string>
 	<string name="async_promo_title">Публикуйте уверенно</string>
