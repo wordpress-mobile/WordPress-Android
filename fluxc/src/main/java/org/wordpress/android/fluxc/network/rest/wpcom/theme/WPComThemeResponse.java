@@ -10,7 +10,7 @@ public class WPComThemeResponse {
         public int count;
     }
 
-    public class ThemeListResponse {
+    public class WPComThemeListResponse {
         public List<WPComThemeResponse> themes;
     }
 
