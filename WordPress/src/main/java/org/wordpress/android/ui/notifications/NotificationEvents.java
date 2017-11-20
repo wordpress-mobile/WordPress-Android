@@ -22,14 +22,6 @@ public class NotificationEvents {
             this.noteId = noteId;
         }
     }
-    public static class NoteVisibilityChanged {
-        final boolean isHidden;
-        final String noteId;
-        public NoteVisibilityChanged(String noteId, boolean isHidden) {
-            this.noteId = noteId;
-            this.isHidden = isHidden;
-        }
-    }
     public static class NotificationsSettingsStatusChanged {
         final String mMessage;
         public NotificationsSettingsStatusChanged(String message) {

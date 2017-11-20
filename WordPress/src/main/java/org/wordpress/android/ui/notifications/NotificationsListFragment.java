@@ -558,13 +558,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         );
     }
 
-    @SuppressWarnings("unused")
-    public void onEventMainThread(NotificationEvents.NoteVisibilityChanged event) {
-        setNoteIsHidden(event.noteId, event.isHidden);
-
-        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteVisibilityChanged.class);
-    }
-
     public SiteModel getSelectedSite() {
         if (getActivity() instanceof WPMainActivity) {
             WPMainActivity mainActivity = (WPMainActivity) getActivity();
