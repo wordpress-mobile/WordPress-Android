@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 
@@ -12,7 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.AutoForeground;
 
 class LoginNotification {
-    private static Intent getPendingIntent(Context context) {
+    private static Intent getResumeIntent(Context context) {
         // Let's get an Intent with the sole purpose of _resuming_ the app from the background
         Intent resumeIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
 
@@ -43,7 +42,7 @@ class LoginNotification {
                 .setContentIntent(PendingIntent.getActivity(
                         context,
                         AutoForeground.NOTIFICATION_ID_PROGRESS,
-                        getPendingIntent(context),
+                        getResumeIntent(context),
                         PendingIntent.FLAG_ONE_SHOT))
                 .setProgress(100, progress, false)
                 .build();
@@ -54,7 +53,7 @@ class LoginNotification {
                 .setContentIntent(PendingIntent.getActivity(
                         context,
                         AutoForeground.NOTIFICATION_ID_SUCCESS,
-                        getPendingIntent(context),
+                        getResumeIntent(context),
                         PendingIntent.FLAG_ONE_SHOT))
                 .build();
     }
@@ -64,7 +63,7 @@ class LoginNotification {
                 .setContentIntent(PendingIntent.getActivity(
                         context,
                         AutoForeground.NOTIFICATION_ID_FAILURE,
-                        getPendingIntent(context),
+                        getResumeIntent(context),
                         PendingIntent.FLAG_ONE_SHOT))
                 .build();
     }
