@@ -94,7 +94,8 @@ import de.greenrobot.event.EventBus;
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
     private static final String KEY_MODE = "KEY_MODE";
-    private static final String KEY_COMMENT = "KEY_COMMENT";
+    private static final String KEY_SITE_ID = "KEY_SITE_ID";
+    private static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
     private static final String KEY_NOTE_ID = "KEY_NOTE_ID";
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
     private static final String KEY_FRAGMENT_CONTAINER_ID = "KEY_FRAGMENT_CONTAINER_ID";
@@ -158,12 +159,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from comment list
      */
-    static CommentDetailFragment newInstance(SiteModel site, CommentModel comment) {
+    static CommentDetailFragment newInstance(SiteModel site, CommentModel commentModel) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
         args.putInt(KEY_MODE, FROM_BLOG_COMMENT);
-        args.putSerializable(WordPress.SITE, site);
-        args.putSerializable(KEY_COMMENT, comment);
+        args.putLong(KEY_SITE_ID, site.getSiteId());
+        args.putLong(KEY_COMMENT_ID, commentModel.getRemoteCommentId());
         fragment.setArguments(args);
         return fragment;
     }
@@ -190,8 +191,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         switch (getArguments().getInt(KEY_MODE)) {
             case FROM_BLOG_COMMENT:
-                setComment((CommentModel) getArguments().getSerializable(KEY_COMMENT),
-                        (SiteModel) getArguments().getSerializable(WordPress.SITE));
+                setComment(getArguments().getLong(KEY_COMMENT_ID), getArguments().getLong(KEY_SITE_ID));
                 break;
             case FROM_NOTE:
                 setNote(getArguments().getString(KEY_NOTE_ID));
@@ -207,9 +207,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 // See WordPress.deferredInit()
                 mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
             } else {
-                SiteModel site = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-                CommentModel comment = (CommentModel) savedInstanceState.getSerializable(KEY_COMMENT);
-                setComment(comment, site);
+                long siteId = savedInstanceState.getLong(KEY_SITE_ID);
+                long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
+                setComment(commentId, siteId);
             }
         }
 
@@ -220,8 +220,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mComment != null) {
-            outState.putSerializable(WordPress.SITE, mSite);
-            outState.putSerializable(KEY_COMMENT, mComment);
+            outState.putLong(KEY_COMMENT_ID, mComment.getRemoteCommentId());
+            outState.putLong(KEY_SITE_ID, mSite.getSiteId());
         }
 
         if (mNote != null) {
@@ -404,6 +404,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mEditReply.getAutoSaveTextHelper().loadString(mEditReply);
             }
         }
+    }
+
+    private void setComment(final long commentRemoteId, final long siteId) {
+        final SiteModel site = mSiteStore.getSiteBySiteId(siteId);
+        setComment(mCommentStore.getCommentBySiteAndRemoteId(site, commentRemoteId), site);
     }
 
     private void setComment(@Nullable final CommentModel comment, @Nullable final SiteModel site) {

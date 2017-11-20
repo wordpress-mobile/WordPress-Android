@@ -11,6 +11,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AppLog;
 
+import javax.annotation.Nullable;
+
 public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
     private final SiteModel mSite;
@@ -20,7 +22,7 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
     CommentDetailFragmentAdapter(FragmentManager fm,
                                  CommentList commentList,
                                  SiteModel site,
-                                 CommentAdapter.OnLoadMoreListener onLoadMoreListener) {
+                                 @Nullable CommentAdapter.OnLoadMoreListener onLoadMoreListener) {
         super(fm);
         this.mSite = site;
         this.mOnLoadMoreListener = onLoadMoreListener;
@@ -29,7 +31,8 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return CommentDetailFragment.newInstance(mSite, getComment(position));
+        final CommentModel comment = getComment(position);
+        return CommentDetailFragment.newInstance(mSite, comment);
     }
 
     void onNewItems(CommentList commentList) {
@@ -38,12 +41,17 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
         notifyDataSetChanged();
     }
 
-    int commentIndex(long commentId) {
-        return mCommentList.indexOfCommentId(commentId);
+    boolean isAddingNewComments(CommentList newComments) {
+        for (int index = 0; index < mCommentList.size(); index++) {
+            if (newComments.size() <= index || mCommentList.get(index).getRemoteCommentId() != newComments.get(index).getRemoteCommentId()) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    boolean isEmpty() {
-        return getCount() == 0;
+    int commentIndex(long commentId) {
+        return mCommentList.indexOfCommentId(commentId);
     }
 
     CommentModel getCommentAtPosition(int position) {
@@ -85,7 +93,7 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
     }
 
     private CommentModel getComment(int position) {
-        if (position == getCount() - 1) {
+        if (position == getCount() - 1 && mOnLoadMoreListener != null) {
             mOnLoadMoreListener.onLoadMore();
         }
         return mCommentList.get(position);

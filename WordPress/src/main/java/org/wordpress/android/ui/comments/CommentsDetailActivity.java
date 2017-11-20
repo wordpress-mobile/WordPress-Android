@@ -179,19 +179,25 @@ public class CommentsDetailActivity extends AppCompatActivity
 
                 @Override
                 public void loadingFinished(CommentList commentList) {
-                    showCommentList(commentList);
+                    if (!commentList.isEmpty()) {
+                        showCommentList(commentList);
+                    }
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
     private void showCommentList(CommentList commentList) {
-        if (mAdapter == null) {
+        final int previousItem = mViewPager.getCurrentItem();
+
+        //Only notify adapter when loading new page
+        if (mAdapter != null && mAdapter.isAddingNewComments(commentList)) {
+            mAdapter.onNewItems(commentList);
+        } else {
+            //If current items change, rebuild the adapter
             mAdapter = new CommentDetailFragmentAdapter(getFragmentManager(), commentList, mSite,
                     CommentsDetailActivity.this);
             mViewPager.setAdapter(mAdapter);
-        } else {
-            mAdapter.onNewItems(commentList);
         }
 
         final int commentIndex = mAdapter.commentIndex(mCommentId);
@@ -212,8 +218,7 @@ public class CommentsDetailActivity extends AppCompatActivity
                 }
             };
         }
-
-        if (commentIndex != mViewPager.getCurrentItem()) {
+        if (commentIndex != previousItem) {
             mViewPager.setCurrentItem(commentIndex);
         }
 
