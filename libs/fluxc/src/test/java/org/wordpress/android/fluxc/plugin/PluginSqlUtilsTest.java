@@ -87,6 +87,9 @@ public class PluginSqlUtilsTest {
         Assert.assertEquals(1, updatedSitePluginList.size());
         PluginModel updatedPlugin = updatedSitePluginList.get(0);
         Assert.assertEquals(updatedPlugin.getDisplayName(), newDisplayName);
+
+        // Verify that local id of the plugin didn't change
+        Assert.assertEquals(insertedPlugin.getId(), updatedPlugin.getId());
     }
 
     // Inserts 10 plugins with known IDs then retrieves all site plugins and validates names
