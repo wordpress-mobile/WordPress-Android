@@ -29,7 +29,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     private final int mColorRead;
     private final int mColorUnread;
     private final int mTextIndentSize;
-    private final List<String> mHiddenNoteIds = new ArrayList<>();
 
     private final DataLoadedListener mDataLoadedListener;
     private final OnLoadMoreListener mOnLoadMoreListener;
@@ -74,16 +73,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     public FILTERS getCurrentFilter() {
         return mCurrentFilter;
-    }
-
-    public void addHiddenNoteId(String noteId) {
-        mHiddenNoteIds.add(noteId);
-        myNotifyDatasetChanged();
-    }
-
-    public void removeHiddenNoteId(String noteId) {
-        mHiddenNoteIds.remove(noteId);
-        myNotifyDatasetChanged();
     }
 
     public void addAll(List<Note> notes, boolean clearBeforeAdding) {
@@ -216,13 +205,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             }
 
             noteViewHolder.headerView.setVisibility(View.VISIBLE);
-        }
-
-        if (mHiddenNoteIds.size() > 0 && mHiddenNoteIds.contains(note.getId())) {
-            noteViewHolder.contentView.setVisibility(View.GONE);
-            noteViewHolder.headerView.setVisibility(View.GONE);
-        } else {
-            noteViewHolder.contentView.setVisibility(View.VISIBLE);
         }
 
         CommentStatus commentStatus = CommentStatus.ALL;

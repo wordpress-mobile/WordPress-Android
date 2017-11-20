@@ -292,23 +292,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 
-    private void setNoteIsHidden(String noteId, boolean isHidden) {
-        if (mNotesAdapter == null) return;
-
-        if (isHidden) {
-            mNotesAdapter.addHiddenNoteId(noteId);
-        } else {
-            // Scroll the row into view if it isn't visible so the animation can be seen
-            int notePosition = mNotesAdapter.getPositionForNote(noteId);
-            if (notePosition != RecyclerView.NO_POSITION &&
-                    mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() > notePosition) {
-                mLinearLayoutManager.scrollToPosition(notePosition);
-            }
-
-            mNotesAdapter.removeHiddenNoteId(noteId);
-        }
-    }
-
     private void showEmptyView(@StringRes int titleResId) {
         showEmptyView(titleResId, 0, 0);
     }
