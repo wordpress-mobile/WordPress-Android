@@ -134,7 +134,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
     private String mPreviousStatus;
-    private long mCommentIdToFetch;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -1247,12 +1246,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 ToastUtils.showToast(getActivity(), event.error.message);
             }
             return;
-        }
-
-        if (mCommentIdToFetch != 0) {
-            CommentModel comment = mCommentStore.getCommentBySiteAndRemoteId(mSite, mCommentIdToFetch);
-            setComment(comment, mSite);
-            mCommentIdToFetch = 0;
         }
     }
 }
