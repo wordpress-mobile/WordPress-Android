@@ -60,6 +60,7 @@ public class PluginSqlUtilsTest {
         PluginModel insertedPlugin = sitePlugins.get(0);
         Assert.assertNotNull(insertedPlugin);
         Assert.assertEquals(plugin.getName(), insertedPlugin.getName());
+        Assert.assertEquals(site.getId(), insertedPlugin.getLocalSiteId());
     }
 
     @Test
