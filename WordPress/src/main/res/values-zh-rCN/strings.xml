@@ -33,7 +33,6 @@ Language: zh_CN
 	<string name="media_encoder_quality_85">中</string>
 	<string name="media_encoder_quality_80">低</string>
 	<string name="media_upload_state_uploaded">已上传</string>
-	<string name="media_upload_state_failed">失败</string>
 	<string name="media_upload_state_deleted">已删除</string>
 	<string name="media_upload_state_deleting">正在删除</string>
 	<string name="media_upload_state_uploading">正在上传</string>
@@ -641,7 +640,6 @@ Language: zh_CN
 	<string name="delete_sure_post">删除此文章</string>
 	<string name="delete_sure">删除此草稿</string>
 	<string name="delete_sure_page">删除此页面</string>
-	<string name="confirm_delete_multi_media">是否删除所选项目？</string>
 	<string name="cab_selected">已选 %d 个</string>
 	<string name="reader_empty_posts_liked">您尚未给任何文章点赞</string>
 	<string name="faq_button">常见问题解答</string>
@@ -890,7 +888,6 @@ Language: zh_CN
 	<string name="nux_tap_continue">继续</string>
 	<string name="nux_welcome_create_account">创建账户</string>
 	<string name="nux_add_selfhosted_blog">添加一个自己的站点</string>
-	<string name="select_from_media_library">从媒体库选择</string>
 	<string name="jetpack_not_found">没有找到Jetpack插件</string>
 	<string name="reader_untitled_post">(未命名)</string>
 	<string name="reader_btn_share">共享</string>

@@ -189,7 +189,6 @@ Language: gd_GB
 	<string name="cab_selected">%d air a thaghadh</string>
 	<string name="delete_sure">Sguab às an dreachd seo</string>
 	<string name="delete_sure_page">Sguab às an duilleag seo</string>
-	<string name="confirm_delete_multi_media">A bheil thu airson na rudan a thagh thu a sguabadh às?</string>
 	<string name="delete_sure_post">Sguab às am post seo</string>
 	<string name="comment_trashed">Chaidh am beachd a chur dhan sgudal</string>
 	<string name="posts_empty_list">Chan eil post agad fhathast. Carson nach cruthaich thu fear?</string>
@@ -439,7 +438,6 @@ Language: gd_GB
 	<string name="nux_welcome_create_account">Cruthaich cunntas</string>
 	<string name="nux_add_selfhosted_blog">Cuir làrach air fèin-òstaireachd ris</string>
 	<string name="media_add_popup_title">Cuir ri leabharlann nam meadhanan</string>
-	<string name="select_from_media_library">Tagh o leabhar-lann nam meadhanan</string>
 	<string name="jetpack_not_found">Cha deach am plugan Jetpack a lorg</string>
 	<string name="reader_untitled_post">(Gun tiotal)</string>
 	<string name="reader_btn_share">Co-roinn</string>

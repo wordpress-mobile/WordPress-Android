@@ -32,7 +32,6 @@ Language: nb_NO
 	<string name="share_media_permission_required">Tillatelser er påkrevd for å kunne dele bilder eller videoer</string>
 	<string name="share_action_post">Legg til i et nytt innlegg</string>
 	<string name="invalid_ip_or_range">Ugyldig IP-adresse eller IP-område</string>
-	<string name="error_media_still_uploading">Vennligst vent på at opplastingen blir ferdig</string>
 	<string name="deleting_media_dlg">Sletter</string>
 	<string name="confirm_delete_media_video">Vil du slette denne videoen?</string>
 	<string name="confirm_delete_media_image">Vil du slette dette bildet?</string>
@@ -93,7 +92,6 @@ Language: nb_NO
 	<string name="async_promo_description">Du kan forlate redigereren, og innlegget ditt vil lagre og publisere bak kulissene! Prøv det ut, da vel!</string>
 	<string name="async_promo_title">Publiser med sikkerhet</string>
 	<string name="editor_uploading_post">Innlegget ditt lastes opp</string>
-	<string name="uploading_post_media">Laster opp medie …</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Er du sikker? Å slette dette innlegget vil også avbryte medieopplastingen.</string>
 	<string name="page_scheduled">Siden har blitt planlagt</string>
 	<string name="post_scheduled">Innlegget har blitt planlagt</string>
@@ -344,7 +342,6 @@ Language: nb_NO
 	<string name="media_encoder_quality_90">Høy</string>
 	<string name="media_encoder_quality_80">Lav</string>
 	<string name="media_upload_state_queued">Stilt opp i kø</string>
-	<string name="media_upload_state_failed">Mislyktes</string>
 	<string name="media_upload_state_deleted">Slettet</string>
 	<string name="media_upload_state_deleting">Sletter</string>
 	<string name="media_upload_state_uploading">Laster opp</string>
@@ -1064,7 +1061,6 @@ Language: nb_NO
 	<string name="delete_sure_page">Slett denne siden</string>
 	<string name="delete_sure">Slett denne kladden</string>
 	<string name="delete_sure_post">Slett dette innlegget</string>
-	<string name="confirm_delete_multi_media">Slette valgte elementer?</string>
 	<string name="cab_selected">%d valgt</string>
 	<string name="reader_label_comment_count_single">En kommentar</string>
 	<string name="comment">Kommentar</string>
@@ -1346,7 +1342,6 @@ Language: nb_NO
 	<string name="connecting_wpcom">Logger inn til WordPress.com</string>
 	<string name="reader_hint_comment_on_comment">Svar på kommentar …</string>
 	<string name="reader_label_added_tag">La til %s</string>
-	<string name="select_from_media_library">Velg fra mediebiblioteket</string>
 	<string name="media_add_popup_title">Legg til i mediebiblioteket</string>
 	<string name="reader_label_removed_tag">Fjernet %s</string>
 	<string name="themes">Temaer</string>

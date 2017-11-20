@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-27 16:43:17+0000
+Translation-Revision-Date: 2017-11-11 16:48:26+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="login_error_suffix">\nPoate încerci un alt cont?</string>
+	<string name="login_error_generic">Au fost probleme cu conectarea la contul Google.</string>
+	<string name="login_error_email_not_found">Contul Google „%s” nu se potrivește cu niciun cont existent pe WordPress.com.</string>
+	<string name="login_error_button">Închide</string>
+	<string name="login_google_button_suffix">Autentificare cu Google.</string>
+	<string name="login_google_button_prefix">Sau poți</string>
+	<string name="enter_wpcom_password_google">Pentru a continua cu acest cont Google, te rog furnizează parola WordPress.com care se potrivește. Aceasta va fi cerută o singură dată.</string>
+	<string name="error_generic_network">A apărut o eroare de rețea. Te rog verifică-ți conexiunea și încearcă din nou.</string>
+	<string name="post_settings_remove_featured_image">Înlătură imaginea reprezentativă</string>
+	<string name="post_settings_choose_featured_image">Alege imagine reprezentativă</string>
 	<string name="login_log_in_for_share_intent">Autentifică-te în WordPress.com pentru a-ți partaja conținutul.</string>
 	<string name="enter_site_address_share_intent">Introdu adresa sitului tău WordPress de pe care vrei să partajezi conținutul.</string>
 	<string name="jetpack_disconnect_error_toast">Eroare la deconectarea sitului</string>
@@ -32,7 +42,6 @@ Language: ro
 	<string name="share_action_post">Adaugă într-un articol nou</string>
 	<string name="share_media_permission_required">Permisiuni necesare pentru a partaja imagini sau videouri</string>
 	<string name="invalid_ip_or_range">IP sau interval de IP-uri invalid</string>
-	<string name="error_media_still_uploading">Te rog așteaptă să se termine încărcarea</string>
 	<string name="deleting_media_dlg">Ștergere</string>
 	<string name="confirm_delete_media_video">Ștergi acest video?</string>
 	<string name="confirm_delete_media_image">Ștergi această imagine?</string>
@@ -93,7 +102,7 @@ Language: ro
 	<string name="async_promo_description">Acum poți părăsi editorul și articolul tău se va salva și publica în spatele scenei! Încearcă!</string>
 	<string name="async_promo_title">Publică cu Confidence</string>
 	<string name="editor_uploading_post">Articolul tău se încarcă</string>
-	<string name="uploading_post_media">Încarc media...</string>
+	<string name="uploading_media">Încarc media...</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Sigur? Ștergerea acestui articol va anula, de asemenea, încărcarea media.</string>
 	<string name="page_scheduled">Pagină programată</string>
 	<string name="post_scheduled">Articol programat</string>
@@ -343,7 +352,7 @@ Language: ro
 	<string name="media_encoder_quality_85">Medie</string>
 	<string name="media_encoder_quality_80">Slabă</string>
 	<string name="media_upload_state_uploaded">Încărcată</string>
-	<string name="media_upload_state_failed">Eșuată</string>
+	<string name="media_upload_state_failed">Încărcare eșuată</string>
 	<string name="media_upload_state_deleted">Ștearsă</string>
 	<string name="media_upload_state_deleting">Ștergere</string>
 	<string name="media_upload_state_uploading">Se încarcă</string>
@@ -1062,7 +1071,6 @@ Language: ro
 	<string name="themes_fetching">Se aduc teme...</string>
 	<string name="ssl_certificate_details">Detalii</string>
 	<string name="cab_selected">%d selectate</string>
-	<string name="confirm_delete_multi_media">Ștergi elementele selectate?</string>
 	<string name="delete_sure_page">Șterge această pagină</string>
 	<string name="delete_sure">Șterge această ciornă</string>
 	<string name="delete_sure_post">Șterge acest articol</string>
@@ -1346,7 +1354,6 @@ Language: ro
 	<string name="reader_btn_share">Partajare</string>
 	<string name="reader_untitled_post">(Fără titlu)</string>
 	<string name="jetpack_not_found">Modulul Jetpack nu e găsit</string>
-	<string name="select_from_media_library">Selectează din biblioteca media</string>
 	<string name="empty_list_default">Această listă e goală</string>
 	<string name="media_add_popup_title">Adaugă în biblioteca media</string>
 	<string name="passcode_turn_on">Pune blocarea PIN-ului</string>

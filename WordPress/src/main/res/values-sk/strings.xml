@@ -460,7 +460,6 @@ Language: sk
 	<string name="delete_sure">Vymazať tento koncept</string>
 	<string name="delete_sure_post">Vymazať tento príspevok</string>
 	<string name="cab_selected">%d vybraných</string>
-	<string name="confirm_delete_multi_media">Zmazať vybrané položky?</string>
 	<string name="posts_empty_list">Žiadne príspevky. Želáte si nejaký vytvoriť?</string>
 	<string name="reader_label_comment_count_multi">odpovedí: %,d</string>
 	<string name="pages_empty_list">Zatiaľ nemáte žiadnu stránku. Želáte si nejakú vytvoriť?</string>
@@ -713,7 +712,6 @@ Language: sk
 	<string name="reader_likes_only_you">Páči sa vám to</string>
 	<string name="nux_tutorial_get_started_title">Začíname!</string>
 	<string name="reader_untitled_post">(bez názvu)</string>
-	<string name="select_from_media_library">Vybrať z knižnice súborov</string>
 	<string name="reader_btn_unfollow">Sledujem</string>
 	<string name="reader_btn_follow">Sledovať</string>
 	<string name="reader_toast_err_view_image">Nie je možné zobraziť obrázok</string>

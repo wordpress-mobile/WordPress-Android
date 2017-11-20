@@ -32,7 +32,6 @@ Language: es_CO
 	<string name="share_action_post">Añadir a una nueva entrada</string>
 	<string name="share_media_permission_required">Se requieren permisos para compartir imágenes o vídeos</string>
 	<string name="invalid_ip_or_range">IP o rango de IP no válido</string>
-	<string name="error_media_still_uploading">Por favor, espera a que termine la carga</string>
 	<string name="deleting_media_dlg">Eliminando</string>
 	<string name="confirm_delete_media_video">¿Borrar este video?</string>
 	<string name="confirm_delete_media_image">¿Eliminar esta imagen?</string>
@@ -93,7 +92,6 @@ Language: es_CO
 	<string name="async_promo_description">¡Ahora puedes salir del editor y tu entrada se guardará y publicará entre bambalinas! ¡Anímate a probarlo!</string>
 	<string name="async_promo_title">Publica con confianza</string>
 	<string name="editor_uploading_post">Tu entrada se está subiendo</string>
-	<string name="uploading_post_media">Subiendo medios…</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">¿Estás seguro? Al borrar esta entrada también cancelarás la subida de medios.</string>
 	<string name="page_scheduled">Página programada</string>
 	<string name="post_scheduled">Entrada programada</string>
@@ -343,7 +341,6 @@ Language: es_CO
 	<string name="media_encoder_quality_85">Media</string>
 	<string name="media_encoder_quality_80">Baja</string>
 	<string name="media_upload_state_uploaded">Se ha subido</string>
-	<string name="media_upload_state_failed">No se ha podido subir</string>
 	<string name="media_upload_state_deleted">Se ha eliminado</string>
 	<string name="media_upload_state_deleting">Eliminando</string>
 	<string name="media_upload_state_uploading">Subiendo</string>
@@ -1064,7 +1061,6 @@ Language: es_CO
 	<string name="delete_sure_post">Eliminar esta entrada</string>
 	<string name="delete_sure_page">Eliminar esta página</string>
 	<string name="cab_selected">%d seleccionados</string>
-	<string name="confirm_delete_multi_media">¿Quieres eliminar los elementos seleccionados?</string>
 	<string name="delete_sure">Eliminar este borrador</string>
 	<string name="faq_button">FAQ</string>
 	<string name="signing_out">Cerrando sesión…</string>
@@ -1346,7 +1342,6 @@ Language: es_CO
 	<string name="reader_hint_comment_on_comment">Contestar al comentario </string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
-	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
 	<string name="media_gallery_type">Tipo</string>
