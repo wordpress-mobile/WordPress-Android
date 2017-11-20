@@ -1,15 +1,9 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.theme;
 
 import java.util.List;
-import java.util.Map;
 
 @SuppressWarnings("WeakerAccess")
 public class WPComThemeResponse {
-    public class WPComThemeMapResponse {
-        public Map<String, WPComThemeResponse> themes;
-        public int count;
-    }
-
     public class WPComThemeListResponse {
         public List<WPComThemeResponse> themes;
     }
