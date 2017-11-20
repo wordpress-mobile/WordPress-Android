@@ -191,6 +191,7 @@ public class PluginStore extends Store {
     }
 
     public enum FetchPluginInfoErrorType {
+        EMPTY_RESPONSE,
         GENERIC_ERROR
     }
 
