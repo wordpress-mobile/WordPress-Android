@@ -40,10 +40,8 @@ public class CommentsDetailActivity extends AppCompatActivity
     public static final String COMMENT_ID_EXTRA = "commentId";
     public static final String COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter";
 
-    @Inject
-    CommentStore mCommentStore;
-    @Inject
-    Dispatcher mDispatcher;
+    @Inject CommentStore mCommentStore;
+    @Inject Dispatcher mDispatcher;
 
     private WPViewPager mViewPager;
     private ProgressBar mProgressBar;

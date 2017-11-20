@@ -10,8 +10,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AppLog;
 
-import javax.annotation.Nullable;
-
 public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
     private final SiteModel mSite;
@@ -21,7 +19,7 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
     CommentDetailFragmentAdapter(FragmentManager fm,
                                  CommentList commentList,
                                  SiteModel site,
-                                 @Nullable CommentAdapter.OnLoadMoreListener onLoadMoreListener) {
+                                 CommentAdapter.OnLoadMoreListener onLoadMoreListener) {
         super(fm);
         this.mSite = site;
         this.mOnLoadMoreListener = onLoadMoreListener;
