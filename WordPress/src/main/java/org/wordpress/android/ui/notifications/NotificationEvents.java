@@ -16,14 +16,6 @@ public class NotificationEvents {
             this.hasUnseenNotes = hasUnseenNotes;
         }
     }
-    public static class NoteModerationStatusChanged {
-        final boolean isModerating;
-        final String noteId;
-        public NoteModerationStatusChanged(String noteId, boolean isModerating) {
-            this.noteId = noteId;
-            this.isModerating = isModerating;
-        }
-    }
     public static class NoteLikeStatusChanged {
         final String noteId;
         public NoteLikeStatusChanged(String noteId) {

@@ -311,16 +311,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         }
     }
 
-    private void setNoteIsModerating(String noteId, boolean isModerating) {
-        if (mNotesAdapter == null) return;
-
-        if (isModerating) {
-            mNotesAdapter.addModeratingNoteId(noteId);
-        } else {
-            mNotesAdapter.removeModeratingNoteId(noteId);
-        }
-    }
-
     private void showEmptyView(@StringRes int titleResId) {
         showEmptyView(titleResId, 0, 0);
     }
@@ -545,31 +535,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         }
         mSwipeToRefreshHelper.setRefreshing(false);
         mNotesAdapter.addAll(event.notes, true);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(final NotificationEvents.NoteModerationStatusChanged event) {
-        if (event.isModerating) {
-            setNoteIsModerating(event.noteId, event.isModerating);
-            EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
-        } else {
-            // Moderation done -> refresh the note before calling the end.
-            NotificationsActions.downloadNoteAndUpdateDB(event.noteId,
-                    new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            setNoteIsModerating(event.noteId, event.isModerating);
-                            EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            setNoteIsModerating(event.noteId, event.isModerating);
-                            EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
-                        }
-                    }
-            );
-        }
     }
 
     @SuppressWarnings("unused")
