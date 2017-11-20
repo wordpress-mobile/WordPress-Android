@@ -55,6 +55,7 @@ import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
+import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -1198,6 +1199,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void onCommentLiked(OnCommentChanged event) {
+        // send signal for listeners to perform any needed updates
+        if (mNote != null) {
+            EventBus.getDefault().postSticky(new NotificationEvents.NoteLikeStatusChanged(mNote.getId()));
+        }
+
         if (event.isError()) {
             // Revert button state in case of an error
             toggleLikeButton(!mBtnLikeComment.isActivated());
