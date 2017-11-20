@@ -536,13 +536,13 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(final NotificationEvents.NoteLikeStatusChanged event) {
+    public void onEventMainThread(final NotificationEvents.NoteLikeOrModerationStatusChanged event) {
         // Like/unlike done -> refresh the note and update db
         NotificationsActions.downloadNoteAndUpdateDB(event.noteId,
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeStatusChanged.class);
+                        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeOrModerationStatusChanged.class);
                         //now re-set the object in our list adapter with the note saved in the updated DB
                         Note note = NotificationsTable.getNoteById(event.noteId);
                         if (note != null) {
@@ -552,7 +552,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeStatusChanged.class);
+                        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeOrModerationStatusChanged.class);
                     }
                 }
         );

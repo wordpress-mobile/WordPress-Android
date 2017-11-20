@@ -16,9 +16,9 @@ public class NotificationEvents {
             this.hasUnseenNotes = hasUnseenNotes;
         }
     }
-    public static class NoteLikeStatusChanged {
+    public static class NoteLikeOrModerationStatusChanged {
         final String noteId;
-        public NoteLikeStatusChanged(String noteId) {
+        public NoteLikeOrModerationStatusChanged(String noteId) {
             this.noteId = noteId;
         }
     }

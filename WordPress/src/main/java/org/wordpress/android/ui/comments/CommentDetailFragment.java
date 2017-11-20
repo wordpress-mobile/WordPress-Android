@@ -1154,6 +1154,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void onCommentModerated(OnCommentChanged event) {
+        // send signal for listeners to perform any needed updates
+        if (mNote != null) {
+            EventBus.getDefault().postSticky(new NotificationEvents.NoteLikeOrModerationStatusChanged(mNote.getId()));
+        }
+
         if (!isAdded()) return;
 
         if (event.isError()) {
@@ -1201,7 +1206,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void onCommentLiked(OnCommentChanged event) {
         // send signal for listeners to perform any needed updates
         if (mNote != null) {
-            EventBus.getDefault().postSticky(new NotificationEvents.NoteLikeStatusChanged(mNote.getId()));
+            EventBus.getDefault().postSticky(new NotificationEvents.NoteLikeOrModerationStatusChanged(mNote.getId()));
         }
 
         if (event.isError()) {
