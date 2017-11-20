@@ -13,9 +13,11 @@ import org.wordpress.android.util.AutoForeground;
 
 class LoginNotification {
     private static Intent getPendingIntent(Context context) {
+        // Let's get an Intent with the sole purpose of _resuming_ the app from the background
         Intent resumeIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
 
-        // apparently, we need to null out the package name to make the intent resume the app
+        // getLaunchIntentForPackage() seems to set the Package Name but if we construct a launcher Intent manually
+        //  the package name is not set so, let's null it out here to match the manual Intent.
         resumeIntent.setSelector(null);
         resumeIntent.setPackage(null);
 
