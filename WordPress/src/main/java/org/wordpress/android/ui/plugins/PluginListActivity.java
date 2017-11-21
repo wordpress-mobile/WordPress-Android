@@ -149,7 +149,7 @@ public class PluginListActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPluginChanged(OnSitePluginUpdated event) {
+    public void onSitePluginUpdated(OnSitePluginUpdated event) {
         if (event.isError()) {
             // We can ignore the error since the action is taken in `PluginDetailActivity`
             return;
