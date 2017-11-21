@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.accounts.login;
 
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -16,6 +19,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.CredentialPickerConfig;
+import com.google.android.gms.auth.api.credentials.HintRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -39,17 +49,23 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
-        implements TextWatcher, OnEditorCommitListener {
+import static android.app.Activity.RESULT_OK;
+
+public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
+        OnEditorCommitListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String KEY_GOOGLE_EMAIL = "KEY_GOOGLE_EMAIL";
     private static final String KEY_IS_SOCIAL = "KEY_IS_SOCIAL";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
+    private static final String LOG_TAG = LoginEmailFragment.class.getSimpleName();
+    private static final int GOOGLE_API_CLIENT_ID = 1001;
+    private static final int REQUEST_CREDENTIALS = 9001;
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
     private ArrayList<Integer> mOldSitesIDs;
+    private GoogleApiClient mGoogleApiClient;
     private String mGoogleEmail;
     private String mRequestedEmail;
     private WPLoginInputRow mEmailInput;
@@ -92,6 +108,14 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
         autoFillFromBuildConfig("DEBUG_DOTCOM_LOGIN_EMAIL", mEmailInput.getEditText());
         mEmailInput.addTextChangedListener(this);
         mEmailInput.setOnEditorCommitListener(this);
+        mEmailInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    getEmailHints();
+                }
+            }
+        });
 
         LinearLayout googleLoginButton = (LinearLayout) rootView.findViewById(R.id.login_google_button);
         googleLoginButton.setOnClickListener(new OnClickListener() {
@@ -188,6 +212,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(LoginEmailFragment.this)
+                .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, LoginEmailFragment.this)
+                .addApi(Auth.CREDENTIALS_API)
+                .build();
     }
 
     @Override
@@ -231,6 +260,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     public void onDetach() {
         super.onDetach();
         mLoginListener = null;
+
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+        }
     }
 
     private String getCleanedEmail() {
@@ -322,5 +356,50 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
     protected void onLoginFinished() {
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
         mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        AppLog.d(T.NUX, LOG_TAG + ": Google API client connected");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        AppLog.d(T.NUX, LOG_TAG + ": Google API connection result: " + connectionResult);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        AppLog.d(T.NUX, LOG_TAG + ": Google API client connection suspended");
+    }
+
+    public void getEmailHints() {
+        HintRequest hintRequest = new HintRequest.Builder()
+                .setHintPickerConfig(new CredentialPickerConfig.Builder()
+                        .setShowCancelButton(true)
+                        .build())
+                .setEmailAddressIdentifierSupported(true)
+                .build();
+
+        PendingIntent intent = Auth.CredentialsApi.getHintPickerIntent(mGoogleApiClient, hintRequest);
+
+        try {
+            startIntentSenderForResult(intent.getIntentSender(), REQUEST_CREDENTIALS, null, 0, 0, 0, null);
+        } catch (IntentSender.SendIntentException exception) {
+            AppLog.d(T.NUX, LOG_TAG + "Could not start email hint picker" + exception);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CREDENTIALS) {
+            if (resultCode == RESULT_OK) {
+                Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
+                mEmailInput.getEditText().setText(credential.getId());
+                next(getCleanedEmail());
+            }
+        }
     }
 }
