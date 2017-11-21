@@ -185,7 +185,8 @@
     <string name="media_edit_failure">Failed to update</string>
     <string name="saving">Saving…</string>
     <string name="confirm_discard_changes">Discard unsaved changes?</string>
-    <string name="media_edit_card_caption">File Details</string>
+    <string name="media_edit_file_details_card_caption">File Details</string>
+    <string name="media_edit_customize_card_caption">Customize</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_filename_caption">File Name</string>
     <string name="media_edit_filetype_caption">File Type</string>
@@ -212,8 +213,10 @@
     <string name="media_empty_audio_list">You don\'t have any audio</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete_media_image">Delete this image?</string>
+    <string name="confirm_remove_media_image">Remove this image from the post?</string>
     <string name="confirm_delete_media_video">Delete this video?</string>
     <string name="deleting_media_dlg">Deleting</string>
+    <string name="remove_image_from_post">Remove from post</string>
 
     <!-- Media details -->
     <string name="media_details_label_date_added">Added</string>
@@ -236,6 +239,8 @@
     <string name="theme_auth_error_message">Ensure you have the privilege to set themes</string>
     <string name="theme_current_theme">Current theme</string>
     <string name="theme_premium_theme">Premium theme</string>
+    <string name="uploaded_themes_header">Uploaded themes</string>
+    <string name="wpcom_themes_header">WordPress.com themes</string>
     <string name="theme_no_search_result_found">Sorry, no themes found.</string>
     <string name="theme_auth_error_authenticate">Failed to fetch themes: failed authenticate user</string>
 
@@ -285,11 +290,17 @@
     </string-array>
 
     <!-- post uploads -->
-    <string name="post_published_param">\"%s\" has been published!</string>
-    <string name="post_updated_param">\"%s\" has been updated!</string>
-    <string name="post_scheduled_param">\"%s\" has been scheduled!</string>
-    <string name="post_draft_param">\"%s\" has been saved as a draft!</string>
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
+    <string name="media_file_post_mixed_not_uploaded">%1$d %2$s with %3$d files not uploaded</string>
+    <string name="media_files_not_uploaded">%d files not uploaded</string>
+    <string name="media_files_uploaded">%d files uploaded</string>
+    <string name="media_file_not_uploaded">1 file not uploaded</string>
+    <string name="media_file_uploaded">1 file uploaded</string>
+    <string name="media_files_uploaded_successfully">, %d successfully uploaded</string>
+    <string name="media_all_files_uploaded_successfully">%d files uploaded successfully</string>
+    <string name="retry_needs_aztec" translatable="false">Retry only available in the Beta editor</string>
+    <string name="media_file_missing_for_retry">Retry not possible - some files in this Post are missing from your device</string>
+    <string name="media_files_uploaded_write_post">Write Post</string>
 
     <!-- post view -->
     <string name="post_id">Post</string>
@@ -307,7 +318,7 @@
     <string name="featured">Use as featured image</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="out_of_memory">Device out of memory</string>
-    <string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
+    <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
     <string name="download">Downloading media</string>
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
@@ -427,6 +438,12 @@
     <string name="preview">Preview</string>
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content…</string>
+    <string name="uploading_title">Uploading…</string>
+    <string name="uploading_subtitle_mixed">%1$d %2$s, and %3$d of %4$d files remaining</string>
+    <string name="uploading_subtitle_mixed_one">%1$d %2$s, and 1 file remaining</string>
+    <string name="uploading_subtitle_posts_only">%1$d %2$s remaining</string>
+    <string name="uploading_subtitle_media_only">%1$d of %2$d files remaining</string>
+    <string name="uploading_subtitle_media_only_one">1 file remaining</string>
     <string name="uploading_total">Uploading %1$d of %2$d</string>
     <string name="uploading_media">Uploading media…</string>
 
@@ -1145,6 +1162,29 @@
         <item>@string/alignment_right</item>
     </string-array>
 
+
+    <!-- Image Size -->
+    <string name="image_size">Size</string>
+
+    <string name="size_thumbnail">Thumbnail</string>
+    <string name="size_medium">Medium</string>
+    <string name="size_large">Large</string>
+    <string name="size_full">Full Size</string>
+
+    <string-array name="image_size_key_array" translatable="false">
+        <item>size-thumbnail</item>
+        <item>size-medium</item>
+        <item>size-large</item>
+        <item>size-full</item>
+    </string-array>
+
+    <string-array name="image_size_label_array" translatable="false">
+        <item>@string/size_thumbnail</item>
+        <item>@string/size_medium</item>
+        <item>@string/size_large</item>
+        <item>@string/size_full</item>
+    </string-array>
+
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
     <string name="publisher">Publisher:</string>
@@ -1214,8 +1254,8 @@
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
-    <string name="error_media_recover_post">We were unable to upload this post\'s media. Please edit the post to try again.</string>
-    <string name="error_media_recover_page">We were unable to upload this page\'s media. Please edit the page to try again.</string>
+    <string name="error_media_recover_post">Unable to upload this post\'s media</string>
+    <string name="error_media_recover_page">Unable to upload this page\'s media</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
     <string name="error_page_does_not_exist">This page no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
@@ -1236,6 +1276,7 @@
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
     <string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
+    <string name="error_generic_error">Couldn\'t perform operation</string>
 
     <!-- Post Error -->
     <string name="error_unknown_post">Could not find the post on the server</string>
@@ -1670,15 +1711,6 @@
     <string name="support">Support</string>
     <string name="active">Active</string>
 
-    <string name="theme_free">Free</string>
-    <string name="theme_all">All</string>
-    <string name="theme_premium">Premium</string>
-    <string-array name="themes_filter_array" translatable="false">
-        <item>@string/theme_free</item>
-        <item>@string/theme_all</item>
-        <item>@string/theme_premium</item>
-    </string-array>
-
     <string name="title_activity_theme_support">Themes</string>
     <string name="theme_activate">Activate</string>
     <string name="theme_try_and_customize">Try &amp; Customize</string>
@@ -1966,6 +1998,7 @@
     <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
     <string name="login_empty_site_url">Please enter a site address</string>
     <string name="login_empty_username">Please enter a username</string>
+    <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_logged_in_as">Logged in as</string>
@@ -1977,8 +2010,5 @@
     <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
-
-    <!-- shared element names -->
-    <string name="shared_element_media" translatable="false">media</string>
 
 </resources>

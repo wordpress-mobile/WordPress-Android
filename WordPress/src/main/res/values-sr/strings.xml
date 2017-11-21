@@ -192,7 +192,6 @@ Language: sr_RS
 	<string name="ssl_certificate_details">Детаљи</string>
 	<string name="delete_sure_page">Обриши ову страну</string>
 	<string name="cab_selected">%d изабрано</string>
-	<string name="confirm_delete_multi_media">Обрисати изабране ставке?</string>
 	<string name="delete_sure">Обриши овај нацрт</string>
 	<string name="delete_sure_post">Обриши овај чланак</string>
 	<string name="browse_our_faq_button">Прегледајте наша ЧПП</string>
@@ -460,7 +459,6 @@ Language: sr_RS
 	<string name="reader_btn_unfollow">Престани са праћењем</string>
 	<string name="reader_btn_follow">Прати</string>
 	<string name="media_add_popup_title">Додајте у библиотеку медија</string>
-	<string name="select_from_media_library">Одаберите из библиотеке медија</string>
 	<string name="reader_hint_comment_on_comment">Одговор на коментар…</string>
 	<string name="media_gallery_type_slideshow">Приказ слајдова</string>
 	<string name="media_gallery_type">Врста</string>

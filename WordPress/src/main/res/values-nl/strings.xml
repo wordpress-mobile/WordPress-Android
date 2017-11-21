@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-20 15:28:38+0000
+Translation-Revision-Date: 2017-11-16 13:44:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
-	<string name="error_media_still_uploading">Wacht tot de upload voltooid is</string>
+	<string name="login_error_button">Sluit</string>
+	<string name="login_google_button_suffix">Log in met Google.</string>
+	<string name="jetpack_security_setting_title">Beveiliging</string>
+	<string name="jetpack_site_settings_category_title">Jetpack instellingen</string>
+	<string name="invalid_ip_or_range">Onjuist IP of IP-reeks</string>
 	<string name="confirm_delete_media_video">Deze video verwijderen?</string>
 	<string name="deleting_media_dlg">Verwijderen...</string>
 	<string name="confirm_delete_media_image">Deze afbeelding verwijderen?</string>
@@ -22,7 +26,7 @@ Language: nl
 	<string name="media_edit_url_caption">URL</string>
 	<string name="media_edit_filetype_caption">Bestandstype</string>
 	<string name="media_edit_filename_caption">Bestandsnaam</string>
-	<string name="media_edit_card_caption">Bestandgegevens</string>
+	<string name="media_edit_file_details_card_caption">Bestandgegevens</string>
 	<string name="copy">Kopieer</string>
 	<string name="media_edit_alttext_text">Alt. tekst</string>
 	<string name="connect_site">Site koppelen</string>
@@ -67,7 +71,7 @@ Language: nl
 	<string name="async_promo_description">Je kunt de editor nu afsluiten; je bericht wordt automatisch opgeslagen en gepubliceerd! Probeer het ook eens!</string>
 	<string name="async_promo_title">Vol vertrouwen publiceren</string>
 	<string name="editor_uploading_post">Je bericht wordt geüpload</string>
-	<string name="uploading_post_media">Media worden geüpload ...</string>
+	<string name="uploading_media">Media uploaden...</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Weet je het zeker? Door dit bericht te verwijderen, wordt de media-upload ook geannuleerd.</string>
 	<string name="page_scheduled">Pagina ingepland</string>
 	<string name="post_scheduled">Bericht ingepland</string>
@@ -317,11 +321,11 @@ Language: nl
 	<string name="media_encoder_quality_85">Gemiddeld</string>
 	<string name="media_encoder_quality_80">Laag</string>
 	<string name="media_upload_state_uploaded">Geüpload</string>
-	<string name="media_upload_state_failed">Mislukt</string>
 	<string name="media_upload_state_deleted">Verwijderd</string>
 	<string name="media_upload_state_deleting">Verwijderen ...</string>
 	<string name="media_upload_state_uploading">Uploaden</string>
 	<string name="media_upload_state_queued">In wachtrij geplaatst</string>
+	<string name="media_upload_state_failed">Upload mislukt</string>
 	<string name="update_draft">Concept bijwerken</string>
 	<string name="keep_editing">Doorgaan met bewerken</string>
 	<string name="image_quality">Afbeeldingskwaliteit</string>
@@ -1038,7 +1042,6 @@ Language: nl
 	<string name="delete_sure_post">Dit bericht verwijderen</string>
 	<string name="delete_sure">Dit concept verwijderen</string>
 	<string name="delete_sure_page">Deze pagina verwijderen</string>
-	<string name="confirm_delete_multi_media">Geselecteerde items verwijderen?</string>
 	<string name="cab_selected">%d geselecteerd</string>
 	<string name="faq_button">FAQ</string>
 	<string name="browse_our_faq_button">Bekijk onze FAQ</string>
@@ -1297,7 +1300,6 @@ Language: nl
 	<string name="nux_add_selfhosted_blog">Voeg zelf gehoste site toe</string>
 	<string name="signing_in">Inloggen…</string>
 	<string name="nux_oops_not_selfhosted_blog">Log in op WordPress.com</string>
-	<string name="select_from_media_library">Selecteer uit de mediabibliotheek</string>
 	<string name="media_add_popup_title">Toevoegen aan mediabibliotheek</string>
 	<string name="reader_untitled_post">(geen titel)</string>
 	<string name="reader_btn_share">Delen</string>

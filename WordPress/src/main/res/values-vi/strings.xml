@@ -596,7 +596,6 @@ Language: vi_VN
 	<string name="delete_sure_post">Xóa bài viết này</string>
 	<string name="delete_sure">Xóa bản nháp này</string>
 	<string name="delete_sure_page">Xóa trang này</string>
-	<string name="confirm_delete_multi_media">Xóa các mục đã chọn?</string>
 	<string name="cab_selected">%d đã chọn</string>
 	<string name="create_new_blog_wpcom">Tạo blog WordPress.com</string>
 	<string name="new_blog_wpcom_created">Blog WordPress.com đã được tạo!</string>
@@ -870,7 +869,6 @@ Language: vi_VN
 	<string name="reader_toast_err_tag_exists">Bạn đã theo dõi thẻ này rồi</string>
 	<string name="media_add_popup_title">Thêm vào thư viện media</string>
 	<string name="empty_list_default">Danh sách này trống rỗng</string>
-	<string name="select_from_media_library">Chọn từ thư viện media</string>
 	<string name="reader_untitled_post">(Chưa có tiêu đề)</string>
 	<string name="limit_reached">Đã đến giới hạn . Bạn có thể thử lại sau 1 phút. Đang thử lại trước đây rằng sẽ chỉ làm tăng thời gian bạn phải chờ trước khi lệnh cấm được dỡ bỏ. Nếu bạn nghĩ rằng đây là lỗi, liên hệ với hỗ trợ.</string>
 	<string name="nux_tutorial_get_started_title">Bắt đầu!</string>

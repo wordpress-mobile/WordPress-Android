@@ -664,7 +664,6 @@ Language: ms
 	<string name="stats_followers_total_wpcom">Jumlah Pengikut WordPress.com: %1$s</string>
 	<string name="ssl_certificate_details">Perincian</string>
 	<string name="cab_selected">%d dipilih</string>
-	<string name="confirm_delete_multi_media">Hapuskan butiran yang dipilih?</string>
 	<string name="delete_sure">Hapuskan draf ini</string>
 	<string name="delete_sure_page">Hapuskan halaman ini</string>
 	<string name="delete_sure_post">Hapuskan kiriman ini</string>
@@ -920,7 +919,6 @@ Language: ms
 	<string name="signing_in">Melog masuk...</string>
 	<string name="nux_oops_not_selfhosted_blog">Log masuk ke WordPress.com</string>
 	<string name="empty_list_default">Senarai ini kosong</string>
-	<string name="select_from_media_library">Pilih dari perpustakaan media</string>
 	<string name="jetpack_not_found">Pemalam Jetpack tidak dijumpai</string>
 	<string name="reader_untitled_post">(Tanpa tajuk)</string>
 	<string name="reader_btn_share">Kongsi</string>
