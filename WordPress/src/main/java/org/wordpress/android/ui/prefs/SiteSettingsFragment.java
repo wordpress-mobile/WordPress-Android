@@ -166,6 +166,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Writing settings
     private DetailListPreference mCategoryPref;
     private DetailListPreference mFormatPref;
+    private DetailListPreference mWeekStartPref;
     private Preference mRelatedPostsPref;
 
     // Discussion settings preview
@@ -771,6 +772,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpMatchEmailPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_match_via_email);
         mJpUseTwoFactorPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_require_two_factor);
         mJpWhitelistPref = (WPPreference) getClickPref(R.string.pref_key_jetpack_brute_force_whitelist);
+        mWeekStartPref = (DetailListPreference) getChangePref(R.string.pref_key_site_week_start);
 
         sortLanguages();
 
@@ -803,7 +805,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
-                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref,
+                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref, mWeekStartPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref
         };
