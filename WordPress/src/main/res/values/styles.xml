@@ -30,7 +30,6 @@
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
         <item name="windowActionModeOverlay">true</item>
-        <item name="swipeToRefreshStyle">@style/WordPress.SwipeToRefresh</item>
         <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
     </style>
 
@@ -68,6 +67,10 @@
 
     <style name="LoginTheme.Button" parent="Widget.AppCompat.Button.Colored">
         <item name="colorControlHighlight">@color/color_control_highlight</item>
+    </style>
+
+    <style name="LoginTheme.Button.Google" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/blue_wordpress</item>
     </style>
 
     <style name="LoginTheme.TextLabel" parent="TextAppearance.AppCompat.Body1">
@@ -122,7 +125,7 @@
         <item name="android:divider">@drawable/tab_divider_wordpress</item>
     </style>
 
-   <style name="PopupMenu.WordPress" parent="android:Widget.Holo.ListPopupWindow">
+    <style name="PopupMenu.WordPress" parent="android:Widget.Holo.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
     </style>
 
@@ -178,6 +181,20 @@
     </style>
 
     <style name="FilteredRecyclerViewToolbar.Theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:listDivider">@null</item>
+    </style>
+
+    <style name="Toolbar.Primary" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/color_primary</item>
+        <item name="android:theme">@style/Toolbar.Theme</item>
+    </style>
+
+    <style name="Toolbar.Secondary" parent="@style/Toolbar.Primary">
+        <item name="android:background">@color/blue_medium</item>
+        <item name="contentInsetStart">@dimen/toolbar_content_offset</item>
+    </style>
+
+    <style name="Toolbar.Theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:listDivider">@null</item>
     </style>
 
@@ -239,6 +256,40 @@
         <item name="android:textSize">14sp</item>
         <item name="android:button">@null</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="MediaSettings" />
+    <style name="MediaSettings.Activity" parent="WordPress">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+    <style name="MediaSettings.TextInputStyle">
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+    </style>
+    <style name="MediaSettings.TextInputTheme" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/grey_500</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlNormal">@color/grey_500</item>
+        <item name="colorControlActivated">@color/blue_wordpress</item>
+    </style>
+    <style name="MediaSettings.Divider">
+        <item name="android:background">@color/divider_grey</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+    </style>
+    <style name="MediaSettings.Label">
+        <item name="android:layout_marginLeft">@dimen/media_settings_margin</item>
+        <item name="android:layout_marginRight">@dimen/media_settings_margin</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+    <style name="MediaSettings.Value">
+        <item name="android:layout_marginLeft">@dimen/media_settings_margin</item>
+        <item name="android:layout_marginRight">@dimen/media_settings_margin</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
     <style name="EmptyListText">
@@ -362,15 +413,12 @@
         <item name="android:background">@color/white</item>
     </style>
 
-    <style name="WordPress.SwipeToRefresh">
-        <item name="refreshIndicatorColor">@color/blue_medium</item>
-    </style>
-
     <!--My Site Styles-->
     <style name="MySiteListRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">@dimen/my_site_list_row_padding_left</item>
+        <item name="android:paddingStart">@dimen/my_site_list_row_padding_left</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
@@ -378,10 +426,12 @@
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentStart">true</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
@@ -390,6 +440,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
@@ -398,16 +449,18 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MySiteListRowSecondaryElement">
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:gravity">right|center_vertical</item>
     </style>
 
     <style name="MySiteListRowSecondaryTextView" parent="MySiteListRowSecondaryElement">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_alignParentRight">true</item>
@@ -418,6 +471,7 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MySiteListRowSecondaryIcon" parent="MySiteListRowSecondaryElement">

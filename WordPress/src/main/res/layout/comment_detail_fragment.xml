@@ -36,7 +36,8 @@
                     android:id="@+id/image_avatar"
                     style="@style/ReaderImageView.Avatar"
                     android:layout_marginRight="@dimen/margin_large"
-                    android:layout_marginTop="@dimen/margin_small" />
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/margin_large"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_name"
@@ -49,7 +50,9 @@
                     android:maxLines="1"
                     android:textColor="@color/reader_hyperlink"
                     android:textSize="@dimen/text_sz_extra_large"
-                    tools:text="text_name" />
+                    tools:text="text_name"
+                    android:layout_toStartOf="@+id/text_date"
+                    android:layout_toEndOf="@+id/image_avatar"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_post_title"
@@ -65,7 +68,9 @@
                     android:paddingTop="@dimen/margin_extra_small"
                     android:textColor="@color/grey_darken_10"
                     android:textSize="@dimen/text_sz_large"
-                    tools:text="text_post_title" />
+                    tools:text="text_post_title"
+                    android:layout_alignStart="@+id/text_name"
+                    android:layout_toStartOf="@+id/text_status"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_date"
@@ -76,7 +81,9 @@
                     android:layout_marginLeft="@dimen/margin_small"
                     android:layout_marginTop="@dimen/margin_small"
                     android:maxLines="1"
-                    tools:text="date" />
+                    tools:text="date"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="@dimen/margin_small"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_status"
@@ -88,7 +95,9 @@
                     android:layout_marginTop="@dimen/margin_small"
                     android:textSize="@dimen/text_sz_small"
                     android:visibility="visible"
-                    tools:text="STATUS" />
+                    tools:text="STATUS"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="@dimen/margin_small"/>
             </RelativeLayout>
 
             <!--
@@ -111,10 +120,8 @@
                 android:fontFamily="serif"
                 tools:text="text_content" />
 
-            <View android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@drawable/notifications_list_divider_full_width" />
         </LinearLayout>
+
     </ScrollView>
 
     <LinearLayout

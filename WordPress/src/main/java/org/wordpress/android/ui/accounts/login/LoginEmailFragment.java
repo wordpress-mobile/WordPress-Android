@@ -2,7 +2,10 @@ package org.wordpress.android.ui.accounts.login;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -11,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -21,25 +25,35 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.ui.accounts.LoginMode;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher, OnEditorCommitListener {
+public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
+        implements TextWatcher, OnEditorCommitListener {
+    private static final String KEY_GOOGLE_EMAIL = "KEY_GOOGLE_EMAIL";
+    private static final String KEY_IS_SOCIAL = "KEY_IS_SOCIAL";
+    private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
-    private WPLoginInputRow mEmailInput;
-
+    private ArrayList<Integer> mOldSitesIDs;
+    private String mGoogleEmail;
     private String mRequestedEmail;
+    private WPLoginInputRow mEmailInput;
+    private boolean isSocialLogin;
 
     @Override
     protected @LayoutRes int getContentLayout() {
@@ -48,14 +62,17 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected @LayoutRes int getProgressBarText() {
-        return R.string.checking_email;
+        return isSocialLogin ? R.string.logging_in : R.string.checking_email;
     }
 
     @Override
-    protected void setupLabel(TextView label) {
+    protected void setupLabel(@NonNull TextView label) {
         switch (mLoginListener.getLoginMode()) {
             case WPCOM_LOGIN_DEEPLINK:
                 label.setText(R.string.login_log_in_for_deeplink);
+                break;
+            case SHARE_INTENT:
+                label.setText(R.string.login_log_in_for_share_intent);
                 break;
             case FULL:
                 label.setText(R.string.enter_email_wordpress_com);
@@ -75,6 +92,22 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         autoFillFromBuildConfig("DEBUG_DOTCOM_LOGIN_EMAIL", mEmailInput.getEditText());
         mEmailInput.addTextChangedListener(this);
         mEmailInput.setOnEditorCommitListener(this);
+
+        LinearLayout googleLoginButton = (LinearLayout) rootView.findViewById(R.id.login_google_button);
+        googleLoginButton.setOnClickListener(new OnClickListener() {
+            @SuppressWarnings("PrivateMemberAccessBetweenOuterAndInnerClass")
+            @Override
+            public void onClick(View view) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_CLICK);
+                WPActivityUtils.hideKeyboard(getActivity().getCurrentFocus());
+
+                if (NetworkUtils.checkConnection(getActivity())) {
+                    mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
+                    isSocialLogin = true;
+                    addGoogleFragment();
+                }
+            }
+        });
     }
 
     @Override
@@ -94,6 +127,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
         switch (mLoginListener.getLoginMode()) {
             case FULL:
+            case SHARE_INTENT:
                 // all features enabled and with typical values
                 secondaryButton.setText(R.string.enter_site_address_instead);
                 break;
@@ -109,6 +143,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         }
 
         primaryButton.setOnClickListener(new OnClickListener() {
+            @SuppressWarnings("PrivateMemberAccessBetweenOuterAndInnerClass")
             public void onClick(View v) {
                 next(getCleanedEmail());
             }
@@ -123,9 +158,30 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     protected void onHelp() {
         if (mLoginListener != null) {
-            // send to Help the exact string the user has inputted for email
-            mLoginListener.helpEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()));
+            if (isSocialLogin) {
+                // Send last email chosen from Google login if available.
+                mLoginListener.helpSocialEmailScreen(mGoogleEmail);
+            } else {
+                // Send exact string the user has inputted for email
+                mLoginListener.helpEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()));
+            }
         }
+    }
+
+    private void addGoogleFragment() {
+        LoginGoogleFragment loginGoogleFragment;
+        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        loginGoogleFragment = (LoginGoogleFragment) fragmentManager.findFragmentByTag(LoginGoogleFragment.TAG);
+
+        if (loginGoogleFragment != null) {
+            fragmentTransaction.remove(loginGoogleFragment);
+        }
+
+        loginGoogleFragment = new LoginGoogleFragment();
+        loginGoogleFragment.setRetainInstance(true);
+        fragmentTransaction.add(loginGoogleFragment, LoginGoogleFragment.TAG);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -139,7 +195,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
+            mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
             mRequestedEmail = savedInstanceState.getString(KEY_REQUESTED_EMAIL);
+            mGoogleEmail = savedInstanceState.getString(KEY_GOOGLE_EMAIL);
+            isSocialLogin = savedInstanceState.getBoolean(KEY_IS_SOCIAL);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
         }
@@ -148,8 +207,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
+        outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
         outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);
+        outState.putString(KEY_GOOGLE_EMAIL, mGoogleEmail);
+        outState.putBoolean(KEY_IS_SOCIAL, isSocialLogin);
     }
 
     protected void next(String email) {
@@ -164,6 +225,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         } else {
             showEmailError(R.string.email_invalid);
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mLoginListener = null;
     }
 
     private String getCleanedEmail() {
@@ -193,6 +260,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mEmailInput.setError(null);
+        isSocialLogin = false;
     }
 
     private void showEmailError(int messageId) {
@@ -240,5 +308,19 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 AppLog.e(T.API, "OnAvailabilityChecked unhandled event type: " + event.error.type);
                 break;
         }
+    }
+
+    public void setGoogleEmail(String email) {
+        mGoogleEmail = email;
+    }
+
+    public void finishLogin() {
+        doFinishLogin();
+    }
+
+    @Override
+    protected void onLoginFinished() {
+        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+        mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
     }
 }

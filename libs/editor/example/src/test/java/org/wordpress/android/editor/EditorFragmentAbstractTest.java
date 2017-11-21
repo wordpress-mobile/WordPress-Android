@@ -95,6 +95,11 @@ public class EditorFragmentAbstractTest {
         }
 
         @Override
+        public void removeMedia(String mediaId) {
+
+        }
+
+        @Override
         public void setTitlePlaceholder(CharSequence text) {
 
         }

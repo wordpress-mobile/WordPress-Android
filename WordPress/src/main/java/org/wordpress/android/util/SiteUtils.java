@@ -10,7 +10,10 @@ import java.util.List;
 
 public class SiteUtils {
     public static String getSiteNameOrHomeURL(SiteModel site) {
-        String siteName = getSiteName(site);
+        String siteName = site.getName();
+        if (siteName == null) {
+            return "";
+        }
         if (siteName.trim().length() == 0) {
             siteName = getHomeURLOrHostName(site);
         }
@@ -24,10 +27,6 @@ public class SiteUtils {
             return UrlUtils.getHost(site.getXmlRpcUrl());
         }
         return homeURL;
-    }
-
-    public static String getSiteName(SiteModel site) {
-        return StringUtils.unescapeHTML(site.getName());
     }
 
     /**

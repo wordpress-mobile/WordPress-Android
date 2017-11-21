@@ -1,6 +1,7 @@
 package org.wordpress.android.analytics;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.automattic.android.tracks.TracksClient;
 
@@ -298,7 +299,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             AppLog.e(AppLog.T.UTILS, e);
         }
 
-        if (metadata.isUserConnected() && metadata.isWordPressComUser()) {
+        // De-anonymize user only when it's WPCOM and we have the username available (might still be waiting for it to
+        //  be fetched).
+        if (metadata.isUserConnected() && metadata.isWordPressComUser()
+                && !TextUtils.isEmpty(metadata.getUsername())) {
             setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
             if (getAnonID() != null) {
@@ -564,6 +568,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_comment_liked";
             case NOTIFICATION_UNLIKED:
                 return "notifications_comment_unliked";
+            case NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST:
+                return "notifications_upload_media_success_write_post";
+            case NOTIFICATION_UPLOAD_POST_ERROR_RETRY:
+                return "notifications_upload_post_error_retry";
+            case NOTIFICATION_UPLOAD_MEDIA_ERROR_RETRY:
+                return "notifications_upload_media_error_retry";
             case OPENED_POSTS:
                 return "site_menu_opened";
             case OPENED_PAGES:
@@ -684,6 +694,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_autofill_credentials_updated";
             case LOGIN_PROLOGUE_PAGED:
                 return "login_prologue_paged";
+            case LOGIN_PROLOGUE_PAGED_JETPACK:
+                return "login_prologue_paged_jetpack";
+            case LOGIN_PROLOGUE_PAGED_NOTIFICATIONS:
+                return "login_prologue_paged_notifications";
+            case LOGIN_PROLOGUE_PAGED_POST:
+                return "login_prologue_paged_post";
+            case LOGIN_PROLOGUE_PAGED_READER:
+                return "login_prologue_paged_reader";
+            case LOGIN_PROLOGUE_PAGED_STATS:
+                return "login_prologue_paged_stats";
             case LOGIN_PROLOGUE_VIEWED:
                 return "login_prologue_viewed";
             case LOGIN_EMAIL_FORM_VIEWED:
@@ -708,6 +728,24 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_epilogue_viewed";
             case LOGIN_FORGOT_PASSWORD_CLICKED:
                 return "login_forgot_password_clicked";
+            case LOGIN_SOCIAL_BUTTON_CLICK:
+                return "login_social_button_click";
+            case LOGIN_SOCIAL_BUTTON_FAILURE:
+                return "login_social_button_failure";
+            case LOGIN_SOCIAL_CONNECT_SUCCESS:
+                return "login_social_connect_success";
+            case LOGIN_SOCIAL_CONNECT_FAILURE:
+                return "login_social_connect_failure";
+            case LOGIN_SOCIAL_SUCCESS:
+                return "login_social_success";
+            case LOGIN_SOCIAL_FAILURE:
+                return "login_social_failure";
+            case LOGIN_SOCIAL_2FA_NEEDED:
+                return "login_social_2fa_needed";
+            case LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING:
+                return "login_social_accounts_need_connecting";
+            case LOGIN_SOCIAL_ERROR_UNKNOWN_USER:
+                return "login_social_error_unknown_user";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
@@ -726,6 +764,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notification_settings_streams_opened";
             case NOTIFICATION_SETTINGS_DETAILS_OPENED:
                 return "notification_settings_details_opened";
+            case NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED:
+                return "notification_settings_app_notifications_disabled";
+            case NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED:
+                return "notification_settings_app_notifications_enabled";
             case ME_ACCESSED:
                 return "me_tab_accessed";
             case ME_GRAVATAR_TAPPED:
@@ -846,6 +888,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_permission_granted";
             case APP_PERMISSION_DENIED:
                 return "app_permission_denied";
+            case SHARE_TO_WP_SUCCEEDED:
+                return "share_to_wp_succeeded";
             default:
                 return null;
         }

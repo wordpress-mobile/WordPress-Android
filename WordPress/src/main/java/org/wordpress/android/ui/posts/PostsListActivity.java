@@ -95,8 +95,9 @@ public class PostsListActivity extends AppCompatActivity {
         if (targetPostId > 0) {
             targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
             if (targetPost == null) {
-                String postType = getString(mIsPage ? R.string.page : R.string.post).toLowerCase();
-                ToastUtils.showToast(this, getString(R.string.error_post_does_not_exist_param, postType));
+                String errorMessage = getString(mIsPage ? R.string.error_page_does_not_exist
+                        : R.string.error_post_does_not_exist);
+                ToastUtils.showToast(this, errorMessage);
             }
         }
 

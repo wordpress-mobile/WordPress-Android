@@ -7,6 +7,7 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -14,7 +15,6 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -30,7 +30,7 @@ public class ReaderUtils {
                                             boolean isPrivate,
                                             PhotonUtils.Quality quality) {
 
-        final String unescapedUrl = HtmlUtils.fastUnescapeHtml(imageUrl);
+        final String unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl);
         if (isPrivate) {
             return getPrivateImageForDisplay(unescapedUrl, width, height);
         } else {

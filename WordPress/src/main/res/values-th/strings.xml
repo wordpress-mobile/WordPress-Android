@@ -78,7 +78,6 @@ Language: th
 	<string name="site_settings_address_title">ที่อยู่</string>
 	<string name="site_settings_title_title">หัวข้อเว็บ</string>
 	<string name="site_settings_tagline_title">คำอธิบาย</string>
-	<string name="site_settings_this_device_header">อุปกรณ์นี้</string>
 	<string name="site_settings_discussion_new_posts_header">ค่าเริ่มต้นสำหรับเรื่องใหม่</string>
 	<string name="site_settings_account_header">บัญชี</string>
 	<string name="site_settings_writing_header">การเขียน</string>
@@ -100,9 +99,7 @@ Language: th
 	<string name="invalid_username_no_spaces">ชื่อผู้ใช้ไม่สามารถมีที่ว่างได้</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">เว็บที่คุณติดตามยังไม่มีเรื่องใหม่เมื่อเร็ว ๆ มานี้</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">ไม่มีเรื่องใหม่</string>
-	<string name="media_details_copy_url_toast">คัดลอก URL ไปยังคลิปบอร์ด</string>
 	<string name="edit_media">แก้ไขไฟล์สื่อ</string>
-	<string name="media_details_copy_url">คัดลอก URL</string>
 	<string name="media_details_label_date_uploaded">อัปโหลดแล้ว</string>
 	<string name="media_details_label_date_added">เพิ่มแล้ว</string>
 	<string name="selected_theme">ธีมที่เลือก</string>
@@ -192,13 +189,7 @@ Language: th
 	<string name="app_notifications">การเตือนแอพ</string>
 	<string name="notifications_tab">แทบการเตือน</string>
 	<string name="email">อีเมล</string>
-	<string name="notifications_comments_other_blogs">ความเห็นบนเว็บอื่น</string>
 	<string name="notifications_wpcom_updates">การอัปเดตของ WordPress.com</string>
-	<string name="notifications_other">อื่น ๆ</string>
-	<string name="notifications_account_emails">อีเมลจาก WordPress.com</string>
-	<string name="notifications_account_emails_summary">เรามักจะส่งอีเมล์ที่สำคัญไปยังอีเมล์ของคุณเสมอ  แต่คุณสามารถได้อีเมล์ที่มีประโยชน์เพิ่มได้เหมือนกัน</string>
-	<string name="your_sites">เว็บของคุณ</string>
-	<string name="notifications_sights_and_sounds">แบบมองเห็นและเสียง</string>
 	<string name="stats_insights_latest_post_trend">มันเป็นเวลา %1$s ตั้งแต่ %2$s ได้เผยแพร่  นี่เป็นวิธีที่เรื่องจะถูกแสดงจนถึงตอนนี้…</string>
 	<string name="stats_insights_latest_post_summary">สรุปเรื่องล่าสุด</string>
 	<string name="button_revert">คืนกลับ</string>
@@ -304,7 +295,6 @@ Language: th
 	<string name="stats_period">ช่วงเวลา</string>
 	<string name="stats_overall">ทั้งหมด</string>
 	<string name="stats_total">ทั้งหมด</string>
-	<string name="post_uploading">กำลังอัปโหลด</string>
 	<string name="reader_page_recommended_blogs">เว็บที่คุณอาจจะชอบ</string>
 	<string name="stats_comments_total_comments_followers">เรื่องทั้งหมดที่มีผู้ติดตามความเห็น: %1$s</string>
 	<string name="stats_empty_publicize_desc">ติดตามจำนวนผู้ติดตามจากบริการโซเชียลเน็ตเวิร์คโดยใช้การเผยแพร่</string>
@@ -369,15 +359,11 @@ Language: th
 	<string name="delete_sure">ลบฉบับร่างนี้</string>
 	<string name="delete_sure_page">ลบหน้านี้</string>
 	<string name="cab_selected">%d ถูกเลือก</string>
-	<string name="confirm_delete_multi_media">ลบสิ่งที่ถูกเลือกหรือไม่?</string>
-	<string name="confirm_delete_media">ลบสิ่งที่ถูกเลือกหรือไม่?</string>
 	<string name="comment_reply_to_user">ตอบกลับไปที่ %s</string>
 	<string name="pages_empty_list">ยังไม่มีหน้า ทำไมไม่สร้างสักหนึ่งหน้า?</string>
-	<string name="posting_post">กำลังส่งเรื่อง "%s"</string>
 	<string name="older_two_days">เก่ากว่า 2 วัน</string>
 	<string name="older_last_week">เก่ากว่าหนึ่งอาทิตย์</string>
 	<string name="stats_no_blog">ไม่สามารถโหลดสถิติได้สำหรับบล็อกที่ต้องการ</string>
-	<string name="sending_content">กำลังอัปโหลดเนื้อหา %s</string>
 	<string name="uploading_total">กำลังอัปโหลด %1$d จาก %2$d</string>
 	<string name="mnu_comment_liked">ชื่นชอบแล้ว</string>
 	<string name="comment">ความเห็น</string>
@@ -476,7 +462,6 @@ Language: th
 	<string name="invalid_password_message">รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร</string>
 	<string name="invalid_username_too_short">ชื่อผู้ใช้ต้องยาวกว่า 4 ตัวอักษร</string>
 	<string name="invalid_username_too_long">ชื่อผู้ใช้ต้องสั้นกว่า 61 ตัวอักษร</string>
-	<string name="error_delete_post">มีความผิดพลาดเกิดขึ้นขณะกำลังลบ %s</string>
 	<string name="theme_auth_error_message">โปรดแน่ใจว่าคุณมีสิทธิการตั้งค่า themes</string>
 	<string name="comments_empty_list">ไม่มีความเห็น</string>
 	<string name="stats_empty_comments">ยังไม่มีความเห็น</string>
@@ -485,7 +470,6 @@ Language: th
 	<string name="notifications_empty_list">ไม่มีการเตือน</string>
 	<string name="gallery_error">ไม่สามารถรับไฟล์สื่อ</string>
 	<string name="blog_not_found">มีความผิดพลาดเกิดขึ้นเมื่อทำการเข้าบล็อกนี้</string>
-	<string name="wait_until_upload_completes">รอจนกระทั่งการอัปโหลดเสร็จสิ้น</string>
 	<string name="theme_set_failed">ล้มเหลวในการตั้งค่า theme</string>
 	<string name="error_refresh_stats">ไม่สามารถโหลดใหม่สถิติในตอนนี้</string>
 	<string name="error_generic">มีความผิดพลาดเกิดขึ้น</string>
@@ -520,8 +504,6 @@ Language: th
 	<string name="error_blog_hidden">บล็อกนี้ถูกซ่อนและไม่สามารถโหลดได้  ให้เปิดใช้งานมันอีกครั้งในการตั้งค่าและลองดูอีกครั้ง</string>
 	<string name="fatal_db_error">มีความผิดพลาดเกิดขึ้นระหว่างการสร้างฐานข้อมูลแอพ  โปรดลองติดตั้งแอพใหม่อีกครั้ง</string>
 	<string name="new_post">เรื่องใหม่</string>
-	<string name="share_action_post">เรื่องใหม่</string>
-	<string name="share_action_media">คลังไฟล์สื่อ</string>
 	<string name="delete_draft">ลบฉบับร่าง</string>
 	<string name="preview_page">ดูก่อนหน้า</string>
 	<string name="preview_post">ดูก่อนเรื่อง</string>
@@ -648,7 +630,6 @@ Language: th
 	<string name="reader_untitled_post">(ไม่มีหัวข้อ)</string>
 	<string name="media_add_popup_title">เพิ่มไปยังคลังสื่อ</string>
 	<string name="empty_list_default">รายชื่อนี้ว่างเปล่า</string>
-	<string name="select_from_media_library">เลือกจากคลังสื่อ</string>
 	<string name="limit_reached">มาถึงขีดจำกัดแล้ว คุณสามารถลองใหม่อีกหนึ่งนาทีภายหลัง  การลองใหม่ก่อนหน้าหนึ่งนาทีจะเพิ่มเวลาที่คุณต้องรอก่อนพ้นการแบนให้ยาวไปอีก  ถ้าคุณคิดว่าสิ่งนี้เป็นความผิดพลาด  โปรดติดต่อฝ่ายช่วยเหลือ</string>
 	<string name="reader_hint_comment_on_comment">ตอบกลับไปที่ความเห็น...</string>
 	<string name="connecting_wpcom">เชื่อมต่อไปยัง WordPress.com</string>
@@ -740,7 +721,6 @@ Language: th
 	<string name="version">รุ่น</string>
 	<string name="tos">เงื่อนไขบริการ</string>
 	<string name="app_title">เวิร์ดเพรสสำหรับแอนดรอยด์</string>
-	<string name="max_thumbnail_px_width">ความกว้างรูปค่าเริ่มต้น</string>
 	<string name="image_alignment">จัดหน้า</string>
 	<string name="refresh">รีเฟรช</string>
 	<string name="untitled">ไม่มีหัวข้อ</string>
@@ -758,9 +738,6 @@ Language: th
 	<string name="title">หัวข้อ</string>
 	<string name="categories">หมวดหมู่</string>
 	<string name="dlg_deleting_comments">กำลังลบความเห็น</string>
-	<string name="notification_vibrate">สั่น</string>
-	<string name="notification_blink">เปิดไฟกระพริบการแจ้งเตือน</string>
-	<string name="notification_sound">เสียงการแจ้งเตือน </string>
 	<string name="sdcard_title">ต้องการ SD Card</string>
 	<string name="media">ไฟล์สื่อ</string>
 	<string name="delete">ลบ</string>

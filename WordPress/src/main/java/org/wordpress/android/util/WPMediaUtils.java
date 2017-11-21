@@ -39,7 +39,7 @@ public class WPMediaUtils {
     }
 
     // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
-    public static final int OPTIMIZE_IMAGE_MAX_WIDTH = 3000;
+    public static final int OPTIMIZE_IMAGE_MAX_SIZE = 3000;
     public static final int OPTIMIZE_IMAGE_ENCODER_QUALITY = 85;
     public static final int OPTIMIZE_VIDEO_MAX_WIDTH = 1280;
     public static final int OPTIMIZE_VIDEO_ENCODER_BITRATE_KB = 3000;
@@ -51,14 +51,15 @@ public class WPMediaUtils {
         if (!AppPrefs.isImageOptimize()) {
             return null;
         }
-        int resizeWidth = AppPrefs.getImageOptimizeWidth() > 1 ? AppPrefs.getImageOptimizeWidth() : Integer.MAX_VALUE;
+        
+        int resizeDimension = AppPrefs.getImageOptimizeMaxSize() > 1 ? AppPrefs.getImageOptimizeMaxSize() : Integer.MAX_VALUE;
         int quality = AppPrefs.getImageOptimizeQuality();
         // do not optimize if original-size and 100% quality are set.
-        if (resizeWidth == Integer.MAX_VALUE && quality == 100) {
+        if (resizeDimension == Integer.MAX_VALUE && quality == 100) {
             return null;
         }
 
-        String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeWidth, quality);
+        String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeDimension, quality);
         if (optimizedPath == null) {
             AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);
@@ -200,6 +201,8 @@ public class WPMediaUtils {
                 return context.getString(R.string.media_error_exceeds_memory_limit);
             case PARSE_ERROR:
                 return context.getString(R.string.error_media_parse_error);
+            case GENERIC_ERROR:
+                return context.getString(R.string.error_generic_error);
         }
 
         return null;
@@ -218,15 +221,18 @@ public class WPMediaUtils {
         dialogBuilder.create().show();
     }
 
-    public static void launchVideoLibrary(Activity activity) {
+    public static void launchVideoLibrary(Activity activity, boolean multiSelect) {
         AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(prepareVideoLibraryIntent(activity),
+        activity.startActivityForResult(prepareVideoLibraryIntent(activity, multiSelect),
                 RequestCodes.VIDEO_LIBRARY);
     }
 
-    private static Intent prepareVideoLibraryIntent(Context context) {
+    private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
     }
 
@@ -239,15 +245,18 @@ public class WPMediaUtils {
         return new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
     }
 
-    public static void launchPictureLibrary(Activity activity) {
+    public static void launchPictureLibrary(Activity activity, boolean multiSelect) {
         AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(preparePictureLibraryIntent(activity.getString(R.string.pick_photo)),
+        activity.startActivityForResult(preparePictureLibraryIntent(activity.getString(R.string.pick_photo), multiSelect),
                 RequestCodes.PICTURE_LIBRARY);
     }
 
-    private static Intent preparePictureLibraryIntent(String title) {
+    private static Intent preparePictureLibraryIntent(String title, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
         return Intent.createChooser(intent, title);
     }
 
@@ -440,4 +449,5 @@ public class WPMediaUtils {
     public static int getFlingDistanceToDisableThumbLoading(@NonNull Context context) {
         return ViewConfiguration.get(context).getScaledMaximumFlingVelocity() / 2;
     }
+
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-18 10:59:06+0000
+Translation-Revision-Date: 2017-10-12 12:31:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
@@ -74,7 +74,12 @@ Language: gl_ES
 	<string name="editor_failed_uploads_switch_html">Fallou a carga dalgúns ficheiros. Nesta situación non podes cambiar a modo HTML\nQueres borrar todas as cargas que fallaron e continuar?</string>
 	<string name="visual_editor">Editor visual</string>
 	<string name="image_thumbnail">Miniatura</string>
+	<string name="format_bar_description_html">Modo HTML</string>
+	<string name="format_bar_description_ul">Lista sen orde</string>
+	<string name="format_bar_description_ol">Lista ordenada</string>
+	<string name="format_bar_description_more">Inserir máis</string>
 	<string name="format_bar_description_strike">Riscado</string>
+	<string name="format_bar_description_quote">Cita</string>
 	<string name="format_bar_description_italic">Cursiva</string>
 	<string name="format_bar_description_underline">Subliñado</string>
 	<string name="image_settings_save_toast">Cambios gardados</string>
@@ -257,6 +262,8 @@ Language: gl_ES
 	<string name="web_address">Enderezo web</string>
 	<string name="editor_toast_uploading_please_wait">Estanse a cargar os ficheiros. Por favor, espera a que o proceso termine.</string>
 	<string name="error_refresh_comments_showing_older">Non foi posible actualizar os comentarios neste momento - mostrando comentarios antigos</string>
+	<string name="post_settings_set_featured_image">Poñer como imaxe destacada</string>
+	<string name="post_settings_featured_image">Imaxe destacada</string>
 	<string name="visual_editor_enabled">Editor visual habilitado</string>
 	<string name="editor_content_placeholder">Comparte aquí as túas anécdotas...</string>
 	<string name="editor_page_title_placeholder">Título da páxina</string>
@@ -380,7 +387,6 @@ Language: gl_ES
 	<string name="site_settings_address_title">Enderezo</string>
 	<string name="site_settings_title_title">Título do sitio</string>
 	<string name="site_settings_tagline_title">Subtítulo</string>
-	<string name="site_settings_this_device_header">Este dispositivo</string>
 	<string name="site_settings_discussion_new_posts_header">Prederterminado para os artigos novos</string>
 	<string name="site_settings_account_header">Conta</string>
 	<string name="site_settings_writing_header">Escrita</string>
@@ -402,9 +408,8 @@ Language: gl_ES
 	<string name="invalid_username_no_spaces">O nome de usuario non pode conter espazos</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Os sitios que segues non publicaron nada ultimamente</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Sen artigos recentes</string>
-	<string name="media_details_copy_url_toast">URL copiado ao portapapeis</string>
 	<string name="edit_media">Editar o ficheiro</string>
-	<string name="media_details_copy_url">Copiar o URL</string>
+	<string name="media_edit_copy_url_toast">URL copiado ao portapapeis</string>
 	<string name="media_details_label_date_uploaded">Cargado</string>
 	<string name="media_details_label_date_added">Engadido</string>
 	<string name="selected_theme">Tema escollido</string>
@@ -463,6 +468,7 @@ Language: gl_ES
 	<string name="stats_widget_loading_data">Cargando datos...</string>
 	<string name="stats_widget_name_for_blog">Estatísticas de hoxe para  %1$s</string>
 	<string name="stats_widget_name">Estatísticas de WordPress hoxe</string>
+	<string name="post_settings_add_location_permission_required">Necesítase permiso para engadir a localización</string>
 	<string name="add_media_permission_required">Necesítase permiso para engadir contido multimedia</string>
 	<string name="access_media_permission_required">Necesítase permiso para acceder aos contidos multimedia</string>
 	<string name="stats_enable_rest_api_in_jetpack">Para ver as estatísticas debes activar o módulo JSON API en Jetpack</string>
@@ -494,13 +500,8 @@ Language: gl_ES
 	<string name="app_notifications">Notificacións da aplicación</string>
 	<string name="notifications_tab">Lapela de notificacións</string>
 	<string name="email">Correo electrónico</string>
-	<string name="notifications_comments_other_blogs">Comentarios en outros sitios</string>
 	<string name="notifications_wpcom_updates">Actualizacións de WordPress.com</string>
-	<string name="notifications_other">Outras</string>
-	<string name="notifications_account_emails">Correo-e de WordPress.com</string>
-	<string name="notifications_account_emails_summary">Enviaremos sempre mensaxes importantes relativos á túa conta, e terás tamén algúns extras de utilidade.</string>
-	<string name="your_sites">Os teus sitios</string>
-	<string name="notifications_sights_and_sounds">Avisos de notificación</string>
+	<string name="notification_settings_item_other_account_emails_summary">Enviaremos sempre mensaxes importantes relativos á túa conta, e terás tamén algúns extras de utilidade.</string>
 	<string name="stats_insights_latest_post_trend">Hai %1$s que %2$s foi publicado. Aquí tes como lle foi ao artigo até este momento...</string>
 	<string name="stats_insights_latest_post_summary">Resumo do último artigo</string>
 	<string name="button_revert">Reverter</string>
@@ -671,8 +672,6 @@ Language: gl_ES
 	<string name="delete_sure_post">Eliminar este artigo</string>
 	<string name="delete_sure">Eliminar este borrador</string>
 	<string name="delete_sure_page">Eliminar esta páxina</string>
-	<string name="confirm_delete_multi_media">Borrar os elementos seleccionados?</string>
-	<string name="confirm_delete_media">Borrar o elemento seleccionado?</string>
 	<string name="cab_selected">%d seleccionados</string>
 	<string name="reader_empty_followed_blogs_title">Non estas a seguir sitio ningún aínda</string>
 	<string name="faq_button">FAQ</string>
@@ -700,7 +699,6 @@ Language: gl_ES
 	<string name="posts_empty_list">Aínda sen artigos. Por que non crear un?</string>
 	<string name="comment_reply_to_user">Resposta a %s</string>
 	<string name="pages_empty_list">Aínda sen páxinas. Por que non crear unha?</string>
-	<string name="posting_post">Enviando "%s"</string>
 	<string name="stats_no_blog">Non foi posible cargar as estatísticas do blogue requirido</string>
 	<string name="reader_empty_posts_liked">Non deches "gústame" a artigo ningún</string>
 	<string name="reader_label_like">Gústame</string>
@@ -760,7 +758,6 @@ Language: gl_ES
 	<string name="stats_bar_graph_empty">Non hai estatísticas dispoñibles</string>
 	<string name="invalid_url_message">Comproba se a URL introducida é válida</string>
 	<string name="notifications_empty_list">Sen notificacións</string>
-	<string name="error_delete_post">Houbo un erro mentres se eliminaba o %s</string>
 	<string name="error_generic">Houbo un erro</string>
 	<string name="passcode_wrong_passcode">PIN incorrecto</string>
 	<string name="invalid_password_message">O contrasinal debe conter como mínimo 4 caracteres</string>
@@ -790,7 +787,6 @@ Language: gl_ES
 	<string name="username_or_password_incorrect">O nome de usuario ou o contrasinal introducido é incorrecto</string>
 	<string name="nux_cannot_log_in">Non foi posible conectar</string>
 	<string name="gallery_error">Non foi posible obter o elemento multimedia</string>
-	<string name="wait_until_upload_completes">Agarda até que se complete a carga</string>
 	<string name="could_not_remove_account">Non foi posible borrar o sitio</string>
 	<string name="error_refresh_posts">Non foi posible actualizar os artigos neste momento</string>
 	<string name="error_refresh_pages">Non foi posible actualizar as páxinas neste momento</string>
@@ -809,6 +805,7 @@ Language: gl_ES
 	<string name="adding_cat_failed">Fallou a adición da categoría</string>
 	<string name="sdcard_message">Para cargar ficheiros fai é necesario ter unha tarxeta SD montada</string>
 	<string name="out_of_memory">Memoria do dispositivo esgotada</string>
+	<string name="error_deleting_post">Houbo un erro mentres se eliminaba a entrada</string>
 	<string name="required_field">Campo obrigatorio</string>
 	<string name="email_hint">Correo electrónico</string>
 	<string name="blog_name_must_include_letters">O enderezo do sitio debe ter como mínimo unha letra (a-z)</string>
@@ -826,8 +823,6 @@ Language: gl_ES
 	<string name="reader_toast_err_add_tag">Non foi posible engadir esta etiqueta</string>
 	<string name="add_new_category">Engadir categoría nova</string>
 	<string name="category_name">Nome da categoría</string>
-	<string name="share_action_post">Artigo novo</string>
-	<string name="share_action_media">Biblioteca Multimedia</string>
 	<string name="file_error_create">Non foi posible crear o ficheiro temporal para a carga. Asegúrate de que haxa espazo libre suficiente no dispositivo.</string>
 	<string name="invalid_site_url_message">Comproba se a URL introducida é válida</string>
 	<string name="http_authorization_required">Necesítase autorización</string>
@@ -940,7 +935,6 @@ Language: gl_ES
 	<string name="button_next">Seguinte</string>
 	<string name="username_invalid">Nome de usuario non válido</string>
 	<string name="nux_tutorial_get_started_title">Comezar!</string>
-	<string name="select_from_media_library">Escoller na Biblioteca Multimedia</string>
 	<string name="jetpack_not_found">Non se atopou Jetpack</string>
 	<string name="reader_untitled_post">(Sen título)</string>
 	<string name="reader_btn_share">Compartir</string>
@@ -1045,7 +1039,6 @@ Language: gl_ES
 	<string name="version">Versión</string>
 	<string name="tos">Termos de servizo</string>
 	<string name="app_title">WordPress para Android</string>
-	<string name="max_thumbnail_px_width">Largo predeterminado da imaxe</string>
 	<string name="image_alignment">Aliñación</string>
 	<string name="refresh">Actualizar</string>
 	<string name="untitled">Sen título</string>
@@ -1061,11 +1054,9 @@ Language: gl_ES
 	<string name="quickpress_add_error">O nome do atallo non pode estar baleiro</string>
 	<string name="upload_full_size_image">Cargar e ligar á imaxe completa</string>
 	<string name="title">Título</string>
+	<string name="tags_separate_with_commas">Etiquetas (separadas por comas)</string>
 	<string name="categories">Categorías</string>
 	<string name="dlg_deleting_comments">Borrando os comentarios</string>
-	<string name="notification_vibrate">Vibración</string>
-	<string name="notification_sound">Son de notificación</string>
-	<string name="notification_blink">Aviso luminoso</string>
 	<string name="sdcard_title">Tarxeta SD requirida</string>
 	<string name="media">Multimedia</string>
 	<string name="delete">Borrar</string>

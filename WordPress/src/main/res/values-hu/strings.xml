@@ -41,8 +41,6 @@ Language: hu
 	<string name="delete_sure_post">Bejegyzés törlése</string>
 	<string name="delete_sure">Vázlat törlése</string>
 	<string name="delete_sure_page">Oldal törlése</string>
-	<string name="confirm_delete_multi_media">Kiválasztott sablon törlése?</string>
-	<string name="confirm_delete_media">Kiválasztott tétel törlése?</string>
 	<string name="cab_selected">%d kiválasztva</string>
 	<string name="reader_empty_posts_liked">Még egy bejegyzés sincs tetszettként jelölve</string>
 	<string name="faq_button">GYIK</string>
@@ -120,7 +118,6 @@ Language: hu
 	<string name="author_email">Szerző e-mail</string>
 	<string name="mnu_comment_trash">Lomtár</string>
 	<string name="media_error_no_permission">Nincs elég jogosultság a médiatár megtekitéséhez</string>
-	<string name="share_action_post">Új bejegyzés</string>
 	<string name="post_settings">Bejegyzés beálitások</string>
 	<string name="upload_failed">Sikertelen feltöltés</string>
 	<string name="edit_comment">Hozzászólás szerkesztése</string>
@@ -228,8 +225,6 @@ Language: hu
 	<string name="upload_full_size_image">Feltöltés és hivatkozás a teljes képhez</string>
 	<string name="categories">Kategóriák</string>
 	<string name="title">Címsor</string>
-	<string name="notification_blink">Figyelmeztető fényjelzés</string>
-	<string name="notification_vibrate">Rezgés</string>
 	<string name="sdcard_title">SD kártya szükséges</string>
 	<string name="media">Média</string>
 	<string name="delete">Törlés</string>

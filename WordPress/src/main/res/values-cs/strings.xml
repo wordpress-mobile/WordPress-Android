@@ -13,7 +13,6 @@ Language: cs_CZ
 	<string name="media_encoder_quality_85">Střední</string>
 	<string name="media_encoder_quality_80">Nízká</string>
 	<string name="media_upload_state_uploaded">Nahráno</string>
-	<string name="media_upload_state_failed">Chyba</string>
 	<string name="media_upload_state_deleted">Smazáno</string>
 	<string name="media_upload_state_deleting">Mazání</string>
 	<string name="media_upload_state_uploading">Nahrávání</string>
@@ -37,10 +36,7 @@ Language: cs_CZ
 	<string name="jetpack_info">Jetpack info</string>
 	<string name="reader_photo_by">Fotka od %s</string>
 	<string name="reader_label_visit">Návštěva</string>
-	<string name="all_your_sites">Všechny moje stránky</string>
 	<string name="pending_draft_more">Váš koncept příspěvku %d nebude nikdy publikován. Klepnutím to zkontrolujete.</string>
-	<string name="no_default_app_available_to_open_link">Nelze otevřít odkaz</string>
-	<string name="notification_pending_drafts">Upozornit na čekající koncepty</string>
 	<string name="invalid_verification_code_format">Musí být šestimístné číslo</string>
 	<string name="confirm_discard_changes">Zahodit neuložené změny?</string>
 	<string name="swipe_for_more">Přejetím více</string>
@@ -422,7 +418,6 @@ Language: cs_CZ
 	<string name="site_settings_address_title">Adresa</string>
 	<string name="site_settings_tagline_title">Popis webu</string>
 	<string name="site_settings_title_title">Název webu</string>
-	<string name="site_settings_this_device_header">Toto zařízení</string>
 	<string name="site_settings_discussion_new_posts_header">Výchozí pro nové příspěvky</string>
 	<string name="site_settings_writing_header">Psaní</string>
 	<string name="site_settings_account_header">Účet</string>
@@ -444,9 +439,7 @@ Language: cs_CZ
 	<string name="invalid_username_no_spaces">Uživatelské jméno nemůže obsahovat mezery</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Stránky, které sledujete v poslední době neměly žádné příspěvky</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Žádné nedávné příspěvky</string>
-	<string name="media_details_copy_url_toast">URL adresa byla zkopírována do schránky</string>
 	<string name="edit_media">Upravit média</string>
-	<string name="media_details_copy_url">Kopírovat URL adresu</string>
 	<string name="media_details_label_date_uploaded">Nahráno</string>
 	<string name="media_details_label_date_added">Přidáno</string>
 	<string name="selected_theme">Vybraná šablona</string>
@@ -536,13 +529,7 @@ Language: cs_CZ
 	<string name="app_notifications">Upozornění aplikace</string>
 	<string name="notifications_tab">Karta oznámení</string>
 	<string name="email">Email</string>
-	<string name="notifications_comments_other_blogs">Komentáře na ostatních webech</string>
 	<string name="notifications_wpcom_updates">Aktualizace WordPress.com</string>
-	<string name="notifications_other">Ostatní</string>
-	<string name="notifications_account_emails">Email od WordPress.com</string>
-	<string name="notifications_account_emails_summary">Budeme vždy odesílat důležité emaily týkající se vašeho účtu, ale můžete také získat některé zajímavé bonusy.</string>
-	<string name="your_sites">Vaše stránky</string>
-	<string name="notifications_sights_and_sounds">Notifikační upozornění</string>
 	<string name="stats_insights_latest_post_trend">Bylo to %1$s od %2$s publikován. Zde je návod, jak byl příspěvek doposud upravován...</string>
 	<string name="stats_insights_latest_post_summary">Přehled posledních příspěvků</string>
 	<string name="button_revert">Vrátit</string>
@@ -640,7 +627,6 @@ Language: cs_CZ
 	<string name="stats_followers_total_wpcom_paged">WordPress.com odběratelé %1$d - %2$d z %3$s</string>
 	<string name="stats_empty_search_terms_desc">Zjistěte, jaká klíčová slova zvyšují návštěvnost vašeho webu.</string>
 	<string name="reader_label_new_posts">Nové příspěvky</string>
-	<string name="post_uploading">Nahrávám</string>
 	<string name="reader_empty_posts_in_blog">Tento web je prázdný</string>
 	<string name="reader_page_recommended_blogs">Stránky které by se vám mohly líbit</string>
 	<string name="stats_months_and_years">Měsíce a Roky</string>
@@ -714,8 +700,6 @@ Language: cs_CZ
 	<string name="delete_sure_page">Smazat stránku</string>
 	<string name="delete_sure">Smazat koncept</string>
 	<string name="delete_sure_post">Smazat příspěvek</string>
-	<string name="confirm_delete_multi_media">Odstranit zvolené položky?</string>
-	<string name="confirm_delete_media">Odstranit zvolenou položku?</string>
 	<string name="reader_title_photo_viewer">%1$d z %2$d</string>
 	<string name="reader_label_comments_closed">Komentáře jsou uzavřené</string>
 	<string name="reader_label_comment_count_single">Jeden komentář</string>
@@ -734,13 +718,11 @@ Language: cs_CZ
 	<string name="comment">Komentář</string>
 	<string name="comment_trashed">Komentář byl přesunut do koše</string>
 	<string name="comment_reply_to_user">Odpovědět uživateli %s</string>
-	<string name="posting_post">Publikuji "%s"</string>
 	<string name="faq_button">Časté dotazy</string>
 	<string name="browse_our_faq_button">Prohledat časté dotazy</string>
 	<string name="nux_help_description">Pro odpovědi na časté dotazy navštivte naše centrum nápovědy nebo fórum</string>
 	<string name="reader_empty_posts_in_tag">Neexistuje žádný příspěvek s tímto štítkem</string>
 	<string name="stats_no_blog">Statistiky pro daný web nebylo možné načíst</string>
-	<string name="sending_content">Nahrávání obsahu %s</string>
 	<string name="posts_empty_list">Žádné příspěvky. Přejete si nějaký vytvořit?</string>
 	<string name="pages_empty_list">Žádné stránky. Přejete si nějakou vytvořit?</string>
 	<string name="agree_terms_of_service">Založením účtu souhlasíte s našimi %1$sPodmínkami používání služby%2$s</string>
@@ -793,7 +775,6 @@ Language: cs_CZ
 	<string name="out_of_memory">Nedostatek paměti v zařízení</string>
 	<string name="no_network_message">Není dostupná žádná síť</string>
 	<string name="gallery_error">Multimediální položka nemohla být stažena</string>
-	<string name="wait_until_upload_completes">Čekej dokud neskončí nahrávání</string>
 	<string name="theme_fetch_failed">Chyba při získávání motivů</string>
 	<string name="theme_set_failed">Chyba při nastavení motivu</string>
 	<string name="theme_auth_error_message">Ujisti se, že máš práva k nastavení motivu</string>
@@ -805,7 +786,6 @@ Language: cs_CZ
 	<string name="stats_bar_graph_empty">Statistika není dostupná</string>
 	<string name="reply_failed">Odpověď se nezdařila</string>
 	<string name="notifications_empty_list">Žádná oznámení</string>
-	<string name="error_delete_post">Nastala chyba při mazání %s</string>
 	<string name="error_refresh_posts">Články momentálně nemohly být obnoveny</string>
 	<string name="error_refresh_pages">Stránky momentálně nemohly být obnoveny</string>
 	<string name="error_refresh_notifications">Oznámení momentálně nemohla být obnovena</string>
@@ -908,7 +888,6 @@ Language: cs_CZ
 	<string name="dlg_trashing_comments">Přesunuji do koše</string>
 	<string name="dlg_confirm_trash_comments">Přesunout do koše?</string>
 	<string name="sure_to_cancel_edit_comment">Ukončit úpravy tohoto komentáře?</string>
-	<string name="share_action_post">Nový příspěvek</string>
 	<string name="image_settings">Vlastnosti obrázku</string>
 	<string name="fatal_db_error">Vyskytla se chyba při vytváření databáze aplikace. Zkuste přeinstalovat tuto aplikaci.</string>
 	<string name="jetpack_message_not_admin">Plugin Jetpack je pro statistiky vyžadován. Kontaktujte administrátora webu.</string>
@@ -925,7 +904,6 @@ Language: cs_CZ
 	<string name="blog_title_invalid">Neplatný popis webu</string>
 	<string name="blog_name_must_include_letters">Webová adresa musí mít alespoň 1 písmeno (a-z)</string>
 	<string name="blog_name_invalid">Neplatná adresa webu</string>
-	<string name="share_action_media">Knihovna médií</string>
 	<string name="notifications_empty_all">Doposud nejsou k dispozici žádná oznámení.</string>
 	<string name="error_blog_hidden">Tento web je skrytý a proto nemohl být načten. Zpřístupněte jej v nastavení a zkuste to znovu.</string>
 	<string name="file_error_create">Nepodařilo se vytvořit soubor temp pro nahrávání. Ujistěte se, že máte na svém zařízení dostatek volného místa.</string>
@@ -980,7 +958,6 @@ Language: cs_CZ
 	<string name="username_invalid">Špatné uživatelské jméno</string>
 	<string name="media_add_popup_title">Přidat do knihovny medií</string>
 	<string name="empty_list_default">Tento seznam je prázdný</string>
-	<string name="select_from_media_library">Vyberte z knihovny medií</string>
 	<string name="jetpack_not_found">Plugin Jetpack nebyl nalezen</string>
 	<string name="reader_untitled_post">(bez názvu)</string>
 	<string name="reader_btn_follow">Sledovat</string>
@@ -1088,7 +1065,6 @@ Language: cs_CZ
 	<string name="app_title">WordPress pro Android</string>
 	<string name="version">Verze</string>
 	<string name="tos">Podmínky služby</string>
-	<string name="max_thumbnail_px_width">Výchozí šířka obrázku</string>
 	<string name="image_alignment">Zarovnání</string>
 	<string name="refresh">Obnovit</string>
 	<string name="untitled">Bez názvu</string>
@@ -1106,9 +1082,6 @@ Language: cs_CZ
 	<string name="title">Název</string>
 	<string name="categories">Rubriky</string>
 	<string name="dlg_deleting_comments">Odstraňování komentářů</string>
-	<string name="notification_sound">Přehrát zvuk oznámení</string>
-	<string name="notification_blink">Blikat při upozornění</string>
-	<string name="notification_vibrate">Vibrovat</string>
 	<string name="sdcard_title">Vyžadována SD karta</string>
 	<string name="media">Média</string>
 	<string name="delete">Vymazat</string>

@@ -69,11 +69,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/imageView"
                     android:layout_gravity="center_horizontal"
-                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentEnd="false"
                     app:srcCompat="@drawable/ic_email_black_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:tint="@color/grey_darken_10"/>
 
             </RelativeLayout>
@@ -100,11 +103,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/imageView2"
                     android:layout_gravity="center_horizontal"
-                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentEnd="false"
                     app:srcCompat="@drawable/ic_user_black_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:tint="@color/grey_darken_10"/>
             </RelativeLayout>
 
@@ -122,18 +128,22 @@
                     style="@style/WordPress.NUXEditText"
                     android:hint="@string/password"
                     android:maxLength="@integer/max_length_password"
-                    android:layout_marginRight="38dp"/>
+                    android:layout_marginRight="38dp"
+                    android:layout_marginEnd="38dp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/imageView3"
                     android:layout_gravity="center_horizontal"
-                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentEnd="false"
                     app:srcCompat="@drawable/ic_lock_black_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:tint="@color/grey_darken_10"/>
 
                 <ImageView
@@ -141,12 +151,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/password_visibility"
                     android:layout_gravity="center_horizontal"
-                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentEnd="false"
                     app:srcCompat="@drawable/ic_visible_off_black_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="16dp"
                     android:tint="@color/nux_eye_icon_color_closed"/>
             </RelativeLayout>
 
@@ -170,6 +182,7 @@
                     android:paddingRight="0dp"
                     android:paddingBottom="12dp"
                     android:layout_toLeftOf="@+id/textView"
+                    android:layout_toStartOf="@+id/textView"
                     app:persistenceEnabled="true"/>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -180,13 +193,16 @@
                     android:layout_alignParentEnd="false"
                     android:layout_marginTop="4dp"
                     android:layout_alignParentStart="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentTop="false"
                     android:paddingRight="8dp"
+                    android:paddingEnd="8dp"
                     android:enabled="false"
                     android:focusable="false"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="4dp"
+                    android:layout_marginEnd="4dp"
                     android:textColor="@color/grey_darken_10"
                     android:textSize="@dimen/nux_edit_field_font_size"/>
 
@@ -195,11 +211,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/imageView4"
                     android:layout_gravity="center_horizontal"
-                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentLeft="false"
                     android:layout_alignParentStart="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentEnd="false"
                     app:srcCompat="@drawable/ic_globe_black_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:tint="@color/grey_darken_10"/>
             </RelativeLayout>
 

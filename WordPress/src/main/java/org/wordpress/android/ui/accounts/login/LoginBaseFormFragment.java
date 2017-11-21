@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -42,7 +43,6 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.EnumSet;
@@ -68,7 +68,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     @Inject AccountStore mAccountStore;
 
     protected abstract @LayoutRes int getContentLayout();
-    protected abstract void setupLabel(TextView label);
+    protected abstract void setupLabel(@NonNull TextView label);
     protected abstract void setupContent(ViewGroup rootView);
     protected abstract void setupBottomButtons(Button secondaryButton, Button primaryButton);
     protected abstract @StringRes int getProgressBarText();
@@ -284,7 +284,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         // mUsername and mPassword are null when the user log in with a magic link
         if (smartLockHelper != null) {
             smartLockHelper.saveCredentialsInSmartLock(username, password,
-                    HtmlUtils.fastUnescapeHtml(mAccountStore.getAccount().getDisplayName()),
+                    mAccountStore.getAccount().getDisplayName(),
                     Uri.parse(mAccountStore.getAccount().getAvatarUrl()));
         }
     }

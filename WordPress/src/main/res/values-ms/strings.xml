@@ -8,10 +8,7 @@ Language: ms
 <resources>
 	<string name="reader_photo_by">Gambar oleh %s</string>
 	<string name="pending_draft_more">Anda telah mendraf %d kiriman tetapi tidak pernah menerbitkannya. Ketik untuk periksa.</string>
-	<string name="all_your_sites">Semua Laman Saya</string>
 	<string name="reader_label_visit">Lawat</string>
-	<string name="no_default_app_available_to_open_link">Tidak dapat membuka pautan</string>
-	<string name="notification_pending_drafts">Beritahu saya tentang draf yang belum seleasi</string>
 	<string name="confirm_discard_changes">Buang perubahan yang belum disimpan?</string>
 	<string name="invalid_verification_code_format">Mestilah nombor enam angka</string>
 	<string name="swipe_for_more">Sapu untuk seterusnya</string>
@@ -389,7 +386,6 @@ Language: ms
 	<string name="site_settings_address_title">Alamat</string>
 	<string name="site_settings_title_title">Tajuk Laman</string>
 	<string name="site_settings_tagline_title">Baris Slogan</string>
-	<string name="site_settings_this_device_header">Peranti ini</string>
 	<string name="site_settings_discussion_new_posts_header">Tetapan lalai bagi kiriman baharu</string>
 	<string name="site_settings_account_header">Akaun</string>
 	<string name="site_settings_writing_header">Menulis</string>
@@ -412,8 +408,6 @@ Language: ms
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Laman yang anda ikuti belum mengirim apa-apa baru-baru ini</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Tiada kiriman terkini</string>
 	<string name="edit_media">Sunting media</string>
-	<string name="media_details_copy_url_toast">URL disalin ke papan keratan</string>
-	<string name="media_details_copy_url">Salin URL</string>
 	<string name="media_details_label_date_uploaded">Dimuat naik</string>
 	<string name="media_details_label_date_added">Ditambah</string>
 	<string name="selected_theme">Tema Dipilih</string>
@@ -503,13 +497,7 @@ Language: ms
 	<string name="app_notifications">Pemberitahuan aplikasi</string>
 	<string name="email">Emel</string>
 	<string name="notifications_tab">Tab pemberitahuan</string>
-	<string name="notifications_comments_other_blogs">Ulasan di laman lain</string>
 	<string name="notifications_wpcom_updates">Pengemas Kinian WordPress.com</string>
-	<string name="notifications_other">Lain</string>
-	<string name="notifications_account_emails">Emal dari WordPress.com</string>
-	<string name="notifications_account_emails_summary">Kami akan selalu menghantar emel penting berkenaan akaun anda, tetapi anda juga boleh mendapat beberapa tambahan yang membantu.</string>
-	<string name="notifications_sights_and_sounds">Pandangan dan Bunyian</string>
-	<string name="your_sites">Laman Anda</string>
 	<string name="stats_insights_latest_post_trend">Telah %1$s sejak %2$s diterbitkan. Sini adalah prestasi kiriman ini setakat ini…</string>
 	<string name="stats_insights_latest_post_summary">Ringkasan Kiriman Terkini</string>
 	<string name="button_revert">Berbalik</string>
@@ -610,7 +598,6 @@ Language: ms
 	<string name="stats_average_per_day">Purata Sehari</string>
 	<string name="stats_months_and_years">Bulan dan Tahun</string>
 	<string name="reader_label_new_posts">Kiriman baharu</string>
-	<string name="post_uploading">Memuat naik</string>
 	<string name="stats_total">Jumlah</string>
 	<string name="stats_overall">Keseluruhan</string>
 	<string name="stats_period">Tempoh</string>
@@ -677,8 +664,6 @@ Language: ms
 	<string name="stats_followers_total_wpcom">Jumlah Pengikut WordPress.com: %1$s</string>
 	<string name="ssl_certificate_details">Perincian</string>
 	<string name="cab_selected">%d dipilih</string>
-	<string name="confirm_delete_media">Hapuskan butir yang dipilih?</string>
-	<string name="confirm_delete_multi_media">Hapuskan butiran yang dipilih?</string>
 	<string name="delete_sure">Hapuskan draf ini</string>
 	<string name="delete_sure_page">Hapuskan halaman ini</string>
 	<string name="delete_sure_post">Hapuskan kiriman ini</string>
@@ -700,12 +685,10 @@ Language: ms
 	<string name="older_two_days">Lebih dari 2 hari</string>
 	<string name="older_last_week">Lebih dari seminggu</string>
 	<string name="stats_no_blog">Statistik tidak dapat dimuatkan bagi blog yang diperlukan</string>
-	<string name="sending_content">Memuat naik %s kandungan</string>
 	<string name="uploading_total">Memuat naik %1$d daripada %2$d</string>
 	<string name="posts_empty_list">Belum ada kiriman. Kenapa tidak wujudkannya?</string>
 	<string name="comment_reply_to_user">Balasan kepada %s</string>
 	<string name="pages_empty_list">Belum ada halaman. Kenapa tidak wujudkannya?</string>
-	<string name="posting_post">Mengirim "%s"</string>
 	<string name="signing_out">Melog keluar…</string>
 	<string name="reader_empty_followed_blogs_title">Anda belum mengikuti mana-mana laman</string>
 	<string name="reader_empty_posts_liked">Anda belum menyukai mana-mana kiriman</string>
@@ -763,7 +746,6 @@ Language: ms
 	<string name="stats_bar_graph_empty">Tiada statistik tersedia</string>
 	<string name="reply_failed">Balasan gagal</string>
 	<string name="notifications_empty_list">Tiada notifikasi</string>
-	<string name="error_delete_post">Ralat berlaku apabila sedang menghapuskan %s</string>
 	<string name="error_refresh_posts">Kiriman tidak dapat disegar semula pada masa ini</string>
 	<string name="error_refresh_pages">Laman tidak dapat disegar semula pada masa ini</string>
 	<string name="error_refresh_notifications">Pemberitahuan tidak dapat disegar semula pada masa ini</string>
@@ -804,7 +786,6 @@ Language: ms
 	<string name="could_not_remove_account">Tidak dapat membuang blog</string>
 	<string name="gallery_error">Butir media tidak boleh didapatkan kembali</string>
 	<string name="blog_not_found">Ralat berlaku apabila mencapai blog ini</string>
-	<string name="wait_until_upload_completes">Tunggu sehingga muat naik selesai</string>
 	<string name="theme_fetch_failed">Gagal mengambil tema</string>
 	<string name="theme_set_failed">Gagal menetapkan tema</string>
 	<string name="theme_auth_error_message">Pastikan anda mempunyai hak untuk menetapkan tema</string>
@@ -854,7 +835,6 @@ Language: ms
 	<string name="mnu_comment_approve">Lulus</string>
 	<string name="mnu_comment_unapprove">Tidak diluluskan</string>
 	<string name="mnu_comment_spam">Spam</string>
-	<string name="share_action_post">Kiriman baharu</string>
 	<string name="file_error_create">Tidak dapat mencipta fail sementara untuk muat naik media. Pastikan terdapat ruang yang cukup dalam peranti anda.</string>
 	<string name="open_source_licenses">Lesen sumber terbuka</string>
 	<string name="delete_draft">Hapus draf</string>
@@ -903,7 +883,6 @@ Language: ms
 	<string name="edit_post">Sunting kiriman</string>
 	<string name="learn_more">Pelajari selanjutnya</string>
 	<string name="dlg_spamming_comments">Ditanda sebagai spam</string>
-	<string name="share_action_media">Pustaka media</string>
 	<string name="invalid_site_url_message">Periksa bahawa URL laman yang dimasukkan adalah sah</string>
 	<string name="notifications_empty_all">Belum ada pemberitahuan.</string>
 	<string name="media_error_no_permission">Anda tidak mempunyai kebenaran untuk melihat pustaka media</string>
@@ -940,7 +919,6 @@ Language: ms
 	<string name="signing_in">Melog masuk...</string>
 	<string name="nux_oops_not_selfhosted_blog">Log masuk ke WordPress.com</string>
 	<string name="empty_list_default">Senarai ini kosong</string>
-	<string name="select_from_media_library">Pilih dari perpustakaan media</string>
 	<string name="jetpack_not_found">Pemalam Jetpack tidak dijumpai</string>
 	<string name="reader_untitled_post">(Tanpa tajuk)</string>
 	<string name="reader_btn_share">Kongsi</string>
@@ -1051,7 +1029,6 @@ Language: ms
 	<string name="version">Versi</string>
 	<string name="tos">Terma Perkhidmatan</string>
 	<string name="app_title">WordPress untuk Android</string>
-	<string name="max_thumbnail_px_width">Lebar Lalai Imej</string>
 	<string name="image_alignment">Penjajaran</string>
 	<string name="refresh">Segar semula</string>
 	<string name="untitled">Tiada tajuk</string>
@@ -1069,9 +1046,6 @@ Language: ms
 	<string name="categories">Kategori</string>
 	<string name="title">Tajuk</string>
 	<string name="dlg_deleting_comments">Menghapuskan ulasan</string>
-	<string name="notification_blink">Kerlipkan lampu pemberitahuan</string>
-	<string name="notification_vibrate">Getar</string>
-	<string name="notification_sound">Bunyi pemberitahuan</string>
 	<string name="sdcard_title">Kad SD Diperlukan</string>
 	<string name="media">Media</string>
 	<string name="delete">Hapus</string>
