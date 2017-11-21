@@ -80,7 +80,6 @@ Language: de
 	<string name="media_encoder_quality_85">Mittel</string>
 	<string name="media_encoder_quality_80">Niedrig</string>
 	<string name="media_upload_state_uploaded">Hochgeladen</string>
-	<string name="media_upload_state_failed">Fehlgeschlagen</string>
 	<string name="media_upload_state_deleted">Gelöscht</string>
 	<string name="media_upload_state_deleting">Lösche</string>
 	<string name="media_upload_state_uploading">Lade hoch</string>
@@ -773,7 +772,6 @@ Language: de
 	<string name="themes_fetching">Themes werden abgerufen…</string>
 	<string name="ssl_certificate_details">Details</string>
 	<string name="cab_selected">%d ausgewählt</string>
-	<string name="confirm_delete_multi_media">Ausgewählte Objekte löschen?</string>
 	<string name="delete_sure_page">Lösche diese Seite</string>
 	<string name="delete_sure">Lösche diesen Entwurf</string>
 	<string name="delete_sure_post">Lösche diesen Beitrag</string>
@@ -1051,7 +1049,6 @@ Language: de
 	<string name="reader_btn_share">Teilen</string>
 	<string name="reader_untitled_post">(Ohne Titel)</string>
 	<string name="jetpack_not_found">Jetpack Plugin nicht gefunden</string>
-	<string name="select_from_media_library">Aus der Mediathek auswählen</string>
 	<string name="empty_list_default">Diese Liste ist leer</string>
 	<string name="media_add_popup_title">Zur Mediathek hinzufügen</string>
 	<string name="passcode_turn_on">Stelle PIN-Sperre an</string>

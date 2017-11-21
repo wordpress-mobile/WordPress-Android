@@ -186,7 +186,6 @@ Language: bg
 	<string name="media_encoder_quality_85">Средно</string>
 	<string name="media_encoder_quality_80">Ниско</string>
 	<string name="media_upload_state_uploaded">Качено</string>
-	<string name="media_upload_state_failed">Грешка</string>
 	<string name="media_upload_state_deleted">Изтрито</string>
 	<string name="media_upload_state_deleting">Изтрива се</string>
 	<string name="media_upload_state_uploading">Качва се</string>
@@ -881,7 +880,6 @@ Language: bg
 	<string name="stats_empty_top_posts_desc">Разберете кое е най-гледаното ви съдържание и вижте как индивидуалните публикации и страници се представят с течение на времето.</string>
 	<string name="stats_followers_email_selector">Електронна поща</string>
 	<string name="ssl_certificate_details">Информация</string>
-	<string name="confirm_delete_multi_media">Изтриване на избраните елементи?</string>
 	<string name="cab_selected">%d избрани</string>
 	<string name="delete_sure_post">Изтриване на публикацията</string>
 	<string name="delete_sure">Изтриване на черновата</string>
@@ -1156,7 +1154,6 @@ Language: bg
 	<string name="limit_reached">Достигнахте ограничение. Пробвайте отново след 1 минута. Ако пробвате по-скоро от една минута ще увеличите продължителността на ограничението. В случай, че това е грешка, трябва да се свържете с поддръжката.</string>
 	<string name="media_add_popup_title">Добавяне в библиотеката с файлове</string>
 	<string name="empty_list_default">Списъкът е празен</string>
-	<string name="select_from_media_library">Избор от медийната библиотека</string>
 	<string name="reader_btn_share">Споделяне</string>
 	<string name="reader_btn_follow">Последване</string>
 	<string name="reader_btn_unfollow">Следва</string>

@@ -13,6 +13,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 
 public class ThemeWebActivity extends WPWebViewActivity {
     public static final String IS_CURRENT_THEME = "is_current_theme";
@@ -23,9 +24,9 @@ public class ThemeWebActivity extends WPWebViewActivity {
 
     private static final String THEME_DOMAIN_PUBLIC = "pub";
     private static final String THEME_DOMAIN_PREMIUM = "premium";
-    private static final String THEME_URL_PREVIEW = "%s/wp-admin/customize.php?theme=%s/%s&hide_close=true";
-    private static final String THEME_URL_SUPPORT = "https://wordpress.com/themes/%s/support/?preview=true&iframe=true";
-    private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s/?preview=true&iframe=true";
+    private static final String THEME_URL_PREVIEW = "https://wordpress.com/customize/%s?theme=%s/%s&hide_close=true";
+    private static final String THEME_URL_SUPPORT = "https://wordpress.com/theme/%s/support/?preview=true&iframe=true";
+    private static final String THEME_URL_DETAILS = "https://wordpress.com/theme/%s/?preview=true&iframe=true";
     private static final String THEME_URL_DEMO_PARAMETER = "demo=true&iframe=true&theme_preview=true";
 
     enum ThemeWebActivityType {
@@ -79,12 +80,10 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     public static String getUrl(SiteModel site, ThemeModel theme, ThemeWebActivityType type, boolean isPremium) {
-        String homeURL = site.getUrl();
-        String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
-
         switch (type) {
             case PREVIEW:
-                return String.format(THEME_URL_PREVIEW, homeURL, domain, theme.getThemeId());
+                String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
+                return String.format(THEME_URL_PREVIEW, UrlUtils.getHost(site.getUrl()), domain, theme.getThemeId());
             case DEMO:
                 String url = theme.getDemoUrl();
                 if (url.contains("?")) {
@@ -93,8 +92,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
                     return url + "?" + THEME_URL_DEMO_PARAMETER;
                 }
             case DETAILS:
-                String currentURL = homeURL.replaceFirst(THEME_HTTPS_PROTOCOL, "");
-                return String.format(THEME_URL_DETAILS, currentURL, theme.getThemeId());
+                return String.format(THEME_URL_DETAILS, theme.getThemeId());
             case SUPPORT:
                 return String.format(THEME_URL_SUPPORT, theme.getThemeId());
             default:

@@ -41,7 +41,6 @@ Language: hu
 	<string name="delete_sure_post">Bejegyzés törlése</string>
 	<string name="delete_sure">Vázlat törlése</string>
 	<string name="delete_sure_page">Oldal törlése</string>
-	<string name="confirm_delete_multi_media">Kiválasztott sablon törlése?</string>
 	<string name="cab_selected">%d kiválasztva</string>
 	<string name="reader_empty_posts_liked">Még egy bejegyzés sincs tetszettként jelölve</string>
 	<string name="faq_button">GYIK</string>

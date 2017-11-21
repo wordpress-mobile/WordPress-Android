@@ -13,7 +13,6 @@ Language: cs_CZ
 	<string name="media_encoder_quality_85">Střední</string>
 	<string name="media_encoder_quality_80">Nízká</string>
 	<string name="media_upload_state_uploaded">Nahráno</string>
-	<string name="media_upload_state_failed">Chyba</string>
 	<string name="media_upload_state_deleted">Smazáno</string>
 	<string name="media_upload_state_deleting">Mazání</string>
 	<string name="media_upload_state_uploading">Nahrávání</string>
@@ -701,7 +700,6 @@ Language: cs_CZ
 	<string name="delete_sure_page">Smazat stránku</string>
 	<string name="delete_sure">Smazat koncept</string>
 	<string name="delete_sure_post">Smazat příspěvek</string>
-	<string name="confirm_delete_multi_media">Odstranit zvolené položky?</string>
 	<string name="reader_title_photo_viewer">%1$d z %2$d</string>
 	<string name="reader_label_comments_closed">Komentáře jsou uzavřené</string>
 	<string name="reader_label_comment_count_single">Jeden komentář</string>
@@ -960,7 +958,6 @@ Language: cs_CZ
 	<string name="username_invalid">Špatné uživatelské jméno</string>
 	<string name="media_add_popup_title">Přidat do knihovny medií</string>
 	<string name="empty_list_default">Tento seznam je prázdný</string>
-	<string name="select_from_media_library">Vyberte z knihovny medií</string>
 	<string name="jetpack_not_found">Plugin Jetpack nebyl nalezen</string>
 	<string name="reader_untitled_post">(bez názvu)</string>
 	<string name="reader_btn_follow">Sledovat</string>
