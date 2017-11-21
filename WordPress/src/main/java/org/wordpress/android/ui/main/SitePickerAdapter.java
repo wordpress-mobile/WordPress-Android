@@ -483,6 +483,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     Set<SiteRecord> setVisibilityForSelectedSites(boolean makeVisible) {
         SiteList sites = getSelectedSites();
         Set<SiteRecord> changeSet = new HashSet<>();
+        int currentSiteId = AppPrefs.getSelectedSite();
         if (sites != null && sites.size() > 0) {
             ArrayList<Integer> recentIds = AppPrefs.getRecentlyPickedSiteIds();
             for (SiteRecord site: sites) {
@@ -492,7 +493,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (siteRecord.isHidden == makeVisible) {
                         changeSet.add(siteRecord);
                         siteRecord.isHidden = !makeVisible;
-                        if (!makeVisible && recentIds.contains(siteRecord.localId)) {
+                        if (!makeVisible
+                                && siteRecord.localId != currentSiteId
+                                && recentIds.contains(siteRecord.localId)) {
                             AppPrefs.removeRecentlyPickedSiteId(siteRecord.localId);
                         }
                     }
