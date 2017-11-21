@@ -58,7 +58,7 @@ public class PluginListActivity extends AppCompatActivity {
 
         setContentView(R.layout.plugin_list_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -104,7 +104,7 @@ public class PluginListActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.plugins_recycler_view);
+        mRecyclerView = findViewById(R.id.plugins_recycler_view);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
@@ -113,7 +113,7 @@ public class PluginListActivity extends AppCompatActivity {
         mAdapter = new PluginListAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.plugin_progress_bar);
+        mProgressBar = findViewById(R.id.plugin_progress_bar);
 
         refreshPluginList();
     }
@@ -232,9 +232,9 @@ public class PluginListActivity extends AppCompatActivity {
 
             PluginViewHolder(View view) {
                 super(view);
-                name = (TextView) view.findViewById(R.id.plugin_name);
-                status = (TextView) view.findViewById(R.id.plugin_status);
-                icon = (WPNetworkImageView) view.findViewById(R.id.plugin_icon);
+                name = view.findViewById(R.id.plugin_name);
+                status = view.findViewById(R.id.plugin_status);
+                icon = view.findViewById(R.id.plugin_icon);
             }
         }
     }

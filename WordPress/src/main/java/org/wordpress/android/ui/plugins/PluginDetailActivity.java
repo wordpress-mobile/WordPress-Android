@@ -70,7 +70,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -99,8 +99,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        mSwitchActive = (Switch) findViewById(R.id.plugin_state_active);
-        mSwitchAutoupdates = (Switch) findViewById(R.id.plugin_state_autoupdates);
+        mSwitchActive = findViewById(R.id.plugin_state_active);
+        mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
 
         mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
