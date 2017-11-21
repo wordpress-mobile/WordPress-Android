@@ -106,6 +106,13 @@ public class WPActivityUtils {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    public static void showKeyboard(@Nullable final View view) {
+        if (view == null) return;
+        InputMethodManager inputMethodManager = (InputMethodManager) view.getContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+    }
+
     public static void applyLocale(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
