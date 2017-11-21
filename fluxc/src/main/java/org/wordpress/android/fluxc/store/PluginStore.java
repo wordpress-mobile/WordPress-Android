@@ -36,6 +36,7 @@ public class PluginStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class InstallSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public String pluginName;
@@ -73,6 +74,7 @@ public class PluginStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class FetchedPluginInfoPayload extends Payload<FetchPluginInfoError> {
         public PluginInfoModel pluginInfo;
 
@@ -223,10 +225,12 @@ public class PluginStore extends Store {
 
     // OnChanged Events
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnPluginInfoChanged extends OnChanged<FetchPluginInfoError> {
         public PluginInfoModel pluginInfo;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginDeleted extends OnChanged<DeleteSitePluginError> {
         public SiteModel site;
         public PluginModel plugin;
@@ -235,21 +239,24 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class OnSitePluginChanged extends OnChanged<UpdateSitePluginError> {
+    @SuppressWarnings("WeakerAccess")
+    public static class OnSitePluginUpdated extends OnChanged<UpdateSitePluginError> {
         public SiteModel site;
         public PluginModel plugin;
-        public OnSitePluginChanged(SiteModel site) {
+        public OnSitePluginUpdated(SiteModel site) {
             this.site = site;
         }
     }
 
-    public static class OnSitePluginsChanged extends OnChanged<FetchSitePluginsError> {
+    @SuppressWarnings("WeakerAccess")
+    public static class OnSitePluginsFetched extends OnChanged<FetchSitePluginsError> {
         public SiteModel site;
-        public OnSitePluginsChanged(SiteModel site) {
+        public OnSitePluginsFetched(SiteModel site) {
             this.site = site;
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginInstalled extends OnChanged<InstallSitePluginError> {
         public SiteModel site;
         public PluginModel plugin;
@@ -371,7 +378,7 @@ public class PluginStore extends Store {
     }
 
     private void fetchedSitePlugins(FetchedSitePluginsPayload payload) {
-        OnSitePluginsChanged event = new OnSitePluginsChanged(payload.site);
+        OnSitePluginsFetched event = new OnSitePluginsFetched(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
@@ -392,7 +399,7 @@ public class PluginStore extends Store {
     }
 
     private void updatedSitePlugin(UpdatedSitePluginPayload payload) {
-        OnSitePluginChanged event = new OnSitePluginChanged(payload.site);
+        OnSitePluginUpdated event = new OnSitePluginUpdated(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
         } else {

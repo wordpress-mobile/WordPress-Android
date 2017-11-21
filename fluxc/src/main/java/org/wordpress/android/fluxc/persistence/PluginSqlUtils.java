@@ -58,10 +58,10 @@ public class PluginSqlUtils {
             return 0;
         }
         // The local id of the plugin might not be set if it's coming from a network request,
-        // using site id and slug is a safer approach here
+        // using site id and name is a safer approach here
         return WellSql.delete(PluginModel.class)
                 .where()
-                .equals(PluginModelTable.SLUG, plugin.getSlug())
+                .equals(PluginModelTable.NAME, plugin.getName())
                 .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().execute();
     }
