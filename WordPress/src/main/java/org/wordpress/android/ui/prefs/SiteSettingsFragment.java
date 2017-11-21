@@ -632,6 +632,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
         } else if (preference == mBlacklistPref) {
             mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        } else if (preference == mWeekStartPref) {
+            mSiteSettings.setStartOfWeek(newValue.toString());
+            mWeekStartPref.setValue(newValue.toString());
+            mWeekStartPref.setSummary(mWeekStartPref.getEntry());
         } else {
             return false;
         }
@@ -1069,6 +1073,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpMatchEmailPref.setChecked(mSiteSettings.isJetpackSsoMatchEmailEnabled());
         mJpUseTwoFactorPref.setChecked(mSiteSettings.isJetpackSsoTwoFactorEnabled());
         mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
+        mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
+        mWeekStartPref.setSummary(mWeekStartPref.getEntry());
     }
 
     private void setCategories() {
