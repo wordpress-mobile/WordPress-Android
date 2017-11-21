@@ -8,6 +8,9 @@
 /is-available/email/
 /is-available/username/
 
+/jetpack-blogs/
+/jetpack-blogs/$site/rest-api/
+
 /me/
 /me/settings/
 /me/sites/
