@@ -18,9 +18,8 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
-import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeWPComResponse.ThemeArrayResponse;
-import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeWPComResponse.MultipleWPComThemesResponse;
-import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeJetpackResponse.MultipleJetpackThemesResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeListResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.JetpackThemeResponse.JetpackThemeListResponse;
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError;
 import org.wordpress.android.fluxc.store.ThemeStore.SearchedThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedThemesPayload;
@@ -50,10 +49,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
     /** Endpoint: v1.1/site/$siteId/themes/$themeId/delete */
     public void deleteTheme(@NonNull final SiteModel site, @NonNull final ThemeModel theme) {
         String url = WPCOMREST.sites.site(site.getSiteId()).themes.theme(theme.getThemeId()).delete.getUrlV1_1();
-        add(WPComGsonRequest.buildPostRequest(url, null, ThemeJetpackResponse.class,
-                new Response.Listener<ThemeJetpackResponse>() {
+        add(WPComGsonRequest.buildPostRequest(url, null, JetpackThemeResponse.class,
+                new Response.Listener<JetpackThemeResponse>() {
                     @Override
-                    public void onResponse(ThemeJetpackResponse response) {
+                    public void onResponse(JetpackThemeResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to Jetpack theme deletion request.");
                         ThemeModel responseTheme = createThemeFromJetpackResponse(response);
                         responseTheme.setId(theme.getId());
@@ -77,10 +76,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
     public void installTheme(@NonNull final SiteModel site, @NonNull final ThemeModel theme) {
         String themeId = getThemeIdWithWpComSuffix(theme);
         String url = WPCOMREST.sites.site(site.getSiteId()).themes.theme(themeId).install.getUrlV1_1();
-        add(WPComGsonRequest.buildPostRequest(url, null, ThemeJetpackResponse.class,
-                new Response.Listener<ThemeJetpackResponse>() {
+        add(WPComGsonRequest.buildPostRequest(url, null, JetpackThemeResponse.class,
+                new Response.Listener<JetpackThemeResponse>() {
                     @Override
-                    public void onResponse(ThemeJetpackResponse response) {
+                    public void onResponse(JetpackThemeResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to Jetpack theme installation request.");
                         ThemeModel responseTheme = createThemeFromJetpackResponse(response);
                         responseTheme.setLocalSiteId(site.getId());
@@ -105,10 +104,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
         Map<String, Object> params = new HashMap<>();
         params.put("theme", theme.getThemeId());
 
-        add(WPComGsonRequest.buildPostRequest(url, params, ThemeWPComResponse.class,
-                new Response.Listener<ThemeWPComResponse>() {
+        add(WPComGsonRequest.buildPostRequest(url, params, WPComThemeResponse.class,
+                new Response.Listener<WPComThemeResponse>() {
                     @Override
-                    public void onResponse(ThemeWPComResponse response) {
+                    public void onResponse(WPComThemeResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to theme activation request.");
                         ActivateThemePayload payload = new ActivateThemePayload(site, theme);
                         payload.theme.setActive(StringUtils.equals(theme.getThemeId(), response.id));
@@ -129,10 +128,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
     /** [Undocumented!] Endpoint: v1.2/themes */
     public void fetchWpComThemes() {
         String url = WPCOMREST.themes.getUrlV1_2() + "?" + WP_THEME_FETCH_NUMBER_PARAM;
-        add(WPComGsonRequest.buildGetRequest(url, null, ThemeArrayResponse.class,
-                new Response.Listener<ThemeArrayResponse>() {
+        add(WPComGsonRequest.buildGetRequest(url, null, WPComThemeListResponse.class,
+                new Response.Listener<WPComThemeListResponse>() {
                     @Override
-                    public void onResponse(ThemeArrayResponse response) {
+                    public void onResponse(WPComThemeListResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to WP.com themes fetch request.");
                         FetchedThemesPayload payload = new FetchedThemesPayload(null);
                         payload.themes = createThemeListFromArrayResponse(response);
@@ -153,10 +152,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
     /** Endpoint: v1/site/$siteId/themes */
     public void fetchJetpackInstalledThemes(@NonNull final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).themes.getUrlV1();
-        add(WPComGsonRequest.buildGetRequest(url, null, MultipleJetpackThemesResponse.class,
-                new Response.Listener<MultipleJetpackThemesResponse>() {
+        add(WPComGsonRequest.buildGetRequest(url, null, JetpackThemeListResponse.class,
+                new Response.Listener<JetpackThemeListResponse>() {
                     @Override
-                    public void onResponse(MultipleJetpackThemesResponse response) {
+                    public void onResponse(JetpackThemeListResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to Jetpack installed themes fetch request.");
                         List<ThemeModel> themes = createThemeListFromJetpackResponse(response);
                         FetchedThemesPayload payload = new FetchedThemesPayload(site, themes);
@@ -174,37 +173,13 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 }));
     }
 
-    /** Endpoint: v1.2/site/$siteId/themes */
-    public void fetchWpComSiteThemes(@NonNull final SiteModel site) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).themes.getUrlV1_2();
-        add(WPComGsonRequest.buildGetRequest(url, null, MultipleWPComThemesResponse.class,
-                new Response.Listener<MultipleWPComThemesResponse>() {
-                    @Override
-                    public void onResponse(MultipleWPComThemesResponse response) {
-                        AppLog.d(AppLog.T.API, "Received response to themes fetch request for WP.com site.");
-                        FetchedThemesPayload payload =
-                                new FetchedThemesPayload(site, createThemeListFromWPComResponse(response));
-                        mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
-                    }
-                }, new BaseRequest.BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.e(AppLog.T.API, "Received error response to themes fetch request for WP.com site.");
-                        ThemesError themeError = new ThemesError(
-                                ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
-                        FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
-                        mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
-                    }
-                }));
-    }
-
     /** Endpoint: v1.1/site/$siteId/themes/mine; same endpoint for both Jetpack and WP.com sites */
     public void fetchCurrentTheme(@NonNull final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).themes.mine.getUrlV1_1();
-        add(WPComGsonRequest.buildGetRequest(url, null, ThemeWPComResponse.class,
-                new Response.Listener<ThemeWPComResponse>() {
+        add(WPComGsonRequest.buildGetRequest(url, null, WPComThemeResponse.class,
+                new Response.Listener<WPComThemeResponse>() {
                     @Override
-                    public void onResponse(ThemeWPComResponse response) {
+                    public void onResponse(WPComThemeResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to current theme fetch request.");
                         ThemeModel responseTheme = createThemeFromWPComResponse(response);
                         FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(site, responseTheme);
@@ -225,10 +200,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
     /** [Undocumented!] Endpoint: v1.2/themes?search=$term */
     public void searchThemes(@NonNull final String searchTerm) {
         String url = WPCOMREST.themes.getUrlV1_2() + "?search=" + searchTerm;
-        add(WPComGsonRequest.buildGetRequest(url, null, ThemeArrayResponse.class,
-                new Response.Listener<ThemeArrayResponse>() {
+        add(WPComGsonRequest.buildGetRequest(url, null, WPComThemeListResponse.class,
+                new Response.Listener<WPComThemeListResponse>() {
                     @Override
-                    public void onResponse(ThemeArrayResponse response) {
+                    public void onResponse(WPComThemeListResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to search themes request.");
                         SearchedThemesPayload payload =
                                 new SearchedThemesPayload(searchTerm, createThemeListFromArrayResponse(response));
@@ -246,7 +221,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 }));
     }
 
-    private static ThemeModel createThemeFromWPComResponse(ThemeWPComResponse response) {
+    private static ThemeModel createThemeFromWPComResponse(WPComThemeResponse response) {
         ThemeModel theme = new ThemeModel();
         theme.setThemeId(response.id);
         theme.setSlug(response.slug);
@@ -267,7 +242,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
         return theme;
     }
 
-    private static ThemeModel createThemeFromJetpackResponse(ThemeJetpackResponse response) {
+    private static ThemeModel createThemeFromJetpackResponse(JetpackThemeResponse response) {
         ThemeModel theme = new ThemeModel();
         theme.setThemeId(response.id);
         theme.setName(response.name);
@@ -290,27 +265,18 @@ public class ThemeRestClient extends BaseWPComRestClient {
         return theme;
     }
 
-    /** Creates a list of ThemeModels from the WP.com /v1.1/themes REST response. */
-    private static List<ThemeModel> createThemeListFromWPComResponse(MultipleWPComThemesResponse response) {
-        List<ThemeModel> themeList = new ArrayList<>();
-        for (ThemeWPComResponse item : response.themes.values()) {
-            themeList.add(createThemeFromWPComResponse(item));
-        }
-        return themeList;
-    }
-
-    private static List<ThemeModel> createThemeListFromArrayResponse(ThemeArrayResponse response) {
-        List<ThemeModel> themeList = new ArrayList<>();
-        for (ThemeWPComResponse item : response.themes) {
+    private static List<ThemeModel> createThemeListFromArrayResponse(WPComThemeListResponse response) {
+        final List<ThemeModel> themeList = new ArrayList<>();
+        for (WPComThemeResponse item : response.themes) {
             themeList.add(createThemeFromWPComResponse(item));
         }
         return themeList;
     }
 
     /** Creates a list of ThemeModels from the Jetpack /v1/sites/$siteId/themes REST response. */
-    private static List<ThemeModel> createThemeListFromJetpackResponse(MultipleJetpackThemesResponse response) {
-        List<ThemeModel> themeList = new ArrayList<>();
-        for (ThemeJetpackResponse item : response.themes) {
+    private static List<ThemeModel> createThemeListFromJetpackResponse(JetpackThemeListResponse response) {
+        final List<ThemeModel> themeList = new ArrayList<>();
+        for (JetpackThemeResponse item : response.themes) {
             themeList.add(createThemeFromJetpackResponse(item));
         }
         return themeList;
