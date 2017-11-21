@@ -73,6 +73,8 @@ public class SiteSettingsModel {
             " add " + ALLOW_COMMENT_LIKES_COLUMN_NAME + " BOOLEAN;";
     public static final String ADD_TWITTER_USERNAME = "alter table " + SETTINGS_TABLE_NAME +
             " add " + TWITTER_USERNAME_COLUMN_NAME + " TEXT;";
+    public static final String ADD_START_OF_WEEK = "alter table " + SETTINGS_TABLE_NAME +
+            " add startOfWeek TEXT;";
 
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
