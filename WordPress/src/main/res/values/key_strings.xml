@@ -152,13 +152,23 @@
     </string-array>
 
     <string-array name="weekdays">
+        <item>Sunday</item>
         <item>Monday</item>
         <item>Tuesday</item>
         <item>Wednesday</item>
         <item>Thursday</item>
         <item>Friday</item>
         <item>Saturday</item>
-        <item>Sunday</item>
+    </string-array>
+
+    <string-array name="weekday_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
     </string-array>
 
     <!-- App Settings - Editor -->

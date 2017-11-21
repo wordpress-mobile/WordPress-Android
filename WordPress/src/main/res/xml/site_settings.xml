@@ -110,7 +110,7 @@
             android:key="@string/pref_key_site_week_start"
             android:title="@string/site_settings_week_start_title"
             android:entries="@array/weekdays"
-            android:entryValues="@array/weekdays" />
+            android:entryValues="@array/weekday_values" />
 
         <org.wordpress.android.ui.prefs.WPPreference
             android:id="@+id/pref_related_posts"
