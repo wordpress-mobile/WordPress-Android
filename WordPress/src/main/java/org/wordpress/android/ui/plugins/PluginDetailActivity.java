@@ -18,9 +18,9 @@ import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
-import org.wordpress.android.fluxc.store.PluginStore.OnPluginChanged;
-import org.wordpress.android.fluxc.store.PluginStore.UpdatePluginErrorType;
-import org.wordpress.android.fluxc.store.PluginStore.UpdatePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
+import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
@@ -56,7 +56,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             pluginName = savedInstanceState.getString(KEY_PLUGIN_NAME);
         }
 
-        mPlugin = mPluginStore.getPluginByName(mSite, pluginName);
+        mPlugin = mPluginStore.getSitePluginByName(mSite, pluginName);
 
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, Duration.SHORT);
@@ -131,20 +131,21 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void dispatchUpdateAction() {
-        mDispatcher.dispatch(PluginActionBuilder.newUpdatePluginAction(
-                new UpdatePluginPayload(mSite, mPlugin)));
+        mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(
+                new UpdateSitePluginPayload(mSite, mPlugin)));
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPluginChanged(OnPluginChanged event) {
+    public void onSitePluginUpdated(OnSitePluginUpdated event) {
         if (event.isError()) {
-            if (event.error.type == UpdatePluginErrorType.ACTIVATION_ERROR
-                    || event.error.type == UpdatePluginErrorType.DEACTIVATION_ERROR) {
+            if (event.error.type == UpdateSitePluginErrorType.ACTIVATION_ERROR
+                    || event.error.type == UpdateSitePluginErrorType.DEACTIVATION_ERROR) {
                 // these errors are thrown when the plugin is already active and we try to activate it and vice versa.
                 return;
             }
-            ToastUtils.showToast(this, "An error occurred while fetching the plugins: " + event.error.message);
+            ToastUtils.showToast(this, "An error occurred while fetching the plugins: "
+                    + event.error.message);
             return;
         }
         if (event.plugin != null) {
