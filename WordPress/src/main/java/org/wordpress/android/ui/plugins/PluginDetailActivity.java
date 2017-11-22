@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
@@ -119,6 +120,20 @@ public class PluginDetailActivity extends AppCompatActivity {
                     mPlugin.setIsAutoUpdateEnabled(b);
                     dispatchUpdateAction();
                 }
+            }
+        });
+
+        findViewById(R.id.plugin_wp_org_page).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: open WordPress.org page for the plugin
+            }
+        });
+
+        findViewById(R.id.plugin_home_page).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: open home page for the plugin
             }
         });
 

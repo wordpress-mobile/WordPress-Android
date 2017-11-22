@@ -56,7 +56,9 @@
             style="@style/PluginCardViewVerticalContainer">
 
             <RelativeLayout
-                style="@style/PluginCardViewHorizontalContainer">
+                android:id="@+id/plugin_wp_org_page"
+                style="@style/PluginCardViewHorizontalContainer"
+                android:background="?android:attr/selectableItemBackground">
 
                 <TextView
                     style="@style/PluginCardViewPrimaryText"
@@ -70,7 +72,9 @@
             <View style="@style/PostSettingsDivider"/>
 
             <RelativeLayout
-                style="@style/PluginCardViewHorizontalContainer">
+                android:id="@+id/plugin_home_page"
+                style="@style/PluginCardViewHorizontalContainer"
+                android:background="?android:attr/selectableItemBackground">
 
                 <TextView
                     style="@style/PluginCardViewPrimaryText"
