@@ -240,7 +240,14 @@ public class PhotoPickerActivity extends AppCompatActivity
     private void doMediaUriSelected(@NonNull Uri mediaUri, @NonNull PhotoPickerMediaSource source) {
         // if user chose a featured image, we need to upload it and return the uploaded media object
         if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
-            uploadMedia(mediaUri);
+            WPMediaUtils.fetchMediaAndDoNext(this, mediaUri,
+                    new WPMediaUtils.MediaFetchDoNext() {
+                        @Override
+                        public void doNext(Uri uri) {
+                            uploadMedia(uri);
+                        }
+                    });
+
         } else {
             Intent intent = new Intent()
                     .putExtra(EXTRA_MEDIA_URI, mediaUri.toString())
