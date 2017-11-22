@@ -60,7 +60,6 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ListUtils;
@@ -351,8 +350,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case RequestCodes.VIDEO_LIBRARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     Uri imageUri = data.getData();
-                    String mimeType = getContentResolver().getType(imageUri);
-                    fetchMedia(imageUri, mimeType);
+                    final String mimeType = getContentResolver().getType(imageUri);
+                    WPMediaUtils.fetchMediaAndDoNext(this, imageUri, new WPMediaUtils.MediaFetchDoNext() {
+                        @Override
+                        public void doNext(Uri uri) {
+                            queueFileForUpload(getOptimizedPictureIfNecessary(uri), mimeType);
+                        }
+                    });
                     trackAddMediaFromDeviceEvents(
                             false,
                             requestCode == RequestCodes.VIDEO_LIBRARY,
@@ -707,7 +711,15 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
         for (Uri uri : uriList) {
             if (uri != null) {
-                fetchMedia(uri, getContentResolver().getType(uri));
+                WPMediaUtils.fetchMediaAndDoNext(this, uri,
+                        new WPMediaUtils.MediaFetchDoNext() {
+                            @Override
+                            public void doNext(Uri downloadedUri) {
+                                queueFileForUpload(
+                                        getOptimizedPictureIfNecessary(downloadedUri),
+                                        getContentResolver().getType(downloadedUri));
+                            }
+                        });
             }
         }
     }
@@ -827,29 +839,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     WPMediaUtils.launchVideoLibrary(this);
                     break;
             }
-        }
-    }
-
-    private void fetchMedia(Uri mediaUri, final String mimeType) {
-        if (!MediaUtils.isInMediaStore(mediaUri)) {
-            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
-            Uri downloadedUri = null;
-            try {
-                downloadedUri = MediaUtils.downloadExternalMedia(MediaBrowserActivity.this, mediaUri);
-            } catch (IllegalStateException e) {
-                // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
-                AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
-                CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString() +
-                        " See issue #5823");
-            }
-            if (downloadedUri != null) {
-                queueFileForUpload(getOptimizedPictureIfNecessary(downloadedUri), mimeType);
-            } else {
-                ToastUtils.showToast(MediaBrowserActivity.this, R.string.error_downloading_image,
-                        ToastUtils.Duration.SHORT);
-            }
-        } else {
-            queueFileForUpload(getOptimizedPictureIfNecessary(mediaUri), mimeType);
         }
     }
 
