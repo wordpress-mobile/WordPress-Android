@@ -57,7 +57,7 @@ public class SiteSettingsModel {
     private static final String ALLOW_LIKE_BUTTON_COLUMN_NAME = "allowLikeButton";
     private static final String ALLOW_COMMENT_LIKES_COLUMN_NAME = "allowCommentLikes";
     private static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
-    private static final String START_OF_WEEK_COLUMN_NAME = "start_of_week";
+    private static final String START_OF_WEEK_COLUMN_NAME = "startOfWeek";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
 
