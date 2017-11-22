@@ -700,19 +700,19 @@
         <item name="android:orientation">vertical</item>
     </style>
 
-    <style name="PluginCardViewDivider">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/list_divider_height</item>
-        <item name="android:background">@color/grey_lighten_20</item>
-    </style>
-
     <style name="PluginCardViewHorizontalContainer">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="PluginCardViewText">
+    <style name="PluginCardViewDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/list_divider_height</item>
+        <item name="android:background">@color/grey_lighten_20</item>
+    </style>
+
+    <style name="PluginCardViewPrimaryText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
@@ -732,5 +732,7 @@
         <item name="android:layout_width">16dp</item>
         <item name="android:layout_height">16dp</item>
         <item name="android:tint">@color/grey_darken_10</item>
+        <item name="android:layout_marginRight">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
     </style>
 </resources>

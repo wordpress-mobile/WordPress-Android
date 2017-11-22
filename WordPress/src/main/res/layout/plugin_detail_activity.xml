@@ -23,7 +23,7 @@
                 style="@style/PluginCardViewHorizontalContainer">
 
                 <TextView
-                    style="@style/PluginCardViewText"
+                    style="@style/PluginCardViewPrimaryText"
                     android:text="@string/plugin_detail_label_state_active"/>
 
                 <Switch
@@ -37,7 +37,7 @@
                 style="@style/PluginCardViewHorizontalContainer">
 
                 <TextView
-                    style="@style/PluginCardViewText"
+                    style="@style/PluginCardViewPrimaryText"
                     android:text="@string/plugin_detail_label_state_autoupdates"/>
 
                 <Switch
@@ -59,7 +59,7 @@
                 style="@style/PluginCardViewHorizontalContainer">
 
                 <TextView
-                    style="@style/PluginCardViewText"
+                    style="@style/PluginCardViewPrimaryText"
                     android:text="@string/wordpress_dot_org_plugin_page"/>
 
                 <ImageView
@@ -73,7 +73,7 @@
                 style="@style/PluginCardViewHorizontalContainer">
 
                 <TextView
-                    style="@style/PluginCardViewText"
+                    style="@style/PluginCardViewPrimaryText"
                     android:text="@string/plugin_home_page"/>
 
                 <ImageView
