@@ -288,6 +288,14 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class OnSitePluginVersionUpdated extends OnChanged<UpdateSitePluginVersionError> {
+        public SiteModel site;
+        public PluginModel plugin;
+        public OnSitePluginVersionUpdated(SiteModel site) {
+            this.site = site;
+        }
+    }
+
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginsFetched extends OnChanged<FetchSitePluginsError> {
         public SiteModel site;
@@ -337,6 +345,9 @@ public class PluginStore extends Store {
             case UPDATE_SITE_PLUGIN:
                 updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
                 break;
+            case UPDATE_SITE_PLUGIN_VERSION:
+                updateSitePluginVersion((UpdateSitePluginVersionPayload) action.getPayload());
+                break;
             case DELETE_SITE_PLUGIN:
                 deleteSitePlugin((DeleteSitePluginPayload) action.getPayload());
                 break;
@@ -351,6 +362,9 @@ public class PluginStore extends Store {
                 break;
             case UPDATED_SITE_PLUGIN:
                 updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
+                break;
+            case UPDATED_SITE_PLUGIN_VERSION:
+                updatedSitePluginVersion((UpdatedSitePluginVersionPayload) action.getPayload());
                 break;
             case DELETED_SITE_PLUGIN:
                 deletedSitePlugin((DeletedSitePluginPayload) action.getPayload());
@@ -397,6 +411,17 @@ public class PluginStore extends Store {
         }
     }
 
+    private void updateSitePluginVersion(UpdateSitePluginVersionPayload payload) {
+        if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
+            mPluginRestClient.updateSitePlugin(payload.site, payload.plugin);
+        } else {
+            UpdateSitePluginVersionError error = new UpdateSitePluginVersionError(
+                    UpdateSitePluginVersionErrorType.NOT_AVAILABLE);
+            UpdatedSitePluginVersionPayload errorPayload = new UpdatedSitePluginVersionPayload(payload.site, error);
+            updatedSitePluginVersion(errorPayload);
+        }
+    }
+
     private void deleteSitePlugin(DeleteSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.deleteSitePlugin(payload.site, payload.plugin);
@@ -440,6 +465,18 @@ public class PluginStore extends Store {
 
     private void updatedSitePlugin(UpdatedSitePluginPayload payload) {
         OnSitePluginUpdated event = new OnSitePluginUpdated(payload.site);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            payload.plugin.setLocalSiteId(payload.site.getId());
+            event.plugin = payload.plugin;
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
+        }
+        emitChange(event);
+    }
+
+    private void updatedSitePluginVersion(UpdatedSitePluginVersionPayload payload) {
+        OnSitePluginVersionUpdated event = new OnSitePluginVersionUpdated(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
