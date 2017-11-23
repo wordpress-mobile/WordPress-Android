@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel
 
 import com.android.volley.Response
+import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener
@@ -12,6 +13,8 @@ import java.lang.reflect.Type
  * tunnel.
  */
 object WPComJPTunnelGsonRequest {
+    private val gson by lazy { Gson() }
+
     /**
      * Creates a new GET request to the given WP-API endpoint, calling it via the WP.com Jetpack WP-API tunnel.
      *
@@ -37,6 +40,31 @@ object WPComJPTunnelGsonRequest {
                 wrappedListener, errorListener)
     }
 
+    /**
+     * Creates a new POST request to the given WP-API endpoint, calling it via the WP.com Jetpack WP-API tunnel.
+     *
+     * @param wpApiEndpoint the WP-API request endpoint (e.g. /wp/v2/posts/)
+     * @param siteId the WordPress.com site ID
+     * @param body the request body
+     * @param type the Type defining the expected response
+     * @param listener the success listener
+     * @param errorListener the error listener
+     *
+     * @param T the expected response object from the WP-API endpoint
+     */
+    fun <T : Any> buildPostRequest(wpApiEndpoint: String, siteId: Long, body: Map<String, Any>,
+                                   type: Type, listener: (T?) -> Unit, errorListener: BaseErrorListener
+    ): WPComGsonRequest<JPTunnelWPComRestResponse<T>>? {
+        val tunnelRequestUrl = getTunnelApiUrl(siteId)
+        val wrappedType = TypeToken.getParameterized(JPTunnelWPComRestResponse::class.java, type).type
+        val wrappedListener = Response.Listener<JPTunnelWPComRestResponse<T>> { listener(it.data) }
+
+        val wrappedBody = createTunnelBody(body, wpApiEndpoint)
+
+        return WPComGsonRequest.buildPostRequest(tunnelRequestUrl, wrappedBody, wrappedType,
+                wrappedListener, errorListener)
+    }
+
     private fun getTunnelApiUrl(siteId: Long): String = WPCOMREST.jetpack_blogs.site(siteId).rest_api.urlV1_1
 
     private fun createTunnelParams(params: Map<String, String>, path: String): MutableMap<String, String> {
@@ -46,6 +74,18 @@ object WPComJPTunnelGsonRequest {
             put("json", "true")
         }
         return finalParams
+    }
+
+    private fun createTunnelBody(body: Map<String, Any> = mapOf(), path: String): MutableMap<String, Any> {
+        val finalBody = mutableMapOf<String, Any>()
+        with(finalBody) {
+            put("path", buildRestApiPath(path, mapOf(), "post"))
+            put("json", "true")
+            if (body.isNotEmpty()) {
+                put("body", gson.toJson(body))
+            }
+        }
+        return finalBody
     }
 
     private fun buildRestApiPath(path: String, params: Map<String, String>, method: String): String {
