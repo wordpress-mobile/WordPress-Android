@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
@@ -126,14 +127,14 @@ public class PluginDetailActivity extends AppCompatActivity {
         findViewById(R.id.plugin_wp_org_page).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: open WordPress.org page for the plugin
+                ActivityLauncher.openUrlExternal(PluginDetailActivity.this, getWpOrgPluginUrl());
             }
         });
 
         findViewById(R.id.plugin_home_page).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: open home page for the plugin
+                ActivityLauncher.openUrlExternal(PluginDetailActivity.this, mPlugin.getPluginUrl());
             }
         });
 
@@ -167,5 +168,11 @@ public class PluginDetailActivity extends AppCompatActivity {
             mPlugin = event.plugin;
             refreshStates();
         }
+    }
+
+    // Helpers
+
+    private String getWpOrgPluginUrl() {
+        return "https://wordpress.org/plugins/" + mPlugin.getSlug();
     }
 }
