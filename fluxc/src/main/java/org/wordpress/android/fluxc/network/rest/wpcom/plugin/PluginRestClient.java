@@ -177,6 +177,27 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void updateSitePluginVersion(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).
+                plugins.name(getEncodedPluginName(plugin)).update.getUrlV1_2();
+        final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                PluginWPComRestResponse.class,
+                new Listener<PluginWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PluginWPComRestResponse response) {
+                        // TODO
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                        // TODO
+                    }
+                }
+        );
+        add(request);
+    }
+
     private PluginModel pluginModelFromResponse(SiteModel siteModel, PluginWPComRestResponse response) {
         PluginModel pluginModel = new PluginModel();
         pluginModel.setLocalSiteId(siteModel.getId());
