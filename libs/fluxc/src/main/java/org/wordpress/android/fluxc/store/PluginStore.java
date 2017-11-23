@@ -57,6 +57,16 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class UpdateSitePluginVersionPayload extends Payload<BaseNetworkError> {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public UpdateSitePluginVersionPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+    }
+
     // Response payloads
 
     public static class DeletedSitePluginPayload extends Payload<DeleteSitePluginError> {
@@ -131,6 +141,21 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class UpdatedSitePluginVersionPayload extends Payload<UpdateSitePluginVersionError> {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public UpdatedSitePluginVersionPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+
+        public UpdatedSitePluginVersionPayload(SiteModel site, UpdateSitePluginVersionError error) {
+            this.site = site;
+            this.error = error;
+        }
+    }
+
     // Errors
 
     public static class DeleteSitePluginError implements OnChangedError {
@@ -182,6 +207,15 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class UpdateSitePluginVersionError implements OnChangedError {
+        public UpdateSitePluginVersionErrorType type;
+        public String message;
+
+        public UpdateSitePluginVersionError(UpdateSitePluginVersionErrorType type) {
+            this.type = type;
+        }
+    }
+
     // Error types
 
     public enum DeleteSitePluginErrorType {
@@ -221,6 +255,12 @@ public class PluginStore extends Store {
         NOT_AVAILABLE, // Return for non-jetpack sites
         UNAUTHORIZED,
         UNKNOWN_PLUGIN
+    }
+
+    public enum UpdateSitePluginVersionErrorType {
+        GENERIC_ERROR,
+        NOT_AVAILABLE, // Return for non-jetpack sites
+        UPDATE_FAILED
     }
 
     // OnChanged Events
