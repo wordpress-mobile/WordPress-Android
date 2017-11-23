@@ -30,11 +30,11 @@ object WPComJPTunnelGsonRequest {
     fun <T : Any> buildGetRequest(wpApiEndpoint: String, siteId: Long, params: Map<String, String>,
                                   type: Type, listener: (T?) -> Unit, errorListener: BaseErrorListener
     ): WPComGsonRequest<JPTunnelWPComRestResponse<T>>? {
+        val wrappedParams = createTunnelParams(params, wpApiEndpoint)
+
         val tunnelRequestUrl = getTunnelApiUrl(siteId)
         val wrappedType = TypeToken.getParameterized(JPTunnelWPComRestResponse::class.java, type).type
         val wrappedListener = Response.Listener<JPTunnelWPComRestResponse<T>> { listener(it.data) }
-
-        val wrappedParams = createTunnelParams(params, wpApiEndpoint)
 
         return WPComGsonRequest.buildGetRequest(tunnelRequestUrl, wrappedParams, wrappedType,
                 wrappedListener, errorListener)
@@ -55,11 +55,54 @@ object WPComJPTunnelGsonRequest {
     fun <T : Any> buildPostRequest(wpApiEndpoint: String, siteId: Long, body: Map<String, Any>,
                                    type: Type, listener: (T?) -> Unit, errorListener: BaseErrorListener
     ): WPComGsonRequest<JPTunnelWPComRestResponse<T>>? {
+        val wrappedBody = createTunnelBody("post", body, wpApiEndpoint)
+        return buildWrappedPostRequest(siteId, wrappedBody, type, listener, errorListener)
+    }
+
+    /**
+     * Creates a new PATCH request to the given WP-API endpoint, calling it via the WP.com Jetpack WP-API tunnel.
+     *
+     * @param wpApiEndpoint the WP-API request endpoint (e.g. /wp/v2/posts/)
+     * @param siteId the WordPress.com site ID
+     * @param body the request body
+     * @param type the Type defining the expected response
+     * @param listener the success listener
+     * @param errorListener the error listener
+     *
+     * @param T the expected response object from the WP-API endpoint
+     */
+    fun <T : Any> buildPatchRequest(wpApiEndpoint: String, siteId: Long, body: Map<String, Any>,
+                                    type: Type, listener: (T?) -> Unit, errorListener: BaseErrorListener
+    ): WPComGsonRequest<JPTunnelWPComRestResponse<T>>? {
+        val wrappedBody = createTunnelBody("patch", body, wpApiEndpoint)
+        return buildWrappedPostRequest(siteId, wrappedBody, type, listener, errorListener)
+    }
+
+    /**
+     * Creates a new PUT request to the given WP-API endpoint, calling it via the WP.com Jetpack WP-API tunnel.
+     *
+     * @param wpApiEndpoint the WP-API request endpoint (e.g. /wp/v2/posts/)
+     * @param siteId the WordPress.com site ID
+     * @param body the request body
+     * @param type the Type defining the expected response
+     * @param listener the success listener
+     * @param errorListener the error listener
+     *
+     * @param T the expected response object from the WP-API endpoint
+     */
+    fun <T : Any> buildPutRequest(wpApiEndpoint: String, siteId: Long, body: Map<String, Any>,
+                                  type: Type, listener: (T?) -> Unit, errorListener: BaseErrorListener
+    ): WPComGsonRequest<JPTunnelWPComRestResponse<T>>? {
+        val wrappedBody = createTunnelBody("put", body, wpApiEndpoint)
+        return buildWrappedPostRequest(siteId, wrappedBody, type, listener, errorListener)
+    }
+
+    private fun <T : Any> buildWrappedPostRequest(siteId: Long, wrappedBody: Map<String, Any>, type: Type,
+                                                  listener: (T?) -> Unit, errorListener: BaseErrorListener
+    ): WPComGsonRequest<JPTunnelWPComRestResponse<T>>? {
         val tunnelRequestUrl = getTunnelApiUrl(siteId)
         val wrappedType = TypeToken.getParameterized(JPTunnelWPComRestResponse::class.java, type).type
         val wrappedListener = Response.Listener<JPTunnelWPComRestResponse<T>> { listener(it.data) }
-
-        val wrappedBody = createTunnelBody(body, wpApiEndpoint)
 
         return WPComGsonRequest.buildPostRequest(tunnelRequestUrl, wrappedBody, wrappedType,
                 wrappedListener, errorListener)
@@ -76,10 +119,11 @@ object WPComJPTunnelGsonRequest {
         return finalParams
     }
 
-    private fun createTunnelBody(body: Map<String, Any> = mapOf(), path: String): MutableMap<String, Any> {
+    private fun createTunnelBody(method: String, body: Map<String, Any> = mapOf(), path: String
+    ): MutableMap<String, Any> {
         val finalBody = mutableMapOf<String, Any>()
         with(finalBody) {
-            put("path", buildRestApiPath(path, mapOf(), "post"))
+            put("path", buildRestApiPath(path, mapOf(), method))
             put("json", "true")
             if (body.isNotEmpty()) {
                 put("body", gson.toJson(body))
