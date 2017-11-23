@@ -260,7 +260,7 @@ public class PluginStore extends Store {
     public enum UpdateSitePluginVersionErrorType {
         GENERIC_ERROR,
         NOT_AVAILABLE, // Return for non-jetpack sites
-        UPDATE_FAILED
+        UPDATE_FAIL
     }
 
     // OnChanged Events
