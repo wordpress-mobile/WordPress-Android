@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -103,7 +104,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     @Override
-    protected void setupLabel(TextView label) {
+    protected void setupLabel(@NonNull TextView label) {
         label.setText(isSocialLogin ? R.string.enter_wpcom_password_google : R.string.enter_wpcom_password);
     }
 

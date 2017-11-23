@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -35,9 +34,9 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/media_settings_background"
                     android:scaleType="centerCrop"
-                    android:transitionName="@string/shared_element_media"
                     tools:layout_height="224dp"
-                    tools:src="@drawable/ic_gridicons_audio"/>
+                    tools:src="@drawable/ic_gridicons_audio"
+                    tools:targetApi="lollipop" />
 
                 <ImageView
                     android:id="@+id/image_gradient_scrim"
@@ -45,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
                     android:background="@drawable/media_settings_gradient_scrim"
-                    tools:layout_height="74dp"/>
+                    tools:layout_height="74dp" />
 
                 <ImageView
                     android:id="@+id/image_play"
@@ -54,7 +53,7 @@
                     android:layout_gravity="center"
                     android:visibility="gone"
                     app:srcCompat="@drawable/play_video_selector_large"
-                    tools:visibility="visible"/>
+                    tools:visibility="visible" />
             </FrameLayout>
 
             <android.support.v7.widget.Toolbar
@@ -62,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -83,6 +82,7 @@
                 android:id="@+id/card1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_extra_large"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/cardview_default_radius"
                 app:cardElevation="@dimen/card_elevation">
@@ -96,7 +96,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:paddingBottom="@dimen/margin_extra_large"
                         android:paddingLeft="@dimen/media_settings_margin"
                         android:paddingRight="@dimen/media_settings_margin"
                         android:paddingTop="@dimen/margin_extra_large">
@@ -106,79 +105,79 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/margin_large"
                             android:layout_marginLeft="@dimen/margin_small"
-                            android:text="@string/media_edit_card_caption"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:text="@string/media_edit_customize_card_caption"
                             android:textColor="@color/blue_wordpress"
                             android:textSize="@dimen/text_sz_large"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
-                        <android.support.design.widget.TextInputLayout
-                            style="@style/MediaSettings.TextInputStyle"
+                        <TextView
+                            style="@style/MediaSettings.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_small"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:text="@string/image_size" />
+
+                        <TextView
+                            android:id="@+id/image_size_hint"
+                            style="@style/MediaSettings.Value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_small"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:layout_marginTop="@dimen/margin_medium"
+                            tools:text="Large" />
+
+                        <SeekBar
+                            android:id="@+id/image_size_seekbar"
+                            style="@style/Widget.AppCompat.SeekBar.Discrete"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:theme="@style/MediaSettings.TextInputTheme">
+                            android:layout_marginLeft="-8dp"
+                            android:layout_marginRight="-8dp"
+                            android:layout_marginTop="@dimen/margin_large"
+                            tools:max="3" />
 
-                            <android.support.design.widget.TextInputEditText
-                                android:id="@+id/edit_title"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/media_edit_title_text"
-                                android:inputType="textCapSentences|textAutoCorrect"
-                                tools:text="edit_title"/>
-
-                        </android.support.design.widget.TextInputLayout>
-
-                        <android.support.design.widget.TextInputLayout
-                            style="@style/MediaSettings.TextInputStyle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:theme="@style/MediaSettings.TextInputTheme">
-
-                            <android.support.design.widget.TextInputEditText
-                                android:id="@+id/edit_caption"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/media_edit_caption_text"
-                                android:inputType="textCapSentences|textAutoCorrect"
-                                tools:text="edit_caption"/>
-
-                        </android.support.design.widget.TextInputLayout>
-
-                        <android.support.design.widget.TextInputLayout
-                            android:id="@+id/edit_alt_text_layout"
-                            style="@style/MediaSettings.TextInputStyle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:theme="@style/MediaSettings.TextInputTheme">
-
-                            <android.support.design.widget.TextInputEditText
-                                android:id="@+id/edit_alt_text"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/media_edit_alttext_text"
-                                android:inputType="textCapSentences|textAutoCorrect"
-                                tools:text="edit_alt_text"/>
-
-                        </android.support.design.widget.TextInputLayout>
-
-                        <android.support.design.widget.TextInputLayout
-                            style="@style/MediaSettings.TextInputStyle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:theme="@style/MediaSettings.TextInputTheme">
-
-                            <android.support.design.widget.TextInputEditText
-                                android:id="@+id/edit_description"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="top|start"
-                                android:hint="@string/media_edit_description_text"
-                                android:inputType="textCapSentences|textAutoCorrect"
-                                android:lines="3"
-                                tools:text="edit_description"/>
-
-                        </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
+
+                    <View
+                        style="@style/MediaSettings.Divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/margin_extra_large"
+                        android:paddingLeft="@dimen/media_settings_margin"
+                        android:paddingRight="@dimen/media_settings_margin">
+
+                        <TextView
+                            android:id="@+id/alignment_spinner_label"
+                            style="@style/MediaSettings.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            android:layout_marginLeft="@dimen/margin_small"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:text="@string/image_alignment" />
+
+                        <Spinner
+                            android:id="@+id/alignment_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_small"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:prompt="@string/image_alignment" />
+
+                    </LinearLayout>
+
+
                 </LinearLayout>
+
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
@@ -186,6 +185,108 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/card1"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardElevation="@dimen/card_elevation">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/margin_extra_large"
+                    android:paddingLeft="@dimen/media_settings_margin"
+                    android:paddingRight="@dimen/media_settings_margin"
+                    android:paddingTop="@dimen/margin_extra_large">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_large"
+                        android:layout_marginLeft="@dimen/margin_small"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/media_edit_file_details_card_caption"
+                        android:textColor="@color/blue_wordpress"
+                        android:textSize="@dimen/text_sz_large"
+                        android:textStyle="bold" />
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/MediaSettings.TextInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:theme="@style/MediaSettings.TextInputTheme">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/edit_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/media_edit_title_text"
+                            android:inputType="textCapSentences|textAutoCorrect"
+                            tools:text="edit_title" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/edit_caption_container"
+                        style="@style/MediaSettings.TextInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:theme="@style/MediaSettings.TextInputTheme">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/edit_caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/media_edit_caption_text"
+                            android:inputType="textCapSentences|textAutoCorrect"
+                            tools:text="edit_caption" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/edit_alt_text_layout"
+                        style="@style/MediaSettings.TextInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:theme="@style/MediaSettings.TextInputTheme">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/edit_alt_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/media_edit_alttext_text"
+                            android:inputType="textCapSentences|textAutoCorrect"
+                            tools:text="edit_alt_text" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/edit_description_container"
+                        style="@style/MediaSettings.TextInputStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:theme="@style/MediaSettings.TextInputTheme">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/edit_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top|start"
+                            android:hint="@string/media_edit_description_text"
+                            android:inputType="textCapSentences|textAutoCorrect"
+                            android:lines="3"
+                            tools:text="edit_description" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/card2"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/cardview_default_radius"
@@ -195,6 +296,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginStart="@dimen/margin_small"
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/margin_extra_large"
                     android:paddingTop="@dimen/margin_extra_large">
@@ -204,7 +306,7 @@
                         style="@style/MediaSettings.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_edit_url_caption"/>
+                        android:text="@string/media_edit_url_caption" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -217,16 +319,19 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@+id/text_copy_url"
+                            android:layout_toStartOf="@+id/text_copy_url"
                             android:ellipsize="end"
                             android:singleLine="true"
-                            tools:text="text_url"/>
+                            tools:text="text_url" />
 
                         <TextView
                             android:id="@+id/text_copy_url"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/margin_extra_large"
                             android:layout_marginRight="@dimen/margin_extra_large"
                             android:background="@drawable/button_frame"
                             android:paddingBottom="@dimen/margin_small"
@@ -236,51 +341,51 @@
                             android:text="@string/copy"
                             android:textAllCaps="true"
                             android:textColor="@color/grey_dark"
-                            android:textSize="@dimen/text_sz_medium"/>
+                            android:textSize="@dimen/text_sz_medium" />
                     </RelativeLayout>
 
                     <View
                         style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"/>
+                        android:layout_height="1dp" />
 
                     <!-- filename -->
                     <TextView
                         style="@style/MediaSettings.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_edit_filename_caption"/>
+                        android:text="@string/media_edit_filename_caption" />
 
                     <TextView
                         android:id="@+id/text_filename"
                         style="@style/MediaSettings.Value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="text_filename"/>
+                        tools:text="text_filename" />
 
                     <View
                         style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"/>
+                        android:layout_height="1dp" />
 
                     <!-- file type -->
                     <TextView
                         style="@style/MediaSettings.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_edit_filetype_caption"/>
+                        android:text="@string/media_edit_filetype_caption" />
 
                     <TextView
                         android:id="@+id/text_filetype"
                         style="@style/MediaSettings.Value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="text_filetype"/>
+                        tools:text="text_filetype" />
 
                     <View
                         style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"/>
+                        android:layout_height="1dp" />
 
                     <!-- dimensions -->
                     <TextView
@@ -288,20 +393,20 @@
                         style="@style/MediaSettings.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_edit_image_dimensions_caption"/>
+                        android:text="@string/media_edit_image_dimensions_caption" />
 
                     <TextView
                         android:id="@+id/text_image_dimensions"
                         style="@style/MediaSettings.Value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="text_image_dimensions"/>
+                        tools:text="text_image_dimensions" />
 
                     <View
                         android:id="@+id/divider_dimensions"
                         style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"/>
+                        android:layout_height="1dp" />
 
                     <!-- duration -->
                     <TextView
@@ -309,20 +414,20 @@
                         style="@style/MediaSettings.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_edit_duration_caption"/>
+                        android:text="@string/media_edit_duration_caption" />
 
                     <TextView
                         android:id="@+id/text_duration"
                         style="@style/MediaSettings.Value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="text_image_dimensions"/>
+                        tools:text="text_image_dimensions" />
 
                     <View
                         android:id="@+id/divider_duration"
                         style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"/>
+                        android:layout_height="1dp" />
 
                     <!-- upload date -->
                     <TextView
@@ -330,26 +435,28 @@
                         style="@style/MediaSettings.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_edit_upload_date_caption"/>
+                        android:text="@string/media_edit_upload_date_caption" />
 
                     <TextView
                         android:id="@+id/text_upload_date"
                         style="@style/MediaSettings.Value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="text_upload_date"/>
+                        tools:text="text_upload_date" />
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
         </RelativeLayout>
+
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:contentDescription="@string/fab_content_description_preview"
         android:visibility="gone"
@@ -359,7 +466,7 @@
         app:layout_anchor="@id/app_bar_layout"
         app:layout_anchorGravity="bottom|right|end"
         app:srcCompat="@drawable/ic_fullscreen_white_24dp"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <ProgressBar
         android:id="@+id/progress"
@@ -369,11 +476,12 @@
         android:elevation="@dimen/card_elevation"
         android:textAppearance="?android:attr/progressBarStyle"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:targetApi="lollipop"
+        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </android.support.design.widget.CoordinatorLayout>

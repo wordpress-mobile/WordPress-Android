@@ -108,6 +108,11 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         } catch (ClassCastException exception) {
             throw new ClassCastException(context.toString() + " must implement OnGoogleLoginFinishedListener");
         }
+
+        // Show account dialog when Google API onConnected callback returns before fragment is attached.
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !isResolvingError && !shouldResolveError) {
+            showAccountDialog();
+        }
     }
 
     @Override
@@ -135,7 +140,10 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         // connection to Google Play services has been established.
         if (shouldResolveError) {
             shouldResolveError = false;
-            showAccountDialog();
+
+            if (isAdded()) {
+                showAccountDialog();
+            }
         }
     }
 
@@ -282,7 +290,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
                     }
                 } else if (result == RESULT_CANCELED) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
-                    AppLog.e(T.NUX, "Google Sign-in Failed: cancelled by user.");
+                    AppLog.e(T.NUX, "Google Sign-in Failed: result was CANCELED.");
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
                     AppLog.e(T.NUX, "Google Sign-in Failed: result was not OK or CANCELED.");
@@ -299,7 +307,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         disconnectGoogleClient();
 
         if (event.isError()) {
-            AppLog.e(T.API, "LoginEmailFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
+            AppLog.e(T.API, "LoginGoogleFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
@@ -308,7 +316,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
 
             showErrorDialog(getString(R.string.login_error_generic));
         } else {
-            AppLog.i(T.NUX, "LoginEmailFragment.onAuthenticationChanged: " + event.toString());
+            AppLog.i(T.NUX, "LoginGoogleFragment.onAuthenticationChanged: " + event.toString());
             mGoogleLoginListener.onGoogleLoginFinished();
         }
     }
@@ -320,7 +328,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
 
         // Response returns error for non-existing account and existing account not connected.
         if (event.isError()) {
-            AppLog.e(T.API, "LoginEmailFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
+            AppLog.e(T.API, "LoginGoogleFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
 
             if (event.error.type != AccountStore.AccountSocialErrorType.USER_EXISTS) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),

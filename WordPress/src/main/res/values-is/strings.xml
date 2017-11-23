@@ -33,7 +33,6 @@ Language: is
 	<string name="media_encoder_quality_85">Miðlungi gott</string>
 	<string name="media_encoder_quality_80">Lítil</string>
 	<string name="media_upload_state_uploaded">Efni upphlaðið</string>
-	<string name="media_upload_state_failed">Mistókst</string>
 	<string name="media_upload_state_deleted">Eytt</string>
 	<string name="media_upload_state_deleting">Eyði</string>
 	<string name="media_upload_state_uploading">Hlaða upp</string>
@@ -739,7 +738,6 @@ Language: is
 	<string name="themes_fetching">Sæki þemu...</string>
 	<string name="ssl_certificate_details">Upplýsingar</string>
 	<string name="cab_selected">%d valið</string>
-	<string name="confirm_delete_multi_media">Eyða völdum atriðum?</string>
 	<string name="delete_sure_page">Eyða þessari síðu</string>
 	<string name="delete_sure">Eyða þessum drögum</string>
 	<string name="delete_sure_post">Eyða þessari færslu</string>
@@ -1018,7 +1016,6 @@ Language: is
 	<string name="reader_btn_share">Deila</string>
 	<string name="reader_untitled_post">(Án titils)</string>
 	<string name="jetpack_not_found">Jetpack viðbót finnst ekki</string>
-	<string name="select_from_media_library">Veldu úr skráarsafni</string>
 	<string name="empty_list_default">Þessi listi er tómur</string>
 	<string name="media_add_popup_title">Bæta í skráarsafn</string>
 	<string name="passcode_turn_on">Kveikja á PIN læsingu</string>

@@ -147,7 +147,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private SiteModel mSite;
 
     public interface MediaGridListener {
-        void onMediaItemSelected(View sourceView, int localMediaId, boolean isLongClick);
+        void onMediaItemSelected(int localMediaId, boolean isLongClick);
         void onMediaRequestRetry(int localMediaId);
         void onMediaRequestDelete(int localMediaId);
     }
@@ -419,9 +419,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     @Override
-    public void onAdapterItemClicked(View sourceView, int position, boolean isLongPress) {
+    public void onAdapterItemClicked(int position, boolean isLongPress) {
         int localMediaId = getAdapter().getLocalMediaIdAtPosition(position);
-        mListener.onMediaItemSelected(sourceView, localMediaId, isLongPress);
+        mListener.onMediaItemSelected(localMediaId, isLongPress);
     }
 
     @Override

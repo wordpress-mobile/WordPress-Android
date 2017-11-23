@@ -24,7 +24,6 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -1293,10 +1292,6 @@ public class ReaderPostDetailFragment extends Fragment
         }
         if (!mAccountStore.hasAccessToken()) {
             return mPost.numReplies > 0;
-        }
-        // On Jetpack sites, if the feature flag is not enabled, we don't want to show the comment count
-        if (mPost.isJetpack && !BuildConfig.ENABLE_READER_COMMENTS_FOR_JETPACK_SITES) {
-            return false;
         }
         return mPost.isWP()
                 && !mPost.isDiscoverPost()

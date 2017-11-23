@@ -33,7 +33,6 @@ Language: ko_KR
 	<string name="media_encoder_quality_85">보통</string>
 	<string name="media_encoder_quality_80">낮음</string>
 	<string name="media_upload_state_uploaded">업로드됨</string>
-	<string name="media_upload_state_failed">실패</string>
 	<string name="media_upload_state_deleted">삭제됨</string>
 	<string name="media_upload_state_deleting">삭제 중</string>
 	<string name="media_upload_state_uploading">업로드 중</string>
@@ -676,7 +675,6 @@ Language: ko_KR
 	<string name="delete_sure_post">이 글을 삭제하기</string>
 	<string name="delete_sure">이 임시 글을 삭제하기</string>
 	<string name="delete_sure_page">이 페이지를 삭제하기</string>
-	<string name="confirm_delete_multi_media">선택된 아이템을 삭제될까요?</string>
 	<string name="cab_selected">%d개 선택함</string>
 	<string name="reader_empty_followed_blogs_title">아직 팔로우하는 블로그가 없습니다.</string>
 	<string name="reader_empty_posts_liked">좋아하는 게시물이 없군요.</string>
@@ -930,7 +928,6 @@ Language: ko_KR
 	<string name="password_invalid">보안 강도 높은 암호가 필요합니다. 7자 이상의 대문자/소문자와 숫자와 기호를 포함하는 것을 추천합니다.</string>
 	<string name="nux_oops_not_selfhosted_blog">WordPress.com에 로그인</string>
 	<string name="signing_in">로그인 중...</string>
-	<string name="select_from_media_library">미디어 라이브러리에서 선택</string>
 	<string name="reader_btn_share">공유</string>
 	<string name="reader_btn_follow">팔로우</string>
 	<string name="reader_toast_err_url_intent">%s를 열 수 없습니다</string>
