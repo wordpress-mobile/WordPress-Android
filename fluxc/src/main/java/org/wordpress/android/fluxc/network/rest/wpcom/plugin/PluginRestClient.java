@@ -30,7 +30,10 @@ import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionError;
+import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginVersionPayload;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -185,13 +188,22 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new Listener<PluginWPComRestResponse>() {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
-                        // TODO
+                        PluginModel pluginModel = pluginModelFromResponse(site, response);
+                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginVersionAction(
+                                new UpdatedSitePluginVersionPayload(site, pluginModel)));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        // TODO
+                        UpdateSitePluginVersionError updatePluginVersionError
+                                = new UpdateSitePluginVersionError(UpdateSitePluginVersionErrorType.GENERIC_ERROR);
+                        updatePluginVersionError.type = UpdateSitePluginVersionErrorType
+                                .valueOf(((WPComGsonNetworkError) networkError).apiError.toUpperCase(Locale.ENGLISH));
+                        updatePluginVersionError.message = networkError.message;
+                        UpdatedSitePluginVersionPayload payload = new UpdatedSitePluginVersionPayload(site,
+                                updatePluginVersionError);
+                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginVersionAction(payload));
                     }
                 }
         );
