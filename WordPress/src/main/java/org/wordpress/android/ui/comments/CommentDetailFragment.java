@@ -92,7 +92,7 @@ import de.greenrobot.event.EventBus;
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
     private static final String KEY_MODE = "KEY_MODE";
-    private static final String KEY_SITE_ID = "KEY_SITE_ID";
+    private static final String KEY_SITE_LOCAL_ID = "KEY_SITE_LOCAL_ID";
     private static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
     private static final String KEY_NOTE_ID = "KEY_NOTE_ID";
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
@@ -160,7 +160,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
         args.putInt(KEY_MODE, FROM_BLOG_COMMENT);
-        args.putLong(KEY_SITE_ID, site.getSiteId());
+        args.putInt(KEY_SITE_LOCAL_ID, site.getId());
         args.putLong(KEY_COMMENT_ID, commentModel.getRemoteCommentId());
         fragment.setArguments(args);
         return fragment;
@@ -188,7 +188,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         switch (getArguments().getInt(KEY_MODE)) {
             case FROM_BLOG_COMMENT:
-                setComment(getArguments().getLong(KEY_COMMENT_ID), getArguments().getLong(KEY_SITE_ID));
+                setComment(getArguments().getLong(KEY_COMMENT_ID), getArguments().getInt(KEY_SITE_LOCAL_ID));
                 break;
             case FROM_NOTE:
                 setNote(getArguments().getString(KEY_NOTE_ID));
@@ -204,7 +204,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 // See WordPress.deferredInit()
                 mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
             } else {
-                long siteId = savedInstanceState.getLong(KEY_SITE_ID);
+                int siteId = savedInstanceState.getInt(KEY_SITE_LOCAL_ID);
                 long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
                 setComment(commentId, siteId);
             }
@@ -218,7 +218,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         super.onSaveInstanceState(outState);
         if (mComment != null) {
             outState.putLong(KEY_COMMENT_ID, mComment.getRemoteCommentId());
-            outState.putLong(KEY_SITE_ID, mSite.getSiteId());
+            outState.putInt(KEY_SITE_LOCAL_ID, mSite.getId());
         }
 
         if (mNote != null) {
@@ -403,8 +403,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
-    private void setComment(final long commentRemoteId, final long siteId) {
-        final SiteModel site = mSiteStore.getSiteBySiteId(siteId);
+    private void setComment(final long commentRemoteId, final int siteLocalId) {
+        final SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
         setComment(mCommentStore.getCommentBySiteAndRemoteId(site, commentRemoteId), site);
     }
 
