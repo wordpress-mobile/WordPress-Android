@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
 
+    private SignupBottomSheetDialog mSignupBottomSheet;
     private SmartLockHelper mSmartLockHelper;
     private boolean mSmartLockCompleted;
 
@@ -231,8 +232,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void doStartSignup() {
-        SignupBottomSheetDialog sheet = new SignupBottomSheetDialog(this, this);
-        sheet.show();
+        mSignupBottomSheet = new SignupBottomSheetDialog(this, this);
+        mSignupBottomSheet.show();
     }
 
     @Override
@@ -242,6 +243,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onSignupSheetEmailClicked() {
+        if (mSignupBottomSheet != null) {
+            mSignupBottomSheet.hide();
+        }
+
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
         NewUserFragment newUserFragment = NewUserFragment.newInstance();
         slideInFragment(newUserFragment, true, NewUserFragment.TAG);
