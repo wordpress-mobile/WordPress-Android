@@ -12,18 +12,19 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 repositories {
+    google()
     jcenter()
 }
 
 dependencies {
     compile 'com.automattic:tracks:1.1.2'
-    compile 'org.wordpress:utils:1.+'
+    compile 'org.wordpress:utils:1.18.1'
 }
 
 android {
     publishNonDefault true
 
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "25.0.3"
 
     defaultConfig {
