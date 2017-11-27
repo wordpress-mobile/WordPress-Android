@@ -37,6 +37,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private SiteModel mSite;
     private PluginModel mPlugin;
+    private PluginInfoModel mPluginInfo;
 
     private TextView mInstalledPluginVersionTextView;
     private TextView mAvailablePluginVersionTextView;
@@ -65,6 +66,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         mPlugin = mPluginStore.getSitePluginByName(mSite, pluginName);
+        mPluginInfo = PluginUtils.getPluginInfo(mPluginStore, mPlugin);
 
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, Duration.SHORT);
@@ -76,6 +78,10 @@ public class PluginDetailActivity extends AppCompatActivity {
             ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
             finish();
             return;
+        }
+
+        if (mPluginInfo == null) {
+            mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(mPlugin.getSlug()));
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -165,13 +171,12 @@ public class PluginDetailActivity extends AppCompatActivity {
                     mPlugin.getVersion()));
         }
 
-        PluginInfoModel pluginInfoModel = PluginUtils.getOrFetchPluginInfo(mDispatcher, mPluginStore, mPlugin);
-        if (pluginInfoModel == null || TextUtils.isEmpty(pluginInfoModel.getVersion())) {
+        if (mPluginInfo == null || TextUtils.isEmpty(mPluginInfo.getVersion())) {
             mAvailablePluginVersionTextView.setVisibility(View.GONE);
         } else {
             mAvailablePluginVersionTextView.setVisibility(View.VISIBLE);
             mAvailablePluginVersionTextView.setText(getString(R.string.plugin_available_version,
-                    pluginInfoModel.getVersion()));
+                    mPluginInfo.getVersion()));
         }
     }
 
@@ -207,7 +212,8 @@ public class PluginDetailActivity extends AppCompatActivity {
                     + event.error.type);
             return;
         }
-        if (event.pluginInfo != null) {
+        if (event.pluginInfo != null && mPlugin.getSlug().equals(event.pluginInfo.getSlug())) {
+            mPluginInfo = event.pluginInfo;
             refreshPluginVersionViews();
         }
     }

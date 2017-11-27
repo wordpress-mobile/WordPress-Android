@@ -197,7 +197,10 @@ public class PluginListActivity extends AppCompatActivity {
                 PluginViewHolder pluginHolder = (PluginViewHolder) holder;
                 pluginHolder.name.setText(pluginModel.getDisplayName());
                 pluginHolder.status.setText(getPluginStatusText(pluginModel));
-                PluginInfoModel pluginInfo = PluginUtils.getOrFetchPluginInfo(mDispatcher, mPluginStore, pluginModel);
+                PluginInfoModel pluginInfo = PluginUtils.getPluginInfo(mPluginStore, pluginModel);
+                if (pluginInfo == null) {
+                    mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(pluginModel.getSlug()));
+                }
                 String iconUrl = pluginInfo != null ? pluginInfo.getIcon() : "";
                 pluginHolder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
             }
