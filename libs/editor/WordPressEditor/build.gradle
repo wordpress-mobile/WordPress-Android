@@ -51,7 +51,7 @@ dependencies {
     compile 'com.android.support:support-v4:26.1.0'
     compile 'com.android.support:design:26.1.0'
     compile 'org.apache.commons:commons-lang3:3.5'
-    compile 'org.wordpress:utils:1.17.1'
+    compile 'org.wordpress:utils:1.18.1'
 
     compile 'com.github.wordpress-mobile.AztecEditor-Android:aztec:develop-SNAPSHOT'
     compile 'com.github.wordpress-mobile.AztecEditor-Android:wordpress-comments:develop-SNAPSHOT'
