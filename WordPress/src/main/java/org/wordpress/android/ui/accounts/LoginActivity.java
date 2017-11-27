@@ -19,6 +19,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.SignupBottomSheetDialog.SignupSheetListener;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.Login2FaFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
@@ -39,7 +40,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener, GoogleLoginListener {
+        Callback, LoginListener, GoogleLoginListener, SignupSheetListener {
     private static final String KEY_SMARTLOCK_COMPLETED = "KEY_SMARTLOCK_COMPLETED";
 
     private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
@@ -230,9 +231,32 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void doStartSignup() {
+        SignupBottomSheetDialog sheet = new SignupBottomSheetDialog(this, this);
+        sheet.show();
+    }
+
+    @Override
+    public void onSignupSheetDismissed() {
+        // TODO: Add analytics to signup sheet dismisses.
+    }
+
+    @Override
+    public void onSignupSheetEmailClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
         NewUserFragment newUserFragment = NewUserFragment.newInstance();
         slideInFragment(newUserFragment, true, NewUserFragment.TAG);
+    }
+
+    @Override
+    public void onSignupSheetGoogleClicked() {
+        // TODO: Add analytics to Google signup clicks.
+        // TODO: Add Google signup.
+    }
+
+    @Override
+    public void onSignupSheetTermsOfServiceClicked() {
+        // TODO: Add analytics to Terms of Service clicks.
+        ActivityLauncher.openUrlExternal(this, getResources().getString(R.string.wordpresscom_tos_url));
     }
 
     @Override
