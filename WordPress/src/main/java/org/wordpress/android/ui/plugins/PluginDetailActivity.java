@@ -171,7 +171,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                     mPlugin.getVersion()));
         }
 
-        if (mPluginInfo == null || TextUtils.isEmpty(mPluginInfo.getVersion())) {
+        if (!isUpdateAvailable()) {
             mAvailablePluginVersionTextView.setVisibility(View.GONE);
         } else {
             mAvailablePluginVersionTextView.setVisibility(View.VISIBLE);
@@ -222,5 +222,10 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private String getWpOrgPluginUrl() {
         return "https://wordpress.org/plugins/" + mPlugin.getSlug();
+    }
+
+    private boolean isUpdateAvailable() {
+        return mPluginInfo != null && !TextUtils.isEmpty(mPluginInfo.getVersion())
+                && !mPlugin.getVersion().equals(mPluginInfo.getVersion());
     }
 }
