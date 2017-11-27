@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -55,6 +56,16 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
         });
 
         setContentView(layout);
+
+        // Set peek height to full height of view to avoid signup buttons being off screen when
+        // bottom sheet is shown with small screen height (e.g. landscape orientation).
+        final BottomSheetBehavior behavior = BottomSheetBehavior.from((View) layout.getParent());
+        setOnShowListener(new OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                behavior.setPeekHeight(layout.getHeight());
+            }
+        });
     }
 
     public void show() {
