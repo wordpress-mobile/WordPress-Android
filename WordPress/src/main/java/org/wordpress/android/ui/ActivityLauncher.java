@@ -288,7 +288,6 @@ public class ActivityLauncher {
 
     public static void newBlogForResult(Activity activity) {
         Intent intent = new Intent(activity, NewBlogActivity.class);
-        intent.putExtra(NewBlogActivity.KEY_START_MODE, NewBlogActivity.CREATE_BLOG);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
