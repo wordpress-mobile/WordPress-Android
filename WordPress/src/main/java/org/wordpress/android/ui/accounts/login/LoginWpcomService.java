@@ -29,6 +29,8 @@ import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -183,6 +185,15 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
             mDispatcher.unregister(this);
             stopSelf();
         }
+
+        track();
+    }
+
+    private void track() {
+        Map<String, Object> props = new HashMap<>();
+        props.put("login_phase", mLoginPhase.name());
+        props.put("login_service_is_foreground", isForeground());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE, props);
     }
 
     @Override

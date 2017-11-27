@@ -53,6 +53,8 @@ public abstract class AutoForeground<EventClass> extends Service {
 
     private final Class<EventClass> mEventClass;
 
+    private boolean mIsForeground;
+
     protected abstract EventClass getCurrentStateEvent();
     protected abstract Notification getNotification();
     protected abstract boolean isIdle();
@@ -61,6 +63,10 @@ public abstract class AutoForeground<EventClass> extends Service {
 
     protected AutoForeground(Class<EventClass> eventClass) {
         mEventClass = eventClass;
+    }
+
+    public boolean isForeground() {
+        return mIsForeground;
     }
 
     @Override
@@ -114,11 +120,13 @@ public abstract class AutoForeground<EventClass> extends Service {
     private void promoteForeground() {
         if (isInProgress()) {
             startForeground(NOTIFICATION_ID_PROGRESS, getNotification());
+            mIsForeground = true;
         }
     }
 
     private void background() {
         stopForeground(true);
+        mIsForeground = false;
     }
 
     @CallSuper
