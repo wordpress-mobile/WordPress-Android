@@ -17,12 +17,13 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.ThemeTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreationStateUpdated;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -38,7 +39,7 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
     private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
     private static final String ARG_SITE_TAGLINE = "ARG_SITE_TAGLINE";
     private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
-    private static final String ARG_SITE_THEME = "ARG_SITE_THEME";
+    private static final String ARG_SITE_THEME_ID = "ARG_SITE_THEME_ID";
 
     public enum SiteCreationPhase {
         IDLE,
@@ -61,11 +62,12 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject ThemeStore mThemeStore;
 
     private SiteCreationPhase mSiteCreationPhase = SiteCreationPhase.IDLE;
 
     private String mSiteTagline;
-    private String mSiteTheme;
+    private ThemeModel mSiteTheme;
     private long mNewSiteRemoteId;
 
     public static void createSite(
@@ -73,12 +75,12 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
             String siteTitle,
             String siteTagline,
             String siteSlug,
-            String siteTheme) {
+            String siteThemeId) {
         Intent intent = new Intent(context, SiteCreationService.class);
         intent.putExtra(ARG_SITE_TITLE, siteTitle);
         intent.putExtra(ARG_SITE_TAGLINE, siteTagline);
         intent.putExtra(ARG_SITE_SLUG, siteSlug);
-        intent.putExtra(ARG_SITE_THEME, siteTheme);
+        intent.putExtra(ARG_SITE_THEME_ID, siteThemeId);
         context.startService(intent);
     }
 
@@ -89,6 +91,11 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
     @Override
     protected OnSiteCreationStateUpdated getCurrentStateEvent() {
         return new OnSiteCreationStateUpdated(mSiteCreationPhase);
+    }
+
+    @Override
+    protected boolean isIdle() {
+        return mSiteCreationPhase == SiteCreationPhase.IDLE;
     }
 
     @Override
@@ -211,7 +218,8 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
         final String siteTitle = intent.getStringExtra(ARG_SITE_TITLE);
         final String siteSlug = intent.getStringExtra(ARG_SITE_SLUG);
         mSiteTagline = intent.getStringExtra(ARG_SITE_TAGLINE);
-        mSiteTheme = intent.getStringExtra(ARG_SITE_THEME);
+        String themeId = intent.getStringExtra(ARG_SITE_THEME_ID);
+        mSiteTheme = mThemeStore.getWpComThemeByThemeId(themeId);
 
         final String language = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
 
@@ -227,11 +235,11 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
         return START_REDELIVER_INTENT;
     }
 
-    private void activateTheme(final SiteModel site, final String themeId) {
-        WordPress.getRestClientUtils().setTheme(site.getSiteId(), themeId, new RestRequest.Listener() {
+    private void activateTheme(final SiteModel site, final ThemeModel themeModel) {
+        WordPress.getRestClientUtils().setTheme(site.getSiteId(), themeModel.getThemeId(), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                ThemeTable.setCurrentTheme(WordPress.wpDB.getDatabase(), String.valueOf(site.getSiteId()), themeId);
+                mThemeStore.setActiveThemeForSite(site, themeModel);
 
                 setState(SiteCreationPhase.SUCCESS);
             }
