@@ -31,6 +31,19 @@
                     style="@style/PluginCardViewPrimaryText"
                     android:layout_below="@id/plugin_installed_version"
                     android:textColor="@color/grey_darken_10"/>
+
+                <TextView
+                    android:id="@+id/plugin_btn_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="@string/plugin_btn_update"
+                    android:textAllCaps="true"
+                    android:textColor="@color/wp_blue_medium"
+                    android:textSize="@dimen/text_sz_medium"/>
             </RelativeLayout>
         </LinearLayout>
 

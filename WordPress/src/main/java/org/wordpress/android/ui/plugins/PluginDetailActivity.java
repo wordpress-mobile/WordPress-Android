@@ -41,6 +41,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private TextView mInstalledPluginVersionTextView;
     private TextView mAvailablePluginVersionTextView;
+    private TextView mUpdatePluginVersionTextView;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
 
@@ -115,6 +116,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void setupViews() {
         mInstalledPluginVersionTextView = findViewById(R.id.plugin_installed_version);
         mAvailablePluginVersionTextView = findViewById(R.id.plugin_available_version);
+        mUpdatePluginVersionTextView = findViewById(R.id.plugin_btn_update);
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
 
@@ -135,6 +137,13 @@ public class PluginDetailActivity extends AppCompatActivity {
                     mPlugin.setIsAutoUpdateEnabled(b);
                     dispatchUpdateAction();
                 }
+            }
+        });
+
+        mUpdatePluginVersionTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
 
