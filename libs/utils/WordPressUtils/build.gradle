@@ -12,15 +12,16 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
 
 repositories {
+    google()
     jcenter()
 }
 
 dependencies {
     compile 'org.apache.commons:commons-text:1.1'
     compile 'com.mcxiaoke.volley:library:1.0.18'
-    compile 'com.android.support:support-v13:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:support-v13:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'org.greenrobot:eventbus:3.0.0'
 }
 
@@ -29,7 +30,7 @@ android {
 
     publishNonDefault true
 
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "25.0.3"
 
     defaultConfig {

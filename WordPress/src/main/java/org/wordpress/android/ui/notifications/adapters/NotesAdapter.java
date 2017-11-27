@@ -29,8 +29,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     private final int mColorRead;
     private final int mColorUnread;
     private final int mTextIndentSize;
-    private final List<String> mHiddenNoteIds = new ArrayList<>();
-    private final List<String> mModeratingNoteIds = new ArrayList<>();
 
     private final DataLoadedListener mDataLoadedListener;
     private final OnLoadMoreListener mOnLoadMoreListener;
@@ -75,28 +73,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     public FILTERS getCurrentFilter() {
         return mCurrentFilter;
-    }
-
-    public void addHiddenNoteId(String noteId) {
-        mHiddenNoteIds.add(noteId);
-        myNotifyDatasetChanged();
-    }
-
-    public void removeHiddenNoteId(String noteId) {
-        mHiddenNoteIds.remove(noteId);
-        myNotifyDatasetChanged();
-    }
-
-    public void addModeratingNoteId(String noteId) {
-        mModeratingNoteIds.add(noteId);
-        myNotifyDatasetChanged();
-    }
-
-    public void removeModeratingNoteId(String noteId) {
-        mModeratingNoteIds.remove(noteId);
-        // Reload the notifications from DB since the state of at least one of them is changed.
-        // DB already has the fresh value in it.
-        reloadNotesFromDBAsync();
     }
 
     public void addAll(List<Note> notes, boolean clearBeforeAdding) {
@@ -231,13 +207,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             noteViewHolder.headerView.setVisibility(View.VISIBLE);
         }
 
-        if (mHiddenNoteIds.size() > 0 && mHiddenNoteIds.contains(note.getId())) {
-            noteViewHolder.contentView.setVisibility(View.GONE);
-            noteViewHolder.headerView.setVisibility(View.GONE);
-        } else {
-            noteViewHolder.contentView.setVisibility(View.VISIBLE);
-        }
-
         CommentStatus commentStatus = CommentStatus.ALL;
         if (note.getCommentStatus() == CommentStatus.UNAPPROVED) {
             commentStatus = CommentStatus.UNAPPROVED;
@@ -245,12 +214,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         if (!TextUtils.isEmpty(note.getLocalStatus())) {
             commentStatus = CommentStatus.fromString(note.getLocalStatus());
-        }
-
-        if (mModeratingNoteIds.size() > 0 && mModeratingNoteIds.contains(note.getId())) {
-            noteViewHolder.progressBar.setVisibility(View.VISIBLE);
-        } else {
-            noteViewHolder.progressBar.setVisibility(View.GONE);
         }
 
         // Subject is stored in db as html to preserve text formatting
@@ -358,7 +321,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         private final TextView txtDetail;
         private final WPNetworkImageView imgAvatar;
         private final NoticonTextView noteIcon;
-        private final View progressBar;
 
         NoteViewHolder(View view) {
             super(view);
@@ -370,7 +332,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             txtDetail = (TextView) view.findViewById(R.id.note_detail);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             noteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);
-            progressBar = view.findViewById(R.id.moderate_progress);
 
             itemView.setOnClickListener(mOnClickListener);
         }

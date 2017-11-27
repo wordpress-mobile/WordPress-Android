@@ -55,6 +55,10 @@ public abstract class AutoForeground<EventClass> extends Service {
 
     protected abstract EventClass getCurrentStateEvent();
     protected abstract Notification getNotification();
+
+    private boolean mIsForeground;
+
+    protected abstract boolean isIdle();
     protected abstract boolean isInProgress();
     protected abstract boolean isError();
 
@@ -62,12 +66,22 @@ public abstract class AutoForeground<EventClass> extends Service {
         mEventClass = eventClass;
     }
 
+    public boolean isForeground() {
+        return mIsForeground;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        notifyState();
+    }
+
     @Nullable
     @CallSuper
     @Override
     public IBinder onBind(Intent intent) {
-        notifyState();
-
+        clearAllNotifications();
         return mBinder;
     }
 
@@ -76,8 +90,8 @@ public abstract class AutoForeground<EventClass> extends Service {
     public void onRebind(Intent intent) {
         super.onRebind(intent);
 
+        clearAllNotifications();
         background();
-        notifyState();
     }
 
     @CallSuper
@@ -88,6 +102,12 @@ public abstract class AutoForeground<EventClass> extends Service {
         }
 
         return true; // call onRebind() if new clients connect
+    }
+
+    protected void clearAllNotifications() {
+        NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID_PROGRESS);
+        NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID_SUCCESS);
+        NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID_FAILURE);
     }
 
     private EventBus getEventBus() {
@@ -101,22 +121,31 @@ public abstract class AutoForeground<EventClass> extends Service {
     private void promoteForeground() {
         if (isInProgress()) {
             startForeground(NOTIFICATION_ID_PROGRESS, getNotification());
+            mIsForeground = true;
         }
     }
 
     private void background() {
         stopForeground(true);
+        mIsForeground = false;
     }
 
     @CallSuper
     protected void notifyState() {
+        // sticky emit the state. The stickiness serves as a state keeping mechanism for clients to re-read upon connect
+        getEventBus().postSticky(getCurrentStateEvent());
+
         if (hasConnectedClients()) {
-            // just send a message to the connected clients
-            getEventBus().post(getCurrentStateEvent());
+            // there are connected clients so, nothing more to do here
             return;
         }
 
-        // ok, no connected clients so, update will be redirected to a notification
+        // ok, no connected clients so, update might need to be delivered to a notification as well
+
+        if (isIdle()) {
+            // no need to have a notification when idle
+            return;
+        }
 
         if (isInProgress()) {
             // operation still is progress so, update the notification
@@ -131,8 +160,7 @@ public abstract class AutoForeground<EventClass> extends Service {
         NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID_PROGRESS);
 
         // put out a simple success/failure notification
-        NotificationManagerCompat.from(this).notify(
-                isError() ? NOTIFICATION_ID_FAILURE : NOTIFICATION_ID_SUCCESS,
+        NotificationManagerCompat.from(this).notify(isError() ? NOTIFICATION_ID_FAILURE : NOTIFICATION_ID_SUCCESS,
                 getNotification());
     }
 }

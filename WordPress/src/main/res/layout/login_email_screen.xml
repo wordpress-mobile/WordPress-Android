@@ -27,10 +27,12 @@
         android:id="@+id/login_email_row"
         android:hint="@string/email_address"
         android:imeOptions="actionNext"
+        android:importantForAutofill="noExcludeDescendants"
         android:inputType="textEmailAddress"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        app:wpIconDrawable="@drawable/ic_user_grey_24dp" >
+        app:wpIconDrawable="@drawable/ic_user_grey_24dp"
+        tools:ignore="UnusedAttribute" >
     </org.wordpress.android.widgets.WPLoginInputRow>
 
     <LinearLayout

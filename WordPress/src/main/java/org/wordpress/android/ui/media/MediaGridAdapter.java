@@ -69,7 +69,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
-        void onAdapterItemClicked(View sourceView, int position, boolean isLongClick);
+        void onAdapterItemClicked(int position, boolean isLongClick);
         void onAdapterSelectionCountChanged(int count);
         void onAdapterRequestRetry(int position);
         void onAdapterRequestDelete(int position);
@@ -308,7 +308,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    doAdapterItemClicked(v, position, false);
+                    doAdapterItemClicked(position, false);
                 }
             });
 
@@ -316,7 +316,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 @Override
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
-                    doAdapterItemClicked(v, position, true);
+                    doAdapterItemClicked(position, true);
                     return true;
                 }
             });
@@ -356,7 +356,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             ViewUtils.addCircularShadowOutline(selectionCountTextView);
         }
 
-        private void doAdapterItemClicked(View sourceView, int position, boolean isLongClick) {
+        private void doAdapterItemClicked(int position, boolean isLongClick) {
             if (!isValidPosition(position)) {
                 return;
             }
@@ -370,7 +370,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     toggleItemSelected(GridViewHolder.this, position);
                 }
                 if (mCallback != null) {
-                    mCallback.onAdapterItemClicked(sourceView, position, isLongClick);
+                    mCallback.onAdapterItemClicked(position, isLongClick);
                 }
             }
         }

@@ -536,6 +536,10 @@
             android:exported="false"
             android:label="Notifications Update Service" />
         <service
+            android:name=".ui.accounts.login.LoginWpcomService"
+            android:exported="false"
+            android:label="Login to WPCOM Service" />
+        <service
             android:name=".ui.accounts.signup.SiteCreationService"
             android:exported="false"
             android:label="Site Creation Service" />

@@ -482,22 +482,32 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     Set<SiteRecord> setVisibilityForSelectedSites(boolean makeVisible) {
         SiteList sites = getSelectedSites();
-        Set<SiteRecord> siteRecordSet = new HashSet<>();
+        Set<SiteRecord> changeSet = new HashSet<>();
         if (sites != null && sites.size() > 0) {
+            ArrayList<Integer> recentIds = AppPrefs.getRecentlyPickedSiteIds();
+            int currentSiteId = AppPrefs.getSelectedSite();
             for (SiteRecord site: sites) {
                 int index = mAllSites.indexOfSite(site);
                 if (index > -1) {
                     SiteRecord siteRecord = mAllSites.get(index);
                     if (siteRecord.isHidden == makeVisible) {
-                        // add it to change set
-                        siteRecordSet.add(siteRecord);
+                        changeSet.add(siteRecord);
+                        siteRecord.isHidden = !makeVisible;
+                        if (!makeVisible
+                                && siteRecord.localId != currentSiteId
+                                && recentIds.contains(siteRecord.localId)) {
+                            AppPrefs.removeRecentlyPickedSiteId(siteRecord.localId);
+                        }
                     }
-                    siteRecord.isHidden = !makeVisible;
                 }
             }
+
+            if (!changeSet.isEmpty()) {
+                notifyDataSetChanged();
+            }
         }
-        notifyDataSetChanged();
-        return siteRecordSet;
+
+        return changeSet;
     }
 
     public void loadSites() {
