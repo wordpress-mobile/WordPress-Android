@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:layout_marginRight="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
-            android:text="@string/create_wordpress_site"/>
+            android:text="@string/sign_up"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/login_button"
