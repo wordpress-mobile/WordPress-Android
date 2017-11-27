@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
@@ -195,6 +196,19 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (event.plugin != null) {
             mPlugin = event.plugin;
             refreshViews();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPluginInfoChanged(PluginStore.OnPluginInfoChanged event) {
+        if (event.isError()) {
+            AppLog.e(AppLog.T.API, "An error occurred while fetching the plugin info with type: "
+                    + event.error.type);
+            return;
+        }
+        if (event.pluginInfo != null) {
+            refreshPluginVersionViews();
         }
     }
 
