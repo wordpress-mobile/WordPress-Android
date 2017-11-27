@@ -179,14 +179,13 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         }
 
         mLoginPhase = loginPhase;
+        track();
         notifyState();
 
         if (mLoginPhase.isTerminal()) {
             mDispatcher.unregister(this);
             stopSelf();
         }
-
-        track();
     }
 
     private void track() {
