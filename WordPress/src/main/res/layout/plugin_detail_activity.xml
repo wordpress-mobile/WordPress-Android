@@ -25,6 +25,12 @@
                 <TextView
                     android:id="@+id/plugin_installed_version"
                     style="@style/PluginCardViewPrimaryText"/>
+
+                <TextView
+                    android:id="@+id/plugin_available_version"
+                    style="@style/PluginCardViewPrimaryText"
+                    android:layout_below="@id/plugin_installed_version"
+                    android:textColor="@color/grey_darken_10"/>
             </RelativeLayout>
         </LinearLayout>
 

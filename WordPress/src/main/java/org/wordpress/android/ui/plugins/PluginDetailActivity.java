@@ -18,6 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
+import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
@@ -37,6 +38,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private PluginModel mPlugin;
 
     private TextView mInstalledPluginVersionTextView;
+    private TextView mAvailablePluginVersionTextView;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
 
@@ -105,7 +107,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void setupViews() {
         mInstalledPluginVersionTextView = findViewById(R.id.plugin_installed_version);
-
+        mAvailablePluginVersionTextView = findViewById(R.id.plugin_available_version);
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
 
@@ -147,14 +149,29 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshViews() {
+        mSwitchActive.setChecked(mPlugin.isActive());
+        mSwitchAutoupdates.setChecked(mPlugin.isAutoUpdateEnabled());
+
+        refreshPluginVersionViews();
+    }
+
+    private void refreshPluginVersionViews() {
         if (TextUtils.isEmpty(mPlugin.getVersion())) {
             mInstalledPluginVersionTextView.setVisibility(View.GONE);
         } else {
             mInstalledPluginVersionTextView.setVisibility(View.VISIBLE);
-            mInstalledPluginVersionTextView.setText(getString(R.string.plugin_installed_version, mPlugin.getVersion()));
+            mInstalledPluginVersionTextView.setText(getString(R.string.plugin_installed_version,
+                    mPlugin.getVersion()));
         }
-        mSwitchActive.setChecked(mPlugin.isActive());
-        mSwitchAutoupdates.setChecked(mPlugin.isAutoUpdateEnabled());
+
+        PluginInfoModel pluginInfoModel = PluginUtils.getOrFetchPluginInfo(mDispatcher, mPluginStore, mPlugin);
+        if (pluginInfoModel == null || TextUtils.isEmpty(pluginInfoModel.getVersion())) {
+            mAvailablePluginVersionTextView.setVisibility(View.GONE);
+        } else {
+            mAvailablePluginVersionTextView.setVisibility(View.VISIBLE);
+            mAvailablePluginVersionTextView.setText(getString(R.string.plugin_available_version,
+                    pluginInfoModel.getVersion()));
+        }
     }
 
     private void dispatchUpdateAction() {
