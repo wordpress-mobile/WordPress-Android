@@ -413,7 +413,7 @@ public class PluginStore extends Store {
 
     private void updateSitePluginVersion(UpdateSitePluginVersionPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
-            mPluginRestClient.updateSitePlugin(payload.site, payload.plugin);
+            mPluginRestClient.updateSitePluginVersion(payload.site, payload.plugin);
         } else {
             UpdateSitePluginVersionError error = new UpdateSitePluginVersionError(
                     UpdateSitePluginVersionErrorType.NOT_AVAILABLE);
