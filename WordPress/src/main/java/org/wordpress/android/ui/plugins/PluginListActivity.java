@@ -197,7 +197,7 @@ public class PluginListActivity extends AppCompatActivity {
                 PluginViewHolder pluginHolder = (PluginViewHolder) holder;
                 pluginHolder.name.setText(pluginModel.getDisplayName());
                 pluginHolder.status.setText(getPluginStatusText(pluginModel));
-                PluginInfoModel pluginInfo = getOrFetchPluginInfo(pluginModel);
+                PluginInfoModel pluginInfo = PluginUtils.getOrFetchPluginInfo(mDispatcher, mPluginStore, pluginModel);
                 String iconUrl = pluginInfo != null ? pluginInfo.getIcon() : "";
                 pluginHolder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
             }
@@ -246,17 +246,5 @@ public class PluginListActivity extends AppCompatActivity {
         String autoUpdateStatus = plugin.isAutoUpdateEnabled() ? getString(R.string.plugin_autoupdates_on)
                 : getString(R.string.plugin_autoupdates_off);
         return activeStatus + ", " + autoUpdateStatus;
-    }
-
-    private PluginInfoModel getOrFetchPluginInfo(@NonNull PluginModel plugin) {
-        String slug = plugin.getSlug();
-        if (TextUtils.isEmpty(slug)) {
-            return null;
-        }
-        PluginInfoModel pluginInfo = mPluginStore.getPluginInfoBySlug(slug);
-        if (pluginInfo == null) {
-            mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(slug));
-        }
-        return pluginInfo;
     }
 }
