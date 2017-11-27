@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -34,6 +36,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private SiteModel mSite;
     private PluginModel mPlugin;
 
+    private TextView mInstalledPluginVersionTextView;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
 
@@ -101,6 +104,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
+        mInstalledPluginVersionTextView = findViewById(R.id.plugin_installed_version);
+
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
 
@@ -138,10 +143,16 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        refreshStates();
+        refreshViews();
     }
 
-    private void refreshStates() {
+    private void refreshViews() {
+        if (TextUtils.isEmpty(mPlugin.getVersion())) {
+            mInstalledPluginVersionTextView.setVisibility(View.GONE);
+        } else {
+            mInstalledPluginVersionTextView.setVisibility(View.VISIBLE);
+            mInstalledPluginVersionTextView.setText(getString(R.string.plugin_installed_version, mPlugin.getVersion()));
+        }
         mSwitchActive.setChecked(mPlugin.isActive());
         mSwitchAutoupdates.setChecked(mPlugin.isAutoUpdateEnabled());
     }
@@ -166,7 +177,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         if (event.plugin != null) {
             mPlugin = event.plugin;
-            refreshStates();
+            refreshViews();
         }
     }
 
