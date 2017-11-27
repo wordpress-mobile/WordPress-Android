@@ -190,7 +190,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
 
     private void track() {
         Map<String, Object> props = new HashMap<>();
-        props.put("login_phase", mLoginPhase.name());
+        props.put("login_phase", mLoginPhase == null ? "null" : mLoginPhase.name());
         props.put("login_service_is_foreground", isForeground());
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE, props);
     }
