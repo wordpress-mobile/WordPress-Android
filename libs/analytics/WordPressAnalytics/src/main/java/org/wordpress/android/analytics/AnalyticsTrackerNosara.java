@@ -746,6 +746,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_social_accounts_need_connecting";
             case LOGIN_SOCIAL_ERROR_UNKNOWN_USER:
                 return "login_social_error_unknown_user";
+            case LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE:
+                return "login_wpcom_background_service_update";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
