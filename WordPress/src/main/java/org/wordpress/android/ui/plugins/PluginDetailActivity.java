@@ -39,9 +39,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     private PluginModel mPlugin;
     private PluginInfoModel mPluginInfo;
 
-    private TextView mInstalledPluginVersionTextView;
-    private TextView mAvailablePluginVersionTextView;
-    private TextView mUpdatePluginVersionTextView;
+    private TextView mInstalledVersionTextView;
+    private TextView mAvailableVersionTextView;
+    private TextView mUpdateVersionTextView;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
 
@@ -114,9 +114,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        mInstalledPluginVersionTextView = findViewById(R.id.plugin_installed_version);
-        mAvailablePluginVersionTextView = findViewById(R.id.plugin_available_version);
-        mUpdatePluginVersionTextView = findViewById(R.id.plugin_btn_update);
+        mInstalledVersionTextView = findViewById(R.id.plugin_installed_version);
+        mAvailableVersionTextView = findViewById(R.id.plugin_available_version);
+        mUpdateVersionTextView = findViewById(R.id.plugin_btn_update);
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
 
@@ -140,7 +140,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        mUpdatePluginVersionTextView.setOnClickListener(new View.OnClickListener() {
+        mUpdateVersionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -173,18 +173,18 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void refreshPluginVersionViews() {
         if (TextUtils.isEmpty(mPlugin.getVersion())) {
-            mInstalledPluginVersionTextView.setVisibility(View.GONE);
+            mInstalledVersionTextView.setVisibility(View.GONE);
         } else {
-            mInstalledPluginVersionTextView.setVisibility(View.VISIBLE);
-            mInstalledPluginVersionTextView.setText(getString(R.string.plugin_installed_version,
+            mInstalledVersionTextView.setVisibility(View.VISIBLE);
+            mInstalledVersionTextView.setText(getString(R.string.plugin_installed_version,
                     mPlugin.getVersion()));
         }
 
         if (!isUpdateAvailable()) {
-            mAvailablePluginVersionTextView.setVisibility(View.GONE);
+            mAvailableVersionTextView.setVisibility(View.GONE);
         } else {
-            mAvailablePluginVersionTextView.setVisibility(View.VISIBLE);
-            mAvailablePluginVersionTextView.setText(getString(R.string.plugin_available_version,
+            mAvailableVersionTextView.setVisibility(View.VISIBLE);
+            mAvailableVersionTextView.setText(getString(R.string.plugin_available_version,
                     mPluginInfo.getVersion()));
         }
     }
