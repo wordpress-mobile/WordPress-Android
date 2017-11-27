@@ -213,10 +213,8 @@ public class PluginDetailActivity extends AppCompatActivity {
                     + event.error.message);
             return;
         }
-        if (event.plugin != null) {
-            mPlugin = event.plugin;
-            refreshViews();
-        }
+        mPlugin = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
+        refreshViews();
     }
 
     @SuppressWarnings("unused")
@@ -241,7 +239,8 @@ public class PluginDetailActivity extends AppCompatActivity {
                     + event.error.type);
             return;
         }
-        refreshPluginVersionViews();
+        mPlugin = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
+        refreshViews();
     }
 
     // Helpers
