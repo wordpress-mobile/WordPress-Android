@@ -12,7 +12,6 @@ Language: it
 	<string name="async_promo_description">Ora puoi lasciare che l\'editor e il tuo articolo salvino e pubblichino da soli! Provaci!</string>
 	<string name="async_promo_title">Pubblica con Confidence</string>
 	<string name="editor_uploading_post">Il tuo articolo è stato caricato</string>
-	<string name="uploading_post_media">Caricamento file multimediale...</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Sei sicuro? Cancellando questo articolo annullerai anche il caricamento del file multimediale.</string>
 	<string name="post_draft_param">"%s" è stato salvato come bozza!</string>
 	<string name="page_scheduled">Pagina programmata</string>
@@ -262,7 +261,6 @@ Language: it
 	<string name="media_encoder_quality_85">Media</string>
 	<string name="media_encoder_quality_80">Bassa</string>
 	<string name="media_upload_state_uploaded">Caricato</string>
-	<string name="media_upload_state_failed">Non riuscito</string>
 	<string name="media_upload_state_deleted">Eliminato</string>
 	<string name="media_upload_state_deleting">Eliminazione in corso</string>
 	<string name="media_upload_state_uploading">Caricamento in corso</string>
@@ -981,7 +979,6 @@ Language: it
 	<string name="delete_sure_post">Cancella questo articolo</string>
 	<string name="delete_sure">Cancella questa bozza</string>
 	<string name="delete_sure_page">Cancella questa pagina</string>
-	<string name="confirm_delete_multi_media">Cancellare gli elementi selezionati?</string>
 	<string name="cab_selected">%d selezionati</string>
 	<string name="faq_button">FAQ</string>
 	<string name="reader_empty_comments">Ancora nessun commento</string>
@@ -1240,7 +1237,6 @@ Language: it
 	<string name="signing_in">Connessione in corso...</string>
 	<string name="media_add_popup_title">Aggiungi alla libreria multimediale</string>
 	<string name="empty_list_default">Questo elenco è vuoto</string>
-	<string name="select_from_media_library">Seleziona dalla libreria multimediale</string>
 	<string name="jetpack_not_found">Il plugin Jetpack non è stato trovato</string>
 	<string name="reader_label_added_tag">Aggiunto %s</string>
 	<string name="reader_label_removed_tag">Rimosso %s</string>

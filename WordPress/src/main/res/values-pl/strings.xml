@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-03 16:19:48+0000
+Translation-Revision-Date: 2017-11-16 19:23:54+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="login_error_suffix">\nMoże spróbujesz innego konta? </string>
+	<string name="login_error_generic">Wystąpił błąd połączenia z kontem Google. </string>
+	<string name="login_error_email_not_found">Konto Google \'%s\' nie pasuje do żadnego konta funkcjonującego na WordPress.com</string>
+	<string name="login_error_button">Zamknij</string>
+	<string name="login_google_button_suffix">Zaloguj się za pośrednictwem Google. </string>
+	<string name="login_google_button_prefix">Lub możesz</string>
+	<string name="enter_wpcom_password_google">Aby kontynuować ze swoim kontem Google, proszę uzupełnić odpowiednie hasłow WordPress.com. Zostaniesz o to zapytany tylko raz.</string>
+	<string name="error_generic_network">Wystąpił błąd sieci. Sprawdź połączenie i spróbuj ponownie.</string>
+	<string name="post_settings_remove_featured_image">Usuń obrazek wyróżniający</string>
+	<string name="post_settings_choose_featured_image">Wybierz obrazek wyróżniający</string>
 	<string name="login_log_in_for_share_intent">Zaloguj się do WordPress.com aby udostępnić treści. </string>
 	<string name="enter_site_address_share_intent">Wprowadź adres WordPressowej witryny, której chciałbyś udostępnić treści. </string>
 	<string name="jetpack_disconnect_error_toast">Błąd rozłączania witryny</string>
@@ -13,6 +23,7 @@ Language: pl
 	<string name="jetpack_disconnect_confirm">Rozłącz</string>
 	<string name="jetpack_disconnect_confirmation_message">Czy jesteś pewien że chcesz rozłączyć Jetpack od tej witryny? </string>
 	<string name="jetpack_disconnect_pref_title">"Rozłącz z WordPress.com"</string>
+	<string name="site_settings_jetpack_whitelist_description">Możesz dodać adres IP lub serię adresów do białej listy aby zapobiec zablokowaniu przez Jetpack. Dozwolone są adresy IPv4 i IPv6. Aby określić zakres, wprowadź dolną \n i górną wartość zakresu i odziej je myślnikiem. Przykład 12.12.12.1–12.12.12.100</string>
 	<string name="jetpack_require_two_factor_title">Wymagaj uwierzytelniania dwuetapowego</string>
 	<string name="jetpack_match_wpcom_via_email_title">Połącz konta używając adresu email </string>
 	<string name="jetpack_allow_wpcom_sign_in_title">Zezwól na logowanie WordPress.com</string>
@@ -31,7 +42,6 @@ Language: pl
 	<string name="share_action_post">Dodaj do nowego wpisu</string>
 	<string name="share_media_permission_required">Wymagane uprawnienia do udostępnienia obrazków lub filmów</string>
 	<string name="invalid_ip_or_range">Nieprawidłowy adres IP lub zakres adresów IP</string>
-	<string name="error_media_still_uploading">Proszę czekaj na zakończenie przesłania</string>
 	<string name="deleting_media_dlg">Usuwanie</string>
 	<string name="confirm_delete_media_video">Usunąć ten film? </string>
 	<string name="confirm_delete_media_image">Usunąć ten obrazek? </string>
@@ -92,7 +102,7 @@ Language: pl
 	<string name="async_promo_description">Możesz teraz opuścić edytora a twój wpis zostanie zapisany i opublikowany poza kulisami! Wypróbuj to!</string>
 	<string name="async_promo_title">Publikuj z pełnym zaufaniem</string>
 	<string name="editor_uploading_post">Twój wpis jest przesyłany</string>
-	<string name="uploading_post_media">Przesyłanie mediów...</string>
+	<string name="uploading_media">Przesyłanie mediów...</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Jesteś pewien? Usunięcie tego wpisu anuluje również przesyłanie mediów.</string>
 	<string name="page_scheduled">Strona zaplanowana</string>
 	<string name="post_scheduled">Wpis zaplanowany</string>
@@ -232,7 +242,7 @@ Language: pl
 	<string name="site_settings_video_width_hint">Zmień rozmiar filmów we wpisie do tego rozmiaru</string>
 	<string name="site_settings_optimize_video_summary">Włącz aby zmienić rozmiar i skompresować filmy</string>
 	<string name="site_settings_optimize_videos">Optymalizuj filmy</string>
-	<string name="draft_uploaded">Szkic wczytany</string>
+	<string name="draft_uploaded">Szkic przesłany</string>
 	<string name="report_bug">Raportuj błąd</string>
 	<string name="video_quality">Jakość filmu</string>
 	<string name="permission_location">Lokalizacja</string>
@@ -342,7 +352,7 @@ Language: pl
 	<string name="media_encoder_quality_85">Średnia</string>
 	<string name="media_encoder_quality_80">Niska</string>
 	<string name="media_upload_state_uploaded">Przesłano</string>
-	<string name="media_upload_state_failed">Niepowodzenie</string>
+	<string name="media_upload_state_failed">Przesyłanie nieudane</string>
 	<string name="media_upload_state_deleted">Usunięto</string>
 	<string name="media_upload_state_deleting">Usuwanie</string>
 	<string name="media_upload_state_uploading">Przesyłanie</string>
@@ -1061,7 +1071,6 @@ Language: pl
 	<string name="themes_fetching">Pobieranie motywów...</string>
 	<string name="ssl_certificate_details">Szczegóły</string>
 	<string name="cab_selected">Liczba zaznaczonych: %d</string>
-	<string name="confirm_delete_multi_media">Usunąć zaznaczone elementy?</string>
 	<string name="delete_sure_page">Usuń tę stronę</string>
 	<string name="delete_sure">Usuń ten szkic</string>
 	<string name="delete_sure_post">Usuń ten wpis</string>
@@ -1345,7 +1354,6 @@ Language: pl
 	<string name="reader_btn_share">Udostępnij</string>
 	<string name="reader_untitled_post">(Brak tytułu)</string>
 	<string name="jetpack_not_found">Wtyczka Jetpack nie została znaleziona</string>
-	<string name="select_from_media_library">Wybierz z biblioteki mediów</string>
 	<string name="empty_list_default">Lista jest pusta</string>
 	<string name="media_add_popup_title">Dodaj do biblioteki mediów</string>
 	<string name="passcode_turn_on">Włącz blokadę PIN</string>

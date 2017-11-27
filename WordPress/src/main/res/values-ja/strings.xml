@@ -44,7 +44,6 @@ Language: ja_JP
 	<string name="async_promo_description">エディターを閉じると、投稿の保存と公開がバックグラウンドで自動的に行われるようになりました。お試しください。</string>
 	<string name="async_promo_title">自信を持って公開</string>
 	<string name="editor_uploading_post">投稿をアップロード中</string>
-	<string name="uploading_post_media">メディアをアップロード中…</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">本当に実行しますか ?この投稿を削除すると、メディアのアップロードもキャンセルされます。</string>
 	<string name="page_scheduled">ページの公開を予約しました</string>
 	<string name="post_scheduled">投稿を予約しました</string>
@@ -294,7 +293,6 @@ Language: ja_JP
 	<string name="media_encoder_quality_80">低い</string>
 	<string name="media_upload_state_uploaded">アップロード済み</string>
 	<string name="media_encoder_quality_100">最高</string>
-	<string name="media_upload_state_failed">失敗</string>
 	<string name="media_upload_state_deleted">削除済み</string>
 	<string name="media_upload_state_deleting">削除中</string>
 	<string name="media_upload_state_uploading">アップロード中</string>
@@ -1014,7 +1012,6 @@ Language: ja_JP
 	<string name="delete_sure_post">この投稿を削除</string>
 	<string name="delete_sure">この下書きを削除</string>
 	<string name="delete_sure_page">このページを削除</string>
-	<string name="confirm_delete_multi_media">選択した項目を削除しますか ?</string>
 	<string name="cab_selected">%d件選択</string>
 	<string name="reader_empty_posts_liked">「いいね」を付けた投稿はありません。</string>
 	<string name="browse_our_faq_button">よく聞かれる質問を表示</string>
@@ -1276,7 +1273,6 @@ Language: ja_JP
 	<string name="nux_tutorial_get_started_title">始めてみましょう</string>
 	<string name="media_add_popup_title">メディアライブラリに追加</string>
 	<string name="empty_list_default">リストが空です</string>
-	<string name="select_from_media_library">メディアライブラリから選択</string>
 	<string name="reader_untitled_post">(無題)</string>
 	<string name="reader_btn_share">共有</string>
 	<string name="reader_btn_follow">フォロー</string>

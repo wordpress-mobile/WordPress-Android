@@ -37,8 +37,6 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
@@ -294,33 +292,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 
-    private void setNoteIsHidden(String noteId, boolean isHidden) {
-        if (mNotesAdapter == null) return;
-
-        if (isHidden) {
-            mNotesAdapter.addHiddenNoteId(noteId);
-        } else {
-            // Scroll the row into view if it isn't visible so the animation can be seen
-            int notePosition = mNotesAdapter.getPositionForNote(noteId);
-            if (notePosition != RecyclerView.NO_POSITION &&
-                    mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() > notePosition) {
-                mLinearLayoutManager.scrollToPosition(notePosition);
-            }
-
-            mNotesAdapter.removeHiddenNoteId(noteId);
-        }
-    }
-
-    private void setNoteIsModerating(String noteId, boolean isModerating) {
-        if (mNotesAdapter == null) return;
-
-        if (isModerating) {
-            mNotesAdapter.addModeratingNoteId(noteId);
-        } else {
-            mNotesAdapter.removeModeratingNoteId(noteId);
-        }
-    }
-
     private void showEmptyView(@StringRes int titleResId) {
         showEmptyView(titleResId, 0, 0);
     }
@@ -548,38 +519,13 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(final NotificationEvents.NoteModerationStatusChanged event) {
-        if (event.isModerating) {
-            setNoteIsModerating(event.noteId, event.isModerating);
-            EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
-        } else {
-            // Moderation done -> refresh the note before calling the end.
-            NotificationsActions.downloadNoteAndUpdateDB(event.noteId,
-                    new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            setNoteIsModerating(event.noteId, event.isModerating);
-                            EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            setNoteIsModerating(event.noteId, event.isModerating);
-                            EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
-                        }
-                    }
-            );
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(final NotificationEvents.NoteLikeStatusChanged event) {
+    public void onEventMainThread(final NotificationEvents.NoteLikeOrModerationStatusChanged event) {
         // Like/unlike done -> refresh the note and update db
         NotificationsActions.downloadNoteAndUpdateDB(event.noteId,
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeStatusChanged.class);
+                        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeOrModerationStatusChanged.class);
                         //now re-set the object in our list adapter with the note saved in the updated DB
                         Note note = NotificationsTable.getNoteById(event.noteId);
                         if (note != null) {
@@ -589,26 +535,10 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeStatusChanged.class);
+                        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeOrModerationStatusChanged.class);
                     }
                 }
         );
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(NotificationEvents.NoteVisibilityChanged event) {
-        setNoteIsHidden(event.noteId, event.isHidden);
-
-        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteVisibilityChanged.class);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(NotificationEvents.NoteModerationFailed event) {
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, Duration.LONG);
-        }
-
-        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationFailed.class);
     }
 
     public SiteModel getSelectedSite() {

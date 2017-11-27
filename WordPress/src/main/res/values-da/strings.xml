@@ -176,7 +176,6 @@ Language: da_DK
 	<string name="delete_sure_post">Slet dette indlæg</string>
 	<string name="delete_sure">Slet denne kladde</string>
 	<string name="delete_sure_page">Slet denne side</string>
-	<string name="confirm_delete_multi_media">Slet markerede elementer</string>
 	<string name="cab_selected">%d markeret</string>
 	<string name="mnu_comment_liked">Synes godt om</string>
 	<string name="stats_no_blog">Statistiken kunne ikke hentes for den valgte blog</string>
@@ -420,7 +419,6 @@ Language: da_DK
 	<string name="reader_untitled_post">(Ingen titel)</string>
 	<string name="media_add_popup_title">Tilføj til mediebibliotek</string>
 	<string name="empty_list_default">Listen er tom</string>
-	<string name="select_from_media_library">Vælg fra mediebiblioteket</string>
 	<string name="reader_label_added_tag">Tilføjede %s</string>
 	<string name="reader_label_removed_tag">Fjernede %s</string>
 	<string name="reader_likes_only_you">Du synes godt om dette</string>

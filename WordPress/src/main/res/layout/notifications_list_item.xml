@@ -86,24 +86,6 @@
                     android:layout_marginEnd="@dimen/notifications_adjusted_font_margin"
                     android:layout_marginTop="@dimen/margin_small" />
 
-                <LinearLayout
-                    android:id="@+id/moderate_progress"
-                    android:layout_width="@dimen/notifications_avatar_sz"
-                    android:layout_height="@dimen/notifications_avatar_sz"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:background="@drawable/shape_oval_translucent"
-                    android:gravity="center"
-                    android:padding="@dimen/margin_large"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <ProgressBar
-                        style="@android:style/Widget.Holo.ProgressBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:indeterminate="true" />
-                </LinearLayout>
-
                 <org.wordpress.android.widgets.NoticonTextView
                     android:id="@+id/note_icon"
                     android:layout_width="@dimen/note_icon_sz"

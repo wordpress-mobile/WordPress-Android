@@ -1,12 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-12 12:46:05+0000
+Translation-Revision-Date: 2017-11-13 21:03:36+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
-	<string name="error_media_still_uploading">Lütfen yüklemenin bitmesini bekleyin</string>
+	<string name="login_error_generic">Google hesabı ile bağlantı kurarken bir miktar sorun yaşadık.</string>
+	<string name="login_error_suffix">\nBelki de farklı bir hesap denemelisiniz.</string>
+	<string name="login_error_email_not_found">\'%s\' Google hesabı WordPress.com\'daki mevcut bir hesabın hiçbiriyle eşleşmiyor.</string>
+	<string name="login_google_button_suffix">Google ile giriş yapın.</string>
+	<string name="login_error_button">Kapat</string>
+	<string name="enter_wpcom_password_google">Bu Google hesabıyla devam etmek için lütfen eşleşen WordPress.com parolasını sağlayın. Bu yalnızca bir kez sorulacak.</string>
+	<string name="login_google_button_prefix">veya</string>
+	<string name="error_generic_network">Bir ağ hatası oluştu. Lütfen bağlantınızı kontrol edin ve tekrar deneyin.</string>
+	<string name="post_settings_remove_featured_image">Öne çıkan görseli kaldır</string>
+	<string name="post_settings_choose_featured_image">Öne çıkan görsel seç</string>
+	<string name="login_log_in_for_share_intent">İçeriği paylaşmak için WordPress.com\'a giriş yapın.</string>
+	<string name="enter_site_address_share_intent">WordPress sitenizin içeriğini paylaşmak istediğiniz adresini girin.</string>
+	<string name="jetpack_disconnect_error_toast">Site bağlantısı kesilirken hata oluştu</string>
+	<string name="jetpack_disconnect_success_toast">Site bağlantısı kesildi</string>
+	<string name="jetpack_disconnect_confirmation_message">Jetpack\'in siteden bağlantısını kesmek istediğinize emin misiniz?</string>
+	<string name="jetpack_disconnect_confirm">Bağlantıyı kes</string>
+	<string name="jetpack_disconnect_pref_title">"WordPress.com\'dan bağlantıyı kes"</string>
+	<string name="site_settings_jetpack_whitelist_description">Jetpack tarafından engellenmelerini önleyen bir IP adresini veya bir dizi adresleri beyaz listeye ekleyebilirsiniz. IPv4 ve IPv6 kabul edilebilir. Bir aralığı belirtmek için, düşük değeri ve yüksek değeri bir çizgi ile ayırarak girin. Örnek: 12.12.12.1-12.12.12.100</string>
+	<string name="jetpack_require_two_factor_title">İki adımlı kimlik doğrulamayı zorunlu kıl</string>
+	<string name="jetpack_allow_wpcom_sign_in_title">WordPress.com oturum açmaya izin ver</string>
+	<string name="jetpack_match_wpcom_via_email_title">E-posta kullanarak hesapları eşleştir</string>
+	<string name="jetpack_wpcom_sign_in_category_title">WordPress.com oturum açma</string>
+	<string name="jetpack_brute_force_whitelist_title">Beyaz listedeki IP adresleri</string>
+	<string name="jetpack_prevent_brute_force_title">Kötü amaçlı giriş girişimleri engelle</string>
+	<string name="jetpack_prevent_brute_force_category_title">Brute force saldırı koruması</string>
+	<string name="jetpack_send_wp_notifications_title">Anlık bildirimleri gönder</string>
+	<string name="jetpack_send_email_notifications_title">Bildirimleri e-posta ile gönder</string>
+	<string name="jetpack_security_setting_title">Güvenlik</string>
+	<string name="jetpack_monitor_uptime_title">Sitenizin çalışma süresini izleyin</string>
+	<string name="share_action_media">Ortam kütüphanesine ekle</string>
+	<string name="share_intent_pick_site">Site seç</string>
+	<string name="share_intent_adding_to">Şuna ekleniyor</string>
+	<string name="jetpack_site_settings_category_title">Jetpack ayarları</string>
+	<string name="share_media_permission_required">Görsel veya videoları paylaşmak için gereken izinler</string>
+	<string name="share_action_post">Yeni yazıya ekle</string>
+	<string name="invalid_ip_or_range">Geçersiz IP yada IP aralığı</string>
 	<string name="deleting_media_dlg">Siliniyor</string>
 	<string name="confirm_delete_media_video">Bu video silinsin mi?</string>
 	<string name="confirm_delete_media_image">Bu görsel silinsin mi?</string>
@@ -24,6 +59,7 @@ Language: tr
 	<string name="media_edit_url_caption">URL</string>
 	<string name="media_edit_file_details_card_caption">Dosya detayları</string>
 	<string name="copy">Kopyala</string>
+	<string name="media_edit_alttext_text">Alternatif metin</string>
 	<string name="notification_settings_item_sights_and_sounds_blink_light">Işığı yakıp söndür</string>
 	<string name="connect_site">Site bağla</string>
 	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Cihazı titreştir</string>
@@ -66,7 +102,7 @@ Language: tr
 	<string name="async_promo_description">Artık düzenleyiciden ayrılabilirsiniz. Yazınız kaydedilecek ve sahne arkasında yayımlanacaktır! Bir deneyin!</string>
 	<string name="async_promo_title">Güvenle Yayımlayın</string>
 	<string name="editor_uploading_post">Yazınız yükleniyor</string>
-	<string name="uploading_post_media">Ortam dosyası yükleniyor…</string>
+	<string name="uploading_media">Ortam dosyası yükleniyor…</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Emin misiniz? Bu yazının silinmesi durumunda ortam dosyasının karşıya yüklenmesi de iptal edilir.</string>
 	<string name="page_scheduled">Sayfa zamanlandı</string>
 	<string name="post_draft_param">"%s" taslak olarak kaydedildi!</string>
@@ -316,11 +352,11 @@ Language: tr
 	<string name="media_encoder_quality_85">Orta</string>
 	<string name="media_encoder_quality_80">Düşük</string>
 	<string name="media_upload_state_uploaded">Yüklendi</string>
-	<string name="media_upload_state_failed">Başarısız oldu</string>
 	<string name="media_upload_state_deleted">Silindi</string>
 	<string name="media_upload_state_deleting">Siliniyor</string>
 	<string name="media_upload_state_uploading">Yükleniyor</string>
 	<string name="media_upload_state_queued">Sırada</string>
+	<string name="media_upload_state_failed">Yükleme başarısız oldu</string>
 	<string name="update_draft">Taslağı güncelle</string>
 	<string name="keep_editing">Düzenlemeye devam et</string>
 	<string name="image_quality">Görsel kalitesi</string>
@@ -1037,7 +1073,6 @@ Language: tr
 	<string name="delete_sure_post">Bu yazıyı sil</string>
 	<string name="delete_sure">Bu taslağı sil</string>
 	<string name="delete_sure_page">Bu sayfayı sil</string>
-	<string name="confirm_delete_multi_media">Seçili ögeler silinsin mi?</string>
 	<string name="cab_selected">%d seçili</string>
 	<string name="comment_reply_to_user">Şunu cevapla: %s</string>
 	<string name="reader_empty_posts_liked">Henüz hiçbir yazıyı beğenmediniz</string>
@@ -1298,7 +1333,6 @@ Language: tr
 	<string name="signing_in">Giriş yapılıyor...</string>
 	<string name="media_add_popup_title">Medya kütüphanesine ekle</string>
 	<string name="empty_list_default">Bu liste boş</string>
-	<string name="select_from_media_library">Medya kütüphanesinden seç</string>
 	<string name="jetpack_not_found">Jetpack eklentisi bulunamadı</string>
 	<string name="reader_untitled_post">(Başlıksız)</string>
 	<string name="reader_btn_share">Paylaş</string>

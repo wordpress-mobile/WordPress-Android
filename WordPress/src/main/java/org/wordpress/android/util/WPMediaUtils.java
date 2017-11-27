@@ -450,4 +450,34 @@ public class WPMediaUtils {
         return ViewConfiguration.get(context).getScaledMaximumFlingVelocity() / 2;
     }
 
+
+    public interface MediaFetchDoNext {
+        void doNext(Uri uri);
+    }
+
+    public static boolean fetchMediaAndDoNext(Context context, Uri mediaUri, MediaFetchDoNext listener) {
+        if (!MediaUtils.isInMediaStore(mediaUri)) {
+            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+            Uri downloadedUri = null;
+            try {
+                downloadedUri = MediaUtils.downloadExternalMedia(context, mediaUri);
+            } catch (IllegalStateException e) {
+                // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
+                AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
+                CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString() +
+                        " See issue #5823");
+            }
+            if (downloadedUri != null) {
+                listener.doNext(downloadedUri);
+            } else {
+                ToastUtils.showToast(context, R.string.error_downloading_image,
+                        ToastUtils.Duration.SHORT);
+                return false;
+            }
+        } else {
+            listener.doNext(mediaUri);
+        }
+        return true;
+    }
+
 }
