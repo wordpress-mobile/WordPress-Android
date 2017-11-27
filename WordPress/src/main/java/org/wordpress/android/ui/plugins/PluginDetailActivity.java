@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
@@ -143,7 +144,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         mUpdateVersionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (isUpdateAvailable()) {
+                    UpdateSitePluginVersionPayload payload = new UpdateSitePluginVersionPayload(mSite, mPlugin);
+                    mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginVersionAction(payload));
+                }
             }
         });
 
@@ -182,10 +186,12 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         if (!isUpdateAvailable()) {
             mAvailableVersionTextView.setVisibility(View.GONE);
+            mUpdateVersionTextView.setVisibility(View.GONE);
         } else {
             mAvailableVersionTextView.setVisibility(View.VISIBLE);
             mAvailableVersionTextView.setText(getString(R.string.plugin_available_version,
                     mPluginInfo.getVersion()));
+            mUpdateVersionTextView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -225,6 +231,17 @@ public class PluginDetailActivity extends AppCompatActivity {
             mPluginInfo = event.pluginInfo;
             refreshPluginVersionViews();
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSitePluginVersionUpdated(PluginStore.OnSitePluginVersionUpdated event) {
+        if (event.isError()) {
+            AppLog.e(AppLog.T.API, "An error occurred while updating the plugin version with type: "
+                    + event.error.type);
+            return;
+        }
+        refreshPluginVersionViews();
     }
 
     // Helpers
