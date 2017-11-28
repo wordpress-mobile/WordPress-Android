@@ -142,6 +142,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshStates() {
+        if (isFinishing()) {
+            return;
+        }
         mSwitchActive.setChecked(mPlugin.isActive());
         mSwitchAutoupdates.setChecked(mPlugin.isAutoUpdateEnabled());
     }
