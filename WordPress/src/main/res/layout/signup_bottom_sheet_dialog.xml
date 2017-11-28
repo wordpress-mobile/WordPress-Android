@@ -2,7 +2,6 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/grey_lighten_30"
     android:clipChildren="false"
     android:clipToPadding="false"
@@ -21,7 +20,6 @@
         android:layout_width="match_parent"
         android:padding="@dimen/margin_extra_large"
         android:text="@string/signup_terms_of_service_text"
-        app:fixWidowWords="true"
         style="@style/WordPress.Button.Secondary" >
     </android.support.v7.widget.AppCompatButton>
 
