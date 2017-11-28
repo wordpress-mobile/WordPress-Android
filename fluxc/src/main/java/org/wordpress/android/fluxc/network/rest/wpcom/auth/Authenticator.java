@@ -200,7 +200,7 @@ public class Authenticator {
 
     public void sendAuthEmail(final AuthEmailPayload payload) {
         String url = payload.isSignup ? WPCOMREST.auth.send_signup_email.getUrlV1_1()
-                : WPCOMREST.auth.send_login_email.getUrlV1_1();
+                : WPCOMREST.auth.send_login_email.getUrlV1_3();
 
         Map<String, Object> params = new HashMap<>();
         params.put("email", payload.email);
