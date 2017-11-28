@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts;
+package org.wordpress.android.ui.accounts.signup;
 
 import android.content.DialogInterface;
 import android.content.res.Resources;
