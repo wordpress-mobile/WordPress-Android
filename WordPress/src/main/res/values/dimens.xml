@@ -335,4 +335,5 @@
 
     <!--plugin-->
     <dimen name="plugin_icon_size">40dp</dimen>
+    <dimen name="plugin_external_link_image_size">16dp</dimen>
 </resources>

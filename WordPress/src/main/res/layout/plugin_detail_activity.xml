@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
+
+    <android.support.v7.widget.CardView
+        style="@style/PluginCardView"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius">
+
+        <LinearLayout
+            style="@style/PluginCardViewVerticalContainer">
+
+            <RelativeLayout
+                style="@style/PluginCardViewHorizontalContainer">
+
+                <TextView
+                    style="@style/PluginCardViewPrimaryText"
+                    android:text="@string/plugin_detail_label_state_active"/>
+
+                <Switch
+                    android:id="@+id/plugin_state_active"
+                    style="@style/PluginCardViewSecondaryElement"/>
+            </RelativeLayout>
+
+            <View style="@style/PostSettingsDivider"/>
+
+            <RelativeLayout
+                style="@style/PluginCardViewHorizontalContainer">
+
+                <TextView
+                    style="@style/PluginCardViewPrimaryText"
+                    android:text="@string/plugin_detail_label_state_autoupdates"/>
+
+                <Switch
+                    android:id="@+id/plugin_state_autoupdates"
+                    style="@style/PluginCardViewSecondaryElement"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        style="@style/PluginCardView"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius">
+
+        <LinearLayout
+            style="@style/PluginCardViewVerticalContainer">
+
+            <RelativeLayout
+                android:id="@+id/plugin_wp_org_page"
+                style="@style/PluginCardViewHorizontalContainer"
+                android:background="?android:attr/selectableItemBackground">
+
+                <TextView
+                    style="@style/PluginCardViewPrimaryText"
+                    android:text="@string/wordpress_dot_org_plugin_page"/>
+
+                <ImageView
+                    style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                    app:srcCompat="@drawable/ic_external_black_24dp"/>
+            </RelativeLayout>
+
+            <View style="@style/PostSettingsDivider"/>
+
+            <RelativeLayout
+                android:id="@+id/plugin_home_page"
+                style="@style/PluginCardViewHorizontalContainer"
+                android:background="?android:attr/selectableItemBackground">
+
+                <TextView
+                    style="@style/PluginCardViewPrimaryText"
+                    android:text="@string/plugin_home_page"/>
+
+                <ImageView
+                    style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                    app:srcCompat="@drawable/ic_external_black_24dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>
