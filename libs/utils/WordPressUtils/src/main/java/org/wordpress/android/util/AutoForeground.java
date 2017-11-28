@@ -75,8 +75,8 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, EventClass
 
     private boolean mIsForeground;
 
-    protected abstract void registerDispatcher();
-    protected abstract void unregisterDispatcher();
+    protected abstract void onProgressStart();
+    protected abstract void onProgressEnd();
 
     protected abstract EventClass getStateEvent(PhaseClass phase);
     protected abstract Notification getNotification(PhaseClass phase);
@@ -159,14 +159,14 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, EventClass
     @CallSuper
     protected void setState(PhaseClass newPhase) {
         if (!getPhase().isInProgress() && newPhase.isInProgress()) {
-            registerDispatcher();
+            onProgressStart();
         }
 
         track(newPhase);
         notifyState(newPhase);
 
         if (newPhase.isTerminal()) {
-            unregisterDispatcher();
+            onProgressEnd();
             stopSelf();
         }
     }

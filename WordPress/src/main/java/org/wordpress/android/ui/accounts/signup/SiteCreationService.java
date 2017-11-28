@@ -124,12 +124,12 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     @Override
-    protected void registerDispatcher() {
+    protected void onProgressStart() {
         mDispatcher.register(this);
     }
 
     @Override
-    protected void unregisterDispatcher() {
+    protected void onProgressEnd() {
         mDispatcher.unregister(this);
     }
 
