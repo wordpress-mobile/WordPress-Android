@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.accounts.signup;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +18,11 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
     private Resources mResources;
     private TextView mTermsOfServiceText;
 
-    public SignupBottomSheetDialog(@NonNull final AppCompatActivity activity, @NonNull final SignupSheetListener signupSheetListener) {
-        super(activity);
-        final View layout = LayoutInflater.from(activity).inflate(R.layout.signup_bottom_sheet_dialog, null, false);
+    public SignupBottomSheetDialog(@NonNull final Context context, @NonNull final SignupSheetListener signupSheetListener) {
+        super(context);
+        final View layout = LayoutInflater.from(context).inflate(R.layout.signup_bottom_sheet_dialog, null, false);
 
-        mResources = activity.getResources();
+        mResources = context.getResources();
 
         mTermsOfServiceText = (TextView) layout.findViewById(R.id.signup_tos);
         mTermsOfServiceText.setOnClickListener(new View.OnClickListener() {
