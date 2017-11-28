@@ -14,17 +14,16 @@
     android:paddingRight="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_medium" >
 
-    <android.support.v7.widget.AppCompatTextView
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/signup_tos"
-        android:background="?attr/selectableItemBackground"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:padding="@dimen/margin_extra_large"
         android:text="@string/signup_terms_of_service_text"
         app:fixWidowWords="true"
-        style="@style/LoginTheme.TextLabel" >
-    </android.support.v7.widget.AppCompatTextView>
+        style="@style/WordPress.Button.Secondary" >
+    </android.support.v7.widget.AppCompatButton>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/signup_email"

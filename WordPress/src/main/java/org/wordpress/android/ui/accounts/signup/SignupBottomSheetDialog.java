@@ -9,14 +9,13 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.WPBottomSheetDialog;
 
 public class SignupBottomSheetDialog extends WPBottomSheetDialog {
+    private Button mTermsOfServiceText;
     private Resources mResources;
-    private TextView mTermsOfServiceText;
 
     public SignupBottomSheetDialog(@NonNull final Context context, @NonNull final SignupSheetListener signupSheetListener) {
         super(context);
@@ -24,7 +23,7 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
 
         mResources = context.getResources();
 
-        mTermsOfServiceText = (TextView) layout.findViewById(R.id.signup_tos);
+        mTermsOfServiceText = (Button) layout.findViewById(R.id.signup_tos);
         mTermsOfServiceText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
