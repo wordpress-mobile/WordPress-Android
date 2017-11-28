@@ -80,19 +80,22 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         }
     }
 
-    public static class OnSiteCreationStateUpdated {
-        public final SiteCreationPhase state;
+    public static class OnSiteCreationStateUpdated implements AutoForeground.ServiceEvent<SiteCreationPhase> {
+        private final SiteCreationPhase state;
 
         public OnSiteCreationStateUpdated(SiteCreationPhase state) {
             this.state = state;
+        }
+
+        @Override
+        public SiteCreationPhase getState() {
+            return state;
         }
     }
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject ThemeStore mThemeStore;
-
-    private SiteCreationPhase mSiteCreationPhase = SiteCreationPhase.IDLE;
 
     private String mSiteTagline;
     private ThemeModel mSiteTheme;
@@ -117,7 +120,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     public SiteCreationService() {
-        super(OnSiteCreationStateUpdated.class);
+        super(SiteCreationPhase.IDLE, OnSiteCreationStateUpdated.class);
     }
 
     @Override
@@ -128,11 +131,6 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     @Override
     protected void unregisterDispatcher() {
         mDispatcher.unregister(this);
-    }
-
-    @Override
-    protected SiteCreationPhase getPhase() {
-        return mSiteCreationPhase;
     }
 
     @Override
@@ -166,16 +164,6 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     @Override
     protected void trackPhaseUpdate(Map<String, ?> props) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_BACKGROUND_SERVICE_UPDATE, props);
-    }
-
-    @Override
-    protected void setState(SiteCreationPhase currentPhase, SiteCreationPhase newPhase) {
-        super.setState(currentPhase, newPhase);
-        mSiteCreationPhase = newPhase;
-    }
-
-    private void setState(SiteCreationPhase newPhase) {
-        setState(mSiteCreationPhase, newPhase);
     }
 
     @Override
@@ -271,8 +259,9 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         }
 
         final SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
+        final SiteCreationPhase phase = getPhase();
 
-        if (mSiteCreationPhase == SiteCreationPhase.FETCHING_NEW_SITE) {
+        if (phase == SiteCreationPhase.FETCHING_NEW_SITE) {
             Intent intent = new Intent();
             if (site == null) {
                 setState(SiteCreationPhase.FAILURE);
@@ -321,7 +310,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             siteSettings.init(false);
             siteSettings.setTagline(mSiteTagline);
             siteSettings.saveSettings();
-        } else if (mSiteCreationPhase == SiteCreationPhase.SET_TAGLINE) {
+        } else if (phase == SiteCreationPhase.SET_TAGLINE) {
             setState(SiteCreationPhase.SET_THEME);
             activateTheme(site, mSiteTheme);
         }

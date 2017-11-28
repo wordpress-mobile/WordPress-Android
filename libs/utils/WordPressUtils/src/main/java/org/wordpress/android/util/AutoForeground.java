@@ -14,12 +14,14 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import org.greenrobot.eventbus.EventBus;
 
+import org.wordpress.android.util.AutoForeground.ServiceEvent;
 import org.wordpress.android.util.AutoForeground.ServicePhase;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AutoForeground<PhaseClass extends ServicePhase, EventClass> extends Service {
+public abstract class AutoForeground<PhaseClass extends ServicePhase, EventClass extends ServiceEvent<PhaseClass>>
+        extends Service {
 
     public static final int NOTIFICATION_ID_PROGRESS = 1;
     public static final int NOTIFICATION_ID_SUCCESS = 2;
@@ -31,6 +33,10 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, EventClass
         boolean isError();
         boolean isTerminal();
         String name();
+    }
+
+    public interface ServiceEvent<T> {
+        T getState();
     }
 
     public static class ServiceEventConnection {
@@ -65,30 +71,35 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, EventClass
     private final IBinder mBinder = new LocalBinder();
 
     private final Class<EventClass> mEventClass;
+    private final PhaseClass mInitialPhase;
 
     private boolean mIsForeground;
 
     protected abstract void registerDispatcher();
     protected abstract void unregisterDispatcher();
 
-    protected abstract PhaseClass getPhase();
     protected abstract EventClass getStateEvent(PhaseClass phase);
     protected abstract Notification getNotification(PhaseClass phase);
     protected abstract void trackPhaseUpdate(Map<String, ?> props);
 
-    protected AutoForeground(Class<EventClass> eventClass) {
+    protected AutoForeground(PhaseClass initialPhase, Class<EventClass> eventClass) {
         mEventClass = eventClass;
+        mInitialPhase = initialPhase;
     }
 
     public boolean isForeground() {
         return mIsForeground;
     }
 
+    protected PhaseClass getPhase() {
+        return EventBus.getDefault().getStickyEvent(mEventClass).getState();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        notifyState(getPhase());
+        notifyState(mInitialPhase);
     }
 
     @Nullable
@@ -146,8 +157,8 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, EventClass
     }
 
     @CallSuper
-    protected void setState(PhaseClass currentPhase, PhaseClass newPhase) {
-        if (!currentPhase.isInProgress() && newPhase.isInProgress()) {
+    protected void setState(PhaseClass newPhase) {
+        if (!getPhase().isInProgress() && newPhase.isInProgress()) {
             registerDispatcher();
         }
 

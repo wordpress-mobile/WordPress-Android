@@ -95,11 +95,16 @@ public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUp
         }
     }
 
-    public static class OnLoginStateUpdated {
-        public final LoginPhase state;
+    public static class OnLoginStateUpdated implements AutoForeground.ServiceEvent<LoginPhase> {
+        private final LoginPhase state;
 
         OnLoginStateUpdated(LoginPhase state) {
             this.state = state;
+        }
+
+        @Override
+        public LoginPhase getState() {
+            return state;
         }
     }
 
@@ -110,8 +115,6 @@ public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUp
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
-
-    private LoginPhase mLoginPhase = LoginPhase.IDLE;
 
     private String mIdToken;
     private String mService;
@@ -137,7 +140,7 @@ public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUp
     }
 
     public LoginWpcomService() {
-        super(OnLoginStateUpdated.class);
+        super(LoginPhase.IDLE, OnLoginStateUpdated.class);
     }
 
     @Override
@@ -148,11 +151,6 @@ public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUp
     @Override
     protected void unregisterDispatcher() {
         mDispatcher.unregister(this);
-    }
-
-    @Override
-    protected LoginPhase getPhase() {
-        return mLoginPhase;
     }
 
     @Override
@@ -167,7 +165,7 @@ public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUp
             case FETCHING_ACCOUNT:
             case FETCHING_SETTINGS:
             case FETCHING_SITES:
-                return AutoForegroundNotification.progress(this, mLoginPhase.progressPercent,
+                return AutoForegroundNotification.progress(this, phase.progressPercent,
                         R.string.notification_login_title_in_progress, R.string.notification_logging_in);
             case SUCCESS:
                 return AutoForegroundNotification.success(this, R.string.notification_login_title_success,
@@ -192,16 +190,6 @@ public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUp
     @Override
     protected void trackPhaseUpdate(Map<String, ?> props) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE, props);
-    }
-
-    @Override
-    protected void setState(LoginPhase currentPhase, LoginPhase newPhase) {
-        super.setState(currentPhase, newPhase);
-        mLoginPhase = newPhase;
-    }
-
-    private void setState(LoginPhase newPhase) {
-        setState(mLoginPhase, newPhase);
     }
 
     @Override
