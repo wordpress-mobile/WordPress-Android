@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts.signup;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.text.Html;
@@ -14,22 +13,19 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.WPBottomSheetDialog;
 
 public class SignupBottomSheetDialog extends WPBottomSheetDialog {
-    private Button mTermsOfServiceText;
-    private Resources mResources;
-
     public SignupBottomSheetDialog(@NonNull final Context context, @NonNull final SignupSheetListener signupSheetListener) {
         super(context);
         final View layout = LayoutInflater.from(context).inflate(R.layout.signup_bottom_sheet_dialog, null, false);
 
-        mResources = context.getResources();
-
-        mTermsOfServiceText = (Button) layout.findViewById(R.id.signup_tos);
-        mTermsOfServiceText.setOnClickListener(new View.OnClickListener() {
+        Button termsOfServiceText = (Button) layout.findViewById(R.id.signup_tos);
+        termsOfServiceText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 signupSheetListener.onSignupSheetTermsOfServiceClicked();
             }
         });
+        termsOfServiceText.setText(Html.fromHtml(String.format(
+                context.getResources().getString(R.string.signup_terms_of_service_text), "<u>", "</u>")));
 
         Button signupWithEmailButton = (Button) layout.findViewById(R.id.signup_email);
         signupWithEmailButton.setOnClickListener(new View.OnClickListener() {
@@ -65,14 +61,6 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
                 behavior.setPeekHeight(layout.getHeight());
             }
         });
-    }
-
-    public void show() {
-        if (mResources != null) {
-            mTermsOfServiceText.setText(Html.fromHtml(String.format(
-                    mResources.getString(R.string.signup_terms_of_service_text), "<u>", "</u>")));
-            super.show();
-        }
     }
 
     public interface SignupSheetListener {
