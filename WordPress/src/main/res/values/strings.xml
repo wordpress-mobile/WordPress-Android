@@ -2021,4 +2021,11 @@
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
 
+    <string name="notification_site_creation_title_success">Site created!</string>
+    <string name="notification_site_creation_created">Tap to continue.</string>
+    <string name="notification_site_creation_title_in_progress">Creating site…</string>
+    <string name="notification_site_creation_please_wait">Please wait while creating your site.</string>
+    <string name="notification_site_creation_title_stopped">Site creation stopped</string>
+    <string name="notification_site_creation_failed">An error has occurred.</string>
+
 </resources>

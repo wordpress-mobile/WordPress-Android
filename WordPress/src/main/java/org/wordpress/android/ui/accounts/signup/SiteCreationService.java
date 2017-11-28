@@ -1,12 +1,9 @@
 package org.wordpress.android.ui.accounts.signup;
 
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -21,34 +18,66 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.ThemeStore;
-import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreationStateUpdated;
+import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationPhase;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
+import org.wordpress.android.util.AutoForegroundNotification;
 import org.wordpress.android.util.LanguageUtils;
+
+import java.util.Map;
 
 import javax.inject.Inject;
 
-public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdated> {
+public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSiteCreationStateUpdated> {
 
     private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
     private static final String ARG_SITE_TAGLINE = "ARG_SITE_TAGLINE";
     private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
     private static final String ARG_SITE_THEME_ID = "ARG_SITE_THEME_ID";
 
-    public enum SiteCreationPhase {
+    public enum SiteCreationPhase implements AutoForeground.ServicePhase {
         IDLE,
-        NEW_SITE,
-        FETCHING_NEW_SITE,
-        SET_TAGLINE,
-        SET_THEME,
+        NEW_SITE(25),
+        FETCHING_NEW_SITE(50),
+        SET_TAGLINE(75),
+        SET_THEME(100),
         SUCCESS,
-        FAILURE
+        FAILURE;
+
+        public final int progressPercent;
+
+        SiteCreationPhase() {
+            this.progressPercent = 0;
+        }
+
+        SiteCreationPhase(int progressPercent) {
+            this.progressPercent = progressPercent;
+        }
+
+        @Override
+        public boolean isIdle() {
+            return this == IDLE;
+        }
+
+        @Override
+        public boolean isInProgress() {
+            return this != IDLE && !isTerminal();
+        }
+
+        @Override
+        public boolean isError() {
+            return this == FAILURE;
+        }
+
+        @Override
+        public boolean isTerminal() {
+            return this == SUCCESS || isError();
+        }
     }
 
     public static class OnSiteCreationStateUpdated {
@@ -60,7 +89,6 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
     }
 
     @Inject Dispatcher mDispatcher;
-    @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ThemeStore mThemeStore;
 
@@ -84,59 +112,70 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
         context.startService(intent);
     }
 
+    public static void clearSiteCreationServiceState() {
+        clearServiceState(SiteCreationService.OnSiteCreationStateUpdated.class);
+    }
+
     public SiteCreationService() {
         super(OnSiteCreationStateUpdated.class);
     }
 
     @Override
-    protected OnSiteCreationStateUpdated getCurrentStateEvent() {
-        return new OnSiteCreationStateUpdated(mSiteCreationPhase);
+    protected void registerDispatcher() {
+        mDispatcher.register(this);
     }
 
     @Override
-    protected boolean isIdle() {
-        return mSiteCreationPhase == SiteCreationPhase.IDLE;
+    protected void unregisterDispatcher() {
+        mDispatcher.unregister(this);
     }
 
     @Override
-    public boolean isInProgress() {
-        return mSiteCreationPhase != SiteCreationPhase.IDLE
-                && mSiteCreationPhase != SiteCreationPhase.SUCCESS
-                && mSiteCreationPhase != SiteCreationPhase.FAILURE;
+    protected SiteCreationPhase getPhase() {
+        return mSiteCreationPhase;
     }
 
     @Override
-    public boolean isError() {
-        return mSiteCreationPhase == SiteCreationPhase.FAILURE;
+    protected OnSiteCreationStateUpdated getStateEvent(SiteCreationPhase phase) {
+        return new OnSiteCreationStateUpdated(phase);
     }
 
     @Override
-    public Notification getNotification() {
-        switch (mSiteCreationPhase) {
+    public Notification getNotification(SiteCreationPhase phase) {
+        switch (phase) {
             case NEW_SITE:
-                return getProgressNotification(25, "Site creation in: " + mSiteCreationPhase.name());
             case FETCHING_NEW_SITE:
-                return getProgressNotification(50, "Site creation in: " + mSiteCreationPhase.name());
             case SET_TAGLINE:
-                return getProgressNotification(75, "Site creation in: " + mSiteCreationPhase.name());
             case SET_THEME:
-                return getProgressNotification(100, "Site creation in: " + mSiteCreationPhase.name());
+                return AutoForegroundNotification.progress(this, 25,
+                        R.string.notification_site_creation_title_in_progress,
+                        R.string.notification_site_creation_please_wait);
             case SUCCESS:
-                return getSuccessNotification("Site created!");
+                return AutoForegroundNotification.success(this,
+                        R.string.notification_site_creation_title_success,
+                        R.string.notification_site_creation_created);
             case FAILURE:
-                return getFailureNotification("Site creation failed :(");
+                return AutoForegroundNotification.success(this,
+                        R.string.notification_site_creation_title_stopped,
+                        R.string.notification_site_creation_failed);
         }
 
         return null;
     }
 
-    private void setState(SiteCreationPhase siteCreationPhase) {
-        mSiteCreationPhase = siteCreationPhase;
-        notifyState();
+    @Override
+    protected void trackPhaseUpdate(Map<String, ?> props) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_BACKGROUND_SERVICE_UPDATE, props);
+    }
 
-        if (siteCreationPhase == SiteCreationPhase.FAILURE || siteCreationPhase == SiteCreationPhase.SUCCESS) {
-            stopSelf();
-        }
+    @Override
+    protected void setState(SiteCreationPhase currentPhase, SiteCreationPhase newPhase) {
+        super.setState(currentPhase, newPhase);
+        mSiteCreationPhase = newPhase;
+    }
+
+    private void setState(SiteCreationPhase newPhase) {
+        setState(mSiteCreationPhase, newPhase);
     }
 
     @Override
@@ -145,66 +184,14 @@ public class SiteCreationService extends AutoForeground<OnSiteCreationStateUpdat
         ((WordPress) getApplication()).component().inject(this);
 
         AppLog.i(T.MAIN, "SiteCreationService > Created");
-        mDispatcher.register(this);
 
         // TODO: Recover any site creations that were interrupted by the service being stopped?
     }
 
     @Override
     public void onDestroy() {
-        mDispatcher.unregister(this);
         AppLog.i(T.MAIN, "SiteCreationService > Destroyed");
         super.onDestroy();
-    }
-
-    private Intent getPendingIntent() {
-        return new Intent(this, NewBlogActivity.class);
-    }
-
-    private Notification getProgressNotification(int progress, String content) {
-        return new NotificationCompat.Builder(this)
-                .setContentTitle(content)
-                .setSmallIcon(R.drawable.ic_my_sites_24dp)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                        R.mipmap.app_icon))
-                .setAutoCancel(true)
-                .setContentIntent(PendingIntent.getActivity(SiteCreationService.this,
-                        AutoForeground.NOTIFICATION_ID_PROGRESS,
-                        getPendingIntent(),
-                        PendingIntent.FLAG_ONE_SHOT))
-                .setProgress(100, progress, false)
-                .build();
-    }
-
-    private Notification getSuccessNotification(String content) {
-        return new NotificationCompat.Builder(this)
-                .setContentTitle(content)
-                .setSmallIcon(R.drawable.ic_my_sites_24dp)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                        R.mipmap.app_icon))
-                .setAutoCancel(true)
-                .setContentIntent(PendingIntent.getActivity(SiteCreationService.this,
-                        AutoForeground.NOTIFICATION_ID_SUCCESS,
-                        getPendingIntent(),
-                        PendingIntent.FLAG_ONE_SHOT))
-                .build();
-    }
-
-    private Notification getFailureNotification(String content) {
-        return new NotificationCompat.Builder(this)
-                .setContentTitle(content)
-                .setSmallIcon(R.drawable.ic_my_sites_24dp)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                        R.mipmap.app_icon))
-                .setAutoCancel(true)
-                .setContentIntent(PendingIntent.getActivity(SiteCreationService.this,
-                        AutoForeground.NOTIFICATION_ID_FAILURE,
-                        getPendingIntent(),
-                        PendingIntent.FLAG_ONE_SHOT))
-                .build();
     }
 
     @Override
