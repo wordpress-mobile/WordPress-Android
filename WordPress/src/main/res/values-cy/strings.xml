@@ -703,7 +703,6 @@ Language: cy_GB
 	<string name="delete_sure_post">Dileu\'r cofnod</string>
 	<string name="delete_sure">Dileu\'r drafft</string>
 	<string name="delete_sure_page">Dileu\'r dudalen</string>
-	<string name="confirm_delete_multi_media">Dileu\'r eitemau hyn?</string>
 	<string name="signing_out">Allgofnodi…</string>
 	<string name="reader_empty_posts_in_tag">Dim cofnod gyda\'r tag hwn</string>
 	<string name="agree_terms_of_service">Drwy greu cyfrif rydych y cytuno â\'r %1$sAmodau Gwasanaeth%2$s difyr</string>
@@ -860,8 +859,6 @@ Language: cy_GB
 	<string name="http_credentials">Cymwysterau HTTP (dewisol)</string>
 	<string name="open_source_licenses">Trwyddedau cod agored</string>
 	<string name="file_error_create">Methwyd creu ffeil dros dro ar gyfer llwytho cyfryngau. Gwnewch yn siwr bod digon o le rhydd ar eich dyfais.</string>
-	<string name="share_action_post">Cofnod newydd</string>
-	<string name="share_action_media">Llyfrgell cyfrwng</string>
 	<string name="category_name">Enw categori</string>
 	<string name="add_new_category">Ychwanegu categori newydd</string>
 	<string name="view_in_browser">Gweld mewn porwr</string>
@@ -978,7 +975,6 @@ Language: cy_GB
 	<string name="reader_btn_share">Rhannu</string>
 	<string name="reader_untitled_post">(Dideitl)</string>
 	<string name="jetpack_not_found">Heb ganfod ategyn jetpack</string>
-	<string name="select_from_media_library">Dewiswch o\'r llyfrgell cyfryngau</string>
 	<string name="empty_list_default">Mae\'r rhestr hon yn wag</string>
 	<string name="media_add_popup_title">Ychwanegu at y llyfrgell cyfryngau</string>
 	<string name="reader_hint_comment_on_comment">Ateb sylw…</string>

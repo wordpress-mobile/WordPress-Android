@@ -7,10 +7,12 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.google.gms:google-services:3.1.0'
     }
 }
 
 repositories {
+    google()
     jcenter()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
@@ -30,13 +32,13 @@ android {
         dexInProcess = true
     }
 
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "25.0.3"
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-82"
-        versionCode 481
+        versionName "alpha-86"
+        versionCode 495
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -44,7 +46,6 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
-        buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "false"
     }
 
     productFlavors {
@@ -53,13 +54,12 @@ android {
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
-            buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "true"
+            buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
-            buildConfigField "boolean", "ENABLE_READER_COMMENTS_FOR_JETPACK_SITES", "true"
         }
     }
 
@@ -88,17 +88,17 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.+'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
-    compile 'com.android.support:support-compat:25.3.1'
-    compile 'com.android.support:support-core-ui:25.3.1'
-    compile 'com.android.support:support-fragment:25.3.1'
+    compile 'com.android.support:support-compat:26.1.0'
+    compile 'com.android.support:support-core-ui:26.1.0'
+    compile 'com.android.support:support-fragment:26.1.0'
 
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:percent:25.3.1'
-    compile 'com.android.support:preference-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:cardview-v7:26.1.0'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:percent:26.1.0'
+    compile 'com.android.support:preference-v7:26.1.0'
 
     compile 'com.google.android.gms:play-services-gcm:10.0.1'
     compile 'com.google.android.gms:play-services-auth:10.0.1'
@@ -139,7 +139,7 @@ dependencies {
     compile 'com.google.dagger:dagger-android-support:2.11'
     apt 'com.google.dagger:dagger-android-processor:2.11'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3c598e8f305b0346a4fb84e94e0c097f7fe28df5') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:2d5ba6a8475b749ae8cb2248422610e849871caf') {
         exclude group: "com.android.volley";
     }
 
@@ -171,6 +171,18 @@ configurations.all {
     exclude group: 'org.wordpress', module: 'analytics'
 }
 
+task copyGoogleServicesExampleFile(type: Copy) {
+    from('.')
+    into('.')
+    include('google-services.json-example')
+    rename('google-services.json-example', 'google-services.json')
+}
+
+task copyGoogleServicesBuddybuildFile(type: Copy) {
+    from(file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/google-services.json"))
+    into('.')
+}
+
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
     def inputFile = checkGradlePropertiesFile()
@@ -191,8 +203,8 @@ android.applicationVariants.all { variant ->
     variant.generateBuildConfig.dependsOn(generateCrashlyticsConfig)
 }
 
-// Add properties named "wp.xxx" to our BuildConfig
 android.buildTypes.all { buildType ->
+    // Add properties named "wp.xxx" to our BuildConfig
     def inputFile = checkGradlePropertiesFile()
     def properties = loadPropertiesFromFile(inputFile)
     properties.any { property ->
@@ -204,6 +216,22 @@ android.buildTypes.all { buildType ->
             buildType.resValue "string", property.key.replace("wp.res.", "").replace(".", "_").toLowerCase(),
                     "${property.value}"
         }
+    }
+
+    // If Google services file doesn't exist...
+    if (!file("google-services.json").exists()) {
+        // ... copy example file.
+        if (!file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/google-services.json").exists()) {
+            tasks.copyGoogleServicesExampleFile.execute()
+        // ... copy Buddybuild file.
+        } else {
+            tasks.copyGoogleServicesBuddybuildFile.execute()
+        }
+    }
+
+    // Print warning message if example Google services file is used.
+    if ((new File('WordPress/google-services.json').text) == (new File('WordPress/google-services.json-example').text)) {
+        println("WARNING: You're using the example google-services.json file. Google login will fail.")
     }
 }
 
@@ -241,3 +269,6 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
 }
+
+// Keep this at the bottom (https://stackoverflow.com/a/37565535)
+apply plugin: 'com.google.gms.google-services'

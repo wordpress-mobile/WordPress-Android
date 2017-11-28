@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.login;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -70,7 +71,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     @Override
-    protected void setupLabel(TextView label) {
+    protected void setupLabel(@NonNull TextView label) {
         // nothing special to do, no main label on epilogue screen
     }
 

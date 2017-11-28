@@ -1,12 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-10 20:33:47+0000
+Translation-Revision-Date: 2017-11-16 13:58:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
-	<string name="error_media_still_uploading">Please wait for the upload to finish</string>
+	<string name="login_error_suffix">\nMaybe try a different account?</string>
+	<string name="login_error_generic">There was some trouble connecting with the Google account.</string>
+	<string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
+	<string name="login_error_button">Close</string>
+	<string name="login_google_button_suffix">Log in with Google.</string>
+	<string name="login_google_button_prefix">Or you can</string>
+	<string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
+	<string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
+	<string name="post_settings_remove_featured_image">Remove featured image</string>
+	<string name="post_settings_choose_featured_image">Choose featured image</string>
+	<string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
+	<string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
+	<string name="jetpack_disconnect_error_toast">Error disconnecting site</string>
+	<string name="jetpack_disconnect_success_toast">Site disconnected</string>
+	<string name="jetpack_disconnect_confirm">Disconnect</string>
+	<string name="jetpack_disconnect_confirmation_message">Are you sure you want to disconnect Jetpack from the site?</string>
+	<string name="jetpack_disconnect_pref_title">"Disconnect from WordPress.com"</string>
+	<string name="site_settings_jetpack_whitelist_description">You may whitelist an IP address or series of addresses preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
+	<string name="jetpack_require_two_factor_title">Require two-step authentication</string>
+	<string name="jetpack_match_wpcom_via_email_title">Match accounts using email</string>
+	<string name="jetpack_allow_wpcom_sign_in_title">Allow WordPress.com login</string>
+	<string name="jetpack_wpcom_sign_in_category_title">WordPress.com login</string>
+	<string name="jetpack_brute_force_whitelist_title">Whitelisted IP addresses</string>
+	<string name="jetpack_prevent_brute_force_title">Block malicious login attempts</string>
+	<string name="jetpack_prevent_brute_force_category_title">Brute force attack protection</string>
+	<string name="jetpack_send_wp_notifications_title">Send push notifications</string>
+	<string name="jetpack_send_email_notifications_title">Send notifications by email</string>
+	<string name="jetpack_monitor_uptime_title">Monitor your site\'s uptime</string>
+	<string name="jetpack_security_setting_title">Security</string>
+	<string name="jetpack_site_settings_category_title">Jetpack Settings</string>
+	<string name="share_intent_adding_to">Adding to</string>
+	<string name="share_intent_pick_site">Pick site</string>
+	<string name="share_action_media">Add to media library</string>
+	<string name="share_action_post">Add to new post</string>
+	<string name="share_media_permission_required">Permissions required in order to share images or videos</string>
+	<string name="invalid_ip_or_range">Invalid IP or IP range</string>
 	<string name="deleting_media_dlg">Deleting</string>
 	<string name="confirm_delete_media_video">Delete this video?</string>
 	<string name="confirm_delete_media_image">Delete this image?</string>
@@ -22,7 +57,7 @@ Language: en_GB
 	<string name="media_edit_filetype_caption">File Type</string>
 	<string name="media_edit_filename_caption">File Name</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_card_caption">File Details</string>
+	<string name="media_edit_file_details_card_caption">File Details</string>
 	<string name="media_edit_alttext_text">Alt text</string>
 	<string name="copy">Copy</string>
 	<string name="connect_site">Connect Site</string>
@@ -67,7 +102,7 @@ Language: en_GB
 	<string name="async_promo_description">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
 	<string name="async_promo_title">Publish with Confidence</string>
 	<string name="editor_uploading_post">Your post is uploading</string>
-	<string name="uploading_post_media">Uploading media…</string>
+	<string name="uploading_media">Uploading media…</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
 	<string name="page_scheduled">Page scheduled</string>
 	<string name="post_scheduled">Post scheduled</string>
@@ -317,7 +352,7 @@ Language: en_GB
 	<string name="media_encoder_quality_85">Medium</string>
 	<string name="media_encoder_quality_80">Low</string>
 	<string name="media_upload_state_uploaded">Uploaded</string>
-	<string name="media_upload_state_failed">Failed</string>
+	<string name="media_upload_state_failed">Upload Failed</string>
 	<string name="media_upload_state_deleted">Deleted</string>
 	<string name="media_upload_state_deleting">Deleting</string>
 	<string name="media_upload_state_uploading">Uploading</string>
@@ -1036,7 +1071,6 @@ Language: en_GB
 	<string name="themes_fetching">Fetching themes…</string>
 	<string name="ssl_certificate_details">Details</string>
 	<string name="cab_selected">%d selected</string>
-	<string name="confirm_delete_multi_media">Delete selected items?</string>
 	<string name="delete_sure_page">Delete this page</string>
 	<string name="delete_sure">Delete this draft</string>
 	<string name="delete_sure_post">Delete this post</string>
@@ -1203,8 +1237,6 @@ Language: en_GB
 	<string name="invalid_site_url_message">Check that the site URL entered is valid</string>
 	<string name="open_source_licenses">Open source licenses</string>
 	<string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
-	<string name="share_action_media">Media library</string>
-	<string name="share_action_post">New post</string>
 	<string name="category_name">Category name</string>
 	<string name="add_new_category">Add new category</string>
 	<string name="view_in_browser">View in browser</string>
@@ -1322,7 +1354,6 @@ Language: en_GB
 	<string name="reader_btn_share">Share</string>
 	<string name="reader_untitled_post">(Untitled)</string>
 	<string name="jetpack_not_found">Jetpack plugin not found</string>
-	<string name="select_from_media_library">Select from media library</string>
 	<string name="empty_list_default">This list is empty</string>
 	<string name="media_add_popup_title">Add to media library</string>
 	<string name="passcode_turn_on">Turn PIN lock on</string>

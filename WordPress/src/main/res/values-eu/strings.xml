@@ -424,7 +424,6 @@ Language: eu_ES
 	<string name="delete_sure_post">Ezabatu bidalketa hau</string>
 	<string name="delete_sure">Ezabatu zirriborro hau</string>
 	<string name="delete_sure_page">Ezabatu orrialde hau</string>
-	<string name="confirm_delete_multi_media">Ezabatu aukeratutako itemak?</string>
 	<string name="signing_out">Saioa ixten...</string>
 	<string name="more">Gehiago</string>
 	<string name="reader_label_comments_closed">Iruzkinak itxita daude</string>
@@ -582,8 +581,6 @@ Language: eu_ES
 	<string name="sure_to_cancel_edit_comment">Iruzkin honen edizioa ezeztatu?</string>
 	<string name="preview_page">Aurreikusi orrialdea</string>
 	<string name="preview_post">Aurreikusi bidalketa</string>
-	<string name="share_action_post">Bidalketa berria</string>
-	<string name="share_action_media">Media bilduma</string>
 	<string name="file_error_create">Ezin izan da media fitxategia igotzeko behin-behineko fitxategia sortu. Ziurtatu zaitez gailuak behar haina toki duela.</string>
 	<string name="open_source_licenses">Kode irekiko lizentziak</string>
 	<string name="new_post">Bidalketa berria</string>
@@ -660,7 +657,6 @@ Language: eu_ES
 	<string name="reader_btn_follow">Jarraitu</string>
 	<string name="connecting_wpcom">WordPress.com-en saioa hasten</string>
 	<string name="media_add_popup_title">Gehitu media bildumara</string>
-	<string name="select_from_media_library">Aukeratu media bildumatik</string>
 	<string name="jetpack_not_found">Ez da Jetpack plugina aurkitu</string>
 	<string name="reader_untitled_post">(Izenbururik gabe)</string>
 	<string name="reader_btn_unfollow">Jarraitzen</string>

@@ -55,6 +55,7 @@ import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
+import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -65,6 +66,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -132,7 +134,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
     private String mPreviousStatus;
-    private long mCommentIdToFetch;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -875,7 +876,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mIsSubmittingReply = true;
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
+        AnalyticsUtils.trackCommentReplyWithDetails(false, mSite, mComment);
 
         // Pseudo comment reply
         CommentModel reply = new CommentModel();
@@ -1152,6 +1153,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void onCommentModerated(OnCommentChanged event) {
+        // send signal for listeners to perform any needed updates
+        if (mNote != null) {
+            EventBus.getDefault().postSticky(new NotificationEvents.NoteLikeOrModerationStatusChanged(mNote.getId()));
+        }
+
         if (!isAdded()) return;
 
         if (event.isError()) {
@@ -1197,6 +1203,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void onCommentLiked(OnCommentChanged event) {
+        // send signal for listeners to perform any needed updates
+        if (mNote != null) {
+            EventBus.getDefault().postSticky(new NotificationEvents.NoteLikeOrModerationStatusChanged(mNote.getId()));
+        }
+
         if (event.isError()) {
             // Revert button state in case of an error
             toggleLikeButton(!mBtnLikeComment.isActivated());
@@ -1235,12 +1246,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 ToastUtils.showToast(getActivity(), event.error.message);
             }
             return;
-        }
-
-        if (mCommentIdToFetch != 0) {
-            CommentModel comment = mCommentStore.getCommentBySiteAndRemoteId(mSite, mCommentIdToFetch);
-            setComment(comment, mSite);
-            mCommentIdToFetch = 0;
         }
     }
 }

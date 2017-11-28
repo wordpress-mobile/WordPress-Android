@@ -33,7 +33,6 @@ Language: id
 	<string name="media_encoder_quality_85">Sedang</string>
 	<string name="media_encoder_quality_80">Rendah</string>
 	<string name="media_upload_state_uploaded">Diunggah</string>
-	<string name="media_upload_state_failed">Gagal</string>
 	<string name="media_upload_state_deleted">Dihapus</string>
 	<string name="media_upload_state_deleting">Menghapus</string>
 	<string name="media_upload_state_uploading">Mengunggah</string>
@@ -719,7 +718,6 @@ Language: id
 	<string name="delete_sure_post">Hapus pos ini</string>
 	<string name="delete_sure">Hapus draf ini</string>
 	<string name="delete_sure_page">Hapus laman ini</string>
-	<string name="confirm_delete_multi_media">Hapus semua item terpilih?</string>
 	<string name="cab_selected">%d terpilih</string>
 	<string name="reader_empty_posts_liked">Anda belum menyukai pos sama sekali</string>
 	<string name="faq_button">Tanya Jawab Umum</string>
@@ -910,8 +908,6 @@ Language: id
 	<string name="view_in_browser">Tampilkan di peramban</string>
 	<string name="add_new_category">Tambahkan kategori baru</string>
 	<string name="category_name">Nama kategori</string>
-	<string name="share_action_post">Pos baru</string>
-	<string name="share_action_media">Pustaka media</string>
 	<string name="file_error_create">Tidak bisa membuat berkas temporer untuk pengunggahan media. Pastikan masih cukup ruang di perangkat Anda.</string>
 	<string name="open_source_licenses">Lisensi sumber terbuka</string>
 	<string name="http_credentials">HTTP credentials (opsional)</string>
@@ -976,7 +972,6 @@ Language: id
 	<string name="signing_in">Log in…</string>
 	<string name="media_add_popup_title">Tambah ke pustaka media</string>
 	<string name="empty_list_default">List ini masih kosong</string>
-	<string name="select_from_media_library">Pilih dari pustaka media</string>
 	<string name="jetpack_not_found">Plugin Jetpack tidak ditemukan</string>
 	<string name="reader_untitled_post">(Tanpa Judul)</string>
 	<string name="reader_btn_share">Bagikan</string>

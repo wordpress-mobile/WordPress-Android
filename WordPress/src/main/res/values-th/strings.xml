@@ -359,7 +359,6 @@ Language: th
 	<string name="delete_sure">ลบฉบับร่างนี้</string>
 	<string name="delete_sure_page">ลบหน้านี้</string>
 	<string name="cab_selected">%d ถูกเลือก</string>
-	<string name="confirm_delete_multi_media">ลบสิ่งที่ถูกเลือกหรือไม่?</string>
 	<string name="comment_reply_to_user">ตอบกลับไปที่ %s</string>
 	<string name="pages_empty_list">ยังไม่มีหน้า ทำไมไม่สร้างสักหนึ่งหน้า?</string>
 	<string name="older_two_days">เก่ากว่า 2 วัน</string>
@@ -505,8 +504,6 @@ Language: th
 	<string name="error_blog_hidden">บล็อกนี้ถูกซ่อนและไม่สามารถโหลดได้  ให้เปิดใช้งานมันอีกครั้งในการตั้งค่าและลองดูอีกครั้ง</string>
 	<string name="fatal_db_error">มีความผิดพลาดเกิดขึ้นระหว่างการสร้างฐานข้อมูลแอพ  โปรดลองติดตั้งแอพใหม่อีกครั้ง</string>
 	<string name="new_post">เรื่องใหม่</string>
-	<string name="share_action_post">เรื่องใหม่</string>
-	<string name="share_action_media">คลังไฟล์สื่อ</string>
 	<string name="delete_draft">ลบฉบับร่าง</string>
 	<string name="preview_page">ดูก่อนหน้า</string>
 	<string name="preview_post">ดูก่อนเรื่อง</string>
@@ -633,7 +630,6 @@ Language: th
 	<string name="reader_untitled_post">(ไม่มีหัวข้อ)</string>
 	<string name="media_add_popup_title">เพิ่มไปยังคลังสื่อ</string>
 	<string name="empty_list_default">รายชื่อนี้ว่างเปล่า</string>
-	<string name="select_from_media_library">เลือกจากคลังสื่อ</string>
 	<string name="limit_reached">มาถึงขีดจำกัดแล้ว คุณสามารถลองใหม่อีกหนึ่งนาทีภายหลัง  การลองใหม่ก่อนหน้าหนึ่งนาทีจะเพิ่มเวลาที่คุณต้องรอก่อนพ้นการแบนให้ยาวไปอีก  ถ้าคุณคิดว่าสิ่งนี้เป็นความผิดพลาด  โปรดติดต่อฝ่ายช่วยเหลือ</string>
 	<string name="reader_hint_comment_on_comment">ตอบกลับไปที่ความเห็น...</string>
 	<string name="connecting_wpcom">เชื่อมต่อไปยัง WordPress.com</string>

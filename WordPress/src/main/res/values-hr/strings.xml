@@ -401,7 +401,6 @@ Language: hr
 	<string name="delete_sure_post">Obriši ovu obavijest</string>
 	<string name="delete_sure">Obriši ovu skicu</string>
 	<string name="delete_sure_page">Obriši ovu stranicu</string>
-	<string name="confirm_delete_multi_media">Obriši odabrane stavke?</string>
 	<string name="cab_selected">%d odabrano</string>
 	<string name="reader_empty_posts_liked">Niste lajkali ni jednu objavu</string>
 	<string name="faq_button">FAQ</string>
@@ -597,8 +596,6 @@ Language: hr
 	<string name="post_not_published">Status objave nije objavljen</string>
 	<string name="page_not_published">Status stranice nije objavljen</string>
 	<string name="view_in_browser">Pregled u pregledniku</string>
-	<string name="share_action_post">Nova objava</string>
-	<string name="share_action_media">Medijski zapisi</string>
 	<string name="new_post">Nova objava</string>
 	<string name="new_media">Novi medijski zapis</string>
 	<string name="local_changes">Lokalne promjene</string>
@@ -663,7 +660,6 @@ Language: hr
 	<string name="reader_empty_followed_tags">Ne pratite ni jednu oznaku</string>
 	<string name="media_add_popup_title">Dodaj u medijske zapise</string>
 	<string name="empty_list_default">Popis je prazan</string>
-	<string name="select_from_media_library">Odaberi iz medijskih zapisa</string>
 	<string name="jetpack_not_found">Dodatak Jetpack nije pronađen</string>
 	<string name="reader_untitled_post">(Bez naslova)</string>
 	<string name="reader_btn_share">Podjeli</string>

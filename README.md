@@ -55,13 +55,21 @@ When creating your application, you should select "Native client" for the
 application type. The applications manager currently requires a "redirect URL",
 but this isn't used for mobile apps. Just use "https://localhost".
 
-Once you've created your application in the [applications manager][5], you'll
+Once you've created your application in the [applications manager](https://developer.wordpress.com/apps/), you'll
 need to edit the `./gradle.properties` file and change the
 `WP.OAUTH.APP_ID` and `WP.OAUTH.APP_SECRET` fields. Then you can compile and
 run the app on a device or an emulator and try to login with a WordPress.com
 account.
 
 Read more about [OAuth2](https://developer.wordpress.com/docs/oauth2/) and the [WordPress.com REST endpoint](https://developer.wordpress.com/docs/api/).
+
+## Google Configuration ##
+
+Google Sign-In is only available for WordPress.com accounts through the [official app][1].
+Contributors can build and run the app without issue, but Google Sign-In will always fail.
+Google Sign-In requires configuration files which contain client and server information
+that can't be shared publicly. More documentation and guides can be found on the
+[Google Identity Platform website][8].
 
 ## How we work ##
 
@@ -85,3 +93,11 @@ WordPress for Android is an Open Source project covered by the
 [GNU General Public License version 2](LICENSE.md). Note: code
 in the `libs/` directory comes from external libraries, which might
 be covered by a different license compatible with the GPLv2.
+
+[1]: https://play.google.com/store/apps/details?id=org.wordpress.android
+[3]: http://developer.android.com/sdk/installing/studio.html
+[4]: https://make.wordpress.org/chat/
+[5]: https://developer.wordpress.com/apps/
+[6]: https://developer.wordpress.com/docs/oauth2/
+[7]: https://developer.wordpress.com/docs/api/
+[8]: https://developers.google.com/identity/

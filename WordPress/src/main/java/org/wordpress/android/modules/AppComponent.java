@@ -25,6 +25,7 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
+import org.wordpress.android.ui.accounts.login.LoginGoogleFragment;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -51,6 +52,7 @@ import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -93,7 +95,8 @@ import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.ui.themes.ThemeWebActivity;
+import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
 import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -128,7 +131,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(SignInFragment object);
     void inject(NewBlogFragment object);
     void inject(SignInDialogFragment object);
-    void inject(LoginEpilogueFragment object);
     void inject(NewUserFragment object);
 
     void inject(UploadService object);
@@ -136,7 +138,9 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PostUploadHandler object);
 
     void inject(LoginActivity object);
+    void inject(LoginGoogleFragment object);
     void inject(LoginEpilogueActivity object);
+    void inject(LoginEpilogueFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsWidgetConfigureAdapter object);
@@ -184,6 +188,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(MediaPreviewActivity object);
     void inject(MediaPreviewFragment object);
     void inject(MediaSettingsActivity object);
+    void inject(PhotoPickerActivity object);
 
     void inject(PublicizeListActivity object);
     void inject(PublicizeWebViewFragment object);
@@ -224,7 +229,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(WPWebViewActivity object);
     void inject(WPWebViewClient object);
 
-    void inject(ThemeWebActivity object);
+    void inject(ThemeBrowserActivity object);
+    void inject(ThemeBrowserFragment object);
 
     void inject(MediaDeleteService object);
 

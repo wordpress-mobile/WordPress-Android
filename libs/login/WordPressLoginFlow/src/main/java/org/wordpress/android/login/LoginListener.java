@@ -22,8 +22,11 @@ public interface LoginListener {
     // Login Email input callbacks
     void gotWpcomEmail(String email);
     void loginViaSiteAddress();
+    void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired);
+    void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds);
     void loginViaWpcomUsernameInstead();
     void helpEmailScreen(String email);
+    void helpSocialEmailScreen(String email);
 
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
@@ -37,6 +40,8 @@ public interface LoginListener {
 
     // Login email password callbacks
     void needs2fa(String email, String password);
+    void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup, String nonceSms);
+    void needs2faSocialConnect(String email, String password, String idToken, String service);
     void loggedInViaPassword(ArrayList<Integer> oldSitesIds);
     void helpEmailPasswordScreen(String email);
 

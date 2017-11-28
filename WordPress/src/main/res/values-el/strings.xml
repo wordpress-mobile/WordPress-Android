@@ -53,7 +53,6 @@ Language: el_GR
 	<string name="media_encoder_quality_85">Μεσαίο</string>
 	<string name="media_encoder_quality_80">Χαμηλό</string>
 	<string name="media_upload_state_uploaded">Μεταφορτώθηκε</string>
-	<string name="media_upload_state_failed">Απέτυχε</string>
 	<string name="media_upload_state_deleted">Διαγράφηκε</string>
 	<string name="media_upload_state_deleting">Γίνεται διαγραφή</string>
 	<string name="media_upload_state_uploading">Γίνεται μεταφόρτωση</string>
@@ -746,7 +745,6 @@ Language: el_GR
 	<string name="themes_fetching">Λήψη θεμάτων...</string>
 	<string name="ssl_certificate_details">Λεπτομέρειες</string>
 	<string name="cab_selected">%d επιλεγμένα</string>
-	<string name="confirm_delete_multi_media">Διαγραφή επιλεγμένων αντικειμένων;</string>
 	<string name="delete_sure_page">Διαγραφή της σελίδας</string>
 	<string name="delete_sure">Διαγραφή αυτού του προσχεδίου</string>
 	<string name="delete_sure_post">Διαγραφή αυτής της ανάρτησης</string>
@@ -906,8 +904,6 @@ Language: el_GR
 	<string name="invalid_site_url_message">Βεβαιωθείτε ότι το URL του ιστότοπου που δώσατε είναι έγκυρο</string>
 	<string name="open_source_licenses">Άδειες ανοιχτού κώδικα</string>
 	<string name="file_error_create">Αδυναμία δημιουργίας προσωρινού αρχείου για μεταφόρτωση πολυμέσων. Βεβαιωθείτε ότι υπάρχει αρκετός ελεύθερος χώρος στη συσκευή σας.</string>
-	<string name="share_action_media">Βιβλιοθήκη πολυμέσων</string>
-	<string name="share_action_post">Νέα ανάρτηση</string>
 	<string name="category_name">Όνομα κατηγορίας</string>
 	<string name="add_new_category">Προσθήκη νέας κατηγορίας</string>
 	<string name="view_in_browser">Προβολή στον περιηγητή</string>
@@ -1022,7 +1018,6 @@ Language: el_GR
 	<string name="reader_btn_share">Μοιράσου</string>
 	<string name="reader_untitled_post">Ανώνυμο</string>
 	<string name="jetpack_not_found">Δεν βρέθηκε το Jetpack plugin</string>
-	<string name="select_from_media_library">Διαλέξτε από την βιβλιοθήκη πολυμέσων</string>
 	<string name="empty_list_default">Αυτή η λίστα είναι κενή</string>
 	<string name="media_add_popup_title">Προσθήκη στην Βιβλιοθήκη Ππολυμέσων</string>
 	<string name="passcode_turn_on">Ενεργοποιήστε το κλείδωμα PIN</string>

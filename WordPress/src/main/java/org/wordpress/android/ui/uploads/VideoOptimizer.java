@@ -51,7 +51,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
     private float mLastProgress;
 
     public VideoOptimizer(@NonNull MediaModel media, @NonNull VideoOptimizationListener listener) {
-        mCacheDir = MediaUtils.getDiskCacheDir(getContext());
+        mCacheDir = getContext().getCacheDir();
         mListener = listener;
         mMedia = media;
         mInputPath = mMedia.getFilePath();

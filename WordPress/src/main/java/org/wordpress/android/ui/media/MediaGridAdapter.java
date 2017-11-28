@@ -22,7 +22,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -70,7 +69,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
-        void onAdapterItemClicked(View sourceView, int position, boolean isLongClick);
+        void onAdapterItemClicked(int position, boolean isLongClick);
         void onAdapterSelectionCountChanged(int count);
         void onAdapterRequestRetry(int position);
         void onAdapterRequestDelete(int position);
@@ -185,7 +184,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.fileTypeImageView.setImageResource(placeholderResId);
         }
 
-        if (canMultiSelect() && canSelect) {
+        if (mBrowserType.canMultiselect() && canSelect) {
             holder.selectionCountTextView.setVisibility(View.VISIBLE);
             holder.selectionCountTextView.setSelected(isSelected);
             if (isSelected) {
@@ -309,7 +308,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    doAdapterItemClicked(v, position, false);
+                    doAdapterItemClicked(position, false);
                 }
             });
 
@@ -317,7 +316,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 @Override
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
-                    doAdapterItemClicked(v, position, true);
+                    doAdapterItemClicked(position, true);
                     return true;
                 }
             });
@@ -357,7 +356,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             ViewUtils.addCircularShadowOutline(selectionCountTextView);
         }
 
-        private void doAdapterItemClicked(View sourceView, int position, boolean isLongClick) {
+        private void doAdapterItemClicked(int position, boolean isLongClick) {
             if (!isValidPosition(position)) {
                 return;
             }
@@ -366,22 +365,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     toggleItemSelected(GridViewHolder.this, position);
                 }
             } else {
-                if (canMultiSelect() && canSelectPosition(position) && !isLongClick) {
+                if (mBrowserType.canMultiselect() && canSelectPosition(position) && !isLongClick) {
                     setInMultiSelect(true);
                     toggleItemSelected(GridViewHolder.this, position);
                 }
                 if (mCallback != null) {
-                    mCallback.onAdapterItemClicked(sourceView, position, isLongClick);
+                    mCallback.onAdapterItemClicked(position, isLongClick);
                 }
             }
         }
-    }
-
-    /*
-     * multiselect is only availble when inserting into the editor
-     */
-    boolean canMultiSelect() {
-        return mBrowserType == MediaBrowserType.EDITOR_PICKER;
     }
 
     public boolean isInMultiSelect() {

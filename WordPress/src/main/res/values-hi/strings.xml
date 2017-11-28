@@ -327,7 +327,6 @@ Language: hi_IN
 	<string name="link_enter_url_text">कड़ी शब्द (वैकल्पिक)</string>
 	<string name="dlg_spamming_comments">स्पैम के रूप में चिन्हित</string>
 	<string name="new_media">नया मीडिया</string>
-	<string name="share_action_post">नया पोस्ट</string>
 	<string name="new_post">नया पोस्ट</string>
 	<string name="open_source_licenses">मुक्त स्रोत लाइसेंस</string>
 	<string name="page_settings">पृष्ठ सेटिंग्स</string>
@@ -359,7 +358,6 @@ Language: hi_IN
 	<string name="connection_error">कनेक्शन त्रुटि</string>
 	<string name="media_error_no_permission">आपको मीडिया समूह देखने की अनुमति नहीं है</string>
 	<string name="select_categories">श्रेणियों को चुने</string>
-	<string name="share_action_media">मीडिया संग्रह</string>
 	<string name="required_field">आवश्यक फ़ील्ड</string>
 	<string name="saving_changes">परिवर्तन सहेजे जा रहा</string>
 	<string name="site_address">आपका अपने से होस्ट किया हुआ पता(यूआरएल)</string>
@@ -435,7 +433,6 @@ Language: hi_IN
 	<string name="reader_toast_err_view_image">छवि को देखने में असमर्थ</string>
 	<string name="media_add_popup_title">मीडिया संग्रह में जोड़े</string>
 	<string name="reader_toast_err_tag_exists">आप पहले से ही इस टैग का अनुसरण कर रहे है</string>
-	<string name="select_from_media_library">मीडिया लाइब्रेरी से चुने </string>
 	<string name="empty_list_default">इस सूची खाली है</string>
 	<string name="nux_tutorial_get_started_title">शुरू हो जाये!</string>
 	<string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>

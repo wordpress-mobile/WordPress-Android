@@ -37,6 +37,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
@@ -69,13 +70,13 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogTitleTextView;
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
-    private RelativeLayout mThemesContainer;
-    private RelativeLayout mPeopleView;
-    private RelativeLayout mPageView;
-    private RelativeLayout mPlanContainer;
+    private LinearLayout mThemesContainer;
+    private LinearLayout mPeopleView;
+    private LinearLayout mPageView;
+    private LinearLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
-    private RelativeLayout mAdminView;
+    private LinearLayout mAdminView;
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
@@ -151,19 +152,19 @@ public class MySiteFragment extends Fragment
         mBlogTitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_title_label);
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
-        mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
-        mPeopleView = (RelativeLayout) rootView.findViewById(R.id.row_people);
-        mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
+        mThemesContainer = (LinearLayout) rootView.findViewById(R.id.row_themes);
+        mPeopleView = (LinearLayout) rootView.findViewById(R.id.row_people);
+        mPlanContainer = (LinearLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
         mSharingView = rootView.findViewById(R.id.row_sharing);
-        mAdminView = (RelativeLayout) rootView.findViewById(R.id.row_admin);
+        mAdminView = (LinearLayout) rootView.findViewById(R.id.row_admin);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
         mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
-        mPageView = (RelativeLayout) rootView.findViewById(R.id.row_pages);
+        mPageView = (LinearLayout) rootView.findViewById(R.id.row_pages);
 
         // hide the FAB the first time the fragment is created in order to animate it in onResume()
         if (savedInstanceState == null) {
@@ -498,6 +499,35 @@ public class MySiteFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadErrorEvent event) {
+        SiteModel site = getSelectedSite();
+        if (site != null && event.post != null) {
+            if (event.post.getLocalSiteId() == site.getId()) {
+                UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
+                        getActivity().findViewById(R.id.coordinator), true,
+                        event.post, event.errorMessage, site, mDispatcher);
+            }
+        }
+        else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), true,
+                    event.mediaModelList, site, event.errorMessage);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
+        SiteModel site = getSelectedSite();
+        if (site != null && event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
+                    getActivity().findViewById(R.id.coordinator), false,
+                    event.mediaModelList, site, event.successMessage);
+        }
+    }
+
+
+    // FluxC events
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         if (!isAdded()) {
@@ -509,13 +539,13 @@ public class MySiteFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(PostStore.OnPostUploaded event) {
-        final PostModel post = event.post;
         if (isAdded() && event.post != null) {
             SiteModel site = getSelectedSite();
             if (site != null) {
                 if (event.post.getLocalSiteId() == site.getId()) {
                     UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                            getActivity().findViewById(R.id.coordinator), event, site, mDispatcher);
+                            getActivity().findViewById(R.id.coordinator),
+                            event.isError(), event.post, null, site, mDispatcher);
                 }
             }
         }

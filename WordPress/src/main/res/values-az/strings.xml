@@ -174,7 +174,6 @@ Language: az
 	<string name="delete_sure_post">Bu yazını sil</string>
 	<string name="delete_sure">Bu qaralamanı sil</string>
 	<string name="delete_sure_page">Bu səhifəni sil</string>
-	<string name="confirm_delete_multi_media">Seçilmiş maddələr silinsinmi?</string>
 	<string name="cab_selected">%d seçildi</string>
 	<string name="faq_button">ÇVS</string>
 	<string name="create_new_blog_wpcom">WordPress.com bloqu yarat</string>
@@ -333,8 +332,6 @@ Language: az
 	<string name="view_in_browser">Brauzerdə bax</string>
 	<string name="add_new_category">Yeni kateqoriya əlavə et</string>
 	<string name="category_name">Kateqoriya adı</string>
-	<string name="share_action_post">Yeni yazı</string>
-	<string name="share_action_media">Media kitabxanası</string>
 	<string name="file_error_create">Müvəqqəti media faylı yaradıla bilmir. Cihazınızda yetərli böş sahə olduğundan əmin olun.</string>
 	<string name="open_source_licenses">Açıq mənbə lisenziyaları</string>
 	<string name="xmlrpc_error">Əlaqə qurula bilmədi. Saytınızdakı xmlrpc.php-nin tam yolunu daxil edib təkrar yoxlayın</string>
@@ -424,7 +421,6 @@ Language: az
 	<string name="empty_list_default">Bu siyahı boşdur</string>
 	<string name="reader_btn_share">Paylaş</string>
 	<string name="jetpack_not_found">Jetpack plaqini tapılmadı</string>
-	<string name="select_from_media_library">Media kitabxanasından seç</string>
 	<string name="username_invalid">Keçərsiz istifadəçi adı</string>
 	<string name="nux_tutorial_get_started_title">Başlayın!</string>
 	<string name="reader_untitled_post">(adsız)</string>

@@ -231,7 +231,6 @@ Language: es_CL
 	<string name="delete_sure_post">Eliminar esta entrada</string>
 	<string name="delete_sure">Eliminar este borrador</string>
 	<string name="delete_sure_page">Eliminar esta página</string>
-	<string name="confirm_delete_multi_media">¿Quieres eliminar los elementos seleccionados?</string>
 	<string name="cab_selected">%d seleccionados</string>
 	<string name="reader_empty_followed_blogs_title">Todavía no sigues a ningún sitio.</string>
 	<string name="reader_empty_posts_liked">No te ha gustado ninguna entrada.</string>
@@ -422,8 +421,6 @@ Language: es_CL
 	<string name="view_in_browser">Ver en el navegador</string>
 	<string name="add_new_category">Añadir nueva categoría</string>
 	<string name="category_name">Nombre de la categoría</string>
-	<string name="share_action_post">Nueva entrada</string>
-	<string name="share_action_media">Librería multimedia</string>
 	<string name="file_error_create">No se pudo crear un archivo temporal para subir el archivo multimedia. Asegúrate que haya suficiente espacio libre en tu dispositivo.</string>
 	<string name="open_source_licenses">Licencias Open source</string>
 	<string name="http_credentials">Credenciales HTTP (opcional)</string>
@@ -481,7 +478,6 @@ Language: es_CL
 	<string name="nux_add_selfhosted_blog">Añade un sitio auto hospedado</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
-	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="reader_btn_share">Compartir</string>

@@ -31,8 +31,6 @@
 
         <item name="windowActionModeOverlay">true</item>
         <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
-
-        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
@@ -360,6 +358,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">@dimen/my_site_list_row_padding_left</item>
+        <item name="android:paddingStart">@dimen/my_site_list_row_padding_left</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
@@ -367,10 +366,12 @@
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentStart">true</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
@@ -379,6 +380,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
@@ -387,16 +389,18 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MySiteListRowSecondaryElement">
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:gravity">right|center_vertical</item>
     </style>
 
     <style name="MySiteListRowSecondaryTextView" parent="MySiteListRowSecondaryElement">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_alignParentRight">true</item>
@@ -407,6 +411,7 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MySiteListRowSecondaryIcon" parent="MySiteListRowSecondaryElement">
