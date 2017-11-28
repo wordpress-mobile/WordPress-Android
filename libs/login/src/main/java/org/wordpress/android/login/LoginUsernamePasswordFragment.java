@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -25,8 +26,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
-import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
+import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -106,7 +110,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     }
 
     @Override
-    protected void setupLabel(TextView label) {
+    protected void setupLabel(@NonNull TextView label) {
         // no label in this screen
     }
 
@@ -254,15 +258,23 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         }
 
         if (TextUtils.isEmpty(getCleanedUsername())) {
-            showError(getString(R.string.login_empty_username));
+            showUsernameError(getString(R.string.login_empty_username));
             EditTextUtils.showSoftInput(mUsernameInput.getEditText());
+            return;
+        }
+
+        final String password = mPasswordInput.getEditText().getText().toString();
+
+        if (TextUtils.isEmpty(password)) {
+            showPasswordError(getString(R.string.login_empty_password));
+            EditTextUtils.showSoftInput(mPasswordInput.getEditText());
             return;
         }
 
         startProgress();
 
         mRequestedUsername = getCleanedUsername();
-        mRequestedPassword = mPasswordInput.getEditText().getText().toString();
+        mRequestedPassword = password;
 
         // clear up the authentication-failed flag before
         mAuthFailed = false;
@@ -270,11 +282,10 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
         if (mIsWpcom) {
-            AccountStore.AuthenticatePayload payload =
-                    new AccountStore.AuthenticatePayload(mRequestedUsername, mRequestedPassword);
+            AuthenticatePayload payload = new AuthenticatePayload(mRequestedUsername, mRequestedPassword);
             mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
         } else {
-            SiteStore.RefreshSitesXMLRPCPayload selfHostedPayload = new SiteStore.RefreshSitesXMLRPCPayload();
+            RefreshSitesXMLRPCPayload selfHostedPayload = new RefreshSitesXMLRPCPayload();
             selfHostedPayload.username = mRequestedUsername;
             selfHostedPayload.password = mRequestedPassword;
             selfHostedPayload.url = mEndpointAddress;
@@ -305,20 +316,42 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         showError(null);
     }
 
+    private void showUsernameError(String errorMessage) {
+        mUsernameInput.setError(errorMessage);
+        mPasswordInput.setError(null);
+
+        if (errorMessage != null) {
+            requestScrollToView(mUsernameInput);
+        }
+    }
+
+    private void showPasswordError(String errorMessage) {
+        mUsernameInput.setError(null);
+        mPasswordInput.setError(errorMessage);
+
+        if (errorMessage != null) {
+            requestScrollToView(mPasswordInput);
+        }
+    }
+
     private void showError(String errorMessage) {
         mUsernameInput.setError(errorMessage != null ? " " : null);
         mPasswordInput.setError(errorMessage);
 
         if (errorMessage != null) {
-            mPasswordInput.post(new Runnable() {
-                @Override
-                public void run() {
-                    Rect rect = new Rect(); //coordinates to scroll to
-                    mPasswordInput.getHitRect(rect);
-                    mScrollView.requestChildRectangleOnScreen(mPasswordInput, rect, false);
-                }
-            });
+            requestScrollToView(mPasswordInput);
         }
+    }
+
+    private void requestScrollToView(final View view) {
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                Rect rect = new Rect(); //coordinates to scroll to
+                view.getHitRect(rect);
+                mScrollView.requestChildRectangleOnScreen(view, rect, false);
+            }
+        });
     }
 
     @Override
@@ -328,7 +361,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         mRequestedPassword = null;
     }
 
-    private void handleAuthError(AccountStore.AuthenticationErrorType error, String errorMessage) {
+    private void handleAuthError(AuthenticationErrorType error, String errorMessage) {
         switch (error) {
             case INCORRECT_USERNAME_OR_PASSWORD:
             case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
@@ -359,7 +392,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAuthenticationChanged(AccountStore.OnAuthenticationChanged event) {
+    public void onAuthenticationChanged(OnAuthenticationChanged event) {
         // emitted when wpcom site or when the selfhosted login failed (but not when succeeded)
 
         if (!isAdded() || mLoginFinished) {

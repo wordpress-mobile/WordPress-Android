@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -61,7 +62,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     protected @Inject AccountStore mAccountStore;
 
     protected abstract @LayoutRes int getContentLayout();
-    protected abstract void setupLabel(TextView label);
+    protected abstract void setupLabel(@NonNull TextView label);
     protected abstract void setupContent(ViewGroup rootView);
     protected abstract void setupBottomButtons(Button secondaryButton, Button primaryButton);
     protected abstract @StringRes int getProgressBarText();
