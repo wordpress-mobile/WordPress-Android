@@ -232,35 +232,37 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void doStartSignup() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_BUTTON_TAPPED);
         mSignupBottomSheet = new SignupBottomSheetDialog(this, this);
         mSignupBottomSheet.show();
     }
 
     @Override
     public void onSignupSheetDismissed() {
-        // TODO: Add analytics to signup sheet dismisses.
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_DISMISSED);
     }
 
     @Override
     public void onSignupSheetEmailClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
+
         if (mSignupBottomSheet != null) {
             mSignupBottomSheet.hide();
         }
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
         NewUserFragment newUserFragment = NewUserFragment.newInstance();
         slideInFragment(newUserFragment, true, NewUserFragment.TAG);
     }
 
     @Override
     public void onSignupSheetGoogleClicked() {
-        // TODO: Add analytics to Google signup clicks.
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_GOOGLE_BUTTON_TAPPED);
         // TODO: Add Google signup.
     }
 
     @Override
     public void onSignupSheetTermsOfServiceClicked() {
-        // TODO: Add analytics to Terms of Service clicks.
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
         ActivityLauncher.openUrlExternal(this, getResources().getString(R.string.wordpresscom_tos_url));
     }
 

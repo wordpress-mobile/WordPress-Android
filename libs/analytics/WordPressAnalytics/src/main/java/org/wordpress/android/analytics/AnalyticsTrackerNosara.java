@@ -748,6 +748,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_social_error_unknown_user";
             case LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE:
                 return "login_wpcom_background_service_update";
+            case SIGNUP_BUTTON_TAPPED:
+                return "signup_button_tapped";
+            case SIGNUP_EMAIL_BUTTON_TAPPED:
+                return "signup_email_button_tapped";
+            case SIGNUP_GOOGLE_BUTTON_TAPPED:
+                return "signup_google_button_tapped";
+            case SIGNUP_TERMS_OF_SERVICE_TAPPED:
+                return "signup_terms_of_service_tapped";
+            case SIGNUP_DISMISSED:
+                return "signup_dismissed";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
