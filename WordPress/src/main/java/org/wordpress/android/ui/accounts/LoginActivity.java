@@ -547,4 +547,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
         loginEmailFragment.finishLogin();
     }
+
+    @Override
+    public void onGoogleSignupFinished(String name, String email, String photoUrl) {
+        // TODO: Send data returned from Google API to signup epilogue.
+    }
 }
