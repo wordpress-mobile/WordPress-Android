@@ -1954,7 +1954,6 @@
 
     <!-- Login -->
     <string name="log_in">Log In</string>
-    <string name="create_wordpress_site">Create a WordPress site</string>
     <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
     <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
     <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
@@ -2009,6 +2008,12 @@
     <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+
+    <!-- Signup -->
+    <string name="sign_up">Sign Up</string>
+    <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="signup_with_email_button">Sign Up with Email</string>
+    <string name="signup_with_google_button">Sign Up with Google</string>
 
     <string name="notification_login_title_success">Logged in!</string>
     <string name="notification_logged_in">Tap to continue.</string>

@@ -30,6 +30,8 @@ import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
+import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog;
+import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog.SignupSheetListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
@@ -39,13 +41,16 @@ import org.wordpress.android.util.WPActivityUtils;
 import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener, GoogleLoginListener {
+        Callback, LoginListener, GoogleLoginListener, SignupSheetListener {
+    private static final String KEY_SIGNUP_SHEET_DISPLAYED = "KEY_SIGNUP_SHEET_DISPLAYED";
     private static final String KEY_SMARTLOCK_COMPLETED = "KEY_SMARTLOCK_COMPLETED";
 
     private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
 
+    private SignupBottomSheetDialog mSignupSheet;
     private SmartLockHelper mSmartLockHelper;
     private boolean mSmartLockCompleted;
+    private boolean mSignupSheetDisplayed;
 
     private LoginMode mLoginMode;
 
@@ -74,14 +79,20 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                     break;
             }
         } else {
+            mSignupSheetDisplayed = savedInstanceState.getBoolean(KEY_SIGNUP_SHEET_DISPLAYED);
             mSmartLockCompleted = savedInstanceState.getBoolean(KEY_SMARTLOCK_COMPLETED);
+
+            if (mSignupSheetDisplayed) {
+                mSignupSheet = new SignupBottomSheetDialog(this, this);
+                mSignupSheet.show();
+            }
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
+        outState.putBoolean(KEY_SIGNUP_SHEET_DISPLAYED, mSignupSheetDisplayed);
         outState.putBoolean(KEY_SMARTLOCK_COMPLETED, mSmartLockCompleted);
     }
 
@@ -230,9 +241,41 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void doStartSignup() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_BUTTON_TAPPED);
+        mSignupSheet = new SignupBottomSheetDialog(this, this);
+        mSignupSheet.show();
+        mSignupSheetDisplayed = true;
+    }
+
+    @Override
+    public void onSignupSheetDismissed() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_DISMISSED);
+        mSignupSheetDisplayed = false;
+    }
+
+    @Override
+    public void onSignupSheetEmailClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
+
+        if (mSignupSheet != null) {
+            mSignupSheet.hide();
+            mSignupSheetDisplayed = false;
+        }
+
         NewUserFragment newUserFragment = NewUserFragment.newInstance();
         slideInFragment(newUserFragment, true, NewUserFragment.TAG);
+    }
+
+    @Override
+    public void onSignupSheetGoogleClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_GOOGLE_BUTTON_TAPPED);
+        // TODO: Add Google signup.
+    }
+
+    @Override
+    public void onSignupSheetTermsOfServiceClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
+        ActivityLauncher.openUrlExternal(this, getResources().getString(R.string.wordpresscom_tos_url));
     }
 
     @Override
