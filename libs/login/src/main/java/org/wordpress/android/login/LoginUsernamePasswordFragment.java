@@ -228,7 +228,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_USERNAME_PASSWORD_FORM_VIEWED);
+            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_USERNAME_PASSWORD_FORM_VIEWED);
 
             // auto-login if username and password are set for wpcom login
             if (mIsWpcom && !TextUtils.isEmpty(mInputUsername) && !TextUtils.isEmpty(mInputPassword)) {
@@ -409,7 +409,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             mAuthFailed = true;
             AppLog.e(T.API, "Login with username/pass onAuthenticationChanged has error: " + event.error.type + " - " +
                     event.error.message);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
             handleAuthError(event.error.type, event.error.message);
