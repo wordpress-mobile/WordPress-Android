@@ -50,7 +50,7 @@ public enum SiteAction implements IAction {
     FETCH_WPCOM_SITE_BY_URL,
 
     // Remote responses
-    @Action(payloadType = AccountRestPayload.class)
+    @Action(payloadType = SiteModel.class)
     FETCHED_PROFILE,
     @Action(payloadType = SitesModel.class)
     FETCHED_SITES,
