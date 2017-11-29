@@ -37,7 +37,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     private static final int REQUEST_CONNECT = 1000;
 
     protected GoogleApiClient mGoogleApiClient;
-    protected GoogleLoginListener mGoogleLoginListener;
+    protected GoogleListener mGoogleListener;
     protected LoginListener mLoginListener;
     protected String mGoogleEmail;
     protected String mIdToken;
@@ -47,7 +47,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     @Inject
     protected Dispatcher mDispatcher;
 
-    public interface GoogleLoginListener {
+    public interface GoogleListener {
         void onGoogleEmailSelected(String email);
         void onGoogleLoginFinished();
     }
@@ -93,9 +93,9 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
         mLoginListener = (LoginListener) context;
 
         try {
-            mGoogleLoginListener = (GoogleLoginListener) context;
+            mGoogleListener = (GoogleListener) context;
         } catch (ClassCastException exception) {
-            throw new ClassCastException(context.toString() + " must implement GoogleLoginListener");
+            throw new ClassCastException(context.toString() + " must implement GoogleListener");
         }
 
         // Show account dialog when Google API onConnected callback returns before fragment is attached.

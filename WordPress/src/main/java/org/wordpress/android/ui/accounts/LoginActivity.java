@@ -20,7 +20,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.accounts.GoogleFragment.GoogleLoginListener;
+import org.wordpress.android.ui.accounts.GoogleFragment.GoogleListener;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.Login2FaFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
@@ -44,7 +44,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener, GoogleLoginListener, SignupSheetListener {
+        Callback, LoginListener, GoogleListener, SignupSheetListener {
     private static final String KEY_SIGNUP_SHEET_DISPLAYED = "KEY_SIGNUP_SHEET_DISPLAYED";
     private static final String KEY_SMARTLOCK_COMPLETED = "KEY_SMARTLOCK_COMPLETED";
 
@@ -532,7 +532,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         AppLog.d(AppLog.T.NUX, "Google API client connection suspended");
     }
 
-    // GoogleLoginListener
+    // GoogleListener
 
     @Override
     public void onGoogleEmailSelected(String email) {

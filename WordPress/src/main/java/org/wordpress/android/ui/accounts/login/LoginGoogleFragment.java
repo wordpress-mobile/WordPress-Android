@@ -47,7 +47,7 @@ public class LoginGoogleFragment extends GoogleFragment {
                         try {
                             GoogleSignInAccount account = signInResult.getSignInAccount();
                             mGoogleEmail = account.getEmail();
-                            mGoogleLoginListener.onGoogleEmailSelected(mGoogleEmail);
+                            mGoogleListener.onGoogleEmailSelected(mGoogleEmail);
                             mIdToken = account.getIdToken();
                             PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
@@ -131,7 +131,7 @@ public class LoginGoogleFragment extends GoogleFragment {
             showErrorDialog(getString(R.string.login_error_generic));
         } else {
             AppLog.i(T.NUX, "LoginGoogleFragment.onAuthenticationChanged: " + event.toString());
-            mGoogleLoginListener.onGoogleLoginFinished();
+            mGoogleListener.onGoogleLoginFinished();
         }
     }
 
@@ -175,7 +175,7 @@ public class LoginGoogleFragment extends GoogleFragment {
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
                     event.nonceSms);
         } else {
-            mGoogleLoginListener.onGoogleLoginFinished();
+            mGoogleListener.onGoogleLoginFinished();
         }
     }
 }
