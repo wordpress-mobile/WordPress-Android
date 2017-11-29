@@ -2011,7 +2011,7 @@
 
     <!-- Signup -->
     <string name="sign_up">Sign Up</string>
-    <string name="signup_terms_of_service_text">By choosing \"Sign up,\" you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_with_google_button">Sign Up with Google</string>
 
