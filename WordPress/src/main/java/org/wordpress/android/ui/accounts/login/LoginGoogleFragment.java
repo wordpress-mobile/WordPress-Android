@@ -53,7 +53,7 @@ public class LoginGoogleFragment extends GoogleFragment {
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
                         } catch (NullPointerException exception) {
                             disconnectGoogleClient();
-                            AppLog.e(T.NUX, "Cannot get ID token from Google sign-in account.", exception);
+                            AppLog.e(T.NUX, "Cannot get ID token from Google login account.", exception);
                             showErrorDialog(getString(R.string.login_error_generic));
                         }
                     } else {
@@ -61,47 +61,47 @@ public class LoginGoogleFragment extends GoogleFragment {
                         switch (signInResult.getStatus().getStatusCode()) {
                             // Internal error.
                             case GoogleSignInStatusCodes.INTERNAL_ERROR:
-                                AppLog.e(T.NUX, "Google Sign-in Failed: internal error.");
+                                AppLog.e(T.NUX, "Google Login Failed: internal error.");
                                 showErrorDialog(getString(R.string.login_error_generic));
                                 break;
                             // Attempted to connect with an invalid account name specified.
                             case GoogleSignInStatusCodes.INVALID_ACCOUNT:
-                                AppLog.e(T.NUX, "Google Sign-in Failed: invalid account name.");
+                                AppLog.e(T.NUX, "Google Login Failed: invalid account name.");
                                 showErrorDialog(getString(R.string.login_error_generic)
                                         + getString(R.string.login_error_suffix));
                                 break;
                             // Network error.
                             case GoogleSignInStatusCodes.NETWORK_ERROR:
-                                AppLog.e(T.NUX, "Google Sign-in Failed: network error.");
+                                AppLog.e(T.NUX, "Google Login Failed: network error.");
                                 showErrorDialog(getString(R.string.error_generic_network));
                                 break;
                             // Cancelled by the user.
                             case GoogleSignInStatusCodes.SIGN_IN_CANCELLED:
-                                AppLog.e(T.NUX, "Google Sign-in Failed: cancelled by user.");
+                                AppLog.e(T.NUX, "Google Login Failed: cancelled by user.");
                                 break;
                             // Attempt didn't succeed with the current account.
                             case GoogleSignInStatusCodes.SIGN_IN_FAILED:
-                                AppLog.e(T.NUX, "Google Sign-in Failed: current account failed.");
+                                AppLog.e(T.NUX, "Google Login Failed: current account failed.");
                                 showErrorDialog(getString(R.string.login_error_generic));
                                 break;
                             // Attempted to connect, but the user is not signed in.
                             case GoogleSignInStatusCodes.SIGN_IN_REQUIRED:
-                                AppLog.e(T.NUX, "Google Sign-in Failed: user is not signed in.");
+                                AppLog.e(T.NUX, "Google Login Failed: user is not signed in.");
                                 showErrorDialog(getString(R.string.login_error_generic));
                                 break;
                             // Unknown error.
                             default:
-                                AppLog.e(T.NUX, "Google Sign-in Failed: unknown error.");
+                                AppLog.e(T.NUX, "Google Login Failed: unknown error.");
                                 showErrorDialog(getString(R.string.login_error_generic));
                                 break;
                         }
                     }
                 } else if (result == RESULT_CANCELED) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
-                    AppLog.e(T.NUX, "Google Sign-in Failed: result was CANCELED.");
+                    AppLog.e(T.NUX, "Google Login Failed: result was CANCELED.");
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
-                    AppLog.e(T.NUX, "Google Sign-in Failed: result was not OK or CANCELED.");
+                    AppLog.e(T.NUX, "Google Login Failed: result was not OK or CANCELED.");
                     showErrorDialog(getString(R.string.login_error_generic));
                 }
 
