@@ -39,8 +39,10 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     protected GoogleApiClient mGoogleApiClient;
     protected GoogleListener mGoogleListener;
     protected LoginListener mLoginListener;
+    protected String mDisplayName;
     protected String mGoogleEmail;
     protected String mIdToken;
+    protected String mPhotoUrl;
 
     protected static final String SERVICE_TYPE_GOOGLE = "google";
 

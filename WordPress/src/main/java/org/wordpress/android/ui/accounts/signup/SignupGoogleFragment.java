@@ -16,6 +16,9 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.accounts.GoogleFragment;
 import org.wordpress.android.util.AppLog;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
@@ -41,9 +44,10 @@ public class SignupGoogleFragment extends GoogleFragment {
                     if (signInResult.isSuccess()) {
                         try {
                             GoogleSignInAccount account = signInResult.getSignInAccount();
+                            mDisplayName = account.getDisplayName();
                             mGoogleEmail = account.getEmail();
-                            // TODO: Set selected email.
                             mIdToken = account.getIdToken();
+                            mPhotoUrl = removeScaleFromGooglePhotoUrl(account.getPhotoUrl().toString());
                             // TODO: Call social signup endpoint.
                         } catch (NullPointerException exception) {
                             disconnectGoogleClient();
@@ -109,13 +113,24 @@ public class SignupGoogleFragment extends GoogleFragment {
         startActivityForResult(signInIntent, REQUEST_SIGNUP);
     }
 
+    // Remove scale from photo URL path string.  Current URL matches /s96-c, which returns a 96 x 96
+    // pixel image.  Removing /s96-c from the string returns a 512 x 512 pixel image.  Using regular
+    // expressions may help if the photo URL scale value in the returned path changes.
+    private String removeScaleFromGooglePhotoUrl(String photoUrl) {
+        Pattern pattern = Pattern.compile("(/s[0-9]+-c)");
+        Matcher matcher = pattern.matcher(photoUrl);
+        return matcher.find() ? photoUrl.replace(matcher.group(1), "") : photoUrl;
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(AccountStore.OnAuthenticationChanged event) {
+        mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSocialChanged(AccountStore.OnSocialChanged event) {
+        mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl);
     }
 }
