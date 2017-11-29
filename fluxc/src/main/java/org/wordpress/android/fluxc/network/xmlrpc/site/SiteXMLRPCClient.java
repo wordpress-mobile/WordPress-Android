@@ -51,16 +51,16 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
-                        AccountModel account = profileResponseToAccountModel(response);
-                        AccountRestPayload payload = new AccountRestPayload(account, null);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileAction(payload));
+                        SiteModel updatedSite = profileResponseToAccountModel(response, site);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileAction(updatedSite));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AccountRestPayload payload = new AccountRestPayload(null, error);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileAction(payload));
+                        SiteModel site = new SiteModel();
+                        site.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileAction(site));
                     }
                 }
         );
@@ -68,17 +68,16 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    private AccountModel profileResponseToAccountModel(Object response) {
+    private SiteModel profileResponseToAccountModel(Object response, SiteModel site) {
         if (response == null) return null;
 
-        AccountModel account = new AccountModel();
         Map<?, ?> userMap = (Map<?, ?>) response;
-        account.setUserId(MapUtils.getMapLong(userMap, "user_id"));
-        account.setUserName(MapUtils.getMapStr(userMap, "username"));
-        account.setEmail(MapUtils.getMapStr(userMap, "email"));
-        account.setDisplayName(MapUtils.getMapStr(userMap, "display_name"));
+        site.setEmail(MapUtils.getMapStr(userMap, "email"));
+        site.setDisplayName(MapUtils.getMapStr(userMap, "display_name"));
+        site.setFirstName(MapUtils.getMapStr(userMap, "first_name"));
+        site.setLastName(MapUtils.getMapStr(userMap, "last_name"));
 
-        return account;
+        return site;
     }
 
     public void fetchSites(final String xmlrpcUrl, final String username, final String password) {
