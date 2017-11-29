@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
@@ -21,6 +22,8 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload
 @ActionEnum
 public enum SiteAction implements IAction {
     // Remote actions
+    @Action(payloadType = SiteModel.class)
+    FETCH_PROFILE,
     @Action(payloadType = SiteModel.class)
     FETCH_SITE,
     @Action
@@ -47,6 +50,8 @@ public enum SiteAction implements IAction {
     FETCH_WPCOM_SITE_BY_URL,
 
     // Remote responses
+    @Action(payloadType = AccountRestPayload.class)
+    FETCHED_PROFILE,
     @Action(payloadType = SitesModel.class)
     FETCHED_SITES,
     @Action(payloadType = SitesModel.class)

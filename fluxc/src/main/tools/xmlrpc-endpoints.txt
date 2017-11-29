@@ -1,3 +1,4 @@
+wp.getProfile
 wp.getOptions
 wp.getPostFormats
 wp.getUsersBlogs
