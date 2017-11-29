@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -215,9 +214,9 @@ public class SiteStore extends Store {
 
     // OnChanged Events
     public static class OnProfileFetched extends OnChanged<SiteError> {
-        public AccountRestPayload payload;
-        public OnProfileFetched(AccountRestPayload payload) {
-            this.payload = payload;
+        public SiteModel site;
+        public OnProfileFetched(SiteModel site) {
+            this.site = site;
         }
     }
 
@@ -731,7 +730,7 @@ public class SiteStore extends Store {
                 fetchProfile((SiteModel) action.getPayload());
                 break;
             case FETCHED_PROFILE:
-                updateProfile((AccountRestPayload) action.getPayload());
+                updateProfile((SiteModel) action.getPayload());
                 break;
             case FETCH_SITE:
                 fetchSite((SiteModel) action.getPayload());
@@ -834,11 +833,17 @@ public class SiteStore extends Store {
         }
     }
 
-    private void updateProfile(AccountRestPayload payload) {
-        OnProfileFetched event = new OnProfileFetched(payload);
-        if (payload.isError()) {
+    private void updateProfile(SiteModel site) {
+        OnProfileFetched event = new OnProfileFetched(site);
+        if (site.isError()) {
             // TODO: what kind of error could we get here?
-            event.error = SiteErrorUtils.genericToSiteError(payload.error);
+            event.error = SiteErrorUtils.genericToSiteError(site.error);
+        } else {
+            try {
+                SiteSqlUtils.insertOrUpdateSite(site);
+            } catch (DuplicateSiteException e) {
+                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            }
         }
         emitChange(event);
     }

@@ -58,7 +58,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 16;
+        return 17;
     }
 
     @Override
@@ -152,6 +152,13 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "AUTHOR_URL TEXT,THEME_URL TEXT,SCREENSHOT_URL TEXT,DEMO_URL TEXT,DOWNLOAD_URL TEXT,"
                         + "STYLESHEET TEXT,CURRENCY TEXT,PRICE REAL,ACTIVE INTEGER,AUTO_UPDATE INTEGER,"
                         + "AUTO_UPDATE_TRANSLATION INTEGER,IS_WP_COM_THEME INTEGER)");
+                oldVersion++;
+            case 16:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add EMAIL text;");
+                db.execSQL("alter table SiteModel add DISPLAY_NAME text;");
+                db.execSQL("alter table SiteModel add FIRST_NAME text;");
+                db.execSQL("alter table SiteModel add LAST_NAME text;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
