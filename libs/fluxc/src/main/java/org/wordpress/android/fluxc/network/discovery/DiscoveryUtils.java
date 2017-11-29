@@ -69,8 +69,8 @@ public class DiscoveryUtils {
             return false;
         }
         // validate xmlrpc methods
-        String[] requiredMethods = {"wp.getUsersBlogs", "wp.getPage", "wp.getCommentStatusList", "wp.newComment",
-                "wp.editComment", "wp.deleteComment", "wp.getComments", "wp.getComment",
+        String[] requiredMethods = {"wp.getProfile", "wp.getUsersBlogs", "wp.getPage", "wp.getCommentStatusList",
+                "wp.newComment", "wp.editComment", "wp.deleteComment", "wp.getComments", "wp.getComment",
                 "wp.getOptions", "wp.uploadFile", "wp.newCategory",
                 "wp.getTags", "wp.getCategories", "wp.editPage", "wp.deletePage",
                 "wp.newPage", "wp.getPages"};
