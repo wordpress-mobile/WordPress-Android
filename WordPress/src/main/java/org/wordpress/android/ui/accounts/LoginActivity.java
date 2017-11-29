@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import org.wordpress.android.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
+import org.wordpress.android.ui.accounts.login.LoginGoogleFragment;
 import org.wordpress.android.ui.accounts.login.LoginGoogleFragment.GoogleLoginListener;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
@@ -430,6 +432,23 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void helpSocialEmailScreen(String email) {
         launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_SOCIAL);
+    }
+
+    @Override
+    public void showGoogleLoginScreen(Fragment parent) {
+        LoginGoogleFragment loginGoogleFragment;
+        FragmentManager fragmentManager = parent.getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        loginGoogleFragment = (LoginGoogleFragment) fragmentManager.findFragmentByTag(LoginGoogleFragment.TAG);
+
+        if (loginGoogleFragment != null) {
+            fragmentTransaction.remove(loginGoogleFragment);
+        }
+
+        loginGoogleFragment = new LoginGoogleFragment();
+        loginGoogleFragment.setRetainInstance(true);
+        fragmentTransaction.add(loginGoogleFragment, LoginGoogleFragment.TAG);
+        fragmentTransaction.commit();
     }
 
     @Override

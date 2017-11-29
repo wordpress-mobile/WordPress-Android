@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -105,7 +103,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 if (NetworkUtils.checkConnection(getActivity())) {
                     mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                     isSocialLogin = true;
-                    addGoogleFragment();
+                    mLoginListener.showGoogleLoginScreen(LoginEmailFragment.this);
                 }
             }
         });
@@ -167,22 +165,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 mLoginListener.helpEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()));
             }
         }
-    }
-
-    private void addGoogleFragment() {
-        LoginGoogleFragment loginGoogleFragment;
-        FragmentManager fragmentManager = getChildFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        loginGoogleFragment = (LoginGoogleFragment) fragmentManager.findFragmentByTag(LoginGoogleFragment.TAG);
-
-        if (loginGoogleFragment != null) {
-            fragmentTransaction.remove(loginGoogleFragment);
-        }
-
-        loginGoogleFragment = new LoginGoogleFragment();
-        loginGoogleFragment.setRetainInstance(true);
-        fragmentTransaction.add(loginGoogleFragment, LoginGoogleFragment.TAG);
-        fragmentTransaction.commit();
     }
 
     @Override
