@@ -9,6 +9,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
@@ -17,6 +18,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
@@ -37,6 +39,46 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
     public SiteXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent,
                             HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
+    }
+
+    public void fetchProfile(final SiteModel site) {
+        List<Object> params = new ArrayList<>(3);
+        params.add(site.getSelfHostedSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_PROFILE, params,
+                new Listener<Object>() {
+                    @Override
+                    public void onResponse(Object response) {
+                        AccountModel account = profileResponseToAccountModel(response);
+                        AccountRestPayload payload = new AccountRestPayload(account, null);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AccountRestPayload payload = new AccountRestPayload(null, error);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileAction(payload));
+                    }
+                }
+        );
+
+        add(request);
+    }
+
+    private AccountModel profileResponseToAccountModel(Object response) {
+        if (response == null) return null;
+
+        AccountModel account = new AccountModel();
+        Map<?, ?> userMap = (Map<?, ?>) response;
+        account.setUserId(MapUtils.getMapLong(userMap, "user_id"));
+        account.setUserName(MapUtils.getMapStr(userMap, "username"));
+        account.setEmail(MapUtils.getMapStr(userMap, "email"));
+        account.setDisplayName(MapUtils.getMapStr(userMap, "display_name"));
+
+        return account;
     }
 
     public void fetchSites(final String xmlrpcUrl, final String username, final String password) {

@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -22,6 +23,7 @@ import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
@@ -212,6 +214,13 @@ public class SiteStore extends Store {
     }
 
     // OnChanged Events
+    public static class OnProfileFetched extends OnChanged<SiteError> {
+        public AccountRestPayload payload;
+        public OnProfileFetched(AccountRestPayload payload) {
+            this.payload = payload;
+        }
+    }
+
     public static class OnSiteChanged extends OnChanged<SiteError> {
         public int rowsAffected;
         public OnSiteChanged(int rowsAffected) {
@@ -718,6 +727,12 @@ public class SiteStore extends Store {
         }
 
         switch ((SiteAction) actionType) {
+            case FETCH_PROFILE:
+                fetchProfile((SiteModel) action.getPayload());
+                break;
+            case FETCHED_PROFILE:
+                updateProfile((AccountRestPayload) action.getPayload());
+                break;
             case FETCH_SITE:
                 fetchSite((SiteModel) action.getPayload());
                 break;
@@ -809,6 +824,23 @@ public class SiteStore extends Store {
                 handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
                 break;
         }
+    }
+
+    private void fetchProfile(SiteModel site) {
+        if (site.isUsingWpComRestApi()) {
+            // TODO: fetch User when WPCOM
+        } else {
+            mSiteXMLRPCClient.fetchProfile(site);
+        }
+    }
+
+    private void updateProfile(AccountRestPayload payload) {
+        OnProfileFetched event = new OnProfileFetched(payload);
+        if (payload.isError()) {
+            // TODO: what kind of error could we get here?
+            event.error = SiteErrorUtils.genericToSiteError(payload.error);
+        }
+        emitChange(event);
     }
 
     private void fetchSite(SiteModel site) {
