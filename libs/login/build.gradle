@@ -13,6 +13,7 @@ repositories {
     google()
     jcenter()
     maven { url "https://jitpack.io" }
+    maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
 }
 
 android {
@@ -33,7 +34,7 @@ android {
 
 dependencies {
     compile 'org.wordpress:utils:1.18.1'
-    compile 'org.wordpress:analytics:1.3.0'
+    compile 'org.wordpress:analytics:1.3.1'
 
     compile "com.android.support:appcompat-v7:$project.SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:design:$project.SUPPORT_LIBRARY_VERSION"
