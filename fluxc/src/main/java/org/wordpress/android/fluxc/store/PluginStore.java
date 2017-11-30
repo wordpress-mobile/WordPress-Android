@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -160,7 +161,7 @@ public class PluginStore extends Store {
 
     public static class DeleteSitePluginError implements OnChangedError {
         public DeleteSitePluginErrorType type;
-        public String message;
+        @Nullable public String message;
 
         DeleteSitePluginError(DeleteSitePluginErrorType type) {
             this.type = type;
@@ -182,57 +183,57 @@ public class PluginStore extends Store {
 
     public static class FetchSitePluginsError implements OnChangedError {
         public FetchSitePluginsErrorType type;
-        public String message;
+        @Nullable public String message;
 
         FetchSitePluginsError(FetchSitePluginsErrorType type) {
             this.type = type;
         }
 
-        public FetchSitePluginsError(String type, String message) {
+        public FetchSitePluginsError(String type, @Nullable String message) {
             this.type = FetchSitePluginsErrorType.fromString(type);
-            this.message = message == null ? "" : message;
+            this.message = message;
         }
     }
 
     public static class InstallSitePluginError implements OnChangedError {
         public InstallSitePluginErrorType type;
-        public String message;
+        @Nullable public String message;
 
         InstallSitePluginError(InstallSitePluginErrorType type) {
             this.type = type;
         }
 
-        public InstallSitePluginError(String type, String message) {
+        public InstallSitePluginError(String type, @Nullable String message) {
             this.type = InstallSitePluginErrorType.fromString(type);
-            this.message = message == null ? "" : message;
+            this.message = message;
         }
     }
 
     public static class UpdateSitePluginError implements OnChangedError {
         public UpdateSitePluginErrorType type;
-        public String message;
+        @Nullable public String message;
 
         UpdateSitePluginError(UpdateSitePluginErrorType type) {
             this.type = type;
         }
 
-        public UpdateSitePluginError(String type, String message) {
+        public UpdateSitePluginError(String type, @Nullable String message) {
             this.type = UpdateSitePluginErrorType.fromString(type);
-            this.message = message == null ? "" : message;
+            this.message = message;
         }
     }
 
     public static class UpdateSitePluginVersionError implements OnChangedError {
         public UpdateSitePluginVersionErrorType type;
-        public String message;
+        @Nullable public String message;
 
         UpdateSitePluginVersionError(UpdateSitePluginVersionErrorType type) {
             this.type = type;
         }
 
-        public UpdateSitePluginVersionError(String type, String message) {
+        public UpdateSitePluginVersionError(String type, @Nullable String message) {
             this.type = UpdateSitePluginVersionErrorType.fromString(type);
-            this.message = message == null ? "" : message;
+            this.message = message;
         }
     }
 
