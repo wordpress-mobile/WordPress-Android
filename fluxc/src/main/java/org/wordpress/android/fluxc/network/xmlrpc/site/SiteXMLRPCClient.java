@@ -50,7 +50,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         SiteModel updatedSite = profileResponseToAccountModel(response, site);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileAction(updatedSite));
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileXmlRpcAction(updatedSite));
                     }
                 },
                 new BaseErrorListener() {
@@ -58,7 +58,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         SiteModel site = new SiteModel();
                         site.error = error;
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileAction(site));
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileXmlRpcAction(site));
                     }
                 }
         );
