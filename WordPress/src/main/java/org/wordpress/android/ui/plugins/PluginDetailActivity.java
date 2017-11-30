@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
@@ -145,7 +146,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mUpdateVersionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isUpdateAvailable()) {
+                if (NetworkUtils.checkConnection(PluginDetailActivity.this) && isUpdateAvailable()) {
                     UpdateSitePluginVersionPayload payload = new UpdateSitePluginVersionPayload(mSite, mPlugin);
                     mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginVersionAction(payload));
                 }
