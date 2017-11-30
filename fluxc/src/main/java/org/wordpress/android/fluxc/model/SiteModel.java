@@ -214,32 +214,32 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         return mEmail;
     }
 
-    public void setEmail(String mEmail) {
-        this.mEmail = mEmail;
+    public void setEmail(String email) {
+        mEmail = email;
     }
 
     public String getDisplayName() {
         return mDisplayName;
     }
 
-    public void setDisplayName(String mDisplayName) {
-        this.mDisplayName = mDisplayName;
+    public void setDisplayName(String displayName) {
+        mDisplayName = displayName;
     }
 
     public String getFirstName() {
         return mFirstName;
     }
 
-    public void setFirstName(String mFirstName) {
-        this.mFirstName = mFirstName;
+    public void setFirstName(String firstName) {
+        mFirstName = firstName;
     }
 
     public String getLastName() {
         return mLastName;
     }
 
-    public void setLastName(String mLastName) {
-        this.mLastName = mLastName;
+    public void setLastName(String lastName) {
+        mLastName = lastName;
     }
 
     public boolean isVisible() {
