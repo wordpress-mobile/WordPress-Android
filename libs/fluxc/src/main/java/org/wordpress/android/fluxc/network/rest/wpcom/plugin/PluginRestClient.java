@@ -95,9 +95,10 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new Listener<PluginWPComRestResponse>() {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
-                        PluginModel pluginModel = pluginModelFromResponse(site, response);
+                        PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
+                        pluginFromResponse.setId(plugin.getId());
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(
-                                new UpdatedSitePluginPayload(site, pluginModel)));
+                                new UpdatedSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
                 new BaseErrorListener() {
@@ -124,9 +125,10 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new Listener<PluginWPComRestResponse>() {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
-                        PluginModel pluginModel = pluginModelFromResponse(site, response);
+                        PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
+                        pluginFromResponse.setId(plugin.getId());
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(
-                                new DeletedSitePluginPayload(site, pluginModel)));
+                                new DeletedSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
                 new BaseErrorListener() {
@@ -152,9 +154,9 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new Listener<PluginWPComRestResponse>() {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
-                        PluginModel pluginModel = pluginModelFromResponse(site, response);
+                        PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
                         mDispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(
-                                new InstalledSitePluginPayload(site, pluginModel)));
+                                new InstalledSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
                 new BaseErrorListener() {
@@ -188,9 +190,10 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new Listener<PluginWPComRestResponse>() {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
-                        PluginModel pluginModel = pluginModelFromResponse(site, response);
+                        PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
+                        pluginFromResponse.setId(plugin.getId());
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginVersionAction(
-                                new UpdatedSitePluginVersionPayload(site, pluginModel)));
+                                new UpdatedSitePluginVersionPayload(site, pluginFromResponse)));
                     }
                 },
                 new BaseErrorListener() {
