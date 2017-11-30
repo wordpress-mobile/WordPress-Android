@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -37,8 +36,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static android.os.Environment.isExternalStorageRemovable;
 
 public class MediaUtils {
     private static final int DEFAULT_MAX_IMAGE_WIDTH = 1024;
@@ -134,22 +131,22 @@ public class MediaUtils {
     }
 
     /**
-     * Get image width setting from the image width site setting string. This string can be an int, in this case it's
+     * Get image max size setting from the image max size setting string. This string can be an int, in this case it's
      * the maximum image width defined by the site.
      * Examples:
      *   "1000" will return 1000
      *   "Original Size" will return Integer.MAX_VALUE
      *   "Largeur originale" will return Integer.MAX_VALUE
      *   null will return Integer.MAX_VALUE
-     * @param imageWidthSiteSettingString Image width site setting string
+     * @param imageMaxSizeSiteSettingString Image max size site setting string
      * @return Integer.MAX_VALUE if image width is not defined or invalid, maximum image width in other cases.
      */
-    public static int getImageWidthSettingFromString(String imageWidthSiteSettingString) {
-        if (imageWidthSiteSettingString == null) {
+    public static int getImageMaxSizeSettingFromString(String imageMaxSizeSiteSettingString) {
+        if (imageMaxSizeSiteSettingString == null) {
             return Integer.MAX_VALUE;
         }
         try {
-            return Integer.valueOf(imageWidthSiteSettingString);
+            return Integer.valueOf(imageMaxSizeSiteSettingString);
         } catch (NumberFormatException e) {
             return Integer.MAX_VALUE;
         }
@@ -158,25 +155,25 @@ public class MediaUtils {
     /**
      * Calculate and return the maximum allowed image width by comparing the width of the image at its full size with
      * the maximum upload width set in the blog settings
-     * @param imageWidth the image's natural (full) width
-     * @param imageWidthSiteSettingString the maximum upload width set in the site settings
+     * @param imageSize the image's natural (full) width
+     * @param imageMaxSizeSiteSettingString the maximum upload width set in the site settings
      * @return maximum allowed image width
      */
-    public static int getMaximumImageWidth(int imageWidth, String imageWidthSiteSettingString) {
-        int imageWidthBlogSetting = getImageWidthSettingFromString(imageWidthSiteSettingString);
-        int imageWidthPictureSetting = imageWidth == 0 ? Integer.MAX_VALUE : imageWidth;
+    public static int getMaximumImageSize(int imageSize, String imageMaxSizeSiteSettingString) {
+        int imageMaxSizeBlogSetting = getImageMaxSizeSettingFromString(imageMaxSizeSiteSettingString);
+        int imageWidthPictureSetting = imageSize == 0 ? Integer.MAX_VALUE : imageSize;
 
-        if (Math.min(imageWidthPictureSetting, imageWidthBlogSetting) == Integer.MAX_VALUE) {
+        if (Math.min(imageWidthPictureSetting, imageMaxSizeBlogSetting) == Integer.MAX_VALUE) {
             // Default value in case of errors reading the picture size or the blog settings is set to Original size
             return DEFAULT_MAX_IMAGE_WIDTH;
         } else {
-            return Math.min(imageWidthPictureSetting, imageWidthBlogSetting);
+            return Math.min(imageWidthPictureSetting, imageMaxSizeBlogSetting);
         }
     }
 
-    public static int getMaximumImageWidth(Context context, Uri curStream, String imageWidthBlogSettingString) {
+    public static int getMaximumImageSize(Context context, Uri curStream, String imageMaxSizeBlogSettingString) {
         int[] dimensions = ImageUtils.getImageSize(curStream, context);
-        return getMaximumImageWidth(dimensions[0], imageWidthBlogSettingString);
+        return getMaximumImageSize(dimensions[0], imageMaxSizeBlogSettingString);
     }
 
     public static boolean isInMediaStore(Uri mediaUri) {
@@ -207,20 +204,12 @@ public class MediaUtils {
         }
     }
 
-    public static File getDiskCacheDir(Context context) {
-        // Check if media is mounted or storage is built-in, if so, try and use external cache dir
-        // otherwise use internal cache dir
-        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
-                !isExternalStorageRemovable() ? context.getApplicationContext().getExternalCacheDir() :
-                context.getCacheDir();
-    }
-
     public static Uri downloadExternalMedia(Context context, Uri imageUri) {
         if (context == null || imageUri == null) {
             return null;
         }
         String mimeType = context.getContentResolver().getType(imageUri);
-        File cacheDir = getDiskCacheDir(context);
+        File cacheDir = context.getCacheDir();
 
         if (cacheDir != null && !cacheDir.exists()) {
             cacheDir.mkdirs();
@@ -290,7 +279,7 @@ public class MediaUtils {
         return file;
     }
 
-    private static String generateTimeStampedFileName(String mimeType) {
+    public static String generateTimeStampedFileName(String mimeType) {
         return "wp-" + System.currentTimeMillis() + "." + getExtensionForMimeType(mimeType);
     }
 
@@ -549,37 +538,5 @@ public class MediaUtils {
      */
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    public static long getVideoDurationMS(Context context, File file) {
-        if(context == null || file == null) {
-            AppLog.e(AppLog.T.MEDIA, "context and file can't be null.");
-            return 0L;
-        }
-        return getVideoDurationMS(context, Uri.fromFile(file));
-    }
-
-    public static long getVideoDurationMS(Context context, Uri videoUri) {
-        if(context == null || videoUri == null) {
-            AppLog.e(AppLog.T.MEDIA, "context and videoUri can't be null.");
-            return 0L;
-        }
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        try {
-            retriever.setDataSource(context, videoUri);
-        } catch (IllegalArgumentException | SecurityException e) {
-            AppLog.e(AppLog.T.MEDIA, "Can't read duration of the video.", e);
-            return 0L;
-        } catch (RuntimeException e) {
-            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5431
-            AppLog.e(AppLog.T.MEDIA, "Can't read duration of the video due to a Runtime Exception happened setting the datasource", e);
-            return 0L;
-        }
-
-        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        if (time == null) {
-            return 0L;
-        }
-        return Long.parseLong(time);
     }
 }

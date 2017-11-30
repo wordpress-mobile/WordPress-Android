@@ -2,7 +2,6 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.support.annotation.StringRes;
-import android.text.Html;
 import android.text.TextUtils;
 
 import org.wordpress.android.util.AppLog.T;
@@ -96,14 +95,6 @@ public class StringUtils {
             md5 = "0" + md5;
         }
         return md5;
-    }
-
-    public static String unescapeHTML(String html) {
-        if (html != null) {
-            return Html.fromHtml(html).toString();
-        } else {
-            return "";
-        }
     }
 
     /*

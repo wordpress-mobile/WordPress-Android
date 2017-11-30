@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.text.TextUtils;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -195,7 +196,7 @@ public class JSONUtils {
      */
     public static String getStringDecoded(JSONObject json, String name) {
         String value = getString(json, name);
-        return HtmlUtils.fastUnescapeHtml(value);
+        return StringEscapeUtils.unescapeHtml4(value);
     }
 
     /*

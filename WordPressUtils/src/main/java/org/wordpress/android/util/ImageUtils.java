@@ -15,6 +15,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -37,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 
 public class ImageUtils {
     public static int[] getImageSize(Uri uri, Context context){
@@ -109,7 +112,7 @@ public class ImageUtils {
     }
 
 
-    public static int getExifOrientation(String path) {
+    private static int getExifOrientation(String path) {
         if (TextUtils.isEmpty(path)) {
             AppLog.w(AppLog.T.UTILS, "Can't read EXIF orientation. Passed path is empty.");
             return 0;
@@ -281,7 +284,6 @@ public class ImageUtils {
         }
     }
 
-
     public static String getTitleForWPImageSpan(Context ctx, String filePath) {
         if (filePath == null)
             return null;
@@ -381,7 +383,7 @@ public class ImageUtils {
      Resize a bitmap to the targetSize on its longest side.
      */
     public static Bitmap getScaledBitmapAtLongestSide(Bitmap bitmap, int targetSize) {
-        if (bitmap.getWidth() <= targetSize && bitmap.getHeight() <= targetSize) {
+        if (bitmap == null || bitmap.getWidth() <= targetSize && bitmap.getHeight() <= targetSize) {
             // Do not resize.
             return bitmap;
         }
@@ -405,7 +407,7 @@ public class ImageUtils {
     private static boolean resizeImageAndWriteToStream(Context context,
                                                     Uri imageUri,
                                                     String fileExtension,
-                                                    int maxWidth,
+                                                    int maxSize,
                                                     int orientation,
                                                     int quality,
                                                     OutputStream outStream) throws OutOfMemoryError, IOException {
@@ -423,13 +425,7 @@ public class ImageUtils {
             throw e;
         }
 
-        // determine correct scale value (should be power of 2)
-        // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
-        int scale = 1;
-        if (maxWidth > 0 && optBounds.outWidth > maxWidth) {
-            double d = Math.pow(2, (int) Math.round(Math.log(maxWidth / (double) optBounds.outWidth) / Math.log(0.5)));
-            scale = (int) d;
-        }
+        int scale = getScaleForResizing(maxSize, optBounds);
 
         BitmapFactory.Options optActual = new BitmapFactory.Options();
         optActual.inSampleSize = scale;
@@ -449,14 +445,7 @@ public class ImageUtils {
         }
 
         // Resize the bitmap to exact size: calculate exact scale in order to resize accurately
-        float percentage = (float) maxWidth / bmpResized.getWidth();
-        float proportionateHeight = bmpResized.getHeight() * percentage;
-        int finalHeight = (int) Math.rint(proportionateHeight);
-
-        float scaleWidth = ((float) maxWidth) / bmpResized.getWidth();
-        float scaleHeight = ((float) finalHeight) / bmpResized.getHeight();
-
-        float scaleBy = Math.min(scaleWidth, scaleHeight);
+        float scaleBy = getScaleImageBy(maxSize, bmpResized);
 
         Matrix matrix = new Matrix();
         matrix.postScale(scaleBy, scaleBy);
@@ -500,11 +489,11 @@ public class ImageUtils {
      * Given the path to an image, compress and resize it.
      * @param context the passed context
      * @param path the path to the original image
-     * @param maxImageWidth the maximum allowed width
+     * @param maxImageSize the maximum allowed width
      * @param quality the encoder quality
      * @return the path to the optimized image
      */
-    public static String optimizeImage(Context context, String path, int maxImageWidth, int quality) {
+    public static String optimizeImage(Context context, String path, int maxImageSize, int quality) {
         if (context == null || TextUtils.isEmpty(path)) {
             return path;
         }
@@ -528,19 +517,20 @@ public class ImageUtils {
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
         String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
 
-        int selectedWidth = getImageSize(srcImageUri, context)[0];
-        if (selectedWidth == 0) {
+        int[] imageDimensions = getImageSize(srcImageUri, context);
+        int selectedMaxSize = Math.max(imageDimensions[0], imageDimensions[1]);
+        if (selectedMaxSize == 0) {
             // Can't read the src dimensions.
             return path;
         }
 
         // do not optimize if original-size and 100% quality are set.
-        if (maxImageWidth == Integer.MAX_VALUE && quality == 100) {
+        if (maxImageSize == Integer.MAX_VALUE && quality == 100) {
             return path;
         }
 
-        if (selectedWidth > maxImageWidth) {
-            selectedWidth = maxImageWidth;
+        if (selectedMaxSize > maxImageSize) {
+            selectedMaxSize = maxImageSize;
         }
 
         int orientation = getImageOrientation(context, path);
@@ -549,7 +539,15 @@ public class ImageUtils {
         FileOutputStream out;
 
         try {
-            resizedImageFile = File.createTempFile("wp-image-", "." + fileExtension);
+            // try to re-use the same name as prefix of the temp file
+            String prefix = FileUtils.getFileNameFromPath(fileName);
+
+            if (TextUtils.isEmpty(prefix) || prefix.length() < 3) {
+                // prefix must be at least 3 characters
+                prefix = "wp-image";
+            }
+
+            resizedImageFile = File.createTempFile(prefix, "." + fileExtension);
             out = new FileOutputStream(resizedImageFile);
         } catch (IOException e) {
             AppLog.e(AppLog.T.MEDIA, "Failed to create the temp file on storage. Use the original picture instead.");
@@ -560,7 +558,7 @@ public class ImageUtils {
         }
 
         try {
-            boolean res = resizeImageAndWriteToStream(context, srcImageUri, fileExtension, selectedWidth, orientation, quality, out);
+            boolean res = resizeImageAndWriteToStream(context, srcImageUri, fileExtension, selectedMaxSize, orientation, quality, out);
             if (!res) {
                 AppLog.w(AppLog.T.MEDIA, "Failed to compress the optimized image. Use the original picture instead.");
                 return path;
@@ -589,6 +587,48 @@ public class ImageUtils {
         }
 
         return path;
+    }
+
+    /**
+     * Generate a thumbnail from a video url.
+     * Note that this method could take time if network url.
+     *
+     * @param videoPath The path to the video on internet
+     * @return the path to the picture on disk
+     */
+    public static Bitmap getVideoFrameFromVideo(String videoPath, int maxWidth) {
+        if (TextUtils.isEmpty(videoPath) || maxWidth <= 0) {
+            return null;
+        }
+
+        if (new File(videoPath).exists()) {
+            // Local file
+            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
+            return ImageUtils.getScaledBitmapAtLongestSide(thumb, maxWidth);
+        }
+
+        // Not a local file. 
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        Bitmap bitmap = null;
+        try {
+            mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
+            bitmap = mediaMetadataRetriever.getFrameAtTime();
+        } catch (IllegalArgumentException e) {
+            AppLog.e(AppLog.T.MEDIA, "The passed video path is invalid: " + videoPath);
+        } catch (java.lang.RuntimeException e) {
+            // I've see this kind of error on one of my testing device
+            AppLog.e(AppLog.T.MEDIA, "The passed video path is invalid: " + videoPath);
+        }
+        finally {
+            mediaMetadataRetriever.release();
+        }
+
+        if (bitmap == null) {
+            AppLog.w(AppLog.T.MEDIA, "Failed to retrieve frame from the passed video path: " + videoPath);
+            return null;
+        }
+
+        return getScaledBitmapAtLongestSide(bitmap, maxWidth);
     }
 
     /**
@@ -739,15 +779,9 @@ public class ImageUtils {
 
         try {
             // try to re-use the same name as prefix of the temp file
-            String prefix;
-            int dotPos = fileName.indexOf('.');
-            if (dotPos > 0) {
-                prefix = fileName.substring(0, dotPos);
-            } else {
-                prefix = fileName;
-            }
+            String prefix = FileUtils.getFileNameFromPath(fileName);
 
-            if (prefix.length() < 3) {
+            if (TextUtils.isEmpty(prefix) || prefix.length() < 3) {
                 // prefix must be at least 3 characters
                 prefix = "wp-image";
             }
@@ -794,7 +828,6 @@ public class ImageUtils {
         return null;
     }
 
-
     /**
      * This is a wrapper around MediaStore.Images.Thumbnails.getThumbnail that takes in consideration
      * the orientation of the picture.
@@ -830,5 +863,34 @@ public class ImageUtils {
         }
 
         return null;
+    }
+
+    // determine correct scale value (should be power of 2)
+    // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
+    protected static int getScaleForResizing(int maxSize, BitmapFactory.Options optBounds) {
+        if (maxSize < 1) {
+            return 1;
+        }
+
+        int maxDimension = Math.max(optBounds.outWidth, optBounds.outHeight);
+        int scale = 1;
+        
+        while (maxDimension / scale / 2 >= maxSize) {
+            scale *= 2;
+        }
+        return scale;
+    }
+
+    private static float getScaleImageBy(float maxSize, Bitmap bmpResized) {
+        int divideBy = Math.max(bmpResized.getHeight(), bmpResized.getWidth());
+        float percentage = maxSize / divideBy;
+
+        float proportionateHeight = bmpResized.getHeight() * percentage;
+        int finalHeight = (int) Math.rint(proportionateHeight);
+
+        float scaleWidth = maxSize / bmpResized.getWidth();
+        float scaleHeight = ((float) finalHeight) / bmpResized.getHeight();
+
+        return Math.min(scaleWidth, scaleHeight);
     }
 }
