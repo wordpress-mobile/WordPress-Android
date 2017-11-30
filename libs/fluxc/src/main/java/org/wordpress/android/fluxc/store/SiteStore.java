@@ -729,7 +729,7 @@ public class SiteStore extends Store {
                 fetchProfileXmlRpc((SiteModel) action.getPayload());
                 break;
             case FETCHED_PROFILE_XML_RPC:
-                updateSite((SiteModel) action.getPayload());
+                updateSiteProfile((SiteModel) action.getPayload());
                 break;
             case FETCH_SITE:
                 fetchSite((SiteModel) action.getPayload());
@@ -838,6 +838,21 @@ public class SiteStore extends Store {
 
     private void fetchSitesXmlRpc(RefreshSitesXMLRPCPayload payload) {
         mSiteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password);
+    }
+
+    private void updateSiteProfile(SiteModel siteModel) {
+        OnProfileFetched event = new OnProfileFetched(siteModel);
+        if (siteModel.isError()) {
+            // TODO: what kind of error could we get here?
+            event.error = SiteErrorUtils.genericToSiteError(siteModel.error);
+        } else {
+            try {
+                SiteSqlUtils.insertOrUpdateSite(siteModel);
+            } catch (DuplicateSiteException e) {
+                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            }
+        }
+        emitChange(event);
     }
 
     private void updateSite(SiteModel siteModel) {
