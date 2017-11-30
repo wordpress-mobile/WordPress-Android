@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -52,6 +53,16 @@ public class PluginStore extends Store {
         public PluginModel plugin;
 
         public UpdateSitePluginPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+    }
+
+    public static class UpdateSitePluginVersionPayload extends Payload<BaseNetworkError> {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public UpdateSitePluginVersionPayload(SiteModel site, PluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
@@ -131,14 +142,34 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class UpdatedSitePluginVersionPayload extends Payload<UpdateSitePluginVersionError> {
+        public SiteModel site;
+        public PluginModel plugin;
+
+        public UpdatedSitePluginVersionPayload(SiteModel site, PluginModel plugin) {
+            this.site = site;
+            this.plugin = plugin;
+        }
+
+        public UpdatedSitePluginVersionPayload(SiteModel site, UpdateSitePluginVersionError error) {
+            this.site = site;
+            this.error = error;
+        }
+    }
+
     // Errors
 
     public static class DeleteSitePluginError implements OnChangedError {
         public DeleteSitePluginErrorType type;
-        public String message;
+        @Nullable public String message;
 
-        public DeleteSitePluginError(DeleteSitePluginErrorType type) {
+        DeleteSitePluginError(DeleteSitePluginErrorType type) {
             this.type = type;
+        }
+
+        public DeleteSitePluginError(String type, @Nullable String message) {
+            this.type = DeleteSitePluginErrorType.fromString(type);
+            this.message = message;
         }
     }
 
@@ -152,33 +183,57 @@ public class PluginStore extends Store {
 
     public static class FetchSitePluginsError implements OnChangedError {
         public FetchSitePluginsErrorType type;
-        public String message;
+        @Nullable public String message;
 
-        public FetchSitePluginsError(FetchSitePluginsErrorType type) {
-            this(type, "");
+        FetchSitePluginsError(FetchSitePluginsErrorType type) {
+            this.type = type;
         }
 
-        FetchSitePluginsError(FetchSitePluginsErrorType type, String message) {
-            this.type = type;
+        public FetchSitePluginsError(String type, @Nullable String message) {
+            this.type = FetchSitePluginsErrorType.fromString(type);
             this.message = message;
         }
     }
 
     public static class InstallSitePluginError implements OnChangedError {
         public InstallSitePluginErrorType type;
-        public String message;
+        @Nullable public String message;
 
-        public InstallSitePluginError(InstallSitePluginErrorType type) {
+        InstallSitePluginError(InstallSitePluginErrorType type) {
             this.type = type;
+        }
+
+        public InstallSitePluginError(String type, @Nullable String message) {
+            this.type = InstallSitePluginErrorType.fromString(type);
+            this.message = message;
         }
     }
 
     public static class UpdateSitePluginError implements OnChangedError {
         public UpdateSitePluginErrorType type;
-        public String message;
+        @Nullable public String message;
 
-        public UpdateSitePluginError(UpdateSitePluginErrorType type) {
+        UpdateSitePluginError(UpdateSitePluginErrorType type) {
             this.type = type;
+        }
+
+        public UpdateSitePluginError(String type, @Nullable String message) {
+            this.type = UpdateSitePluginErrorType.fromString(type);
+            this.message = message;
+        }
+    }
+
+    public static class UpdateSitePluginVersionError implements OnChangedError {
+        public UpdateSitePluginVersionErrorType type;
+        @Nullable public String message;
+
+        UpdateSitePluginVersionError(UpdateSitePluginVersionErrorType type) {
+            this.type = type;
+        }
+
+        public UpdateSitePluginVersionError(String type, @Nullable String message) {
+            this.type = UpdateSitePluginVersionErrorType.fromString(type);
+            this.message = message;
         }
     }
 
@@ -189,7 +244,18 @@ public class PluginStore extends Store {
         UNAUTHORIZED,
         DELETE_PLUGIN_ERROR,
         NOT_AVAILABLE, // Return for non-jetpack sites
-        UNKNOWN_PLUGIN
+        UNKNOWN_PLUGIN;
+
+        public static DeleteSitePluginErrorType fromString(String string) {
+            if (string != null) {
+                for (DeleteSitePluginErrorType v : DeleteSitePluginErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum FetchPluginInfoErrorType {
@@ -200,7 +266,18 @@ public class PluginStore extends Store {
     public enum FetchSitePluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
-        NOT_AVAILABLE // Return for non-jetpack sites
+        NOT_AVAILABLE; // Return for non-jetpack sites
+
+        public static FetchSitePluginsErrorType fromString(String string) {
+            if (string != null) {
+                for (FetchSitePluginsErrorType v : FetchSitePluginsErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum InstallSitePluginErrorType {
@@ -211,7 +288,21 @@ public class PluginStore extends Store {
         NO_PLUGIN_INSTALLED,
         NOT_AVAILABLE, // Return for non-jetpack sites
         PLUGIN_ALREADY_INSTALLED,
-        UNAUTHORIZED
+        UNAUTHORIZED;
+
+        public static InstallSitePluginErrorType fromString(String string) {
+            if (string != null) {
+                if (string.equalsIgnoreCase("local-file-does-not-exist")) {
+                    return LOCAL_FILE_DOES_NOT_EXIST;
+                }
+                for (InstallSitePluginErrorType v : InstallSitePluginErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum UpdateSitePluginErrorType {
@@ -220,7 +311,35 @@ public class PluginStore extends Store {
         DEACTIVATION_ERROR,
         NOT_AVAILABLE, // Return for non-jetpack sites
         UNAUTHORIZED,
-        UNKNOWN_PLUGIN
+        UNKNOWN_PLUGIN;
+
+        public static UpdateSitePluginErrorType fromString(String string) {
+            if (string != null) {
+                for (UpdateSitePluginErrorType v : UpdateSitePluginErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
+    }
+
+    public enum UpdateSitePluginVersionErrorType {
+        GENERIC_ERROR,
+        NOT_AVAILABLE, // Return for non-jetpack sites
+        UPDATE_FAIL;
+
+        public static UpdateSitePluginVersionErrorType fromString(String string) {
+            if (string != null) {
+                for (UpdateSitePluginVersionErrorType v : UpdateSitePluginVersionErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     // OnChanged Events
@@ -244,6 +363,15 @@ public class PluginStore extends Store {
         public SiteModel site;
         public PluginModel plugin;
         public OnSitePluginUpdated(SiteModel site) {
+            this.site = site;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static class OnSitePluginVersionUpdated extends OnChanged<UpdateSitePluginVersionError> {
+        public SiteModel site;
+        public PluginModel plugin;
+        public OnSitePluginVersionUpdated(SiteModel site) {
             this.site = site;
         }
     }
@@ -297,6 +425,9 @@ public class PluginStore extends Store {
             case UPDATE_SITE_PLUGIN:
                 updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
                 break;
+            case UPDATE_SITE_PLUGIN_VERSION:
+                updateSitePluginVersion((UpdateSitePluginVersionPayload) action.getPayload());
+                break;
             case DELETE_SITE_PLUGIN:
                 deleteSitePlugin((DeleteSitePluginPayload) action.getPayload());
                 break;
@@ -311,6 +442,9 @@ public class PluginStore extends Store {
                 break;
             case UPDATED_SITE_PLUGIN:
                 updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
+                break;
+            case UPDATED_SITE_PLUGIN_VERSION:
+                updatedSitePluginVersion((UpdatedSitePluginVersionPayload) action.getPayload());
                 break;
             case DELETED_SITE_PLUGIN:
                 deletedSitePlugin((DeletedSitePluginPayload) action.getPayload());
@@ -354,6 +488,17 @@ public class PluginStore extends Store {
             UpdateSitePluginError error = new UpdateSitePluginError(UpdateSitePluginErrorType.NOT_AVAILABLE);
             UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site, error);
             updatedSitePlugin(errorPayload);
+        }
+    }
+
+    private void updateSitePluginVersion(UpdateSitePluginVersionPayload payload) {
+        if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
+            mPluginRestClient.updateSitePluginVersion(payload.site, payload.plugin);
+        } else {
+            UpdateSitePluginVersionError error = new UpdateSitePluginVersionError(
+                    UpdateSitePluginVersionErrorType.NOT_AVAILABLE);
+            UpdatedSitePluginVersionPayload errorPayload = new UpdatedSitePluginVersionPayload(payload.site, error);
+            updatedSitePluginVersion(errorPayload);
         }
     }
 
@@ -405,7 +550,18 @@ public class PluginStore extends Store {
         } else {
             payload.plugin.setLocalSiteId(payload.site.getId());
             event.plugin = payload.plugin;
-            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
+        }
+        emitChange(event);
+    }
+
+    private void updatedSitePluginVersion(UpdatedSitePluginVersionPayload payload) {
+        OnSitePluginVersionUpdated event = new OnSitePluginVersionUpdated(payload.site);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            event.plugin = payload.plugin;
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
         }
         emitChange(event);
     }
@@ -415,7 +571,6 @@ public class PluginStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            payload.plugin.setLocalSiteId(payload.site.getId());
             event.plugin = payload.plugin;
             PluginSqlUtils.deleteSitePlugin(payload.site, payload.plugin);
         }
@@ -427,9 +582,8 @@ public class PluginStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            payload.plugin.setLocalSiteId(payload.site.getId());
             event.plugin = payload.plugin;
-            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
         }
         emitChange(event);
     }
