@@ -725,11 +725,11 @@ public class SiteStore extends Store {
         }
 
         switch ((SiteAction) actionType) {
-            case FETCH_PROFILE:
-                fetchProfile((SiteModel) action.getPayload());
+            case FETCH_PROFILE_XML_RPC:
+                fetchProfileXmlRpc((SiteModel) action.getPayload());
                 break;
-            case FETCHED_PROFILE:
-                updateProfile((SiteModel) action.getPayload());
+            case FETCHED_PROFILE_XML_RPC:
+                updateSite((SiteModel) action.getPayload());
                 break;
             case FETCH_SITE:
                 fetchSite((SiteModel) action.getPayload());
@@ -824,27 +824,8 @@ public class SiteStore extends Store {
         }
     }
 
-    private void fetchProfile(SiteModel site) {
-        if (site.isUsingWpComRestApi()) {
-            // TODO: fetch User when WPCOM
-        } else {
-            mSiteXMLRPCClient.fetchProfile(site);
-        }
-    }
-
-    private void updateProfile(SiteModel site) {
-        OnProfileFetched event = new OnProfileFetched(site);
-        if (site.isError()) {
-            // TODO: what kind of error could we get here?
-            event.error = SiteErrorUtils.genericToSiteError(site.error);
-        } else {
-            try {
-                SiteSqlUtils.insertOrUpdateSite(site);
-            } catch (DuplicateSiteException e) {
-                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
-            }
-        }
-        emitChange(event);
+    private void fetchProfileXmlRpc(SiteModel site) {
+        mSiteXMLRPCClient.fetchProfile(site);
     }
 
     private void fetchSite(SiteModel site) {
