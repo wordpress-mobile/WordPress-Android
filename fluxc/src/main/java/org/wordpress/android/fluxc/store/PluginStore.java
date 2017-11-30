@@ -223,18 +223,51 @@ public class PluginStore extends Store {
         UNAUTHORIZED,
         DELETE_PLUGIN_ERROR,
         NOT_AVAILABLE, // Return for non-jetpack sites
-        UNKNOWN_PLUGIN
+        UNKNOWN_PLUGIN;
+
+        public static DeleteSitePluginErrorType fromString(String string) {
+            if (string != null) {
+                for (DeleteSitePluginErrorType v : DeleteSitePluginErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum FetchPluginInfoErrorType {
         EMPTY_RESPONSE,
-        GENERIC_ERROR
+        GENERIC_ERROR;
+
+        public static FetchPluginInfoErrorType fromString(String string) {
+            if (string != null) {
+                for (FetchPluginInfoErrorType v : FetchPluginInfoErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum FetchSitePluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
-        NOT_AVAILABLE // Return for non-jetpack sites
+        NOT_AVAILABLE; // Return for non-jetpack sites
+
+        public static FetchSitePluginsErrorType fromString(String string) {
+            if (string != null) {
+                for (FetchSitePluginsErrorType v : FetchSitePluginsErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum InstallSitePluginErrorType {
@@ -245,7 +278,21 @@ public class PluginStore extends Store {
         NO_PLUGIN_INSTALLED,
         NOT_AVAILABLE, // Return for non-jetpack sites
         PLUGIN_ALREADY_INSTALLED,
-        UNAUTHORIZED
+        UNAUTHORIZED;
+
+        public static InstallSitePluginErrorType fromString(String string) {
+            if (string != null) {
+                if (string.equalsIgnoreCase("local-file-does-not-exist")) {
+                    return LOCAL_FILE_DOES_NOT_EXIST;
+                }
+                for (InstallSitePluginErrorType v : InstallSitePluginErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum UpdateSitePluginErrorType {
@@ -254,13 +301,35 @@ public class PluginStore extends Store {
         DEACTIVATION_ERROR,
         NOT_AVAILABLE, // Return for non-jetpack sites
         UNAUTHORIZED,
-        UNKNOWN_PLUGIN
+        UNKNOWN_PLUGIN;
+
+        public static UpdateSitePluginErrorType fromString(String string) {
+            if (string != null) {
+                for (UpdateSitePluginErrorType v : UpdateSitePluginErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum UpdateSitePluginVersionErrorType {
         GENERIC_ERROR,
         NOT_AVAILABLE, // Return for non-jetpack sites
-        UPDATE_FAIL
+        UPDATE_FAIL;
+
+        public static UpdateSitePluginVersionErrorType fromString(String string) {
+            if (string != null) {
+                for (UpdateSitePluginVersionErrorType v : UpdateSitePluginVersionErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     // OnChanged Events
