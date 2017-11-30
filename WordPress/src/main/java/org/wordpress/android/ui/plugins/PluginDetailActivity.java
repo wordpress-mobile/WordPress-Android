@@ -55,8 +55,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
 
-        setContentView(R.layout.plugin_detail_activity);
-
         String pluginName;
 
         if (savedInstanceState == null) {
@@ -67,14 +65,13 @@ public class PluginDetailActivity extends AppCompatActivity {
             pluginName = savedInstanceState.getString(KEY_PLUGIN_NAME);
         }
 
-        mPlugin = mPluginStore.getSitePluginByName(mSite, pluginName);
-        mPluginInfo = PluginUtils.getPluginInfo(mPluginStore, mPlugin);
-
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, Duration.SHORT);
             finish();
             return;
         }
+
+        mPlugin = mPluginStore.getSitePluginByName(mSite, pluginName);
 
         if (mPlugin == null) {
             ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
@@ -82,9 +79,12 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
+        mPluginInfo = PluginUtils.getPluginInfo(mPluginStore, mPlugin);
         if (mPluginInfo == null) {
             mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(mPlugin.getSlug()));
         }
+
+        setContentView(R.layout.plugin_detail_activity);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
