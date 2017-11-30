@@ -73,12 +73,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         mPlugin = mPluginStore.getSitePluginByName(mSite, pluginName);
-
-        if (mPlugin == null) {
-            ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
-            finish();
-            return;
-        }
+        checkIfPluginIsNull();
 
         mPluginInfo = PluginUtils.getPluginInfo(mPluginStore, mPlugin);
         if (mPluginInfo == null) {
@@ -219,6 +214,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
         mPlugin = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
+        checkIfPluginIsNull();
         refreshViews();
     }
 
@@ -245,10 +241,18 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
         mPlugin = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
+        checkIfPluginIsNull();
         refreshViews();
     }
 
     // Helpers
+
+    private void checkIfPluginIsNull() {
+        if (mPlugin == null) {
+            ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
+            finish();
+        }
+    }
 
     private String getWpOrgPluginUrl() {
         return "https://wordpress.org/plugins/" + mPlugin.getSlug();
