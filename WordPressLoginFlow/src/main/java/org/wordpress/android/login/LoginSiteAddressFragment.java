@@ -27,7 +27,8 @@ import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.AccountStore.OnDiscoveryResponse;
+import org.wordpress.android.fluxc.store.SiteStore.OnWPComSiteFetched;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -56,7 +57,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
     private static final String MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_ID = "11";
 
     private static final String NO_SITE_HELPSHIFT_FAQ_SECTION = "10";
-    private static final String NO_SITE_HELPSHIFT_FAQ_ID = "2"; //using the same as in INVALID URL
+    private static final String NO_SITE_HELPSHIFT_FAQ_ID = "2"; // Using the same as in INVALID URL
 
     private WPLoginInputRow mSiteAddressInput;
 
@@ -171,7 +172,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
     }
 
     @Override
-    public void OnEditorCommit() {
+    public void onEditorCommit() {
         discover();
     }
 
@@ -270,7 +271,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnWPComSiteFetched(SiteStore.OnWPComSiteFetched event) {
+    public void onWPComSiteFetched(OnWPComSiteFetched event) {
         if (mRequestedSiteAddress == null) {
             // bail if user canceled
             return;
@@ -302,7 +303,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDiscoverySucceeded(AccountStore.OnDiscoveryResponse event) {
+    public void onDiscoverySucceeded(OnDiscoveryResponse event) {
         if (mRequestedSiteAddress == null) {
             // bail if user canceled
             return;
@@ -339,7 +340,8 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
                 return;
             } else {
-                AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name() + " - " + event.error.toString());
+                AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name()
+                        + " - " + event.error.toString());
                 handleDiscoveryError(event.error, event.failedEndpoint);
                 return;
             }

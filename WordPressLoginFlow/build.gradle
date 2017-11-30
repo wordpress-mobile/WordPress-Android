@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    compile 'org.wordpress:utils:1.17.1'
+    compile 'org.wordpress:utils:1.18.0'
     compile 'org.wordpress:analytics:1.3.0'
 
     compile "com.android.support:appcompat-v7:$project.SUPPORT_LIBRARY_VERSION"

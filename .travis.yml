@@ -1,0 +1,27 @@
+language: android
+jdk: oraclejdk8
+
+android:
+  components:
+    - extra-android-m2repository
+    - extra-android-support
+    - platform-tools
+    - tools
+    - build-tools-25.0.3
+    - android-25
+
+env:
+  global:
+    - MALLOC_ARENA_MAX=2
+    - GRADLE_OPTS="-Xmx768m -Xms256m -Xss1m"
+    - ANDROID_SDKS=android-16
+    - ANDROID_TARGET=android-16
+
+install:
+  # Setup gradle.properties
+  - cp gradle.properties-example gradle.properties
+
+script:
+  - ./gradlew assembleDebug assembleRelease
+  - ./gradlew lint || (grep -A20 -B2 'severity="Error"' */build/**/*.xml; exit 1)
+  - ./gradlew checkstyle
