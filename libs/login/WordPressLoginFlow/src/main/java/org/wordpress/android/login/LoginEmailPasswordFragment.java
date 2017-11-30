@@ -61,7 +61,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     private String mIdToken;
     private String mPassword;
     private String mService;
-    private boolean isSocialLogin;
+    private boolean mIsSocialLogin;
 
     public static LoginEmailPasswordFragment newInstance(String emailAddress, String password,
                                                          String idToken, String service,
@@ -91,7 +91,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         mPassword = getArguments().getString(ARG_PASSWORD);
         mIdToken = getArguments().getString(ARG_SOCIAL_ID_TOKEN);
         mService = getArguments().getString(ARG_SOCIAL_SERVICE);
-        isSocialLogin = getArguments().getBoolean(ARG_SOCIAL_LOGIN);
+        mIsSocialLogin = getArguments().getBoolean(ARG_SOCIAL_LOGIN);
 
         if (savedInstanceState != null) {
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
@@ -111,7 +111,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     @Override
     protected void setupLabel(@NonNull TextView label) {
-        label.setText(isSocialLogin ? R.string.enter_wpcom_password_google : R.string.enter_wpcom_password);
+        label.setText(mIsSocialLogin ? R.string.enter_wpcom_password_google : R.string.enter_wpcom_password);
     }
 
     @Override
@@ -219,12 +219,11 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     private void handleAuthError(AccountStore.AuthenticationErrorType error, String errorMessage) {
-
         if (error != AccountStore.AuthenticationErrorType.NEEDS_2FA) {
             mLoginListener.track(AnalyticsTracker.Stat.LOGIN_FAILED, error.getClass().getSimpleName(),
                     error.toString(), errorMessage);
 
-            if (isSocialLogin) {
+            if (mIsSocialLogin) {
                 mLoginListener.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, error.getClass().getSimpleName(),
                         error.toString(), errorMessage);
             }
@@ -239,7 +238,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 // login credentials were correct anyway so, offer to save to SmartLock
                 saveCredentialsInSmartLock(mLoginListener, mEmailAddress, mPassword);
 
-                if (isSocialLogin) {
+                if (mIsSocialLogin) {
                     mLoginListener.needs2faSocialConnect(mEmailAddress, mRequestedPassword, mIdToken, mService);
                 } else {
                     mLoginListener.needs2fa(mEmailAddress, mRequestedPassword);
@@ -276,7 +275,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
-        if (isSocialLogin) {
+        if (mIsSocialLogin) {
             PushSocialLoginPayload payload = new PushSocialLoginPayload(mIdToken, mService);
             mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
         } else {
@@ -311,7 +310,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     protected void onLoginFinished() {
         mLoginListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
-        if (isSocialLogin) {
+        if (mIsSocialLogin) {
             mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
         } else {
             mLoginListener.loggedInViaPassword(mOldSitesIDs);
