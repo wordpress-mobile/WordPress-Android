@@ -50,7 +50,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private String mGoogleEmail;
     private String mRequestedEmail;
     private WPLoginInputRow mEmailInput;
-    private boolean isSocialLogin;
+    private boolean mIsSocialLogin;
 
     @Override
     protected @LayoutRes int getContentLayout() {
@@ -59,7 +59,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected @LayoutRes int getProgressBarText() {
-        return isSocialLogin ? R.string.logging_in : R.string.checking_email;
+        return mIsSocialLogin ? R.string.logging_in : R.string.checking_email;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
                 if (NetworkUtils.checkConnection(getActivity())) {
                     mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
-                    isSocialLogin = true;
+                    mIsSocialLogin = true;
                     mLoginListener.showGoogleLoginScreen(LoginEmailFragment.this);
                 }
             }
@@ -157,7 +157,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     protected void onHelp() {
         if (mLoginListener != null) {
-            if (isSocialLogin) {
+            if (mIsSocialLogin) {
                 // Send last email chosen from Google login if available.
                 mLoginListener.helpSocialEmailScreen(mGoogleEmail);
             } else {
@@ -181,7 +181,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
             mRequestedEmail = savedInstanceState.getString(KEY_REQUESTED_EMAIL);
             mGoogleEmail = savedInstanceState.getString(KEY_GOOGLE_EMAIL);
-            isSocialLogin = savedInstanceState.getBoolean(KEY_IS_SOCIAL);
+            mIsSocialLogin = savedInstanceState.getBoolean(KEY_IS_SOCIAL);
         } else {
             mLoginListener.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
         }
@@ -193,7 +193,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
         outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);
         outState.putString(KEY_GOOGLE_EMAIL, mGoogleEmail);
-        outState.putBoolean(KEY_IS_SOCIAL, isSocialLogin);
+        outState.putBoolean(KEY_IS_SOCIAL, mIsSocialLogin);
     }
 
     protected void next(String email) {
@@ -243,7 +243,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mEmailInput.setError(null);
-        isSocialLogin = false;
+        mIsSocialLogin = false;
     }
 
     private void showEmailError(int messageId) {
