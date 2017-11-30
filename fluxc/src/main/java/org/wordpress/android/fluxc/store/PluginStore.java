@@ -470,7 +470,7 @@ public class PluginStore extends Store {
         } else {
             payload.plugin.setLocalSiteId(payload.site.getId());
             event.plugin = payload.plugin;
-            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
         }
         emitChange(event);
     }
@@ -481,7 +481,7 @@ public class PluginStore extends Store {
             event.error = payload.error;
         } else {
             event.plugin = payload.plugin;
-            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
         }
         emitChange(event);
     }
@@ -503,7 +503,7 @@ public class PluginStore extends Store {
             event.error = payload.error;
         } else {
             event.plugin = payload.plugin;
-            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
         }
         emitChange(event);
     }
