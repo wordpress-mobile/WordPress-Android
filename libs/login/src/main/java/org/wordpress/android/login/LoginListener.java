@@ -56,8 +56,8 @@ public interface LoginListener {
     void helpFindingSiteAddress(String username, SiteStore siteStore);
 
     // Login username password callbacks
-    void saveCredentials(@NonNull final String username, @NonNull final String password,
-                         @NonNull final String displayName, @Nullable final Uri profilePicture);
+    void saveCredentials(@NonNull String username, @NonNull String password,
+                         @NonNull String displayName, @Nullable Uri profilePicture);
     void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds);
     void helpUsernamePassword(String url, String username, boolean isWpcom);
 

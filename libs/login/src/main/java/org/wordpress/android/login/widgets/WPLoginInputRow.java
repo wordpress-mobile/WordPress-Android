@@ -28,9 +28,8 @@ import java.util.List;
  * Compound view composed of an icon and an EditText
  */
 public class WPLoginInputRow extends RelativeLayout {
-
     public interface OnEditorCommitListener {
-        void OnEditorCommit();
+        void onEditorCommit();
     }
 
     private ImageView mIcon;
@@ -87,7 +86,6 @@ public class WPLoginInputRow extends RelativeLayout {
                 if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleEnabled)) {
                     mTextInputLayout.setPasswordVisibilityToggleEnabled(
                             a.getBoolean(R.styleable.wpLoginInputRow_passwordToggleEnabled, false));
-
                 }
 
                 if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleTint)) {
@@ -156,8 +154,8 @@ public class WPLoginInputRow extends RelativeLayout {
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        //begin boilerplate code so parent classes can restore state
-        if(!(state instanceof SavedState)) {
+        // Begin boilerplate code so parent classes can restore state
+        if (!(state instanceof SavedState)) {
             super.onRestoreInstanceState(state);
             return;
         }
@@ -178,12 +176,12 @@ public class WPLoginInputRow extends RelativeLayout {
         mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE ||
-                        actionId == EditorInfo.IME_ACTION_NEXT ||
-                        (event != null
+                if (actionId == EditorInfo.IME_ACTION_DONE
+                        || actionId == EditorInfo.IME_ACTION_NEXT
+                        || (event != null
                                 && event.getAction() == KeyEvent.ACTION_UP
                                 && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    listener.OnEditorCommit();
+                    listener.onEditorCommit();
                 }
 
                 // always consume the event so the focus stays in the EditText

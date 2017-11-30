@@ -80,6 +80,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     public static final String TAG = "login_2fa_fragment_tag";
 
+    private static final Pattern TWO_STEP_AUTH_CODE = Pattern.compile("^[0-9]{6}");
+
     private WPLoginInputRow m2FaInput;
 
     private @StringRes int mInProgressMessageId;
@@ -315,7 +317,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 && clipboard.getPrimaryClip().getItemAt(0).getText() != null) {
             String code = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
 
-            final Pattern TWO_STEP_AUTH_CODE = Pattern.compile("^[0-9]{6}");
             final Matcher twoStepAuthCodeMatcher = TWO_STEP_AUTH_CODE.matcher("");
             twoStepAuthCodeMatcher.reset(code);
 
@@ -345,7 +346,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     }
 
     @Override
-    public void OnEditorCommit() {
+    public void onEditorCommit() {
         next();
     }
 

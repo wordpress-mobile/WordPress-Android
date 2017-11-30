@@ -143,12 +143,12 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         mUsernameInput = (WPLoginInputRow) rootView.findViewById(R.id.login_username_row);
         mUsernameInput.setText(mInputUsername);
         if (BuildConfig.DEBUG) {
-            mUsernameInput.getEditText().setText(BuildConfig.DEBUG_DOTCOM_LOGIN_USERNAME);
+            mUsernameInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_USERNAME);
         }
         mUsernameInput.addTextChangedListener(this);
         mUsernameInput.setOnEditorCommitListener(new OnEditorCommitListener() {
             @Override
-            public void OnEditorCommit() {
+            public void onEditorCommit() {
                 showError(null);
                 mPasswordInput.getEditText().requestFocus();
             }
@@ -157,7 +157,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         mPasswordInput = (WPLoginInputRow) rootView.findViewById(R.id.login_password_row);
         mPasswordInput.setText(mInputPassword);
         if (BuildConfig.DEBUG) {
-            mPasswordInput.getEditText().setText(BuildConfig.DEBUG_DOTCOM_LOGIN_PASSWORD);
+            mPasswordInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_PASSWORD);
         }
         mPasswordInput.addTextChangedListener(this);
 
@@ -298,7 +298,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     }
 
     @Override
-    public void OnEditorCommit() {
+    public void onEditorCommit() {
         showError(null);
         next();
     }
@@ -347,7 +347,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         view.post(new Runnable() {
             @Override
             public void run() {
-                Rect rect = new Rect(); //coordinates to scroll to
+                Rect rect = new Rect(); // Coordinates to scroll to
                 view.getHitRect(rect);
                 mScrollView.requestChildRectangleOnScreen(view, rect, false);
             }
@@ -407,8 +407,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             }
 
             mAuthFailed = true;
-            AppLog.e(T.API, "Login with username/pass onAuthenticationChanged has error: " + event.error.type + " - " +
-                    event.error.message);
+            AppLog.e(T.API, "Login with username/pass onAuthenticationChanged has error: " + event.error.type
+                    + " - " + event.error.message);
             mLoginListener.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
@@ -463,8 +463,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
                 errorMessage = getString(R.string.login_error_while_adding_site, event.error.type.toString());
             }
 
-            AppLog.e(T.API, "Login with username/pass onSiteChanged has error: " + event.error.type + " - " +
-                    errorMessage);
+            AppLog.e(T.API, "Login with username/pass onSiteChanged has error: " + event.error.type
+                    + " - " + errorMessage);
 
             if (!mAuthFailed) {
                 // show the error if not already displayed in onAuthenticationChanged (like in username/pass error)
