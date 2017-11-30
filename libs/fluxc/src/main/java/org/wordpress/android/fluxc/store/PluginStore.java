@@ -162,8 +162,13 @@ public class PluginStore extends Store {
         public DeleteSitePluginErrorType type;
         public String message;
 
-        public DeleteSitePluginError(DeleteSitePluginErrorType type) {
+        DeleteSitePluginError(DeleteSitePluginErrorType type) {
             this.type = type;
+        }
+
+        public DeleteSitePluginError(String type, String message) {
+            this.type = DeleteSitePluginErrorType.fromString(type);
+            this.message = message == null ? "" : message;
         }
     }
 
@@ -179,13 +184,13 @@ public class PluginStore extends Store {
         public FetchSitePluginsErrorType type;
         public String message;
 
-        public FetchSitePluginsError(FetchSitePluginsErrorType type) {
-            this(type, "");
+        FetchSitePluginsError(FetchSitePluginsErrorType type) {
+            this.type = type;
         }
 
-        FetchSitePluginsError(FetchSitePluginsErrorType type, String message) {
-            this.type = type;
-            this.message = message;
+        public FetchSitePluginsError(String type, String message) {
+            this.type = FetchSitePluginsErrorType.fromString(type);
+            this.message = message == null ? "" : message;
         }
     }
 
@@ -193,8 +198,13 @@ public class PluginStore extends Store {
         public InstallSitePluginErrorType type;
         public String message;
 
-        public InstallSitePluginError(InstallSitePluginErrorType type) {
+        InstallSitePluginError(InstallSitePluginErrorType type) {
             this.type = type;
+        }
+
+        public InstallSitePluginError(String type, String message) {
+            this.type = InstallSitePluginErrorType.fromString(type);
+            this.message = message == null ? "" : message;
         }
     }
 
@@ -202,8 +212,13 @@ public class PluginStore extends Store {
         public UpdateSitePluginErrorType type;
         public String message;
 
-        public UpdateSitePluginError(UpdateSitePluginErrorType type) {
+        UpdateSitePluginError(UpdateSitePluginErrorType type) {
             this.type = type;
+        }
+
+        public UpdateSitePluginError(String type, String message) {
+            this.type = UpdateSitePluginErrorType.fromString(type);
+            this.message = message == null ? "" : message;
         }
     }
 
@@ -211,8 +226,13 @@ public class PluginStore extends Store {
         public UpdateSitePluginVersionErrorType type;
         public String message;
 
-        public UpdateSitePluginVersionError(UpdateSitePluginVersionErrorType type) {
+        UpdateSitePluginVersionError(UpdateSitePluginVersionErrorType type) {
             this.type = type;
+        }
+
+        public UpdateSitePluginVersionError(String type, String message) {
+            this.type = UpdateSitePluginVersionErrorType.fromString(type);
+            this.message = message == null ? "" : message;
         }
     }
 
