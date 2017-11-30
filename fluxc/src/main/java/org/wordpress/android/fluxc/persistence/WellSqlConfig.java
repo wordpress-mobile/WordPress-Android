@@ -157,8 +157,6 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table SiteModel add EMAIL text;");
                 db.execSQL("alter table SiteModel add DISPLAY_NAME text;");
-                db.execSQL("alter table SiteModel add FIRST_NAME text;");
-                db.execSQL("alter table SiteModel add LAST_NAME text;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
