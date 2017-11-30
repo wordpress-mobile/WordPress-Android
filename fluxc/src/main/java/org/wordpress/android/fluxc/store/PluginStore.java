@@ -239,18 +239,7 @@ public class PluginStore extends Store {
 
     public enum FetchPluginInfoErrorType {
         EMPTY_RESPONSE,
-        GENERIC_ERROR;
-
-        public static FetchPluginInfoErrorType fromString(String string) {
-            if (string != null) {
-                for (FetchPluginInfoErrorType v : FetchPluginInfoErrorType.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
-                        return v;
-                    }
-                }
-            }
-            return GENERIC_ERROR;
-        }
+        GENERIC_ERROR
     }
 
     public enum FetchSitePluginsErrorType {
