@@ -167,9 +167,9 @@ public class PluginStore extends Store {
             this.type = type;
         }
 
-        public DeleteSitePluginError(String type, String message) {
+        public DeleteSitePluginError(String type, @Nullable String message) {
             this.type = DeleteSitePluginErrorType.fromString(type);
-            this.message = message == null ? "" : message;
+            this.message = message;
         }
     }
 
@@ -367,6 +367,7 @@ public class PluginStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginVersionUpdated extends OnChanged<UpdateSitePluginVersionError> {
         public SiteModel site;
         public PluginModel plugin;
