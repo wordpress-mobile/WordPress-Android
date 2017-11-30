@@ -480,7 +480,6 @@ public class PluginStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            payload.plugin.setLocalSiteId(payload.site.getId());
             event.plugin = payload.plugin;
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
         }
@@ -492,7 +491,6 @@ public class PluginStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            payload.plugin.setLocalSiteId(payload.site.getId());
             event.plugin = payload.plugin;
             PluginSqlUtils.deleteSitePlugin(payload.site, payload.plugin);
         }
@@ -504,7 +502,6 @@ public class PluginStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            payload.plugin.setLocalSiteId(payload.site.getId());
             event.plugin = payload.plugin;
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
         }
