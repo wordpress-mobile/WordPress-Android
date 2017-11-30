@@ -63,8 +63,6 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     // Self hosted user's profile data
     @Column private String mEmail;
     @Column private String mDisplayName;
-    @Column private String mFirstName;
-    @Column private String mLastName;
 
     // mIsJetpackInstalled is true if Jetpack is installed and activated on the self hosted site, but Jetpack can
     // be disconnected.
@@ -224,22 +222,6 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setDisplayName(String displayName) {
         mDisplayName = displayName;
-    }
-
-    public String getFirstName() {
-        return mFirstName;
-    }
-
-    public void setFirstName(String firstName) {
-        mFirstName = firstName;
-    }
-
-    public String getLastName() {
-        return mLastName;
-    }
-
-    public void setLastName(String lastName) {
-        mLastName = lastName;
     }
 
     public boolean isVisible() {

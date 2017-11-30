@@ -72,8 +72,6 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         Map<?, ?> userMap = (Map<?, ?>) response;
         site.setEmail(MapUtils.getMapStr(userMap, "email"));
         site.setDisplayName(MapUtils.getMapStr(userMap, "display_name"));
-        site.setFirstName(MapUtils.getMapStr(userMap, "first_name"));
-        site.setLastName(MapUtils.getMapStr(userMap, "last_name"));
 
         return site;
     }
