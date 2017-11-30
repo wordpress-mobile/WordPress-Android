@@ -23,6 +23,45 @@
                 style="@style/PluginCardViewHorizontalContainer">
 
                 <TextView
+                    android:id="@+id/plugin_installed_version"
+                    style="@style/PluginCardViewPrimaryText"/>
+
+                <TextView
+                    android:id="@+id/plugin_available_version"
+                    style="@style/PluginCardViewPrimaryText"
+                    android:layout_below="@id/plugin_installed_version"
+                    android:textColor="@color/grey_darken_10"/>
+
+                <TextView
+                    android:id="@+id/plugin_btn_update"
+                    android:padding="@dimen/margin_large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="@string/plugin_btn_update"
+                    android:textAllCaps="true"
+                    android:textColor="@color/wp_blue_medium"
+                    android:textSize="@dimen/text_sz_medium"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        style="@style/PluginCardView"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius">
+
+        <LinearLayout
+            style="@style/PluginCardViewVerticalContainer">
+
+            <RelativeLayout
+                style="@style/PluginCardViewHorizontalContainer">
+
+                <TextView
                     style="@style/PluginCardViewPrimaryText"
                     android:text="@string/plugin_detail_label_state_active"/>
 
