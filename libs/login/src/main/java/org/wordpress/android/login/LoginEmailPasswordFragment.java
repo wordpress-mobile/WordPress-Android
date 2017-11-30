@@ -312,6 +312,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 showError(getString(R.string.error_generic));
                 break;
             case SUCCESS:
+                mLoginListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+                mLoginListener.startPostLoginServices();
                 onLoginFinished(true);
                 break;
         }

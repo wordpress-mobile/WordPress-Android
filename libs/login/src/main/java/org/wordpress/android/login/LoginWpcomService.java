@@ -30,7 +30,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.ToastUtils;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -272,17 +271,6 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         }
     }
 
-    protected void startPostLoginServices() {
-        // Get reader tags so they're available as soon as the Reader is accessed - done for
-        // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
-        // uses the application context since the activity is finished immediately below
-        ReaderUpdateService.startService(getApplicationContext(), EnumSet.of(ReaderUpdateService
-                .UpdateTask.TAGS));
-
-        // Start Notification service
-        NotificationsUpdateService.startService(getApplicationContext());
-    }
-
     private void fetchAccount() {
         setState(LoginPhase.FETCHING_ACCOUNT);
         mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
@@ -378,10 +366,6 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
                 ToastUtils.showToast(this, R.string.duplicate_site_detected);
             }
         }
-
-        startPostLoginServices();
-
-        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
         setState(LoginPhase.SUCCESS);
     }
