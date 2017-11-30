@@ -471,7 +471,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         }
 
         SiteModel newlyAddedSite = detectNewlyAddedSite();
-        mDispatcher.dispatch(SiteActionBuilder.newFetchProfileAction(newlyAddedSite));
+        mDispatcher.dispatch(SiteActionBuilder.newFetchProfileXmlRpcAction(newlyAddedSite));
     }
 
     @SuppressWarnings("unused")
