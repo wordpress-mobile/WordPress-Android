@@ -178,13 +178,6 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         Log.w(LoginGoogleFragment.class.getSimpleName(), "onConnectionSuspended: " + i);
     }
 
-    public void onHelp() {
-        if (mLoginListener != null) {
-            // Send last email chosen from Google login if available.
-            mLoginListener.helpSocialEmailScreen(mGoogleEmail);
-        }
-    }
-
     public void connectGoogleClient() {
         if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
             shouldResolveError = true;

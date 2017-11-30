@@ -81,6 +81,17 @@
         site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
 
+    <string name="notification_login_title_success">Logged in!</string>
+    <string name="notification_logged_in">Tap to continue.</string>
+
+    <string name="notification_login_title_in_progress">Login in progress…</string>
+    <string name="notification_logging_in">Please wait while logging in.</string>
+
+    <string name="notification_login_title_stopped">Login stopped</string>
+    <string name="notification_error_wrong_password">Please double check your password to continue.</string>
+    <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
+    <string name="notification_login_failed">An error has occurred.</string>
+
     <!-- HTTP Authentication -->
     <string name="http_authorization_required">Authorization required</string>
     <string name="httpuser">HTTP username</string>
