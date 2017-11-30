@@ -212,13 +212,6 @@ public class SiteStore extends Store {
     }
 
     // OnChanged Events
-    public static class OnProfileFetched extends OnChanged<SiteError> {
-        public SiteModel site;
-        public OnProfileFetched(SiteModel site) {
-            this.site = site;
-        }
-    }
-
     public static class OnSiteChanged extends OnChanged<SiteError> {
         public int rowsAffected;
         public OnSiteChanged(int rowsAffected) {
