@@ -66,16 +66,6 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    private SiteModel profileResponseToAccountModel(Object response, SiteModel site) {
-        if (response == null) return null;
-
-        Map<?, ?> userMap = (Map<?, ?>) response;
-        site.setEmail(MapUtils.getMapStr(userMap, "email"));
-        site.setDisplayName(MapUtils.getMapStr(userMap, "display_name"));
-
-        return site;
-    }
-
     public void fetchSites(final String xmlrpcUrl, final String username, final String password) {
         List<Object> params = new ArrayList<>(2);
         params.add(username);
@@ -186,6 +176,16 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                 }
         );
         add(request);
+    }
+
+    private SiteModel profileResponseToAccountModel(Object response, SiteModel site) {
+        if (response == null) return null;
+
+        Map<?, ?> userMap = (Map<?, ?>) response;
+        site.setEmail(MapUtils.getMapStr(userMap, "email"));
+        site.setDisplayName(MapUtils.getMapStr(userMap, "display_name"));
+
+        return site;
     }
 
     private SitesModel sitesResponseToSitesModel(Object[] response, String username, String password) {
