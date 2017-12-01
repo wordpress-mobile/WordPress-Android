@@ -26,8 +26,8 @@ public class ThemeModel implements Identifiable, Serializable {
     @Column private String mDemoUrl;
     @Column private String mDownloadUrl;
     @Column private String mStylesheet;
-    @Column private String mCurrency;
-    @Column private float mPrice;
+    @Column private String mPriceText;
+    @Column private boolean mFree;
     @Column private boolean mActive;
     @Column private boolean mAutoUpdate;
     @Column private boolean mAutoUpdateTranslation;
@@ -65,8 +65,8 @@ public class ThemeModel implements Identifiable, Serializable {
                 && StringUtils.equals(getSlug(), otherTheme.getSlug())
                 && StringUtils.equals(getDownloadUrl(), otherTheme.getDownloadUrl())
                 && StringUtils.equals(getStylesheet(), otherTheme.getStylesheet())
-                && StringUtils.equals(getCurrency(), otherTheme.getCurrency())
-                && getPrice() == otherTheme.getPrice()
+                && StringUtils.equals(getPriceText(), otherTheme.getPriceText())
+                && getFree() == otherTheme.getFree()
                 && getActive() == otherTheme.getActive()
                 && getAutoUpdate() == otherTheme.getAutoUpdate()
                 && getAutoUpdateTranslation() == otherTheme.getAutoUpdateTranslation()
@@ -177,20 +177,20 @@ public class ThemeModel implements Identifiable, Serializable {
         mStylesheet = stylesheet;
     }
 
-    public String getCurrency() {
-        return mCurrency;
+    public String getPriceText() {
+        return mPriceText;
     }
 
-    public void setCurrency(String currency) {
-        mCurrency = currency;
+    public void setPriceText(String priceText) {
+        mPriceText = priceText;
     }
 
-    public float getPrice() {
-        return mPrice;
+    public boolean getFree() {
+        return mFree;
     }
 
-    public void setPrice(float price) {
-        mPrice = price;
+    public void setFree(boolean free) {
+        mFree = free;
     }
 
     public boolean getActive() {
