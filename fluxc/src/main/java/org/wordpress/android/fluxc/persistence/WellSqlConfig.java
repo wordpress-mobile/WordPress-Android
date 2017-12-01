@@ -58,7 +58,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 16;
+        return 17;
     }
 
     @Override
@@ -152,6 +152,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "AUTHOR_URL TEXT,THEME_URL TEXT,SCREENSHOT_URL TEXT,DEMO_URL TEXT,DOWNLOAD_URL TEXT,"
                         + "STYLESHEET TEXT,CURRENCY TEXT,PRICE REAL,ACTIVE INTEGER,AUTO_UPDATE INTEGER,"
                         + "AUTO_UPDATE_TRANSLATION INTEGER,IS_WP_COM_THEME INTEGER)");
+                oldVersion++;
+            case 16:
+                db.execSQL("alter table ThemeModel add FREE integer;");
+                db.execSQL("alter table ThemeModel add PRICE_TEXT integer;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
