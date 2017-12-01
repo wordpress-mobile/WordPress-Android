@@ -8,7 +8,7 @@ android:
     - platform-tools
     - tools
     - build-tools-25.0.3
-    - android-25
+    - android-26
 
 env:
   global:
