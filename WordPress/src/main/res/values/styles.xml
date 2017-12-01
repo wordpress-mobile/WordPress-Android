@@ -112,6 +112,9 @@
         <item name="android:textColor">@color/grey_dark</item>
     </style>
 
+    <style name="LoginTheme.CardTitle" parent="TextAppearance.AppCompat.Subhead">
+    </style>
+
     <style name="NoDisplay" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

@@ -138,6 +138,11 @@
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".ui.accounts.SiteCreationActivity"
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.accounts.HelpActivity"
             android:label=""
             android:theme="@style/CalypsoTheme.NoActionBarShadow" />
