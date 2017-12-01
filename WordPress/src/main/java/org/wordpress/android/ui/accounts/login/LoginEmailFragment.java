@@ -279,7 +279,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mGoogleApiClient.disconnect();
         }
 
-        WPActivityUtils.showKeyboard(getActivity().getCurrentFocus());
+        ActivityUtils.showKeyboard(getActivity().getCurrentFocus());
     }
 
     private String getCleanedEmail() {
@@ -416,7 +416,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 next(getCleanedEmail());
             } else {
                 hasDismissedEmailHints = true;
-                WPActivityUtils.showKeyboard(mEmailInput.getEditText());
+                ActivityUtils.showKeyboard(mEmailInput.getEditText());
             }
 
             isDisplayingEmailHints = false;
