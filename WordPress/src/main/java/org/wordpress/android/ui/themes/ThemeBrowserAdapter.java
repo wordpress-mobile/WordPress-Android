@@ -43,12 +43,12 @@ class ThemeBrowserAdapter extends CursorAdapter {
 
     static final String[] THEME_COLUMNS = new String[] {
             ThemeModelTable.ID, ThemeModelTable.THEME_ID, ThemeModelTable.NAME, ThemeModelTable.SCREENSHOT_URL,
-            ThemeModelTable.CURRENCY, ThemeModelTable.PRICE, ThemeModelTable.ACTIVE
+            ThemeModelTable.PRICE_TEXT, ThemeModelTable.ACTIVE, ThemeModelTable.FREE
     };
     static String[] createThemeCursorRow(@NonNull ThemeModel theme) {
         return new String[] {
                 String.valueOf(theme.getId()), theme.getThemeId(), theme.getName(), theme.getScreenshotUrl(),
-                theme.getCurrency(), String.valueOf(theme.getPrice()), String.valueOf(theme.getActive())
+                theme.getPriceText(), String.valueOf(theme.getActive()), String.valueOf(theme.getFree())
         };
     }
 
@@ -126,15 +126,14 @@ class ThemeBrowserAdapter extends CursorAdapter {
         final ThemeViewHolder themeViewHolder = (ThemeViewHolder) view.getTag();
         final String name = cursor.getString(cursor.getColumnIndex(ThemeModelTable.NAME));
         final String themeId = cursor.getString(cursor.getColumnIndex(ThemeModelTable.THEME_ID));
-        final String currency = cursor.getString(cursor.getColumnIndex(ThemeModelTable.CURRENCY));
-        final float price = cursor.getFloat(cursor.getColumnIndex(ThemeModelTable.PRICE));
-        final boolean isPremium = price > 0.f;
+        final String priceText = cursor.getString(cursor.getColumnIndex(ThemeModelTable.PRICE_TEXT));
+        final boolean isPremium =
+                StringUtils.equals("false", cursor.getString(cursor.getColumnIndex(ThemeModelTable.FREE)));
         final boolean isCurrent =
                 StringUtils.equals("true", cursor.getString(cursor.getColumnIndex(ThemeModelTable.ACTIVE)));
 
         themeViewHolder.nameView.setText(name);
         if (isPremium) {
-            String priceText = currency + String.valueOf((int) price);
             themeViewHolder.priceView.setText(priceText);
             themeViewHolder.priceView.setVisibility(View.VISIBLE);
         } else {

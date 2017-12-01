@@ -46,6 +46,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
+
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 
     productFlavors {
@@ -128,6 +130,12 @@ dependencies {
     androidTestCompile 'org.mockito:mockito-core:1.10.19'
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
     androidTestCompile 'com.squareup.okio:okio:1.13.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestCompile 'com.android.support.test:runner:1.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:passcodelock:1.5.1'
@@ -137,7 +145,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.11'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:a6ff8356ad7be8d7a00e94b0934cc827a6213c84') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:304a7f68117ea030a50ef9b9c8a17a111b78110c') {
         exclude group: "com.android.volley";
     }
 
