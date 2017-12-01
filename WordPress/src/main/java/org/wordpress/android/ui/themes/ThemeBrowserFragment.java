@@ -411,7 +411,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         Iterator<ThemeModel> iterator = themes.iterator();
         while (iterator.hasNext()) {
             ThemeModel theme = iterator.next();
-            if (theme.getPrice() > 0.f && !theme.getActive()) {
+            if (!theme.isFree() && !theme.getActive()) {
                 iterator.remove();
             }
         }

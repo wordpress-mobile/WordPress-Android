@@ -108,6 +108,11 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         } catch (ClassCastException exception) {
             throw new ClassCastException(context.toString() + " must implement OnGoogleLoginFinishedListener");
         }
+
+        // Show account dialog when Google API onConnected callback returns before fragment is attached.
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !isResolvingError && !shouldResolveError) {
+            showAccountDialog();
+        }
     }
 
     @Override
@@ -135,7 +140,10 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         // connection to Google Play services has been established.
         if (shouldResolveError) {
             shouldResolveError = false;
-            showAccountDialog();
+
+            if (isAdded()) {
+                showAccountDialog();
+            }
         }
     }
 
@@ -167,13 +175,6 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         // to re-connect.  Any UI elements depending on connection to Google APIs should be hidden
         // or disabled until onConnected is called again.
         Log.w(LoginGoogleFragment.class.getSimpleName(), "onConnectionSuspended: " + i);
-    }
-
-    public void onHelp() {
-        if (mLoginListener != null) {
-            // Send last email chosen from Google login if available.
-            mLoginListener.helpSocialEmailScreen(mGoogleEmail);
-        }
     }
 
     public void connectGoogleClient() {

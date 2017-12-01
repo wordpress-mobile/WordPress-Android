@@ -286,6 +286,19 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
      * called so the settings will be reflected here
      */
     private void getSiteSettings(boolean shouldFetchSettings) {
+        if (mSiteSettings == null) {
+            // mSiteSettings should not be null here, but we've had some cases where it's null and the app crashed. See #6890
+            if (mSite == null) {
+                ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+                getActivity().finish();
+                return;
+            }
+
+            // this creates a default site settings interface - the actual settings will
+            // be retrieved when getSiteSettings() is called
+            mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, this);
+        }
+
         mSiteSettings.init(false);
 
         if (shouldFetchSettings) {
