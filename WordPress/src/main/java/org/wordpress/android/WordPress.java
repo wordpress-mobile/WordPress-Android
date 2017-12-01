@@ -3,6 +3,7 @@ package org.wordpress.android;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.Service;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -97,10 +98,13 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasServiceInjector;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
-public class WordPress extends MultiDexApplication {
+public class WordPress extends MultiDexApplication implements HasServiceInjector {
     public static final String SITE = "SITE";
     public static String versionName;
     public static WordPressDB wpDB;
@@ -120,6 +124,8 @@ public class WordPress extends MultiDexApplication {
     private static BitmapLruCache mBitmapCache;
 
     private static GoogleApiClient mCredentialsClient;
+
+    @Inject DispatchingAndroidInjector<Service> mServiceDispatchingAndroidInjector;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -627,6 +633,11 @@ public class WordPress extends MultiDexApplication {
         }
 
         return "";
+    }
+
+    @Override
+    public AndroidInjector<Service> serviceInjector() {
+        return mServiceDispatchingAndroidInjector;
     }
 
     /**

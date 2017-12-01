@@ -35,6 +35,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import dagger.android.AndroidInjection;
+
 public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     private static final String ARG_EMAIL = "ARG_EMAIL";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
@@ -197,8 +199,8 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
 
     @Override
     public void onCreate() {
+        AndroidInjection.inject(this);
         super.onCreate();
-        ((WordPress) getApplication()).component().inject(this);
 
         AppLog.i(T.MAIN, "LoginWpcomService > Created");
 
