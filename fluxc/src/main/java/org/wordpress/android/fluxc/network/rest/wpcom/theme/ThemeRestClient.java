@@ -235,11 +235,11 @@ public class ThemeRestClient extends BaseWPComRestClient {
         theme.setScreenshotUrl(response.screenshot);
         theme.setDescription(response.description);
         theme.setDownloadUrl(response.download_uri);
-        if (!TextUtils.isEmpty(response.price)) {
+        if (TextUtils.isEmpty(response.price)) {
+            theme.setFree(true);
+        } else {
             theme.setFree(false);
             theme.setPriceText(response.price);
-        } else {
-            theme.setFree(true);
         }
         return theme;
     }
