@@ -2027,6 +2027,7 @@
     <string name="signup_with_google_button">Sign Up with Google</string>
 
     <!-- Site Creation -->
+    <string name="site_creation_title">Create New Site</string>
     <string name="site_creation_label_category_title">Step 1 of 4</string>
     <string name="site_creation_label_category">What kind of site do you need?\nChoose an option below:</string>
     <string name="site_creation_title_blog">Start with a Blog</string>

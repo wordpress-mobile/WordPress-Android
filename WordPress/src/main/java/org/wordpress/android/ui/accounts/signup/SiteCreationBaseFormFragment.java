@@ -101,8 +101,8 @@ public abstract class SiteCreationBaseFormFragment<SiteCreationListenerType> ext
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.site_creation_title);
         }
 
 //        if (savedInstanceState == null) {
