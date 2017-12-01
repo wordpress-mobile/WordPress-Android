@@ -12,13 +12,6 @@ import static org.hamcrest.Matchers.allOf;
 public class SnackbarComponent {
 
     private static ViewInteraction publishConfirmation = onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("Post published")));
-    private static ViewInteraction postUploading = onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("Your post is uploading")));
-
-    public SnackbarComponent verifyPostUploading() {
-        postUploading.check(matches(isDisplayed()));
-
-        return this;
-    }
 
     public void verifyPostPublished() {
         publishConfirmation.check(matches(isDisplayed()));

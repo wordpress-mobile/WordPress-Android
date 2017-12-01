@@ -15,7 +15,6 @@ import static org.hamcrest.Matchers.startsWith;
 
 public class MasterbarComponent {
 
-    // Main Navigation Bar
     private static ViewInteraction mainNavBar = onView(withId(R.id.tab_layout));
     private static ViewInteraction mySitesButton = onView(allOf(withId(R.id.tab_icon), withContentDescription(startsWith("My Site"))));
     private static ViewInteraction meButton = onView(allOf(withId(R.id.tab_icon), withContentDescription(startsWith("Me"))));
