@@ -27,7 +27,7 @@ public class ThemeModel implements Identifiable, Serializable {
     @Column private String mDownloadUrl;
     @Column private String mStylesheet;
     @Column private String mPriceText;
-    @Column private boolean mFree;
+    @Column private boolean mFree = true;
     @Column private boolean mActive;
     @Column private boolean mAutoUpdate;
     @Column private boolean mAutoUpdateTranslation;
@@ -187,6 +187,10 @@ public class ThemeModel implements Identifiable, Serializable {
 
     public boolean getFree() {
         return mFree;
+    }
+
+    public boolean isFree() {
+        return getFree();
     }
 
     public void setFree(boolean free) {
