@@ -36,3 +36,9 @@ wp.res.com.google.android.geo.api.key = geo-api-key
 # Optional: used to autofill username and password fields at login on debug build only
 wp.debug.dotcom_login_username =
 wp.debug.dotcom_login_password =
+
+# Optional: used to run end-to-end UI tests on debug build
+wp.debug.e2etest_default_username =
+wp.debug.e2etest_default_email =
+wp.debug.e2etest_default_password =
+wp.debug.e2etest_default_url =
