@@ -200,6 +200,9 @@ public class WPLoginInputRow extends RelativeLayout {
 
     public void setError(@Nullable final CharSequence error) {
         mTextInputLayout.setError(error);
+        if (error == null) {
+            mTextInputLayout.setErrorEnabled(false);
+        }
     }
 
     private static class SavedState extends BaseSavedState {

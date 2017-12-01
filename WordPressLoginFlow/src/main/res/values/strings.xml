@@ -2,6 +2,7 @@
 <resources>
     <string name="email_address">Email address</string>
     <string name="verification_code">Verification code</string>
+    <string name="invalid_verification_code">Invalid verification code</string>
     <string name="send_link">Send link</string>
     <string name="enter_your_password_instead">Enter your password instead</string>
     <string name="username">Username</string>
@@ -21,9 +22,11 @@
     <string name="enter_username_instead">Log in with username instead.</string>
     <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
+    <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="login_text_otp">Text me a code instead.</string>
+    <string name="login_text_otp_another">Text me another code instead.</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
-    <string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
+    <string name="email_not_registered_wpcom">Hmm, this email address isn\'t registered with WordPress.com.\nAre you trying to access a self-hosted site? Log in using the link at the bottom of this screen.</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
     <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
@@ -31,6 +34,7 @@
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
+    <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
     <string name="connect_more">Connect Another Site</string>
     <string name="connect_site">Connect Site</string>
     <string name="login_continue">Continue</string>
@@ -49,9 +53,13 @@
     <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
     <string name="login_empty_site_url">Please enter a site address</string>
     <string name="login_empty_username">Please enter a username</string>
+    <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_logged_in_as">Logged in as</string>
+    <string name="login_google_button_prefix">Or you can</string>
+    <string name="login_google_button_suffix">Log in with Google.</string>
+    <string name="login_error_button">Close</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>

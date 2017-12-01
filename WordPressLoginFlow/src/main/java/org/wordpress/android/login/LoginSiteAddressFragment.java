@@ -79,7 +79,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
     }
 
     @Override
-    protected void setupLabel(TextView label) {
+    protected void setupLabel(@NonNull TextView label) {
         switch (mLoginListener.getLoginMode()) {
             case SHARE_INTENT:
                 label.setText(R.string.enter_site_address_share_intent);
@@ -138,7 +138,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         if (savedInstanceState != null) {
             mRequestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS);
         } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_URL_FORM_VIEWED);
+            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_URL_FORM_VIEWED);
         }
     }
 
@@ -230,7 +230,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 break;
             case INVALID_URL:
                 showError(R.string.invalid_site_url_message, null, null);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_INSERTED_INVALID_URL);
+                mLoginListener.track(AnalyticsTracker.Stat.LOGIN_INSERTED_INVALID_URL);
                 break;
             case MISSING_XMLRPC_METHOD:
                 showError(R.string.xmlrpc_missing_method_error,
@@ -321,7 +321,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         }
 
         if (event.isError()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.name(), event.error.toString());
 
             if (event.error == DiscoveryError.WORDPRESS_COM_SITE) {

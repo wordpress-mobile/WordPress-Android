@@ -1,31 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_extra_large"
+    android:layout_width="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/margin_extra_large"
-    android:paddingStart="@dimen/margin_extra_large"
-    android:paddingRight="@dimen/margin_extra_large"
     android:paddingEnd="@dimen/margin_extra_large"
-    android:layout_marginBottom="@dimen/margin_extra_large">
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large" >
 
     <TextView
-        style="@style/LoginTheme.TextLabel"
         android:id="@+id/label"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_marginBottom="@dimen/margin_extra_large"
-        tools:text="@string/enter_email_wordpress_com" />
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_width="match_parent"
+        tools:text="@string/enter_email_wordpress_com"
+        style="@style/LoginTheme.TextLabel" >
+    </TextView>
 
     <org.wordpress.android.login.widgets.WPLoginInputRow
         android:id="@+id/login_email_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:hint="@string/email_address"
-        android:inputType="textEmailAddress"
         android:imeOptions="actionNext"
-        app:wpIconDrawable="@drawable/ic_user_grey_24dp"/>
+        android:importantForAutofill="noExcludeDescendants"
+        android:inputType="textEmailAddress"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:wpIconDrawable="@drawable/ic_user_grey_24dp"
+        tools:ignore="UnusedAttribute" >
+    </org.wordpress.android.login.widgets.WPLoginInputRow>
+
+    <LinearLayout
+        android:id="@+id/login_google_layout"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_width="match_parent"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:gravity="center_vertical"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:text="@string/login_google_button_prefix"
+            style="@style/LoginTheme.TextLabel" >
+        </TextView>
+
+        <LinearLayout
+            android:id="@+id/login_google_button"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_medium" >
+
+            <ImageView
+                android:importantForAccessibility="no"
+                android:layout_height="@dimen/google_button_icon_sz"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_width="@dimen/google_button_icon_sz"
+                app:srcCompat="@drawable/ic_google_60dp" >
+            </ImageView>
+
+            <TextView
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:text="@string/login_google_button_suffix"
+                style="@style/LoginTheme.Button.Google" >
+            </TextView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>

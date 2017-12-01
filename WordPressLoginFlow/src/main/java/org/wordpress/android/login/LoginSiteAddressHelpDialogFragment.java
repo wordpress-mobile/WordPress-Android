@@ -55,7 +55,7 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
         });
 
         if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_URL_HELP_SCREEN_VIEWED);
+            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_URL_HELP_SCREEN_VIEWED);
         }
 
         return alert.create();

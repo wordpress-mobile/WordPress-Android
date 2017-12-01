@@ -38,6 +38,10 @@
         <item name="colorControlHighlight">@color/color_control_highlight</item>
     </style>
 
+    <style name="LoginTheme.Button.Google" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/blue_wordpress</item>
+    </style>
+
     <style name="LoginTheme.TextLabel" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:lineSpacingExtra">2dp</item>
