@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -44,8 +45,11 @@ public class PluginDetailActivity extends AppCompatActivity {
     private TextView mInstalledVersionTextView;
     private TextView mAvailableVersionTextView;
     private TextView mUpdateVersionTextView;
+    private ProgressBar mUpdateVersionProgressBar;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
+
+    private boolean isUpdatingVersion;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -119,6 +123,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mInstalledVersionTextView = findViewById(R.id.plugin_installed_version);
         mAvailableVersionTextView = findViewById(R.id.plugin_available_version);
         mUpdateVersionTextView = findViewById(R.id.plugin_btn_update);
+        mUpdateVersionProgressBar = findViewById(R.id.plugin_update_progress_bar);
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
 
@@ -190,12 +195,27 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         if (!isUpdateAvailable()) {
             mAvailableVersionTextView.setVisibility(View.GONE);
-            mUpdateVersionTextView.setVisibility(View.GONE);
         } else {
             mAvailableVersionTextView.setVisibility(View.VISIBLE);
             mAvailableVersionTextView.setText(getString(R.string.plugin_available_version,
                     mPluginInfo.getVersion()));
+        }
+
+        refreshUpdateVersionViews();
+    }
+
+    private void refreshUpdateVersionViews() {
+        boolean isUpdateAvailable = !isUpdateAvailable();
+        if (isUpdateAvailable && !isUpdatingVersion) {
             mUpdateVersionTextView.setVisibility(View.VISIBLE);
+        } else {
+            mUpdateVersionTextView.setVisibility(View.GONE);
+        }
+
+        if (isUpdatingVersion) {
+            mUpdateVersionProgressBar.setVisibility(View.VISIBLE);
+        } else {
+            mUpdateVersionProgressBar.setVisibility(View.GONE);
         }
     }
 
