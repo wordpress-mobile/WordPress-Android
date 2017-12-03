@@ -63,6 +63,7 @@ import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.Html;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.ITextFormat;
+import org.wordpress.aztec.extensions.MediaLinkExtensionsKt;
 import org.wordpress.aztec.plugins.IAztecPlugin;
 import org.wordpress.aztec.plugins.shortcodes.AudioShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.CaptionShortcodePlugin;
@@ -77,7 +78,6 @@ import org.wordpress.aztec.spans.AztecMediaSpan;
 import org.wordpress.aztec.spans.IAztecAttributedSpan;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
-import org.wordpress.aztec.util.MediaExtensionsKt;
 import org.wordpress.aztec.watchers.BlockElementWatcher;
 import org.xml.sax.Attributes;
 
@@ -1473,9 +1473,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 metaData.setCaption(CaptionExtensionsKt.getImageCaption(content, mTappedMediaPredicate));
 
-                String mediaLink = MediaExtensionsKt.getMediaLink(content, mTappedMediaPredicate);
+                String mediaLink = MediaLinkExtensionsKt.getMediaLink(content, mTappedMediaPredicate);
                 if (!TextUtils.isEmpty(mediaLink)) {
-                    AztecAttributes linkAttributes = MediaExtensionsKt.getMediaLinkAttributes(content, mTappedMediaPredicate);
+                    AztecAttributes linkAttributes = MediaLinkExtensionsKt.getMediaLinkAttributes(content, mTappedMediaPredicate);
 
                     metaData.setLinkUrl(mediaLink);
 
@@ -1549,7 +1549,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
 
                     if (!TextUtils.isEmpty(metaData.getLinkUrl())) {
-                        String existingLink = MediaExtensionsKt.getMediaLink(content, mTappedMediaPredicate);
+                        String existingLink = MediaLinkExtensionsKt.getMediaLink(content, mTappedMediaPredicate);
 
                         if (TextUtils.isEmpty(existingLink)) {
                             AztecAttributes linkAttributes = new AztecAttributes();
@@ -1558,9 +1558,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                 linkAttributes.setValue(ATTR_TARGET, "_blank");
                             }
 
-                            MediaExtensionsKt.addLinkToMedia(content, mTappedMediaPredicate, metaData.getLinkUrl(), linkAttributes);
+                            MediaLinkExtensionsKt.addLinkToMedia(content, mTappedMediaPredicate, metaData.getLinkUrl(), linkAttributes);
                         } else {
-                            AztecAttributes linkAttributes = MediaExtensionsKt.getMediaLinkAttributes(content, mTappedMediaPredicate);
+                            AztecAttributes linkAttributes = MediaLinkExtensionsKt.getMediaLinkAttributes(content, mTappedMediaPredicate);
 
                             if (metaData.isLinkTargetBlank()) {
                                 linkAttributes.setValue(ATTR_TARGET, "_blank");
@@ -1568,7 +1568,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                 linkAttributes.removeAttribute(ATTR_TARGET);
                             }
 
-                            MediaExtensionsKt.addLinkToMedia(content, mTappedMediaPredicate, metaData.getLinkUrl(), linkAttributes);
+                            MediaLinkExtensionsKt.addLinkToMedia(content, mTappedMediaPredicate, metaData.getLinkUrl(), linkAttributes);
                         }
                     }
 
