@@ -233,6 +233,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
+        isUpdatingVersion = true;
+        refreshUpdateVersionViews();
         UpdateSitePluginVersionPayload payload = new UpdateSitePluginVersionPayload(mSite, mPlugin);
         mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginVersionAction(payload));
     }
@@ -278,9 +280,11 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginVersionUpdated(PluginStore.OnSitePluginVersionUpdated event) {
+        isUpdatingVersion = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while updating the plugin version with type: "
                     + event.error.type);
+            refreshPluginVersionViews();
             return;
         }
         mPlugin = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
@@ -289,6 +293,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             finish();
             return;
         }
+
         refreshViews();
     }
 
