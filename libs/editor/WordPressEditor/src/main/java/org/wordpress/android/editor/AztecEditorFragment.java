@@ -77,6 +77,7 @@ import org.wordpress.aztec.spans.AztecMediaSpan;
 import org.wordpress.aztec.spans.IAztecAttributedSpan;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
+import org.wordpress.aztec.util.MediaExtensionsKt;
 import org.wordpress.aztec.watchers.BlockElementWatcher;
 import org.xml.sax.Attributes;
 
@@ -103,6 +104,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String ATTR_TAPPED_MEDIA_PREDICATE = "tapped_media_predicate";
 
     private static final String ATTR_ALIGN = "align";
+    private static final String ATTR_TARGET = "target";
     private static final String ATTR_CLASS = "class";
     private static final String ATTR_ID_WP = "data-wpid";
     private static final String ATTR_IMAGE_WP_DASH = "wp-image-";
@@ -1471,6 +1473,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 metaData.setCaption(CaptionExtensionsKt.getImageCaption(content, mTappedMediaPredicate));
 
+                String mediaLink = MediaExtensionsKt.getMediaLink(content, mTappedMediaPredicate);
+                if (!TextUtils.isEmpty(mediaLink)) {
+                    AztecAttributes linkAttributes = MediaExtensionsKt.getMediaLinkAttributes(content, mTappedMediaPredicate);
+
+                    metaData.setLinkUrl(mediaLink);
+
+                    String linkTarget = linkAttributes.getValue(ATTR_TARGET);
+                    metaData.setLinkTargetBlank(!TextUtils.isEmpty(linkTarget) && linkTarget.equals("_blank"));
+                }
+
                 // Use https:// when requesting the auth header, in case the image is incorrectly using http://
                 // If an auth header is returned, force https:// for the actual HTTP request
                 final String imageSrc = metaData.getSrc();
@@ -1518,7 +1530,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     AztecAttributes attributes = content.getElementAttributes(mTappedMediaPredicate);
-
                     attributes.setValue(ATTR_SRC, metaData.getSrc());
 
                     if (!TextUtils.isEmpty(metaData.getTitle())) {
@@ -1536,6 +1547,30 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     attributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
                     attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
 
+
+                    if (!TextUtils.isEmpty(metaData.getLinkUrl())) {
+                        String existingLink = MediaExtensionsKt.getMediaLink(content, mTappedMediaPredicate);
+
+                        if (TextUtils.isEmpty(existingLink)) {
+                            AztecAttributes linkAttributes = new AztecAttributes();
+
+                            if (metaData.isLinkTargetBlank()) {
+                                linkAttributes.setValue(ATTR_TARGET, "_blank");
+                            }
+
+                            MediaExtensionsKt.addLinkToMedia(content, mTappedMediaPredicate, metaData.getLinkUrl(), linkAttributes);
+                        } else {
+                            AztecAttributes linkAttributes = MediaExtensionsKt.getMediaLinkAttributes(content, mTappedMediaPredicate);
+
+                            if (metaData.isLinkTargetBlank()) {
+                                linkAttributes.setValue(ATTR_TARGET, "_blank");
+                            } else {
+                                linkAttributes.removeAttribute(ATTR_TARGET);
+                            }
+
+                            MediaExtensionsKt.addLinkToMedia(content, mTappedMediaPredicate, metaData.getLinkUrl(), linkAttributes);
+                        }
+                    }
 
                     AttributesWithClass attributesWithClass = getAttributesWithClass(attributes);
 
@@ -1581,10 +1616,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                     attributes.removeAttribute(TEMP_IMAGE_ID);
                     content.updateElementAttributes(mTappedMediaPredicate, attributes);
-
-//                  TODO: Fix issue with image inside link.
-//                  https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
-//                  String link = JSONUtils.getString(meta, ATTR_URL_LINK);
                 }
 
                 mTappedMediaPredicate = null;
@@ -1594,6 +1625,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
             }
         }
+
     }
 
     private void setAttributeValuesIfNotDefault(AztecAttributes attributes, MediaFile mediaFile) {
