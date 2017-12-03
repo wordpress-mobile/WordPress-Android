@@ -122,9 +122,6 @@ Language: sk
 	<string name="comments_empty_list_filtered_approved">Žiadne komentáre schválené</string>
 	<string name="button_done">Hotovo</string>
 	<string name="button_skip">Preskočiť</string>
-	<string name="theme_premium">Prémium</string>
-	<string name="theme_all">Všetky</string>
-	<string name="theme_free">Zdarma</string>
 	<string name="alignment_center">Na stred</string>
 	<string name="post_format_video">Video</string>
 	<string name="post_format_status">Status</string>
@@ -652,7 +649,6 @@ Language: sk
 	<string name="delete_page">Vymazať stránku</string>
 	<string name="delete_post">Vymazať príspevok</string>
 	<string name="post_settings">Nastavenia príspevku</string>
-	<string name="file_not_found">Nie je možné nájsť súbor pre nahratie. Nebol zmazaný alebo presunutý?</string>
 	<string name="horizontal_alignment">Horizontálne zarovnanie</string>
 	<string name="upload_failed">Nahratie sa nepodarilo</string>
 	<string name="local_draft">Lokálny koncept </string>

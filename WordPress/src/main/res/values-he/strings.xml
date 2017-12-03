@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-24 23:24:33+0000
+Translation-Revision-Date: 2017-11-22 12:19:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+	<string name="error_post_does_not_exist">הפוסט כבר לא קיים</string>
 	<string name="async_promo_link">כיצד זה עובד?</string>
 	<string name="editor_uploading_post">הפוסט נטען</string>
+	<string name="uploading_media">מעלה מדיה...</string>
 	<string name="page_scheduled">העמוד תוזמן לפרסום</string>
-	<string name="post_draft_param">"%s" נשמר כטיוטה!</string>
 	<string name="post_scheduled">הפוסט תוזמן לפרסום</string>
-	<string name="post_updated_param">"%s" עודכן!</string>
-	<string name="post_published_param">"%s" פורסם!</string>
-	<string name="post_scheduled_param">"%s" תוזמן לפרסום!</string>
 	<string name="button_retry">לנסות שנית</string>
 	<string name="uploading_post">מעלה את "%s"</string>
 	<string name="login_epilogue_mysites_other">האתרים שלי</string>
@@ -133,6 +131,7 @@ Language: he_IL
 	<string name="media_upload_state_deleting">מוחק</string>
 	<string name="media_upload_state_uploading">מעלה</string>
 	<string name="media_upload_state_queued">בתור</string>
+	<string name="media_upload_state_failed">העלאה נכשלה</string>
 	<string name="update_draft">עדכון טיוטה</string>
 	<string name="keep_editing">המשך עריכה</string>
 	<string name="image_quality">איכות תמונה</string>
@@ -389,10 +388,7 @@ Language: he_IL
 	<string name="xmlrpc_missing_method_error">לא ניתן להתחבר. שיטות XML-RPC נדרשות חסרות בשרת.</string>
 	<string name="post_format_video">וידאו</string>
 	<string name="alignment_center">מרכז</string>
-	<string name="theme_free">חינם</string>
-	<string name="theme_premium">פרימיום</string>
 	<string name="post_format_status">מצב</string>
-	<string name="theme_all">הכול</string>
 	<string name="post_format_chat">צ\'אט</string>
 	<string name="post_format_image">תמונה</string>
 	<string name="post_format_link">קישור</string>
@@ -585,6 +581,7 @@ Language: he_IL
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">האתרים אחריהם אתה עוקב לא פרסמו דבר לאחרונה</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">אין פוסטים אחרונים</string>
 	<string name="edit_media">עריכת מדיה</string>
+	<string name="media_edit_copy_url_toast">הכתובת הועתקה</string>
 	<string name="media_details_label_date_uploaded">הועלה</string>
 	<string name="media_details_label_date_added">התווסף</string>
 	<string name="selected_theme">תבנית נבחרת</string>
@@ -676,6 +673,7 @@ Language: he_IL
 	<string name="notifications_tab">טאב התראות</string>
 	<string name="app_notifications">התראות אפליקציה</string>
 	<string name="notifications_wpcom_updates">עדכוני וורדפרס.קום</string>
+	<string name="notification_settings_item_other_account_emails_summary">תמיד נשלח אימיילים חשובים הקשורים לאתר, אבל לפעמים תקבלו גם תוספות מועילות.</string>
 	<string name="stats_insights_latest_post_trend">עברו %1$s מאז פרסום %2$s. קצת מידע על תפקוד הפוסט עד כה...</string>
 	<string name="stats_insights_latest_post_summary">סיכום פוסטים אחרונים</string>
 	<string name="button_revert">שיחזור</string>
@@ -979,6 +977,7 @@ Language: he_IL
 	<string name="username_or_password_incorrect">שם המשתמש או הסיסמה שהקלדת שגויים</string>
 	<string name="nux_cannot_log_in">איננו יכולים לחבר אותך</string>
 	<string name="invalid_url_message">ודא שכתובת האתר שהוזנה תקפה</string>
+	<string name="error_deleting_post">אירעה שגיאה בזמן מחיקת הפוסט</string>
 	<string name="wordpress_blog">אתר ב-WordPress</string>
 	<string name="blog_removed_successfully">האתר הוסר בהצלחה</string>
 	<string name="add_account_blog_url">כתובת האתר</string>
@@ -1006,7 +1005,6 @@ Language: he_IL
 	<string name="local_draft">טיוטה מקומית</string>
 	<string name="upload_failed">העלאה נכשלה</string>
 	<string name="horizontal_alignment">יישור אופקי</string>
-	<string name="file_not_found">מציאת הקובץ להעלאה נכשלה. האם הוא נמחק או הועבר?</string>
 	<string name="post_settings">הגדרות רשומה</string>
 	<string name="delete_post">מחק רשומה</string>
 	<string name="delete_page">מחק דף</string>
