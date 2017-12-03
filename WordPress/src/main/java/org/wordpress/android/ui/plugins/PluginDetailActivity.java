@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.plugins;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -42,6 +44,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private PluginModel mPlugin;
     private PluginInfoModel mPluginInfo;
 
+    private LinearLayout mContainer;
     private TextView mInstalledVersionTextView;
     private TextView mAvailableVersionTextView;
     private TextView mUpdateVersionTextView;
@@ -122,6 +125,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     // UI Helpers
 
     private void setupViews() {
+        mContainer = findViewById(R.id.plugin_detail_container);
         mInstalledVersionTextView = findViewById(R.id.plugin_installed_version);
         mAvailableVersionTextView = findViewById(R.id.plugin_available_version);
         mUpdateVersionTextView = findViewById(R.id.plugin_btn_update);
@@ -239,6 +243,26 @@ public class PluginDetailActivity extends AppCompatActivity {
         mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginVersionAction(payload));
     }
 
+    private void showSuccessfulUpdateSnackbar() {
+        Snackbar.make(mContainer,
+                getString(R.string.plugin_updated_successfully, mPlugin.getDisplayName()),
+                Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    private void showUpdateFailedSnackbar() {
+        Snackbar.make(mContainer,
+                getString(R.string.plugin_updated_failed, mPlugin.getDisplayName()),
+                Snackbar.LENGTH_LONG)
+                .setAction(R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        updatePluginVersion();
+                    }
+                })
+                .show();
+    }
+
     // FluxC callbacks
 
     @SuppressWarnings("unused")
@@ -285,6 +309,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             AppLog.e(AppLog.T.API, "An error occurred while updating the plugin version with type: "
                     + event.error.type);
             refreshPluginVersionViews();
+            showUpdateFailedSnackbar();
             return;
         }
         mPlugin = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
@@ -295,6 +320,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         refreshViews();
+        showSuccessfulUpdateSnackbar();
     }
 
     // Utils
