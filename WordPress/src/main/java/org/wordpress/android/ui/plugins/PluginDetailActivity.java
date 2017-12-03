@@ -192,7 +192,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                     mPlugin.getVersion()));
         }
 
-        if (!isUpdateAvailable()) {
+        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo)) {
             mAvailableVersionTextView.setVisibility(View.GONE);
         } else {
             mAvailableVersionTextView.setVisibility(View.VISIBLE);
@@ -204,7 +204,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshUpdateVersionViews() {
-        boolean isUpdateAvailable = isUpdateAvailable();
+        boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo);
         if (isUpdateAvailable && !isUpdatingVersion) {
             mUpdateVersionTextView.setVisibility(View.VISIBLE);
         } else {
@@ -229,7 +229,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
-        if (!isUpdateAvailable() || isUpdatingVersion) {
+        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo) || isUpdatingVersion) {
             return;
         }
 
@@ -301,10 +301,5 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private String getWpOrgPluginUrl() {
         return "https://wordpress.org/plugins/" + mPlugin.getSlug();
-    }
-
-    private boolean isUpdateAvailable() {
-        return mPluginInfo != null && !TextUtils.isEmpty(mPluginInfo.getVersion())
-                && !mPlugin.getVersion().equals(mPluginInfo.getVersion());
     }
 }

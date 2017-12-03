@@ -15,4 +15,9 @@ class PluginUtils {
         }
         return pluginStore.getPluginInfoBySlug(slug);
     }
+
+    static boolean isUpdateAvailable(PluginModel pluginModel, PluginInfoModel pluginInfoModel) {
+        return pluginInfoModel != null && !TextUtils.isEmpty(pluginInfoModel.getVersion())
+                && !pluginModel.getVersion().equals(pluginInfoModel.getVersion());
+    }
 }
