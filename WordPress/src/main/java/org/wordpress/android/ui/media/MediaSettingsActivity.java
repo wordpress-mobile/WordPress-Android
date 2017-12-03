@@ -559,8 +559,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         if (isMediaFromEditor()) {
             findViewById(R.id.edit_description_container).setVisibility(View.GONE);
-            findViewById(R.id.edit_caption_container).setVisibility(View.GONE);
+//            findViewById(R.id.edit_caption_container).setVisibility(View.GONE);
             findViewById(R.id.divider_dimensions).setVisibility(View.GONE);
+            mCaptionView.setText(mMedia.getCaption());
 
             setupAlignmentSpinner();
             setupImageSizeSeekBar();
@@ -908,6 +909,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             boolean hasChanged = !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
                     || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText)
                     || !StringUtils.equals(mEditorImageMetaData.getSize(), size)
+                    || !StringUtils.equals(mEditorImageMetaData.getCaption(), thisCaption)
                     || !StringUtils.equals(mEditorImageMetaData.getAlign(), alignment);
 
             if (hasChanged) {
@@ -915,6 +917,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 mEditorImageMetaData.setSize(size);
                 mEditorImageMetaData.setAlt(thisAltText);
                 mEditorImageMetaData.setAlign(alignment);
+                mEditorImageMetaData.setCaption(thisCaption);
 
                 Intent intent = new Intent();
                 intent.putExtra(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
