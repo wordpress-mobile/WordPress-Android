@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-31 16:33:03+0000
+Translation-Revision-Date: 2017-11-27 04:07:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+	<string name="login_empty_password">Vennligst skriv inn et passord</string>
+	<string name="login_text_otp_another">Send meg en annen kode i stedet.</string>
+	<string name="size_large">Stor</string>
+	<string name="size_medium">Middels</string>
+	<string name="image_size">Størrelse</string>
 	<string name="login_log_in_for_share_intent">Logg inn på WordPress.com for å dele innholdet.</string>
 	<string name="enter_site_address_share_intent">Skriv inn adressen til WordPress-siden din som du ønsker å dele innholdet til.</string>
 	<string name="jetpack_disconnect_error_toast">Feil under frakobling av siden.</string>
@@ -47,7 +52,6 @@ Language: nb_NO
 	<string name="media_edit_filetype_caption">Filtype</string>
 	<string name="media_edit_filename_caption">Filnavn</string>
 	<string name="media_edit_url_caption">Nettadresse</string>
-	<string name="media_edit_file_details_card_caption">Fildetaljer</string>
 	<string name="copy">Kopier</string>
 	<string name="media_edit_alttext_text">Alternativ tekst</string>
 	<string name="notification_settings_item_sights_and_sounds_blink_light">Lysblink</string>
@@ -69,7 +73,6 @@ Language: nb_NO
 	<string name="notification_settings_master_status_on">På</string>
 	<string name="max_video_resolution">Maks videostørrelse</string>
 	<string name="max_thumbnail_px_size">Maks bildestørrelse</string>
-	<string name="error_media_recover_post">Vi klarte ikke å laste denne postens media. Vennligst rediger innlegget for å prøve igjen.</string>
 	<string name="error_page_does_not_exist">Denne siden finnes ikke lenger</string>
 	<string name="error_upload_post_media_param">Det var en feil under opplastning av mediene i dette innlegget: %s.</string>
 	<string name="error_upload_post_param">Det var en feil under opplastning av dette innlegget: %s.</string>
@@ -84,7 +87,6 @@ Language: nb_NO
 	<string name="cant_open_url">Klarte ikke å åpne lenken</string>
 	<string name="error_unknown_post">Klarte ikke å finne innlegget på tjeneren</string>
 	<string name="error_post_does_not_exist">Dette innlegget finnes ikke lenger</string>
-	<string name="error_media_recover_page">Vi klarte ikke å laste opp denne sidens medier. Vennligst rediger siden for å prøve igjen.</string>
 	<string name="error_media_canceled">Opplasting av medie ble avbrutt</string>
 	<string name="error_upload_page_media_param">Det var en feil under opplastning av mediene i denne siden: %s.</string>
 	<string name="error_upload_page_param">Det var en feil under opplastning av denne siden: %s.</string>
@@ -95,10 +97,6 @@ Language: nb_NO
 	<string name="dialog_confirm_cancel_post_media_uploading">Er du sikker? Å slette dette innlegget vil også avbryte medieopplastingen.</string>
 	<string name="page_scheduled">Siden har blitt planlagt</string>
 	<string name="post_scheduled">Innlegget har blitt planlagt</string>
-	<string name="post_draft_param">«%s» har blitt lagret som et utkast!</string>
-	<string name="post_scheduled_param">«%s» har blitt planlagt!</string>
-	<string name="post_updated_param">«%s» har blitt oppdatert!</string>
-	<string name="post_published_param">«%s» har blitt publisert!</string>
 	<string name="button_retry">Prøv igjen</string>
 	<string name="post_queued">Køoppstilt innlegg</string>
 	<string name="connection_to_server_lost">Tilkoblingen til tjeneren forsvant</string>
@@ -129,7 +127,6 @@ Language: nb_NO
 	<string name="login_magic_links_sent_label">Din magiske lenke er på vei! Sjekk E-posten din på denne enheten, og trykk på lenken i E-posten du mottok fra WordPress.com.</string>
 	<string name="login_magic_links_label">Vi sender deg en E-post med en magisk lenke som vil logge deg inn umiddelbart, og intet passord er påkrevd. Du trenger aldri å lete etter den igjen!</string>
 	<string name="password_incorrect">Det ser ut til at dette passordet er feil. Vennligst dobbeltsjekk informasjonen din og prøv igjen.</string>
-	<string name="email_not_registered_wpcom">Denne E-posten er ikke registrert på WordPress.com</string>
 	<string name="requesting_otp">Ber om en verifiseringskode via SMS.</string>
 	<string name="login_text_otp">Send meg en SMS-kode istedet.</string>
 	<string name="enter_verification_code">Nesten framme! Vennligst skriv inn verifiseringskoden fra autentiseringsappen din.</string>
@@ -600,12 +597,9 @@ Language: nb_NO
 	<string name="site_timeout_error">Klarte ikke å koble til WordPress-nettstedet på grunn av en tidsutløpsfeil.</string>
 	<string name="xmlrpc_malformed_response_error">Klarte ikke å koble til. WordPress-installasjonen svarte med et ugylidg XML-RPC-dokument.</string>
 	<string name="xmlrpc_missing_method_error">Klarte ikke å koble til. De påkrevde XML-RPC-metodene mangler på denne tjeneren.</string>
-	<string name="theme_free">Gratis</string>
-	<string name="theme_all">Alle</string>
 	<string name="alignment_center">Midten</string>
 	<string name="post_format_video">Video</string>
 	<string name="post_format_status">Status</string>
-	<string name="theme_premium">Betalt</string>
 	<string name="post_format_gallery">Galleri</string>
 	<string name="post_format_image">Bilde</string>
 	<string name="post_format_quote">Sitering</string>
@@ -1271,7 +1265,6 @@ Language: nb_NO
 	<string name="blog_removed_successfully">Nettstedet ble vellykket fjernet</string>
 	<string name="content_required">Kommentering er påkrevd</string>
 	<string name="sure_to_cancel_edit_comment">Vil du avbryte redigeringen av denne kommentaren?</string>
-	<string name="file_not_found">Klarte ikke å finne mediefilen som skulle lastes opp. Ble den kanskje slettet eller flyttet?</string>
 	<string name="theme_premium_theme">Betalt tema</string>
 	<string name="media_error_no_permission">Du har ikke tillatelse til å se mediebiblioteket</string>
 	<string name="post_not_found">En feil oppstod under innlastning av innlegget. Oppfrisk innleggene dine, og prøv igjen.</string>

@@ -214,7 +214,6 @@ Language: mk
 	<string name="mnu_comment_spam">Спам</string>
 	<string name="horizontal_alignment">Хоризонтално порамнување</string>
 	<string name="dlg_confirm_trash_comments">Испрати во корпа?</string>
-	<string name="file_not_found">Не е пронајдена медиа за качување. Дали е избришана или преместена?</string>
 	<string name="post_settings">Подесувања на напис</string>
 	<string name="delete_post">Избриши напис</string>
 	<string name="delete_page">Избриши страница</string>

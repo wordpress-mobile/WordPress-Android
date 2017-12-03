@@ -8,17 +8,12 @@ Language: ar
 <resources>
 	<string name="error_unknown_post">تعذر العثور على المقالة على الخادم</string>
 	<string name="error_post_does_not_exist">لم تعد هذه المقالة موجودة</string>
-	<string name="error_media_recover_page">تعذر علينا رفع الوسائط الخاصة بهذه المقالة. يرجى تحرير المقالة للمحاولة مجددًا.</string>
 	<string name="error_media_canceled">تم إلغاء رفع الوسائط</string>
 	<string name="async_promo_title">النشر مع التمتع بالثقة</string>
 	<string name="editor_uploading_post">يجري رفع مقالتك</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">هل أنت متأكد من ذلك؟ سيؤدي حذف هذه المقالة إلى إلغاء رفع الوسائط كذلك.</string>
 	<string name="page_scheduled">تمت جدولة الصفحة</string>
 	<string name="post_scheduled">تمت جدولة المقالة</string>
-	<string name="post_draft_param">تم حفظ "%s" كمسودة!</string>
-	<string name="post_scheduled_param">تمت جدولة "%s"!</string>
-	<string name="post_updated_param">تم تحديث "%s"!</string>
-	<string name="post_published_param">تم نشر "%s"!</string>
 	<string name="button_retry">إعادة المحاولة</string>
 	<string name="smart_toast_comments_long_press">اضغط مع الاستمرار لتحديد العديد من التعليقات</string>
 	<string name="smart_toast_photo_long_press">اضغط مع الاستمرار لتحديد العديد من الصور</string>
@@ -261,9 +256,6 @@ Language: ar
 	<string name="post_format_status">الحالة</string>
 	<string name="post_format_video">الفيديو</string>
 	<string name="alignment_center">وسط</string>
-	<string name="theme_free">مجانًا</string>
-	<string name="theme_all">الكل</string>
-	<string name="theme_premium">Premium</string>
 	<string name="post_format_chat">محادثة</string>
 	<string name="post_format_gallery">معرض</string>
 	<string name="post_format_link">الرابط</string>
@@ -910,7 +902,6 @@ Language: ar
 	<string name="fatal_db_error">حدث خطأ اثناء إنشاء قاعدة بيانات التطبيق. حاول إعادة تنصيب التطبيق.</string>
 	<string name="http_credentials">تفويضات HTTP  (إختياري)</string>
 	<string name="horizontal_alignment">المحاذاة الأفقية</string>
-	<string name="file_not_found">لايمكن إيجاد ملف الوسائط للرفع. هل تم حذفه أو نقله؟</string>
 	<string name="trash">سلة المهملات</string>
 	<string name="comment_status_spam">مزعج</string>
 	<string name="mnu_comment_spam">مزعج</string>
