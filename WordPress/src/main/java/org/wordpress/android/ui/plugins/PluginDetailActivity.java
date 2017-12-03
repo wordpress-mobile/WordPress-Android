@@ -204,7 +204,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshUpdateVersionViews() {
-        boolean isUpdateAvailable = !isUpdateAvailable();
+        boolean isUpdateAvailable = isUpdateAvailable();
         if (isUpdateAvailable && !isUpdatingVersion) {
             mUpdateVersionTextView.setVisibility(View.VISIBLE);
         } else {
@@ -226,7 +226,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void updatePluginVersion() {
-        if (NetworkUtils.checkConnection(this)) {
+        if (!NetworkUtils.checkConnection(this)) {
             return;
         }
         if (!isUpdateAvailable() || isUpdatingVersion) {
