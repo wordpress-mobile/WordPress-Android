@@ -53,6 +53,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/plugin_update_available_icon_content_description"
+        android:visibility="gone"
         app:srcCompat="@drawable/plugin_update_available_icon" />
 
 </RelativeLayout>

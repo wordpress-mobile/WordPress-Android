@@ -204,6 +204,12 @@ public class PluginListActivity extends AppCompatActivity {
                 }
                 String iconUrl = pluginInfo != null ? pluginInfo.getIcon() : "";
                 pluginHolder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
+
+                if (pluginInfo != null && PluginUtils.isUpdateAvailable(pluginModel, pluginInfo)) {
+                    pluginHolder.updateAvailableIcon.setVisibility(View.VISIBLE);
+                } else {
+                    pluginHolder.updateAvailableIcon.setVisibility(View.GONE);
+                }
             }
         }
 
