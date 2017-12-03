@@ -67,6 +67,7 @@ import org.wordpress.aztec.plugins.IAztecPlugin;
 import org.wordpress.aztec.plugins.shortcodes.AudioShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.CaptionShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.VideoShortcodePlugin;
+import org.wordpress.aztec.plugins.shortcodes.extensions.CaptionExtensionsKt;
 import org.wordpress.aztec.plugins.shortcodes.handlers.CaptionHandler;
 import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
@@ -247,7 +248,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .setOnMediaDeletedListener(this)
                 .addPlugin(new WordPressCommentsPlugin(content))
                 .addPlugin(new MoreToolbarButton(content))
-                .addPlugin(new CaptionShortcodePlugin())
+                .addPlugin(new CaptionShortcodePlugin(content))
                 .addPlugin(new VideoShortcodePlugin())
                 .addPlugin(new AudioShortcodePlugin());
 
@@ -1468,6 +1469,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 EditorImageMetaData metaData = gson.fromJson(meta.toString(), EditorImageMetaData.class);
 
+                metaData.setCaption(CaptionExtensionsKt.getImageCaption(content, mTappedMediaPredicate));
+
                 // Use https:// when requesting the auth header, in case the image is incorrectly using http://
                 // If an auth header is returned, force https:// for the actual HTTP request
                 final String imageSrc = metaData.getSrc();
@@ -1515,9 +1518,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     AztecAttributes attributes = content.getElementAttributes(mTappedMediaPredicate);
-                    attributes.removeAttribute(TEMP_IMAGE_ID);
-
-                    content.updateElementAttributes(mTappedMediaPredicate, attributes);
 
                     attributes.setValue(ATTR_SRC, metaData.getSrc());
 
@@ -1544,11 +1544,29 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     attributesWithClass.removeClassStartingWith(ATTR_SIZE_DASH);
                     attributesWithClass.removeClassStartingWith(ATTR_IMAGE_WP_DASH);
 
-                    // only add align attribute if there is no caption since alignment is sent with shortcode
-                    if (!TextUtils.isEmpty(metaData.getAlign()) &&
-                            TextUtils.isEmpty(metaData.getCaption())) {
-                        attributesWithClass.addClass(ATTR_ALIGN + metaData.getAlign());
+
+                    if (!TextUtils.isEmpty(metaData.getCaption())) {
+                        AztecAttributes captionAttributes = CaptionExtensionsKt.getImageCaptionAttributes(content, mTappedMediaPredicate);
+
+
+                        if (!TextUtils.isEmpty(metaData.getAlign())) {
+                            captionAttributes.setValue(ATTR_ALIGN, ATTR_ALIGN + metaData.getAlign());
+                        }else{
+                            captionAttributes.removeAttribute(ATTR_ALIGN);
+                        }
+
+                        captionAttributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
+
+                        CaptionExtensionsKt.setImageCaption(content, mTappedMediaPredicate, metaData.getCaption(), captionAttributes);
+
+                    } else {
+                        if (!TextUtils.isEmpty(metaData.getAlign())) {
+                            attributesWithClass.addClass(ATTR_ALIGN + metaData.getAlign());
+                        }
+
+                        CaptionExtensionsKt.removeImageCaption(content, mTappedMediaPredicate);
                     }
+
 
                     if (!TextUtils.isEmpty(metaData.getSize())) {
                         attributesWithClass.addClass(metaData.getSize());
@@ -1560,14 +1578,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                     attributes.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
 
-//                  TODO: Add shortcode support to allow captions.
-//                  https://github.com/wordpress-mobile/AztecEditor-Android/issues/17
-//                  String caption = JSONUtils.getString(meta, ATTR_CAPTION);
+
+                    attributes.removeAttribute(TEMP_IMAGE_ID);
+                    content.updateElementAttributes(mTappedMediaPredicate, attributes);
 
 //                  TODO: Fix issue with image inside link.
 //                  https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
 //                  String link = JSONUtils.getString(meta, ATTR_URL_LINK);
-
                 }
 
                 mTappedMediaPredicate = null;
