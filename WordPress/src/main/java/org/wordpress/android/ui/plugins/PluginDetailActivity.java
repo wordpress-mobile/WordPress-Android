@@ -274,8 +274,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 // these errors are thrown when the plugin is already active and we try to activate it and vice versa.
                 return;
             }
-            ToastUtils.showToast(this, "An error occurred while fetching the plugins: "
-                    + event.error.message);
+            ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed, event.error.message));
             return;
         }
         mPlugin = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
