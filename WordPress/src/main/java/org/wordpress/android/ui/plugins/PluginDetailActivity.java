@@ -119,6 +119,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         outState.putString(KEY_PLUGIN_NAME, mPlugin.getName());
     }
 
+    // UI Helpers
+
     private void setupViews() {
         mInstalledVersionTextView = findViewById(R.id.plugin_installed_version);
         mAvailableVersionTextView = findViewById(R.id.plugin_available_version);
@@ -150,10 +152,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mUpdateVersionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (NetworkUtils.checkConnection(PluginDetailActivity.this) && isUpdateAvailable()) {
-                    UpdateSitePluginVersionPayload payload = new UpdateSitePluginVersionPayload(mSite, mPlugin);
-                    mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginVersionAction(payload));
-                }
+                updatePluginVersion();
             }
         });
 
@@ -219,10 +218,26 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
+    // Network Helpers
+
     private void dispatchUpdateAction() {
         mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(
                 new UpdateSitePluginPayload(mSite, mPlugin)));
     }
+
+    private void updatePluginVersion() {
+        if (NetworkUtils.checkConnection(this)) {
+            return;
+        }
+        if (!isUpdateAvailable() || isUpdatingVersion) {
+            return;
+        }
+
+        UpdateSitePluginVersionPayload payload = new UpdateSitePluginVersionPayload(mSite, mPlugin);
+        mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginVersionAction(payload));
+    }
+
+    // FluxC callbacks
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -277,7 +292,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         refreshViews();
     }
 
-    // Helpers
+    // Utils
 
     private String getWpOrgPluginUrl() {
         return "https://wordpress.org/plugins/" + mPlugin.getSlug();
