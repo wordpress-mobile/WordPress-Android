@@ -9,8 +9,81 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import java.lang.reflect.Type
 
 /**
- * A request making a WP-API call on a Jetpack site via the WordPress.com <code>/jetpack-blogs/$site/rest-api</code>
- * tunnel.
+ * A request making a WP-API call to a Jetpack site via the WordPress.com /jetpack-blogs/$site/rest-api/ tunnel.
+ *
+ * # Requests
+ *
+ * The tunnel endpoint expects requests to be made in this way:
+ *
+ * ## GET:
+ *
+ * Example request:
+ * https://public-api.wordpress.com/rest/v1.1/jetpack-blogs/$siteId/rest-api/
+ * ?path=%2Fwp%2Fv2%2Fposts%2F%26_method%3Dget%26status%3Ddraft&json=true
+ *
+ * Broken down, the GET parameters are:
+ * path=/wp/v2/posts/&_method=get&status=draft
+ * json=true
+ *
+ * The path parameter is sent HTML-encoded so that it's discernible from the other arguments by WordPress.com.
+ * In this example, this would become a GET request to {JSON endpoint root}/wp/v2/posts/?status=draft.
+ *
+ * Any additional top-level params are received by the WordPress.com API, and are not sent through to the
+ * WP-API endpoint (e.g. `json=true`).
+ *
+ * ## POST:
+ *
+ * Example request:
+ * https://public-api.wordpress.com/rest/v1.1/jetpack-blogs/$siteId/rest-api/
+ *
+ * Body (Form URL-Encoded):
+ * path=%2Fwp%2Fv2%2Fposts%2F%26_method%3Dpost&body=%7B%22title%22%3A%22test-title%22%7D&json=true
+ *
+ * Broken down, the POST parameters are:
+ * path=/wp/v2/posts/&_method=post
+ * body={"title":"A title"}
+ * json=true
+ *
+ * Again, the path parameter is sent encoded so that it's separate from the rest of the arguments.
+ * The body parameter is a JSON object, and contains the POST body that would be sent if the WP-API endpoint
+ * were called directly.
+ *
+ * In this example, this would become a POST request to {JSON endpoint root}/wp/v2/posts/, with body:
+ * {"title":"A title"}
+ *
+ * Any additional top-level arguments are received by the WordPress.com API, and are not sent through to the
+ * WP-API endpoint.
+ *
+ * ## PUT/PATCH
+ *
+ * For PUT and PATCH, a POST request is made to /jetpack-blogs/$siteId/rest-api/ just as the POST case,
+ * but with `_method=put` (or `patch`).
+ *
+ * ## DELETE
+ *
+ * DELETE requests are also made as POST requests to /jetpack-blogs/$siteId/rest-api/, but with no `body` parameter.
+ * Instead, any arguments intended for the WP-API endpoint are added to the `path` parameter.
+ *
+ * Example request:
+ * https://public-api.wordpress.com/rest/v1.1/jetpack-blogs/$siteId/rest-api/
+ *
+ * Body (Form URL-Encoded):
+ * path=%2Fwp%2Fv2%2Fposts%2F123456%2F%26_method%3Ddelete%26force%3Dtrue&json=true
+ *
+ * Broken down, the POST parameters are:
+ * path=/wp/v2/posts/123456&_method=delete&force=true
+ * json=true
+ *
+ * # Responses
+ *
+ * The WordPress.com endpoint will return the response it received from the WP-API endpoint, wrapped in a `data`
+ * object (see [JPTunnelWPComRestResponse]). The response is unwrapped, and the pure WP-API response is handed
+ * to the listeners.
+ *
+ * # Errors
+ *
+ * Any errors from WP-API are converted into usual WP.com API errors.
+ *
  */
 object WPComJPTunnelGsonRequest {
     private val gson by lazy { Gson() }
