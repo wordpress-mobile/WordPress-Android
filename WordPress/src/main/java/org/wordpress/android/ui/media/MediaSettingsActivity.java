@@ -40,6 +40,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -114,6 +115,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     private EditText mCaptionView;
     private EditText mAltTextView;
     private EditText mDescriptionView;
+    private EditText mLinkView;
+    private CheckBox mLinkTargetNewWindowView;
     private TextView mImageSizeView;
     private SeekBar mImageSizeSeekBarView;
     private Spinner mAlignmentSpinnerView;
@@ -210,16 +213,18 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         }
 
-        mImageView = (ImageView) findViewById(R.id.image_preview);
-        mImagePlay = (ImageView) findViewById(R.id.image_play);
-        mTitleView = (EditText) findViewById(R.id.edit_title);
-        mCaptionView = (EditText) findViewById(R.id.edit_caption);
-        mAltTextView = (EditText) findViewById(R.id.edit_alt_text);
-        mDescriptionView = (EditText) findViewById(R.id.edit_description);
-        mImageSizeView = (TextView) findViewById(R.id.image_size_hint);
-        mImageSizeSeekBarView = (SeekBar) findViewById(R.id.image_size_seekbar);
-        mAlignmentSpinnerView = (Spinner) findViewById(org.wordpress.android.editor.R.id.alignment_spinner);
-        mFabView = (FloatingActionButton) findViewById(R.id.fab_button);
+        mImageView = findViewById(R.id.image_preview);
+        mImagePlay = findViewById(R.id.image_play);
+        mTitleView = findViewById(R.id.edit_title);
+        mCaptionView = findViewById(R.id.edit_caption);
+        mAltTextView = findViewById(R.id.edit_alt_text);
+        mDescriptionView = findViewById(R.id.edit_description);
+        mLinkView = findViewById(R.id.edit_link);
+        mLinkTargetNewWindowView = findViewById(R.id.edit_link_target_new_widnow_checkbox);
+        mImageSizeView = findViewById(R.id.image_size_hint);
+        mImageSizeSeekBarView = findViewById(R.id.image_size_seekbar);
+        mAlignmentSpinnerView = findViewById(org.wordpress.android.editor.R.id.alignment_spinner);
+        mFabView = findViewById(R.id.fab_button);
 
         int mediaId;
         if (savedInstanceState != null) {
@@ -249,8 +254,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         }
 
         // only show title when toolbar is collapsed
-        final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             int scrollRange = -1;
 
@@ -280,7 +285,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         // set the height of the gradient scrim that appears atop the image
         int toolbarHeight = DisplayUtils.getActionBarHeight(this);
-        ImageView imgScrim = (ImageView) findViewById(R.id.image_gradient_scrim);
+        ImageView imgScrim = findViewById(R.id.image_gradient_scrim);
         imgScrim.getLayoutParams().height = toolbarHeight * 3;
 
         adjustToolbar();
@@ -558,6 +563,9 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         mAltTextView.setText(mMedia.getAlt());
 
         if (isMediaFromEditor()) {
+            mLinkView.setText(mEditorImageMetaData.getLinkUrl());
+            mLinkTargetNewWindowView.setChecked(mEditorImageMetaData.isLinkTargetBlank());
+
             findViewById(R.id.edit_description_container).setVisibility(View.GONE);
 //            findViewById(R.id.edit_caption_container).setVisibility(View.GONE);
             findViewById(R.id.divider_dimensions).setVisibility(View.GONE);
@@ -570,15 +578,16 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             mCaptionView.setText(mMedia.getCaption());
 
             findViewById(R.id.card1).setVisibility(View.GONE);
+            findViewById(R.id.edit_link_container).setVisibility(View.GONE);
         }
 
-        TextView txtUrl = (TextView) findViewById(R.id.text_url);
+        TextView txtUrl = findViewById(R.id.text_url);
         txtUrl.setText(mMedia.getUrl());
 
-        TextView txtFilename = (TextView) findViewById(R.id.text_filename);
+        TextView txtFilename = findViewById(R.id.text_filename);
         txtFilename.setText(mMedia.getFileName());
 
-        TextView txtFileType = (TextView) findViewById(R.id.text_filetype);
+        TextView txtFileType = findViewById(R.id.text_filetype);
         txtFileType.setText(StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase());
 
         showImageDimensions(mMedia.getWidth(), mMedia.getHeight());
@@ -590,8 +599,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 uploadDate = SimpleDateFormat.getDateInstance().format(date);
             }
         }
-        TextView txtUploadDate = (TextView) findViewById(R.id.text_upload_date);
-        TextView txtUploadDateLabel = (TextView) findViewById(R.id.text_upload_date_label);
+        TextView txtUploadDate = findViewById(R.id.text_upload_date);
+        TextView txtUploadDateLabel = findViewById(R.id.text_upload_date_label);
         if (uploadDate != null) {
             txtUploadDate.setVisibility(View.VISIBLE);
             txtUploadDateLabel.setVisibility(View.VISIBLE);
@@ -601,8 +610,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             txtUploadDateLabel.setVisibility(View.GONE);
         }
 
-        TextView txtDuration = (TextView) findViewById(R.id.text_duration);
-        TextView txtDurationLabel = (TextView) findViewById(R.id.text_duration_label);
+        TextView txtDuration = findViewById(R.id.text_duration);
+        TextView txtDurationLabel = findViewById(R.id.text_duration_label);
         if (mMedia.getLength() > 0) {
             txtDuration.setVisibility(View.VISIBLE);
             txtDurationLabel.setVisibility(View.VISIBLE);
@@ -662,8 +671,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     }
 
     private void showImageDimensions(int width, int height) {
-        TextView txtDimensions = (TextView) findViewById(R.id.text_image_dimensions);
-        TextView txtDimensionsLabel = (TextView) findViewById(R.id.text_image_dimensions_label);
+        TextView txtDimensions = findViewById(R.id.text_image_dimensions);
+        TextView txtDimensionsLabel = findViewById(R.id.text_image_dimensions_label);
         if (width > 0 && height > 0) {
             txtDimensions.setVisibility(View.VISIBLE);
             txtDimensionsLabel.setVisibility(View.VISIBLE);
@@ -681,7 +690,7 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
     /**
      * Initialize the image alignment spinner
      */
-        private void setupAlignmentSpinner() {
+    private void setupAlignmentSpinner() {
         String alignment = mEditorImageMetaData.getAlign();
         mAlignmentKeyArray = getResources().getStringArray(R.array.alignment_key_array);
         int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
@@ -905,12 +914,16 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
         } else {
             String alignment = mAlignmentKeyArray[mAlignmentSpinnerView.getSelectedItemPosition()];
             String size = mImageSizeKeyArray[mImageSizeSeekBarView.getProgress()];
+            String linkUrl = EditTextUtils.getText(mLinkView);
+            boolean linkTargetBlank = mLinkTargetNewWindowView.isChecked();
 
             boolean hasChanged = !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
                     || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText)
                     || !StringUtils.equals(mEditorImageMetaData.getSize(), size)
                     || !StringUtils.equals(mEditorImageMetaData.getCaption(), thisCaption)
-                    || !StringUtils.equals(mEditorImageMetaData.getAlign(), alignment);
+                    || !StringUtils.equals(mEditorImageMetaData.getAlign(), alignment)
+                    || !StringUtils.equals(mEditorImageMetaData.getLinkUrl(), linkUrl)
+                    || linkTargetBlank != mEditorImageMetaData.isLinkTargetBlank();
 
             if (hasChanged) {
                 mEditorImageMetaData.setTitle(thisTitle);
@@ -918,6 +931,8 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
                 mEditorImageMetaData.setAlt(thisAltText);
                 mEditorImageMetaData.setAlign(alignment);
                 mEditorImageMetaData.setCaption(thisCaption);
+                mEditorImageMetaData.setLinkUrl(linkUrl);
+                mEditorImageMetaData.setLinkTargetBlank(linkTargetBlank);
 
                 Intent intent = new Intent();
                 intent.putExtra(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
