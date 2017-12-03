@@ -567,19 +567,18 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
             mLinkTargetNewWindowView.setChecked(mEditorImageMetaData.isLinkTargetBlank());
 
             findViewById(R.id.edit_description_container).setVisibility(View.GONE);
-//            findViewById(R.id.edit_caption_container).setVisibility(View.GONE);
             findViewById(R.id.divider_dimensions).setVisibility(View.GONE);
-            mCaptionView.setText(mMedia.getCaption());
 
             setupAlignmentSpinner();
             setupImageSizeSeekBar();
         } else {
             mDescriptionView.setText(mMedia.getDescription());
-            mCaptionView.setText(mMedia.getCaption());
 
             findViewById(R.id.card1).setVisibility(View.GONE);
             findViewById(R.id.edit_link_container).setVisibility(View.GONE);
         }
+
+        mCaptionView.setText(mMedia.getCaption());
 
         TextView txtUrl = findViewById(R.id.text_url);
         txtUrl.setText(mMedia.getUrl());
