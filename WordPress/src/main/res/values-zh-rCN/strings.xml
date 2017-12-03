@@ -1227,7 +1227,6 @@ Language: zh_CN
 	<string name="blog_name_contains_invalid_characters">网址不能包含字符「_」</string>
 	<string name="username_contains_invalid_characters">用户名不能包含字符「_」</string>
 	<string name="error_downloading_image">下载图片错误</string>
-	<string name="error_deleting_post">删除文章时发生错误</string>
 	<string name="cat_name_required">「分类名称」必填</string>
 	<string name="xmlrpc_error">无法连接。请输入您网站上 xmlrpc.php 的完整路径再试。</string>
 	<string name="select_categories">选择分类</string>
