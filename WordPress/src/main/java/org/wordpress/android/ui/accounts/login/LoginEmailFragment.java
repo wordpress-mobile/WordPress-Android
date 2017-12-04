@@ -34,7 +34,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.ui.accounts.LoginMode;
-import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -137,7 +136,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             @Override
             public void onClick(View view) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_CLICK);
-                ActivityUtils.hideKeyboardForced(getActivity().getCurrentFocus());
+                EditTextUtils.hideSoftInput(mEmailInput.getEditText());
 
                 if (NetworkUtils.checkConnection(getActivity())) {
                     mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
@@ -279,7 +278,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mGoogleApiClient.disconnect();
         }
 
-        ActivityUtils.showKeyboard(getActivity().getCurrentFocus());
+        EditTextUtils.showSoftInput(mEmailInput.getEditText());
     }
 
     private String getCleanedEmail() {
@@ -416,7 +415,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 next(getCleanedEmail());
             } else {
                 hasDismissedEmailHints = true;
-                ActivityUtils.showKeyboard(mEmailInput.getEditText());
+                EditTextUtils.showSoftInput(mEmailInput.getEditText());
             }
 
             isDisplayingEmailHints = false;
