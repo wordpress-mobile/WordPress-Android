@@ -142,7 +142,7 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class UpdatedSitePluginPayload extends Payload<UpdateSitePluginVersionError> {
+    public static class UpdatedSitePluginPayload extends Payload<UpdateSitePluginError> {
         public SiteModel site;
         public PluginModel plugin;
 
@@ -151,7 +151,7 @@ public class PluginStore extends Store {
             this.plugin = plugin;
         }
 
-        public UpdatedSitePluginPayload(SiteModel site, UpdateSitePluginVersionError error) {
+        public UpdatedSitePluginPayload(SiteModel site, UpdateSitePluginError error) {
             this.site = site;
             this.error = error;
         }
@@ -223,16 +223,16 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class UpdateSitePluginVersionError implements OnChangedError {
-        public UpdateSitePluginVersionErrorType type;
+    public static class UpdateSitePluginError implements OnChangedError {
+        public UpdateSitePluginErrorType type;
         @Nullable public String message;
 
-        UpdateSitePluginVersionError(UpdateSitePluginVersionErrorType type) {
+        UpdateSitePluginError(UpdateSitePluginErrorType type) {
             this.type = type;
         }
 
-        public UpdateSitePluginVersionError(String type, @Nullable String message) {
-            this.type = UpdateSitePluginVersionErrorType.fromString(type);
+        public UpdateSitePluginError(String type, @Nullable String message) {
+            this.type = UpdateSitePluginErrorType.fromString(type);
             this.message = message;
         }
     }
@@ -325,14 +325,14 @@ public class PluginStore extends Store {
         }
     }
 
-    public enum UpdateSitePluginVersionErrorType {
+    public enum UpdateSitePluginErrorType {
         GENERIC_ERROR,
         NOT_AVAILABLE, // Return for non-jetpack sites
         UPDATE_FAIL;
 
-        public static UpdateSitePluginVersionErrorType fromString(String string) {
+        public static UpdateSitePluginErrorType fromString(String string) {
             if (string != null) {
-                for (UpdateSitePluginVersionErrorType v : UpdateSitePluginVersionErrorType.values()) {
+                for (UpdateSitePluginErrorType v : UpdateSitePluginErrorType.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
@@ -368,7 +368,7 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class OnSitePluginVersionUpdated extends OnChanged<UpdateSitePluginVersionError> {
+    public static class OnSitePluginVersionUpdated extends OnChanged<UpdateSitePluginError> {
         public SiteModel site;
         public PluginModel plugin;
         public OnSitePluginVersionUpdated(SiteModel site) {
@@ -497,8 +497,8 @@ public class PluginStore extends Store {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.updateSitePlugin(payload.site, payload.plugin);
         } else {
-            UpdateSitePluginVersionError error = new UpdateSitePluginVersionError(
-                    UpdateSitePluginVersionErrorType.NOT_AVAILABLE);
+            UpdateSitePluginError error = new UpdateSitePluginError(
+                    UpdateSitePluginErrorType.NOT_AVAILABLE);
             UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site, error);
             updatedSitePlugin(errorPayload);
         }
