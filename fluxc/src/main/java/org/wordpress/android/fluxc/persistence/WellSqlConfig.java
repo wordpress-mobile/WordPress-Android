@@ -58,7 +58,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 17;
+        return 18;
     }
 
     @Override
@@ -156,6 +156,11 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 16:
                 db.execSQL("alter table ThemeModel add FREE integer;");
                 db.execSQL("alter table ThemeModel add PRICE_TEXT integer;");
+                oldVersion++;
+            case 17:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add EMAIL text;");
+                db.execSQL("alter table SiteModel add DISPLAY_NAME text;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

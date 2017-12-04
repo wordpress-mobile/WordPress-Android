@@ -59,6 +59,11 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column(name = "XMLRPC_URL") private String mXmlRpcUrl;
     @Column private String mSoftwareVersion;
     @Column private boolean mIsSelfHostedAdmin;
+
+    // Self hosted user's profile data
+    @Column private String mEmail;
+    @Column private String mDisplayName;
+
     // mIsJetpackInstalled is true if Jetpack is installed and activated on the self hosted site, but Jetpack can
     // be disconnected.
     @Column private boolean mIsJetpackInstalled;
@@ -201,6 +206,22 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setIsSelfHostedAdmin(boolean selfHostedAdmin) {
         mIsSelfHostedAdmin = selfHostedAdmin;
+    }
+
+    public String getEmail() {
+        return mEmail;
+    }
+
+    public void setEmail(String email) {
+        mEmail = email;
+    }
+
+    public String getDisplayName() {
+        return mDisplayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        mDisplayName = displayName;
     }
 
     public boolean isVisible() {
