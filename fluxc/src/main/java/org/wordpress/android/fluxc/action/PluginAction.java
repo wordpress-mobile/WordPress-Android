@@ -4,21 +4,21 @@ import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginInfoPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
-import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionPayload;
-import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginVersionPayload;
 
 @ActionEnum
 public enum PluginAction implements IAction {
     // Remote actions
-    @Action(payloadType = UpdateSitePluginPayload.class)
+    @Action(payloadType = ConfigureSitePluginPayload.class)
     CONFIGURE_SITE_PLUGIN,
     @Action(payloadType = DeleteSitePluginPayload.class)
     DELETE_SITE_PLUGIN,
