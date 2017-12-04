@@ -29,7 +29,7 @@ public enum PluginAction implements IAction {
     @Action(payloadType = InstallSitePluginPayload.class)
     INSTALL_SITE_PLUGIN,
     @Action(payloadType = UpdateSitePluginVersionPayload.class)
-    UPDATE_SITE_PLUGIN_VERSION,
+    UPDATE_SITE_PLUGIN,
 
     // Remote responses
     @Action(payloadType = ConfiguredSitePluginPayload.class)
@@ -43,5 +43,5 @@ public enum PluginAction implements IAction {
     @Action(payloadType = InstalledSitePluginPayload.class)
     INSTALLED_SITE_PLUGIN,
     @Action(payloadType = UpdatedSitePluginVersionPayload.class)
-    UPDATED_SITE_PLUGIN_VERSION
+    UPDATED_SITE_PLUGIN
 }
