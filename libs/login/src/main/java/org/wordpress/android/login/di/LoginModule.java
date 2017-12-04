@@ -3,6 +3,7 @@ package org.wordpress.android.login.di;
 import org.wordpress.android.login.Login2FaFragment;
 import org.wordpress.android.login.LoginEmailFragment;
 import org.wordpress.android.login.LoginEmailPasswordFragment;
+import org.wordpress.android.login.LoginGoogleFragment;
 import org.wordpress.android.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment;
@@ -22,6 +23,9 @@ public abstract class LoginModule {
 
     @ContributesAndroidInjector
     abstract LoginEmailPasswordFragment loginEmailPasswordFragment();
+
+    @ContributesAndroidInjector
+    abstract LoginGoogleFragment loginGoogleFragment();
 
     @ContributesAndroidInjector
     abstract LoginMagicLinkRequestFragment loginMagicLinkRequestFragment();

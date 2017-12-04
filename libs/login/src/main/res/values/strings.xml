@@ -60,6 +60,9 @@
     <string name="login_google_button_prefix">Or you can</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="login_error_button">Close</string>
+    <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
+    <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
+    <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>
@@ -80,6 +83,8 @@
     <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
         site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
+
+    <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
 
     <string name="notification_login_title_success">Logged in!</string>
     <string name="notification_logged_in">Tap to continue.</string>
