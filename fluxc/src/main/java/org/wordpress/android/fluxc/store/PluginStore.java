@@ -48,11 +48,11 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class UpdateSitePluginPayload extends Payload<BaseNetworkError> {
+    public static class ConfigureSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public PluginModel plugin;
 
-        public UpdateSitePluginPayload(SiteModel site, PluginModel plugin) {
+        public ConfigureSitePluginPayload(SiteModel site, PluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
@@ -418,7 +418,7 @@ public class PluginStore extends Store {
         switch ((PluginAction) actionType) {
             // Remote actions
             case CONFIGURE_SITE_PLUGIN:
-                updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
+                configureSitePlugin((ConfigureSitePluginPayload) action.getPayload());
                 break;
             case FETCH_SITE_PLUGINS:
                 fetchSitePlugins((SiteModel) action.getPayload());
@@ -483,7 +483,7 @@ public class PluginStore extends Store {
         mPluginWPOrgClient.fetchPluginInfo(plugin);
     }
 
-    private void updateSitePlugin(UpdateSitePluginPayload payload) {
+    private void configureSitePlugin(ConfigureSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.updateSitePlugin(payload.site, payload.plugin);
         } else {
