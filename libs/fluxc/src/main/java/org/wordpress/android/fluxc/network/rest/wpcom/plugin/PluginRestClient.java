@@ -27,7 +27,7 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError;
-import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionError;
+import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
 
 import java.io.UnsupportedEncodingException;
@@ -175,8 +175,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        UpdateSitePluginVersionError updatePluginVersionError
-                                = new UpdateSitePluginVersionError(((WPComGsonNetworkError) networkError).apiError,
+                        UpdateSitePluginError updatePluginVersionError
+                                = new UpdateSitePluginError(((WPComGsonNetworkError) networkError).apiError,
                                 networkError.message);
                         UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site,
                                 updatePluginVersionError);
