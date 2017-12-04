@@ -212,6 +212,13 @@ public class SiteStore extends Store {
     }
 
     // OnChanged Events
+    public static class OnProfileFetched extends OnChanged<SiteError> {
+        public SiteModel site;
+        public OnProfileFetched(SiteModel site) {
+            this.site = site;
+        }
+    }
+
     public static class OnSiteChanged extends OnChanged<SiteError> {
         public int rowsAffected;
         public OnSiteChanged(int rowsAffected) {
@@ -718,6 +725,12 @@ public class SiteStore extends Store {
         }
 
         switch ((SiteAction) actionType) {
+            case FETCH_PROFILE_XML_RPC:
+                fetchProfileXmlRpc((SiteModel) action.getPayload());
+                break;
+            case FETCHED_PROFILE_XML_RPC:
+                updateSiteProfile((SiteModel) action.getPayload());
+                break;
             case FETCH_SITE:
                 fetchSite((SiteModel) action.getPayload());
                 break;
@@ -811,6 +824,10 @@ public class SiteStore extends Store {
         }
     }
 
+    private void fetchProfileXmlRpc(SiteModel site) {
+        mSiteXMLRPCClient.fetchProfile(site);
+    }
+
     private void fetchSite(SiteModel site) {
         if (site.isUsingWpComRestApi()) {
             mSiteRestClient.fetchSite(site);
@@ -821,6 +838,21 @@ public class SiteStore extends Store {
 
     private void fetchSitesXmlRpc(RefreshSitesXMLRPCPayload payload) {
         mSiteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password);
+    }
+
+    private void updateSiteProfile(SiteModel siteModel) {
+        OnProfileFetched event = new OnProfileFetched(siteModel);
+        if (siteModel.isError()) {
+            // TODO: what kind of error could we get here?
+            event.error = SiteErrorUtils.genericToSiteError(siteModel.error);
+        } else {
+            try {
+                SiteSqlUtils.insertOrUpdateSite(siteModel);
+            } catch (DuplicateSiteException e) {
+                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            }
+        }
+        emitChange(event);
     }
 
     private void updateSite(SiteModel siteModel) {

@@ -39,6 +39,33 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
+    public void fetchProfile(final SiteModel site) {
+        List<Object> params = new ArrayList<>(3);
+        params.add(site.getSelfHostedSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_PROFILE, params,
+                new Listener<Object>() {
+                    @Override
+                    public void onResponse(Object response) {
+                        SiteModel updatedSite = profileResponseToAccountModel(response, site);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileXmlRpcAction(updatedSite));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SiteModel site = new SiteModel();
+                        site.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileXmlRpcAction(site));
+                    }
+                }
+        );
+
+        add(request);
+    }
+
     public void fetchSites(final String xmlrpcUrl, final String username, final String password) {
         List<Object> params = new ArrayList<>(2);
         params.add(username);
@@ -149,6 +176,16 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                 }
         );
         add(request);
+    }
+
+    private SiteModel profileResponseToAccountModel(Object response, SiteModel site) {
+        if (response == null) return null;
+
+        Map<?, ?> userMap = (Map<?, ?>) response;
+        site.setEmail(MapUtils.getMapStr(userMap, "email"));
+        site.setDisplayName(MapUtils.getMapStr(userMap, "display_name"));
+
+        return site;
     }
 
     private SitesModel sitesResponseToSitesModel(Object[] response, String username, String password) {
