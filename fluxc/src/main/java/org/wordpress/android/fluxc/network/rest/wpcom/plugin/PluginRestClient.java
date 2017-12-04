@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResponse.FetchPluginsResponse;
-import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
@@ -27,7 +26,7 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsError;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
-import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginError;
+import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginVersionPayload;
 
@@ -96,8 +95,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        UpdateSitePluginError updatePluginError = new UpdateSitePluginError(((WPComGsonNetworkError)
-                                networkError).apiError, networkError.message);
+                        ConfigureSitePluginError updatePluginError = new ConfigureSitePluginError(((
+                                WPComGsonNetworkError) networkError).apiError, networkError.message);
                         ConfiguredSitePluginPayload payload = new ConfiguredSitePluginPayload(site, updatePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload));
                     }
