@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginInfoPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
-import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionPayload;
+import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginVersionPayload;
 
 @ActionEnum
@@ -28,7 +28,7 @@ public enum PluginAction implements IAction {
     FETCH_SITE_PLUGINS,
     @Action(payloadType = InstallSitePluginPayload.class)
     INSTALL_SITE_PLUGIN,
-    @Action(payloadType = UpdateSitePluginVersionPayload.class)
+    @Action(payloadType = UpdateSitePluginPayload.class)
     UPDATE_SITE_PLUGIN,
 
     // Remote responses

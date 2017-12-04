@@ -158,7 +158,7 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void updateSitePluginVersion(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
+    public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
         String url = WPCOMREST.sites.site(site.getSiteId()).
                 plugins.name(getEncodedPluginName(plugin)).update.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
