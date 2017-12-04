@@ -175,11 +175,11 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        UpdateSitePluginError updatePluginVersionError
+                        UpdateSitePluginError updatePluginError
                                 = new UpdateSitePluginError(((WPComGsonNetworkError) networkError).apiError,
                                 networkError.message);
                         UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site,
-                                updatePluginVersionError);
+                                updatePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
                     }
                 }
