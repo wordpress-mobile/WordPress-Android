@@ -19,6 +19,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResponse.FetchPluginsResponse;
+import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsError;
@@ -27,7 +29,6 @@ import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionError;
-import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginVersionPayload;
 
 import java.io.UnsupportedEncodingException;
@@ -89,7 +90,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                         PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
                         pluginFromResponse.setId(plugin.getId());
                         mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(
-                                new UpdatedSitePluginPayload(site, pluginFromResponse)));
+                                new ConfiguredSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
                 new BaseErrorListener() {
@@ -97,7 +98,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         UpdateSitePluginError updatePluginError = new UpdateSitePluginError(((WPComGsonNetworkError)
                                 networkError).apiError, networkError.message);
-                        UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site, updatePluginError);
+                        ConfiguredSitePluginPayload payload = new ConfiguredSitePluginPayload(site, updatePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload));
                     }
                 }
