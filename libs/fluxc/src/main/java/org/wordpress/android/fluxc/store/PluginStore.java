@@ -58,11 +58,11 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class UpdateSitePluginVersionPayload extends Payload<BaseNetworkError> {
+    public static class UpdateSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public PluginModel plugin;
 
-        public UpdateSitePluginVersionPayload(SiteModel site, PluginModel plugin) {
+        public UpdateSitePluginPayload(SiteModel site, PluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
@@ -427,7 +427,7 @@ public class PluginStore extends Store {
                 fetchPluginInfo((String) action.getPayload());
                 break;
             case UPDATE_SITE_PLUGIN:
-                updateSitePluginVersion((UpdateSitePluginVersionPayload) action.getPayload());
+                updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
                 break;
             case DELETE_SITE_PLUGIN:
                 deleteSitePlugin((DeleteSitePluginPayload) action.getPayload());
@@ -493,9 +493,9 @@ public class PluginStore extends Store {
         }
     }
 
-    private void updateSitePluginVersion(UpdateSitePluginVersionPayload payload) {
+    private void updateSitePlugin(UpdateSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
-            mPluginRestClient.updateSitePluginVersion(payload.site, payload.plugin);
+            mPluginRestClient.updateSitePlugin(payload.site, payload.plugin);
         } else {
             UpdateSitePluginVersionError error = new UpdateSitePluginVersionError(
                     UpdateSitePluginVersionErrorType.NOT_AVAILABLE);
