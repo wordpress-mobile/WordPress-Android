@@ -33,15 +33,18 @@ android {
 }
 
 dependencies {
-    compile 'org.wordpress:utils:1.19.0'
-    compile 'org.wordpress:analytics:1.3.1'
+    compile ('org.wordpress:utils:1.19.0') {
+        exclude group: "com.mcxiaoke.volley";
+    }
+
+    compile ('org.wordpress:analytics:1.3.1') {
+        exclude group: "com.mcxiaoke.volley";
+    }
 
     compile "com.android.support:appcompat-v7:$project.SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:design:$project.SUPPORT_LIBRARY_VERSION"
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:2d5ba6a8475b749ae8cb2248422610e849871caf') {
-        exclude group: "com.android.volley";
-    }
+    compile 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:2d5ba6a8475b749ae8cb2248422610e849871caf'
 
     compile 'com.github.bumptech.glide:glide:4.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
