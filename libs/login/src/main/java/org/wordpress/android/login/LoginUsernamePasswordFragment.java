@@ -29,8 +29,9 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
-import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -435,7 +436,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSiteChanged(SiteStore.OnSiteChanged event) {
+    public void onSiteChanged(OnSiteChanged event) {
         if (!isAdded() || mLoginFinished) {
             return;
         }
@@ -449,7 +450,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             endProgress();
 
             String errorMessage;
-            if (event.error.type == SiteStore.SiteErrorType.DUPLICATE_SITE) {
+            if (event.error.type == SiteErrorType.DUPLICATE_SITE) {
                 if (event.rowsAffected == 0) {
                     // If there is a duplicate site and not any site has been added, show an error and
                     // stop the sign in process
