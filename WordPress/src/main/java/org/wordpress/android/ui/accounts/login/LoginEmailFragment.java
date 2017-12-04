@@ -277,8 +277,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mGoogleApiClient.stopAutoManage(getActivity());
             mGoogleApiClient.disconnect();
         }
-
-        EditTextUtils.showSoftInput(mEmailInput.getEditText());
     }
 
     private String getCleanedEmail() {
