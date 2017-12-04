@@ -28,7 +28,7 @@ import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionError;
-import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginVersionPayload;
+import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -169,7 +169,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                         PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
                         pluginFromResponse.setId(plugin.getId());
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginVersionAction(
-                                new UpdatedSitePluginVersionPayload(site, pluginFromResponse)));
+                                new UpdatedSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
                 new BaseErrorListener() {
@@ -178,7 +178,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                         UpdateSitePluginVersionError updatePluginVersionError
                                 = new UpdateSitePluginVersionError(((WPComGsonNetworkError) networkError).apiError,
                                 networkError.message);
-                        UpdatedSitePluginVersionPayload payload = new UpdatedSitePluginVersionPayload(site,
+                        UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site,
                                 updatePluginVersionError);
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginVersionAction(payload));
                     }
