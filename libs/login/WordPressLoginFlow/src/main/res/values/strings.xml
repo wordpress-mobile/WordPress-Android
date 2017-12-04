@@ -102,6 +102,10 @@
     <string name="httpuser">HTTP username</string>
     <string name="httppassword">HTTP password</string>
 
+    <!-- Placeholder for the generated default_web_client_id for Google login.
+    This resource will be automatically overwritten in the host project with the real value from google-services.json. -->
+    <string name="default_web_client_id">placeholder</string>
+
     <!-- Image Descriptions for Accessibility -->
     <string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
 </resources>
