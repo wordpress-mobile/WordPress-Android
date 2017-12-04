@@ -49,6 +49,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static android.app.Activity.RESULT_OK;
+import static org.wordpress.android.ui.RequestCodes.EMAIL_CREDENTIALS;
 
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -60,7 +61,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
     private static final String LOG_TAG = LoginEmailFragment.class.getSimpleName();
     private static final int GOOGLE_API_CLIENT_ID = 1001;
-    private static final int REQUEST_CREDENTIALS = 9001;
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
@@ -399,7 +399,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         PendingIntent intent = Auth.CredentialsApi.getHintPickerIntent(mGoogleApiClient, hintRequest);
 
         try {
-            startIntentSenderForResult(intent.getIntentSender(), REQUEST_CREDENTIALS, null, 0, 0, 0, null);
+            startIntentSenderForResult(intent.getIntentSender(), EMAIL_CREDENTIALS, null, 0, 0, 0, null);
         } catch (IntentSender.SendIntentException exception) {
             AppLog.d(T.NUX, LOG_TAG + "Could not start email hint picker" + exception);
         }
@@ -409,7 +409,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CREDENTIALS) {
+        if (requestCode == EMAIL_CREDENTIALS) {
             if (resultCode == RESULT_OK) {
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
                 mEmailInput.getEditText().setText(credential.getId());
