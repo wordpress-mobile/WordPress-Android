@@ -286,8 +286,8 @@
                 <ImageView
                     android:id="@+id/my_site_people_icon"
                     style="@style/MySiteListRowIcon"
-                    android:contentDescription="@string/people"
-                    app:srcCompat="@drawable/ic_user_grey_24dp" />
+                    app:srcCompat="@drawable/ic_user_grey_24dp"
+                    android:importantForAccessibility="no" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_people_management_text_view"
@@ -305,8 +305,8 @@
                 <ImageView
                     android:id="@+id/my_site_sharing_icon"
                     style="@style/MySiteListRowIcon"
-                    android:contentDescription="@string/my_site_btn_sharing"
-                    android:src="@drawable/my_site_icon_sharing" />
+                    android:src="@drawable/my_site_icon_sharing"
+                    android:importantForAccessibility="no" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_sharing_text_view"
