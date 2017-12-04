@@ -48,7 +48,8 @@
                 android:layout_width="@dimen/avatar_sz_login_epilogue"
                 android:layout_height="@dimen/avatar_sz_login_epilogue"
                 android:layout_marginTop="@dimen/margin_extra_medium_large"
-                android:layout_marginBottom="@dimen/margin_medium"/>
+                android:layout_marginBottom="@dimen/margin_medium"
+                app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"/>
 
             <org.wordpress.android.widgets.WPTextView
                 style="@style/LoginTheme.Subhead"

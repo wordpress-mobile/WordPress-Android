@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-21 11:13:24+0000
+Translation-Revision-Date: 2017-11-23 09:38:19+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -137,9 +137,8 @@ Language: hr
 	<string name="invalid_username_no_spaces">Korisničko ime ne može sadržavati razmake</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Web-stranice koje pratite nisu ništa objavile u posljednje vrijeme</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Nema novijih objava</string>
-	<string name="media_details_copy_url_toast">URL kopiran u međuspremnik</string>
+	<string name="media_edit_copy_url_toast">URL kopiran u međuspremnik</string>
 	<string name="edit_media">Uredi medijski zapis</string>
-	<string name="media_details_copy_url">Kopiraj URL</string>
 	<string name="media_details_label_date_uploaded">Preneseno</string>
 	<string name="media_details_label_date_added">Dodano</string>
 	<string name="selected_theme">Odabrana tema</string>
@@ -230,13 +229,8 @@ Language: hr
 	<string name="app_notifications">Obavijesti aplikacije</string>
 	<string name="notifications_tab">Kartica obavijesti</string>
 	<string name="email">E-pošta</string>
-	<string name="notifications_comments_other_blogs">Komentari na drugim web-stranicama</string>
 	<string name="notifications_wpcom_updates">WordPress.com ažuriranja</string>
-	<string name="notifications_other">Drugo</string>
-	<string name="notifications_account_emails">Poruke od WordPress.com</string>
-	<string name="notifications_account_emails_summary">Uvijek ćemo slati važne poruke e-pošte o vašem računu, ali također možete dobiti i dodatnu pomoć.</string>
-	<string name="notifications_sights_and_sounds">Prizori i zvukovi</string>
-	<string name="your_sites">Vaše stranice</string>
+	<string name="notification_settings_item_other_account_emails_summary">Uvijek ćemo slati važne poruke e-pošte o vašem računu, ali također možete dobiti i dodatnu pomoć.</string>
 	<string name="stats_insights_latest_post_trend">Prošlo je %1$s od kad je %2$s objavljen. Ovo su informacije kako je primljen kod čitatelja...</string>
 	<string name="stats_insights_latest_post_summary">Najnoviji sažetak objava</string>
 	<string name="button_revert">Vrati</string>
@@ -407,8 +401,6 @@ Language: hr
 	<string name="delete_sure_post">Obriši ovu obavijest</string>
 	<string name="delete_sure">Obriši ovu skicu</string>
 	<string name="delete_sure_page">Obriši ovu stranicu</string>
-	<string name="confirm_delete_multi_media">Obriši odabrane stavke?</string>
-	<string name="confirm_delete_media">Obriši odabranu stavku?</string>
 	<string name="cab_selected">%d odabrano</string>
 	<string name="reader_empty_posts_liked">Niste lajkali ni jednu objavu</string>
 	<string name="faq_button">FAQ</string>
@@ -499,7 +491,6 @@ Language: hr
 	<string name="no_network_message">Mreža nedostupna</string>
 	<string name="gallery_error">Nije moguće dohvatiti medijski zapis.</string>
 	<string name="blog_not_found">Dogodila se greška prilikom pristupa ovom blogu</string>
-	<string name="wait_until_upload_completes">Pričekajte dok se prijenos završi</string>
 	<string name="theme_fetch_failed">Neuspjelo dohvaćanje tema</string>
 	<string name="theme_set_failed">Neuspjelo postavljanje teme</string>
 	<string name="theme_auth_error_message">Provjerite je li imate dopuštenje za postavljanje tema</string>
@@ -513,7 +504,6 @@ Language: hr
 	<string name="sdcard_message">Za prijenos medijskih zapisa potrebna je montirana SD kartica</string>
 	<string name="stats_empty_comments">Još nema komentara</string>
 	<string name="stats_bar_graph_empty">Nema dostupne statistike</string>
-	<string name="error_delete_post">Dogodila se greška prilikom brisanja %s</string>
 	<string name="error_refresh_posts">Trenutno nije moguće osvježiti objave</string>
 	<string name="error_refresh_notifications">Trenutno nije moguće osvježiti obavijesti</string>
 	<string name="error_refresh_pages">Trenutno nije moguće osvježiti stranice</string>
@@ -543,6 +533,7 @@ Language: hr
 	<string name="blog_name_must_be_at_least_four_characters">Adresa web-stranice mora sadržavati najmanje 4 znaka</string>
 	<string name="blog_name_not_allowed">Adresa web-stranice nije dozvoljena</string>
 	<string name="blog_name_required">Unesite adresu web-stranice</string>
+	<string name="error_deleting_post">Dogodila se greška prilikom brisanja posta</string>
 	<string name="view_site">Pogledaj stranicu</string>
 	<string name="add_new_category">Dodaj novu kategoriju</string>
 	<string name="category_name">Ime kategorije</string>
@@ -605,8 +596,6 @@ Language: hr
 	<string name="post_not_published">Status objave nije objavljen</string>
 	<string name="page_not_published">Status stranice nije objavljen</string>
 	<string name="view_in_browser">Pregled u pregledniku</string>
-	<string name="share_action_post">Nova objava</string>
-	<string name="share_action_media">Medijski zapisi</string>
 	<string name="new_post">Nova objava</string>
 	<string name="new_media">Novi medijski zapis</string>
 	<string name="local_changes">Lokalne promjene</string>
@@ -671,7 +660,6 @@ Language: hr
 	<string name="reader_empty_followed_tags">Ne pratite ni jednu oznaku</string>
 	<string name="media_add_popup_title">Dodaj u medijske zapise</string>
 	<string name="empty_list_default">Popis je prazan</string>
-	<string name="select_from_media_library">Odaberi iz medijskih zapisa</string>
 	<string name="jetpack_not_found">Dodatak Jetpack nije pronađen</string>
 	<string name="reader_untitled_post">(Bez naslova)</string>
 	<string name="reader_btn_share">Podjeli</string>
@@ -776,7 +764,6 @@ Language: hr
 	<string name="version">Inačica</string>
 	<string name="tos">Uvjeti Korištenja</string>
 	<string name="app_title">WordPress za Android</string>
-	<string name="max_thumbnail_px_width">Zadana širina slike</string>
 	<string name="image_alignment">Poravnanje</string>
 	<string name="refresh">Osvježi</string>
 	<string name="untitled">Nenaslovljeno</string>
@@ -795,9 +782,6 @@ Language: hr
 	<string name="tags_separate_with_commas">Oznake (razdvoji oznake zarezima)</string>
 	<string name="categories">Kategorije</string>
 	<string name="dlg_deleting_comments">Brisanje komentara</string>
-	<string name="notification_blink">Trepereće svjetlo za obavijesti</string>
-	<string name="notification_vibrate">Vibracija</string>
-	<string name="notification_sound">Zvučna obavijest </string>
 	<string name="sdcard_title">Neophodna SD kartica</string>
 	<string name="media">Medijski zapisi</string>
 	<string name="approve">Odobri</string>

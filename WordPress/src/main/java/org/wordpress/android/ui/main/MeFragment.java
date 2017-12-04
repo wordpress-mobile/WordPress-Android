@@ -44,6 +44,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -54,6 +55,7 @@ import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.io.DataInputStream;
@@ -448,17 +450,18 @@ public class MeFragment extends Fragment {
                                     : AnalyticsTracker.Stat.ME_GRAVATAR_GALLERY_PICKED;
                     AnalyticsTracker.track(stat);
                     Uri imageUri = Uri.parse(strMediaUri);
-                    if (!MediaUtils.isInMediaStore(imageUri)) {
-                        // Download the picture. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
-                        Uri downloadedUri = MediaUtils.downloadExternalMedia(getActivity(), imageUri);
-                        if (downloadedUri != null) {
-                            startCropActivity(downloadedUri);
-                        } else {
-                            ToastUtils.showToast(getActivity(), R.string.error_downloading_image, Duration.SHORT);
+                    if (imageUri != null) {
+                        boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
+                                new WPMediaUtils.MediaFetchDoNext() {
+                                    @Override
+                                    public void doNext(Uri uri) {
+                                        startCropActivity(uri);
+                                    }
+                                });
+
+                        if (!didGoWell) {
                             AppLog.e(AppLog.T.UTILS, "Can't download picked or captured image");
                         }
-                    } else {
-                        startCropActivity(imageUri);
                     }
                 }
                 break;
@@ -466,7 +469,14 @@ public class MeFragment extends Fragment {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_CROPPED);
 
                 if (resultCode == Activity.RESULT_OK) {
-                    fetchMedia(UCrop.getOutput(data));
+                    WPMediaUtils.fetchMediaAndDoNext(getActivity(), UCrop.getOutput(data),
+                            new WPMediaUtils.MediaFetchDoNext() {
+                                @Override
+                                public void doNext(Uri uri) {
+                                    startGravatarUpload(MediaUtils.getRealPathFromURI(getActivity(), uri));
+                                }
+                            });
+
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(AppLog.T.MAIN, "Image cropping failed!", UCrop.getError(data));
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
@@ -476,7 +486,7 @@ public class MeFragment extends Fragment {
     }
 
     private void showPhotoPickerForGravatar() {
-        ActivityLauncher.showPhotoPickerForResult(getActivity());
+        ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.GRAVATAR_IMAGE_PICKER, null);
     }
 
     private void startCropActivity(Uri uri) {
@@ -497,21 +507,6 @@ public class MeFragment extends Fragment {
                 .withAspectRatio(1, 1)
                 .withOptions(options)
                 .start(getActivity(), this);
-    }
-
-    private void fetchMedia(Uri mediaUri) {
-        if (!MediaUtils.isInMediaStore(mediaUri)) {
-            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
-            Uri downloadedUri = MediaUtils.downloadExternalMedia(getActivity(), mediaUri);
-            if (downloadedUri != null) {
-                startGravatarUpload(MediaUtils.getRealPathFromURI(getActivity(), downloadedUri));
-            } else {
-                ToastUtils.showToast(getActivity(), R.string.error_downloading_image, ToastUtils.Duration.SHORT);
-            }
-        } else {
-            // It is a regular local media file
-            startGravatarUpload(MediaUtils.getRealPathFromURI(getActivity(), mediaUri));
-        }
     }
 
     private void startGravatarUpload(final String filePath) {

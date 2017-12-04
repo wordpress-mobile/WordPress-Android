@@ -39,8 +39,8 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -59,9 +59,10 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
+import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -70,7 +71,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GeocoderUtils;
-import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -99,10 +99,9 @@ public class EditPostSettingsFragment extends Fragment {
     private static final int ACTIVITY_REQUEST_CODE_PICK_LOCATION = 7;
     private static final int ACTIVITY_REQUEST_PLAY_SERVICES_RESOLUTION = 8;
 
-    private static final int SELECT_LIBRARY_MENU_POSITION = 100;
-    private static final int CLEAR_FEATURED_IMAGE_MENU_POSITION = 101;
+    private static final int CHOOSE_FEATURED_IMAGE_MENU_ID = 100;
+    private static final int REMOVE_FEATURED_IMAGE_MENU_ID = 101;
 
-    private EditPostActivityHook mEditPostActivityHook;
     private SiteSettingsInterface mSiteSettings;
 
     private LinearLayout mCategoriesContainer;
@@ -173,15 +172,25 @@ public class EditPostSettingsFragment extends Fragment {
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSite(),
                 new SiteSettingsListener() {
                     @Override
-                    public void onSettingsUpdated(Exception error) {
+                    public void onSaveError(Exception error) {
+                        // no-op
+                    }
+
+                    @Override
+                    public void onFetchError(Exception error) {
+                        // no-op
+                    }
+
+                    @Override
+                    public void onSettingsUpdated() {
                         // mEditPostActivityHook will be null if the fragment is detached
-                        if (error == null && mEditPostActivityHook != null) {
+                        if (getEditPostActivityHook() != null) {
                             updatePostFormat(mSiteSettings.getDefaultPostFormat());
                         }
                     }
 
                     @Override
-                    public void onSettingsSaved(Exception error) {
+                    public void onSettingsSaved() {
                         // no-op
                     }
 
@@ -194,23 +203,6 @@ public class EditPostSettingsFragment extends Fragment {
             // init will fetch remote settings for us
             mSiteSettings.init(true);
         }
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof EditPostActivityHook) {
-            mEditPostActivityHook = (EditPostActivityHook) activity;
-        } else {
-            throw new RuntimeException(activity.toString() + " must implement PostSettingsListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mEditPostActivityHook = null;
     }
 
     @Override
@@ -332,7 +324,7 @@ public class EditPostSettingsFragment extends Fragment {
         });
 
 
-        if (getPost().isPage()) { // remove post specific views
+        if (getPost() != null && getPost().isPage()) { // remove post specific views
             final View categoriesTagsContainer = rootView.findViewById(R.id.post_categories_and_tags_card);
             final View formatBottomSeparator = rootView.findViewById(R.id.post_format_bottom_separator);
             categoriesTagsContainer.setVisibility(View.GONE);
@@ -345,17 +337,17 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, SELECT_LIBRARY_MENU_POSITION, 0, getResources().getText(R.string.select_from_media_library));
-        menu.add(0, CLEAR_FEATURED_IMAGE_MENU_POSITION, 0, "Remove featured image");
+        menu.add(0, CHOOSE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_choose_featured_image));
+        menu.add(0, REMOVE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_remove_featured_image));
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case SELECT_LIBRARY_MENU_POSITION:
+            case CHOOSE_FEATURED_IMAGE_MENU_ID:
                 launchFeaturedMediaPicker();
                 return true;
-            case CLEAR_FEATURED_IMAGE_MENU_POSITION:
+            case REMOVE_FEATURED_IMAGE_MENU_ID:
                 clearFeaturedImage();
                 return true;
             default:
@@ -420,15 +412,12 @@ public class EditPostSettingsFragment extends Fragment {
                         updateTags(selectedTags);
                     }
                     break;
-                case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
-                    if (resultCode == RESULT_OK) {
-                        ArrayList<Long> ids = ListUtils.
-                                fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
-                        if (ids == null || ids.size() == 0) {
-                            return;
-                        }
-                        updateFeaturedImage(ids.get(0));
+                case RequestCodes.PHOTO_PICKER:
+                    if (resultCode == RESULT_OK && data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                        long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
+                        updateFeaturedImage(mediaId);
                     }
+                    break;
             }
         }
     }
@@ -626,19 +615,32 @@ public class EditPostSettingsFragment extends Fragment {
     // Helpers
 
     private PostModel getPost() {
-        if (mEditPostActivityHook == null) {
+        if (getEditPostActivityHook() == null) {
             // This can only happen during a callback while activity is re-created for some reason (config changes etc)
             return null;
         }
-        return mEditPostActivityHook.getPost();
+        return getEditPostActivityHook().getPost();
     }
 
     private SiteModel getSite() {
-        if (mEditPostActivityHook == null) {
+        if (getEditPostActivityHook() == null) {
             // This can only happen during a callback while activity is re-created for some reason (config changes etc)
             return null;
         }
-        return mEditPostActivityHook.getSite();
+        return getEditPostActivityHook().getSite();
+    }
+
+    private EditPostActivityHook getEditPostActivityHook() {
+        Activity activity = getActivity();
+        if (activity == null) {
+            return null;
+        }
+
+        if (activity instanceof EditPostActivityHook) {
+            return (EditPostActivityHook) activity;
+        } else {
+            throw new RuntimeException(activity.toString() + " must implement EditPostActivityHook");
+        }
     }
 
     private void updateSaveButton() {
@@ -893,13 +895,9 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void launchFeaturedMediaPicker() {
-        if (!isAdded()) {
-            return;
+        if (isAdded()) {
+            ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite());
         }
-        Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
-        intent.putExtra(WordPress.SITE, getSite());
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER);
-        startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
     }
 
     // Publish Date Helpers

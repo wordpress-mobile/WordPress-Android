@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -27,9 +28,10 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
@@ -80,8 +82,14 @@ public class ActivityLauncher {
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
     }
 
-    public static void showPhotoPickerForResult(Activity activity) {
+    public static void showPhotoPickerForResult(Activity activity,
+                                                @NonNull MediaBrowserType browserType,
+                                                @Nullable SiteModel site) {
         Intent intent = new Intent(activity, PhotoPickerActivity.class);
+        intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
+        if (site != null) {
+            intent.putExtra(WordPress.SITE, site);
+        }
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
@@ -271,7 +279,6 @@ public class ActivityLauncher {
 
     public static void newBlogForResult(Activity activity) {
         Intent intent = new Intent(activity, NewBlogActivity.class);
-        intent.putExtra(NewBlogActivity.KEY_START_MODE, NewBlogActivity.CREATE_BLOG);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
@@ -318,11 +325,19 @@ public class ActivityLauncher {
         context.startActivity(statsPostViewIntent);
     }
 
-    public static void viewMediaPickerForResult(Activity activity, @NonNull SiteModel site) {
+    public static void viewMediaPickerForResult(Activity activity,
+                                                @NonNull SiteModel site,
+                                                @NonNull MediaBrowserType browserType) {
         Intent intent = new Intent(activity, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER);
-        activity.startActivityForResult(intent, RequestCodes.MULTI_SELECT_MEDIA_PICKER);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType);
+        int requestCode;
+        if (browserType.canMultiselect()) {
+            requestCode = RequestCodes.MULTI_SELECT_MEDIA_PICKER;
+        } else {
+            requestCode = RequestCodes.SINGLE_SELECT_MEDIA_PICKER;
+        }
+        activity.startActivityForResult(intent, requestCode);
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {
@@ -350,6 +365,19 @@ public class ActivityLauncher {
         }
 
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+    }
+
+    public static void loginForShareIntent(Activity activity) {
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            Intent intent = new Intent(activity, LoginActivity.class);
+            LoginMode.SHARE_INTENT.putInto(intent);
+            activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+        } else {
+            ToastUtils.showToast(activity, R.string.no_account,
+                    ToastUtils.Duration.LONG);
+            activity.startActivity(new Intent(activity, SignInActivity.class));
+            activity.finish();
+        }
     }
 
     public static void loginWithoutMagicLink(Activity activity) {

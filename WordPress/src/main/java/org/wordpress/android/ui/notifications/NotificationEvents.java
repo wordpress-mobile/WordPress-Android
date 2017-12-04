@@ -16,27 +16,10 @@ public class NotificationEvents {
             this.hasUnseenNotes = hasUnseenNotes;
         }
     }
-    public static class NoteModerationFailed {}
-    public static class NoteModerationStatusChanged {
-        final boolean isModerating;
+    public static class NoteLikeOrModerationStatusChanged {
         final String noteId;
-        public NoteModerationStatusChanged(String noteId, boolean isModerating) {
+        public NoteLikeOrModerationStatusChanged(String noteId) {
             this.noteId = noteId;
-            this.isModerating = isModerating;
-        }
-    }
-    public static class NoteLikeStatusChanged {
-        final String noteId;
-        public NoteLikeStatusChanged(String noteId) {
-            this.noteId = noteId;
-        }
-    }
-    public static class NoteVisibilityChanged {
-        final boolean isHidden;
-        final String noteId;
-        public NoteVisibilityChanged(String noteId, boolean isHidden) {
-            this.noteId = noteId;
-            this.isHidden = isHidden;
         }
     }
     public static class NotificationsSettingsStatusChanged {

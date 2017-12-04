@@ -26,6 +26,11 @@
     <dimen name="tabs_elevation">4dp</dimen>
 
     <dimen name="media_grid_progress_height">24dp</dimen>
+    <dimen name="media_settings_margin_normal">@dimen/margin_extra_large</dimen>
+    <dimen name="media_settings_margin_tablet">48dp</dimen>
+    <dimen name="media_settings_margin_tablet_large">96dp</dimen>
+    <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
+    <dimen name="media_selection_dot">24dp</dimen>
 
     <dimen name="theme_details_fragment_width">650dp</dimen>
     <dimen name="theme_details_fragment_height">450dp</dimen>
@@ -78,9 +83,6 @@
     <dimen name="margin_extra_extra_large">48dp</dimen>
     <dimen name="margin_filter_spinner">64dp</dimen>
 
-    <item name="wp_match_parent" type="dimen">-1</item>
-    <dimen name="reader_webview_width">@dimen/wp_match_parent</dimen>
-
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
     <dimen name="reader_card_margin_tablet">48dp</dimen>
@@ -90,7 +92,9 @@
     <!-- left/right margin for reader detail -->
     <dimen name="reader_detail_margin_normal">24dp</dimen>
     <dimen name="reader_detail_margin_tablet">48dp</dimen>
+    <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
     <dimen name="reader_detail_margin_tablet_big">96dp</dimen>
+    <dimen name="reader_detail_margin_tablet_big_landscape">160dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
     <dimen name="reader_detail_header_avatar">48dp</dimen>
@@ -270,6 +274,7 @@
     <dimen name="theme_browser_header_button_height">50dp</dimen>
     <dimen name="theme_browser_header_button_width">100dp</dimen>
     <dimen name="theme_browser_more_button_padding">8dp</dimen>
+    <dimen name="theme_count_border_stroke_width">1.5dp</dimen>
     <dimen name="drake_themes_width">400dp</dimen>
     <dimen name="start_over_text_margin">25dp</dimen>
     <dimen name="start_over_url_margin">22dp</dimen>
@@ -325,8 +330,7 @@
     <dimen name="margin_text_input_layout_baseline">20dp</dimen>
     <dimen name="margin_extra_extra_extra_large">92dp</dimen>
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
-    <dimen name="textinputlayout_baseline_correction">2dp</dimen>
-    <dimen name="textinputlayout_correction_padding">4.3dp</dimen>
-    <dimen name="textinputlayout_correction_margin_right">-8.6dp</dimen>
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
+    <dimen name="google_button_icon_sz">24dp</dimen>
+
 </resources>

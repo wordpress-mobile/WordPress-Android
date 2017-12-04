@@ -187,10 +187,8 @@ Language: gd_GB
 	<string name="themes_fetching">A’ faighinn nan ùrlaran…</string>
 	<string name="ssl_certificate_details">Mion-fhiosrachadh</string>
 	<string name="cab_selected">%d air a thaghadh</string>
-	<string name="confirm_delete_media">A bheil thu airson an rud a thagh thu a sguabadh às?</string>
 	<string name="delete_sure">Sguab às an dreachd seo</string>
 	<string name="delete_sure_page">Sguab às an duilleag seo</string>
-	<string name="confirm_delete_multi_media">A bheil thu airson na rudan a thagh thu a sguabadh às?</string>
 	<string name="delete_sure_post">Sguab às am post seo</string>
 	<string name="comment_trashed">Chaidh am beachd a chur dhan sgudal</string>
 	<string name="posts_empty_list">Chan eil post agad fhathast. Carson nach cruthaich thu fear?</string>
@@ -297,7 +295,6 @@ Language: gd_GB
 	<string name="error_moderate_comment">Thachair mearachd fhad \'s a bha sinn ri modarataireachd</string>
 	<string name="error_edit_comment">Thachair mearachd rè deasachadh a’ bheachd</string>
 	<string name="notifications_empty_list">Gun bhrathan</string>
-	<string name="error_delete_post">Thachair mearachd fhad ’s a bhathar a’ sguabadh às %s</string>
 	<string name="error_refresh_posts">Cha b’ urrainn dhuinn na puist ath-nuadhachadh aig an àm seo</string>
 	<string name="error_refresh_pages">Cha b’ urrainn dhuinn na duilleagan ath-nuadhachadh aig an àm seo</string>
 	<string name="error_refresh_notifications">Cha b’ urrainn dhuinn na brathan ath-nuadhachadh aig an àm seo</string>
@@ -316,7 +313,6 @@ Language: gd_GB
 	<string name="mnu_comment_unspam">Beachd còir</string>
 	<string name="gallery_error">Cha b’ urrainn dhuinn am meadhan fhaighinn</string>
 	<string name="blog_not_found">Thachair mearachd fhad ’s a bha sinn ag inntrigeadh a’ bhloga seo</string>
-	<string name="wait_until_upload_completes">Fuirich ort gus an deach a luchdadh suas</string>
 	<string name="theme_fetch_failed">Cha b’ urrainn dhuinn na h-ùrlaran fhaighinn dhut</string>
 	<string name="out_of_memory">Chan eil cuimhne air fhàgail air an uidheam</string>
 	<string name="no_network_message">Chan eil lìonra ri làimh</string>
@@ -347,8 +343,6 @@ Language: gd_GB
 	<string name="http_credentials">Ainm ’s facal-faire HTTP (roghainneil)</string>
 	<string name="open_source_licenses">Ceadachasan Open Source</string>
 	<string name="file_error_create">Cha b’ urrainn dhuinn am faidhle sealach a chruthachadh gus meadhan a luchdadh suas. Dèan cinnteach gu bheil rum gu leòr air an uidheam agad.</string>
-	<string name="share_action_post">Post ùr</string>
-	<string name="share_action_media">Leabhar-lann nam meadhanan</string>
 	<string name="category_name">Ainm na roinne-seòrsa</string>
 	<string name="add_new_category">Cuir roinn-seòrsa ùr ris</string>
 	<string name="view_in_browser">Seall sa bhrabhsair</string>
@@ -388,7 +382,6 @@ Language: gd_GB
 	<string name="delete_page">Sguab às an duilleag</string>
 	<string name="delete_post">Sguab às am post</string>
 	<string name="horizontal_alignment">Co-thaobhadh còmhnard</string>
-	<string name="file_not_found">Cha b’ urrainn dhuinn greim fhaighinn air faidhle a’ mheadhain gus a luchdadh suas. An deach a sguabadh às no a ghluasad?</string>
 	<string name="post_settings">Roghainnean a’ phuist</string>
 	<string name="local_draft">Dreachd ionadail</string>
 	<string name="upload_failed">Dh’fhàillig a luchdadh suas</string>
@@ -444,7 +437,6 @@ Language: gd_GB
 	<string name="nux_welcome_create_account">Cruthaich cunntas</string>
 	<string name="nux_add_selfhosted_blog">Cuir làrach air fèin-òstaireachd ris</string>
 	<string name="media_add_popup_title">Cuir ri leabharlann nam meadhanan</string>
-	<string name="select_from_media_library">Tagh o leabhar-lann nam meadhanan</string>
 	<string name="jetpack_not_found">Cha deach am plugan Jetpack a lorg</string>
 	<string name="reader_untitled_post">(Gun tiotal)</string>
 	<string name="reader_btn_share">Co-roinn</string>
@@ -554,7 +546,6 @@ Language: gd_GB
 	<string name="version">Tionndadh</string>
 	<string name="tos">Teirmichean na seirbheise</string>
 	<string name="app_title">WordPress airson Android</string>
-	<string name="max_thumbnail_px_size">Leud bunaiteach an deilbh</string>
 	<string name="image_alignment">Co-thaobhadh</string>
 	<string name="refresh">Ath-nuadhaich</string>
 	<string name="untitled">Gun tiotal</string>
@@ -572,9 +563,6 @@ Language: gd_GB
 	<string name="title">Tiotal</string>
 	<string name="categories">Roinnean-seòrsa</string>
 	<string name="dlg_deleting_comments">A’ sguabadh às nam beachdan</string>
-	<string name="notification_blink">Boillsg solas</string>
-	<string name="notification_vibrate">Crith</string>
-	<string name="notification_sound">Fuaim bhrathan</string>
 	<string name="sdcard_title">Tha feum air cairt SD</string>
 	<string name="media">Meadhan</string>
 	<string name="delete">Sguab às</string>

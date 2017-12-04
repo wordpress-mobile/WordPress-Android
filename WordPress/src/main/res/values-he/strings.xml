@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-24 23:24:33+0000
+Translation-Revision-Date: 2017-11-22 12:19:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
@@ -9,16 +9,11 @@ Language: he_IL
 	<string name="error_post_does_not_exist">הפוסט כבר לא קיים</string>
 	<string name="async_promo_link">כיצד זה עובד?</string>
 	<string name="editor_uploading_post">הפוסט נטען</string>
-	<string name="uploading_post_media">מעלה מדיה...</string>
+	<string name="uploading_media">מעלה מדיה...</string>
 	<string name="page_scheduled">העמוד תוזמן לפרסום</string>
 	<string name="post_scheduled">הפוסט תוזמן לפרסום</string>
-	<string name="post_draft_param">"%s" נשמר כטיוטה!</string>
-	<string name="post_scheduled_param">"%s" תוזמן לפרסום!</string>
-	<string name="post_updated_param">"%s" עודכן!</string>
-	<string name="post_published_param">"%s" פורסם!</string>
 	<string name="button_retry">לנסות שנית</string>
 	<string name="uploading_post">מעלה את "%s"</string>
-	<string name="max_video_resolution">רזולוציה מרבית</string>
 	<string name="login_epilogue_mysites_other">האתרים שלי</string>
 	<string name="login_epilogue_mysites_one">האתר שלי</string>
 	<string name="login_logged_in_as">מחובר בתור</string>
@@ -132,7 +127,7 @@ Language: he_IL
 	<string name="media_encoder_quality_85">בינונית</string>
 	<string name="media_encoder_quality_80">נמוכה</string>
 	<string name="media_upload_state_uploaded">הועלה</string>
-	<string name="media_upload_state_failed">נכשל</string>
+	<string name="media_upload_state_failed">העלאה נכשלה</string>
 	<string name="media_upload_state_deleted">נמחק</string>
 	<string name="media_upload_state_deleting">מוחק</string>
 	<string name="media_upload_state_uploading">מעלה</string>
@@ -182,10 +177,7 @@ Language: he_IL
 	<string name="jetpack_info">מידע על Jetpack</string>
 	<string name="reader_photo_by">צולם על ידי %s</string>
 	<string name="reader_label_visit">ניתן לבקר בכתובת</string>
-	<string name="all_your_sites">כל האתרים שלי</string>
 	<string name="pending_draft_more">יצרת טיוטה ל-%d פוסטים, אבל מעולם לא פרסמת אותם. יש להקיש כדי לבדוק.</string>
-	<string name="no_default_app_available_to_open_link">אי אפשר לפתוח את הקישור</string>
-	<string name="notification_pending_drafts">קבלת הודעה על טיוטות בהמתנה</string>
 	<string name="invalid_verification_code_format">חייב להיות מספר בן שש ספרות</string>
 	<string name="confirm_discard_changes">האם לבטל שינויים שלא נשמרו?</string>
 	<string name="swipe_for_more">יש להחליק לקבלת מידע נוסף</string>
@@ -394,9 +386,6 @@ Language: he_IL
 	<string name="site_timeout_error">לא ניתן להתחבר ל-WordPress עקב שגיאה - תם הזמן הקצוב.</string>
 	<string name="xmlrpc_malformed_response_error">לא ניתן להתחבר. התקנת WordPress הגיבה עם מסמך XML-RPC לא תקף.</string>
 	<string name="xmlrpc_missing_method_error">לא ניתן להתחבר. שיטות XML-RPC נדרשות חסרות בשרת.</string>
-	<string name="theme_premium">פרימיום</string>
-	<string name="theme_all">הכול</string>
-	<string name="theme_free">חינם</string>
 	<string name="alignment_center">מרכז</string>
 	<string name="post_format_video">וידאו</string>
 	<string name="post_format_status">מצב</string>
@@ -592,8 +581,7 @@ Language: he_IL
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">האתרים אחריהם אתה עוקב לא פרסמו דבר לאחרונה</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">אין פוסטים אחרונים</string>
 	<string name="edit_media">עריכת מדיה</string>
-	<string name="media_details_copy_url_toast">הכתובת הועתקה ללוח העריכה</string>
-	<string name="media_details_copy_url">העתק כתובת</string>
+	<string name="media_edit_copy_url_toast">הכתובת הועתקה</string>
 	<string name="media_details_label_date_uploaded">הועלה</string>
 	<string name="media_details_label_date_added">התווסף</string>
 	<string name="selected_theme">תבנית נבחרת</string>
@@ -684,13 +672,8 @@ Language: he_IL
 	<string name="email">אימייל</string>
 	<string name="notifications_tab">טאב התראות</string>
 	<string name="app_notifications">התראות אפליקציה</string>
-	<string name="notifications_comments_other_blogs">תגובות באתרים אחרים</string>
-	<string name="notifications_other">אחר</string>
 	<string name="notifications_wpcom_updates">עדכוני וורדפרס.קום</string>
-	<string name="notifications_account_emails">עדכונים מוורדפרס.קום</string>
-	<string name="notifications_account_emails_summary">תמיד נשלח מיילים חשובים הקשורים לאתר, אבל לפעמים תקבלו גם תוספות מועילות.</string>
-	<string name="your_sites">אתרים שלך</string>
-	<string name="notifications_sights_and_sounds">מראות וצלילים</string>
+	<string name="notification_settings_item_other_account_emails_summary">תמיד נשלח אימיילים חשובים הקשורים לאתר, אבל לפעמים תקבלו גם תוספות מועילות.</string>
 	<string name="stats_insights_latest_post_trend">עברו %1$s מאז פרסום %2$s. קצת מידע על תפקוד הפוסט עד כה...</string>
 	<string name="stats_insights_latest_post_summary">סיכום פוסטים אחרונים</string>
 	<string name="button_revert">שיחזור</string>
@@ -859,8 +842,6 @@ Language: he_IL
 	<string name="themes_fetching">משיג ערכות עיצוב…</string>
 	<string name="ssl_certificate_details">פרטים</string>
 	<string name="cab_selected">%d נבחרו</string>
-	<string name="confirm_delete_media">מחיקת פריט שנבחר?</string>
-	<string name="confirm_delete_multi_media">מחיקת פריטים שנבחרו?</string>
 	<string name="delete_sure_page">מחיקת עמוד</string>
 	<string name="delete_sure">מחיקת טיוטה</string>
 	<string name="delete_sure_post">מחיקת פוסט</string>
@@ -975,7 +956,7 @@ Language: he_IL
 	<string name="error_refresh_notifications">לא ניתן לרענן הודעות כעת</string>
 	<string name="error_refresh_pages">לא ניתן לרענן דפים כעת</string>
 	<string name="error_refresh_posts">לא ניתן לרענן רשומות כעת</string>
-	<string name="error_delete_post">אירעה שגיאה בזמן המחיקה של %s</string>
+	<string name="error_deleting_post">אירעה שגיאה בזמן מחיקת הפוסט</string>
 	<string name="notifications_empty_list">אין הודעות</string>
 	<string name="reply_failed">התשובה נכשלה</string>
 	<string name="invalid_url_message">ודא שכתובת האתר שהוזנה תקפה</string>
@@ -992,7 +973,6 @@ Language: he_IL
 	<string name="theme_auth_error_message">ודא שיש לך הרשאה להגדיר ערכות עיצוב</string>
 	<string name="theme_set_failed">הגדרת ערכת העיצוב נכשלה</string>
 	<string name="theme_fetch_failed">הבאת ערכות העיצוב נכשלה</string>
-	<string name="wait_until_upload_completes">המתן לסיום ההעלאה</string>
 	<string name="blog_not_found">אירעה שגיאה בזמן הגישה לאתר זה</string>
 	<string name="gallery_error">לא ניתן היה לאחזר את פריט המדיה</string>
 	<string name="could_not_remove_account">לא ניתן היה להסיר את האתר</string>
@@ -1026,8 +1006,6 @@ Language: he_IL
 	<string name="invalid_site_url_message">יש לוודא שכתובת ה-URL של האתר שהוזנה תקפה</string>
 	<string name="open_source_licenses">רישיונות קוד פתוח</string>
 	<string name="file_error_create">יצירת קובץ temp להעלאת קבצים לא הצליחה. וודא שיש מספיק מקום פנוי במכשיר.</string>
-	<string name="share_action_media">ספריית מדיה</string>
-	<string name="share_action_post">רשומה חדשה</string>
 	<string name="category_name">שם קטגוריה</string>
 	<string name="add_new_category">הוסף קטגוריה חדשה</string>
 	<string name="view_in_browser">הצג בדפדפן</string>
@@ -1067,7 +1045,6 @@ Language: he_IL
 	<string name="delete_page">מחק דף</string>
 	<string name="delete_post">מחק רשומה</string>
 	<string name="post_settings">הגדרות רשומה</string>
-	<string name="file_not_found">מציאת הקובץ להעלאה נכשלה. האם הוא נמחק או הועבר?</string>
 	<string name="horizontal_alignment">יישור אופקי</string>
 	<string name="upload_failed">העלאה נכשלה</string>
 	<string name="local_draft">טיוטה מקומית</string>
@@ -1145,7 +1122,6 @@ Language: he_IL
 	<string name="reader_btn_share">שתף</string>
 	<string name="reader_untitled_post">(ללא כותרת)</string>
 	<string name="jetpack_not_found">התוסף Jetpack לא נמצא</string>
-	<string name="select_from_media_library">בחר מתוך ספריית מדיה</string>
 	<string name="empty_list_default">רשימה זו ריקה</string>
 	<string name="media_add_popup_title">הוסף לספריית המדיה</string>
 	<string name="passcode_turn_on">הפעל נעילת קוד אישי</string>
@@ -1236,7 +1212,6 @@ Language: he_IL
 	<string name="app_title">וורדפרס עבור אנדרואיד</string>
 	<string name="tos">תנאי שימוש</string>
 	<string name="version">גרסה</string>
-	<string name="max_thumbnail_px_size">ברירת מחדל לרוחב תמונה</string>
 	<string name="image_alignment">יישור</string>
 	<string name="refresh">רענון</string>
 	<string name="untitled">ללא כותרת</string>
@@ -1255,9 +1230,6 @@ Language: he_IL
 	<string name="tags_separate_with_commas">יש להפריד תגיות בפסיקים</string>
 	<string name="title">כותרת</string>
 	<string name="dlg_deleting_comments">מוחק תגובות</string>
-	<string name="notification_vibrate">רטט</string>
-	<string name="notification_sound">צליל התראה</string>
-	<string name="notification_blink">האר נורית הודעה</string>
 	<string name="sdcard_title">דרוש כרטיס SD</string>
 	<string name="media">מדיה</string>
 	<string name="approve">אשר</string>

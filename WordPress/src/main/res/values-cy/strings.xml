@@ -44,10 +44,7 @@ Language: cy_GB
 	<string name="jetpack_info">Gwybodaeth am Jetpack</string>
 	<string name="reader_photo_by">Llun gan %s</string>
 	<string name="reader_label_visit">Ymweld</string>
-	<string name="all_your_sites">Fy Ngwefannau</string>
 	<string name="pending_draft_more">Rydych wedi drafftio %d cofnod ond heb eu chyhoeddi. Tapiwch i wirio.</string>
-	<string name="no_default_app_available_to_open_link">Methu agor y ddolen</string>
-	<string name="notification_pending_drafts">Rhoi gwybod i mi am ddrafftiau sy\'n disgwyl</string>
 	<string name="invalid_verification_code_format">Rhaid iddo fod yn rif chwe digid</string>
 	<string name="confirm_discard_changes">Hepgor newidiadau heb eu cadw?</string>
 	<string name="swipe_for_more">Llusgo am rhagor</string>
@@ -251,9 +248,6 @@ Language: cy_GB
 	<string name="site_timeout_error">Methwyd cysylltu â gwefan WordPress oherwydd gwall Terfyn Amser.</string>
 	<string name="xmlrpc_malformed_response_error">Doedd dim modd cysylltu. Ymatebodd y gosodiad WordPress gyda dogfen XML-RPC annilys.</string>
 	<string name="xmlrpc_missing_method_error">Doedd dim modd cysylltu. Mae\'r dulliau XML-RPC angenrheidiol ar goll o\'r gweinydd.</string>
-	<string name="theme_premium">Premiwm</string>
-	<string name="theme_all">Y Cyfan</string>
-	<string name="theme_free">Rhad ac am Ddim</string>
 	<string name="alignment_center">Canol</string>
 	<string name="post_format_video">Fideo</string>
 	<string name="post_format_status">Statws</string>
@@ -447,8 +441,6 @@ Language: cy_GB
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Nid yw\'r gwefannau rydych yn eu dilyn gofnodi dim yn ddiweddar</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Dim cofnodion diweddar</string>
 	<string name="edit_media">Golygu cyfrwng</string>
-	<string name="media_details_copy_url_toast">URL wedi ei gopïo i\'r clipfwrdd</string>
-	<string name="media_details_copy_url">Copïo URL</string>
 	<string name="media_details_label_date_uploaded">Wedi ei lwytho</string>
 	<string name="media_details_label_date_added">Ychwanegwyd</string>
 	<string name="selected_theme">Thema Dewiswyd</string>
@@ -538,13 +530,7 @@ Language: cy_GB
 	<string name="email">E-bost</string>
 	<string name="notifications_tab">Tab hysbysiadau</string>
 	<string name="app_notifications">Hysbysiadau apiau</string>
-	<string name="notifications_comments_other_blogs">Sylwadau ar wefannau eraill</string>
-	<string name="notifications_other">Arall</string>
 	<string name="notifications_wpcom_updates">Diweddariadau WordPress.com</string>
-	<string name="notifications_account_emails">E-bost gan WordPress.com</string>
-	<string name="notifications_account_emails_summary">Byddwn yn anfon e-byst pwysig am eich cyfrif a hefyd cewch bethau ychwanegol a defnyddiol.</string>
-	<string name="your_sites">Eich Gwefannau</string>
-	<string name="notifications_sights_and_sounds">Golwg a Sain</string>
 	<string name="stats_insights_latest_post_trend">Mae wedi bod yn %1$s ers cyhoeddi %2$s. Dyma sut mae\'r cofnod wedi performio hyd yma…</string>
 	<string name="stats_insights_latest_post_summary">Crynodeb o\'r Cofnod Diweddaraf</string>
 	<string name="button_revert">Dychwelyd</string>
@@ -711,8 +697,6 @@ Language: cy_GB
 	<string name="themes_fetching">Estyn themâu…</string>
 	<string name="ssl_certificate_details">Manylion</string>
 	<string name="cab_selected">%d wedi eu dewis</string>
-	<string name="confirm_delete_media">Dileu\'r eitem hon?</string>
-	<string name="confirm_delete_multi_media">Dileu\'r eitemau hyn?</string>
 	<string name="delete_sure_page">Dileu\'r dudalen</string>
 	<string name="delete_sure">Dileu\'r drafft</string>
 	<string name="delete_sure_post">Dileu\'r cofnod</string>
@@ -825,7 +809,6 @@ Language: cy_GB
 	<string name="error_refresh_notifications">Nid oedd modd adnewyddu\'r hysbysiadau ar hyn o bryd</string>
 	<string name="error_refresh_pages">Nid oedd modd adnewyddu\'r tudalennau ar hyn o bryd</string>
 	<string name="error_refresh_posts">Nid oedd modd adnewyddu\'r cofnodion ar hyn o bryd</string>
-	<string name="error_delete_post">Digwyddodd gwall wrth ddileu y%s</string>
 	<string name="notifications_empty_list">Dim hysbysiadau</string>
 	<string name="reply_failed">Methodd yr ateb</string>
 	<string name="invalid_url_message">Gwiriwch fod URL y blog yn ddilys</string>
@@ -842,7 +825,6 @@ Language: cy_GB
 	<string name="theme_auth_error_message">Sicrhewch bod gennych breintiau gosod themâu</string>
 	<string name="theme_set_failed">Methu gosod thema</string>
 	<string name="theme_fetch_failed">Methu estyn themâu</string>
-	<string name="wait_until_upload_completes">Arhoswch nes bod y llwytho i fyny wedi cwblhau</string>
 	<string name="blog_not_found">Digwyddodd gwall wrth geisio cael mynediad at y blog</string>
 	<string name="gallery_error">Methu estyn y cyfrwng</string>
 	<string name="could_not_remove_account">Methu tynnu\'r blog</string>
@@ -876,8 +858,6 @@ Language: cy_GB
 	<string name="invalid_site_url_message">Gwiriwch fod URL y blog yn ddilys</string>
 	<string name="open_source_licenses">Trwyddedau cod agored</string>
 	<string name="file_error_create">Methwyd creu ffeil dros dro ar gyfer llwytho cyfryngau. Gwnewch yn siwr bod digon o le rhydd ar eich dyfais.</string>
-	<string name="share_action_media">Llyfrgell cyfrwng</string>
-	<string name="share_action_post">Cofnod newydd</string>
 	<string name="category_name">Enw categori</string>
 	<string name="add_new_category">Ychwanegu categori newydd</string>
 	<string name="view_in_browser">Gweld mewn porwr</string>
@@ -917,7 +897,6 @@ Language: cy_GB
 	<string name="delete_page">Dileu\'r dudalen</string>
 	<string name="delete_post">Dileu\'r cofnod</string>
 	<string name="post_settings">Gosodiadau cofnodion</string>
-	<string name="file_not_found">Methu canfod y ffeil cyfryngau i\'w llwytho i fyny. A yw wedi ei dileu neu ei symud?</string>
 	<string name="horizontal_alignment">Alinio llorweddol</string>
 	<string name="upload_failed">Methodd y llwytho</string>
 	<string name="local_draft">Drafft lleol</string>
@@ -995,7 +974,6 @@ Language: cy_GB
 	<string name="reader_btn_share">Rhannu</string>
 	<string name="reader_untitled_post">(Dideitl)</string>
 	<string name="jetpack_not_found">Heb ganfod ategyn jetpack</string>
-	<string name="select_from_media_library">Dewiswch o\'r llyfrgell cyfryngau</string>
 	<string name="empty_list_default">Mae\'r rhestr hon yn wag</string>
 	<string name="media_add_popup_title">Ychwanegu at y llyfrgell cyfryngau</string>
 	<string name="passcode_turn_on">Troi clo PIN ymlaen</string>
@@ -1084,7 +1062,6 @@ Language: cy_GB
 	<string name="app_title">WordPress ar gyfer Android</string>
 	<string name="tos">Amodau Gwasanaeth</string>
 	<string name="version">Fersiwn</string>
-	<string name="max_thumbnail_px_width">Lled Rhagosodedig y Ddelwedd</string>
 	<string name="image_alignment">Alinio</string>
 	<string name="refresh">Adnewyddu</string>
 	<string name="untitled">Dideitl</string>
@@ -1102,9 +1079,6 @@ Language: cy_GB
 	<string name="categories">Categorïau</string>
 	<string name="title">Teitl</string>
 	<string name="dlg_deleting_comments">Dileu sylwadau</string>
-	<string name="notification_vibrate">Dirgrynu</string>
-	<string name="notification_sound">Sain hysbysu</string>
-	<string name="notification_blink">Fflachio\'r golau hysbysu</string>
 	<string name="sdcard_title">Mae angen cerdyn SD</string>
 	<string name="media">Cyfrwng</string>
 	<string name="approve">Cymeradwyo</string>

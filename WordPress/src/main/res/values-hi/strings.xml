@@ -1,22 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-18 23:31:13+0000
+Translation-Revision-Date: 2017-12-02 23:45:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: hi_IN
 -->
 <resources>
+	<string name="jetpack_allow_wpcom_sign_in_title">WordPress.com लॉगिन की अनुमति दें</string>
+	<string name="jetpack_wpcom_sign_in_category_title">WordPress.com लॉगिन</string>
+	<string name="jetpack_security_setting_title">सुरक्षा</string>
+	<string name="jetpack_site_settings_category_title">जेटपैक सेटिंग्स</string>
+	<string name="share_action_media">मीडिया लाइब्रेरी में जोड़ें</string>
+	<string name="share_action_post">नई पोस्ट में जोड़ें</string>
+	<string name="deleting_media_dlg">हटाया जा रहा है</string>
+	<string name="media_title_audio_details">ऑडियो का विवरण</string>
+	<string name="media_title_document_details">दस्तावेज़ का विवरण</string>
+	<string name="media_title_video_details">वीडियो का विवरण</string>
+	<string name="fab_content_description_preview">पूर्वावलोकन</string>
+	<string name="media_title_image_details">छवि का विवरण</string>
+	<string name="media_edit_duration_caption">अवधि</string>
+	<string name="media_edit_upload_date_caption">अपलोड की तारीख</string>
+	<string name="media_edit_url_caption">यूआरएल</string>
+	<string name="media_edit_filename_caption">फ़ाइल का नाम</string>
+	<string name="media_edit_filetype_caption">फाइल का प्रकार</string>
+	<string name="copy">कापी</string>
+	<string name="connect_site">साइट कनेक्ट करे</string>
+	<string name="notification_settings_item_sights_and_sounds_blink_light">लाइट टिमटिमाये </string>
+	<string name="notification_settings_item_sights_and_sounds_choose_sound">ध्वनि चुनें</string>
+	<string name="notification_settings_category_sights_and_sounds">दृश्य और ध्वनि </string>
+	<string name="notification_settings_item_other_account_emails">WordPress.com से ईमेल </string>
+	<string name="notification_settings_item_other_pending_drafts">अधूरे ड्राफ्ट के बारे में सूचित करें </string>
+	<string name="notification_settings_item_other_comments_other_blogs">दूसरे वेबसाइट पर टिप्पणी करें </string>
+	<string name="notification_settings_category_other">अन्य </string>
+	<string name="notification_settings_item_your_sites_all_your_sites">मेरे सभी साईट </string>
+	<string name="notification_settings_category_your_sites">आपके साइट </string>
+	<string name="notification_settings_master_hint_off">सूचना सक्रिय करें </string>
+	<string name="notification_settings_master_hint_on">सूचना असक्रिये करें </string>
+	<string name="notification_settings_master_status_off">बंद करें </string>
+	<string name="notification_settings_master_status_on">ऑन </string>
+	<string name="max_video_resolution">अधिकतम वीडियो साइज</string>
+	<string name="max_thumbnail_px_size">अधिकतम छवि साइज</string>
+	<string name="error_page_does_not_exist">यह  पृष्ठ अब उपलब्ध नहीं है</string>
+	<string name="error_upload_post_media_param">इस पोस्ट : %s में मीडिया अपलोड करते समय त्रुटि आई।</string>
+	<string name="error_upload_post_param">इस पोस्ट : %s में अपलोड करते समय त्रुटि आई।</string>
+	<string name="add_media_progress">मीडिया जोड़े </string>
+	<string name="reader_excerpt_link">और जानने के लिए  %s पर जाये </string>
+	<string name="error_unknown_page">सर्वर पर यह पृष्ठ मौजूद नहीं है </string>
+	<string name="error_publish_empty_page">खाली पृष्ठ प्रकाशित नहीं कर सकते </string>
+	<string name="upload_failed_param">"%s" के लिए अपलोड असफल </string>
+	<string name="cannot_retry_deleted_media_item">मीडिया हटा दिया गया हैं। इस पोस्ट से इसे हटाये?</string>
+	<string name="error_please_choose_browser">मौजूदा वेब ब्राउज़र खोलने में अक्षम। कृपया दूसरा ऐप्प चुने:</string>
+	<string name="cant_open_url">लिंक को खोलने में अक्षम</string>
+	<string name="error_unknown_post">इस सर्वर पर पोस्ट मौजूद नहीं है </string>
+	<string name="error_post_does_not_exist">पोस्ट अब मौजूद नहीं है </string>
+	<string name="async_promo_link">यह कैसे काम करता है?</string>
+	<string name="editor_uploading_post">आपकी पोस्ट अपलोड हो रहे है</string>
+	<string name="uploading_media">मीडिया अपलोड हो रही है...</string>
+	<string name="button_retry">पुन: प्रयास करें</string>
+	<string name="login_epilogue_mysites_one">मेरी साइट</string>
+	<string name="login_site_address">साइट का पता</string>
+	<string name="login_username_at">\@%s</string>
+	<string name="login_continue">जारी रखें</string>
+	<string name="connect_more">अन्य साइट कनेक्ट करें</string>
+	<string name="next">अगला</string>
+	<string name="open_mail">मेल खोलें</string>
+	<string name="turn_on">चालू करें</string>
+	<string name="leave_off">छोड़ दें</string>
+	<string name="post_title">शीर्षक</string>
+	<string name="media_audio">ऑडियो</string>
+	<string name="format_bar_description_heading">शीर्षक</string>
+	<string name="format_bar_description_list">सूची</string>
+	<string name="format_bar_description_media">मीडिया</string>
+	<string name="new_editor_promo_confirmation_action">सेटिंग्स</string>
+	<string name="permission_camera">कैमरा</string>
+	<string name="twitter">ट्विटर</string>
 	<string name="editor_draft_saved_locally">ड्राफ़्ट डिवाइस पर सहेजा गया</string>
 	<string name="editor_post_saved_locally">पोस्ट डिवाइस पर सहेजा गया</string>
 	<string name="button_sync">सिंक</string>
 	<string name="wp_media_title">वर्डप्रेस मीडिया </string>
 	<string name="error_unknown_post_type">अज्ञात पोस्ट प्रारूप</string>
+	<string name="confirm">पुष्टि करें</string>
 	<string name="jetpack_stats_module_disabled_message_not_admin">जेटपैक प्लगइन से जुड़ा हुआ है, लेकिन आँकड़े मॉड्यूल सक्रिय नहीं है। साइट व्यवस्थापक से संपर्क करें।</string>
 	<string name="jetpack_stats_module_disabled_message">जेटपैक प्लगइन से जुड़ा हुआ है, लेकिन आँकड़े मॉड्यूल सक्रिय नहीं है। क्या आप आँकड़े सक्रिय करना चाहते हैं?</string>
 	<string name="jetpack_info">जेटपैक की जानकारी</string>
 	<string name="reader_photo_by">Photo by %s</string>
 	<string name="pending_draft_more">आप %d के पदों का मसौदा तैयार किया है, लेकिन उन्हें कभी नहीं प्रकाशित किया। जाँच करने के लिए टैप करें I</string>
-	<string name="all_your_sites">मेरी</string>
 	<string name="reader_label_visit">भेंट</string>
 	<string name="swipe_for_more">अधिक के लिए स्वाइप करें</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">आप इस पोस्ट को देखने के लिए अधिकृत नहीं  हैं। पहले WordPress.com में जाकर लॉग इन करें या एक ब्राउज़र को खोलने के लिए शीर्ष कार्रवाई बटन का उपयोग करें।</string>
@@ -34,16 +102,16 @@ Language: hi_IN
 	<string name="notifications_label_new_notifications_subtitle">उन्हें दिखाने के लिए टैप करेंI</string>
 	<string name="notifications_label_new_notifications">नई सूचनाएं I</string>
 	<string name="like">लाइक</string>
+	<string name="reader_label_image_count_one">1 छवि</string>
 	<string name="timespan_now">अब</string>
 	<string name="visual_editor">विजुअल सम्पादक</string>
+	<string name="format_bar_description_html">एचटीएमएल</string>
 	<string name="image_width">चौड़ाई </string>
 	<string name="invite_error_for_username">%1$s: %2$s</string>
+	<string name="send">भेजें</string>
 	<string name="post_format_video">विडियो </string>
 	<string name="alignment_center">मध्य में</string>
 	<string name="post_format_status">स्थिति</string>
-	<string name="theme_free">नि: शुल्क</string>
-	<string name="theme_all">सभी</string>
-	<string name="theme_premium">प्रीमियम</string>
 	<string name="post_format_standard">मानक</string>
 	<string name="post_format_chat">चैट</string>
 	<string name="post_format_gallery">गैलरी</string>
@@ -62,6 +130,7 @@ Language: hi_IN
 	<string name="editor_page_title_placeholder">पृष्ठ शीर्षक</string>
 	<string name="editor_post_title_placeholder">पोस्ट शीर्षक</string>
 	<string name="email_address">ईमेल पता</string>
+	<string name="preference_editor">संपादक</string>
 	<string name="comment_status_all">सभी</string>
 	<string name="could_not_load_page">पृष्ठ लोड नहीं हो सका</string>
 	<string name="about_the_app">ऐप्प के बारे में</string>
@@ -78,7 +147,6 @@ Language: hi_IN
 	<string name="never">कभी नहीं </string>
 	<string name="unknown">अज्ञात</string>
 	<string name="edit_media">मीडिया को संपादित करे</string>
-	<string name="media_details_copy_url">यूआरएल को कॉपी करे</string>
 	<string name="media_details_label_date_uploaded">अपलोड की गई</string>
 	<string name="could_not_load_theme">थीम लोड नहीं हो सका</string>
 	<string name="theme_by_author_prompt_append">द्वारा %1$s</string>
@@ -125,9 +193,6 @@ Language: hi_IN
 	<string name="notifications_tab">अधिसूचना सूचि</string>
 	<string name="email">ईमेल</string>
 	<string name="app_notifications">एप्लिकेशन अधिसूची</string>
-	<string name="notifications_other">अन्य</string>
-	<string name="notifications_account_emails">Wordpress.com की ओर से ईमेल</string>
-	<string name="your_sites">आपकी साइटे</string>
 	<string name="button_revert">उलट दें</string>
 	<string name="days_ago">%d दिन पहले</string>
 	<string name="yesterday">कल</string>
@@ -267,11 +332,9 @@ Language: hi_IN
 	<string name="error_load_comment">टिप्पणी लोड नहीं हो सका</string>
 	<string name="theme_set_failed">थीम को सेट करने में असफल</string>
 	<string name="passcode_wrong_passcode">गलत पिन</string>
-	<string name="wait_until_upload_completes">अपलोड पूर्ण होने तक प्रतीक्षा करे</string>
 	<string name="username_not_allowed">उपयोगकर्ता नाम की अनुमति नहीं</string>
 	<string name="username_or_password_incorrect">आपके द्वारा दर्ज उपयोगकर्ता नाम या कूटशब्द गलत है</string>
 	<string name="gallery_error">मीडिया आइटम पुनः प्राप्त नहीं किया जा सका</string>
-	<string name="error_delete_post">%s को हटाने के दौरान एक त्रुटि हुई</string>
 	<string name="error_edit_comment">टिप्पणी के संपादन के दौरान एक त्रुटि हुई</string>
 	<string name="blog_name_cant_be_used">आप उस साइट पते का उपयोग नहीं कर सकते</string>
 	<string name="invalid_url_message">दर्ज किया गये ब्लॉग यूआरएल की वैधता की जाँच करे</string>
@@ -334,7 +397,6 @@ Language: hi_IN
 	<string name="link_enter_url_text">कड़ी शब्द (वैकल्पिक)</string>
 	<string name="dlg_spamming_comments">स्पैम के रूप में चिन्हित</string>
 	<string name="new_media">नया मीडिया</string>
-	<string name="share_action_post">नया पोस्ट</string>
 	<string name="new_post">नया पोस्ट</string>
 	<string name="open_source_licenses">मुक्त स्रोत लाइसेंस</string>
 	<string name="page_settings">पृष्ठ सेटिंग्स</string>
@@ -366,7 +428,6 @@ Language: hi_IN
 	<string name="connection_error">कनेक्शन त्रुटि</string>
 	<string name="media_error_no_permission">आपको मीडिया समूह देखने की अनुमति नहीं है</string>
 	<string name="select_categories">श्रेणियों को चुने</string>
-	<string name="share_action_media">मीडिया संग्रह</string>
 	<string name="required_field">आवश्यक फ़ील्ड</string>
 	<string name="saving_changes">परिवर्तन सहेजे जा रहा</string>
 	<string name="site_address">आपका अपने से होस्ट किया हुआ पता(यूआरएल)</string>
@@ -442,7 +503,6 @@ Language: hi_IN
 	<string name="reader_toast_err_view_image">छवि को देखने में असमर्थ</string>
 	<string name="media_add_popup_title">मीडिया संग्रह में जोड़े</string>
 	<string name="reader_toast_err_tag_exists">आप पहले से ही इस टैग का अनुसरण कर रहे है</string>
-	<string name="select_from_media_library">मीडिया लाइब्रेरी से चुने </string>
 	<string name="empty_list_default">इस सूची खाली है</string>
 	<string name="nux_tutorial_get_started_title">शुरू हो जाये!</string>
 	<string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>
@@ -536,7 +596,6 @@ Language: hi_IN
 	<string name="version">संस्करण</string>
 	<string name="tos">सेवा की शर्तें</string>
 	<string name="app_title">एंड्राइड के लिए वर्डप्रेस</string>
-	<string name="max_thumbnail_px_width">मूलभूत छवि की चौड़ाई</string>
 	<string name="image_alignment">संरेखण</string>
 	<string name="refresh">रिफ्रेश</string>
 	<string name="untitled">बिना शीर्षक का</string>
@@ -555,9 +614,6 @@ Language: hi_IN
 	<string name="title">शीर्षक</string>
 	<string name="tags_separate_with_commas">टैग को अल्पविराम से अलग करे \n</string>
 	<string name="dlg_deleting_comments">टिप्पणियों को हटाना</string>
-	<string name="notification_vibrate">वाइब्रेट</string>
-	<string name="notification_blink">ब्लिंक सुचना का प्रकाश </string>
-	<string name="notification_sound">सूचना ध्वनि</string>
 	<string name="sdcard_title">एसडी कार्ड आवश्यक है</string>
 	<string name="media">मीडिया</string>
 	<string name="delete">हटाये</string>

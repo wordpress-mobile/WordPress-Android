@@ -3,31 +3,29 @@
 [![Build Status](https://travis-ci.org/wordpress-mobile/WordPress-Android.svg?branch=develop)](https://travis-ci.org/wordpress-mobile/WordPress-Android)
 
 If you're just looking to install WordPress for Android, you can find
-it on [Google Play][1]. If you're a developer wanting to contribute,
-read on.
+it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.android). If you're a developer wanting to contribute, read on.
+
 
 ## Build Instructions ##
 
-You first need to generate the `local.properties` (replace YOUR_SDK_DIR with
-your actual android SDK directory) file and create the `gradle.properties` file:
+1. Make sure you've installed [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and [Android Studio](https://developer.android.com/studio/index.html), a _Standard Setup_ would work.
+2. Clone this GitHub repository.
+3. Copy `gradle.properties-example` to `gradle.properties`.
+4. In Android Studio open the project from the local repository as a **Gradle project** (this will auto-generate `local.properties` with the SDK location).
+5. Make sure you have an emulation device setup in AVD Manager (_Tools → Android → AVD Manager_).
+6. Run.
 
-    $ echo "sdk.dir=YOUR_SDK_DIR" > local.properties
-    $ cp ./gradle.properties-example ./gradle.properties
+Notes:
 
-Note: this is the default `./gradle.properties` file. If you
-want to use WordPress.com features (login to a WordPress.com account,
-access the Reader and Stats for example), you'll have to get a WordPress.com
-OAuth2 ID and secret. Please read the
-[OAuth2 Authentication](#oauth2-authentication) section.
+* To use WordPress.com features (login to WordPress.com, access Reader and Stats, etc) you need a WordPress.com OAuth2 ID and secret. Please read the [OAuth2 Authentication](#oauth2-authentication) section.
 
-You can now build, install and test the project:
+Once installed, you can now build, install and test the project from the command line:
 
     $ ./gradlew assembleVanillaDebug # assemble the debug .apk
     $ ./gradlew installVanillaDebug  # install the debug .apk if you have an
                                      # emulator or an Android device connected
     $ ./gradlew cAT                  # assemble, install and run unit tests
 
-You can use [Android Studio][3] by importing the project as a Gradle project.
 
 ## Directory structure ##
 
@@ -51,19 +49,27 @@ In order to use WordPress.com functions you will need a client ID and
 a client secret key. These details will be used to authenticate your
 application and verify that the API calls being made are valid. You can
 create an application or view details for your existing applications with
-our [WordPress.com applications manager][5].
+our [WordPress.com applications manager](https://developer.wordpress.com/apps/).
 
 When creating your application, you should select "Native client" for the
 application type. The applications manager currently requires a "redirect URL",
 but this isn't used for mobile apps. Just use "https://localhost".
 
-Once you've created your application in the [applications manager][5], you'll
+Once you've created your application in the [applications manager](https://developer.wordpress.com/apps/), you'll
 need to edit the `./gradle.properties` file and change the
 `WP.OAUTH.APP_ID` and `WP.OAUTH.APP_SECRET` fields. Then you can compile and
 run the app on a device or an emulator and try to login with a WordPress.com
 account.
 
-Read more about [OAuth2][6] and the [WordPress.com REST endpoint][7].
+Read more about [OAuth2](https://developer.wordpress.com/docs/oauth2/) and the [WordPress.com REST endpoint](https://developer.wordpress.com/docs/api/).
+
+## Google Configuration ##
+
+Google Sign-In is only available for WordPress.com accounts through the [official app][1].
+Contributors can build and run the app without issue, but Google Sign-In will always fail.
+Google Sign-In requires configuration files which contain client and server information
+that can't be shared publicly. More documentation and guides can be found on the
+[Google Identity Platform website][8].
 
 ## How we work ##
 
@@ -73,7 +79,7 @@ how we're organizing branches in our repository in the
 
 ## Need help to build or hack? ##
 
-Say hello on our [Slack][4] channel: `#mobile`.
+Say hello on our [Slack](https://make.wordpress.org/chat/) channel: `#mobile`.
 
 ## FAQ ##
 
@@ -94,4 +100,4 @@ be covered by a different license compatible with the GPLv2.
 [5]: https://developer.wordpress.com/apps/
 [6]: https://developer.wordpress.com/docs/oauth2/
 [7]: https://developer.wordpress.com/docs/api/
-[9]: https://facebook.github.io/watchman/docs/install.html
+[8]: https://developers.google.com/identity/

@@ -33,7 +33,6 @@ Language: id
 	<string name="media_encoder_quality_85">Sedang</string>
 	<string name="media_encoder_quality_80">Rendah</string>
 	<string name="media_upload_state_uploaded">Diunggah</string>
-	<string name="media_upload_state_failed">Gagal</string>
 	<string name="media_upload_state_deleted">Dihapus</string>
 	<string name="media_upload_state_deleting">Menghapus</string>
 	<string name="media_upload_state_uploading">Mengunggah</string>
@@ -62,9 +61,6 @@ Language: id
 	<string name="reader_photo_by">Foto oleh %s</string>
 	<string name="reader_label_visit">Kunjungi</string>
 	<string name="pending_draft_more">Anda mengonsep %d pos namun belum menerbitkannya. Sentuh untuk melihatnya.</string>
-	<string name="all_your_sites">Semua Situs Saya</string>
-	<string name="no_default_app_available_to_open_link">Tak bisa membuka tautan</string>
-	<string name="notification_pending_drafts">Beritahu saya tentang konsep yang tertunda</string>
 	<string name="invalid_verification_code_format">Harus angka enam digit</string>
 	<string name="confirm_discard_changes">Buang perubahan yang belum tersimpan?</string>
 	<string name="swipe_for_more">Geser untuk selengkapnya</string>
@@ -271,9 +267,6 @@ Language: id
 	<string name="post_format_status">Status</string>
 	<string name="post_format_video">Video</string>
 	<string name="alignment_center">Tengah</string>
-	<string name="theme_free">Gratis</string>
-	<string name="theme_all">Semua</string>
-	<string name="theme_premium">Premium</string>
 	<string name="post_format_chat">Obrolan</string>
 	<string name="post_format_gallery">Galeri</string>
 	<string name="post_format_image">Gambar</string>
@@ -463,9 +456,7 @@ Language: id
 	<string name="invalid_username_no_spaces">Nama pengguna tak boleh memuat spasi</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Situs-situs yang Anda ikuti belum menerbitkan pos apapun belakangan ini</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Tak ada pos terbaru</string>
-	<string name="media_details_copy_url_toast">URL tersalin dalam papan klip</string>
 	<string name="edit_media">Edit media</string>
-	<string name="media_details_copy_url">Salin URL</string>
 	<string name="media_details_label_date_uploaded">Terunggah</string>
 	<string name="media_details_label_date_added">Ditambahkan</string>
 	<string name="selected_theme">Tema Terpilih</string>
@@ -555,13 +546,7 @@ Language: id
 	<string name="app_notifications">Pemberitahuan aplikasi</string>
 	<string name="notifications_tab">Tab pemberitahuan</string>
 	<string name="email">Email</string>
-	<string name="notifications_comments_other_blogs">Komentar di situs lain</string>
-	<string name="notifications_other">Lainnya</string>
 	<string name="notifications_wpcom_updates">Berita Terbaru WordPress.com</string>
-	<string name="notifications_account_emails">Email dari WordPress.com</string>
-	<string name="notifications_account_emails_summary">Kami akan selalu mengirim email penting terkait akun Anda, namun Anda juga dapat memperoleh beberapa tambahan yang bermanfaat.</string>
-	<string name="notifications_sights_and_sounds">Penglihatan dan Suara</string>
-	<string name="your_sites">Situs Anda</string>
 	<string name="stats_insights_latest_post_trend">Telah %1$s sejak %2$s diterbitkan. Berikut ini gambaran kinerja pos sejauh ini…</string>
 	<string name="stats_insights_latest_post_summary">Ringkasan Pos Terbaru</string>
 	<string name="button_revert">Kembalikan</string>
@@ -730,8 +715,6 @@ Language: id
 	<string name="delete_sure_post">Hapus pos ini</string>
 	<string name="delete_sure">Hapus draf ini</string>
 	<string name="delete_sure_page">Hapus laman ini</string>
-	<string name="confirm_delete_media">Hapus item terpilih?</string>
-	<string name="confirm_delete_multi_media">Hapus semua item terpilih?</string>
 	<string name="cab_selected">%d terpilih</string>
 	<string name="reader_empty_posts_liked">Anda belum menyukai pos sama sekali</string>
 	<string name="faq_button">Tanya Jawab Umum</string>
@@ -806,7 +789,6 @@ Language: id
 	<string name="ssl_certificate_ask_trust">Jika biasanya Anda bisa terhubung dengan situs ini tanpa masalah, galat ini bisa berarti seseorang sedang mencoba meniru situs, dan Anda sebaiknya tidak melanjutkannya. Apakah Anda ingin mempercayai sertifikat ini?</string>
 	<string name="no_network_message">Tidak ada jaringan yang tersedia</string>
 	<string name="blog_not_found">Terjadi kekeliruan ketika mengakses blog ini</string>
-	<string name="wait_until_upload_completes">Tunggu sampai pengunggahan lengkap</string>
 	<string name="out_of_memory">Perangkat kehabisan memori.</string>
 	<string name="gallery_error">Item media gagal diambil</string>
 	<string name="theme_fetch_failed">Gagal mengunduh tema</string>
@@ -824,7 +806,6 @@ Language: id
 	<string name="stats_bar_graph_empty">Belum ada statistik</string>
 	<string name="reply_failed">Gagal mengirim balasan</string>
 	<string name="notifications_empty_list">Tak ada pemberitahuan</string>
-	<string name="error_delete_post">Terjadi galat saat menghapus %s</string>
 	<string name="error_refresh_posts">Pos tidak bisa disegarkan saat ini</string>
 	<string name="error_refresh_pages">Laman tidak bisa disegarkan saat ini</string>
 	<string name="error_refresh_notifications">Pemberitahuan tidak bisa disegarkan saat ini</string>
@@ -886,7 +867,6 @@ Language: id
 	<string name="local_draft">Draf lokal</string>
 	<string name="upload_failed">Pengunggahan gagal</string>
 	<string name="horizontal_alignment">Perataan horisontal</string>
-	<string name="file_not_found">Tidak bisa menemukan media yang hendak diunggah. Apakah sudah dihapus atau dipindahkan?</string>
 	<string name="post_settings">Pengaturan pos</string>
 	<string name="delete_post">Hapus pos</string>
 	<string name="delete_page">Hapus laman</string>
@@ -924,8 +904,6 @@ Language: id
 	<string name="view_in_browser">Tampilkan di peramban</string>
 	<string name="add_new_category">Tambahkan kategori baru</string>
 	<string name="category_name">Nama kategori</string>
-	<string name="share_action_post">Pos baru</string>
-	<string name="share_action_media">Pustaka media</string>
 	<string name="file_error_create">Tidak bisa membuat berkas temporer untuk pengunggahan media. Pastikan masih cukup ruang di perangkat Anda.</string>
 	<string name="open_source_licenses">Lisensi sumber terbuka</string>
 	<string name="http_credentials">HTTP credentials (opsional)</string>
@@ -990,7 +968,6 @@ Language: id
 	<string name="signing_in">Log in…</string>
 	<string name="media_add_popup_title">Tambah ke pustaka media</string>
 	<string name="empty_list_default">List ini masih kosong</string>
-	<string name="select_from_media_library">Pilih dari pustaka media</string>
 	<string name="jetpack_not_found">Plugin Jetpack tidak ditemukan</string>
 	<string name="reader_untitled_post">(Tanpa Judul)</string>
 	<string name="reader_btn_share">Bagikan</string>
@@ -1100,7 +1077,6 @@ Language: id
 	<string name="version">Versi</string>
 	<string name="app_title">WordPress untuk Android</string>
 	<string name="tos">Syarat Layanan</string>
-	<string name="max_thumbnail_px_width">Lebar Gambar Baku</string>
 	<string name="image_alignment">Penjajaran</string>
 	<string name="refresh">Segarkan</string>
 	<string name="untitled">Tanpa judul</string>
@@ -1118,9 +1094,6 @@ Language: id
 	<string name="categories">Kategori</string>
 	<string name="title">Judul</string>
 	<string name="dlg_deleting_comments">Menghapus komentar</string>
-	<string name="notification_vibrate">Getar</string>
-	<string name="notification_blink">Lampu notifikasi berkelip</string>
-	<string name="notification_sound">Bunyi notifikasi</string>
 	<string name="sdcard_title">Dibutuhkan SD Card</string>
 	<string name="media">Media</string>
 	<string name="delete">Hapus</string>

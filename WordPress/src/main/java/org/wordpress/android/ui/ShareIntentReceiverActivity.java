@@ -4,227 +4,191 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.ShareIntentReceiverFragment.ShareAction;
+import org.wordpress.android.ui.ShareIntentReceiverFragment.ShareIntentFragmentListener;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.PermissionUtils;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 /**
  * An activity to handle share intents, since there are multiple actions possible.
- * If there are multiple blogs, it lets the user choose which blog to share to.
- * It lists what actions that the user can perform and redirects them to the activity,
- * along with the content passed in the intent
+ * If the user is not logged in, redirects the user to the LoginFlow. When the user is logged in,
+ * displays ShareIntentReceiverFragment. The fragment lets the user choose which blog to share to.
+ * Moreover it lists what actions the user can perform and redirects the user to the activity,
+ * along with the content passed in the intent.
  */
-public class ShareIntentReceiverActivity extends AppCompatActivity implements OnItemSelectedListener {
-    public static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
-    public static final String SHARE_LAST_USED_ADDTO_KEY = "wp-settings-share-last-used-image-addto";
+public class ShareIntentReceiverActivity extends AppCompatActivity implements ShareIntentFragmentListener {
 
-    private static final int ADD_TO_NEW_POST = 0;
-    private static final int ADD_TO_MEDIA_LIBRARY = 1;
+    private static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
+    private static final String KEY_SELECTED_SITE_LOCAL_ID = "KEY_SELECTED_SITE_LOCAL_ID";
+    private static final String KEY_SHARE_ACTION_ID = "KEY_SHARE_ACTION_ID";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
-    private Spinner mBlogSpinner;
-    private RadioGroup mActionGroup;
-    private String mSiteNames[];
-    private int mSiteIds[];
-    private int mSelectedSiteLocalId;
-    private int mActionIndex;
+    private int mClickedSiteLocalId;
+    private String mShareActionName;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        refreshContent();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        setContentView(R.layout.share_intent_receiver_activity);
 
-        setContentView(R.layout.share_intent_receiver_dialog);
-
-        TextView blogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
-        mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
-        mActionGroup = (RadioGroup) findViewById(R.id.share_actions);
-
-        initSiteLists();
-
-        if (mSiteNames == null) {
-            finishIfNoVisibleBlogs();
-            return;
-        }
-
-        if (mSiteNames.length == 1) {
-            mBlogSpinner.setVisibility(View.GONE);
-            blogSpinnerTitle.setVisibility(View.GONE);
+        if (savedInstanceState == null) {
+            refreshContent();
         } else {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_menu_dropdown_item, mSiteNames);
-            mBlogSpinner.setAdapter(adapter);
-            mBlogSpinner.setOnItemSelectedListener(this);
+            loadState(savedInstanceState);
         }
+    }
 
-        loadLastUsed();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // keep setBackground in the onResume, otherwise the transition between activities is visible to the user when
+        // sharing text with an account with one visible site
+        findViewById(R.id.main_view).setBackgroundResource(R.color.login_background_color);
+    }
 
-        // If type is text/plain hide Media Gallery option
-        if (isSharingText()) {
-            mActionIndex = ADD_TO_NEW_POST;
-            mActionGroup.setVisibility(View.GONE);
-            findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
-            // if text/plain and only one blog, then don't show this fragment, share it directly to a new post
-            if (mSiteNames.length == 1) {
-                // Single site, startActivityAndFinish will pick the first one by default
-                startActivityAndFinish(new Intent(this, EditPostActivity.class));
+    private void refreshContent() {
+        if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            List<SiteModel> visibleSites = mSiteStore.getVisibleSites();
+            if (visibleSites.size() == 0) {
+                ToastUtils.showToast(this, R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
+                finish();
+            } else if (visibleSites.size() == 1 && isSharingText()) {
+                // if text/plain and only one blog, then don't show the fragment, share it directly to a new post
+                share(ShareAction.SHARE_TO_POST, visibleSites.get(0).getId());
+            } else {
+                // display a fragment with list of sites and list of actions the user can perform
+                initShareFragment(false);
             }
         } else {
-            mActionGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                    mActionIndex = getActionIndex(checkedId);
-                }
-            });
+            // start the login flow and wait onActivityResult
+            ActivityLauncher.loginForShareIntent(this);
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getId() == R.id.blog_spinner) {
-            mSelectedSiteLocalId = mSiteIds[position];
-        }
+    private void initShareFragment(boolean afterLogin) {
+        ShareIntentReceiverFragment shareIntentReceiverFragment = ShareIntentReceiverFragment
+                .newInstance(!isSharingText(), loadLastUsedBlogLocalId(), afterLogin);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, shareIntentReceiverFragment, ShareIntentReceiverFragment.TAG)
+                .commit();
+    }
+
+    private void loadState(Bundle savedInstanceState) {
+        mClickedSiteLocalId = savedInstanceState.getInt(KEY_SELECTED_SITE_LOCAL_ID);
+        mShareActionName = savedInstanceState.getString(KEY_SHARE_ACTION_ID);
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // nop
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putInt(KEY_SELECTED_SITE_LOCAL_ID, mClickedSiteLocalId);
+        outState.putString(KEY_SHARE_ACTION_ID, mShareActionName);
+    }
+
+    private int loadLastUsedBlogLocalId() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        return settings.getInt(SHARE_LAST_USED_BLOG_ID_KEY, -1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.DO_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                // login successful
+                refreshContent();
+            } else {
+                finish();
+            }
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
+            @NonNull String permissions[],
+            @NonNull int[] grantResults) {
         boolean allGranted = WPPermissionUtils.setPermissionListAsked(
                 this, requestCode, permissions, grantResults, true);
         if (allGranted && requestCode == WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
-            shareIt();
-        }
-    }
-
-    /**
-     * Callback for "Share" button.
-     */
-    public void onShareClicked(View view) {
-        shareIt();
-    }
-
-    /**
-     * Callback for "Cancel" button.
-     */
-    public void onCancelClicked(View view) {
-        finish();
-    }
-
-    private void finishIfNoVisibleBlogs() {
-        // If not logged in, then ask to log in, else inform the user to set at least one blog visible
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-            ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
-            startActivity(new Intent(this, SignInActivity.class));
-            finish();
+            // permissions granted
+            share(ShareAction.valueOf(mShareActionName), mClickedSiteLocalId);
         } else {
-            ToastUtils.showToast(getBaseContext(), R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
-            finish();
+            Toast.makeText(this, R.string.share_media_permission_required, Toast.LENGTH_LONG).show();
         }
     }
 
-    private int getActionIndex(int actionId) {
-        if (actionId == R.id.media_library_share_action) {
-            return ADD_TO_MEDIA_LIBRARY;
+    @Override
+    public void share(ShareAction shareAction, int selectedSiteLocalId) {
+        if (checkAndRequestPermissions()) {
+            bumpAnalytics(shareAction, selectedSiteLocalId);
+            Intent intent = new Intent(this, shareAction.targetClass);
+            startActivityAndFinish(intent, selectedSiteLocalId);
+        } else {
+            mShareActionName = shareAction.name();
+            mClickedSiteLocalId = selectedSiteLocalId;
         }
-        return ADD_TO_NEW_POST;
-    }
-
-    private int getActionId(int actionIndex) {
-        if (actionIndex == ADD_TO_MEDIA_LIBRARY) {
-            return R.id.media_library_share_action;
-        }
-        return R.id.new_post_share_action;
-    }
-
-    private int getPositionBySiteId(long localBlogId) {
-        for (int i = 0; i < mSiteIds.length; i++) {
-            if (mSiteIds[i] == localBlogId) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private void loadLastUsed() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        int localBlogId = settings.getInt(SHARE_LAST_USED_BLOG_ID_KEY, -1);
-        if (localBlogId != -1) {
-            int position = getPositionBySiteId(localBlogId);
-            if (position != -1) {
-                mBlogSpinner.setSelection(position);
-            }
-        }
-        mActionIndex = settings.getInt(SHARE_LAST_USED_ADDTO_KEY, ADD_TO_NEW_POST);
-        if (mActionIndex < 0 || mActionIndex >= mActionGroup.getChildCount()) {
-            mActionIndex = ADD_TO_NEW_POST;
-        }
-        mActionGroup.check(getActionId(mActionIndex));
     }
 
     private boolean isSharingText() {
         return "text/plain".equals(getIntent().getType());
     }
 
-    private void initSiteLists() {
-        List<SiteModel> sites = mSiteStore.getVisibleSites();
-        if (sites.size() > 0) {
-            mSiteNames = new String[sites.size()];
-            mSiteIds = new int[sites.size()];
-            int i = 0;
-            for (SiteModel site : sites) {
-                mSiteNames[i] = SiteUtils.getSiteNameOrHomeURL(site);
-                mSiteIds[i] = site.getId();
-                i += 1;
+    private boolean checkAndRequestPermissions() {
+        if (!isSharingText()) {
+            // If we're sharing media, we must check we have Storage permission (needed for media upload).
+            if (!PermissionUtils
+                    .checkAndRequestStoragePermission(this, WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
+                return false;
             }
-            // default selected site to the first one
-            mSelectedSiteLocalId = mSiteIds[0];
         }
+        return true;
     }
 
-    private void startActivityAndFinish(@NonNull Intent intent) {
+    private void startActivityAndFinish(@NonNull Intent intent, int mSelectedSiteLocalId) {
         String action = getIntent().getAction();
         intent.setAction(action);
         intent.setType(getIntent().getType());
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         intent.putExtra(WordPress.SITE, mSiteStore.getSiteByLocalId(mSelectedSiteLocalId));
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserActivity.MediaBrowserType.BROWSER);
 
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.BROWSER);
         intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
         intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra(Intent.EXTRA_SUBJECT));
 
@@ -240,31 +204,47 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         PreferenceManager.getDefaultSharedPreferences(this)
                 .edit()
                 .putInt(SHARE_LAST_USED_BLOG_ID_KEY, mSelectedSiteLocalId)
-                .putInt(SHARE_LAST_USED_ADDTO_KEY, mActionIndex)
                 .apply();
 
-        startActivity(intent);
+        startActivityWithSyntheticBackstack(intent);
         finish();
     }
 
-    /**
-     * Start the correct activity if permissions are granted.
-     */
-    private void shareIt() {
+    private void startActivityWithSyntheticBackstack(@NonNull Intent intent) {
+        Intent parentIntent = new Intent(this, WPMainActivity.class);
+        parentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        parentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        parentIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        TaskStackBuilder.create(this).addNextIntent(parentIntent).addNextIntent(intent).startActivities();
+    }
+
+    private void bumpAnalytics(ShareAction shareAction, int selectedSiteLocalId) {
+        Map<String, Object> analyticsProperties = new HashMap<>();
+        analyticsProperties.put("number_of_media_shared", countMedia());
+        analyticsProperties.put("share_to", shareAction.analyticsName);
+
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SHARE_TO_WP_SUCCEEDED,
+                mSiteStore.getSiteByLocalId(selectedSiteLocalId),
+                analyticsProperties);
+
+    }
+
+    private int countMedia() {
+        int mediaShared = 0;
         if (!isSharingText()) {
-            // If we're sharing media, we must check we have Storage permission (needed for media upload).
-            if (!PermissionUtils.checkAndRequestStoragePermission(this, WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
-                return;
+            String action = getIntent().getAction();
+            if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                // Multiple pictures share to WP
+                ArrayList<Uri> mediaUrls = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+                if (mediaUrls != null) {
+                    mediaShared = mediaUrls.size();
+                }
+            } else {
+                mediaShared = 1;
             }
         }
-
-        if (mActionIndex == ADD_TO_NEW_POST) {
-            startActivityAndFinish(new Intent(this, EditPostActivity.class));
-        } else if (mActionIndex == ADD_TO_MEDIA_LIBRARY) {
-            startActivityAndFinish(new Intent(this, MediaBrowserActivity.class));
-        } else {
-            ToastUtils.showToast(this, R.string.cant_share_unknown_action);
-            finish();
-        }
+        return mediaShared;
     }
+
+
 }

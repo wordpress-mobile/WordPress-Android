@@ -1,11 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-04 08:16:42+0000
+Translation-Revision-Date: 2017-10-09 13:19:27+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+	<string name="connect_site">サイトを連携</string>
+	<string name="notification_settings_item_sights_and_sounds_vibrate_device">端末をバイブレート</string>
+	<string name="notification_settings_item_other_account_emails">WordPress.com からのメール</string>
+	<string name="notification_settings_item_other_pending_drafts">保留の下書きを通知する</string>
+	<string name="notification_settings_item_other_comments_other_blogs">他サイト上のコメント</string>
+	<string name="notification_settings_item_your_sites_all_your_sites">自分の全サイト</string>
+	<string name="notification_settings_category_other">その他</string>
+	<string name="notification_settings_category_your_sites">あなたのサイト</string>
+	<string name="notification_settings_master_off_title">このデバイスで通知を受信するには、通知設定をオンにします。</string>
+	<string name="notification_settings_master_hint_off">通知を有効にする</string>
+	<string name="notification_settings_master_hint_on">通知を無効化</string>
+	<string name="notification_settings_master_status_off">オフ</string>
+	<string name="max_video_resolution">最大動画サイズ</string>
+	<string name="notification_settings_master_status_on">オン</string>
+	<string name="max_thumbnail_px_size">最大画像サイズ</string>
+	<string name="error_page_does_not_exist">このページはもう存在しません</string>
+	<string name="error_upload_post_media_param">投稿内のメディアのアップロード中にエラーが発生しました: %s。</string>
+	<string name="error_upload_post_param">投稿のアップロード中にエラーが発生しました: %s。</string>
+	<string name="add_media_progress">メディアを追加中</string>
+	<string name="reader_excerpt_link">詳細は%sへ</string>
+	<string name="login_site_address_help_image">サイトアドレスは Webブラウザーのナビゲーションバーにあります</string>
+	<string name="error_unknown_page">サーバー上にページが見つかりませんでした</string>
+	<string name="error_publish_empty_page">空のページは公開できません</string>
+	<string name="upload_failed_param">"%s" のアップロードに失敗</string>
+	<string name="cannot_retry_deleted_media_item">メディアは削除されました。この投稿から削除しますか ?</string>
+	<string name="error_please_choose_browser">デフォルトのブラウザーを開く際にエラーが発生しました。別のアプリを選択してください:</string>
+	<string name="cant_open_url">リンクを開けません</string>
+	<string name="error_unknown_post">サーバー上で投稿が見つかりませんでした</string>
+	<string name="error_post_does_not_exist">この投稿は存在しません</string>
+	<string name="error_media_canceled">メディアのアップロードがキャンセルされました</string>
+	<string name="error_upload_page_media_param">このページ内のメディアをアップロードする際にエラーが発生しました: %s.</string>
+	<string name="error_upload_page_param">このページをアップロードする際にエラーが発生しました: %s.</string>
+	<string name="async_promo_link">機能の説明</string>
+	<string name="async_promo_description">エディターを閉じると、投稿の保存と公開がバックグラウンドで自動的に行われるようになりました。お試しください。</string>
+	<string name="async_promo_title">自信を持って公開</string>
+	<string name="editor_uploading_post">投稿をアップロード中</string>
+	<string name="dialog_confirm_cancel_post_media_uploading">本当に実行しますか ?この投稿を削除すると、メディアのアップロードもキャンセルされます。</string>
+	<string name="page_scheduled">ページの公開を予約しました</string>
+	<string name="post_scheduled">投稿を予約しました</string>
+	<string name="button_retry">再試行</string>
+	<string name="post_queued">待機中の投稿</string>
+	<string name="uploading_post">「%s」をアップロード中</string>
+	<string name="connection_to_server_lost">サーバーへの接続が失われました</string>
+	<string name="login_epilogue_mysites_other">自分のサイト</string>
+	<string name="login_epilogue_mysites_one">自分のサイト</string>
+	<string name="login_logged_in_as">現在のユーザーアカウント:</string>
+	<string name="login_email_client_not_found">メールクライアントアプリを検出できません</string>
+	<string name="login_empty_2fa">認証コードを入力してください</string>
+	<string name="login_empty_username">ユーザー名を入力してください</string>
+	<string name="login_empty_site_url">サイトアドレスを入力してください</string>
+	<string name="login_log_in_for_deeplink">WordPress.com にログインして投稿にアクセスしてください。</string>
+	<string name="login_error_while_adding_site">サイトを追加する際にエラーが発生しました。エラーコード: %s</string>
+	<string name="login_checking_site_address">サイトアドレスの確認</string>
+	<string name="login_site_address_more_help">問題が解決しない場合</string>
+	<string name="login_site_address_help_content">Chrome でサイトにアクセスすると、画面の上部にあるバーにサイトアドレスが表示されます。</string>
+	<string name="login_site_address_help_title">自分のサイトアドレス:</string>
+	<string name="login_site_address_help">自分のサイトアドレスを忘れましたか ?</string>
+	<string name="login_site_address">サイトアドレス</string>
+	<string name="enter_site_address">連携する WordPress サイトのアドレスを入力してください。</string>
+	<string name="login_username_at">\@%s</string>
+	<string name="login_already_logged_in_wpcom">すでに WordPress.com にログインしています</string>
+	<string name="login_continue">次へ</string>
+	<string name="connect_more">別のサイトと連携</string>
+	<string name="enter_wpcom_password">WordPress.com パスワードを入力してください。</string>
+	<string name="login_magic_link_email_requesting">ログインメールのリクエスト</string>
+	<string name="login_magic_links_sent_description">マジックリンクが送信されたことを示すイラスト</string>
+	<string name="login_magic_links_sent_label">マジックリンクがもうすぐ送られてきます。このデバイスでメールをチェックして、WordPress.com から届いたメールにあるリンクをタップしてください。</string>
+	<string name="login_magic_links_label">パスワードなしですぐにログインできるマジックリンクのメールをお送りします。面倒な入力は不要です !</string>
+	<string name="password_incorrect">このパスワードは間違っているようです。入力した情報をもう一度確認してから、やり直してください。</string>
+	<string name="requesting_otp">SMS 経由で認証コードをリクエスト。</string>
+	<string name="login_text_otp">代わりに SMS でコードを送信する。</string>
+	<string name="enter_verification_code">もう少しで完了です。認証アプリから認証コードを入力してください。</string>
+	<string name="enter_the_address_of_your_wordpress_site">ご自分の WordPress サイトのアドレスを入力してください</string>
+	<string name="enter_username_instead">代わりにユーザー名でログインしてください。</string>
+	<string name="enter_site_address_instead">代わりにサイトアドレスを入力して、サイトにログインしてください。</string>
+	<string name="open_mail">メールを開く</string>
+	<string name="next">次へ</string>
+	<string name="enter_email_wordpress_com">メールアドレスを使用して WordPress.com にログインすると、自分のすべての WordPress サイトを管理できます。</string>
+	<string name="login_promo_text_jetpack">Jetpack 搭載のサイトを外出先で管理 — WordPress をどこにでも持ち歩けます。</string>
+	<string name="login_promo_text_notifications">通知がモバイルでも表示されます。コメントやいいねをリアルタイムで確認できます。</string>
+	<string name="login_promo_text_anytime">お気に入りのサイトを常時チェックして、好きな時に好きな場所で会話に加わることができます。</string>
+	<string name="login_promo_text_realtime">あなたのサイトを読んで、やり取りしている世界中の読者の動向をリアルタイムで確認できます。</string>
+	<string name="login_promo_text_onthego">公園から投稿を公開。バスからブログを投稿。カフェからコメントを送信。WordPress をどこでも使えます。</string>
+	<string name="create_wordpress_site">WordPress サイトを新規作成</string>
+	<string name="email_not_found">そのメールアドレスの WordPress.com ユーザーを見つけることはできませんでした。</string>
 	<string name="image_optimization_promo_desc">画像の最適化により、画像サイズを縮小して迅速に読み込めます。\n\nこれはサイト設定でいつでも変更できます。</string>
 	<string name="image_optimization_promo_title">画像の最適化を有効にしますか ?</string>
 	<string name="leave_off">無効のままにする</string>
@@ -57,6 +142,7 @@ Language: ja_JP
 	<string name="media_error_exceeds_memory_limit">ファイルが大きすぎてこのサイトにアップロードできません</string>
 	<string name="media_error_exceeds_php_filesize">このサイトのアップロードサイズ上限を超えているファイルです</string>
 	<string name="media_error_http_too_large_video_upload">動画が大きすぎてアップロードできません</string>
+	<string name="media_error_http_too_large_photo_upload">画像が大きすぎるためアップロードできません。アプリの設定画面で画像最適化を変更してみてください</string>
 	<string name="media_audio">音声</string>
 	<string name="media_videos">動画</string>
 	<string name="media_documents">文書</string>
@@ -151,6 +237,7 @@ Language: ja_JP
 	<string name="fab_content_description_write">投稿</string>
 	<string name="my_site_btn_sharing">共有</string>
 	<string name="button_not_now">後で</string>
+	<string name="media_error_internal_server_error">アップロードエラー。 アプリの設定画面で画像最適化を変更してみてください</string>
 	<string name="media_downloading">メディアを端末に保存中</string>
 	<string name="editor_scheduled_post_saved_online">投稿を予約しました</string>
 	<string name="error_media_save">メディアを保存できません</string>
@@ -186,6 +273,7 @@ Language: ja_JP
 	<string name="start_over_email_body">サイト %s をもう一度始めたい</string>
 	<string name="start_over_email_subject">サイト %s をもう一度始める</string>
 	<string name="site_picker_remove_site_error">サイトの削除中にエラーが発生しました。後でもう一度やり直してください</string>
+	<string name="editor_post_saved_locally_failed_media">投稿はメディアアップロードに失敗し、ローカルに保存されました</string>
 	<string name="sure_to_remove_account">アプリからこのサイトを削除しますか ?</string>
 	<string name="photo_picker_title">写真を選択</string>
 	<string name="error_publish_no_network">端末がオフラインです。変更をローカルで保存しました。</string>
@@ -198,7 +286,6 @@ Language: ja_JP
 	<string name="media_encoder_quality_80">低い</string>
 	<string name="media_upload_state_uploaded">アップロード済み</string>
 	<string name="media_encoder_quality_100">最高</string>
-	<string name="media_upload_state_failed">失敗</string>
 	<string name="media_upload_state_deleted">削除済み</string>
 	<string name="media_upload_state_deleting">削除中</string>
 	<string name="media_upload_state_uploading">アップロード中</string>
@@ -223,6 +310,7 @@ Language: ja_JP
 	<string name="error_media_refresh_no_connection">ライブラリのリフレッシュに接続が必要</string>
 	<string name="error_media_unauthorized">メディアを表示または編集する権限がありません</string>
 	<string name="error_media_not_found">メディアを検出できませんでした</string>
+	<string name="error_media_insufficient_fs_permissions">端末上のメディア読み取り権限が拒否されました</string>
 	<string name="site_settings_optimize_images">画像を最適化</string>
 	<string name="no_site_error">WordPress サイトに接続できませんでした。有効な WordPress サイトはこの\nアドレスにはありません。入力したサイトアドレス (URL) を確認してください。</string>
 	<string name="media_generic_error">メディアエラーが発生しました</string>
@@ -248,10 +336,7 @@ Language: ja_JP
 	<string name="jetpack_info">Jetpack 情報</string>
 	<string name="reader_photo_by">%s の写真</string>
 	<string name="reader_label_visit">表示</string>
-	<string name="all_your_sites">すべての参加サイト</string>
 	<string name="pending_draft_more">%d件の投稿の下書きを作成しましたが、公開していません。タップして確認してください。</string>
-	<string name="no_default_app_available_to_open_link">リンクを開けません</string>
-	<string name="notification_pending_drafts">保留中の下書きを通知する</string>
 	<string name="confirm_discard_changes">保存されていない変更を破棄しますか ?</string>
 	<string name="invalid_verification_code_format">6桁の数字にする必要があります</string>
 	<string name="swipe_for_more">スワイプしてさらに表示</string>
@@ -462,9 +547,6 @@ Language: ja_JP
 	<string name="xmlrpc_missing_method_error">接続できませんでした。必要な XML-RPC メソッドがサーバーにありません。</string>
 	<string name="post_format_status">ステータス</string>
 	<string name="post_format_video">動画</string>
-	<string name="theme_free">無料</string>
-	<string name="theme_all">すべて</string>
-	<string name="theme_premium">プレミアム</string>
 	<string name="alignment_center">中央</string>
 	<string name="post_format_chat">チャット</string>
 	<string name="post_format_gallery">ギャラリー</string>
@@ -511,6 +593,8 @@ Language: ja_JP
 	<string name="web_address">ウェブアドレス</string>
 	<string name="editor_toast_uploading_please_wait">メディアをアップロードしています。完了するまで、しばらくお待ちください。</string>
 	<string name="error_refresh_comments_showing_older">現在、コメントを更新することができないため、古いコメントが表示されます。</string>
+	<string name="post_settings_set_featured_image">アイキャッチ画像を設定</string>
+	<string name="post_settings_featured_image">アイキャッチ画像</string>
 	<string name="visual_editor_enabled">ビジュアルエディターを有効化しました</string>
 	<string name="editor_content_placeholder">こちらでストーリーを共有してください...</string>
 	<string name="editor_page_title_placeholder">ページタイトル</string>
@@ -655,9 +739,7 @@ Language: ja_JP
 	<string name="invalid_username_no_spaces">ユーザー名にスペースを含めることはできません</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">フォローしているサイトには、最近の投稿はありません</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">最近の投稿はありません</string>
-	<string name="media_details_copy_url_toast">URL がクリップボードにコピーされました</string>
 	<string name="edit_media">メディアを編集</string>
-	<string name="media_details_copy_url">URL をコピー</string>
 	<string name="media_details_label_date_uploaded">アップロード済み</string>
 	<string name="media_details_label_date_added">追加済み</string>
 	<string name="selected_theme">選択済みテーマ</string>
@@ -716,6 +798,7 @@ Language: ja_JP
 	<string name="stats_widget_loading_data">データを読み込み中…</string>
 	<string name="stats_widget_name_for_blog">WordPress 統計情報 (%1$s)</string>
 	<string name="stats_widget_name">WordPress 今日の統計情報</string>
+	<string name="post_settings_add_location_permission_required">位置情報を追加するために必要な権限</string>
 	<string name="add_media_permission_required">メディアを追加するには権限が必要です</string>
 	<string name="access_media_permission_required">メディアにアクセスするには権限が必要です</string>
 	<string name="stats_enable_rest_api_in_jetpack">統計情報を表示するには、Jetpack の JSON API モジュールを有効化してください。</string>
@@ -747,13 +830,8 @@ Language: ja_JP
 	<string name="app_notifications">アプリ通知</string>
 	<string name="notifications_tab">「通知」タブ</string>
 	<string name="email">メール</string>
-	<string name="notifications_comments_other_blogs">他のサイトのコメント</string>
 	<string name="notifications_wpcom_updates">WordPress.com のニュース</string>
-	<string name="notifications_other">その他</string>
-	<string name="notifications_account_emails">WordPress.com からのメール</string>
-	<string name="notifications_account_emails_summary">アカウントに関する重要なお知らせは常にメールでお送りしますが、役に立つ追加情報を受け取ることもできます。</string>
-	<string name="your_sites">あなたのサイト</string>
-	<string name="notifications_sights_and_sounds">視覚効果と音声</string>
+	<string name="notification_settings_item_other_account_emails_summary">アカウントに関する重要なお知らせは常にメールでお送りしますが、役に立つ追加情報を受け取ることもできます。</string>
 	<string name="stats_insights_latest_post_trend">「%2$s」が公開されてから%1$sが経過しました。過去の投稿のパフォーマンスを次に示します…</string>
 	<string name="stats_insights_latest_post_summary">最新の投稿概要</string>
 	<string name="button_revert">戻す</string>
@@ -861,6 +939,7 @@ Language: ja_JP
 	<string name="stats_total">合計</string>
 	<string name="stats_overall">全体</string>
 	<string name="reader_page_recommended_blogs">おすすめのサイト</string>
+	<string name="post_uploading">投稿をアップロード中</string>
 	<string name="stats_comments_total_comments_followers">コメントをフォロー中の人がいる投稿の合計数: %1$s</string>
 	<string name="stats_empty_geoviews_desc">リストから、どの国や地域からのトラフィックが多いのかを見ることができます。</string>
 	<string name="stats_empty_top_posts_desc">最も頻繁に表示されているコンテンツを発見し、各投稿やページの長期間に渡ったパフォーマンスをチェックできます。</string>
@@ -923,8 +1002,6 @@ Language: ja_JP
 	<string name="delete_sure_post">この投稿を削除</string>
 	<string name="delete_sure">この下書きを削除</string>
 	<string name="delete_sure_page">このページを削除</string>
-	<string name="confirm_delete_multi_media">選択した項目を削除しますか ?</string>
-	<string name="confirm_delete_media">選択した項目を削除しますか ?</string>
 	<string name="cab_selected">%d件選択</string>
 	<string name="reader_empty_posts_liked">「いいね」を付けた投稿はありません。</string>
 	<string name="browse_our_faq_button">よく聞かれる質問を表示</string>
@@ -937,7 +1014,6 @@ Language: ja_JP
 	<string name="reader_label_view_original">元の記事を表示</string>
 	<string name="reader_label_like">いいね</string>
 	<string name="reader_label_liked_by">いいね:</string>
-	<string name="reader_label_comments_closed">コメントは停止中です。</string>
 	<string name="reader_label_comments_on">次の投稿へのコメント:</string>
 	<string name="reader_title_photo_viewer">%1$d/%2$d</string>
 	<string name="error_publish_empty_post">空の投稿はできません。</string>
@@ -962,6 +1038,8 @@ Language: ja_JP
 	<string name="reader_empty_followed_blogs_title">フォローしているサイトがまだありません</string>
 	<string name="faq_button">よくある質問</string>
 	<string name="select_a_blog">WordPress サイトを選択</string>
+	<string name="sending_content">%s のコンテンツをアップロードしています…</string>
+	<string name="reader_label_comments_closed">コメントは受け付けていません。</string>
 	<string name="reader_toast_blog_blocked">このブログからの投稿は今後表示されません</string>
 	<string name="reader_menu_block_blog">このブログをブロック</string>
 	<string name="reader_toast_err_block_blog">ブログをブロックできませんでした</string>
@@ -1020,7 +1098,6 @@ Language: ja_JP
 	<string name="email_exists">そのメールアドレスはすでに使われています</string>
 	<string name="email_invalid">有効なメールアドレスを入力してください</string>
 	<string name="email_not_allowed">そのメールアドレスでは登録できません</string>
-	<string name="error_delete_post">%sを削除する際にエラーが発生しました</string>
 	<string name="error_edit_comment">コメント編集の際にエラーが発生しました</string>
 	<string name="error_generic">エラーが発生しました</string>
 	<string name="error_load_comment">コメントを読み込めませんでした</string>
@@ -1047,7 +1124,6 @@ Language: ja_JP
 	<string name="blog_name_exists">そのサイトはすでに存在しています</string>
 	<string name="blog_name_reserved">そのサイトは予約済みです</string>
 	<string name="username_or_password_incorrect">入力されたユーザー名またはパスワードが間違っています</string>
-	<string name="wait_until_upload_completes">アップロードが完了するまでお待ちください</string>
 	<string name="username_must_include_letters">ユーザー名には必ず英小文字 (a-z) を1つ以上含めてください</string>
 	<string name="error_refresh_posts">投稿を再読み込みできませんでした</string>
 	<string name="error_refresh_pages">ページを再読み込みできませんでした</string>
@@ -1059,6 +1135,7 @@ Language: ja_JP
 	<string name="could_not_remove_account">サイトを削除できませんでした</string>
 	<string name="invalid_url_message">入力したブログ URL が正しいか確認してください</string>
 	<string name="out_of_memory">端末のメモリが足りません</string>
+	<string name="error_deleting_post">投稿を削除する際にエラーが発生しました</string>
 	<string name="image_settings">画像設定</string>
 	<string name="local_changes">ローカルの変更</string>
 	<string name="new_media">新規メディア</string>
@@ -1094,7 +1171,6 @@ Language: ja_JP
 	<string name="edit_post">投稿を編集</string>
 	<string name="email_hint">メールアドレス</string>
 	<string name="email_reserved">そのメールアドレスはすでに使われています。有効化メールが届いていないかチェックしてみてください。有効化しなかった場合、数日後に同じアドレスでもう一度登録できるようになります。</string>
-	<string name="file_not_found">アップロードするメディアファイルが見つかりませんでした。削除または移動されたようです。</string>
 	<string name="hint_comment_content">コメント</string>
 	<string name="horizontal_alignment">横配置</string>
 	<string name="http_authorization_required">認証が必要です</string>
@@ -1123,8 +1199,6 @@ Language: ja_JP
 	<string name="saving_changes">変更を保存中</string>
 	<string name="scaled_image_error">正しい画像幅を入力してください</string>
 	<string name="select_categories">カテゴリーを選択</string>
-	<string name="share_action_media">メディアギャラリー</string>
-	<string name="share_action_post">新規投稿</string>
 	<string name="site_address">インストール型 WordPress のアドレス (URL)</string>
 	<string name="sure_to_cancel_edit_comment">このコメントの修正を中止しますか ?</string>
 	<string name="theme_current_theme">現在のテーマ</string>
@@ -1152,6 +1226,7 @@ Language: ja_JP
 	<string name="jetpack_message_not_admin">Jetpack プラグインが必要です。サイト管理者にご連絡ください。</string>
 	<string name="file_error_create">メディアアップロードの際に一時ファイルを作成できませんでした。端末上に空き容量があるか確認してください。</string>
 	<string name="error_refresh_media">メディアファイルを再読み込みできませんでした</string>
+	<string name="error_deleting_page">ページの削除中にエラーが発生しました</string>
 	<string name="deleting_page">ページを削除中</string>
 	<string name="deleting_post">投稿を削除中</string>
 	<string name="share_link">リンクを共有</string>
@@ -1187,7 +1262,6 @@ Language: ja_JP
 	<string name="nux_tutorial_get_started_title">始めてみましょう</string>
 	<string name="media_add_popup_title">メディアライブラリに追加</string>
 	<string name="empty_list_default">リストが空です</string>
-	<string name="select_from_media_library">メディアライブラリから選択</string>
 	<string name="reader_untitled_post">(無題)</string>
 	<string name="reader_btn_share">共有</string>
 	<string name="reader_btn_follow">フォロー</string>
@@ -1298,7 +1372,6 @@ Language: ja_JP
 	<string name="version">バージョン</string>
 	<string name="tos">利用規約</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="max_thumbnail_px_width">標準の画像幅</string>
 	<string name="image_alignment">配置</string>
 	<string name="refresh">再読み込み</string>
 	<string name="untitled">名称未設定</string>
@@ -1315,10 +1388,8 @@ Language: ja_JP
 	<string name="upload_full_size_image">アップロードしてフルサイズの画像にリンクする</string>
 	<string name="title">タイトル</string>
 	<string name="categories">カテゴリー</string>
+	<string name="tags_separate_with_commas">タグはコンマで区切ってください</string>
 	<string name="dlg_deleting_comments">コメントを削除中</string>
-	<string name="notification_blink">通知ライトを点滅</string>
-	<string name="notification_vibrate">バイブ</string>
-	<string name="notification_sound">通知音</string>
 	<string name="sdcard_title">SD カードが必要です</string>
 	<string name="media">メディア</string>
 	<string name="delete">削除</string>

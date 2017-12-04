@@ -210,9 +210,6 @@ Language: es_VE
 	<string name="xmlrpc_malformed_response_error">No se pudo conectar. La instalación de WordPress está respondiendo con un documento XML-RPC no válido.</string>
 	<string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
 	<string name="post_format_video">Video</string>
-	<string name="theme_all">Todo</string>
-	<string name="theme_premium">Premium</string>
-	<string name="theme_free">Gratis</string>
 	<string name="post_format_status">Estado</string>
 	<string name="alignment_center">Centrado</string>
 	<string name="post_format_image">Imagen</string>
@@ -404,9 +401,7 @@ Language: es_VE
 	<string name="invalid_username_no_spaces">El nombre de usuario no puede tener espacios</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Los sitios que estás siguiendo no han publicado nada recientemente</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">No hay entradas recientes</string>
-	<string name="media_details_copy_url_toast">URL copiada al portapapeles</string>
 	<string name="edit_media">Editar multimedia</string>
-	<string name="media_details_copy_url">Copiar URL</string>
 	<string name="media_details_label_date_uploaded">Subido</string>
 	<string name="media_details_label_date_added">Añadido</string>
 	<string name="selected_theme">Tema seleccionado</string>
@@ -496,13 +491,7 @@ Language: es_VE
 	<string name="notifications_tab">Pestaña de avisos</string>
 	<string name="email">Correo electrónico</string>
 	<string name="app_notifications">Avisos de la aplicación</string>
-	<string name="notifications_comments_other_blogs">Comentarios en otros sitios</string>
-	<string name="notifications_other">Otras</string>
 	<string name="notifications_wpcom_updates">Actualizaciones de WordPress.com</string>
-	<string name="notifications_account_emails">Correo de WordPress.com</string>
-	<string name="notifications_account_emails_summary">Siempre mandamos correos electrónicos importantes relativos a tu cuenta, pero también obtendrás extras útiles.</string>
-	<string name="notifications_sights_and_sounds">Vistas y sonidos</string>
-	<string name="your_sites">Tus sitios</string>
 	<string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
 	<string name="stats_insights_latest_post_summary">Sumario de la última entrada</string>
 	<string name="button_revert">Volver</string>
@@ -671,8 +660,6 @@ Language: es_VE
 	<string name="delete_sure">Eliminar este borrador</string>
 	<string name="delete_sure_page">Eliminar esta página</string>
 	<string name="delete_sure_post">Eliminar esta entrada</string>
-	<string name="confirm_delete_multi_media">¿Quieres eliminar los elementos seleccionados?</string>
-	<string name="confirm_delete_media">¿Quieres eliminar el elemento seleccionado?</string>
 	<string name="cab_selected">%d seleccionados</string>
 	<string name="nux_help_description">Visita el centro de ayuda para obtener respuestas a las preguntas habituales o visita los foros para hacer preguntas nuevas.</string>
 	<string name="reader_label_view_original">Ver artículo original</string>
@@ -749,7 +736,6 @@ Language: es_VE
 	<string name="no_network_message">No hay ninguna conexión de red disponible</string>
 	<string name="gallery_error">El elemento multimedia no ha podido ser recuperado</string>
 	<string name="blog_not_found">Ha ocurrido un error mientras se accedía a este blog</string>
-	<string name="wait_until_upload_completes">Espere mientras se complete la carga</string>
 	<string name="theme_fetch_failed">Ocurrió un error al obtener los temas.</string>
 	<string name="theme_set_failed">No se pudo establecer el tema</string>
 	<string name="theme_auth_error_message">Asegúrate que tienes autorización para elegir temas</string>
@@ -765,7 +751,6 @@ Language: es_VE
 	<string name="stats_bar_graph_empty">Estadísticas no disponibles.</string>
 	<string name="reply_failed">Respuesta fallida</string>
 	<string name="notifications_empty_list">Sin notificaciones</string>
-	<string name="error_delete_post">Ocurrió un error al eliminar el %s</string>
 	<string name="error_refresh_posts">Las entradas no pueden ser actualizadas en este momento</string>
 	<string name="error_refresh_pages">Las páginas no pueden ser actualizadas en este momento.</string>
 	<string name="error_refresh_notifications">No se pudo actualizar las notificaciones</string>
@@ -828,7 +813,6 @@ Language: es_VE
 	<string name="local_draft">Borrador local</string>
 	<string name="upload_failed">Falló la subida</string>
 	<string name="horizontal_alignment">Alineación horizontal</string>
-	<string name="file_not_found">No ha sido posible encontrar el archivo multimedia para cargar. ¿Se ha borrado o cambiado de ubicación?</string>
 	<string name="post_settings">Ajustes de entrada</string>
 	<string name="delete_post">Borrar entrada</string>
 	<string name="delete_page">Borrar página</string>
@@ -866,8 +850,6 @@ Language: es_VE
 	<string name="view_in_browser">Ver en el navegador</string>
 	<string name="add_new_category">Añadir nueva categoría</string>
 	<string name="category_name">Nombre de la categoría</string>
-	<string name="share_action_post">Nueva entrada</string>
-	<string name="share_action_media">Librería multimedia</string>
 	<string name="file_error_create">No se pudo crear un archivo temporal para subir el archivo multimedia. Asegúrate que haya suficiente espacio libre en tu dispositivo.</string>
 	<string name="open_source_licenses">Licencias Open source</string>
 	<string name="http_credentials">Credenciales HTTP (opcional)</string>
@@ -931,7 +913,6 @@ Language: es_VE
 	<string name="nux_oops_not_selfhosted_blog">Accede a WordPress.com</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
-	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="reader_btn_share">Compartir</string>
@@ -1041,7 +1022,6 @@ Language: es_VE
 	<string name="version">Versión</string>
 	<string name="tos">Términos del servicio</string>
 	<string name="app_title">WordPress para Android</string>
-	<string name="max_thumbnail_px_size">Ancho predeterminado de la imagen </string>
 	<string name="image_alignment">Alineamiento</string>
 	<string name="refresh">Refrescar</string>
 	<string name="untitled">Sin Título</string>
@@ -1059,9 +1039,6 @@ Language: es_VE
 	<string name="title">Título</string>
 	<string name="categories">Categorías</string>
 	<string name="dlg_deleting_comments">Eliminando comentarios</string>
-	<string name="notification_blink">Notificación luminosa</string>
-	<string name="notification_vibrate">Vibrar</string>
-	<string name="notification_sound">Sonido de aviso</string>
 	<string name="sdcard_title">Requiere tarjeta SD</string>
 	<string name="media">Multimedia</string>
 	<string name="delete">Eliminar</string>

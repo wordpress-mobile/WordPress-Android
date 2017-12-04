@@ -19,7 +19,7 @@
         android:background="@color/reader_divider_grey" />
 
     <RelativeLayout
-        android:layout_width="@dimen/reader_webview_width"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/reader_detail_margin"

@@ -2,8 +2,6 @@ package org.wordpress.android.ui.uploads;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore.Images;
@@ -36,9 +34,7 @@ import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
-import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -103,6 +99,15 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     @Override
     public void upload(@NonNull PostModel post) {
         synchronized (sQueuedPostsList) {
+            // first check whether there was an old version of this Post still enqueued waiting
+            // for being uploaded
+            for (PostModel queuedPost : sQueuedPostsList) {
+                if (queuedPost.getId() == post.getId()) {
+                    // we found an older version, so let's remove it and replace it with the newest copy
+                    sQueuedPostsList.remove(queuedPost);
+                    break;
+                }
+            }
             sQueuedPostsList.add(post);
         }
         uploadNextPost();
@@ -193,8 +198,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             if (!pushActionWasDispatched) {
                 // This block only runs if the PUSH_POST action was never dispatched - if it was dispatched, any error
                 // will be handled in OnPostChanged instead of here
-                mPostUploadNotifier.cancelNotification(mPost);
-                mPostUploadNotifier.updateNotificationError(mPost, mSite, mErrorMessage);
+                mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost);
+                mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage, 0);
                 finishUpload();
             }
         }
@@ -203,14 +208,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         protected Boolean doInBackground(PostModel... posts) {
             mContext = WordPress.getContext();
             mPost = posts[0];
-
-            String uploadingPostMessage = String.format(
-                    mContext.getString(R.string.sending_content),
-                    mPost.isPage() ? mContext.getString(R.string.page).toLowerCase()
-                            : mContext.getString(R.string.post).toLowerCase()
-            );
-
-            mPostUploadNotifier.showForegroundNotificationForPost(mPost, uploadingPostMessage);
 
             mSite = mSiteStore.getSiteByLocalId(mPost.getLocalSiteId());
             if (mSite == null) {
@@ -320,9 +317,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 totalMediaItems++;
             }
 
-            mPostUploadNotifier.setTotalMediaItems(mPost, totalMediaItems);
-
-            int mediaItemCount = 0;
             for (String tag : imageTags) {
                 Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
                 Matcher m = p.matcher(tag);
@@ -336,22 +330,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                         }
                         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
                         if (mediaFile != null) {
-                            // Get image thumbnail for notification icon
-                            Bitmap imageIcon = ImageUtils.getWPImageSpanThumbnailFromFilePath(
-                                    mContext,
-                                    imageUri,
-                                    DisplayUtils.dpToPx(mContext, 128)
-                            );
-
-                            // Crop the thumbnail to be squared in the center
-                            if (imageIcon != null) {
-                                int squaredSize = DisplayUtils.dpToPx(mContext, 64);
-                                imageIcon = ThumbnailUtils.extractThumbnail(imageIcon, squaredSize, squaredSize);
-                            }
-
-                            mediaItemCount++;
-                            mPostUploadNotifier.setCurrentMediaItem(mPost, mediaItemCount);
-                            mPostUploadNotifier.updateNotificationIcon(mPost, imageIcon);
+                            mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaModel);
 
                             String mediaUploadOutput;
                             if (mediaFile.isVideo()) {
@@ -564,13 +543,13 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             Context context = WordPress.getContext();
             String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
-            mPostUploadNotifier.updateNotificationError(event.post, site, notificationMessage);
-            mPostUploadNotifier.cancelNotification(event.post);
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
+            mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);
             sFirstPublishPosts.remove(event.post.getId());
         } else {
-            mPostUploadNotifier.cancelNotification(event.post);
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
-            mPostUploadNotifier.updateNotificationSuccess(event.post, site, isFirstTimePublish);
+            mPostUploadNotifier.updateNotificationSuccessForPost(event.post, site, isFirstTimePublish);
             if (isFirstTimePublish) {
                 if (sCurrentUploadingPostAnalyticsProperties != null){
                     sCurrentUploadingPostAnalyticsProperties.put("post_id", event.post.getRemotePostId());
@@ -594,6 +573,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             AppLog.w(T.POSTS, "PostUploadHandler > Received media event for null media, ignoring");
             return;
         }
+
         if (sUseLegacyMode) {
             handleMediaUploadCompletedLegacy(event);
         }
@@ -614,8 +594,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String errorMessage = UploadUtils.getErrorMessageFromMediaError(context, event.media, event.error);
             String notificationMessage =
                     UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage, true);
-            mPostUploadNotifier.cancelNotification(sCurrentUploadingPost);
-            mPostUploadNotifier.updateNotificationError(sCurrentUploadingPost, site, notificationMessage);
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(sCurrentUploadingPost);
+            mPostUploadNotifier.updateNotificationErrorForPost(sCurrentUploadingPost, site, notificationMessage, 0);
             sFirstPublishPosts.remove(sCurrentUploadingPost.getId());
             finishUpload();
             return;
@@ -631,9 +611,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                     + ", post id: " + sCurrentUploadingPost.getId());
             mMediaLatchMap.get(event.media.getId()).countDown();
             mMediaLatchMap.remove(event.media.getId());
-        } else {
-            // Progress update
-            mPostUploadNotifier.updateNotificationProgress(sCurrentUploadingPost, event.progress);
         }
     }
 }

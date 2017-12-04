@@ -33,7 +33,6 @@ Language: is
 	<string name="media_encoder_quality_85">Miðlungi gott</string>
 	<string name="media_encoder_quality_80">Lítil</string>
 	<string name="media_upload_state_uploaded">Efni upphlaðið</string>
-	<string name="media_upload_state_failed">Mistókst</string>
 	<string name="media_upload_state_deleted">Eytt</string>
 	<string name="media_upload_state_deleting">Eyði</string>
 	<string name="media_upload_state_uploading">Hlaða upp</string>
@@ -82,10 +81,7 @@ Language: is
 	<string name="jetpack_info">Jetpack upplýsingar</string>
 	<string name="reader_photo_by">Mynd eftir %s</string>
 	<string name="reader_label_visit">Heimsækja</string>
-	<string name="all_your_sites">Allir mínir vefir</string>
 	<string name="pending_draft_more">Þú hefur skrifað %d drög en aldrei birt þau. Ýttu til þess að skoða.</string>
-	<string name="no_default_app_available_to_open_link">Gat ekki opnað tengilinn</string>
-	<string name="notification_pending_drafts">Láta mig vita ef drög bíða</string>
 	<string name="invalid_verification_code_format">Verður að vera sex stafa tala</string>
 	<string name="confirm_discard_changes">Hætta við óvistaðar breytingar?</string>
 	<string name="swipe_for_more">Strjúktu fyrir meira</string>
@@ -289,9 +285,6 @@ Language: is
 	<string name="site_timeout_error">Gat ekki tengst WordPress vef þar sem tenging rann út á tíma.</string>
 	<string name="xmlrpc_malformed_response_error">Gat ekki tengst. WordPress uppsetningin svaraði með ógildu XML-RPC skjali.</string>
 	<string name="xmlrpc_missing_method_error">Gat ekki tengst. Nauðsynlega XML-RPC virkni vantar á netþjóninn.</string>
-	<string name="theme_premium">Sérfræðingar</string>
-	<string name="theme_all">Allt</string>
-	<string name="theme_free">Ókeypis</string>
 	<string name="alignment_center">Miðja</string>
 	<string name="post_format_video">Myndband</string>
 	<string name="post_format_status">Staða</string>
@@ -485,8 +478,6 @@ Language: is
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Vefirnir sem þú fylgir hafa ekki birt neitt efni nýlega</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Engar nýlegar færslur</string>
 	<string name="edit_media">Breyta skrám</string>
-	<string name="media_details_copy_url_toast">Vefslóð afrituð í klemmuspjald</string>
-	<string name="media_details_copy_url">Afrita vefslóð</string>
 	<string name="media_details_label_date_uploaded">Efni upphlaðið</string>
 	<string name="media_details_label_date_added">Bætt við</string>
 	<string name="selected_theme">Valið þema</string>
@@ -576,13 +567,7 @@ Language: is
 	<string name="email">Netfang</string>
 	<string name="notifications_tab">Tilkynningar</string>
 	<string name="app_notifications">App tilkynningar</string>
-	<string name="notifications_comments_other_blogs">Athugasemdir á öðrum vefjum</string>
-	<string name="notifications_other">Annað</string>
 	<string name="notifications_wpcom_updates">WordPress.com uppfærslur</string>
-	<string name="notifications_account_emails">Tölvupóstur frá WordPress.com</string>
-	<string name="notifications_account_emails_summary">Við sendum þér ávallt mikilvæga tölvupósta í tengslum við aðganginn þinn, en þú gætir mögulega einnig fengið hjálplega tölvupósta til viðbótar.</string>
-	<string name="your_sites">Vefirnir þínir</string>
-	<string name="notifications_sights_and_sounds">Birtingar og hljóð</string>
 	<string name="stats_insights_latest_post_trend">Það er %1$s síðan %2$s var birt. Hér eru upplýsingar um hvernig færslunni hefur vegnað hingað til...</string>
 	<string name="stats_insights_latest_post_summary">Samantekt um síðustu færslu</string>
 	<string name="button_revert">Afturkalla</string>
@@ -750,8 +735,6 @@ Language: is
 	<string name="themes_fetching">Sæki þemu...</string>
 	<string name="ssl_certificate_details">Upplýsingar</string>
 	<string name="cab_selected">%d valið</string>
-	<string name="confirm_delete_media">Eyða völdu atriði?</string>
-	<string name="confirm_delete_multi_media">Eyða völdum atriðum?</string>
 	<string name="delete_sure_page">Eyða þessari síðu</string>
 	<string name="delete_sure">Eyða þessum drögum</string>
 	<string name="delete_sure_post">Eyða þessari færslu</string>
@@ -864,7 +847,6 @@ Language: is
 	<string name="error_refresh_notifications">Ekki var hægt að endurfríska tilkynningar í þetta sinn</string>
 	<string name="error_refresh_pages">Ekki var hægt að endurfríska síðu í þetta sinn</string>
 	<string name="error_refresh_posts">Ekki var hægt að endurfríska færslur í þetta sinn</string>
-	<string name="error_delete_post">Villa kom upp við að eyða %s</string>
 	<string name="notifications_empty_list">Engar tilkynningar</string>
 	<string name="reply_failed">Tókst ekki að svara</string>
 	<string name="invalid_url_message">Athugaðu hvort að uppgefin vefslóð (URL) bloggs sé gild</string>
@@ -881,7 +863,6 @@ Language: is
 	<string name="theme_auth_error_message">Gakktu úr skugga um að þú hafir réttindi til þess að skilgreina þemu</string>
 	<string name="theme_set_failed">Tókst ekki að skilgreina þema</string>
 	<string name="theme_fetch_failed">Tókst ekki að sækja þemu</string>
-	<string name="wait_until_upload_completes">Biða uns upphleðslu er lokið</string>
 	<string name="blog_not_found">Villa kom upp við að tengjast við þetta blogg</string>
 	<string name="gallery_error">Ekki var hægt að sækja skrá</string>
 	<string name="could_not_remove_account">Gat ekki fjarlægt þennan vef</string>
@@ -915,8 +896,6 @@ Language: is
 	<string name="invalid_site_url_message">Athugaðu að innslegið veffang sé gilt</string>
 	<string name="open_source_licenses">Opin hugbúnaðarleyfi</string>
 	<string name="file_error_create">Gat ekki búið til tímabundna skrá fyrir skráarupphal. Vinsamlegast gakktu úr skugga um að það sé nægilegt geymslupláss eftir á tækinu þínu.</string>
-	<string name="share_action_media">Skráarsafn</string>
-	<string name="share_action_post">Ný færsla</string>
 	<string name="category_name">Heiti flokks</string>
 	<string name="add_new_category">Bæta við nýjum flokki</string>
 	<string name="view_in_browser">Skoða í vafra</string>
@@ -956,7 +935,6 @@ Language: is
 	<string name="delete_page">Eyða síðu</string>
 	<string name="delete_post">Eyða færslu</string>
 	<string name="post_settings">Stillingar færslu</string>
-	<string name="file_not_found">Gat ekki fundið skrána til upphleðslu. Var henni eytt eða hún flutt?</string>
 	<string name="horizontal_alignment">Lárétt jöfnun</string>
 	<string name="upload_failed">Sending mistókst</string>
 	<string name="local_draft">Staðvær drög</string>
@@ -1034,7 +1012,6 @@ Language: is
 	<string name="reader_btn_share">Deila</string>
 	<string name="reader_untitled_post">(Án titils)</string>
 	<string name="jetpack_not_found">Jetpack viðbót finnst ekki</string>
-	<string name="select_from_media_library">Veldu úr skráarsafni</string>
 	<string name="empty_list_default">Þessi listi er tómur</string>
 	<string name="media_add_popup_title">Bæta í skráarsafn</string>
 	<string name="passcode_turn_on">Kveikja á PIN læsingu</string>
@@ -1123,7 +1100,6 @@ Language: is
 	<string name="app_title">WordPress fyrir Android</string>
 	<string name="tos">Notendaskilmálar</string>
 	<string name="version">Útgáfa</string>
-	<string name="max_thumbnail_px_size">Sjálfgefin breidd myndar</string>
 	<string name="image_alignment">Jöfnun</string>
 	<string name="refresh">Endurhlaða</string>
 	<string name="untitled">Án titils</string>
@@ -1141,9 +1117,6 @@ Language: is
 	<string name="categories">Flokkar</string>
 	<string name="title">Titill</string>
 	<string name="dlg_deleting_comments">Eyði athugasemdum</string>
-	<string name="notification_vibrate">Titra</string>
-	<string name="notification_sound">Hljóð tilkynninga</string>
-	<string name="notification_blink">Blikka tilkynningaljós</string>
 	<string name="sdcard_title">SD minnikorts krafist</string>
 	<string name="media">Skrár</string>
 	<string name="approve">Samþykkja</string>

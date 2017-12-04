@@ -98,6 +98,12 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.publicize_button_prefs_fragment, container, false);
 
@@ -197,16 +203,18 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     private void toggleTwitterPreference() {
         if (!isAdded()) return;
 
-        View twitterCard = getView().findViewById(R.id.card_view_twitter);
-        for (int i = 0; i < mPublicizeButtons.size(); i++) {
-            PublicizeButton publicizeButton = mPublicizeButtons.get(i);
-            if (publicizeButton.getId().equals(TWITTER_ID) && publicizeButton.isEnabled()) {
-                twitterCard.setVisibility(View.VISIBLE);
-                return;
+        View view = getView();
+        if (view != null) {
+            View twitterCard = view.findViewById(R.id.card_view_twitter);
+            for (int i = 0; i < mPublicizeButtons.size(); i++) {
+                PublicizeButton publicizeButton = mPublicizeButtons.get(i);
+                if (publicizeButton.getId().equals(TWITTER_ID) && publicizeButton.isEnabled()) {
+                    twitterCard.setVisibility(View.VISIBLE);
+                    return;
+                }
             }
+            twitterCard.setVisibility(View.GONE);
         }
-
-        twitterCard.setVisibility(View.GONE);
     }
 
     /*
@@ -278,6 +286,19 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
      * called so the settings will be reflected here
      */
     private void getSiteSettings(boolean shouldFetchSettings) {
+        if (mSiteSettings == null) {
+            // mSiteSettings should not be null here, but we've had some cases where it's null and the app crashed. See #6890
+            if (mSite == null) {
+                ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+                getActivity().finish();
+                return;
+            }
+
+            // this creates a default site settings interface - the actual settings will
+            // be retrieved when getSiteSettings() is called
+            mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, this);
+        }
+
         mSiteSettings.init(false);
 
         if (shouldFetchSettings) {
@@ -323,25 +344,35 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     }
 
     @Override
-    public void onSettingsUpdated(Exception error) {
-        if (!isAdded()) return;
-
-        if (error != null) {
+    public void onFetchError(Exception error) {
+        if (isAdded()) {
             ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
             getActivity().finish();
-        } else {
-            setPreferencesFromSiteSettings();
         }
     }
+
     @Override
-    public void onSettingsSaved(Exception error) {
-        if (isAdded() && error != null) {
+    public void onSaveError(Exception error) {
+        if (isAdded()) {
             ToastUtils.showToast(WordPress.getContext(), R.string.error_post_remote_site_settings);
         }
     }
+
+    @Override
+    public void onSettingsUpdated() {
+        if (isAdded()) {
+            setPreferencesFromSiteSettings();
+        }
+    }
+
+    @Override
+    public void onSettingsSaved() {
+        // no-op
+    }
+
     @Override
     public void onCredentialsValidated(Exception error) {
-        // noop
+        // no-op
     }
 
     @Override

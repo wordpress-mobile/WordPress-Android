@@ -787,7 +787,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (mIsLoggedOutReader) {
             canShowComments = post.numReplies > 0;
         } else {
-            canShowComments = post.isWP() && !post.isJetpack && (post.isCommentsOpen || post.numReplies > 0);
+            canShowComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
         }
 
         if (canShowComments) {

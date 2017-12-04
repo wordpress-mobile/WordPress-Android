@@ -10,7 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -81,8 +83,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private OnSelectedCountChangedListener mSelectedCountListener;
     private OnDataLoadedListener mDataLoadedListener;
 
+    private boolean mIsSingleItemSelectionEnabled;
+    private int mSelectedItemPos;
+
     // show recently picked first if there are at least this many blogs
-    private static final int RECENTLY_PICKED_THRESHOLD = 15;
+    private static final int RECENTLY_PICKED_THRESHOLD = 11;
 
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_ITEM = 1;
@@ -97,6 +102,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final WPNetworkImageView imgBlavatar;
         private final View divider;
         private Boolean isSiteHidden;
+        private final RadioButton selectedRadioButton;
 
         public SiteViewHolder(View view) {
             super(view);
@@ -106,6 +112,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
             divider = view.findViewById(R.id.divider);
             isSiteHidden = null;
+            selectedRadioButton = (RadioButton) view.findViewById(R.id.radio_selected);
         }
     }
 
@@ -147,6 +154,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.grey_lighten_20_translucent_50));
 
         mHeaderHandler = headerHandler;
+        mSelectedItemPos = getPositionOffset();
 
         mIgnoreSitesIds = ignoreSitesIds;
 
@@ -156,6 +164,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemCount() {
         return (mHeaderHandler != null ? 1 : 0) + mSites.size();
+    }
+
+    public int getSitesCount(){
+        return mSites.size();
     }
 
     @Override
@@ -177,8 +189,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private SiteRecord getItem(int position) {
-        int offset = (mHeaderHandler == null ? 0 : 1);
-        return mSites.get(position - offset);
+        return mSites.get(position - getPositionOffset());
+    }
+
+    private int getPositionOffset(){
+        return (mHeaderHandler == null ? 0 : 1);
     }
 
     void setOnSelectedCountChangedListener(OnSelectedCountChangedListener listener) {
@@ -276,6 +291,51 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
         }
+
+        if (mIsSingleItemSelectionEnabled) {
+            if (getSitesCount() <= 1) {
+                holder.selectedRadioButton.setVisibility(View.GONE);
+            } else {
+                holder.selectedRadioButton.setVisibility(View.VISIBLE);
+                holder.selectedRadioButton.setChecked(mSelectedItemPos == position);
+                holder.layoutContainer.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectSingleItem(holder.getAdapterPosition());
+                    }
+                });
+            }
+        } else {
+            if (holder.selectedRadioButton != null) {
+                holder.selectedRadioButton.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void selectSingleItem(final int newItemPosition) {
+        // clear last selected item
+        notifyItemChanged(mSelectedItemPos);
+        mSelectedItemPos = newItemPosition;
+        // select new item
+        notifyItemChanged(mSelectedItemPos);
+    }
+
+    public void setSingleItemSelectionEnabled(final boolean enabled) {
+        if (enabled != mIsSingleItemSelectionEnabled) {
+            mIsSingleItemSelectionEnabled = enabled;
+            notifyDataSetChanged();
+        }
+    }
+
+    public void findAndSelect(final int lastUsedBlogLocalId) {
+        int positionInSitesArray = mSites.indexOfSiteId(lastUsedBlogLocalId);
+        if (positionInSitesArray != -1) {
+            selectSingleItem(positionInSitesArray + getPositionOffset());
+        }
+    }
+
+    public int getSelectedItemLocalId() {
+        return mSites.size() != 0 ? getItem(mSelectedItemPos).localId : -1;
     }
 
     public String getLastSearch() {
@@ -422,22 +482,32 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     Set<SiteRecord> setVisibilityForSelectedSites(boolean makeVisible) {
         SiteList sites = getSelectedSites();
-        Set<SiteRecord> siteRecordSet = new HashSet<>();
+        Set<SiteRecord> changeSet = new HashSet<>();
         if (sites != null && sites.size() > 0) {
+            ArrayList<Integer> recentIds = AppPrefs.getRecentlyPickedSiteIds();
+            int currentSiteId = AppPrefs.getSelectedSite();
             for (SiteRecord site: sites) {
                 int index = mAllSites.indexOfSite(site);
                 if (index > -1) {
                     SiteRecord siteRecord = mAllSites.get(index);
                     if (siteRecord.isHidden == makeVisible) {
-                        // add it to change set
-                        siteRecordSet.add(siteRecord);
+                        changeSet.add(siteRecord);
+                        siteRecord.isHidden = !makeVisible;
+                        if (!makeVisible
+                                && siteRecord.localId != currentSiteId
+                                && recentIds.contains(siteRecord.localId)) {
+                            AppPrefs.removeRecentlyPickedSiteId(siteRecord.localId);
+                        }
                     }
-                    siteRecord.isHidden = !makeVisible;
                 }
             }
+
+            if (!changeSet.isEmpty()) {
+                notifyDataSetChanged();
+            }
         }
-        notifyDataSetChanged();
-        return siteRecordSet;
+
+        return changeSet;
     }
 
     public void loadSites() {

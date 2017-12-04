@@ -46,10 +46,10 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.Debouncer;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -61,6 +61,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class SitePickerActivity extends AppCompatActivity
         implements SitePickerAdapter.OnSiteClickListener,
@@ -249,8 +251,7 @@ public class SitePickerActivity extends AppCompatActivity
         if (view == null) {
             return;
         }
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
-                this,
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new SwipeToRefreshHelper.RefreshListener() {
                     @Override
@@ -264,7 +265,8 @@ public class SitePickerActivity extends AppCompatActivity
                         }
                         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
                     }
-                });
+                }
+        );
     }
 
     private void setupRecycleView() {
@@ -460,7 +462,7 @@ public class SitePickerActivity extends AppCompatActivity
 
     private void hideSoftKeyboard() {
         if (!hasHardwareKeyboard()) {
-            WPActivityUtils.hideKeyboard(mSearchView);
+            ActivityUtils.hideKeyboardForced(mSearchView);
         }
     }
 

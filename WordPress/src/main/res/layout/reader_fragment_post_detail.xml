@@ -40,7 +40,7 @@
 
                     <include
                         layout="@layout/reader_include_post_detail_content"
-                        android:layout_width="@dimen/reader_webview_width"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/header_view"
                         android:layout_centerHorizontal="true"
