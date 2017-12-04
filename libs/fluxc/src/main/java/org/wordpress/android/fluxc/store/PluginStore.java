@@ -416,14 +416,15 @@ public class PluginStore extends Store {
             return;
         }
         switch ((PluginAction) actionType) {
+            // Remote actions
+            case CONFIGURE_SITE_PLUGIN:
+                updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
+                break;
             case FETCH_SITE_PLUGINS:
                 fetchSitePlugins((SiteModel) action.getPayload());
                 break;
             case FETCH_PLUGIN_INFO:
                 fetchPluginInfo((String) action.getPayload());
-                break;
-            case UPDATE_SITE_PLUGIN:
-                updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
                 break;
             case UPDATE_SITE_PLUGIN_VERSION:
                 updateSitePluginVersion((UpdateSitePluginVersionPayload) action.getPayload());
@@ -434,14 +435,15 @@ public class PluginStore extends Store {
             case INSTALL_SITE_PLUGIN:
                 installSitePlugin((InstallSitePluginPayload) action.getPayload());
                 break;
+            // Network callbacks
+            case CONFIGURED_SITE_PLUGIN:
+                updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
+                break;
             case FETCHED_SITE_PLUGINS:
                 fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
                 break;
             case FETCHED_PLUGIN_INFO:
                 fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
-                break;
-            case UPDATED_SITE_PLUGIN:
-                updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
                 break;
             case UPDATED_SITE_PLUGIN_VERSION:
                 updatedSitePluginVersion((UpdatedSitePluginVersionPayload) action.getPayload());
