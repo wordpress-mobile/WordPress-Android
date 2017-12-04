@@ -19,15 +19,15 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResponse.FetchPluginsResponse;
+import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsError;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
-import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginError;
+import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionError;
-import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginVersionPayload;
 
 import java.io.UnsupportedEncodingException;
@@ -78,7 +78,7 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
+    public void configureSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
         String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(getEncodedPluginName(plugin)).getUrlV1_2();
         Map<String, Object> params = paramsFromPluginModel(plugin);
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, params,
@@ -88,17 +88,18 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onResponse(PluginWPComRestResponse response) {
                         PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
                         pluginFromResponse.setId(plugin.getId());
-                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(
-                                new UpdatedSitePluginPayload(site, pluginFromResponse)));
+                        mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(
+                                new ConfiguredSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        UpdateSitePluginError updatePluginError = new UpdateSitePluginError(((WPComGsonNetworkError)
-                                networkError).apiError, networkError.message);
-                        UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site, updatePluginError);
-                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
+                        ConfigureSitePluginError configurePluginError = new ConfigureSitePluginError(((
+                                WPComGsonNetworkError) networkError).apiError, networkError.message);
+                        ConfiguredSitePluginPayload payload =
+                                new ConfiguredSitePluginPayload(site, configurePluginError);
+                        mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload));
                     }
                 }
         );
