@@ -168,7 +168,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onResponse(PluginWPComRestResponse response) {
                         PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
                         pluginFromResponse.setId(plugin.getId());
-                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginVersionAction(
+                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(
                                 new UpdatedSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
@@ -180,7 +180,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 networkError.message);
                         UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site,
                                 updatePluginVersionError);
-                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginVersionAction(payload));
+                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
                     }
                 }
         );
