@@ -425,8 +425,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:contentDescription="@string/content_description_drake_no_sites"
-            app:srcCompat="@drawable/drake_no_sites_190dp" />
+            app:srcCompat="@drawable/drake_no_sites_190dp"
+            android:importantForAccessibility="no"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
