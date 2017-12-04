@@ -359,10 +359,10 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class OnSitePluginUpdated extends OnChanged<UpdateSitePluginError> {
+    public static class OnSitePluginConfigured extends OnChanged<UpdateSitePluginError> {
         public SiteModel site;
         public PluginModel plugin;
-        public OnSitePluginUpdated(SiteModel site) {
+        public OnSitePluginConfigured(SiteModel site) {
             this.site = site;
         }
     }
@@ -546,7 +546,7 @@ public class PluginStore extends Store {
     }
 
     private void updatedSitePlugin(UpdatedSitePluginPayload payload) {
-        OnSitePluginUpdated event = new OnSitePluginUpdated(payload.site);
+        OnSitePluginConfigured event = new OnSitePluginConfigured(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
