@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login;
+package org.wordpress.android.login;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,20 +23,19 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
-import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialLoginPayload;
-import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import javax.inject.Inject;
+
+import dagger.android.support.AndroidSupportInjection;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -47,8 +46,8 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
     private LoginListener mLoginListener;
     private String mGoogleEmail;
     private String mIdToken;
-    private boolean isResolvingError;
-    private boolean shouldResolveError;
+    private boolean mIsResolvingError;
+    private boolean mShouldResolveError;
 
     private static final String SERVICE_TYPE_GOOGLE = "google";
     private static final String STATE_RESOLVING_ERROR = "STATE_RESOLVING_ERROR";
@@ -67,10 +66,9 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         // Restore state of error resolving.
-        isResolvingError = savedInstanceState != null && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+        mIsResolvingError = savedInstanceState != null && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
 
         // Configure sign-in to request user's ID, basic profile, email address, and ID token.
         // ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -88,7 +86,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        if (!isResolvingError) {
+        if (!mIsResolvingError) {
             connectGoogleClient();
         }
     }
@@ -96,11 +94,12 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(STATE_RESOLVING_ERROR, isResolvingError);
+        outState.putBoolean(STATE_RESOLVING_ERROR, mIsResolvingError);
     }
 
     @Override
     public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
         mLoginListener = (LoginListener) context;
 
@@ -111,7 +110,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         }
 
         // Show account dialog when Google API onConnected callback returns before fragment is attached.
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !isResolvingError && !shouldResolveError) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mIsResolvingError && !mShouldResolveError) {
             showAccountDialog();
         }
     }
@@ -139,8 +138,8 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
     public void onConnected(Bundle bundle) {
         // Indicates account was selected, that account has granted any required permissions, and a
         // connection to Google Play services has been established.
-        if (shouldResolveError) {
-            shouldResolveError = false;
+        if (mShouldResolveError) {
+            mShouldResolveError = false;
 
             if (isAdded()) {
                 showAccountDialog();
@@ -153,17 +152,17 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         // Could not connect to Google Play Services.  The user needs to select an account, grant
         // permissions or resolve an error in order to sign in.  Refer to the documentation for
         // ConnectionResult to see possible error codes.
-        if (!isResolvingError && shouldResolveError) {
+        if (!mIsResolvingError && mShouldResolveError) {
             if (connectionResult.hasResolution()) {
                 try {
-                    isResolvingError = true;
+                    mIsResolvingError = true;
                     connectionResult.startResolutionForResult(getActivity(), REQUEST_CONNECT);
                 } catch (IntentSender.SendIntentException exception) {
-                    isResolvingError = false;
+                    mIsResolvingError = false;
                     mGoogleApiClient.connect();
                 }
             } else {
-                isResolvingError = false;
+                mIsResolvingError = false;
                 AppLog.e(T.NUX, GoogleApiAvailability.getInstance().getErrorString(connectionResult.getErrorCode()));
                 showErrorDialog(getString(R.string.login_error_generic));
             }
@@ -180,7 +179,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
 
     public void connectGoogleClient() {
         if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
-            shouldResolveError = true;
+            mShouldResolveError = true;
             mGoogleApiClient.connect();
         } else {
             showAccountDialog();
@@ -214,7 +213,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         switch (request) {
             case REQUEST_CONNECT:
                 if (result != RESULT_OK) {
-                    shouldResolveError = false;
+                    mShouldResolveError = false;
                 }
 
                 if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
@@ -223,7 +222,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
                     showAccountDialog();
                 }
 
-                isResolvingError = false;
+                mIsResolvingError = false;
                 break;
             case REQUEST_LOGIN:
                 if (result == RESULT_OK) {
@@ -301,7 +300,8 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         disconnectGoogleClient();
 
         if (event.isError()) {
-            AppLog.e(T.API, "LoginGoogleFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
+            AppLog.e(T.API, "LoginGoogleFragment.onAuthenticationChanged: " + event.error.type
+                    + " - " + event.error.message);
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
@@ -324,7 +324,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         if (event.isError()) {
             AppLog.e(T.API, "LoginGoogleFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
 
-            if (event.error.type != AccountStore.AccountSocialErrorType.USER_EXISTS) {
+            if (event.error.type != AccountSocialErrorType.USER_EXISTS) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
                         event.error.type.toString(), event.error.message);
 
