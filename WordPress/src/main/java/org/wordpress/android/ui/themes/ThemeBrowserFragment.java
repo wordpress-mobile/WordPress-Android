@@ -109,6 +109,8 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
+        // This version of onAttach will be called for all Android versions but it's deprecated, so we only want to
+        // use it when we have to. https://github.com/wordpress-mobile/WordPress-Android/issues/6937
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             attachActivity((ThemeBrowserActivity) activity);
         }
