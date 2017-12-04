@@ -95,9 +95,10 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        ConfigureSitePluginError updatePluginError = new ConfigureSitePluginError(((
+                        ConfigureSitePluginError configurePluginError = new ConfigureSitePluginError(((
                                 WPComGsonNetworkError) networkError).apiError, networkError.message);
-                        ConfiguredSitePluginPayload payload = new ConfiguredSitePluginPayload(site, updatePluginError);
+                        ConfiguredSitePluginPayload payload =
+                                new ConfiguredSitePluginPayload(site, configurePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload));
                     }
                 }
