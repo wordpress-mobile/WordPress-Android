@@ -18,6 +18,8 @@ import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginVersionPay
 @ActionEnum
 public enum PluginAction implements IAction {
     // Remote actions
+    @Action(payloadType = UpdateSitePluginPayload.class)
+    CONFIGURE_SITE_PLUGIN,
     @Action(payloadType = DeleteSitePluginPayload.class)
     DELETE_SITE_PLUGIN,
     @Action(payloadType = String.class)
@@ -26,12 +28,12 @@ public enum PluginAction implements IAction {
     FETCH_SITE_PLUGINS,
     @Action(payloadType = InstallSitePluginPayload.class)
     INSTALL_SITE_PLUGIN,
-    @Action(payloadType = UpdateSitePluginPayload.class)
-    UPDATE_SITE_PLUGIN,
     @Action(payloadType = UpdateSitePluginVersionPayload.class)
     UPDATE_SITE_PLUGIN_VERSION,
 
     // Remote responses
+    @Action(payloadType = UpdatedSitePluginPayload.class)
+    CONFIGURED_SITE_PLUGIN,
     @Action(payloadType = DeletedSitePluginPayload.class)
     DELETED_SITE_PLUGIN,
     @Action(payloadType = FetchedPluginInfoPayload.class)
@@ -40,8 +42,6 @@ public enum PluginAction implements IAction {
     FETCHED_SITE_PLUGINS,
     @Action(payloadType = InstalledSitePluginPayload.class)
     INSTALLED_SITE_PLUGIN,
-    @Action(payloadType = UpdatedSitePluginPayload.class)
-    UPDATED_SITE_PLUGIN,
     @Action(payloadType = UpdatedSitePluginVersionPayload.class)
     UPDATED_SITE_PLUGIN_VERSION
 }

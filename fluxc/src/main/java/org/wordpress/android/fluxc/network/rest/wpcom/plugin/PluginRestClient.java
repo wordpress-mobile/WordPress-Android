@@ -88,7 +88,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onResponse(PluginWPComRestResponse response) {
                         PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
                         pluginFromResponse.setId(plugin.getId());
-                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(
+                        mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(
                                 new UpdatedSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
@@ -98,7 +98,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                         UpdateSitePluginError updatePluginError = new UpdateSitePluginError(((WPComGsonNetworkError)
                                 networkError).apiError, networkError.message);
                         UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site, updatePluginError);
-                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
+                        mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload));
                     }
                 }
         );
