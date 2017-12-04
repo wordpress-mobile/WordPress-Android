@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
-import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginVersionPayload;
+import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
 
 @ActionEnum
 public enum PluginAction implements IAction {
@@ -42,6 +42,6 @@ public enum PluginAction implements IAction {
     FETCHED_SITE_PLUGINS,
     @Action(payloadType = InstalledSitePluginPayload.class)
     INSTALLED_SITE_PLUGIN,
-    @Action(payloadType = UpdatedSitePluginVersionPayload.class)
+    @Action(payloadType = UpdatedSitePluginPayload.class)
     UPDATED_SITE_PLUGIN
 }
