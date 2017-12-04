@@ -127,16 +127,16 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class UpdatedSitePluginPayload extends Payload<UpdateSitePluginError> {
+    public static class ConfiguredSitePluginPayload extends Payload<UpdateSitePluginError> {
         public SiteModel site;
         public PluginModel plugin;
 
-        public UpdatedSitePluginPayload(SiteModel site, PluginModel plugin) {
+        public ConfiguredSitePluginPayload(SiteModel site, PluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
 
-        public UpdatedSitePluginPayload(SiteModel site, UpdateSitePluginError error) {
+        public ConfiguredSitePluginPayload(SiteModel site, UpdateSitePluginError error) {
             this.site = site;
             this.error = error;
         }
@@ -437,7 +437,7 @@ public class PluginStore extends Store {
                 break;
             // Network callbacks
             case CONFIGURED_SITE_PLUGIN:
-                updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
+                configuredSitePlugin((ConfiguredSitePluginPayload) action.getPayload());
                 break;
             case FETCHED_SITE_PLUGINS:
                 fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
@@ -488,8 +488,8 @@ public class PluginStore extends Store {
             mPluginRestClient.updateSitePlugin(payload.site, payload.plugin);
         } else {
             UpdateSitePluginError error = new UpdateSitePluginError(UpdateSitePluginErrorType.NOT_AVAILABLE);
-            UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site, error);
-            updatedSitePlugin(errorPayload);
+            ConfiguredSitePluginPayload errorPayload = new ConfiguredSitePluginPayload(payload.site, error);
+            configuredSitePlugin(errorPayload);
         }
     }
 
@@ -545,7 +545,7 @@ public class PluginStore extends Store {
         emitChange(event);
     }
 
-    private void updatedSitePlugin(UpdatedSitePluginPayload payload) {
+    private void configuredSitePlugin(ConfiguredSitePluginPayload payload) {
         OnSitePluginConfigured event = new OnSitePluginConfigured(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
