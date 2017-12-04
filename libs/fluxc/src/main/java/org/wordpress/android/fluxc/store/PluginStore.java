@@ -426,7 +426,7 @@ public class PluginStore extends Store {
             case FETCH_PLUGIN_INFO:
                 fetchPluginInfo((String) action.getPayload());
                 break;
-            case UPDATE_SITE_PLUGIN_VERSION:
+            case UPDATE_SITE_PLUGIN:
                 updateSitePluginVersion((UpdateSitePluginVersionPayload) action.getPayload());
                 break;
             case DELETE_SITE_PLUGIN:
@@ -445,7 +445,7 @@ public class PluginStore extends Store {
             case FETCHED_PLUGIN_INFO:
                 fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
                 break;
-            case UPDATED_SITE_PLUGIN_VERSION:
+            case UPDATED_SITE_PLUGIN:
                 updatedSitePluginVersion((UpdatedSitePluginVersionPayload) action.getPayload());
                 break;
             case DELETED_SITE_PLUGIN:
