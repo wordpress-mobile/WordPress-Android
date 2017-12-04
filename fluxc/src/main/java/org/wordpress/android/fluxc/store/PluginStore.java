@@ -485,7 +485,7 @@ public class PluginStore extends Store {
 
     private void configureSitePlugin(ConfigureSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
-            mPluginRestClient.updateSitePlugin(payload.site, payload.plugin);
+            mPluginRestClient.configureSitePlugin(payload.site, payload.plugin);
         } else {
             ConfigureSitePluginError error = new ConfigureSitePluginError(ConfigureSitePluginErrorType.NOT_AVAILABLE);
             ConfiguredSitePluginPayload errorPayload = new ConfiguredSitePluginPayload(payload.site, error);
