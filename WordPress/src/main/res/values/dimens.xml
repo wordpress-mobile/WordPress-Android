@@ -336,5 +336,5 @@
     <dimen name="bottom_sheet_dialog_width">0dp</dimen>
 
     <!-- Site Creation -->
-    <dimen name="site_creation_category_illustration_sz">100dp</dimen>
+    <dimen name="site_creation_category_illustration_sz">80dp</dimen>
 </resources>

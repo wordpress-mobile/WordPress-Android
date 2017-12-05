@@ -29,8 +29,8 @@
             android:id="@+id/site_creation_form_content_stub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_marginBottom="@dimen/margin_extra_large"/>
+            android:layout_marginTop="@dimen/margin_extra_medium_large"
+            android:layout_marginBottom="@dimen/margin_extra_medium_large"/>
     </ScrollView>
 
     <LinearLayout

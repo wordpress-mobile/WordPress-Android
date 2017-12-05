@@ -112,7 +112,17 @@
         <item name="android:textColor">@color/grey_dark</item>
     </style>
 
-    <style name="LoginTheme.CardTitle" parent="TextAppearance.AppCompat.Subhead">
+    <style name="SiteCreation.Heading" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_text_min</item>
+    </style>
+
+    <style name="SiteCreation.Subhead" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+    </style>
+
+    <style name="SiteCreation.CardTitle" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">@color/grey_dark</item>
     </style>
 
     <style name="NoDisplay" parent="Theme.AppCompat.Light.NoActionBar">
