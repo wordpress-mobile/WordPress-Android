@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/plugin_detail_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -32,19 +33,31 @@
                     android:layout_below="@id/plugin_installed_version"
                     android:textColor="@color/grey_darken_10"/>
 
-                <TextView
-                    android:id="@+id/plugin_btn_update"
-                    android:padding="@dimen/margin_large"
+                <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:text="@string/plugin_btn_update"
-                    android:textAllCaps="true"
-                    android:textColor="@color/wp_blue_medium"
-                    android:textSize="@dimen/text_sz_medium"/>
+                    android:layout_centerVertical="true">
+
+                    <TextView
+                        android:id="@+id/plugin_btn_update"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:padding="@dimen/margin_large"
+                        android:text="@string/plugin_btn_update"
+                        android:textAllCaps="true"
+                        android:textColor="@color/wp_blue_medium"
+                        android:textSize="@dimen/text_sz_medium" />
+
+                    <ProgressBar
+                        android:id="@+id/plugin_update_progress_bar"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="@dimen/margin_extra_extra_medium_large"
+                        android:layout_height="@dimen/margin_extra_extra_medium_large"
+                        android:layout_gravity="center" />
+                </FrameLayout>
             </RelativeLayout>
         </LinearLayout>
 

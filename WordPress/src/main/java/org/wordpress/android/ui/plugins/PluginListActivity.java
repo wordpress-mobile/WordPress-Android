@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -203,6 +204,12 @@ public class PluginListActivity extends AppCompatActivity {
                 }
                 String iconUrl = pluginInfo != null ? pluginInfo.getIcon() : "";
                 pluginHolder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
+
+                if (pluginInfo != null && PluginUtils.isUpdateAvailable(pluginModel, pluginInfo)) {
+                    pluginHolder.updateAvailableIcon.setVisibility(View.VISIBLE);
+                } else {
+                    pluginHolder.updateAvailableIcon.setVisibility(View.GONE);
+                }
             }
         }
 
@@ -233,12 +240,14 @@ public class PluginListActivity extends AppCompatActivity {
             TextView name;
             TextView status;
             WPNetworkImageView icon;
+            ImageView updateAvailableIcon;
 
             PluginViewHolder(View view) {
                 super(view);
                 name = view.findViewById(R.id.plugin_name);
                 status = view.findViewById(R.id.plugin_status);
                 icon = view.findViewById(R.id.plugin_icon);
+                updateAvailableIcon = view.findViewById(R.id.plugin_update_available_icon);
             }
         }
     }

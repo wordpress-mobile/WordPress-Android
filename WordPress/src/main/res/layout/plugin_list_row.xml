@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -43,7 +43,17 @@
             android:layout_height="wrap_content"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_medium"/>
-
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/plugin_update_available_icon"
+        android:layout_width="@dimen/margin_extra_medium_large"
+        android:layout_height="@dimen/margin_extra_medium_large"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/plugin_update_available_icon_content_description"
+        android:visibility="gone"
+        app:srcCompat="@drawable/plugin_update_available_icon" />
 
 </RelativeLayout>

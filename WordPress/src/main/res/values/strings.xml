@@ -1792,6 +1792,10 @@
     <string name="plugin_installed_version">Plugin version %s</string>
     <string name="plugin_available_version">Version %s is available.</string>
     <string name="plugin_btn_update">Update</string>
+    <string name="plugin_update_available_icon_content_description">Update available</string>
+    <string name="plugin_updated_successfully">Successfully updated %s.</string>
+    <string name="plugin_updated_failed">Error updating %s.</string>
+    <string name="plugin_configuration_failed">An error occurred while fetching the plugins: %s</string>
 
     <string name="wordpress_dot_org_plugin_page">WordPress.org Plugin page</string>
     <string name="plugin_home_page">Plugin homepage</string>
