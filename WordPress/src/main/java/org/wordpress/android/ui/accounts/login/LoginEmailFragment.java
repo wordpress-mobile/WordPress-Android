@@ -68,9 +68,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private GoogleApiClient mGoogleApiClient;
     private String mGoogleEmail;
     private String mRequestedEmail;
-    private WPLoginInputRow mEmailInput;
     private boolean isSocialLogin;
 
+    protected WPLoginInputRow mEmailInput;
     protected boolean hasDismissedEmailHints;
     protected boolean isDisplayingEmailHints;
 
@@ -413,7 +413,14 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 next(getCleanedEmail());
             } else {
                 hasDismissedEmailHints = true;
-                EditTextUtils.showSoftInput(mEmailInput.getEditText());
+                mEmailInput.getEditText().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isAdded()) {
+                            EditTextUtils.showSoftInput(mEmailInput.getEditText());
+                        }
+                    }
+                }, getResources().getInteger(android.R.integer.config_mediumAnimTime));
             }
 
             isDisplayingEmailHints = false;
