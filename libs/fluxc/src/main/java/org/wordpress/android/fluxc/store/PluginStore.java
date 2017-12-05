@@ -58,11 +58,11 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class UpdateSitePluginVersionPayload extends Payload<BaseNetworkError> {
+    public static class UpdateSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public PluginModel plugin;
 
-        public UpdateSitePluginVersionPayload(SiteModel site, PluginModel plugin) {
+        public UpdateSitePluginPayload(SiteModel site, PluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
@@ -142,16 +142,16 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class UpdatedSitePluginVersionPayload extends Payload<UpdateSitePluginVersionError> {
+    public static class UpdatedSitePluginPayload extends Payload<UpdateSitePluginError> {
         public SiteModel site;
         public PluginModel plugin;
 
-        public UpdatedSitePluginVersionPayload(SiteModel site, PluginModel plugin) {
+        public UpdatedSitePluginPayload(SiteModel site, PluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
 
-        public UpdatedSitePluginVersionPayload(SiteModel site, UpdateSitePluginVersionError error) {
+        public UpdatedSitePluginPayload(SiteModel site, UpdateSitePluginError error) {
             this.site = site;
             this.error = error;
         }
@@ -223,16 +223,16 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class UpdateSitePluginVersionError implements OnChangedError {
-        public UpdateSitePluginVersionErrorType type;
+    public static class UpdateSitePluginError implements OnChangedError {
+        public UpdateSitePluginErrorType type;
         @Nullable public String message;
 
-        UpdateSitePluginVersionError(UpdateSitePluginVersionErrorType type) {
+        UpdateSitePluginError(UpdateSitePluginErrorType type) {
             this.type = type;
         }
 
-        public UpdateSitePluginVersionError(String type, @Nullable String message) {
-            this.type = UpdateSitePluginVersionErrorType.fromString(type);
+        public UpdateSitePluginError(String type, @Nullable String message) {
+            this.type = UpdateSitePluginErrorType.fromString(type);
             this.message = message;
         }
     }
@@ -325,14 +325,14 @@ public class PluginStore extends Store {
         }
     }
 
-    public enum UpdateSitePluginVersionErrorType {
+    public enum UpdateSitePluginErrorType {
         GENERIC_ERROR,
         NOT_AVAILABLE, // Return for non-jetpack sites
         UPDATE_FAIL;
 
-        public static UpdateSitePluginVersionErrorType fromString(String string) {
+        public static UpdateSitePluginErrorType fromString(String string) {
             if (string != null) {
-                for (UpdateSitePluginVersionErrorType v : UpdateSitePluginVersionErrorType.values()) {
+                for (UpdateSitePluginErrorType v : UpdateSitePluginErrorType.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
@@ -368,10 +368,10 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class OnSitePluginVersionUpdated extends OnChanged<UpdateSitePluginVersionError> {
+    public static class OnSitePluginUpdated extends OnChanged<UpdateSitePluginError> {
         public SiteModel site;
         public PluginModel plugin;
-        public OnSitePluginVersionUpdated(SiteModel site) {
+        public OnSitePluginUpdated(SiteModel site) {
             this.site = site;
         }
     }
@@ -426,8 +426,8 @@ public class PluginStore extends Store {
             case FETCH_PLUGIN_INFO:
                 fetchPluginInfo((String) action.getPayload());
                 break;
-            case UPDATE_SITE_PLUGIN_VERSION:
-                updateSitePluginVersion((UpdateSitePluginVersionPayload) action.getPayload());
+            case UPDATE_SITE_PLUGIN:
+                updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
                 break;
             case DELETE_SITE_PLUGIN:
                 deleteSitePlugin((DeleteSitePluginPayload) action.getPayload());
@@ -445,8 +445,8 @@ public class PluginStore extends Store {
             case FETCHED_PLUGIN_INFO:
                 fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
                 break;
-            case UPDATED_SITE_PLUGIN_VERSION:
-                updatedSitePluginVersion((UpdatedSitePluginVersionPayload) action.getPayload());
+            case UPDATED_SITE_PLUGIN:
+                updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
                 break;
             case DELETED_SITE_PLUGIN:
                 deletedSitePlugin((DeletedSitePluginPayload) action.getPayload());
@@ -493,14 +493,14 @@ public class PluginStore extends Store {
         }
     }
 
-    private void updateSitePluginVersion(UpdateSitePluginVersionPayload payload) {
+    private void updateSitePlugin(UpdateSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
-            mPluginRestClient.updateSitePluginVersion(payload.site, payload.plugin);
+            mPluginRestClient.updateSitePlugin(payload.site, payload.plugin);
         } else {
-            UpdateSitePluginVersionError error = new UpdateSitePluginVersionError(
-                    UpdateSitePluginVersionErrorType.NOT_AVAILABLE);
-            UpdatedSitePluginVersionPayload errorPayload = new UpdatedSitePluginVersionPayload(payload.site, error);
-            updatedSitePluginVersion(errorPayload);
+            UpdateSitePluginError error = new UpdateSitePluginError(
+                    UpdateSitePluginErrorType.NOT_AVAILABLE);
+            UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site, error);
+            updatedSitePlugin(errorPayload);
         }
     }
 
@@ -557,8 +557,8 @@ public class PluginStore extends Store {
         emitChange(event);
     }
 
-    private void updatedSitePluginVersion(UpdatedSitePluginVersionPayload payload) {
-        OnSitePluginVersionUpdated event = new OnSitePluginVersionUpdated(payload.site);
+    private void updatedSitePlugin(UpdatedSitePluginPayload payload) {
+        OnSitePluginUpdated event = new OnSitePluginUpdated(payload.site);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
