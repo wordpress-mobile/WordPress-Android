@@ -71,10 +71,10 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class PushSocialLoginPayload extends Payload<BaseNetworkError> {
+    public static class PushSocialPayload extends Payload<BaseNetworkError> {
         public String idToken;
         public String service;
-        public PushSocialLoginPayload(@NonNull String idToken, @NonNull String service) {
+        public PushSocialPayload(@NonNull String idToken, @NonNull String service) {
             this.idToken = idToken;
             this.service = service;
         }
@@ -442,10 +442,10 @@ public class AccountStore extends Store {
                 createPushSocialAuth((PushSocialAuthPayload) payload);
                 break;
             case PUSH_SOCIAL_CONNECT:
-                createPushSocialConnect((PushSocialLoginPayload) payload);
+                createPushSocialConnect((PushSocialPayload) payload);
                 break;
             case PUSH_SOCIAL_LOGIN:
-                createPushSocialLogin((PushSocialLoginPayload) payload);
+                createPushSocialLogin((PushSocialPayload) payload);
                 break;
             case PUSH_SOCIAL_SMS:
                 createPushSocialSms((PushSocialSmsPayload) payload);
@@ -651,11 +651,11 @@ public class AccountStore extends Store {
         mAccountRestClient.pushSocialAuth(payload.userId, payload.type, payload.nonce, payload.code);
     }
 
-    private void createPushSocialConnect(PushSocialLoginPayload payload) {
+    private void createPushSocialConnect(PushSocialPayload payload) {
         mAccountRestClient.pushSocialConnect(payload.idToken, payload.service);
     }
 
-    private void createPushSocialLogin(PushSocialLoginPayload payload) {
+    private void createPushSocialLogin(PushSocialPayload payload) {
         mAccountRestClient.pushSocialLogin(payload.idToken, payload.service);
     }
 
