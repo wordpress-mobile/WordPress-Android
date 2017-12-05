@@ -5,7 +5,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -47,11 +46,6 @@ public class SiteCreationCategoryFragment extends SiteCreationBaseFormFragment<S
                 }
             }
         });
-    }
-
-    @Override
-    protected boolean setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        return true; // hide the whole buttons container
     }
 
     @Override

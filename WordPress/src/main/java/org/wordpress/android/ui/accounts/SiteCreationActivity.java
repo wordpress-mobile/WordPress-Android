@@ -42,17 +42,6 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         fragmentTransaction.commit();
     }
 
-    private void slideInFragment(Fragment fragment, boolean shouldAddToBackStack, String tag) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
-        fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
-        if (shouldAddToBackStack) {
-            fragmentTransaction.addToBackStack(null);
-        }
-        fragmentTransaction.commitAllowingStateLoss();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
