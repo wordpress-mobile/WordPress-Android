@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-16 11:13:05+0000
+Translation-Revision-Date: 2017-11-23 19:02:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+	<string name="login_empty_password">Ju lutemi, jepni një fjalëkalim</string>
+	<string name="email_not_registered_wpcom">Hëm, kjo adresë email s’është e regjistruar te WordPress.com.\nMos po provoni të hyni në një sajt që e strehoni ju vetë diku? Bëni hyrjen duke përdorur lidhjen në fund të kësaj skene.</string>
+	<string name="login_text_otp_another">Më mirë më dërgoni një kod tjetër.</string>
+	<string name="enter_verification_code_sms">Dërguam një mesazh teksti te numri i telefonit që përfundon me %s. Ju lutemi, futni kodin e verifikimit nga SMS-ja.</string>
+	<string name="error_generic_error">S’u krye dot veprimi</string>
+	<string name="error_media_recover_page">S’arrihet të ngarkohen mediat e kësaj faqeje</string>
+	<string name="error_media_recover_post">S’arrihet të ngarkohen mediat e këtij postimi</string>
+	<string name="size_full">Madhësi e Plotë</string>
+	<string name="size_large">E madhe</string>
+	<string name="size_medium">E mesme</string>
+	<string name="size_thumbnail">Miniaturë</string>
+	<string name="image_size">Përmasa</string>
+	<string name="uploading_subtitle_media_only_one">ende 1 kartelë</string>
+	<string name="uploading_subtitle_media_only">Ende %1$d nga %2$d kartela gjithsej</string>
+	<string name="uploading_subtitle_posts_only">ende %1$d %2$s</string>
+	<string name="uploading_subtitle_mixed_one">%1$d %2$s, dhe ende 1 kartelë</string>
+	<string name="uploading_subtitle_mixed">%1$d %2$s, dhe ende %3$d nga %4$d kartela gjithsej</string>
+	<string name="uploading_title">Po ngarkohet…</string>
+	<string name="media_files_uploaded_write_post">Shkruani Postim</string>
+	<string name="media_file_missing_for_retry">Riprovim i pamundur - disa kartela në këtë Postim nuk gjenden te pajisja juaj</string>
+	<string name="media_all_files_uploaded_successfully">%d kartela u ngarkuan me sukses</string>
+	<string name="media_files_uploaded_successfully">, %d të ngarkuara me sukses</string>
+	<string name="media_file_uploaded">U ngarkua 1 kartelë</string>
+	<string name="media_file_not_uploaded">S’u ngarkua 1 kartelë</string>
+	<string name="media_files_uploaded">U ngarkuan %d kartela</string>
+	<string name="media_files_not_uploaded">S’u ngarkuan %d kartela</string>
+	<string name="media_file_post_mixed_not_uploaded">s’u ngarkuan %1$d %2$s me %3$d kartela</string>
+	<string name="wpcom_themes_header">Tema WordPress.com</string>
+	<string name="uploaded_themes_header">Tema të ngarkuara</string>
+	<string name="remove_image_from_post">Hiqe prej postimi</string>
+	<string name="confirm_remove_media_image">Të hiqet kjo figurë nga postimi?</string>
+	<string name="media_edit_customize_card_caption">Përshtateni</string>
+	<string name="media_edit_file_details_card_caption">Hollësi Kartele</string>
 	<string name="login_error_suffix">\nNdoshta të provohej me një llogari tjetër?</string>
 	<string name="login_error_generic">Pati problem në lidhjen me llogarinë Google.</string>
 	<string name="login_error_email_not_found">Llogaria Google \'%s\' s’ka përputhje me ndonjë llogari te WordPress.com</string>
@@ -57,7 +90,6 @@ Language: sq_AL
 	<string name="media_edit_filetype_caption">Lloj Kartele</string>
 	<string name="media_edit_filename_caption">Emër Kartele</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_card_caption">Hollësi Kartele</string>
 	<string name="media_edit_alttext_text">Tekst alternativ</string>
 	<string name="copy">Kopjoje</string>
 	<string name="connect_site">Lidhe Sajtin</string>
@@ -79,7 +111,6 @@ Language: sq_AL
 	<string name="notification_settings_master_status_on">On</string>
 	<string name="max_video_resolution">Madhësi Maksimum Videoje</string>
 	<string name="max_thumbnail_px_size">Madhësi Maksimum Figure</string>
-	<string name="error_media_recover_post">S’qemë në gjendje të ngarkonim media të këtij postimi. Ju lutemi, përpunoni postimin që të riprovohet.</string>
 	<string name="error_page_does_not_exist">Ky faqe s’ekziston më</string>
 	<string name="error_upload_post_media_param">Ndodhi një gabim gjatë ngarkimit të medias në këtë postim: %s.</string>
 	<string name="error_upload_post_param">Ndodhi një gabim gjatë ngarkimit të këtij postimi: %s.</string>
@@ -94,7 +125,6 @@ Language: sq_AL
 	<string name="cant_open_url">S’arrihet të hapet lidhja</string>
 	<string name="error_unknown_post">S’u gjet dot postimi te shërbyesi</string>
 	<string name="error_post_does_not_exist">Ky postim s’ekziston më</string>
-	<string name="error_media_recover_page">S’qemë në gjendje të ngarkonim media të kësaj faqeje. Ju lutemi, përpunoni faqen që të riprovohet.</string>
 	<string name="error_media_canceled">Ngarkimi i medias u anulua</string>
 	<string name="error_upload_page_media_param">Ndodhi një gabim gjatë ngarkimit të medias në këtë faqe: %s.</string>
 	<string name="error_upload_page_param">Ndodhi një gabim gjatë ngarkimit të kësaj faqeje: %s.</string>
@@ -106,10 +136,6 @@ Language: sq_AL
 	<string name="dialog_confirm_cancel_post_media_uploading">Jeni i sigurt? Fshirja e këtij postimi do të anulojë edhe ngarkimin e medias.</string>
 	<string name="page_scheduled">Faqe e planifikuar për botim</string>
 	<string name="post_scheduled">Postim i planifikuar për botim</string>
-	<string name="post_draft_param">"%s" u ruajt si skicë!</string>
-	<string name="post_scheduled_param">"%s" u planifikua për botim!</string>
-	<string name="post_updated_param">"%s" u përditësua!</string>
-	<string name="post_published_param">"%s" u botua!</string>
 	<string name="button_retry">Riprovoni</string>
 	<string name="post_queued">Postimi u vu në radhë</string>
 	<string name="uploading_post">Po ngarkohet "%s"</string>
@@ -135,10 +161,11 @@ Language: sq_AL
 	<string name="login_continue">Vazhdo</string>
 	<string name="connect_more">Lidhni Një Sajt Tjetër</string>
 	<string name="enter_wpcom_password">Jepni fjalëkalimin tuaj WordPress.com.</string>
+	<string name="login_magic_link_email_requesting">Po kërkohet email hyrjesh</string>
+	<string name="login_magic_links_sent_description">Ilustrim i dërgimit të lidhjes magjike</string>
 	<string name="login_magic_links_sent_label">Lidhja juaj magjike është rrugës! Kontrolloni email-in tuaj në këtë pajisje, dhe prekni lidhjen te email-i që morët nga WordPress.com-i.</string>
 	<string name="login_magic_links_label">Do t’ju dërgojmë me email një lidhje magjike që do t’ju fusë menjëherë, pa qenë nevoja për fjalëkalim. Mjaft më me shtypje me dy gishta!</string>
 	<string name="password_incorrect">Duket sikur ky fjalëkalim është i pasaktë. Ju lutemi, kontrollojeni edhe një herë informacionin tuaj dhe riprovoni.</string>
-	<string name="email_not_registered_wpcom">Ky email s’është i regjistruar në WordPress.com</string>
 	<string name="requesting_otp">Po kërkohet një kod verifikimi përmes SMS-je.</string>
 	<string name="login_text_otp">Më mirë më dërgoni kod me tekst.</string>
 	<string name="enter_verification_code">Thuajse arritëm! Ju lutemi, jepni kodin e verifikimit prej aplikacionit tuaj Authenticator.</string>
@@ -157,9 +184,10 @@ Language: sq_AL
 	<string name="email_not_found">S’gjetëm përdorues në WordPress.com me atë adresë email</string>
 	<string name="image_optimization_promo_desc">Optimizimi i figurave i mpak figurat, për ngarkim më të shpejtë.\n\nKëtë mund ta ndryshoni kurdo, te rregullimet e sajtit.</string>
 	<string name="image_optimization_promo_title">Të aktivizohet optimizimi i figurave?</string>
-	<string name="turn_on">Çaktivizoje</string>
 	<string name="me_profile_photo">Foto Profili</string>
 	<string name="error_media_parse_error">Përgjigje e papritur nga shërbyesi</string>
+	<string name="turn_on">Aktivizoje</string>
+	<string name="leave_off">Lëre joaktive</string>
 	<string name="upload_finished_toast">Ngarkimi s’mund të ndalet, ngaqë ka mbaruar tashmë</string>
 	<string name="post_title">Titull</string>
 	<string name="menu_redo">Ribëje</string>
@@ -226,6 +254,7 @@ Language: sq_AL
 	<string name="new_editor_promo_title_beta">Beta</string>
 	<string name="new_editor_promo_title">Provoni Përpunuesin e ri</string>
 	<string name="new_editor_promo_link">Ç’ka të re?</string>
+	<string name="new_editor_promo_description_image">Shkrim Dore</string>
 	<string name="new_editor_promo_confirmation_message">Përpunuesi i ri u aktivizua!</string>
 	<string name="new_editor_promo_confirmation_action">Rregullime</string>
 	<string name="new_editor_promo_button_positive">Provojeni</string>
@@ -256,6 +285,7 @@ Language: sq_AL
 	<string name="twitter">Twitter</string>
 	<string name="likes">Pëlqime</string>
 	<string name="sharing_comment_likes_description">Lejo që të Pëlqehen prej jush dhe lexuesve tuaj krejt komentet</string>
+	<string name="connected">I lidhur</string>
 	<string name="visual">Pamore</string>
 	<string name="buttons">Butona</string>
 	<string name="sharing_edit_more_buttons">Përpunoni Butona "Më Tepër"</string>
@@ -610,9 +640,6 @@ Language: sq_AL
 	<string name="post_format_status">Gjendje</string>
 	<string name="post_format_video">Video</string>
 	<string name="alignment_center">Në qendër</string>
-	<string name="theme_free">Falas</string>
-	<string name="theme_all">Krejt</string>
-	<string name="theme_premium">Me pagesë</string>
 	<string name="post_format_chat">Fjalosje</string>
 	<string name="post_format_gallery">Galeri</string>
 	<string name="post_format_image">Figurë</string>

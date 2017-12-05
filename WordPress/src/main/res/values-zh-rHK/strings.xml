@@ -307,9 +307,6 @@ Language: zh_TW
 	<string name="post_format_status">狀態</string>
 	<string name="post_format_video">影片</string>
 	<string name="alignment_center">置中</string>
-	<string name="theme_free">免費</string>
-	<string name="theme_all">全部</string>
-	<string name="theme_premium">進階版</string>
 	<string name="post_format_chat">聊天</string>
 	<string name="post_format_gallery">圖庫</string>
 	<string name="post_format_image">圖片</string>
@@ -915,7 +912,6 @@ Language: zh_TW
 	<string name="local_draft">本機草稿</string>
 	<string name="upload_failed">上傳失敗</string>
 	<string name="horizontal_alignment">水平對齊</string>
-	<string name="file_not_found">找不到可上傳的媒體檔案。該檔案是否已刪除或移走？</string>
 	<string name="post_settings">文章設定</string>
 	<string name="delete_post">刪除文章</string>
 	<string name="delete_page">刪除頁面</string>

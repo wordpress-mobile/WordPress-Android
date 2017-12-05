@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-16 19:23:54+0000
+Translation-Revision-Date: 2017-11-27 09:15:01+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="login_empty_password">Proszę wprowadzić hasło</string>
+	<string name="email_not_registered_wpcom">Ten adres email nie jest zarejestrowany w WordPress.com. Czy próbujesz uzyskać dostęp do witryny z własnym hostingiem? Zaloguj się używając odnośnika na dole tego ekranu. </string>
+	<string name="login_text_otp_another">Prześlij mi kolejny kod</string>
+	<string name="enter_verification_code_sms">Przesłaliśmy wiadomość tekstową na numer telefonu kończący się na %s. Proszę wprowadzić kod weryfikacyjny z SMSa. </string>
+	<string name="error_generic_error">Nie można było przeprowadzić operacji</string>
+	<string name="error_media_recover_page">Nie można przesłać mediów tego strony</string>
+	<string name="error_media_recover_post">Nie można przesłać mediów tego wpisu</string>
+	<string name="size_full">Pełny rozmiar</string>
+	<string name="size_large">Duży</string>
+	<string name="size_medium">Średni</string>
+	<string name="size_thumbnail">Miniatura</string>
+	<string name="image_size">Rozmiar</string>
+	<string name="uploading_subtitle_media_only_one">Pozostał 1 plik</string>
+	<string name="uploading_subtitle_media_only">Pozostało %1$d z %2$d plików</string>
+	<string name="uploading_subtitle_posts_only">Pozostało %1$d %2$s</string>
+	<string name="uploading_subtitle_mixed_one">Pozostało %1$d %2$s, oraz 1 plik</string>
+	<string name="uploading_subtitle_mixed">Pozostało %1$d %2$s, oraz %3$d z %4$d plików</string>
+	<string name="uploading_title">Przesyłanie... </string>
+	<string name="media_files_uploaded_write_post">Zredaguj wpis</string>
+	<string name="media_file_missing_for_retry">Ponowna próba niemożliwa - brakuje niektórych plików z tego urządzenia w tym wpisie</string>
+	<string name="media_all_files_uploaded_successfully">Przesłano z sukcesem %d plików</string>
+	<string name="media_files_uploaded_successfully">, przesłano %d  z sukcesem</string>
+	<string name="media_file_uploaded">Przesłano 1 plik</string>
+	<string name="media_file_not_uploaded">Nie przesłano 1 pliku</string>
+	<string name="media_files_uploaded">Przesłano %d plików</string>
+	<string name="media_files_not_uploaded">Nie przesłano %d plików</string>
+	<string name="media_file_post_mixed_not_uploaded">%1$d %2$s z %3$d plikami nie przesłano</string>
+	<string name="wpcom_themes_header">Motywy WordPress.com</string>
+	<string name="uploaded_themes_header">Przesłano motywy</string>
+	<string name="remove_image_from_post">Usuń z wpisu</string>
+	<string name="confirm_remove_media_image">Usunąć ten obrazek z wpisu</string>
+	<string name="media_edit_customize_card_caption">Spersonalizuj</string>
+	<string name="media_edit_file_details_card_caption">Szczegóły Pliku</string>
 	<string name="login_error_suffix">\nMoże spróbujesz innego konta? </string>
 	<string name="login_error_generic">Wystąpił błąd połączenia z kontem Google. </string>
 	<string name="login_error_email_not_found">Konto Google \'%s\' nie pasuje do żadnego konta funkcjonującego na WordPress.com</string>
@@ -57,7 +90,6 @@ Language: pl
 	<string name="media_edit_filetype_caption">Typ pliku</string>
 	<string name="media_edit_filename_caption">Nazwa pliku</string>
 	<string name="media_edit_url_caption">Adres URL </string>
-	<string name="media_edit_file_details_card_caption">Szczegóły pliku</string>
 	<string name="media_edit_alttext_text">Tekst alternatywny</string>
 	<string name="copy">Kopia</string>
 	<string name="connect_site">Połącz witrynę</string>
@@ -79,7 +111,6 @@ Language: pl
 	<string name="notification_settings_master_status_on">Włączone</string>
 	<string name="max_video_resolution">Maksymalny rozmiar filmu</string>
 	<string name="max_thumbnail_px_size">Maksymalny rozmiar obrazka</string>
-	<string name="error_media_recover_post">Nie można było przesłać mediów tego wpisu. Proszę wejść w edycję wpisu i spróbować ponownie.</string>
 	<string name="error_page_does_not_exist">Ta strona już nie istnieje</string>
 	<string name="error_upload_post_media_param">Wystąpił błąd podczas przesyłania mediów w tym wpisie: %s.</string>
 	<string name="error_upload_post_param">Wystąpił błąd podczas przesyłania tego wpisu: %s.</string>
@@ -94,7 +125,6 @@ Language: pl
 	<string name="cant_open_url">Nie można było otworzyć odnośnika</string>
 	<string name="error_unknown_post">Nie można było odnaleźć wpisu na serwerze</string>
 	<string name="error_post_does_not_exist">Ten wpis już nie istnieje</string>
-	<string name="error_media_recover_page">Nie mogliśmy przesłać mediów tej strony. Przejdź do edycii tej strony  i spróbuj ponownie.</string>
 	<string name="error_media_canceled">Przesyłanie mediów zostało anulowane</string>
 	<string name="error_upload_page_media_param">Wystąpił błąd podczas przesyłania mediów na tej stronie %s.</string>
 	<string name="error_upload_page_param">Wystąpił błąd podczas przesyłania tej strony: %s.</string>
@@ -106,10 +136,6 @@ Language: pl
 	<string name="dialog_confirm_cancel_post_media_uploading">Jesteś pewien? Usunięcie tego wpisu anuluje również przesyłanie mediów.</string>
 	<string name="page_scheduled">Strona zaplanowana</string>
 	<string name="post_scheduled">Wpis zaplanowany</string>
-	<string name="post_draft_param">"%s" został zapisany jako szkic!</string>
-	<string name="post_scheduled_param">"%s" został zaplanowany!</string>
-	<string name="post_updated_param">"%s" został zaktualizowany!</string>
-	<string name="post_published_param">"%s" został opublikowany!</string>
 	<string name="button_retry">Spróbuj ponownie</string>
 	<string name="post_queued">Wpis w kolejce</string>
 	<string name="uploading_post">Przesyłanie "%s"</string>
@@ -140,7 +166,6 @@ Language: pl
 	<string name="login_magic_links_sent_label">Twój odnośnik jest już w drodze! Sprawdź swoje konto email na tym urządzeniu, stuknij  na odnośnik w emailu, którego otrzymałeś od WordPress.com</string>
 	<string name="login_magic_links_label">Wyślemy tobie odnośnik, który zaloguje cie automatycznie, żadne hasło nie będzie wymagane.Oszczędzisz sobie pisania jednym palcem!</string>
 	<string name="password_incorrect">Wygląda na to, że hasło jest nieprawidłowe. Proszę sprawdzić te dane i spróbować ponownie.</string>
-	<string name="email_not_registered_wpcom">Ten adres email nie jest zarejestrowany na WordPress.com</string>
 	<string name="requesting_otp">Żądanie kodu weryfikacyjnego przez SMS</string>
 	<string name="login_text_otp">Wyślij mi zamiast tego kod przez SMS.</string>
 	<string name="enter_verification_code">Już prawie! Proszę wprowadzić kod weryfikacyjny z aplikacji do Uwierzytelnienia.</string>
@@ -612,9 +637,6 @@ Language: pl
 	<string name="site_timeout_error">Błąd połączenia do WordPressa - przekroczono maksymalny dopuszczalny czas połączenia</string>
 	<string name="xmlrpc_malformed_response_error">Nie można się połączyć. Instalacja WordPressa odpowiedziała nieprawidłowym dokumentem XML-RPC</string>
 	<string name="xmlrpc_missing_method_error">Błąd połączenia. Brak wymaganych metod XML-RPC na serwerze.</string>
-	<string name="theme_premium">Premium</string>
-	<string name="theme_all">Wszystkie</string>
-	<string name="theme_free">Bezpłatny</string>
 	<string name="alignment_center">Wyśrodkowany</string>
 	<string name="post_format_video">Film</string>
 	<string name="post_format_status">Status</string>
