@@ -27,8 +27,8 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError;
-import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionError;
-import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginVersionPayload;
+import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginError;
+import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -158,7 +158,7 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void updateSitePluginVersion(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
+    public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
         String url = WPCOMREST.sites.site(site.getSiteId()).
                 plugins.name(getEncodedPluginName(plugin)).update.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
@@ -168,19 +168,19 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onResponse(PluginWPComRestResponse response) {
                         PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
                         pluginFromResponse.setId(plugin.getId());
-                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginVersionAction(
-                                new UpdatedSitePluginVersionPayload(site, pluginFromResponse)));
+                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(
+                                new UpdatedSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        UpdateSitePluginVersionError updatePluginVersionError
-                                = new UpdateSitePluginVersionError(((WPComGsonNetworkError) networkError).apiError,
+                        UpdateSitePluginError updatePluginError
+                                = new UpdateSitePluginError(((WPComGsonNetworkError) networkError).apiError,
                                 networkError.message);
-                        UpdatedSitePluginVersionPayload payload = new UpdatedSitePluginVersionPayload(site,
-                                updatePluginVersionError);
-                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginVersionAction(payload));
+                        UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site,
+                                updatePluginError);
+                        mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
                     }
                 }
         );
