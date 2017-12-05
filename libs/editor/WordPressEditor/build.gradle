@@ -53,9 +53,9 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.wordpress:utils:1.18.1'
 
-    compile 'com.github.wordpress-mobile.AztecEditor-Android:aztec:v1.0-beta.11'
-    compile 'com.github.wordpress-mobile.AztecEditor-Android:wordpress-comments:v1.0-beta.11'
-    compile 'com.github.wordpress-mobile.AztecEditor-Android:wordpress-shortcodes:v1.0-beta.11'
+    compile 'com.github.wordpress-mobile.AztecEditor-Android:aztec:fc0bab7105a2be65061b56d66b4cd752bdb92901'
+    compile 'com.github.wordpress-mobile.AztecEditor-Android:wordpress-comments:fc0bab7105a2be65061b56d66b4cd752bdb92901'
+    compile 'com.github.wordpress-mobile.AztecEditor-Android:wordpress-shortcodes:fc0bab7105a2be65061b56d66b4cd752bdb92901'
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     compile "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
