@@ -9,7 +9,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.NewAccountPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
@@ -32,8 +31,10 @@ public enum AccountAction implements IAction {
     PUSH_SOCIAL_AUTH,      // request social auth remotely
     @Action(payloadType = PushSocialPayload.class)
     PUSH_SOCIAL_CONNECT,    // request social connect remotely
-    @Action(payloadType = AccountStore.PushSocialPayload.class)
+    @Action(payloadType = PushSocialPayload.class)
     PUSH_SOCIAL_LOGIN,      // request social login remotely
+    @Action(payloadType = PushSocialPayload.class)
+    PUSH_SOCIAL_SIGNUP,     // request social signup remotely
     @Action(payloadType = PushSocialSmsPayload.class)
     PUSH_SOCIAL_SMS,      // request social sms remotely
     @Action(payloadType = NewAccountPayload.class)
