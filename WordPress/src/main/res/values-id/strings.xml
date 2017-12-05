@@ -267,9 +267,6 @@ Language: id
 	<string name="post_format_status">Status</string>
 	<string name="post_format_video">Video</string>
 	<string name="alignment_center">Tengah</string>
-	<string name="theme_free">Gratis</string>
-	<string name="theme_all">Semua</string>
-	<string name="theme_premium">Premium</string>
 	<string name="post_format_chat">Obrolan</string>
 	<string name="post_format_gallery">Galeri</string>
 	<string name="post_format_image">Gambar</string>
@@ -870,7 +867,6 @@ Language: id
 	<string name="local_draft">Draf lokal</string>
 	<string name="upload_failed">Pengunggahan gagal</string>
 	<string name="horizontal_alignment">Perataan horisontal</string>
-	<string name="file_not_found">Tidak bisa menemukan media yang hendak diunggah. Apakah sudah dihapus atau dipindahkan?</string>
 	<string name="post_settings">Pengaturan pos</string>
 	<string name="delete_post">Hapus pos</string>
 	<string name="delete_page">Hapus laman</string>
