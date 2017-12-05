@@ -25,10 +25,11 @@ import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
-import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
-import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -138,7 +139,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isPressed()) {
                     mPlugin.setIsActive(b);
-                    dispatchUpdateAction();
+                    dispatchConfigurePluginAction();
                 }
             }
         });
@@ -148,7 +149,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isPressed()) {
                     mPlugin.setIsAutoUpdateEnabled(b);
-                    dispatchUpdateAction();
+                    dispatchConfigurePluginAction();
                 }
             }
         });
@@ -224,9 +225,9 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     // Network Helpers
 
-    private void dispatchUpdateAction() {
-        mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(
-                new UpdateSitePluginPayload(mSite, mPlugin)));
+    private void dispatchConfigurePluginAction() {
+        mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(
+                new ConfigureSitePluginPayload(mSite, mPlugin)));
     }
 
     private void updatePluginVersion() {
@@ -239,8 +240,8 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         isUpdatingVersion = true;
         refreshUpdateVersionViews();
-        UpdateSitePluginVersionPayload payload = new UpdateSitePluginVersionPayload(mSite, mPlugin);
-        mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginVersionAction(payload));
+        UpdateSitePluginPayload payload = new UpdateSitePluginPayload(mSite, mPlugin);
+        mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
     }
 
     private void showSuccessfulUpdateSnackbar() {
@@ -267,10 +268,10 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSitePluginUpdated(OnSitePluginUpdated event) {
+    public void onSitePluginConfigured(OnSitePluginConfigured event) {
         if (event.isError()) {
-            if (event.error.type == UpdateSitePluginErrorType.ACTIVATION_ERROR
-                    || event.error.type == UpdateSitePluginErrorType.DEACTIVATION_ERROR) {
+            if (event.error.type == ConfigureSitePluginErrorType.ACTIVATION_ERROR
+                    || event.error.type == ConfigureSitePluginErrorType.DEACTIVATION_ERROR) {
                 // these errors are thrown when the plugin is already active and we try to activate it and vice versa.
                 return;
             }
@@ -302,10 +303,10 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSitePluginVersionUpdated(PluginStore.OnSitePluginVersionUpdated event) {
+    public void onSitePluginUpdated(OnSitePluginUpdated event) {
         isUpdatingVersion = false;
         if (event.isError()) {
-            AppLog.e(AppLog.T.API, "An error occurred while updating the plugin version with type: "
+            AppLog.e(AppLog.T.API, "An error occurred while updating the plugin with type: "
                     + event.error.type);
             refreshPluginVersionViews();
             showUpdateFailedSnackbar();
