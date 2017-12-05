@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.DragEvent;
@@ -195,6 +197,37 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         title.setOnImeBackListener(this);
         content.setOnImeBackListener(this);
         source.setOnImeBackListener(this);
+
+        // We need to intercept the "Enter" key on title. A new space is inserted instead
+        InputFilter noEnterKeyInputFilter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end,
+                                       Spanned dest, int dstart, int dend) {
+                //  You sometimes get a SpannableStringBuilder, sometimes a plain String in the source parameter
+                if (source instanceof SpannableStringBuilder) {
+                    SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder) source;
+                    for (int i = end - 1; i >= start; i--) {
+                        char currentChar = source.charAt(i);
+                        if (currentChar == '\n') {
+                            sourceAsSpannableBuilder.replace(i, i + 1, " ");
+                        }
+                    }
+                    return source;
+                } else {
+                    StringBuilder filteredStringBuilder = new StringBuilder();
+                    for (int i = start; i < end; i++) {
+                        char currentChar = source.charAt(i);
+                        if (currentChar == '\n') {
+                            filteredStringBuilder.append(" ");
+                        } else {
+                            filteredStringBuilder.append(currentChar);
+                        }
+                    }
+                    return filteredStringBuilder.toString();
+                }
+            }
+        };
+        title.setFilters(new InputFilter[]{noEnterKeyInputFilter});
 
         source.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
 
