@@ -608,14 +608,19 @@ public class AccountStore extends Store {
             OnSocialChanged event = new OnSocialChanged();
             event.error = payload.error;
             emitChange(event);
-        // No error and two-factor authentication code sent via SMS; emit only social change.
+        // Two-factor authentication code sent via SMS; emit only social change.
         } else if (payload.hasPhoneNumber()) {
             OnSocialChanged event = new OnSocialChanged(payload);
             emitChange(event);
-        // No error, but either two-factor authentication or social connect is required; emit only social change.
+        // Two-factor authentication or social connect is required; emit only social change.
         } else if (!payload.hasToken()) {
             OnSocialChanged event = new OnSocialChanged(payload);
             event.requiresTwoStepAuth = payload.hasTwoStepTypes();
+            emitChange(event);
+        // Social signup completed; emit only social change.
+        } else if (payload.hasUsername()) {
+            OnSocialChanged event = new OnSocialChanged(payload);
+            event.createdAccount = payload.createdAccount;
             emitChange(event);
         // No error and two-factor authentication is not required; emit only authentication change.
         } else {
