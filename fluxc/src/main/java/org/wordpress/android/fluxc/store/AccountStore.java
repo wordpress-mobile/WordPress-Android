@@ -142,6 +142,7 @@ public class AccountStore extends Store {
         public String notificationSent;
         public String phoneNumber;
         public String userId;
+        public boolean createdAccount;
         public boolean requiresTwoStepAuth;
 
         public OnSocialChanged() {
@@ -446,6 +447,8 @@ public class AccountStore extends Store {
                 break;
             case PUSH_SOCIAL_LOGIN:
                 createPushSocialLogin((PushSocialPayload) payload);
+                break;
+            case PUSH_SOCIAL_SIGNUP:
                 break;
             case PUSH_SOCIAL_SMS:
                 createPushSocialSms((PushSocialSmsPayload) payload);
