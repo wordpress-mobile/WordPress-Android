@@ -69,6 +69,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     public static class AccountPushSocialResponsePayload extends Payload<AccountSocialError> {
         public AccountPushSocialResponsePayload(AccountSocialResponse response) {
             this.bearerToken = response.bearer_token;
+            this.createdAccount = response.created_account;
             this.phoneNumber = response.phone_number;
             this.twoStepNonce = response.two_step_nonce;
             this.twoStepNonceAuthenticator = response.two_step_nonce_authenticator;
@@ -77,6 +78,7 @@ public class AccountRestClient extends BaseWPComRestClient {
             this.twoStepNotificationSent = response.two_step_notification_sent;
             this.twoStepTypes = convertJsonArrayToStringList(response.two_step_supported_auth_types);
             this.userId = response.user_id;
+            this.userName = response.username;
         }
         public AccountPushSocialResponsePayload() {
         }
@@ -89,6 +91,8 @@ public class AccountRestClient extends BaseWPComRestClient {
         public String twoStepNonceSms;
         public String twoStepNotificationSent;
         public String userId;
+        public String userName;
+        public boolean createdAccount;
 
         private List<String> convertJsonArrayToStringList(JSONArray array) {
             List<String> list = new ArrayList<>();
@@ -116,6 +120,10 @@ public class AccountRestClient extends BaseWPComRestClient {
 
         public boolean hasTwoStepTypes() {
             return this.twoStepTypes != null && this.twoStepTypes.size() > 0;
+        }
+
+        public boolean hasUsername() {
+            return !TextUtils.isEmpty(this.userName);
         }
     }
 
