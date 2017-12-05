@@ -247,9 +247,6 @@ Language: cs_CZ
 	<string name="post_format_status">Aktualita</string>
 	<string name="post_format_video">Video</string>
 	<string name="alignment_center">Na střed</string>
-	<string name="theme_free">Zdarma</string>
-	<string name="theme_all">Vše</string>
-	<string name="theme_premium">Placeno</string>
 	<string name="post_format_gallery">Galerie</string>
 	<string name="post_format_image">Obrázek</string>
 	<string name="post_format_link">Odkaz</string>
@@ -878,7 +875,6 @@ Language: cs_CZ
 	<string name="media_error_no_permission">Nemáte oprávnění pro zobrazení mediální knihovny</string>
 	<string name="cannot_delete_multi_media_items">Některá média momentálně nelze odstranit. Zkuste to později.</string>
 	<string name="horizontal_alignment">Vodorovné zarovnání</string>
-	<string name="file_not_found">Nepodařilo se najít mediální soubor pro nahrávání. Nebyl odstraněný nebo přesunutý?</string>
 	<string name="comment_status_approved">Schváleno</string>
 	<string name="mnu_comment_approve">Schválit</string>
 	<string name="mnu_comment_unapprove">Zamítnout</string>

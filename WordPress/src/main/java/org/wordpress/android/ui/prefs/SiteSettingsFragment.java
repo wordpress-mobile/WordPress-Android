@@ -680,12 +680,18 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onSaveError(Exception error) {
+        if (!isAdded()) {
+            return;
+        }
         ToastUtils.showToast(getActivity(), R.string.error_post_remote_site_settings);
         getActivity().finish();
     }
 
     @Override
     public void onFetchError(Exception error) {
+        if (!isAdded()) {
+            return;
+        }
         ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
         getActivity().finish();
     }
@@ -706,6 +712,9 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onCredentialsValidated(Exception error) {
+        if (!isAdded()) {
+            return;
+        }
         if (error != null) {
             ToastUtils.showToast(WordPress.getContext(), R.string.username_or_password_incorrect);
         }

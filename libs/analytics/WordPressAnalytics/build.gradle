@@ -4,12 +4,13 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.novoda:bintray-release:0.5.0'
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
-apply plugin: 'signing'
+apply plugin: 'com.novoda.bintray-release' // must be applied after your artifact generating plugin (eg. java / com.android.library)
 
 repositories {
     google()
@@ -28,62 +29,21 @@ android {
     buildToolsVersion "25.0.3"
 
     defaultConfig {
-        versionName "1.2.0"
+        versionName "1.3.0"
         minSdkVersion 16
         targetSdkVersion 25
     }
 }
 
-version android.defaultConfig.versionName
-group = "org.wordpress"
-archivesBaseName = "analytics"
-
-signing {
-    required {
-        project.properties.containsKey("signing.keyId") && project.properties.containsKey("signing.secretKeyRingFile")
-    }
-    sign configurations.archives
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: project.properties.ossrhUsername, password: project.properties.ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: project.properties.ossrhUsername, password: project.properties.ossrhPassword)
-            }
-
-            pom.project {
-                name 'WordPressCom-Analytics-Android'
-                packaging 'aar'
-                description 'Analytics lib for WordPress-Android'
-                url 'https://github.com/wordpress-mobile/WordPressCom-Analytics-Android'
-                scm {
-                    connection 'scm:git:https://github.com/wordpress-mobile/WordPressCom-Analytics-Android.git'
-                    developerConnection 'scm:git:https://github.com/wordpress-mobile/WordPressCom-Analytics-Android.git'
-                    url 'https://github.com/wordpress-mobile/WordPressCom-Analytics-Android'
-                }
-
-                licenses {
-                    license {
-                        name 'The MIT License (MIT)'
-                        url 'http://opensource.org/licenses/MIT'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'maxme'
-                        name 'Maxime Biais'
-                        email 'maxime@automattic.com'
-                    }
-                }
-            }
-        }
-    }
+publish {
+    artifactId = 'analytics'
+    userOrg = 'wordpress-mobile'
+    groupId = 'org.wordpress'
+    uploadName = 'analytics'
+    description = 'Analytics library for WordPress for Android'
+    publishVersion = android.defaultConfig.versionName
+    licences = ['GPL-2.0']
+    website = 'https://github.com/wordpress-mobile/WordPress-Analytics-Android'
+    dryRun = 'false'
+    autoPublish = 'true'
 }
