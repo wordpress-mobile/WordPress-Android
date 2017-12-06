@@ -8,13 +8,12 @@ import org.wordpress.android.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
-import org.wordpress.android.login.LoginWpcomService;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
 @Module
-public abstract class LoginModule {
+public abstract class LoginFragmentModule {
     @ContributesAndroidInjector
     abstract Login2FaFragment login2FaFragment();
 
@@ -38,7 +37,4 @@ public abstract class LoginModule {
 
     @ContributesAndroidInjector
     abstract LoginUsernamePasswordFragment loginUsernamePasswordFragment();
-
-    @ContributesAndroidInjector
-    abstract LoginWpcomService loginWpcomService();
 }

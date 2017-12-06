@@ -7,7 +7,8 @@ import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseOkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
-import org.wordpress.android.login.di.LoginModule;
+import org.wordpress.android.login.di.LoginFragmentModule;
+import org.wordpress.android.login.di.LoginServiceModule;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
@@ -119,7 +120,9 @@ import dagger.android.support.AndroidSupportInjectionModule;
         LegacyModule.class,
         ReleaseToolsModule.class,
         AndroidSupportInjectionModule.class,
-        LoginModule.class
+        // Login flow library
+        LoginFragmentModule.class,
+        LoginServiceModule.class
 })
 public interface AppComponent extends AndroidInjector<WordPress> {
     @Override
