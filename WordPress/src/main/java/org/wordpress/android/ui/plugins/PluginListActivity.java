@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginInfoChanged;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginsFetched;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
@@ -161,6 +162,12 @@ public class PluginListActivity extends AppCompatActivity {
             // We can ignore the error since the action is taken in `PluginDetailActivity`
             return;
         }
+        refreshPluginList();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSitePluginDeleted(OnSitePluginDeleted event) {
         refreshPluginList();
     }
 
