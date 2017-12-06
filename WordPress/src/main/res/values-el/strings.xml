@@ -303,9 +303,6 @@ Language: el_GR
 	<string name="site_timeout_error">Αδυναμία σύνδεσης με τον ιστότοπο του WordPress λόγω σφάλματος Timeout.</string>
 	<string name="xmlrpc_malformed_response_error">Αδυναμία σύνδεσης. Η εγκατάσταση του WordPress απάντησε με μη έγκυρο έγγραφο XML-RPC.</string>
 	<string name="xmlrpc_missing_method_error">Αδυναμία σύνδεσης. Οι απαιτούμενες μέθοδοι XML-RPC απουσιάζουν από το διακομιστή.</string>
-	<string name="theme_premium">Premium</string>
-	<string name="theme_all">Όλα</string>
-	<string name="theme_free">Δωρεάν</string>
 	<string name="post_format_video">Βίντεο</string>
 	<string name="post_format_status">Κατάσταση</string>
 	<string name="post_format_standard">Κανονικό</string>
@@ -943,7 +940,6 @@ Language: el_GR
 	<string name="delete_page">Διαγραφή σελίδας</string>
 	<string name="delete_post">Διαγραφή ανάρτησης</string>
 	<string name="post_settings">Ρυθμίσεις άρθρου</string>
-	<string name="file_not_found">Αδυναμία εύρεσης του αρχείου πολυμέσων για μεταφόρτωση. Μήπως διαγράφηκε ή μετακινήθηκε;</string>
 	<string name="horizontal_alignment">Οριζόντια ευθυγράμμιση</string>
 	<string name="upload_failed">Αποτυχία μεταφόρτωσης</string>
 	<string name="local_draft">Τοπικό προσχέδιο</string>

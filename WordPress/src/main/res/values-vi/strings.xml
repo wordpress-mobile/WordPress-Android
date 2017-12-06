@@ -145,9 +145,6 @@ Language: vi_VN
 	<string name="alignment_center">Ở giữa</string>
 	<string name="post_format_status">Trạng thái</string>
 	<string name="post_format_video">Video</string>
-	<string name="theme_free">Miễn phí</string>
-	<string name="theme_all">Tất cả</string>
-	<string name="theme_premium">Premium</string>
 	<string name="post_format_image">Ảnh</string>
 	<string name="post_format_chat">Tán gẫu</string>
 	<string name="post_format_link">Liên kết</string>
@@ -738,7 +735,6 @@ Language: vi_VN
 	<string name="page_settings">Thiết đặt trang</string>
 	<string name="upload_failed">Tải lên bị lỗi</string>
 	<string name="horizontal_alignment">Canh ngang</string>
-	<string name="file_not_found">Không thể tìm thấy tập tin media để tải lên. Nó đã bị xóa hoặc di chuyển?</string>
 	<string name="post_settings">Thiết đặt bài viết</string>
 	<string name="delete_post">Xóa bài viết</string>
 	<string name="delete_page">Xóa trang</string>

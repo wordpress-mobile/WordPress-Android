@@ -47,7 +47,6 @@ Language: es_CO
 	<string name="media_edit_filetype_caption">Tipo de archivo</string>
 	<string name="media_edit_filename_caption">Nombre del archivo</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_file_details_card_caption">Detalles de documentos</string>
 	<string name="media_edit_alttext_text">Texto alternativo</string>
 	<string name="copy">Copiar</string>
 	<string name="connect_site">Conectar el sitio</string>
@@ -69,7 +68,6 @@ Language: es_CO
 	<string name="notification_settings_master_status_on">Activos</string>
 	<string name="max_video_resolution">Tamaño máximo de vídeo</string>
 	<string name="max_thumbnail_px_size">Tamaño máximo de imagen</string>
-	<string name="error_media_recover_post">No nos fue posible subir los medios a esta entrada. Por favor, edita la entrada e inténtalo de nuevo.</string>
 	<string name="error_page_does_not_exist">Esta página ya no existe</string>
 	<string name="error_upload_post_media_param">Hubo un error al subir los medios a esta entrada: %s.</string>
 	<string name="error_upload_post_param">Hubo un error al subir esta entrada: %s.</string>
@@ -84,7 +82,6 @@ Language: es_CO
 	<string name="cant_open_url">No fue posible abrir el enlace</string>
 	<string name="error_unknown_post">No se pudo encontrar la entrada en el servidor</string>
 	<string name="error_post_does_not_exist">Esta entrada ya no existe</string>
-	<string name="error_media_recover_page">No hemos podido subir los medios de esta página. Por favor, edita la página e inténtalo de nuevo.</string>
 	<string name="error_media_canceled">Se canceló la subida de medios</string>
 	<string name="error_upload_page_media_param">Hubo un error al subir los medios a esta página: %s.</string>
 	<string name="error_upload_page_param">Hubo un error al subir esta página: %s.</string>
@@ -95,10 +92,6 @@ Language: es_CO
 	<string name="dialog_confirm_cancel_post_media_uploading">¿Estás seguro? Al borrar esta entrada también cancelarás la subida de medios.</string>
 	<string name="page_scheduled">Página programada</string>
 	<string name="post_scheduled">Entrada programada</string>
-	<string name="post_draft_param">¡"%s" se ha guardado como borrador!</string>
-	<string name="post_scheduled_param">¡"%s" se ha programado!</string>
-	<string name="post_updated_param">¡"%s" se ha actualizado!</string>
-	<string name="post_published_param">¡"%s" se ha publicado!</string>
 	<string name="button_retry">Reintentar</string>
 	<string name="post_queued">Entrada a la espera</string>
 	<string name="uploading_post">Subiendo "%s"</string>
@@ -129,7 +122,6 @@ Language: es_CO
 	<string name="login_magic_links_sent_label">¡Tu enlace mágico está en camino! Revisa tu correo electrónico en este dispositivo y pulsa el enlace que hay en el correo electrónico que has recibido de WordPress.com.</string>
 	<string name="login_magic_links_label">Te enviaremos por correo electrónico un enlace mágico que te conectará al instante, sin tener que introducir contraseña. ¡Caza y no picotees más!</string>
 	<string name="password_incorrect">Parece que esta contraseña es incorrecta. Por favor, vuelve a comprobar tu información e inténtalo de nuevo.</string>
-	<string name="email_not_registered_wpcom">Este correo electrónico no está registrado en WordPress.com</string>
 	<string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
 	<string name="login_text_otp">Envíame un código en texto en su lugar.</string>
 	<string name="enter_verification_code">¡Casi lo tenemos! Por favor, introduce un código de verificación desde tu aplicación Authenticator.</string>
@@ -602,9 +594,6 @@ Language: es_CO
 	<string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
 	<string name="post_format_status">Estado</string>
 	<string name="post_format_video">Video</string>
-	<string name="theme_free">Gratis</string>
-	<string name="theme_all">Todo</string>
-	<string name="theme_premium">Premium</string>
 	<string name="alignment_center">Centrado</string>
 	<string name="post_format_chat">Chat</string>
 	<string name="post_format_image">Imagen</string>
@@ -1264,7 +1253,6 @@ Language: es_CO
 	<string name="delete_page">Borrar página</string>
 	<string name="delete_post">Borrar entrada</string>
 	<string name="post_settings">Ajustes de entrada</string>
-	<string name="file_not_found">No ha sido posible encontrar el archivo multimedia para cargar. ¿Se ha borrado o cambiado de ubicación?</string>
 	<string name="horizontal_alignment">Alineación horizontal</string>
 	<string name="upload_failed">Falló la subida</string>
 	<string name="local_draft">Borrador local</string>

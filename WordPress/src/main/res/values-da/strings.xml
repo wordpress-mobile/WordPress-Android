@@ -29,11 +29,8 @@ Language: da_DK
 	<string name="contact_support">Kontakt support</string>
 	<string name="site_settings_advanced_header">Avanceret</string>
 	<string name="button_skip">Spring over</string>
-	<string name="theme_free">Gratis</string>
 	<string name="post_format_video">Video</string>
 	<string name="post_format_status">Status</string>
-	<string name="theme_all">Alle</string>
-	<string name="theme_premium">Premium</string>
 	<string name="post_format_chat">Chat</string>
 	<string name="post_format_gallery">Galleri</string>
 	<string name="post_format_image">Billede</string>
