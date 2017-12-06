@@ -293,7 +293,12 @@ public class PluginDetailActivity extends AppCompatActivity {
         mRemovePluginProgressDialog = new ProgressDialog(this);
         mRemovePluginProgressDialog.setCancelable(false);
         mRemovePluginProgressDialog.setIndeterminate(true);
-        mRemovePluginProgressDialog.setMessage(getString(R.string.plugin_disable_progress_dialog_message));
+        // Even though we are deactivating the plugin to make sure it's disabled on the server side, since the user
+        // sees that the plugin is disabled, it'd be confusing to say we are disabling the plugin
+        String message = mPlugin.isActive()
+                ? getString(R.string.plugin_disable_progress_dialog_message, mPlugin.getDisplayName())
+                : getRemovingPluginMessage();
+        mRemovePluginProgressDialog.setMessage(message);
         mRemovePluginProgressDialog.show();
     }
 
@@ -331,7 +336,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
-        mRemovePluginProgressDialog.setMessage(getString(R.string.plugin_remove_progress_dialog_message));
+        mRemovePluginProgressDialog.setMessage(getRemovingPluginMessage());
         DeleteSitePluginPayload payload = new DeleteSitePluginPayload(mSite, mPlugin);
         mDispatcher.dispatch(PluginActionBuilder.newDeleteSitePluginAction(payload));
     }
@@ -435,5 +440,9 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private String getWpOrgPluginUrl() {
         return "https://wordpress.org/plugins/" + mPlugin.getSlug();
+    }
+
+    private String getRemovingPluginMessage() {
+        return getString(R.string.plugin_remove_progress_dialog_message, mPlugin.getDisplayName());
     }
 }

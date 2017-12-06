@@ -1799,8 +1799,8 @@
     <string name="plugin_remove_failed">Error removing %s.</string>
     <string name="plugin_configuration_failed">An error occurred while configuring the plugin: %s</string>
     <string name="plugin_btn_remove">Remove Plugin</string>
-    <string name="plugin_disable_progress_dialog_message">Disabling the plugin..</string>
-    <string name="plugin_remove_progress_dialog_message">Removing the plugin..</string>
+    <string name="plugin_disable_progress_dialog_message">Disabling %s..</string>
+    <string name="plugin_remove_progress_dialog_message">Removing %s..</string>
     <string name="plugin_remove_dialog_title">Remove Plugin</string>
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s? This will deactivate the plugin and delete all associated files and data.</string>
 
