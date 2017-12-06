@@ -57,8 +57,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
 
-    private boolean isUpdatingPlugin;
-    private boolean isRemovingPlugin;
+    private boolean mIsUpdatingPlugin;
+    private boolean mIsRemovingPlugin;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -222,13 +222,13 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void refreshUpdateVersionViews() {
         boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo);
-        if (isUpdateAvailable && !isUpdatingPlugin) {
+        if (isUpdateAvailable && !mIsUpdatingPlugin) {
             mUpdateTextView.setVisibility(View.VISIBLE);
         } else {
             mUpdateTextView.setVisibility(View.GONE);
         }
 
-        if (isUpdatingPlugin) {
+        if (mIsUpdatingPlugin) {
             mUpdateProgressBar.setVisibility(View.VISIBLE);
         } else {
             mUpdateProgressBar.setVisibility(View.GONE);
@@ -302,11 +302,11 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
-        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo) || isUpdatingPlugin) {
+        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo) || mIsUpdatingPlugin) {
             return;
         }
 
-        isUpdatingPlugin = true;
+        mIsUpdatingPlugin = true;
         refreshUpdateVersionViews();
         UpdateSitePluginPayload payload = new UpdateSitePluginPayload(mSite, mPlugin);
         mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
@@ -322,7 +322,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void disableAndRemovePlugin() {
         // We need to make sure that plugin is disabled before attempting to remove it
-        isRemovingPlugin = true;
+        mIsRemovingPlugin = true;
         mPlugin.setIsActive(false);
         dispatchConfigurePluginAction();
     }
@@ -334,8 +334,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
         if (event.isError()) {
             ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed, event.error.message));
-            if (isRemovingPlugin) {
-                isRemovingPlugin = false;
+            if (mIsRemovingPlugin) {
+                mIsRemovingPlugin = false;
                 showPluginRemoveFailedSnackbar();
             }
             return;
@@ -349,7 +349,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         refreshViews();
 
         // Plugin is disabled, we can now remove it
-        if (isRemovingPlugin && !mPlugin.isActive()) {
+        if (mIsRemovingPlugin && !mPlugin.isActive()) {
             dispatchRemovePluginAction();
         }
     }
@@ -371,7 +371,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginUpdated(OnSitePluginUpdated event) {
-        isUpdatingPlugin = false;
+        mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while updating the plugin with type: "
                     + event.error.type);
@@ -393,7 +393,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
-        isRemovingPlugin = false;
+        mIsRemovingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while removing the plugin with type: "
                     + event.error.type);
