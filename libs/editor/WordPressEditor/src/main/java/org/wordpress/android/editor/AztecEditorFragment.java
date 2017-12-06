@@ -720,7 +720,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (URLUtil.isNetworkUrl(mediaUrl)) {
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
-            setAttributeValuesIfNotDefault(attributes, mediaFile);
+
+            setDefaultAttributes(attributes, mediaFile);
+
             if (mediaFile.isVideo()) {
                 addVideoUploadingClassIfMissing(attributes);
                 content.insertVideo(getLoadingVideoPlaceholder(), attributes);
@@ -777,7 +779,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                     AztecAttributes attributes = new AztecAttributes();
                     attributes.setValue(ATTR_SRC, mediaUrl);
-                    setAttributeValuesIfNotDefault(attributes, mediaFile);
 
                     int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
 
@@ -936,17 +937,23 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // clear overlay
                 MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
+
+                AztecAttributes attrs = content.getElementAttributes(predicate);
+                attrs.setValue("src", remoteUrl);
+
+                if (mediaType.equals(MediaType.IMAGE)) {
+                    setDefaultAttributes(attrs, mediaFile);
+                }
+
                 // remove the uploading class
-                AttributesWithClass attributesWithClass = getAttributesWithClass(
-                        content.getElementAttributes(predicate));
+                AttributesWithClass attributesWithClass = getAttributesWithClass(attrs);
                 attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+
                 if (mediaFile.isVideo()) {
                     attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
                 }
 
-                // add then new src property with the remoteUrl
-                AztecAttributes attrs = attributesWithClass.getAttributes();
-                attrs.setValue("src", remoteUrl);
+                attrs.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
 
                 /* TODO add video press attribute -> value here
                 if (mediaType.equals(MediaType.VIDEO)) {
@@ -955,8 +962,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     attrs.setValue( ?? , videoPressId);
                 }
                 */
-
-                addDefaultSizeClassIfMissing(attrs);
 
                 // clear overlay
                 content.clearOverlays(predicate);
@@ -1471,6 +1476,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 EditorImageMetaData metaData = gson.fromJson(meta.toString(), EditorImageMetaData.class);
 
+                AztecAttributes captionAttributes = CaptionExtensionsKt.getImageCaptionAttributes(content, mTappedMediaPredicate);
+
+                if (captionAttributes.hasAttribute(ATTR_ALIGN)) {
+                    metaData.setAlign(captionAttributes.getValue(ATTR_ALIGN));
+                }
+
                 metaData.setCaption(CaptionExtensionsKt.getImageCaption(content, mTappedMediaPredicate));
 
                 String mediaLink = MediaLinkExtensionsKt.getMediaLink(content, mTappedMediaPredicate);
@@ -1557,7 +1568,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             if (metaData.isLinkTargetBlank()) {
                                 linkAttributes.setValue(ATTR_TARGET, "_blank");
                             }
-
                             MediaLinkExtensionsKt.addLinkToMedia(content, mTappedMediaPredicate, metaData.getLinkUrl(), linkAttributes);
                         } else {
                             AztecAttributes linkAttributes = MediaLinkExtensionsKt.getMediaLinkAttributes(content, mTappedMediaPredicate);
@@ -1570,6 +1580,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                             MediaLinkExtensionsKt.addLinkToMedia(content, mTappedMediaPredicate, metaData.getLinkUrl(), linkAttributes);
                         }
+                    } else {
+                        MediaLinkExtensionsKt.removeLinkFromMedia(content, mTappedMediaPredicate);
                     }
 
                     AttributesWithClass attributesWithClass = getAttributesWithClass(attributes);
@@ -1583,10 +1595,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     if (!TextUtils.isEmpty(metaData.getCaption())) {
                         AztecAttributes captionAttributes = CaptionExtensionsKt.getImageCaptionAttributes(content, mTappedMediaPredicate);
 
-
                         if (!TextUtils.isEmpty(metaData.getAlign())) {
                             captionAttributes.setValue(ATTR_ALIGN, ATTR_ALIGN + metaData.getAlign());
-                        }else{
+                        } else {
                             captionAttributes.removeAttribute(ATTR_ALIGN);
                         }
 
@@ -1628,16 +1639,27 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     }
 
-    private void setAttributeValuesIfNotDefault(AztecAttributes attributes, MediaFile mediaFile) {
-        if (mediaFile.getWidth() != DEFAULT_MEDIA_WIDTH) {
+
+    private static void setDefaultAttributes(AztecAttributes attributes, MediaFile mediaFile) {
+        if (mediaFile.getWidth() > 0) {
             attributes.setValue(ATTR_DIMEN_WIDTH, String.valueOf(mediaFile.getWidth()));
         }
 
-        if (mediaFile.getHeight() != DEFAULT_MEDIA_HEIGHT) {
+        if (mediaFile.getHeight() > 0) {
             attributes.setValue(ATTR_DIMEN_HEIGHT, String.valueOf(mediaFile.getHeight()));
         }
 
-        addDefaultSizeClassIfMissing(attributes);
+        AttributesWithClass attributesWithClass = getAttributesWithClass(attributes);
+
+        if (!TextUtils.isEmpty(mediaFile.getMediaId())) {
+            attributesWithClass.addClass(ATTR_IMAGE_WP_DASH + mediaFile.getMediaId());
+        }
+        attributesWithClass.addClass(ATTR_ALIGN + "none");
+
+        if (!attributesWithClass.hasClassStartingWith("size")) {
+            attributesWithClass.addClass("size-full");
+        }
+        attributes.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
     }
 
     private static void addDefaultSizeClassIfMissing(AztecAttributes attributes) {
