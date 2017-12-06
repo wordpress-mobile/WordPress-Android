@@ -115,6 +115,12 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        mDispatcher.unregister(this);
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
