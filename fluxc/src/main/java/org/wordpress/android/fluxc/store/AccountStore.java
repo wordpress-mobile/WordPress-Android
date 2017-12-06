@@ -131,7 +131,9 @@ public class AccountStore extends Store {
         public AccountAction causeOfChange;
     }
 
-    public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {}
+    public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {
+        public boolean createdAccount;
+    }
 
     public static class OnSocialChanged extends OnChanged<AccountSocialError> {
         public List<String> twoStepTypes;
@@ -711,6 +713,19 @@ public class AccountStore extends Store {
     private void updateToken(UpdateTokenPayload updateTokenPayload) {
         mAccessToken.set(updateTokenPayload.token);
         emitChange(new OnAuthenticationChanged());
+    }
+
+    /**
+     * Update access token for account store for social login or signup.
+     *
+     * @param updateTokenPayload payload containing token to be updated
+     * @param createdAccount     flag to send in event to determine login or signup
+     */
+    private void updateToken(UpdateTokenPayload updateTokenPayload, boolean createdAccount) {
+        mAccessToken.set(updateTokenPayload.token);
+        OnAuthenticationChanged event = new OnAuthenticationChanged();
+        event.createdAccount = createdAccount;
+        emitChange(event);
     }
 
     private void updateDefaultAccount(AccountModel accountModel, AccountAction cause) {
