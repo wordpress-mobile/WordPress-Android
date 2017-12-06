@@ -106,7 +106,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         try {
             mGoogleLoginListener = (GoogleLoginListener) context;
         } catch (ClassCastException exception) {
-            throw new ClassCastException(context.toString() + " must implement OnGoogleLoginFinishedListener");
+            throw new ClassCastException(context.toString() + " must implement GoogleLoginListener");
         }
 
         // Show account dialog when Google API onConnected callback returns before fragment is attached.
