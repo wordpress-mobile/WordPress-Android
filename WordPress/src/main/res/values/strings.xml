@@ -1795,6 +1795,7 @@
     <string name="plugin_updated_successfully">Successfully updated %s.</string>
     <string name="plugin_updated_failed">Error updating %s.</string>
     <string name="plugin_configuration_failed">An error occurred while fetching the plugins: %s</string>
+    <string name="plugin_btn_remove">Remove Plugin</string>
     <string name="remove_plugin_dialog_title">Remove Plugin</string>
     <string name="remove_plugin_dialog_message">Are you sure you want to remove %1$s from %2$s? This will deactivate the plugin and delete all associated files and data.</string>
 
