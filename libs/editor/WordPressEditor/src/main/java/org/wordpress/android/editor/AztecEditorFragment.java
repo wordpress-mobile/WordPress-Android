@@ -1558,28 +1558,28 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     attributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
                     attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
 
-
                     if (!TextUtils.isEmpty(metaData.getLinkUrl())) {
                         String existingLink = MediaLinkExtensionsKt.getMediaLink(content, mTappedMediaPredicate);
 
+                        AztecAttributes linkAttributes;
+
                         if (TextUtils.isEmpty(existingLink)) {
-                            AztecAttributes linkAttributes = new AztecAttributes();
-
-                            if (metaData.isLinkTargetBlank()) {
-                                linkAttributes.setValue(ATTR_TARGET, "_blank");
-                            }
-                            MediaLinkExtensionsKt.addLinkToMedia(content, mTappedMediaPredicate, metaData.getLinkUrl(), linkAttributes);
+                            linkAttributes = new AztecAttributes();
                         } else {
-                            AztecAttributes linkAttributes = MediaLinkExtensionsKt.getMediaLinkAttributes(content, mTappedMediaPredicate);
-
-                            if (metaData.isLinkTargetBlank()) {
-                                linkAttributes.setValue(ATTR_TARGET, "_blank");
-                            } else {
-                                linkAttributes.removeAttribute(ATTR_TARGET);
-                            }
-
-                            MediaLinkExtensionsKt.addLinkToMedia(content, mTappedMediaPredicate, metaData.getLinkUrl(), linkAttributes);
+                            linkAttributes = MediaLinkExtensionsKt.getMediaLinkAttributes(content, mTappedMediaPredicate);
                         }
+
+                        linkAttributes.setValue("rel", "noopener");
+
+                        if (metaData.isLinkTargetBlank()) {
+                            linkAttributes.setValue(ATTR_TARGET, "_blank");
+                        } else {
+                            linkAttributes.removeAttribute(ATTR_TARGET);
+                        }
+
+                        MediaLinkExtensionsKt.removeLinkFromMedia(content, mTappedMediaPredicate);
+                        MediaLinkExtensionsKt.addLinkToMedia(content, mTappedMediaPredicate,
+                                UrlUtils.addUrlSchemeIfNeeded(metaData.getLinkUrl(), false), linkAttributes);
                     } else {
                         MediaLinkExtensionsKt.removeLinkFromMedia(content, mTappedMediaPredicate);
                     }
@@ -1612,7 +1612,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                         CaptionExtensionsKt.removeImageCaption(content, mTappedMediaPredicate);
                     }
-
 
                     if (!TextUtils.isEmpty(metaData.getSize())) {
                         attributesWithClass.addClass(metaData.getSize());
