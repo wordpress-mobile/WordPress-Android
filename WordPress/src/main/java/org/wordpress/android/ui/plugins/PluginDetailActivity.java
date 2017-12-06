@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.plugins;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -56,6 +57,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private ProgressBar mUpdateProgressBar;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
+    private ProgressDialog mRemovePluginProgressDialog;
 
     private boolean mIsUpdatingPlugin;
     private boolean mIsRemovingPlugin;
@@ -237,8 +239,8 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void confirmRemovePlugin() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
-        builder.setTitle(getResources().getText(R.string.remove_plugin_dialog_title));
-        String confirmationMessage = getString(R.string.remove_plugin_dialog_message,
+        builder.setTitle(getResources().getText(R.string.plugin_remove_dialog_title));
+        String confirmationMessage = getString(R.string.plugin_remove_dialog_message,
                 mPlugin.getDisplayName(),
                 SiteUtils.getSiteNameOrHomeURL(mSite));
         builder.setMessage(confirmationMessage);
@@ -274,18 +276,25 @@ public class PluginDetailActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void showPluginRemovedSnackbar() {
-        Snackbar.make(mContainer,
-                getString(R.string.plugin_removed_successfully, mPlugin.getDisplayName()),
-                Snackbar.LENGTH_LONG)
-                .show();
-    }
-
     private void showPluginRemoveFailedSnackbar() {
         Snackbar.make(mContainer,
                 getString(R.string.plugin_remove_failed, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    private void showRemovePluginProgressDialog() {
+        mRemovePluginProgressDialog = new ProgressDialog(this);
+        mRemovePluginProgressDialog.setCancelable(false);
+        mRemovePluginProgressDialog.setIndeterminate(true);
+        mRemovePluginProgressDialog.setMessage(getString(R.string.plugin_disable_progress_dialog_message));
+        mRemovePluginProgressDialog.show();
+    }
+
+    private void cancelRemovePluginProgressDialog() {
+        if (mRemovePluginProgressDialog != null && mRemovePluginProgressDialog.isShowing()) {
+            mRemovePluginProgressDialog.cancel();
+        }
     }
 
     // Network Helpers
@@ -316,6 +325,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
+        mRemovePluginProgressDialog.setMessage(getString(R.string.plugin_remove_progress_dialog_message));
         DeleteSitePluginPayload payload = new DeleteSitePluginPayload(mSite, mPlugin);
         mDispatcher.dispatch(PluginActionBuilder.newDeleteSitePluginAction(payload));
     }
@@ -323,6 +333,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void disableAndRemovePlugin() {
         // We need to make sure that plugin is disabled before attempting to remove it
         mIsRemovingPlugin = true;
+        showRemovePluginProgressDialog();
         mPlugin.setIsActive(false);
         dispatchConfigurePluginAction();
     }
@@ -336,6 +347,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed, event.error.message));
             if (mIsRemovingPlugin) {
                 mIsRemovingPlugin = false;
+                cancelRemovePluginProgressDialog();
                 showPluginRemoveFailedSnackbar();
             }
             return;
@@ -394,6 +406,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
         mIsRemovingPlugin = false;
+        cancelRemovePluginProgressDialog();
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while removing the plugin with type: "
                     + event.error.type);
@@ -403,7 +416,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
         // Plugin removed we need to go back to the plugin list
-        showPluginRemovedSnackbar();
+        String toastMessage = getString(R.string.plugin_removed_successfully, mPlugin.getDisplayName());
+        ToastUtils.showToast(this, toastMessage, Duration.LONG);
         finish();
     }
 
