@@ -27,10 +27,10 @@ import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
-import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginErrorType;
-import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
@@ -276,6 +276,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     // Network Helpers
 
     private void dispatchConfigurePluginAction() {
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
         mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(
                 new ConfigureSitePluginPayload(mSite, mPlugin)));
     }
@@ -294,8 +297,19 @@ public class PluginDetailActivity extends AppCompatActivity {
         mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
     }
 
+    private void dispatchRemovePluginAction() {
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+        DeleteSitePluginPayload payload = new DeleteSitePluginPayload(mSite, mPlugin);
+        mDispatcher.dispatch(PluginActionBuilder.newDeleteSitePluginAction(payload));
+    }
+
     private void disableAndRemovePlugin() {
         // We need to make sure that plugin is disabled before attempting to remove it
+        isRemovingPlugin = true;
+        mPlugin.setIsActive(false);
+        dispatchConfigurePluginAction();
     }
 
     // FluxC callbacks
@@ -304,11 +318,6 @@ public class PluginDetailActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
         if (event.isError()) {
-            if (event.error.type == ConfigureSitePluginErrorType.ACTIVATION_ERROR
-                    || event.error.type == ConfigureSitePluginErrorType.DEACTIVATION_ERROR) {
-                // these errors are thrown when the plugin is already active and we try to activate it and vice versa.
-                return;
-            }
             ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed, event.error.message));
             return;
         }
@@ -319,6 +328,11 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
         refreshViews();
+
+        // Plugin is disabled, we can now remove it
+        if (isRemovingPlugin && !mPlugin.isActive()) {
+            dispatchRemovePluginAction();
+        }
     }
 
     @SuppressWarnings("unused")
