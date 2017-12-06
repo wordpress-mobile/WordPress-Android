@@ -298,6 +298,7 @@ public class AccountStore extends Store {
         NO_PHONE_NUMBER_FOR_ACCOUNT,
         SMS_AUTHENTICATION_UNAVAILABLE,
         SMS_CODE_THROTTLED,
+        TWO_STEP_ENABLED,
         UNABLE_CONNECT,
         UNKNOWN_USER,
         USER_ALREADY_ASSOCIATED,
@@ -306,6 +307,7 @@ public class AccountStore extends Store {
 
         public static AccountSocialErrorType fromString(String string) {
             if (string != null) {
+                string = string.replace("2FA_enabled", "two_step_enabled");
                 for (AccountSocialErrorType type : AccountSocialErrorType.values()) {
                     if (string.equalsIgnoreCase(type.name())) {
                         return type;
