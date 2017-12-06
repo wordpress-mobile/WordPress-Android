@@ -214,9 +214,6 @@ Language: gl_ES
 	<string name="post_format_status">Estado</string>
 	<string name="post_format_video">Vídeo</string>
 	<string name="alignment_center">Centro</string>
-	<string name="theme_free">Gratis</string>
-	<string name="theme_all">Todos</string>
-	<string name="theme_premium">Premium</string>
 	<string name="post_format_gallery">Galería</string>
 	<string name="post_format_image">Imaxe</string>
 	<string name="post_format_link">Enlace</string>
@@ -878,7 +875,6 @@ Language: gl_ES
 	<string name="author_email">Correo-e do autor</string>
 	<string name="author_url">URL do autor</string>
 	<string name="sure_to_cancel_edit_comment">Cancelar a edición deste comentario?</string>
-	<string name="file_not_found">Non foi posible atopar o ficheiro para cargar. Terá sido eliminado ou movido?</string>
 	<string name="reader_toast_err_remove_tag">Non foi posible borrar esta etiqueta</string>
 	<string name="email_cant_be_used_to_signup">Ese enderezo de correo non serve para rexistrarche. Temos problemas con ese provedor por bloqueo das nosas mensaxes. Utiliza outro provedor de correo electrónico.</string>
 	<string name="email_reserved">Ese enderezo de correo xa está en uso. Comproba se tes unha mensaxe de activación na túa bandexa de entrada. Se non o activas, podes tentalo de novo dentro dalgúns días.</string>

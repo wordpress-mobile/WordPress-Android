@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-16 13:58:26+0000
+Translation-Revision-Date: 2017-11-23 11:44:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
@@ -57,7 +57,6 @@ Language: en_GB
 	<string name="media_edit_filetype_caption">File Type</string>
 	<string name="media_edit_filename_caption">File Name</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_file_details_card_caption">File Details</string>
 	<string name="media_edit_alttext_text">Alt text</string>
 	<string name="copy">Copy</string>
 	<string name="connect_site">Connect Site</string>
@@ -79,7 +78,6 @@ Language: en_GB
 	<string name="notification_settings_master_status_on">On</string>
 	<string name="max_video_resolution">Maximum Video Size</string>
 	<string name="max_thumbnail_px_size">Maximum Image Size</string>
-	<string name="error_media_recover_post">We were unable to upload this post\'s media. Please edit the post to try again.</string>
 	<string name="error_page_does_not_exist">This page no longer exists</string>
 	<string name="error_upload_post_media_param">There was an error uploading the media in this post: %s.</string>
 	<string name="error_upload_post_param">There was an error uploading this post: %s.</string>
@@ -94,7 +92,6 @@ Language: en_GB
 	<string name="cant_open_url">Unable to open the link</string>
 	<string name="error_unknown_post">Could not find the post on the server</string>
 	<string name="error_post_does_not_exist">This post no longer exists</string>
-	<string name="error_media_recover_page">We were unable to upload this page\'s media. Please edit the page to try again.</string>
 	<string name="error_media_canceled">Uploading media were canceled</string>
 	<string name="error_upload_page_media_param">There was an error uploading the media in this page: %s.</string>
 	<string name="error_upload_page_param">There was an error uploading this page: %s.</string>
@@ -106,10 +103,6 @@ Language: en_GB
 	<string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
 	<string name="page_scheduled">Page scheduled</string>
 	<string name="post_scheduled">Post scheduled</string>
-	<string name="post_draft_param">"%s" has been saved as a draft!</string>
-	<string name="post_scheduled_param">"%s" has been scheduled!</string>
-	<string name="post_updated_param">"%s" has been updated!</string>
-	<string name="post_published_param">"%s" has been published!</string>
 	<string name="button_retry">Retry</string>
 	<string name="post_queued">Queued post</string>
 	<string name="uploading_post">Uploading "%s"</string>
@@ -140,7 +133,6 @@ Language: en_GB
 	<string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
 	<string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
 	<string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
-	<string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
 	<string name="requesting_otp">Requesting a verification code via SMS.</string>
 	<string name="login_text_otp">Text me a code instead.</string>
 	<string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
@@ -612,9 +604,6 @@ Language: en_GB
 	<string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
 	<string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
 	<string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
-	<string name="theme_premium">Premium</string>
-	<string name="theme_all">All</string>
-	<string name="theme_free">Free</string>
 	<string name="alignment_center">Centre</string>
 	<string name="post_format_video">Video</string>
 	<string name="post_format_status">Status</string>
@@ -1276,7 +1265,7 @@ Language: en_GB
 	<string name="delete_page">Delete page</string>
 	<string name="delete_post">Delete post</string>
 	<string name="post_settings">Post settings</string>
-	<string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
+	<string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
 	<string name="horizontal_alignment">Horizontal alignment</string>
 	<string name="upload_failed">Upload failed</string>
 	<string name="local_draft">Local draft</string>
