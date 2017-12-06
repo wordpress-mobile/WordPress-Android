@@ -144,7 +144,6 @@ public class AccountStore extends Store {
         public String notificationSent;
         public String phoneNumber;
         public String userId;
-        public boolean createdAccount;
         public boolean requiresTwoStepAuth;
 
         public OnSocialChanged() {
@@ -621,14 +620,14 @@ public class AccountStore extends Store {
             OnSocialChanged event = new OnSocialChanged(payload);
             event.requiresTwoStepAuth = payload.hasTwoStepTypes();
             emitChange(event);
-        // Social signup completed; emit only social change.
-        } else if (payload.hasUsername()) {
-            OnSocialChanged event = new OnSocialChanged(payload);
-            event.createdAccount = payload.createdAccount;
-            emitChange(event);
-        // No error and two-factor authentication is not required; emit only authentication change.
+            // No error and two-factor authentication is not required; emit only authentication change.
         } else {
-            updateToken(new UpdateTokenPayload(payload.bearerToken));
+            // Social login or signup completed; update token and send boolean flag.
+            if (payload.hasUsername()) {
+                updateToken(new UpdateTokenPayload(payload.bearerToken), payload.createdAccount);
+            } else {
+                updateToken(new UpdateTokenPayload(payload.bearerToken));
+            }
         }
     }
 
