@@ -1791,7 +1791,6 @@
     <string name="plugin_not_found">An error occurred when accessing this plugin</string>
     <string name="plugin_installed_version">Plugin version %s</string>
     <string name="plugin_available_version">Version %s is available.</string>
-    <string name="plugin_btn_update">Update</string>
     <string name="plugin_update_available_icon_content_description">Update available</string>
     <string name="plugin_updated_successfully">Successfully updated %s.</string>
     <string name="plugin_updated_failed">Error updating %s.</string>
