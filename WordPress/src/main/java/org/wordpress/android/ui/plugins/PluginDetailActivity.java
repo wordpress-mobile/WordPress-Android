@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.plugins;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -33,6 +35,7 @@ import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
@@ -175,6 +178,13 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.plugin_btn_remove).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removePlugin();
+            }
+        });
+
         refreshViews();
     }
 
@@ -242,6 +252,24 @@ public class PluginDetailActivity extends AppCompatActivity {
         refreshUpdateVersionViews();
         UpdateSitePluginPayload payload = new UpdateSitePluginPayload(mSite, mPlugin);
         mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
+    }
+
+    private void removePlugin() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
+        builder.setTitle(getResources().getText(R.string.remove_plugin_dialog_title));
+        String confirmationMessage = getString(R.string.remove_plugin_dialog_message,
+                mPlugin.getDisplayName(),
+                SiteUtils.getSiteNameOrHomeURL(mSite));
+        builder.setMessage(confirmationMessage);
+        builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setCancelable(true);
+        builder.create();
+        builder.show();
     }
 
     private void showSuccessfulUpdateSnackbar() {
