@@ -397,7 +397,9 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while removing the plugin with type: "
                     + event.error.type);
-            showPluginRemoveFailedSnackbar();
+            String toastMessage = getString(R.string.plugin_updated_failed_detailed,
+                    mPlugin.getDisplayName(), event.error.message);
+            ToastUtils.showToast(this, toastMessage, Duration.LONG);
             return;
         }
         // Plugin removed we need to go back to the plugin list
