@@ -25,10 +25,11 @@ import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
-import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
-import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginVersionPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -47,12 +48,12 @@ public class PluginDetailActivity extends AppCompatActivity {
     private LinearLayout mContainer;
     private TextView mInstalledVersionTextView;
     private TextView mAvailableVersionTextView;
-    private TextView mUpdateVersionTextView;
-    private ProgressBar mUpdateVersionProgressBar;
+    private TextView mUpdateTextView;
+    private ProgressBar mUpdateProgressBar;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
 
-    private boolean isUpdatingVersion;
+    private boolean isUpdatingPlugin;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -128,8 +129,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         mContainer = findViewById(R.id.plugin_detail_container);
         mInstalledVersionTextView = findViewById(R.id.plugin_installed_version);
         mAvailableVersionTextView = findViewById(R.id.plugin_available_version);
-        mUpdateVersionTextView = findViewById(R.id.plugin_btn_update);
-        mUpdateVersionProgressBar = findViewById(R.id.plugin_update_progress_bar);
+        mUpdateTextView = findViewById(R.id.plugin_btn_update);
+        mUpdateProgressBar = findViewById(R.id.plugin_update_progress_bar);
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
 
@@ -138,7 +139,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isPressed()) {
                     mPlugin.setIsActive(b);
-                    dispatchUpdateAction();
+                    dispatchConfigurePluginAction();
                 }
             }
         });
@@ -148,15 +149,15 @@ public class PluginDetailActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isPressed()) {
                     mPlugin.setIsAutoUpdateEnabled(b);
-                    dispatchUpdateAction();
+                    dispatchConfigurePluginAction();
                 }
             }
         });
 
-        mUpdateVersionTextView.setOnClickListener(new View.OnClickListener() {
+        mUpdateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updatePluginVersion();
+                dispatchUpdatePluginAction();
             }
         });
 
@@ -209,38 +210,38 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void refreshUpdateVersionViews() {
         boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo);
-        if (isUpdateAvailable && !isUpdatingVersion) {
-            mUpdateVersionTextView.setVisibility(View.VISIBLE);
+        if (isUpdateAvailable && !isUpdatingPlugin) {
+            mUpdateTextView.setVisibility(View.VISIBLE);
         } else {
-            mUpdateVersionTextView.setVisibility(View.GONE);
+            mUpdateTextView.setVisibility(View.GONE);
         }
 
-        if (isUpdatingVersion) {
-            mUpdateVersionProgressBar.setVisibility(View.VISIBLE);
+        if (isUpdatingPlugin) {
+            mUpdateProgressBar.setVisibility(View.VISIBLE);
         } else {
-            mUpdateVersionProgressBar.setVisibility(View.GONE);
+            mUpdateProgressBar.setVisibility(View.GONE);
         }
     }
 
     // Network Helpers
 
-    private void dispatchUpdateAction() {
-        mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(
-                new UpdateSitePluginPayload(mSite, mPlugin)));
+    private void dispatchConfigurePluginAction() {
+        mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(
+                new ConfigureSitePluginPayload(mSite, mPlugin)));
     }
 
-    private void updatePluginVersion() {
+    private void dispatchUpdatePluginAction() {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
-        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo) || isUpdatingVersion) {
+        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo) || isUpdatingPlugin) {
             return;
         }
 
-        isUpdatingVersion = true;
+        isUpdatingPlugin = true;
         refreshUpdateVersionViews();
-        UpdateSitePluginVersionPayload payload = new UpdateSitePluginVersionPayload(mSite, mPlugin);
-        mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginVersionAction(payload));
+        UpdateSitePluginPayload payload = new UpdateSitePluginPayload(mSite, mPlugin);
+        mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
     }
 
     private void showSuccessfulUpdateSnackbar() {
@@ -257,7 +258,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        updatePluginVersion();
+                        dispatchUpdatePluginAction();
                     }
                 })
                 .show();
@@ -267,10 +268,10 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSitePluginUpdated(OnSitePluginUpdated event) {
+    public void onSitePluginConfigured(OnSitePluginConfigured event) {
         if (event.isError()) {
-            if (event.error.type == UpdateSitePluginErrorType.ACTIVATION_ERROR
-                    || event.error.type == UpdateSitePluginErrorType.DEACTIVATION_ERROR) {
+            if (event.error.type == ConfigureSitePluginErrorType.ACTIVATION_ERROR
+                    || event.error.type == ConfigureSitePluginErrorType.DEACTIVATION_ERROR) {
                 // these errors are thrown when the plugin is already active and we try to activate it and vice versa.
                 return;
             }
@@ -302,10 +303,10 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSitePluginVersionUpdated(PluginStore.OnSitePluginVersionUpdated event) {
-        isUpdatingVersion = false;
+    public void onSitePluginUpdated(OnSitePluginUpdated event) {
+        isUpdatingPlugin = false;
         if (event.isError()) {
-            AppLog.e(AppLog.T.API, "An error occurred while updating the plugin version with type: "
+            AppLog.e(AppLog.T.API, "An error occurred while updating the plugin with type: "
                     + event.error.type);
             refreshPluginVersionViews();
             showUpdateFailedSnackbar();
