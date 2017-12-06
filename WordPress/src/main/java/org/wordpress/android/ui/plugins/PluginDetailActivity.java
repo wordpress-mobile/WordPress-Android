@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
@@ -58,6 +57,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private Switch mSwitchAutoupdates;
 
     private boolean isUpdatingPlugin;
+    private boolean isRemovingPlugin;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -182,7 +182,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         findViewById(R.id.plugin_btn_remove).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                removePlugin();
+                confirmRemovePlugin();
             }
         });
 
@@ -234,28 +234,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
-    // Network Helpers
-
-    private void dispatchConfigurePluginAction() {
-        mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(
-                new ConfigureSitePluginPayload(mSite, mPlugin)));
-    }
-
-    private void dispatchUpdatePluginAction() {
-        if (!NetworkUtils.checkConnection(this)) {
-            return;
-        }
-        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo) || isUpdatingPlugin) {
-            return;
-        }
-
-        isUpdatingPlugin = true;
-        refreshUpdateVersionViews();
-        UpdateSitePluginPayload payload = new UpdateSitePluginPayload(mSite, mPlugin);
-        mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
-    }
-
-    private void removePlugin() {
+    private void confirmRemovePlugin() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
         builder.setTitle(getResources().getText(R.string.remove_plugin_dialog_title));
         String confirmationMessage = getString(R.string.remove_plugin_dialog_message,
@@ -265,6 +244,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                disableAndRemovePlugin();
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
@@ -291,6 +271,31 @@ public class PluginDetailActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    // Network Helpers
+
+    private void dispatchConfigurePluginAction() {
+        mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(
+                new ConfigureSitePluginPayload(mSite, mPlugin)));
+    }
+
+    private void dispatchUpdatePluginAction() {
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo) || isUpdatingPlugin) {
+            return;
+        }
+
+        isUpdatingPlugin = true;
+        refreshUpdateVersionViews();
+        UpdateSitePluginPayload payload = new UpdateSitePluginPayload(mSite, mPlugin);
+        mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
+    }
+
+    private void disableAndRemovePlugin() {
+        // We need to make sure that plugin is disabled before attempting to remove it
     }
 
     // FluxC callbacks
