@@ -197,7 +197,6 @@
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".ui.posts.EditPostActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Calypso.ActionMode.Dark"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data

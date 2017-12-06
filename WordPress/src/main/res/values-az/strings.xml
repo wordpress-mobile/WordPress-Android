@@ -365,7 +365,6 @@ Language: az
 	<string name="local_draft">Yerli qaralama</string>
 	<string name="upload_failed">Yükləmə baş tutmadı</string>
 	<string name="horizontal_alignment">Üfüqi qruplaşma</string>
-	<string name="file_not_found">Yüklənəcək media faylı tapılmadı. Silinmiş vəya daşınmış ola bilərmi?</string>
 	<string name="post_settings">Yazı parametrləri</string>
 	<string name="delete_post">Yazını sil</string>
 	<string name="delete_page">Səhifəni sil</string>

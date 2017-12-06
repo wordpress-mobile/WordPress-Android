@@ -223,9 +223,6 @@ Language: ko_KR
 	<string name="xmlrpc_missing_method_error">연결할 수 없습니다. 필수 XML-RPC 함수가 서버에 없습니다.</string>
 	<string name="post_format_status">상태</string>
 	<string name="post_format_video">비디오</string>
-	<string name="theme_free">무료</string>
-	<string name="theme_all">모두</string>
-	<string name="theme_premium">프리미엄</string>
 	<string name="alignment_center">가운데</string>
 	<string name="post_format_chat">채팅</string>
 	<string name="post_format_gallery">갤러리</string>
@@ -835,7 +832,6 @@ Language: ko_KR
 	<string name="http_credentials">HTTP 로그인 정보(옵션)</string>
 	<string name="file_error_create">미디어 업로드시에 임시 파일을 만들 수 없습니다 . 장치에 여유 공간이 있는지 확인 하십시오.</string>
 	<string name="category_name">카테고리 이름</string>
-	<string name="file_not_found">올라간 미디어 파일을 찾을 수 없습니다. 삭제 또는 이동 된 것 같습니다.</string>
 	<string name="horizontal_alignment">가로</string>
 	<string name="image_settings">이미지 설정</string>
 	<string name="wordpress_blog">WordPress 블로그</string>

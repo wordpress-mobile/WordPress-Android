@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-86"
-        versionCode 495
+        versionName "alpha-87"
+        versionCode 498
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -46,8 +46,6 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
-
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 
     productFlavors {
@@ -130,12 +128,6 @@ dependencies {
     androidTestCompile 'org.mockito:mockito-core:1.10.19'
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
     androidTestCompile 'com.squareup.okio:okio:1.13.0'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestCompile 'com.android.support.test:runner:1.0.1', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
 
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:passcodelock:1.5.1'
