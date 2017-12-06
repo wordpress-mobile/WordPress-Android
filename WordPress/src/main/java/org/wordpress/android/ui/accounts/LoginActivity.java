@@ -46,6 +46,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.SelfSignedSSLUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
@@ -435,7 +436,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void showGoogleLoginScreen(Fragment parent) {
+    public void showGoogleLoginScreen(@NonNull Fragment parent) {
         LoginGoogleFragment loginGoogleFragment;
         FragmentManager fragmentManager = parent.getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -495,9 +496,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     // SmartLock
 
     @Override
-    public void saveCredentials(@NonNull final String username, @NonNull final String password,
+    public void saveCredentials(@Nullable final String username, @Nullable final String password,
                                 @NonNull final String displayName, @Nullable final Uri profilePicture) {
-        mSmartLockHelper.saveCredentialsInSmartLock(username, password, displayName, profilePicture);
+        mSmartLockHelper.saveCredentialsInSmartLock(StringUtils.notNullStr(username), StringUtils.notNullStr(password),
+                displayName, profilePicture);
     }
 
     // Analytics
