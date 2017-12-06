@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -273,6 +274,20 @@ public class PluginDetailActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void showPluginRemovedSnackbar() {
+        Snackbar.make(mContainer,
+                getString(R.string.plugin_removed_successfully, mPlugin.getDisplayName()),
+                Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    private void showPluginRemoveFailedSnackbar() {
+        Snackbar.make(mContainer,
+                getString(R.string.plugin_remove_failed, mPlugin.getDisplayName()),
+                Snackbar.LENGTH_LONG)
+                .show();
+    }
+
     // Network Helpers
 
     private void dispatchConfigurePluginAction() {
@@ -319,6 +334,10 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
         if (event.isError()) {
             ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed, event.error.message));
+            if (isRemovingPlugin) {
+                isRemovingPlugin = false;
+                showPluginRemoveFailedSnackbar();
+            }
             return;
         }
         mPlugin = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
@@ -369,6 +388,21 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         refreshViews();
         showSuccessfulUpdateSnackbar();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSitePluginDeleted(OnSitePluginDeleted event) {
+        isRemovingPlugin = false;
+        if (event.isError()) {
+            AppLog.e(AppLog.T.API, "An error occurred while removing the plugin with type: "
+                    + event.error.type);
+            showPluginRemoveFailedSnackbar();
+            return;
+        }
+        // Plugin removed we need to go back to the plugin list
+        showPluginRemovedSnackbar();
+        finish();
     }
 
     // Utils

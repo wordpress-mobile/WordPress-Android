@@ -1794,6 +1794,8 @@
     <string name="plugin_update_available_icon_content_description">Update available</string>
     <string name="plugin_updated_successfully">Successfully updated %s.</string>
     <string name="plugin_updated_failed">Error updating %s.</string>
+    <string name="plugin_removed_successfully">Successfully removed %s.</string>
+    <string name="plugin_remove_failed">Error removing %s.</string>
     <string name="plugin_configuration_failed">An error occurred while configuring the plugin: %s</string>
     <string name="plugin_btn_remove">Remove Plugin</string>
     <string name="remove_plugin_dialog_title">Remove Plugin</string>
