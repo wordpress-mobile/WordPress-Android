@@ -345,6 +345,11 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void disableAndRemovePlugin() {
+        // This is only a sanity check as the remove button should not be visible. It's important to disable removing
+        // plugins in certain cases, so we should still make this sanity check
+        if (!isRemovePluginFeatureAvailable()) {
+            return;
+        }
         // We need to make sure that plugin is disabled before attempting to remove it
         mIsRemovingPlugin = true;
         showRemovePluginProgressDialog();
