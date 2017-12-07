@@ -203,9 +203,6 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshViews() {
-        if (isFinishing()) {
-            return;
-        }
         mSwitchActive.setChecked(mPlugin.isActive());
         mSwitchAutoupdates.setChecked(mPlugin.isAutoUpdateEnabled());
 
@@ -367,6 +364,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
+        if (isFinishing()) {
+            return;
+        }
         mIsConfiguringPlugin = false;
         if (event.isError()) {
             ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed, event.error.message));
@@ -394,6 +394,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginInfoChanged(PluginStore.OnPluginInfoChanged event) {
+        if (isFinishing()) {
+            return;
+        }
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while fetching the plugin info with type: "
                     + event.error.type);
@@ -408,6 +411,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginUpdated(OnSitePluginUpdated event) {
+        if (isFinishing()) {
+            return;
+        }
         mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while updating the plugin with type: "
@@ -430,6 +436,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
+        if (isFinishing()) {
+            return;
+        }
         mIsRemovingPlugin = false;
         cancelRemovePluginProgressDialog();
         if (event.isError()) {
