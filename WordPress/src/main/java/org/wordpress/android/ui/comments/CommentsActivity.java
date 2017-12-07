@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -37,19 +38,17 @@ import javax.inject.Inject;
 
 public class CommentsActivity extends AppCompatActivity
         implements OnCommentSelectedListener,
-                   NotificationFragment.OnPostClickListener,
-                   CommentActions.OnCommentActionListener,
-                   CommentActions.OnCommentChangeListener {
-    private static final String KEY_SELECTED_COMMENT = "selected_comment_id";
+        NotificationFragment.OnPostClickListener {
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private static final String SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type";
+    public static final String COMMENT_MODERATE_ID_EXTRA = "commentModerateId";
+    public static final String COMMENT_MODERATE_STATUS_EXTRA = "commentModerateStatus";
     private final CommentList mTrashedComments = new CommentList();
 
     private CommentStatus mCurrentCommentStatusType = CommentStatus.ALL;
 
     private SiteModel mSite;
-    private CommentModel mComment;
 
     @Inject Dispatcher mDispatcher;
     @Inject CommentStore mCommentStore;
@@ -101,7 +100,6 @@ public class CommentsActivity extends AppCompatActivity
         } else {
             getIntent().putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED));
             getIntent().putExtra(KEY_EMPTY_VIEW_MESSAGE, savedInstanceState.getString(KEY_EMPTY_VIEW_MESSAGE));
-            mComment = (CommentModel) savedInstanceState.getSerializable(KEY_SELECTED_COMMENT);
         }
     }
 
@@ -136,20 +134,6 @@ public class CommentsActivity extends AppCompatActivity
         AppLog.d(AppLog.T.COMMENTS, "comment activity new intent");
     }
 
-
-    private CommentDetailFragment getDetailFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(getString(
-                R.string.fragment_tag_comment_detail));
-        if (fragment == null) {
-            return null;
-        }
-        return (CommentDetailFragment) fragment;
-    }
-
-    private boolean hasDetailFragment() {
-        return (getDetailFragment() != null);
-    }
-
     private CommentsListFragment getListFragment() {
         Fragment fragment = getFragmentManager().findFragmentByTag(getString(
                 R.string.fragment_tag_comment_list));
@@ -171,10 +155,8 @@ public class CommentsActivity extends AppCompatActivity
         FragmentTransaction ft = fm.beginTransaction();
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         ft.add(R.id.layout_fragment_container, fragment, tagForFragment)
-          .addToBackStack(tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        if (hasDetailFragment())
-            ft.hide(getDetailFragment());
+                .addToBackStack(tagForFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
     }
 
@@ -182,26 +164,12 @@ public class CommentsActivity extends AppCompatActivity
      * called from comment list when user taps a comment
      */
     @Override
-    public void onCommentSelected(long commentId) {
-        FragmentManager fm = getFragmentManager();
-        if (fm == null) {
-            return;
-        }
-
-        mComment = mCommentStore.getCommentBySiteAndRemoteId(mSite, commentId);
-
-        fm.executePendingTransactions();
-        CommentsListFragment listFragment = getListFragment();
-
-        FragmentTransaction ft = fm.beginTransaction();
-        String tagForFragment = getString(R.string.fragment_tag_comment_detail);
-        CommentDetailFragment detailFragment = CommentDetailFragment.newInstance(mSite, mComment);
-        ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment).addToBackStack(tagForFragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        if (listFragment != null) {
-            ft.hide(listFragment);
-        }
-        ft.commitAllowingStateLoss();
+    public void onCommentSelected(long commentId, CommentStatus statusFilter) {
+        Intent detailIntent = new Intent(this, CommentsDetailActivity.class);
+        detailIntent.putExtra(CommentsDetailActivity.COMMENT_ID_EXTRA, commentId);
+        detailIntent.putExtra(CommentsDetailActivity.COMMENT_STATUS_FILTER_EXTRA, statusFilter);
+        detailIntent.putExtra(WordPress.SITE, mSite);
+        startActivityForResult(detailIntent, 1);
     }
 
     /*
@@ -238,11 +206,7 @@ public class CommentsActivity extends AppCompatActivity
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putSerializable(WordPress.SITE, mSite);
 
-        // retain the id of the highlighted and selected comments
-        if (mComment != null && hasDetailFragment()) {
-            outState.putSerializable(KEY_SELECTED_COMMENT, mComment);
-        }
-
+        // retain the id of the highlighted comments
         if (hasListFragment()) {
             outState.putBoolean(KEY_AUTO_REFRESHED, getListFragment().mHasAutoRefreshedComments);
             outState.putString(KEY_EMPTY_VIEW_MESSAGE, getListFragment().getEmptyViewMessage());
@@ -259,12 +223,19 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onModerateComment(final SiteModel site, final CommentModel comment,
-                                  final CommentStatus newStatus) {
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            long commentId = data.getLongExtra(COMMENT_MODERATE_ID_EXTRA, -1);
+            String newStatus = data.getStringExtra(COMMENT_MODERATE_STATUS_EXTRA);
+            if (commentId >= 0 && !TextUtils.isEmpty(newStatus)) {
+                onModerateComment(mCommentStore.getCommentBySiteAndRemoteId(mSite, commentId),
+                        CommentStatus.fromString(newStatus));
+            }
         }
+    }
+
+    public void onModerateComment(final CommentModel comment,
+                                  final CommentStatus newStatus) {
 
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             getListFragment().updateEmptyView();
@@ -278,7 +249,7 @@ public class CommentsActivity extends AppCompatActivity
 
             String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) :
                     newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed) :
-                            getString(R.string.comment_deleted_permanently)  );
+                            getString(R.string.comment_deleted_permanently));
             View.OnClickListener undoListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -317,18 +288,6 @@ public class CommentsActivity extends AppCompatActivity
             // Actual moderation (push the modified comment).
             comment.setStatus(newStatus.toString());
             mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, comment)));
-        }
-    }
-
-    @Override
-    public void onCommentChanged(CommentActions.ChangeType changeType) {
-        switch (changeType) {
-            case EDITED:
-                reloadCommentList();
-                break;
-            case REPLIED:
-                updateCommentList();
-                break;
         }
     }
 

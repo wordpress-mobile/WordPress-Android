@@ -188,6 +188,9 @@
         <activity
             android:name=".ui.comments.EditCommentActivity"
             android:theme="@style/CalypsoTheme" />
+        <activity
+            android:name=".ui.comments.CommentsDetailActivity"
+            android:theme="@style/CalypsoTheme" />
 
         <!-- Posts activities -->
         <activity
@@ -197,7 +200,6 @@
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".ui.posts.EditPostActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Calypso.ActionMode.Dark"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data

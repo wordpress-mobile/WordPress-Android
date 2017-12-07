@@ -51,9 +51,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
-import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationFragment;
@@ -95,7 +93,8 @@ import de.greenrobot.event.EventBus;
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
     private static final String KEY_MODE = "KEY_MODE";
-    private static final String KEY_COMMENT = "KEY_COMMENT";
+    private static final String KEY_SITE_LOCAL_ID = "KEY_SITE_LOCAL_ID";
+    private static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
     private static final String KEY_NOTE_ID = "KEY_NOTE_ID";
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
     private static final String KEY_FRAGMENT_CONTAINER_ID = "KEY_FRAGMENT_CONTAINER_ID";
@@ -143,7 +142,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
-    private OnCommentChangeListener mOnCommentChangeListener;
     private OnPostClickListener mOnPostClickListener;
     private OnCommentActionListener mOnCommentActionListener;
     private OnNoteCommentActionListener mOnNoteCommentActionListener;
@@ -158,12 +156,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from comment list
      */
-    static CommentDetailFragment newInstance(SiteModel site, CommentModel comment) {
+    static CommentDetailFragment newInstance(SiteModel site, CommentModel commentModel) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
         args.putInt(KEY_MODE, FROM_BLOG_COMMENT);
-        args.putSerializable(WordPress.SITE, site);
-        args.putSerializable(KEY_COMMENT, comment);
+        args.putInt(KEY_SITE_LOCAL_ID, site.getId());
+        args.putLong(KEY_COMMENT_ID, commentModel.getRemoteCommentId());
         fragment.setArguments(args);
         return fragment;
     }
@@ -190,8 +188,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         switch (getArguments().getInt(KEY_MODE)) {
             case FROM_BLOG_COMMENT:
-                setComment((CommentModel) getArguments().getSerializable(KEY_COMMENT),
-                        (SiteModel) getArguments().getSerializable(WordPress.SITE));
+                setComment(getArguments().getLong(KEY_COMMENT_ID), getArguments().getInt(KEY_SITE_LOCAL_ID));
                 break;
             case FROM_NOTE:
                 setNote(getArguments().getString(KEY_NOTE_ID));
@@ -207,9 +204,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 // See WordPress.deferredInit()
                 mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
             } else {
-                SiteModel site = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-                CommentModel comment = (CommentModel) savedInstanceState.getSerializable(KEY_COMMENT);
-                setComment(comment, site);
+                int siteId = savedInstanceState.getInt(KEY_SITE_LOCAL_ID);
+                long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
+                setComment(commentId, siteId);
             }
         }
 
@@ -220,8 +217,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mComment != null) {
-            outState.putSerializable(WordPress.SITE, mSite);
-            outState.putSerializable(KEY_COMMENT, mComment);
+            outState.putLong(KEY_COMMENT_ID, mComment.getRemoteCommentId());
+            outState.putInt(KEY_SITE_LOCAL_ID, mSite.getId());
         }
 
         if (mNote != null) {
@@ -406,6 +403,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
+    private void setComment(final long commentRemoteId, final int siteLocalId) {
+        final SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+        setComment(mCommentStore.getCommentBySiteAndRemoteId(site, commentRemoteId), site);
+    }
+
     private void setComment(@Nullable final CommentModel comment, @Nullable final SiteModel site) {
         mComment = comment;
         mSite = site;
@@ -494,9 +496,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @SuppressWarnings("deprecation") // TODO: Remove when minSdkVersion >= 23
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof OnCommentChangeListener) {
-            mOnCommentChangeListener = (OnCommentChangeListener) activity;
-        }
         if (activity instanceof OnPostClickListener) {
             mOnPostClickListener = (OnPostClickListener) activity;
         }
@@ -543,9 +542,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
             reloadComment();
-            // tell the host to reload the comment list
-            if (mOnCommentChangeListener != null)
-                mOnCommentChangeListener.onCommentChanged(ChangeType.EDITED);
         }
     }
 
@@ -1186,9 +1182,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
 
-        if (mOnCommentChangeListener != null) {
-            mOnCommentChangeListener.onCommentChanged(ChangeType.REPLIED);
-        }
+        reloadComment();
 
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
