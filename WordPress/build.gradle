@@ -118,6 +118,10 @@ dependencies {
         exclude group: 'com.squareup.okhttp3'
     }
 
+    compile 'com.github.bumptech.glide:glide:4.1.1'
+    apt 'com.github.bumptech.glide:compiler:4.1.1'
+    compile 'com.github.bumptech.glide:volley-integration:4.1.1@aar'
+
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.3.2'
     testCompile 'org.robolectric:shadows-multidex:3.3.2'
@@ -154,9 +158,11 @@ dependencies {
     debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
     releaseCompile (project(path:':libs:login:WordPressLoginFlow', configuration: 'release')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc";
+        exclude group: 'com.github.bumptech.glide'
     }
     debugCompile (project(path:':libs:login:WordPressLoginFlow', configuration: 'debug')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc";
+        exclude group: 'com.github.bumptech.glide'
     }
 
     // Debug
