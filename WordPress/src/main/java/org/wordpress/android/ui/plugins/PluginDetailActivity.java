@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.plugins;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -25,14 +28,16 @@ import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
-import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
-import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
-import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
@@ -52,8 +57,10 @@ public class PluginDetailActivity extends AppCompatActivity {
     private ProgressBar mUpdateProgressBar;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
+    private ProgressDialog mRemovePluginProgressDialog;
 
-    private boolean isUpdatingPlugin;
+    private boolean mIsUpdatingPlugin;
+    private boolean mIsRemovingPlugin;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -105,6 +112,12 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         setupViews();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mDispatcher.unregister(this);
+        super.onDestroy();
     }
 
     @Override
@@ -175,6 +188,13 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.plugin_btn_remove).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                confirmRemovePlugin();
+            }
+        });
+
         refreshViews();
     }
 
@@ -210,38 +230,36 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void refreshUpdateVersionViews() {
         boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo);
-        if (isUpdateAvailable && !isUpdatingPlugin) {
+        if (isUpdateAvailable && !mIsUpdatingPlugin) {
             mUpdateTextView.setVisibility(View.VISIBLE);
         } else {
             mUpdateTextView.setVisibility(View.GONE);
         }
 
-        if (isUpdatingPlugin) {
+        if (mIsUpdatingPlugin) {
             mUpdateProgressBar.setVisibility(View.VISIBLE);
         } else {
             mUpdateProgressBar.setVisibility(View.GONE);
         }
     }
 
-    // Network Helpers
-
-    private void dispatchConfigurePluginAction() {
-        mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(
-                new ConfigureSitePluginPayload(mSite, mPlugin)));
-    }
-
-    private void dispatchUpdatePluginAction() {
-        if (!NetworkUtils.checkConnection(this)) {
-            return;
-        }
-        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo) || isUpdatingPlugin) {
-            return;
-        }
-
-        isUpdatingPlugin = true;
-        refreshUpdateVersionViews();
-        UpdateSitePluginPayload payload = new UpdateSitePluginPayload(mSite, mPlugin);
-        mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
+    private void confirmRemovePlugin() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
+        builder.setTitle(getResources().getText(R.string.plugin_remove_dialog_title));
+        String confirmationMessage = getString(R.string.plugin_remove_dialog_message,
+                mPlugin.getDisplayName(),
+                SiteUtils.getSiteNameOrHomeURL(mSite));
+        builder.setMessage(confirmationMessage);
+        builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                disableAndRemovePlugin();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setCancelable(true);
+        builder.create();
+        builder.show();
     }
 
     private void showSuccessfulUpdateSnackbar() {
@@ -264,18 +282,85 @@ public class PluginDetailActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void showPluginRemoveFailedSnackbar() {
+        Snackbar.make(mContainer,
+                getString(R.string.plugin_remove_failed, mPlugin.getDisplayName()),
+                Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    private void showRemovePluginProgressDialog() {
+        mRemovePluginProgressDialog = new ProgressDialog(this);
+        mRemovePluginProgressDialog.setCancelable(false);
+        mRemovePluginProgressDialog.setIndeterminate(true);
+        // Even though we are deactivating the plugin to make sure it's disabled on the server side, since the user
+        // sees that the plugin is disabled, it'd be confusing to say we are disabling the plugin
+        String message = mPlugin.isActive()
+                ? getString(R.string.plugin_disable_progress_dialog_message, mPlugin.getDisplayName())
+                : getRemovingPluginMessage();
+        mRemovePluginProgressDialog.setMessage(message);
+        mRemovePluginProgressDialog.show();
+    }
+
+    private void cancelRemovePluginProgressDialog() {
+        if (mRemovePluginProgressDialog != null && mRemovePluginProgressDialog.isShowing()) {
+            mRemovePluginProgressDialog.cancel();
+        }
+    }
+
+    // Network Helpers
+
+    private void dispatchConfigurePluginAction() {
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+        mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(
+                new ConfigureSitePluginPayload(mSite, mPlugin)));
+    }
+
+    private void dispatchUpdatePluginAction() {
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo) || mIsUpdatingPlugin) {
+            return;
+        }
+
+        mIsUpdatingPlugin = true;
+        refreshUpdateVersionViews();
+        UpdateSitePluginPayload payload = new UpdateSitePluginPayload(mSite, mPlugin);
+        mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
+    }
+
+    private void dispatchRemovePluginAction() {
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+        mRemovePluginProgressDialog.setMessage(getRemovingPluginMessage());
+        DeleteSitePluginPayload payload = new DeleteSitePluginPayload(mSite, mPlugin);
+        mDispatcher.dispatch(PluginActionBuilder.newDeleteSitePluginAction(payload));
+    }
+
+    private void disableAndRemovePlugin() {
+        // We need to make sure that plugin is disabled before attempting to remove it
+        mIsRemovingPlugin = true;
+        showRemovePluginProgressDialog();
+        mPlugin.setIsActive(false);
+        dispatchConfigurePluginAction();
+    }
+
     // FluxC callbacks
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
         if (event.isError()) {
-            if (event.error.type == ConfigureSitePluginErrorType.ACTIVATION_ERROR
-                    || event.error.type == ConfigureSitePluginErrorType.DEACTIVATION_ERROR) {
-                // these errors are thrown when the plugin is already active and we try to activate it and vice versa.
-                return;
-            }
             ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed, event.error.message));
+            if (mIsRemovingPlugin) {
+                mIsRemovingPlugin = false;
+                cancelRemovePluginProgressDialog();
+                showPluginRemoveFailedSnackbar();
+            }
             return;
         }
         mPlugin = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
@@ -285,6 +370,11 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
         refreshViews();
+
+        // Plugin is disabled, we can now remove it
+        if (mIsRemovingPlugin && !mPlugin.isActive()) {
+            dispatchRemovePluginAction();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -304,7 +394,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginUpdated(OnSitePluginUpdated event) {
-        isUpdatingPlugin = false;
+        mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while updating the plugin with type: "
                     + event.error.type);
@@ -323,9 +413,32 @@ public class PluginDetailActivity extends AppCompatActivity {
         showSuccessfulUpdateSnackbar();
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSitePluginDeleted(OnSitePluginDeleted event) {
+        mIsRemovingPlugin = false;
+        cancelRemovePluginProgressDialog();
+        if (event.isError()) {
+            AppLog.e(AppLog.T.API, "An error occurred while removing the plugin with type: "
+                    + event.error.type);
+            String toastMessage = getString(R.string.plugin_updated_failed_detailed,
+                    mPlugin.getDisplayName(), event.error.message);
+            ToastUtils.showToast(this, toastMessage, Duration.LONG);
+            return;
+        }
+        // Plugin removed we need to go back to the plugin list
+        String toastMessage = getString(R.string.plugin_removed_successfully, mPlugin.getDisplayName());
+        ToastUtils.showToast(this, toastMessage, Duration.LONG);
+        finish();
+    }
+
     // Utils
 
     private String getWpOrgPluginUrl() {
         return "https://wordpress.org/plugins/" + mPlugin.getSlug();
+    }
+
+    private String getRemovingPluginMessage() {
+        return getString(R.string.plugin_remove_progress_dialog_message, mPlugin.getDisplayName());
     }
 }
