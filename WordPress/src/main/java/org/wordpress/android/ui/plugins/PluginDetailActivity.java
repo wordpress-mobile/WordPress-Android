@@ -60,6 +60,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
 
+    private boolean mIsConfiguringPlugin;
     private boolean mIsUpdatingPlugin;
     private boolean mIsRemovingPlugin;
 
@@ -317,6 +318,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
+        if (mIsConfiguringPlugin) {
+            return;
+        }
+        mIsConfiguringPlugin = true;
         mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(
                 new ConfigureSitePluginPayload(mSite, mPlugin)));
     }
@@ -362,6 +367,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
+        mIsConfiguringPlugin = false;
         if (event.isError()) {
             ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed, event.error.message));
             if (mIsRemovingPlugin) {
