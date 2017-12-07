@@ -53,9 +53,9 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.wordpress:utils:1.18.1'
 
-    compile 'com.github.wordpress-mobile.AztecEditor-Android:aztec:fix~expose-static-format-methods-to-jvm-SNAPSHOT'
-    compile 'com.github.wordpress-mobile.AztecEditor-Android:wordpress-comments:fix~expose-static-format-methods-to-jvm-SNAPSHOT'
-    compile 'com.github.wordpress-mobile.AztecEditor-Android:wordpress-shortcodes:fix~expose-static-format-methods-to-jvm-SNAPSHOT'
+    compile 'com.github.wordpress-mobile.AztecEditor-Android:aztec:6eac8aa37e2905671f8fda3e172a3dec50b14746'
+    compile 'com.github.wordpress-mobile.AztecEditor-Android:wordpress-comments:6eac8aa37e2905671f8fda3e172a3dec50b14746'
+    compile 'com.github.wordpress-mobile.AztecEditor-Android:wordpress-shortcodes:6eac8aa37e2905671f8fda3e172a3dec50b14746'
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     compile "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
