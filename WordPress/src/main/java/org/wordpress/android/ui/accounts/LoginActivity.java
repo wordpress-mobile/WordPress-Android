@@ -75,8 +75,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.login_activity);
 
