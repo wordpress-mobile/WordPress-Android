@@ -118,6 +118,7 @@
 
                 <ImageView
                     style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                    android:contentDescription="@string/plugin_external_link_icon_content_description"
                     app:srcCompat="@drawable/ic_external_black_24dp"/>
             </RelativeLayout>
 
@@ -134,6 +135,7 @@
 
                 <ImageView
                     style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                    android:contentDescription="@string/plugin_external_link_icon_content_description"
                     app:srcCompat="@drawable/ic_external_black_24dp"/>
             </RelativeLayout>
         </LinearLayout>
