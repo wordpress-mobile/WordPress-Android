@@ -162,6 +162,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("alter table SiteModel add EMAIL text;");
                 db.execSQL("alter table SiteModel add DISPLAY_NAME text;");
                 oldVersion++;
+            case 18:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add JETPACK_VERSION text;");
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
