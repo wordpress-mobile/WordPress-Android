@@ -70,8 +70,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private boolean mIsSocialLogin;
 
     protected WPLoginInputRow mEmailInput;
-    protected boolean hasDismissedEmailHints;
-    protected boolean isDisplayingEmailHints;
+    protected boolean mHasDismissedEmailHints;
+    protected boolean mIsDisplayingEmailHints;
 
     @Override
     protected @LayoutRes int getContentLayout() {
@@ -115,8 +115,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         mEmailInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus && !isDisplayingEmailHints && !hasDismissedEmailHints) {
-                    isDisplayingEmailHints = true;
+                if (hasFocus && !mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
+                    mIsDisplayingEmailHints = true;
                     getEmailHints();
                 }
             }
@@ -124,8 +124,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         mEmailInput.getEditText().setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isDisplayingEmailHints && !hasDismissedEmailHints) {
-                    isDisplayingEmailHints = true;
+                if (!mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
+                    mIsDisplayingEmailHints = true;
                     getEmailHints();
                 }
             }
@@ -226,8 +226,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mRequestedEmail = savedInstanceState.getString(KEY_REQUESTED_EMAIL);
             mGoogleEmail = savedInstanceState.getString(KEY_GOOGLE_EMAIL);
             mIsSocialLogin = savedInstanceState.getBoolean(KEY_IS_SOCIAL);
-            isDisplayingEmailHints = savedInstanceState.getBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS);
-            hasDismissedEmailHints = savedInstanceState.getBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS);
+            mIsDisplayingEmailHints = savedInstanceState.getBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS);
+            mHasDismissedEmailHints = savedInstanceState.getBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS);
         } else {
             mLoginListener.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
         }
@@ -240,8 +240,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);
         outState.putString(KEY_GOOGLE_EMAIL, mGoogleEmail);
         outState.putBoolean(KEY_IS_SOCIAL, mIsSocialLogin);
-        outState.putBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS, isDisplayingEmailHints);
-        outState.putBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS, hasDismissedEmailHints);
+        outState.putBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS, mIsDisplayingEmailHints);
+        outState.putBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS, mHasDismissedEmailHints);
     }
 
     protected void next(String email) {
@@ -402,7 +402,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 mEmailInput.getEditText().setText(credential.getId());
                 next(getCleanedEmail());
             } else {
-                hasDismissedEmailHints = true;
+                mHasDismissedEmailHints = true;
                 mEmailInput.getEditText().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -413,7 +413,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 }, getResources().getInteger(android.R.integer.config_mediumAnimTime));
             }
 
-            isDisplayingEmailHints = false;
+            mIsDisplayingEmailHints = false;
         }
     }
 }
