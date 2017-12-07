@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
@@ -188,7 +189,9 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.plugin_btn_remove).setOnClickListener(new View.OnClickListener() {
+        Button removeBtn = findViewById(R.id.plugin_btn_remove);
+        removeBtn.setVisibility(isRemovePluginFeatureAvailable() ? View.VISIBLE : View.GONE);
+        removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 confirmRemovePlugin();
@@ -440,5 +443,16 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private String getRemovingPluginMessage() {
         return getString(R.string.plugin_remove_progress_dialog_message, mPlugin.getDisplayName());
+    }
+
+    private boolean isRemovePluginFeatureAvailable() {
+        String pluginName = mPlugin.getName();
+        // Disable removing jetpack as the site will stop working in the client
+        if (pluginName.equals("jetpack/jetpack")) {
+            return false;
+        }
+        // Disable removing akismet and vaultpress for AT sites
+        return !mSite.isAutomatedTransfer()
+                || (!pluginName.equals("akismet/akismet") && !pluginName.equals("vaultpress/vaultpress"));
     }
 }
