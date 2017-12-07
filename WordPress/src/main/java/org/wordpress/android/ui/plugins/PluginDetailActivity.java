@@ -46,6 +46,11 @@ import javax.inject.Inject;
 
 public class PluginDetailActivity extends AppCompatActivity {
     public static final String KEY_PLUGIN_NAME = "KEY_PLUGIN_NAME";
+    public static final String KEY_IS_CONFIGURING_PLUGIN = "KEY_IS_CONFIGURING_PLUGIN";
+    public static final String KEY_IS_UPDATING_PLUGIN = "KEY_IS_UPDATING_PLUGIN";
+    public static final String KEY_IS_REMOVING_PLUGIN = "KEY_IS_REMOVING_PLUGIN";
+    public static final String KEY_IS_ACTIVE = "KEY_IS_ACTIVE";
+    public static final String KEY_IS_AUTO_UPDATE_ENABLED = "KEY_IS_AUTO_UPDATE_ENABLED";
 
     private SiteModel mSite;
     private PluginModel mPlugin;
@@ -99,8 +104,17 @@ public class PluginDetailActivity extends AppCompatActivity {
             finish();
             return;
         }
-        mIsActive = mPlugin.isActive();
-        mIsAutoUpdateEnabled = mPlugin.isAutoUpdateEnabled();
+
+        if (savedInstanceState == null) {
+            mIsActive = mPlugin.isActive();
+            mIsAutoUpdateEnabled = mPlugin.isAutoUpdateEnabled();
+        } else {
+            mIsConfiguringPlugin = savedInstanceState.getBoolean(KEY_IS_CONFIGURING_PLUGIN);
+            mIsUpdatingPlugin = savedInstanceState.getBoolean(KEY_IS_UPDATING_PLUGIN);
+            mIsRemovingPlugin = savedInstanceState.getBoolean(KEY_IS_REMOVING_PLUGIN);
+            mIsActive = savedInstanceState.getBoolean(KEY_IS_ACTIVE);
+            mIsAutoUpdateEnabled = savedInstanceState.getBoolean(KEY_IS_AUTO_UPDATE_ENABLED);
+        }
 
         mPluginInfo = PluginUtils.getPluginInfo(mPluginStore, mPlugin);
         if (mPluginInfo == null) {
@@ -147,6 +161,11 @@ public class PluginDetailActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putString(KEY_PLUGIN_NAME, mPlugin.getName());
+        outState.putBoolean(KEY_IS_CONFIGURING_PLUGIN, mIsConfiguringPlugin);
+        outState.putBoolean(KEY_IS_UPDATING_PLUGIN, mIsUpdatingPlugin);
+        outState.putBoolean(KEY_IS_REMOVING_PLUGIN, mIsRemovingPlugin);
+        outState.putBoolean(KEY_IS_ACTIVE, mIsActive);
+        outState.putBoolean(KEY_IS_AUTO_UPDATE_ENABLED, mIsAutoUpdateEnabled);
     }
 
     // UI Helpers
