@@ -377,16 +377,36 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
             return;
         }
-        mPlugin = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
-        if (mPlugin == null) {
+
+        PluginModel pluginFromDB = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
+        if (pluginFromDB == null) {
             ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
             finish();
             return;
         }
+
+        boolean isConfigurePluginActionNecessary = false;
+
+        // The plugin state has been changed while a configuration network call is going on, we need to dispatch another
+        // configure plugin action since we don't allow multiple configure actions to happen at the same time
+        // This might happen either because user changed the state or a remove plugin action has started
+        if (mPlugin.isActive() != pluginFromDB.isActive()
+                || mPlugin.isAutoUpdateEnabled() != pluginFromDB.isAutoUpdateEnabled()) {
+            // The plugin's state in UI has priority over the one in DB as we'll dispatch another configuration change
+            // to make sure UI is reflected correctly in network and DB
+            pluginFromDB.setIsActive(mPlugin.isActive());
+            pluginFromDB.setIsAutoUpdateEnabled(mPlugin.isAutoUpdateEnabled());
+            isConfigurePluginActionNecessary = true;
+        }
+        mPlugin = pluginFromDB;
         refreshViews();
 
-        // Plugin is disabled, we can now remove it
-        if (mIsRemovingPlugin && !mPlugin.isActive()) {
+        // We don't want to trigger the remove plugin action before configuration changes are reflected in network
+        if (isConfigurePluginActionNecessary) {
+            dispatchConfigurePluginAction();
+        } else if (mIsRemovingPlugin && !mPlugin.isActive()) {
+            // We need to check that plugin is disabled first because we might be dealing with a different callback
+            // than what remove plugin has started
             dispatchRemovePluginAction();
         }
     }
