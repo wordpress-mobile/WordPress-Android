@@ -134,10 +134,21 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         setupViews();
+
+        // The remove plugin dialog will be dismissed if the activity is re-created, we need to make sure
+        // it's being displayed while a plugin is being removed
+        if (mIsRemovingPlugin) {
+            showRemovePluginProgressDialog();
+        }
     }
 
     @Override
     protected void onDestroy() {
+        // Even though the progress dialog will be destroyed, when it's re-created sometimes the spinner
+        // would get stuck. This seems to be helping with that.
+        if (mRemovePluginProgressDialog != null && mRemovePluginProgressDialog.isShowing()) {
+            mRemovePluginProgressDialog.cancel();
+        }
         mDispatcher.unregister(this);
         super.onDestroy();
     }
