@@ -326,7 +326,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mRemovePluginProgressDialog.setIndeterminate(true);
         // Even though we are deactivating the plugin to make sure it's disabled on the server side, since the user
         // sees that the plugin is disabled, it'd be confusing to say we are disabling the plugin
-        String message = mPlugin.isActive()
+        String message = mIsActive
                 ? getString(R.string.plugin_disable_progress_dialog_message, mPlugin.getDisplayName())
                 : getRemovingPluginMessage();
         mRemovePluginProgressDialog.setMessage(message);
