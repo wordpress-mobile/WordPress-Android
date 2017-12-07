@@ -14,8 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -56,7 +56,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private PluginModel mPlugin;
     private PluginInfoModel mPluginInfo;
 
-    private LinearLayout mContainer;
+    private ScrollView mContainer;
     private TextView mInstalledVersionTextView;
     private TextView mAvailableVersionTextView;
     private TextView mUpdateTextView;
