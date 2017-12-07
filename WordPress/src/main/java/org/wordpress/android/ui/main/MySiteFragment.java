@@ -33,6 +33,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
+import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -423,7 +424,7 @@ public class MySiteFragment extends Fragment
         mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
         mPeopleView.setVisibility(site.getHasCapabilityListUsers() ? View.VISIBLE : View.GONE);
 
-        mPluginsContainer.setVisibility(site.isUsingWpComRestApi() && site.isJetpackConnected() ? View.VISIBLE : View.GONE);
+        mPluginsContainer.setVisibility(PluginUtils.isPluginsFeatureAvailable(site) ? View.VISIBLE : View.GONE);
 
         // if either people or settings is visible, configuration header should be visible
         int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
