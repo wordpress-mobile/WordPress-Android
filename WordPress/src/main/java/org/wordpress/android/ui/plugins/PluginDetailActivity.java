@@ -64,6 +64,10 @@ public class PluginDetailActivity extends AppCompatActivity {
     private boolean mIsUpdatingPlugin;
     private boolean mIsRemovingPlugin;
 
+    // These flags reflects the UI state
+    private boolean mIsActive;
+    private boolean mIsAutoUpdateEnabled;
+
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
 
@@ -95,6 +99,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             finish();
             return;
         }
+        mIsActive = mPlugin.isActive();
+        mIsAutoUpdateEnabled = mPlugin.isAutoUpdateEnabled();
 
         mPluginInfo = PluginUtils.getPluginInfo(mPluginStore, mPlugin);
         if (mPluginInfo == null) {
@@ -153,7 +159,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isPressed()) {
-                    mPlugin.setIsActive(b);
+                    mIsActive = b;
                     dispatchConfigurePluginAction();
                 }
             }
@@ -163,7 +169,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isPressed()) {
-                    mPlugin.setIsAutoUpdateEnabled(b);
+                    mIsAutoUpdateEnabled = b;
                     dispatchConfigurePluginAction();
                 }
             }
@@ -203,8 +209,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshViews() {
-        mSwitchActive.setChecked(mPlugin.isActive());
-        mSwitchAutoupdates.setChecked(mPlugin.isAutoUpdateEnabled());
+        mSwitchActive.setChecked(mIsActive);
+        mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
 
         refreshPluginVersionViews();
     }
@@ -319,6 +325,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
         mIsConfiguringPlugin = true;
+        mPlugin.setIsActive(mIsActive);
+        mPlugin.setIsAutoUpdateEnabled(mIsAutoUpdateEnabled);
         mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(
                 new ConfigureSitePluginPayload(mSite, mPlugin)));
     }
@@ -355,7 +363,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         // We need to make sure that plugin is disabled before attempting to remove it
         mIsRemovingPlugin = true;
         showRemovePluginProgressDialog();
-        mPlugin.setIsActive(false);
+        mIsActive = false;
         dispatchConfigurePluginAction();
     }
 
@@ -370,6 +378,15 @@ public class PluginDetailActivity extends AppCompatActivity {
         mIsConfiguringPlugin = false;
         if (event.isError()) {
             ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed, event.error.message));
+
+            // Refresh the UI to plugin's last known state
+            if (refreshPluginFromStoreAndCheckForNull()) {
+                return;
+            }
+            mIsActive = mPlugin.isActive();
+            mIsAutoUpdateEnabled = mPlugin.isAutoUpdateEnabled();
+            refreshViews();
+
             if (mIsRemovingPlugin) {
                 mIsRemovingPlugin = false;
                 cancelRemovePluginProgressDialog();
@@ -378,35 +395,20 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
-        PluginModel pluginFromDB = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
-        if (pluginFromDB == null) {
-            ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
-            finish();
+        if (refreshPluginFromStoreAndCheckForNull()) {
             return;
         }
-
-        boolean isConfigurePluginActionNecessary = false;
 
         // The plugin state has been changed while a configuration network call is going on, we need to dispatch another
         // configure plugin action since we don't allow multiple configure actions to happen at the same time
         // This might happen either because user changed the state or a remove plugin action has started
-        if (mPlugin.isActive() != pluginFromDB.isActive()
-                || mPlugin.isAutoUpdateEnabled() != pluginFromDB.isAutoUpdateEnabled()) {
+        if (mPlugin.isActive() != mIsActive
+                || mPlugin.isAutoUpdateEnabled() != mIsAutoUpdateEnabled) {
             // The plugin's state in UI has priority over the one in DB as we'll dispatch another configuration change
             // to make sure UI is reflected correctly in network and DB
-            pluginFromDB.setIsActive(mPlugin.isActive());
-            pluginFromDB.setIsAutoUpdateEnabled(mPlugin.isAutoUpdateEnabled());
-            isConfigurePluginActionNecessary = true;
-        }
-        mPlugin = pluginFromDB;
-        refreshViews();
-
-        // We don't want to trigger the remove plugin action before configuration changes are reflected in network
-        if (isConfigurePluginActionNecessary) {
             dispatchConfigurePluginAction();
         } else if (mIsRemovingPlugin && !mPlugin.isActive()) {
-            // We need to check that plugin is disabled first because we might be dealing with a different callback
-            // than what remove plugin has started
+            // We don't want to trigger the remove plugin action before configuration changes are reflected in network
             dispatchRemovePluginAction();
         }
     }
@@ -442,10 +444,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             showUpdateFailedSnackbar();
             return;
         }
-        mPlugin = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
-        if (mPlugin == null) {
-            ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
-            finish();
+        if (refreshPluginFromStoreAndCheckForNull()) {
             return;
         }
 
@@ -494,5 +493,15 @@ public class PluginDetailActivity extends AppCompatActivity {
         // Disable removing akismet and vaultpress for AT sites
         return !mSite.isAutomatedTransfer()
                 || (!pluginName.equals("akismet/akismet") && !pluginName.equals("vaultpress/vaultpress"));
+    }
+
+    private boolean refreshPluginFromStoreAndCheckForNull() {
+        mPlugin = mPluginStore.getSitePluginByName(mSite, mPlugin.getName());
+        if (mPlugin == null) {
+            ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
+            finish();
+            return true;
+        }
+        return false;
     }
 }
