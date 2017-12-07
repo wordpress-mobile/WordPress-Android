@@ -131,6 +131,11 @@ public class PluginDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            if (isPluginStateChangedSinceLastConfigurationDispatch()) {
+                // It looks like we have some unsaved changes, we need to force a configuration dispatch since the
+                // user is leaving the page
+                dispatchConfigurePluginAction(true);
+            }
             onBackPressed();
             return true;
         }
@@ -160,7 +165,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isPressed()) {
                     mIsActive = b;
-                    dispatchConfigurePluginAction();
+                    dispatchConfigurePluginAction(false);
                 }
             }
         });
@@ -170,7 +175,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isPressed()) {
                     mIsAutoUpdateEnabled = b;
-                    dispatchConfigurePluginAction();
+                    dispatchConfigurePluginAction(false);
                 }
             }
         });
@@ -317,11 +322,11 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     // Network Helpers
 
-    private void dispatchConfigurePluginAction() {
+    private void dispatchConfigurePluginAction(boolean forceUpdate) {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
-        if (mIsConfiguringPlugin) {
+        if (!forceUpdate && mIsConfiguringPlugin) {
             return;
         }
         mIsConfiguringPlugin = true;
@@ -364,7 +369,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mIsRemovingPlugin = true;
         showRemovePluginProgressDialog();
         mIsActive = false;
-        dispatchConfigurePluginAction();
+        dispatchConfigurePluginAction(false);
     }
 
     // FluxC callbacks
@@ -402,11 +407,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         // The plugin state has been changed while a configuration network call is going on, we need to dispatch another
         // configure plugin action since we don't allow multiple configure actions to happen at the same time
         // This might happen either because user changed the state or a remove plugin action has started
-        if (mPlugin.isActive() != mIsActive
-                || mPlugin.isAutoUpdateEnabled() != mIsAutoUpdateEnabled) {
+        if (isPluginStateChangedSinceLastConfigurationDispatch()) {
             // The plugin's state in UI has priority over the one in DB as we'll dispatch another configuration change
             // to make sure UI is reflected correctly in network and DB
-            dispatchConfigurePluginAction();
+            dispatchConfigurePluginAction(false);
         } else if (mIsRemovingPlugin && !mPlugin.isActive()) {
             // We don't want to trigger the remove plugin action before configuration changes are reflected in network
             dispatchRemovePluginAction();
@@ -493,6 +497,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         // Disable removing akismet and vaultpress for AT sites
         return !mSite.isAutomatedTransfer()
                 || (!pluginName.equals("akismet/akismet") && !pluginName.equals("vaultpress/vaultpress"));
+    }
+
+    private boolean isPluginStateChangedSinceLastConfigurationDispatch() {
+        return mPlugin.isActive() != mIsActive || mPlugin.isAutoUpdateEnabled() != mIsAutoUpdateEnabled;
     }
 
     private boolean refreshPluginFromStoreAndCheckForNull() {
