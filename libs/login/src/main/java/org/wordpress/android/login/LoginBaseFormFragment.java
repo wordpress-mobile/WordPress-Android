@@ -70,6 +70,8 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         return true;
     }
 
+    protected void startPostLoginServices() { }
+
     protected EditText getEditTextToFocusOnStart() {
         return null;
     }
@@ -326,9 +328,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
             }
         }
 
-        if (mLoginListener instanceof LoginListener) {
-            ((LoginListener) mLoginListener).startPostLoginServices();
-        }
+        startPostLoginServices();
 
         onLoginFinished(true);
     }
