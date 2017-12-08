@@ -121,6 +121,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         ReleaseToolsModule.class,
         AndroidSupportInjectionModule.class,
         // Login flow library
+        LoginAnalyticsModule.class,
         LoginFragmentModule.class,
         LoginServiceModule.class
 })
