@@ -69,6 +69,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     public static class AccountPushSocialResponsePayload extends Payload<AccountSocialError> {
         public AccountPushSocialResponsePayload(AccountSocialResponse response) {
             this.bearerToken = response.bearer_token;
+            this.createdAccount = response.created_account;
             this.phoneNumber = response.phone_number;
             this.twoStepNonce = response.two_step_nonce;
             this.twoStepNonceAuthenticator = response.two_step_nonce_authenticator;
@@ -77,6 +78,7 @@ public class AccountRestClient extends BaseWPComRestClient {
             this.twoStepNotificationSent = response.two_step_notification_sent;
             this.twoStepTypes = convertJsonArrayToStringList(response.two_step_supported_auth_types);
             this.userId = response.user_id;
+            this.userName = response.username;
         }
         public AccountPushSocialResponsePayload() {
         }
@@ -89,6 +91,8 @@ public class AccountRestClient extends BaseWPComRestClient {
         public String twoStepNonceSms;
         public String twoStepNotificationSent;
         public String userId;
+        public String userName;
+        public boolean createdAccount;
 
         private List<String> convertJsonArrayToStringList(JSONArray array) {
             List<String> list = new ArrayList<>();
@@ -116,6 +120,10 @@ public class AccountRestClient extends BaseWPComRestClient {
 
         public boolean hasTwoStepTypes() {
             return this.twoStepTypes != null && this.twoStepTypes.size() > 0;
+        }
+
+        public boolean hasUsername() {
+            return !TextUtils.isEmpty(this.userName);
         }
     }
 
@@ -379,6 +387,48 @@ public class AccountRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountPushSocialResponsePayload payload =
                                 volleyErrorToAccountSocialResponsePayload(error.volleyError);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                }
+        ));
+    }
+
+    /**
+     * Performs an HTTP POST call to the v1.1 /users/social/new endpoint.  Upon receiving a response
+     * (success or error) a {@link AccountAction#PUSHED_SOCIAL} action is dispatched with a payload
+     * of type {@link AccountPushSocialResponsePayload}.
+     *
+     * {@link AccountPushSocialResponsePayload#isError()} can be used to check the request result.
+     *
+     * No HTTP POST call is made if the given parameter map is null or contains no entries.
+     *
+     * @param idToken       OpenID Connect Token (JWT) from the service the user is using to
+     *                      authenticate their account.
+     * @param service       Slug representing the service for the given token (e.g. google).
+     */
+    public void pushSocialSignup(@NonNull String idToken, @NonNull String service) {
+        String url = WPCOMREST.users.social.new_.getUrlV1_1();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("id_token", idToken);
+        params.put("service", service);
+        params.put("signup_flow_name", "social");
+        params.put("client_id", mAppSecrets.getAppId());
+        params.put("client_secret", mAppSecrets.getAppSecret());
+
+        add(WPComGsonRequest.buildPostRequest(url, params, AccountSocialResponse.class,
+                new Listener<AccountSocialResponse>() {
+                    @Override
+                    public void onResponse(AccountSocialResponse response) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                        payload.error = new AccountSocialError(((WPComGsonNetworkError) error).apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }

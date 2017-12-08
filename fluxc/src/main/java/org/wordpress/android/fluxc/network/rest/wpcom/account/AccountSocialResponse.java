@@ -13,4 +13,6 @@ public class AccountSocialResponse implements Response {
     public String two_step_nonce_sms;
     public String two_step_notification_sent;
     public String user_id;
+    public String username;
+    public boolean created_account;
 }
