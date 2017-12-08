@@ -496,8 +496,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     // SmartLock
 
     @Override
-    public void saveCredentials(@Nullable final String username, @Nullable final String password,
-                                @NonNull final String displayName, @Nullable final Uri profilePicture) {
+    public void saveCredentialsInSmartLock(@Nullable final String username, @Nullable final String password,
+                                           @NonNull final String displayName, @Nullable final Uri profilePicture) {
         mSmartLockHelper.saveCredentialsInSmartLock(StringUtils.notNullStr(username), StringUtils.notNullStr(password),
                 displayName, profilePicture);
     }
