@@ -70,6 +70,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     // mIsJetpackConnected is true if Jetpack is installed, activated and connected to a WordPress.com account.
     @Column private boolean mIsJetpackConnected;
     @Column private boolean mIsAutomatedTransfer;
+    @Column private String mJetpackVersion;
 
     // WPCom specifics
     @Column private boolean mIsVisible = true;
@@ -526,6 +527,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setIsAutomatedTransfer(boolean automatedTransfer) {
         mIsAutomatedTransfer = automatedTransfer;
+    }
+
+    public String getJetpackVersion() {
+        return mJetpackVersion;
+    }
+
+    public void setJetpackVersion(String jetpackVersion) {
+        mJetpackVersion = jetpackVersion;
     }
 
     @SiteOrigin
