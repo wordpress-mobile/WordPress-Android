@@ -60,6 +60,8 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     protected @Inject SiteStore mSiteStore;
     protected @Inject AccountStore mAccountStore;
 
+    protected @Inject LoginAnalyticsListener mAnalyticsListener;
+
     protected abstract @LayoutRes int getContentLayout();
     protected abstract void setupLabel(@NonNull TextView label);
     protected abstract void setupContent(ViewGroup rootView);

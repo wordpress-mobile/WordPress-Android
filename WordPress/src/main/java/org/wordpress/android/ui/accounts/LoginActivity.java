@@ -21,7 +21,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.Login2FaFragment;
 import org.wordpress.android.login.LoginEmailFragment;
@@ -41,7 +40,6 @@ import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
@@ -52,7 +50,6 @@ import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -500,28 +497,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                                            @NonNull final String displayName, @Nullable final Uri profilePicture) {
         mSmartLockHelper.saveCredentialsInSmartLock(StringUtils.notNullStr(username), StringUtils.notNullStr(password),
                 displayName, profilePicture);
-    }
-
-    // Analytics
-
-    @Override
-    public void track(AnalyticsTracker.Stat stat) {
-        AnalyticsTracker.track(stat);
-    }
-
-    @Override
-    public void track(AnalyticsTracker.Stat stat, Map<String, ?> properties) {
-        AnalyticsTracker.track(stat, properties);
-    }
-
-    @Override
-    public void track(AnalyticsTracker.Stat stat, String errorContext, String errorType, String errorDescription) {
-        AnalyticsTracker.track(stat, errorContext, errorType, errorDescription);
-    }
-
-    @Override
-    public void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin) {
-        AnalyticsUtils.trackAnalyticsSignIn(accountStore, siteStore, isWpcomLogin);
     }
 
     @Override

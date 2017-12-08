@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -103,6 +102,8 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
+    @Inject LoginAnalyticsListener mAnalyticsListener;
+
     private LoginPhase mLoginPhase = LoginPhase.IDLE;
 
     private String mIdToken;
@@ -194,7 +195,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
         Map<String, Object> props = new HashMap<>();
         props.put("login_phase", mLoginPhase == null ? "null" : mLoginPhase.name());
         props.put("login_service_is_foreground", isForeground());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE, props);
+        mAnalyticsListener.trackWpComBackgroundServiceUpdate(props);
     }
 
     @Override
@@ -237,11 +238,11 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
 
     private void handleAuthError(AuthenticationErrorType error, String errorMessage) {
         if (error != AuthenticationErrorType.NEEDS_2FA) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, error.getClass().getSimpleName(),
+            mAnalyticsListener.trackLoginFailed(error.getClass().getSimpleName(),
                     error.toString(), errorMessage);
 
             if (mIsSocialLogin) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, error.getClass().getSimpleName(),
+                mAnalyticsListener.trackSocialFailure(error.getClass().getSimpleName(),
                         error.toString(), errorMessage);
             }
         }
@@ -309,7 +310,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSocialChanged(OnSocialChanged event) {
         if (event.isError()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_FAILURE);
+            mAnalyticsListener.trackSocialConnectFailure();
             switch (event.error.type) {
                 case UNABLE_CONNECT:
                     AppLog.e(T.API, "Unable to connect WordPress.com account to social account.");
@@ -322,7 +323,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
 
             fetchAccount();
         } else if (!event.requiresTwoStepAuth) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_SUCCESS);
+            mAnalyticsListener.trackSocialConnectSuccess();
             fetchAccount();
         }
     }

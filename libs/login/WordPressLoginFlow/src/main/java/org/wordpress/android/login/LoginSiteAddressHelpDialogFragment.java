@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 
@@ -23,6 +22,8 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
 
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
+
+    @Inject LoginAnalyticsListener mAnalyticsListener;
 
     @Override
     public void onAttach(Context context) {
@@ -55,7 +56,7 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
         });
 
         if (savedInstanceState == null) {
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_URL_HELP_SCREEN_VIEWED);
+            mAnalyticsListener.trackUrlHelpScreenViewed();
         }
 
         return alert.create();

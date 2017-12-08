@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.login.LoginWpcomService.OnCredentialsOK;
 import org.wordpress.android.login.LoginWpcomService.OnLoginStateUpdated;
 import org.wordpress.android.login.util.SiteUtils;
@@ -183,7 +182,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_PASSWORD_FORM_VIEWED);
+            mAnalyticsListener.trackPasswordFormViewed();
 
             if (!TextUtils.isEmpty(mPassword)) {
                 mPasswordInput.setText(mPassword);
@@ -312,7 +311,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 showError(getString(R.string.error_generic));
                 break;
             case SUCCESS:
-                mLoginListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+                mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
                 mLoginListener.startPostLoginServices();
                 onLoginFinished(true);
                 break;

@@ -23,7 +23,6 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
@@ -57,6 +56,8 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
     public static final String TAG = "login_google_fragment_tag";
 
     @Inject Dispatcher mDispatcher;
+
+    @Inject LoginAnalyticsListener mAnalyticsListener;
 
     public interface GoogleLoginListener {
         void onGoogleEmailSelected(String email);
@@ -242,7 +243,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
                             showErrorDialog(getString(R.string.login_error_generic));
                         }
                     } else {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
+                        mAnalyticsListener.trackSocialButtonFailure();
                         switch (signInResult.getStatus().getStatusCode()) {
                             // Internal error.
                             case GoogleSignInStatusCodes.INTERNAL_ERROR:
@@ -282,10 +283,10 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
                         }
                     }
                 } else if (result == RESULT_CANCELED) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
+                    mAnalyticsListener.trackSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Sign-in Failed: result was CANCELED.");
                 } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
+                    mAnalyticsListener.trackSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Sign-in Failed: result was not OK or CANCELED.");
                     showErrorDialog(getString(R.string.login_error_generic));
                 }
@@ -302,10 +303,10 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
         if (event.isError()) {
             AppLog.e(T.API, "LoginGoogleFragment.onAuthenticationChanged: " + event.error.type
                     + " - " + event.error.message);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+            mAnalyticsListener.trackLoginFailed(event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, event.getClass().getSimpleName(),
+            mAnalyticsListener.trackSocialFailure(event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
             showErrorDialog(getString(R.string.login_error_generic));
@@ -325,22 +326,22 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
             AppLog.e(T.API, "LoginGoogleFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
 
             if (event.error.type != AccountSocialErrorType.USER_EXISTS) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+                mAnalyticsListener.trackLoginFailed(event.getClass().getSimpleName(),
                         event.error.type.toString(), event.error.message);
 
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, event.getClass().getSimpleName(),
+                mAnalyticsListener.trackSocialFailure(event.getClass().getSimpleName(),
                         event.error.type.toString(), event.error.message);
             }
 
             switch (event.error.type) {
                 // WordPress account exists with input email address, but not connected.
                 case USER_EXISTS:
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING);
+                    mAnalyticsListener.trackSocialAccountsNeedConnecting();
                     mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
                     break;
                 // WordPress account does not exist with input email address.
                 case UNKNOWN_USER:
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_ERROR_UNKNOWN_USER);
+                    mAnalyticsListener.trackSocialErrorUnknownUser();
                     showErrorDialog(getString(R.string.login_error_email_not_found, mGoogleEmail));
                     break;
                 // Unknown error.
