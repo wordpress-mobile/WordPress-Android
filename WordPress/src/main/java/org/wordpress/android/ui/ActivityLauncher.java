@@ -155,7 +155,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPlugins(Context context, SiteModel site) {
-        if (PluginUtils.isPluginsFeatureAvailable(site)) {
+        if (PluginUtils.isPluginFeatureAvailable(site)) {
             Intent intent = new Intent(context, PluginListActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
@@ -163,7 +163,7 @@ public class ActivityLauncher {
     }
 
     public static void viewPluginDetail(Context context, SiteModel site, PluginModel plugin) {
-        if (PluginUtils.isPluginsFeatureAvailable(site)) {
+        if (PluginUtils.isPluginFeatureAvailable(site)) {
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());

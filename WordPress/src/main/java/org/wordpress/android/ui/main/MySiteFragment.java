@@ -424,7 +424,7 @@ public class MySiteFragment extends Fragment
         mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
         mPeopleView.setVisibility(site.getHasCapabilityListUsers() ? View.VISIBLE : View.GONE);
 
-        mPluginsContainer.setVisibility(PluginUtils.isPluginsFeatureAvailable(site) ? View.VISIBLE : View.GONE);
+        mPluginsContainer.setVisibility(PluginUtils.isPluginFeatureAvailable(site) ? View.VISIBLE : View.GONE);
 
         // if either people or settings is visible, configuration header should be visible
         int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
