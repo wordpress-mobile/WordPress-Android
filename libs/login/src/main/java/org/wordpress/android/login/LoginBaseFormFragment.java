@@ -269,7 +269,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     protected void saveCredentialsInSmartLock(LoginListener loginListener, String username, String password) {
         // mUsername and mPassword are null when the user log in with a magic link
         if (loginListener != null) {
-            loginListener.saveCredentials(username, password, mAccountStore.getAccount().getDisplayName(),
+            loginListener.saveCredentialsInSmartLock(username, password, mAccountStore.getAccount().getDisplayName(),
                     Uri.parse(mAccountStore.getAccount().getAvatarUrl()));
         }
     }
