@@ -28,7 +28,6 @@ import com.bumptech.glide.request.target.Target;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthEmailSent;
@@ -63,6 +62,8 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     private boolean mInProgress;
 
     protected @Inject Dispatcher mDispatcher;
+
+    protected @Inject LoginAnalyticsListener mAnalyticsListener;
 
     public static LoginMagicLinkRequestFragment newInstance(String email) {
         LoginMagicLinkRequestFragment fragment = new LoginMagicLinkRequestFragment();
@@ -160,7 +161,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         }
 
         if (savedInstanceState == null) {
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUEST_FORM_VIEWED);
+            mAnalyticsListener.trackMagicLinkRequestFormViewed();
         }
     }
 
@@ -267,7 +268,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         if (event.isError()) {
             HashMap<String, String> errorProperties = new HashMap<>();
             errorProperties.put(ERROR_KEY, event.error.message);
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, errorProperties);
+            mAnalyticsListener.trackMagicLinkFailed(errorProperties);
 
             AppLog.e(AppLog.T.API, "OnAuthEmailSent has error: " + event.error.type + " - " + event.error.message);
             if (isAdded()) {
@@ -277,7 +278,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             return;
         }
 
-        mLoginListener.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUESTED);
+        mAnalyticsListener.trackMagicLinkRequested();
 
         if (mLoginListener != null) {
             mLoginListener.showMagicLinkSentScreen(mEmail);

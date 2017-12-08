@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
@@ -243,7 +242,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             mInProgressMessageId = savedInstanceState.getInt(KEY_IN_PROGRESS_MESSAGE_ID, 0);
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         } else {
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_TWO_FACTOR_FORM_VIEWED);
+            mAnalyticsListener.trackTwoFactorFormViewed();
         }
         super.onActivityCreated(savedInstanceState);
     }
@@ -413,11 +412,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             endProgress();
 
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_FAILED, event.getClass().getSimpleName(),
+            mAnalyticsListener.trackLoginFailed(event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
             if (mIsSocialLogin) {
-                mLoginListener.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, event.getClass().getSimpleName(),
+                mAnalyticsListener.trackSocialFailure(event.getClass().getSimpleName(),
                         event.error.type.toString(), event.error.message);
             }
 
@@ -482,7 +481,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
             // Finish login on social connect error.
             if (mIsSocialLoginConnect) {
-                mLoginListener.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_FAILURE);
+                mAnalyticsListener.trackSocialConnectFailure();
                 doFinishLogin();
             }
         // Two-factor authentication code was sent via SMS to account phone number; replace SMS nonce with response.
@@ -493,7 +492,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             setTextForSms();
         } else {
             if (mIsSocialLoginConnect) {
-                mLoginListener.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_SUCCESS);
+                mAnalyticsListener.trackSocialConnectSuccess();
             }
             doFinishLogin();
         }
@@ -501,7 +500,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     @Override
     protected void onLoginFinished() {
-        mLoginListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+        mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
         if (mIsSocialLogin) {
             mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);

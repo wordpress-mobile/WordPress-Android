@@ -5,13 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public interface LoginListener {
     interface SelfSignedSSLCallback {
@@ -69,10 +66,4 @@ public interface LoginListener {
     void startPostLoginServices();
 
     void setHelpContext(String faqId, String faqSection);
-
-    // Analytics
-    void track(AnalyticsTracker.Stat stat);
-    void track(AnalyticsTracker.Stat stat, Map<String, ?> properties);
-    void track(AnalyticsTracker.Stat stat, String errorContext, String errorType, String errorDescription);
-    void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin);
 }

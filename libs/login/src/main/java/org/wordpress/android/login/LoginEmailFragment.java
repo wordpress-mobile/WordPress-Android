@@ -29,7 +29,6 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.login.util.SiteUtils;
@@ -136,7 +135,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             @SuppressWarnings("PrivateMemberAccessBetweenOuterAndInnerClass")
             @Override
             public void onClick(View view) {
-                mLoginListener.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_CLICK);
+                mAnalyticsListener.trackSocialButtonClick();
                 EditTextUtils.hideSoftInput(mEmailInput.getEditText());
 
                 if (NetworkUtils.checkConnection(getActivity())) {
@@ -229,7 +228,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mIsDisplayingEmailHints = savedInstanceState.getBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS);
             mHasDismissedEmailHints = savedInstanceState.getBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS);
         } else {
-            mLoginListener.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
+            mAnalyticsListener.trackEmailFormViewed();
         }
     }
 
@@ -356,7 +355,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected void onLoginFinished() {
-        mLoginListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+        mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
         mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
     }
 
