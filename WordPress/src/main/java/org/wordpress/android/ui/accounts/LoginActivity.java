@@ -436,7 +436,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void showGoogleLoginScreen(@NonNull Fragment parent) {
+    public void addGoogleLoginFragment(@NonNull Fragment parent) {
         LoginGoogleFragment loginGoogleFragment;
         FragmentManager fragmentManager = parent.getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
