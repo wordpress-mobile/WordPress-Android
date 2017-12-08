@@ -510,6 +510,7 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setTimezone(from.options.gmt_offset);
             site.setFrameNonce(from.options.frame_nonce);
             site.setUnmappedUrl(from.options.unmapped_url);
+            site.setJetpackVersion(from.options.jetpack_version);
 
             try {
                 site.setMaxUploadSize(Long.valueOf(from.options.max_upload_size));
