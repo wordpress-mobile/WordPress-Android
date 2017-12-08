@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -15,6 +16,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.WebViewActivity;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.helpers.WPWebChromeClient;
 
 import javax.inject.Inject;
 
@@ -52,6 +54,8 @@ public class ReleaseNotesActivity extends WebViewActivity {
                 }
             }
         );
+
+        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
     }
 
     @Override
