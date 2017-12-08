@@ -71,10 +71,10 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class PushSocialLoginPayload extends Payload<BaseNetworkError> {
+    public static class PushSocialPayload extends Payload<BaseNetworkError> {
         public String idToken;
         public String service;
-        public PushSocialLoginPayload(@NonNull String idToken, @NonNull String service) {
+        public PushSocialPayload(@NonNull String idToken, @NonNull String service) {
             this.idToken = idToken;
             this.service = service;
         }
@@ -131,7 +131,9 @@ public class AccountStore extends Store {
         public AccountAction causeOfChange;
     }
 
-    public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {}
+    public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {
+        public boolean createdAccount;
+    }
 
     public static class OnSocialChanged extends OnChanged<AccountSocialError> {
         public List<String> twoStepTypes;
@@ -297,6 +299,7 @@ public class AccountStore extends Store {
         NO_PHONE_NUMBER_FOR_ACCOUNT,
         SMS_AUTHENTICATION_UNAVAILABLE,
         SMS_CODE_THROTTLED,
+        TWO_STEP_ENABLED,
         UNABLE_CONNECT,
         UNKNOWN_USER,
         USER_ALREADY_ASSOCIATED,
@@ -305,6 +308,7 @@ public class AccountStore extends Store {
 
         public static AccountSocialErrorType fromString(String string) {
             if (string != null) {
+                string = string.replace("2FA_enabled", "two_step_enabled");
                 for (AccountSocialErrorType type : AccountSocialErrorType.values()) {
                     if (string.equalsIgnoreCase(type.name())) {
                         return type;
@@ -442,10 +446,13 @@ public class AccountStore extends Store {
                 createPushSocialAuth((PushSocialAuthPayload) payload);
                 break;
             case PUSH_SOCIAL_CONNECT:
-                createPushSocialConnect((PushSocialLoginPayload) payload);
+                createPushSocialConnect((PushSocialPayload) payload);
                 break;
             case PUSH_SOCIAL_LOGIN:
-                createPushSocialLogin((PushSocialLoginPayload) payload);
+                createPushSocialLogin((PushSocialPayload) payload);
+                break;
+            case PUSH_SOCIAL_SIGNUP:
+                createPushSocialSignup((PushSocialPayload) payload);
                 break;
             case PUSH_SOCIAL_SMS:
                 createPushSocialSms((PushSocialSmsPayload) payload);
@@ -604,18 +611,23 @@ public class AccountStore extends Store {
             OnSocialChanged event = new OnSocialChanged();
             event.error = payload.error;
             emitChange(event);
-        // No error and two-factor authentication code sent via SMS; emit only social change.
+        // Two-factor authentication code sent via SMS; emit only social change.
         } else if (payload.hasPhoneNumber()) {
             OnSocialChanged event = new OnSocialChanged(payload);
             emitChange(event);
-        // No error, but either two-factor authentication or social connect is required; emit only social change.
+        // Two-factor authentication or social connect is required; emit only social change.
         } else if (!payload.hasToken()) {
             OnSocialChanged event = new OnSocialChanged(payload);
             event.requiresTwoStepAuth = payload.hasTwoStepTypes();
             emitChange(event);
-        // No error and two-factor authentication is not required; emit only authentication change.
+            // No error and two-factor authentication is not required; emit only authentication change.
         } else {
-            updateToken(new UpdateTokenPayload(payload.bearerToken));
+            // Social login or signup completed; update token and send boolean flag.
+            if (payload.hasUsername()) {
+                updateToken(new UpdateTokenPayload(payload.bearerToken), payload.createdAccount);
+            } else {
+                updateToken(new UpdateTokenPayload(payload.bearerToken));
+            }
         }
     }
 
@@ -651,12 +663,16 @@ public class AccountStore extends Store {
         mAccountRestClient.pushSocialAuth(payload.userId, payload.type, payload.nonce, payload.code);
     }
 
-    private void createPushSocialConnect(PushSocialLoginPayload payload) {
+    private void createPushSocialConnect(PushSocialPayload payload) {
         mAccountRestClient.pushSocialConnect(payload.idToken, payload.service);
     }
 
-    private void createPushSocialLogin(PushSocialLoginPayload payload) {
+    private void createPushSocialLogin(PushSocialPayload payload) {
         mAccountRestClient.pushSocialLogin(payload.idToken, payload.service);
+    }
+
+    private void createPushSocialSignup(PushSocialPayload payload) {
+        mAccountRestClient.pushSocialSignup(payload.idToken, payload.service);
     }
 
     private void createPushSocialSms(PushSocialSmsPayload payload) {
@@ -696,6 +712,19 @@ public class AccountStore extends Store {
     private void updateToken(UpdateTokenPayload updateTokenPayload) {
         mAccessToken.set(updateTokenPayload.token);
         emitChange(new OnAuthenticationChanged());
+    }
+
+    /**
+     * Update access token for account store for social login or signup.
+     *
+     * @param updateTokenPayload payload containing token to be updated
+     * @param createdAccount     flag to send in event to determine login or signup
+     */
+    private void updateToken(UpdateTokenPayload updateTokenPayload, boolean createdAccount) {
+        mAccessToken.set(updateTokenPayload.token);
+        OnAuthenticationChanged event = new OnAuthenticationChanged();
+        event.createdAccount = createdAccount;
+        emitChange(event);
     }
 
     private void updateDefaultAccount(AccountModel accountModel, AccountAction cause) {
