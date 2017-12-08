@@ -28,7 +28,7 @@ public interface LoginListener {
     void loginViaWpcomUsernameInstead();
     void helpEmailScreen(String email);
     void helpSocialEmailScreen(String email);
-    void showGoogleLoginScreen(@NonNull Fragment fragment);
+    void addGoogleLoginFragment(@NonNull Fragment fragment);
 
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
