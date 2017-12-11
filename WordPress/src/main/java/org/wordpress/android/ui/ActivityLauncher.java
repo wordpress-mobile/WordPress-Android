@@ -36,6 +36,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginListActivity;
+import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -154,7 +155,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPlugins(Context context, SiteModel site) {
-        if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
+        if (PluginUtils.isPluginFeatureAvailable(site)) {
             Intent intent = new Intent(context, PluginListActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
@@ -162,7 +163,7 @@ public class ActivityLauncher {
     }
 
     public static void viewPluginDetail(Context context, SiteModel site, PluginModel plugin) {
-        if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
+        if (PluginUtils.isPluginFeatureAvailable(site)) {
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());

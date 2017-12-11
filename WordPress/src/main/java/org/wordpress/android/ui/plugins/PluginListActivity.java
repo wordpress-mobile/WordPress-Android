@@ -134,10 +134,12 @@ public class PluginListActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginsFetched(OnSitePluginsFetched event) {
+        if (isFinishing()) {
+            return;
+        }
         mProgressBar.setVisibility(View.GONE);
         if (event.isError()) {
-            ToastUtils.showToast(this, "An error occurred while fetching the plugins: "
-                    + event.error.message);
+            AppLog.e(T.API, "An error occurred while fetching the plugins: " + event.error.message);
             return;
         }
         refreshPluginList();
@@ -146,6 +148,9 @@ public class PluginListActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginInfoChanged(OnPluginInfoChanged event) {
+        if (isFinishing()) {
+            return;
+        }
         if (event.isError()) {
             AppLog.e(T.API, "An error occurred while fetching the plugin info with type: " + event.error.type);
             return;
@@ -162,13 +167,17 @@ public class PluginListActivity extends AppCompatActivity {
             // We can ignore the error since the action is taken in `PluginDetailActivity`
             return;
         }
-        refreshPluginList();
+        if (!isFinishing()) {
+            refreshPluginList();
+        }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
-        refreshPluginList();
+        if (!isFinishing()) {
+            refreshPluginList();
+        }
     }
 
     private class PluginListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
