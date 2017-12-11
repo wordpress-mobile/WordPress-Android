@@ -7,6 +7,7 @@ import com.squareup.javapoet.TypeSpec;
 import org.wordpress.android.fluxc.annotations.AnnotationConfig;
 import org.wordpress.android.fluxc.annotations.endpoint.EndpointNode;
 import org.wordpress.android.fluxc.annotations.endpoint.EndpointTreeGenerator;
+import org.wordpress.android.fluxc.annotations.endpoint.WCWPAPIEndpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.WPAPIEndpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.WPComEndpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.WPComV2Endpoint;
@@ -37,6 +38,10 @@ public class EndpointProcessor extends AbstractProcessor {
     private static final String XMLRPC_ENDPOINT_FILE = "fluxc/src/main/tools/xmlrpc-endpoints.txt";
     private static final String WPAPI_ENDPOINT_FILE = "fluxc/src/main/tools/wp-api-endpoints.txt";
     private static final String WPORG_API_ENDPOINT_FILE = "fluxc/src/main/tools/wporg-api-endpoints.txt";
+
+    // Plugin endpoints
+    private static final String WPORG_API_WC_ENDPOINT_FILE =
+            "plugins/woocommerce/src/main/tools/wc-wp-api-endpoints.txt";
 
     private static final Pattern WPCOMREST_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("\\$");
     private static final Pattern WPAPI_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("^<.*>/$");
@@ -72,6 +77,8 @@ public class EndpointProcessor extends AbstractProcessor {
                 generateXMLRPCEndpointFile();
                 generateWPAPIEndpointFile();
                 generateWPORGAPIEndpointFile();
+            } else if (outputPath.contains("/plugins/woocommerce/build/")) {
+                generateWCWPAPIPluginEndpointFile();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -113,6 +120,15 @@ public class EndpointProcessor extends AbstractProcessor {
         EndpointNode rootNode = EndpointTreeGenerator.process(file);
 
         TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPAPI", WPAPIEndpoint.class,
+                WPAPI_VARIABLE_ENDPOINT_PATTERN);
+        writeEndpointClassToFile(endpointClass);
+    }
+
+    private void generateWCWPAPIPluginEndpointFile() throws IOException {
+        File file = new File(WPORG_API_WC_ENDPOINT_FILE);
+        EndpointNode rootNode = EndpointTreeGenerator.process(file);
+
+        TypeSpec endpointClass = RESTPoet.generate(rootNode, "WOOCOMMERCE", WCWPAPIEndpoint.class,
                 WPAPI_VARIABLE_ENDPOINT_PATTERN);
         writeEndpointClassToFile(endpointClass);
     }
