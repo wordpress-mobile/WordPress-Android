@@ -111,6 +111,9 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             mIsActive = mPlugin.isActive();
             mIsAutoUpdateEnabled = mPlugin.isAutoUpdateEnabled();
+
+            // Refresh the plugin information to check if there is a newer version
+            mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(mPlugin.getSlug()));
         } else {
             mIsConfiguringPlugin = savedInstanceState.getBoolean(KEY_IS_CONFIGURING_PLUGIN);
             mIsUpdatingPlugin = savedInstanceState.getBoolean(KEY_IS_UPDATING_PLUGIN);
@@ -122,8 +125,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         mPluginInfo = PluginUtils.getPluginInfo(mPluginStore, mPlugin);
-        // Always refresh the plugin information to check if there is a newer version
-        mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(mPlugin.getSlug()));
 
         setContentView(R.layout.plugin_detail_activity);
 
