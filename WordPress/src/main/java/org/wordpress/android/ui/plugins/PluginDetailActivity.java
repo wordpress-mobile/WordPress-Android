@@ -117,9 +117,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         mPluginInfo = PluginUtils.getPluginInfo(mPluginStore, mPlugin);
-        if (mPluginInfo == null) {
-            mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(mPlugin.getSlug()));
-        }
+        // Always refresh the plugin information to check if there is a newer version
+        mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(mPlugin.getSlug()));
 
         setContentView(R.layout.plugin_detail_activity);
 
@@ -458,7 +457,9 @@ public class PluginDetailActivity extends AppCompatActivity {
                     + event.error.type);
             return;
         }
-        if (event.pluginInfo != null && mPlugin.getSlug().equals(event.pluginInfo.getSlug())) {
+        if (event.pluginInfo != null
+                && mPlugin.getSlug() != null
+                && mPlugin.getSlug().equals(event.pluginInfo.getSlug())) {
             mPluginInfo = event.pluginInfo;
             refreshPluginVersionViews();
         }

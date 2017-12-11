@@ -29,7 +29,13 @@ public class PluginUtils {
     }
 
     static boolean isUpdateAvailable(PluginModel plugin, PluginInfoModel pluginInfo) {
-        return pluginInfo != null && !TextUtils.isEmpty(pluginInfo.getVersion())
-                && !plugin.getVersion().equals(pluginInfo.getVersion());
+        if (pluginInfo == null
+                || TextUtils.isEmpty(plugin.getVersion())
+                || TextUtils.isEmpty(pluginInfo.getVersion())) {
+            return false;
+        }
+        Version currentVersion = new Version(plugin.getVersion());
+        Version availableVersion = new Version(pluginInfo.getVersion());
+        return currentVersion.compareTo(availableVersion) == -1;
     }
 }
