@@ -101,7 +101,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_CLICK);
                 ActivityUtils.hideKeyboardForced(getActivity().getCurrentFocus());
 
-                if (NetworkUtils.checkConnection(getActivity())) {
+                if (NetworkUtils.checkConnection(getActivity()) && isAdded()) {
                     mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                     isSocialLogin = true;
                     addGoogleFragment();
