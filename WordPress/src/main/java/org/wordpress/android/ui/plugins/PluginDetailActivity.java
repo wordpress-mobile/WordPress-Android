@@ -231,13 +231,17 @@ public class PluginDetailActivity extends AppCompatActivity {
         });
 
         Button removeBtn = findViewById(R.id.plugin_btn_remove);
-        removeBtn.setVisibility(isRemovePluginFeatureAvailable() ? View.VISIBLE : View.GONE);
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 confirmRemovePlugin();
             }
         });
+
+        // Handle specific cases for Jetpack, Akismet and VaultPress
+        boolean canPluginBeDisabledOrRemoved = canPluginBeDisabledOrRemoved();
+        removeBtn.setVisibility(canPluginBeDisabledOrRemoved ? View.VISIBLE : View.GONE);
+        mSwitchActive.setClickable(canPluginBeDisabledOrRemoved);
 
         refreshViews();
     }
@@ -391,7 +395,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void disableAndRemovePlugin() {
         // This is only a sanity check as the remove button should not be visible. It's important to disable removing
         // plugins in certain cases, so we should still make this sanity check
-        if (!isRemovePluginFeatureAvailable()) {
+        if (!canPluginBeDisabledOrRemoved()) {
             return;
         }
         // We need to make sure that plugin is disabled before attempting to remove it
@@ -519,7 +523,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         return getString(R.string.plugin_remove_progress_dialog_message, mPlugin.getDisplayName());
     }
 
-    private boolean isRemovePluginFeatureAvailable() {
+    private boolean canPluginBeDisabledOrRemoved() {
         String pluginName = mPlugin.getName();
         // Disable removing jetpack as the site will stop working in the client
         if (pluginName.equals("jetpack/jetpack")) {
