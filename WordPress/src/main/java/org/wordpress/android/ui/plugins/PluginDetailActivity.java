@@ -51,6 +51,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     private static final String KEY_IS_REMOVING_PLUGIN = "KEY_IS_REMOVING_PLUGIN";
     private static final String KEY_IS_ACTIVE = "KEY_IS_ACTIVE";
     private static final String KEY_IS_AUTO_UPDATE_ENABLED = "KEY_IS_AUTO_UPDATE_ENABLED";
+    private static final String KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG
+            = "KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG";
 
     private SiteModel mSite;
     private PluginModel mPlugin;
@@ -68,6 +70,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private boolean mIsConfiguringPlugin;
     private boolean mIsUpdatingPlugin;
     private boolean mIsRemovingPlugin;
+    private boolean mIsShowingRemovePluginConfirmationDialog;
 
     // These flags reflects the UI state
     private boolean mIsActive;
@@ -114,6 +117,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             mIsRemovingPlugin = savedInstanceState.getBoolean(KEY_IS_REMOVING_PLUGIN);
             mIsActive = savedInstanceState.getBoolean(KEY_IS_ACTIVE);
             mIsAutoUpdateEnabled = savedInstanceState.getBoolean(KEY_IS_AUTO_UPDATE_ENABLED);
+            mIsShowingRemovePluginConfirmationDialog =
+                    savedInstanceState.getBoolean(KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG);
         }
 
         mPluginInfo = PluginUtils.getPluginInfo(mPluginStore, mPlugin);
@@ -134,8 +139,12 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         setupViews();
 
-        // The remove plugin dialog will be dismissed if the activity is re-created, we need to make sure
-        // it's being displayed while a plugin is being removed
+        // Show remove plugin confirmation dialog if it's dismissed while activity is re-created
+        if (mIsShowingRemovePluginConfirmationDialog) {
+            confirmRemovePlugin();
+        }
+
+        // Show remove plugin progress dialog if it's dismissed while activity is re-created
         if (mIsRemovingPlugin) {
             showRemovePluginProgressDialog();
         }
@@ -176,6 +185,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         outState.putBoolean(KEY_IS_REMOVING_PLUGIN, mIsRemovingPlugin);
         outState.putBoolean(KEY_IS_ACTIVE, mIsActive);
         outState.putBoolean(KEY_IS_AUTO_UPDATE_ENABLED, mIsAutoUpdateEnabled);
+        outState.putBoolean(KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG, mIsShowingRemovePluginConfirmationDialog);
     }
 
     // UI Helpers
@@ -298,12 +308,19 @@ public class PluginDetailActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                mIsShowingRemovePluginConfirmationDialog = false;
                 disableAndRemovePlugin();
             }
         });
-        builder.setNegativeButton(R.string.cancel, null);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mIsShowingRemovePluginConfirmationDialog = false;
+            }
+        });
         builder.setCancelable(true);
         builder.create();
+        mIsShowingRemovePluginConfirmationDialog = true;
         builder.show();
     }
 
