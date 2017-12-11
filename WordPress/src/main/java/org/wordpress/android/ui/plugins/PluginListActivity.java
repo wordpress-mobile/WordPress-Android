@@ -139,8 +139,7 @@ public class PluginListActivity extends AppCompatActivity {
         }
         mProgressBar.setVisibility(View.GONE);
         if (event.isError()) {
-            ToastUtils.showToast(this, "An error occurred while fetching the plugins: "
-                    + event.error.message);
+            AppLog.e(T.API, "An error occurred while fetching the plugins: " + event.error.message);
             return;
         }
         refreshPluginList();
