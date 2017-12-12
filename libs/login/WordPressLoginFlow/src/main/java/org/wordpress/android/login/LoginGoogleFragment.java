@@ -28,7 +28,7 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
-import org.wordpress.android.fluxc.store.AccountStore.PushSocialLoginPayload;
+import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -235,7 +235,7 @@ public class LoginGoogleFragment extends Fragment implements ConnectionCallbacks
                             mGoogleEmail = account.getEmail();
                             mGoogleLoginListener.onGoogleEmailSelected(mGoogleEmail);
                             mIdToken = account.getIdToken();
-                            PushSocialLoginPayload payload = new PushSocialLoginPayload(mIdToken, SERVICE_TYPE_GOOGLE);
+                            PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
                         } catch (NullPointerException exception) {
                             disconnectGoogleClient();

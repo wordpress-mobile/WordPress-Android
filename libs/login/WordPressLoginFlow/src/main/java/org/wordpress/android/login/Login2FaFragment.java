@@ -29,7 +29,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
-import org.wordpress.android.fluxc.store.AccountStore.PushSocialLoginPayload;
+import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialSmsPayload;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
@@ -430,7 +430,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
         if (mIsSocialLoginConnect) {
-            PushSocialLoginPayload payload = new PushSocialLoginPayload(mIdToken, mService);
+            PushSocialPayload payload = new PushSocialPayload(mIdToken, mService);
             mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
         } else {
             doFinishLogin();

@@ -23,4 +23,8 @@
     <issue id="InvalidPackage">
         <ignore regexp="okio-1.9.0.jar" />
     </issue>
+
+    <issue id="IconLauncherFormat">
+        <ignore path="src/main/res/mipmap-anydpi-v26/app_icon.xml" />
+    </issue>
 </lint>

@@ -538,8 +538,12 @@ public class NewUserFragment extends AbstractFragment {
         termsOfServiceTextView.setOnClickListener(new OnClickListener() {
                                                       @Override
                                                       public void onClick(View v) {
+                                                          String localString =  LanguageUtils.getPatchedCurrentDeviceLanguage(v.getContext());
+                                                          if (localString.contains("_")) {
+                                                              localString = localString.substring(0, localString.indexOf("_"));
+                                                          }
                                                           ActivityLauncher.openUrlExternal(getContext(),
-                                                                  getString(R.string.wordpresscom_tos_url));
+                                                                  String.format(getString(R.string.wordpresscom_tos_url ), localString));
                                                       }
                                                   }
         );
