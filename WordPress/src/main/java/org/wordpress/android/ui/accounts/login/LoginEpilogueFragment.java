@@ -17,9 +17,13 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.main.SitePickerAdapter;
+import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ViewUtils;
 
@@ -40,6 +44,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     private Button mConnectMore;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     private SitePickerAdapter mAdapter;
     private boolean mDoLoginUpdate;
@@ -181,8 +186,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             }
 
             @Override
-            public void onBindViewHolder(RecyclerView.ViewHolder holder, int numberOfSites) {
-                refreshAccountDetails((LoginHeaderViewHolder) holder, numberOfSites);
+            public void onBindViewHolder(RecyclerView.ViewHolder holder, SiteList sites) {
+                refreshAccountDetails((LoginHeaderViewHolder) holder, sites);
             }
         }, mOldSitesIds);
     }
@@ -207,19 +212,33 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
     }
 
-    private void refreshAccountDetails(LoginHeaderViewHolder holder, int numberOfSites) {
+    private void refreshAccountDetails(LoginHeaderViewHolder holder, SiteList sites) {
         if (!isAdded()) {
             return;
         }
-        holder.updateLoggedInAsHeading(getContext(), mAccountStore.hasAccessToken(), true, mAccountStore.getAccount());
 
-        if (numberOfSites == 0) {
+        final boolean isWpcom = mAccountStore.hasAccessToken();
+
+        if (isWpcom) {
+            holder.updateLoggedInAsHeading(getContext(), true, mAccountStore.getAccount());
+        } else if (sites.size() != 0) {
+            SiteModel site = mSiteStore.getSiteByLocalId(sites.get(0).getLocalId());
+            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+
+            String avatarUrl = GravatarUtils.gravatarFromEmail(site.getEmail(), avatarSz);
+            String username = site.getUsername();
+            String displayName = site.getDisplayName();
+
+            holder.updateLoggedInAsHeading(getContext(), true, avatarUrl, username, displayName);
+        }
+
+        if (sites.size() == 0) {
             holder.hideSitesHeading();
             mConnectMore.setText(R.string.connect_site);
         } else {
             holder.showSitesHeading(StringUtils.getQuantityString(
                     getActivity(), R.string.days_quantity_one, R.string.login_epilogue_mysites_one,
-                    R.string.login_epilogue_mysites_other, numberOfSites));
+                    R.string.login_epilogue_mysites_other, sites.size()));
 
             mConnectMore.setText(R.string.connect_more);
         }

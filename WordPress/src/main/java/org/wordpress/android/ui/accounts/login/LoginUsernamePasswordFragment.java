@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -38,6 +39,7 @@ import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener {
@@ -337,6 +339,17 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         });
     }
 
+    private @Nullable SiteModel detectNewlyAddedSite() {
+        List<SiteModel> selfhostedSites = mSiteStore.getSitesAccessedViaXMLRPC();
+        for (SiteModel site : selfhostedSites) {
+            if (!mOldSitesIDs.contains(site.getId())) {
+                return site;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     protected void endProgress() {
         super.endProgress();
@@ -457,8 +470,31 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             return;
         }
 
-        // continue with success, even if the operation was cancelled since the user got logged in regardless. So, go on
-        //  with finishing the login process
+        SiteModel newlyAddedSite = detectNewlyAddedSite();
+        mDispatcher.dispatch(SiteActionBuilder.newFetchProfileXmlRpcAction(newlyAddedSite));
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onProfileFetched(SiteStore.OnProfileFetched event) {
+        if (!isAdded() || mLoginFinished) {
+            return;
+        }
+
+        if (event.isError()) {
+            if (mRequestedUsername == null) {
+                // just bail since the operation was cancelled
+                return;
+            }
+
+            endProgress();
+
+            AppLog.e(T.API, "Fetching selfhosted site profile has error: " + event.error.type + " - " +
+                    event.error.message);
+
+            // continue with success, even if the operation was cancelled since the user got logged in regardless. So, go on
+            //  with finishing the login process
+        }
 
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
 

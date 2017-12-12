@@ -23,6 +23,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
+import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -202,6 +203,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content.setOnImeBackListener(this);
         source.setOnImeBackListener(this);
 
+        // We need to intercept the "Enter" key on the title field, and replace it with a space instead
+        title.setFilters(new InputFilter[]{replaceEnterKeyWithSpaceInputFilter});
+
         source.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
 
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
@@ -281,6 +285,35 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void setAztecVideoLoader(Html.VideoThumbnailGetter videoLoader) {
         this.aztecVideoLoader = videoLoader;
     }
+
+    private InputFilter replaceEnterKeyWithSpaceInputFilter = new InputFilter() {
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end,
+                                   Spanned dest, int dstart, int dend) {
+            //  You sometimes get a SpannableStringBuilder, sometimes a plain String in the source parameter
+            if (source instanceof SpannableStringBuilder) {
+                SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder) source;
+                for (int i = end - 1; i >= start; i--) {
+                    char currentChar = source.charAt(i);
+                    if (currentChar == '\n') {
+                        sourceAsSpannableBuilder.replace(i, i + 1, " ");
+                    }
+                }
+                return source;
+            } else {
+                StringBuilder filteredStringBuilder = new StringBuilder();
+                for (int i = start; i < end; i++) {
+                    char currentChar = source.charAt(i);
+                    if (currentChar == '\n') {
+                        filteredStringBuilder.append(" ");
+                    } else {
+                        filteredStringBuilder.append(currentChar);
+                    }
+                }
+                return filteredStringBuilder.toString();
+            }
+        }
+    };
 
     @Override
     public void onPause() {
