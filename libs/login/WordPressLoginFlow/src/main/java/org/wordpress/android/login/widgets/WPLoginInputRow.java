@@ -79,6 +79,14 @@ public class WPLoginInputRow extends RelativeLayout {
                     mIcon.setVisibility(View.GONE);
                 }
 
+                if (a.hasValue(R.styleable.wpLoginInputRow_android_inputType)) {
+                    mEditText.setInputType(a.getInteger(R.styleable.wpLoginInputRow_android_inputType, 0));
+                }
+
+                if (a.hasValue(R.styleable.wpLoginInputRow_android_imeOptions)) {
+                    mEditText.setImeOptions(a.getInteger(R.styleable.wpLoginInputRow_android_imeOptions, 0));
+                }
+
                 if (a.hasValue(R.styleable.wpLoginInputRow_android_hint)) {
                     mTextInputLayout.setHint(a.getString(R.styleable.wpLoginInputRow_android_hint));
                 }
@@ -91,14 +99,6 @@ public class WPLoginInputRow extends RelativeLayout {
                 if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleTint)) {
                     mTextInputLayout.setPasswordVisibilityToggleTintList(
                             a.getColorStateList(R.styleable.wpLoginInputRow_passwordToggleTint));
-                }
-
-                if (a.hasValue(R.styleable.wpLoginInputRow_android_inputType)) {
-                    mEditText.setInputType(a.getInteger(R.styleable.wpLoginInputRow_android_inputType, 0));
-                }
-
-                if (a.hasValue(R.styleable.wpLoginInputRow_android_imeOptions)) {
-                    mEditText.setImeOptions(a.getInteger(R.styleable.wpLoginInputRow_android_imeOptions, 0));
                 }
             } finally {
                 a.recycle();
