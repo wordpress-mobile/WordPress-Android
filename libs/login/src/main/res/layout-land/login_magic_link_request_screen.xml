@@ -58,7 +58,7 @@
         android:clipToPadding="false">
 
         <android.support.v7.widget.AppCompatButton
-            style="@style/WordPress.Button.Secondary"
+            style="@style/LoginTheme.Button.Secondary"
             android:id="@+id/login_enter_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
             android:text="@string/enter_your_password_instead"/>
 
         <android.support.v7.widget.AppCompatButton
-            style="@style/WordPress.Button.Primary"
+            style="@style/LoginTheme.Button.Primary"
             android:id="@+id/login_request_magic_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

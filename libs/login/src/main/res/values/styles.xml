@@ -1,26 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
-    <!-- TODO Move to util library -->
-    <style name="WordPress.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/white</item>
-        <item name="android:textColor">@color/grey_dark</item>
-    </style>
-
-    <style name="WordPress.Button.Primary" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/blue_medium</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="WordPress.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/blue_wordpress</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
-    </style>
-
-    <style name="WordPress.Button.Grey" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/grey_light</item>
-        <item name="android:textColor">@color/blue_wordpress</item>
-    </style>
-
     <style name="LoginTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorAccent">@color/blue_medium</item>
@@ -36,6 +15,16 @@
 
     <style name="LoginTheme.Button" parent="Widget.AppCompat.Button.Colored">
         <item name="colorControlHighlight">@color/color_control_highlight</item>
+    </style>
+
+    <style name="LoginTheme.Button.Primary" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/blue_medium</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="LoginTheme.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
     </style>
 
     <style name="LoginTheme.Button.Google" parent="TextAppearance.AppCompat.Body1">
