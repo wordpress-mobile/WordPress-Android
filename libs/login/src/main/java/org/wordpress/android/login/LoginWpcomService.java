@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
-import org.wordpress.android.fluxc.store.AccountStore.PushSocialLoginPayload;
+import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
@@ -298,7 +298,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
 
         if (mIsSocialLogin) {
             setState(LoginPhase.SOCIAL_LOGIN);
-            PushSocialLoginPayload payload = new PushSocialLoginPayload(mIdToken, mService);
+            PushSocialPayload payload = new PushSocialPayload(mIdToken, mService);
             mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
         } else {
             signalCredentialsOK();
