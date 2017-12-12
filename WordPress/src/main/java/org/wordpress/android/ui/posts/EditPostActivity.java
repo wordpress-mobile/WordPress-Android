@@ -1798,9 +1798,6 @@ public class EditPostActivity extends AppCompatActivity implements
             contentChanged = true;
         } else if (compareCurrentMediaMarkedUploadingToOriginal(content)) {
             contentChanged = true;
-        } else if (mEditorFragment instanceof AztecEditorFragment
-                && ((AztecEditorFragment) mEditorFragment).isHistoryEnabled()) {
-            contentChanged = ((AztecEditorFragment) mEditorFragment).hasHistory();
         } else {
             contentChanged = mPost.getContent().compareTo(content) != 0;
         }
