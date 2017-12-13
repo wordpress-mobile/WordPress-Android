@@ -381,7 +381,6 @@ Language: es_CL
 	<string name="local_draft">Borrador local</string>
 	<string name="upload_failed">Falló la subida</string>
 	<string name="horizontal_alignment">Alineación horizontal</string>
-	<string name="file_not_found">No ha sido posible encontrar el archivo multimedia para cargar. ¿Se ha borrado o cambiado de ubicación?</string>
 	<string name="post_settings">Ajustes de entrada</string>
 	<string name="delete_post">Borrar entrada</string>
 	<string name="delete_page">Borrar página</string>

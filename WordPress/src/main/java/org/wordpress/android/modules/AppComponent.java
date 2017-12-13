@@ -31,9 +31,11 @@ import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressHelpDialogFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
+import org.wordpress.android.ui.accounts.login.LoginWpcomService;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.comments.CommentsDetailActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
@@ -136,6 +138,7 @@ public interface AppComponent {
     void inject(PostUploadHandler object);
 
     void inject(LoginActivity object);
+    void inject(LoginWpcomService object);
     void inject(LoginMagicLinkRequestFragment object);
     void inject(LoginEmailFragment object);
     void inject(LoginGoogleFragment object);
@@ -168,6 +171,7 @@ public interface AppComponent {
     void inject(CommentAdapter object);
     void inject(CommentsListFragment object);
     void inject(CommentsActivity object);
+    void inject(CommentsDetailActivity object);
 
     void inject(MeFragment object);
     void inject(MyProfileActivity object);

@@ -135,7 +135,7 @@
         <activity
             android:name=".ui.accounts.NewBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/SignInTheme"
+            android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.accounts.HelpActivity"
@@ -188,6 +188,9 @@
         <activity
             android:name=".ui.comments.EditCommentActivity"
             android:theme="@style/CalypsoTheme" />
+        <activity
+            android:name=".ui.comments.CommentsDetailActivity"
+            android:theme="@style/CalypsoTheme" />
 
         <!-- Posts activities -->
         <activity
@@ -197,7 +200,6 @@
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".ui.posts.EditPostActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Calypso.ActionMode.Dark"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
@@ -535,6 +537,10 @@
             android:name=".ui.notifications.services.NotificationsUpdateService"
             android:exported="false"
             android:label="Notifications Update Service" />
+        <service
+            android:name=".ui.accounts.login.LoginWpcomService"
+            android:exported="false"
+            android:label="Login to WPCOM Service" />
 
         <!-- Samsung multiwindow support -->
         <uses-library

@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-11 09:28:26+0000
+Translation-Revision-Date: 2017-11-23 14:42:19+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+	<string name="login_empty_password">Пожалуйста, введите пароль</string>
+	<string name="email_not_registered_wpcom">Хм, этот email адрес не зарегистрирован на WordPress.com.\nВозможно вы пытаетесь получить доступ к сайту на своем хостинге? Войдите используя ссылка внизу этого экрана.</string>
+	<string name="login_text_otp_another">Пришлите мне другой код.</string>
+	<string name="enter_verification_code_sms">Мы послали текстовое сообщение на телефонный номер оканчивающийся на %s. Пожалуйста введите проверочный код из SMS.</string>
+	<string name="error_generic_error">Невозможно совершить действие</string>
+	<string name="error_media_recover_page">Невозможно загрузить медиафайлы этой страницы</string>
+	<string name="error_media_recover_post">Невозможно загрузить медиафайлы этой записи</string>
+	<string name="size_full">Полноразмерный</string>
+	<string name="size_large">Большой</string>
+	<string name="size_medium">Средний</string>
+	<string name="size_thumbnail">Миниатюра</string>
+	<string name="image_size">Размер</string>
+	<string name="uploading_subtitle_media_only_one">остался 1 файл</string>
+	<string name="uploading_subtitle_media_only">осталось %1$d из %2$d файлов</string>
+	<string name="uploading_subtitle_posts_only">остались %1$d %2$s</string>
+	<string name="uploading_subtitle_mixed_one">остались %1$d %2$s и один файл</string>
+	<string name="uploading_subtitle_mixed">остались %1$d %2$s, и %3$d из %4$d файлов</string>
+	<string name="uploading_title">Загрузка...</string>
+	<string name="media_files_uploaded_write_post">Написать запись</string>
+	<string name="media_file_missing_for_retry">Повтор не возможен, некоторые файлы этой записи отсутствуют на устройстве</string>
+	<string name="media_all_files_uploaded_successfully">успешно загружено %d файлов</string>
+	<string name="media_files_uploaded_successfully">, %d загружено</string>
+	<string name="media_file_uploaded">1 файл загружен</string>
+	<string name="media_file_not_uploaded">1 файл не загружен</string>
+	<string name="media_files_uploaded">%d файлов загружено</string>
+	<string name="media_files_not_uploaded">%d файлов не загружено</string>
+	<string name="media_file_post_mixed_not_uploaded">%1$d %2$s с %3$d файлами не загружено</string>
+	<string name="wpcom_themes_header">темы WordPress.com</string>
+	<string name="uploaded_themes_header">Загруженные темы</string>
+	<string name="remove_image_from_post">Удалить из записи</string>
+	<string name="confirm_remove_media_image">Удалить это изображение из записи?</string>
+	<string name="media_edit_customize_card_caption">Настроить</string>
+	<string name="media_edit_file_details_card_caption">Информация о файле</string>
 	<string name="login_error_suffix">\nВозможно попробуете другую учетную запись?</string>
 	<string name="login_error_generic">Возникла ошибка подключения к учетной записи Google.</string>
 	<string name="login_error_email_not_found">Учетная запись Google \'%s\' не соответствует ни одной учетной записи WordPress.com.</string>
@@ -57,7 +90,6 @@ Language: ru
 	<string name="media_edit_filetype_caption">Тип файла</string>
 	<string name="media_edit_filename_caption">Имя файла</string>
 	<string name="media_edit_url_caption">URL-адрес</string>
-	<string name="media_edit_card_caption">Сведения о файле</string>
 	<string name="media_edit_alttext_text">Атрибут Alt</string>
 	<string name="copy">Копировать</string>
 	<string name="connect_site">Подключить сайт</string>
@@ -79,7 +111,6 @@ Language: ru
 	<string name="notification_settings_master_status_on">Вкл.</string>
 	<string name="max_video_resolution">Максимальный размер видео</string>
 	<string name="max_thumbnail_px_size">Максимальный размер изображения</string>
-	<string name="error_media_recover_post">Не удалось загрузить медиафайл для этой записи. Отредактируйте запись, чтобы повторить попытку.</string>
 	<string name="error_page_does_not_exist">Эта страница больше не существует</string>
 	<string name="error_upload_post_media_param">При загрузке медиафайла в эту запись произошла ошибка: %s.</string>
 	<string name="error_upload_post_param">При загрузке этой записи произошла ошибка: %s.</string>
@@ -94,8 +125,9 @@ Language: ru
 	<string name="cant_open_url">Не удаётся открыть ссылку</string>
 	<string name="error_unknown_post">Не удалось найти запись на сервере</string>
 	<string name="error_post_does_not_exist">Эта запись больше не существует</string>
-	<string name="error_media_recover_page">Не удалось загрузить медиафайл для этой записи. Отредактируйте запись, чтобы повторить попытку.</string>
 	<string name="error_media_canceled">Загрузка медиафайлов отменена</string>
+	<string name="error_upload_page_media_param">Возникла ошибка загрузки медиафайла на этой странице: %s.</string>
+	<string name="error_upload_page_param">Возникла ошибка загрузки этой страницы: %s.</string>
 	<string name="async_promo_link">Как это работает?</string>
 	<string name="async_promo_description">Теперь можно выйти из редактора — ваша запись будет сохранена и опубликована без вашего участия! Попробуйте нажать!</string>
 	<string name="async_promo_title">Публикуйте уверенно</string>
@@ -104,10 +136,6 @@ Language: ru
 	<string name="dialog_confirm_cancel_post_media_uploading">Продолжить? Если удалить эту запись, загрузка медиафайлов будет отменена.</string>
 	<string name="page_scheduled">Страница запланирована</string>
 	<string name="post_scheduled">Публикация записи запланирована</string>
-	<string name="post_draft_param">Запись «%s» сохранена как черновик!</string>
-	<string name="post_scheduled_param">Запись «%s» запланирована!</string>
-	<string name="post_updated_param">Запись «%s» обновлена!</string>
-	<string name="post_published_param">Запись «%s» опубликована!</string>
 	<string name="button_retry">Повторить попытку</string>
 	<string name="post_queued">Запись в очереди</string>
 	<string name="uploading_post">Выполняется загрузка записи «%s»</string>
@@ -138,7 +166,6 @@ Language: ru
 	<string name="login_magic_links_sent_label">Ваша волшебная ссылка уже в пути! Проверьте почту с этого устройства и нажмите ссылку в письме от WordPress.com.</string>
 	<string name="login_magic_links_label">Мы отправим вам волшебную ссылку, по которой вы сможете сразу войти в систему без пароля. Не нужно больше тыкать по клавиатуре!</string>
 	<string name="password_incorrect">Похоже, пароль введён неправильно. Проверьте правильность введенных данных и повторите попытку.</string>
-	<string name="email_not_registered_wpcom">Этот адрес электронной почты не зарегистрирован на WordPress.com.</string>
 	<string name="requesting_otp">Выполняется запрос на получение проверочного кода в SMS-сообщении.</string>
 	<string name="login_text_otp">Пришлите мне сообщение с кодом.</string>
 	<string name="enter_verification_code">Почти готово! Введите проверочный код из приложения Authenticator.</string>
@@ -610,9 +637,6 @@ Language: ru
 	<string name="site_timeout_error">Не удалось подключиться к сайту WordPress из-за ошибки времени ожидания.</string>
 	<string name="xmlrpc_malformed_response_error">Не удалось подключиться. При установке WordPress отправлен недействительный документ XML-RPC.</string>
 	<string name="xmlrpc_missing_method_error">Не удалось подключиться. На сервере отсутствуют необходимые методы XML-RPC.</string>
-	<string name="theme_premium">Премиум</string>
-	<string name="theme_all">Все</string>
-	<string name="theme_free">Бесплатно</string>
 	<string name="alignment_center">По центру</string>
 	<string name="post_format_video">Видео</string>
 	<string name="post_format_status">Статус</string>
@@ -1274,7 +1298,7 @@ Language: ru
 	<string name="delete_page">Удалить страницу</string>
 	<string name="delete_post">Удалить запись</string>
 	<string name="post_settings">Настройки записи</string>
-	<string name="file_not_found">Не удалось найти файл для загрузки: он был удален или перемещен.</string>
+	<string name="file_not_found">Не удалось найти файл для загрузки. Возможно он был удален или перемещен?</string>
 	<string name="horizontal_alignment">Горизонтальное выравнивание</string>
 	<string name="upload_failed">Ошибка загрузки</string>
 	<string name="local_draft">Локальные черновики</string>

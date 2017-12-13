@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-11 01:33:23+0000
+Translation-Revision-Date: 2017-11-23 08:24:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+	<string name="login_empty_password">Please enter a password</string>
+	<string name="email_not_registered_wpcom">Hmm, this email address isn\'t registered with WordPress.com.\nAre you trying to access a self-hosted site? Log in using the link at the bottom of this screen.</string>
+	<string name="login_text_otp_another">Text me another code instead.</string>
+	<string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
+	<string name="error_generic_error">Couldn\'t perform operation</string>
+	<string name="error_media_recover_page">Unable to upload this page\'s media</string>
+	<string name="error_media_recover_post">Unable to upload this post\'s media</string>
+	<string name="size_full">Full Size</string>
+	<string name="size_large">Large</string>
+	<string name="size_medium">Medium</string>
+	<string name="size_thumbnail">Thumbnail</string>
+	<string name="image_size">Size</string>
+	<string name="uploading_subtitle_media_only_one">1 file remaining</string>
+	<string name="uploading_subtitle_media_only">%1$d of %2$d files remaining</string>
+	<string name="uploading_subtitle_posts_only">%1$d %2$s remaining</string>
+	<string name="uploading_subtitle_mixed_one">%1$d %2$s, and 1 file remaining</string>
+	<string name="uploading_subtitle_mixed">%1$d %2$s, and %3$d of %4$d files remaining</string>
+	<string name="uploading_title">Uploading…</string>
+	<string name="media_files_uploaded_write_post">Write Post</string>
+	<string name="media_file_missing_for_retry">Retry not possible - some files in this Post are missing from your device</string>
+	<string name="media_all_files_uploaded_successfully">%d files uploaded successfully</string>
+	<string name="media_files_uploaded_successfully">, %d successfully uploaded</string>
+	<string name="media_file_uploaded">1 file uploaded</string>
+	<string name="media_file_not_uploaded">1 file not uploaded</string>
+	<string name="media_files_uploaded">%d files uploaded</string>
+	<string name="media_files_not_uploaded">%d files not uploaded</string>
+	<string name="media_file_post_mixed_not_uploaded">%1$d %2$s with %3$d files not uploaded</string>
+	<string name="wpcom_themes_header">WordPress.com themes</string>
+	<string name="uploaded_themes_header">Uploaded themes</string>
+	<string name="remove_image_from_post">Remove from post</string>
+	<string name="confirm_remove_media_image">Remove this image from the post?</string>
+	<string name="media_edit_customize_card_caption">Customise</string>
+	<string name="media_edit_file_details_card_caption">File Details</string>
 	<string name="login_error_suffix">\nMaybe try a different account?</string>
 	<string name="login_error_generic">There was some trouble connecting with the Google account.</string>
 	<string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
@@ -57,7 +90,6 @@ Language: en_AU
 	<string name="media_edit_filetype_caption">File Type</string>
 	<string name="media_edit_filename_caption">File Name</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_file_details_card_caption">File Details</string>
 	<string name="media_edit_alttext_text">Alt text</string>
 	<string name="copy">Copy</string>
 	<string name="connect_site">Connect Site</string>
@@ -79,7 +111,6 @@ Language: en_AU
 	<string name="notification_settings_master_status_on">On</string>
 	<string name="max_video_resolution">Maximum Video Size</string>
 	<string name="max_thumbnail_px_size">Maximum Image Size</string>
-	<string name="error_media_recover_post">We were unable to upload this post\'s media. Please edit the post to try again.</string>
 	<string name="error_page_does_not_exist">This page no longer exists</string>
 	<string name="error_upload_post_media_param">There was an error uploading the media in this post: %s.</string>
 	<string name="error_upload_post_param">There was an error uploading this post: %s.</string>
@@ -94,7 +125,6 @@ Language: en_AU
 	<string name="cant_open_url">Unable to open the link</string>
 	<string name="error_unknown_post">Could not find the post on the server</string>
 	<string name="error_post_does_not_exist">This post no longer exists</string>
-	<string name="error_media_recover_page">We were unable to upload this page\'s media. Please edit the page to try again.</string>
 	<string name="error_media_canceled">Uploading media were cancelled</string>
 	<string name="error_upload_page_media_param">There was an error uploading the media in this page: %s.</string>
 	<string name="error_upload_page_param">There was an error uploading this page: %s.</string>
@@ -106,10 +136,6 @@ Language: en_AU
 	<string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
 	<string name="page_scheduled">Page scheduled</string>
 	<string name="post_scheduled">Post scheduled</string>
-	<string name="post_draft_param">"%s" has been saved as a draft!</string>
-	<string name="post_scheduled_param">"%s" has been scheduled!</string>
-	<string name="post_updated_param">"%s" has been updated!</string>
-	<string name="post_published_param">"%s" has been published!</string>
 	<string name="button_retry">Retry</string>
 	<string name="post_queued">Queued post</string>
 	<string name="uploading_post">Uploading "%s"</string>
@@ -140,7 +166,6 @@ Language: en_AU
 	<string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
 	<string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
 	<string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
-	<string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
 	<string name="requesting_otp">Requesting a verification code via SMS.</string>
 	<string name="login_text_otp">Text me a code instead.</string>
 	<string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
@@ -612,9 +637,6 @@ Language: en_AU
 	<string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
 	<string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
 	<string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
-	<string name="theme_premium">Premium</string>
-	<string name="theme_all">All</string>
-	<string name="theme_free">Free</string>
 	<string name="alignment_center">Centre</string>
 	<string name="post_format_video">Video</string>
 	<string name="post_format_status">Status</string>
@@ -1276,7 +1298,7 @@ Language: en_AU
 	<string name="delete_page">Delete page</string>
 	<string name="delete_post">Delete post</string>
 	<string name="post_settings">Post settings</string>
-	<string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
+	<string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
 	<string name="horizontal_alignment">Horizontal alignment</string>
 	<string name="upload_failed">Upload failed</string>
 	<string name="local_draft">Local draft</string>
