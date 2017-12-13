@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResponse.FetchPluginsResponse;
+import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
@@ -125,7 +126,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         DeleteSitePluginError deletePluginError = new DeleteSitePluginError(((WPComGsonNetworkError)
                                 networkError).apiError, networkError.message);
-                        DeletedSitePluginPayload payload = new DeletedSitePluginPayload(site, deletePluginError);
+                        DeletedSitePluginPayload payload =
+                                new DeletedSitePluginPayload(site, plugin, deletePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(payload));
                     }
                 }
