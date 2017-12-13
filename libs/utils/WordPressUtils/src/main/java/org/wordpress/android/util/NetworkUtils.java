@@ -1,5 +1,6 @@
 package org.wordpress.android.util;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -11,7 +12,7 @@ import android.provider.Settings;
 /**
  * requires android.permission.ACCESS_NETWORK_STATE
  */
-
+@SuppressLint("MissingPermission")
 public class NetworkUtils {
     public static final int TYPE_UNKNOWN = -1;
 

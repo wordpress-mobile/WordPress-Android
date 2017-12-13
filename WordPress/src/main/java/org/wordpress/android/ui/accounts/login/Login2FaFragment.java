@@ -415,7 +415,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
         if (isSocialLoginConnect) {
-            AccountStore.PushSocialLoginPayload payload = new AccountStore.PushSocialLoginPayload(mIdToken, mService);
+            AccountStore.PushSocialPayload payload = new AccountStore.PushSocialPayload(mIdToken, mService);
             mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
         } else {
             doFinishLogin();
