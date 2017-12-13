@@ -13,12 +13,8 @@ Language: it
 	<string name="async_promo_title">Pubblica con Confidence</string>
 	<string name="editor_uploading_post">Il tuo articolo è stato caricato</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Sei sicuro? Cancellando questo articolo annullerai anche il caricamento del file multimediale.</string>
-	<string name="post_draft_param">"%s" è stato salvato come bozza!</string>
 	<string name="page_scheduled">Pagina programmata</string>
 	<string name="post_scheduled">Articolo programmata</string>
-	<string name="post_scheduled_param">"%s" è stato programmato!</string>
-	<string name="post_updated_param">"%s" è stata aggiornata!</string>
-	<string name="post_published_param">"%s" è stata pubblicata!</string>
 	<string name="button_retry">Riprova</string>
 	<string name="post_queued">Articolo in coda</string>
 	<string name="uploading_post">Caricamento "%s"</string>
@@ -49,7 +45,6 @@ Language: it
 	<string name="login_magic_links_sent_label">Il tuo link sta arrivando! Controlla la tua e-mail su questo dispositivo e premi il link nell\'e-mail ricevuta da WordPress.com.</string>
 	<string name="login_magic_links_label">Ti invieremo per e-mail un link per accedere subito, senza password. Non ci sarà più bisogno di digitare la password!</string>
 	<string name="password_incorrect">Sembra che la password non sia corretta. Verifica attentamente le informazioni e riprova.</string>
-	<string name="email_not_registered_wpcom">Questa e-mail non è registrata su Wordpress.com</string>
 	<string name="requesting_otp">Richiesta codice di verifica tramite SMS.</string>
 	<string name="login_text_otp">Inviami un codice.</string>
 	<string name="enter_verification_code">Ci sei quasi! Inserisci il codice di verifica dalla tua app di autenticazione.</string>
@@ -523,9 +518,6 @@ Language: it
 	<string name="post_format_status">Stato</string>
 	<string name="post_format_video">Video</string>
 	<string name="alignment_center">Centro</string>
-	<string name="theme_free">Gratuito</string>
-	<string name="theme_all">Tutti</string>
-	<string name="theme_premium">Premium</string>
 	<string name="post_format_chat">Chat</string>
 	<string name="post_format_gallery">Galleria</string>
 	<string name="post_format_image">Immagine</string>
@@ -1136,7 +1128,6 @@ Language: it
 	<string name="local_draft">Bozza locale</string>
 	<string name="upload_failed">Caricamento non riuscito</string>
 	<string name="horizontal_alignment">Allineamento orizzontale</string>
-	<string name="file_not_found">Impossibile trovare il file da caricare. È stato eliminato o spostato?</string>
 	<string name="post_settings">Impostazioni articolo</string>
 	<string name="delete_post">Elimina articolo</string>
 	<string name="delete_page">Elimina pagina</string>

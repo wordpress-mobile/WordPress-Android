@@ -285,9 +285,6 @@ Language: is
 	<string name="site_timeout_error">Gat ekki tengst WordPress vef þar sem tenging rann út á tíma.</string>
 	<string name="xmlrpc_malformed_response_error">Gat ekki tengst. WordPress uppsetningin svaraði með ógildu XML-RPC skjali.</string>
 	<string name="xmlrpc_missing_method_error">Gat ekki tengst. Nauðsynlega XML-RPC virkni vantar á netþjóninn.</string>
-	<string name="theme_premium">Sérfræðingar</string>
-	<string name="theme_all">Allt</string>
-	<string name="theme_free">Ókeypis</string>
 	<string name="alignment_center">Miðja</string>
 	<string name="post_format_video">Myndband</string>
 	<string name="post_format_status">Staða</string>
@@ -938,7 +935,6 @@ Language: is
 	<string name="delete_page">Eyða síðu</string>
 	<string name="delete_post">Eyða færslu</string>
 	<string name="post_settings">Stillingar færslu</string>
-	<string name="file_not_found">Gat ekki fundið skrána til upphleðslu. Var henni eytt eða hún flutt?</string>
 	<string name="horizontal_alignment">Lárétt jöfnun</string>
 	<string name="upload_failed">Sending mistókst</string>
 	<string name="local_draft">Staðvær drög</string>

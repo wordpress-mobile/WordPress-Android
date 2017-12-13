@@ -210,9 +210,6 @@ Language: es_VE
 	<string name="xmlrpc_malformed_response_error">No se pudo conectar. La instalación de WordPress está respondiendo con un documento XML-RPC no válido.</string>
 	<string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
 	<string name="post_format_video">Video</string>
-	<string name="theme_all">Todo</string>
-	<string name="theme_premium">Premium</string>
-	<string name="theme_free">Gratis</string>
 	<string name="post_format_status">Estado</string>
 	<string name="alignment_center">Centrado</string>
 	<string name="post_format_image">Imagen</string>
@@ -816,7 +813,6 @@ Language: es_VE
 	<string name="local_draft">Borrador local</string>
 	<string name="upload_failed">Falló la subida</string>
 	<string name="horizontal_alignment">Alineación horizontal</string>
-	<string name="file_not_found">No ha sido posible encontrar el archivo multimedia para cargar. ¿Se ha borrado o cambiado de ubicación?</string>
 	<string name="post_settings">Ajustes de entrada</string>
 	<string name="delete_post">Borrar entrada</string>
 	<string name="delete_page">Borrar página</string>

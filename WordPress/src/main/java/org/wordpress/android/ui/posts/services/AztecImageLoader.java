@@ -28,6 +28,11 @@ public class AztecImageLoader implements Html.ImageGetter {
 
     @Override
     public void loadImage(final String url, final Callbacks callbacks, int maxWidth) {
+        loadImage(url, callbacks, maxWidth, 0);
+    }
+
+    @Override
+    public void loadImage(final String url, final Callbacks callbacks, int maxWidth, int minWidth) {
         // FIXME: Aztec has now the option to set the desired image width. We should respect it
         // Ignore the maxWidth passed from Aztec, since it's the MAX of screen width/height
         final int maxWidthForEditor = ImageUtils.getMaximumThumbnailWidthForEditor(context);

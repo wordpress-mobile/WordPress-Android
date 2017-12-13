@@ -382,7 +382,6 @@ Language: gd_GB
 	<string name="delete_page">Sguab às an duilleag</string>
 	<string name="delete_post">Sguab às am post</string>
 	<string name="horizontal_alignment">Co-thaobhadh còmhnard</string>
-	<string name="file_not_found">Cha b’ urrainn dhuinn greim fhaighinn air faidhle a’ mheadhain gus a luchdadh suas. An deach a sguabadh às no a ghluasad?</string>
 	<string name="post_settings">Roghainnean a’ phuist</string>
 	<string name="local_draft">Dreachd ionadail</string>
 	<string name="upload_failed">Dh’fhàillig a luchdadh suas</string>
