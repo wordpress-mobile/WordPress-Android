@@ -71,7 +71,9 @@
 
             <LinearLayout style="@style/PluginCardViewVerticalContainer">
 
-                <RelativeLayout style="@style/PluginCardViewHorizontalContainer">
+                <RelativeLayout
+                    android:id="@+id/plugin_state_active_container"
+                    style="@style/PluginCardViewHorizontalContainer">
 
                     <TextView
                         style="@style/PluginCardViewPrimaryText"

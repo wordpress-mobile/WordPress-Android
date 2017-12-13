@@ -252,7 +252,9 @@ public class PluginDetailActivity extends AppCompatActivity {
         // Handle specific cases for Jetpack, Akismet and VaultPress
         boolean canPluginBeDisabledOrRemoved = canPluginBeDisabledOrRemoved();
         removeBtn.setVisibility(canPluginBeDisabledOrRemoved ? View.VISIBLE : View.GONE);
-        mSwitchActive.setClickable(canPluginBeDisabledOrRemoved);
+        if (!canPluginBeDisabledOrRemoved) {
+            findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
+        }
 
         refreshViews();
     }
