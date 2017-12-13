@@ -11,8 +11,8 @@ import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
-import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
+import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -76,7 +76,6 @@ import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.MyProfileFragment;
-import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
@@ -234,7 +233,6 @@ public interface AppComponent {
     void inject(ReaderWebView object);
     void inject(ReaderPostPagerActivity object);
 
-    void inject(ReleaseNotesActivity object);
     void inject(WPWebViewActivity object);
     void inject(WPWebViewClient object);
 
