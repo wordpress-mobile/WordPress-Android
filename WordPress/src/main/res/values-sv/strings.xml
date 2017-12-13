@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-11 23:43:24+0000
+Translation-Revision-Date: 2017-11-23 14:11:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="login_empty_password">Skriv in ett lösenord</string>
+	<string name="email_not_registered_wpcom">Hmm, denna e-postadress är inte registrerad på WordPress.com.\nFörsöker du logga in på en webbplats som ligger på webbhotell eller egen server? Logga då in via länken längst ned på denna sida.</string>
+	<string name="login_text_otp_another">Skicka ett nytt SMS med en kod till mig istället.</string>
+	<string name="enter_verification_code_sms">Vi har skickat ett SMS till telefonnumret som slutar på %s. Skriv in bekräftelsekoden from SMS;et.</string>
+	<string name="error_generic_error">Åtgärden kunde inte utföras</string>
+	<string name="error_media_recover_page">Det gick inte att ladda upp sidans media</string>
+	<string name="error_media_recover_post">Det gick inte att ladda upp inläggets media</string>
+	<string name="size_full">Full storlek</string>
+	<string name="size_large">Stor</string>
+	<string name="size_medium">Medium</string>
+	<string name="size_thumbnail">Miniatyr</string>
+	<string name="image_size">Storlek</string>
+	<string name="uploading_subtitle_media_only_one">1 fil återstår</string>
+	<string name="uploading_subtitle_media_only">%1$d av %2$d filer återstår</string>
+	<string name="uploading_subtitle_posts_only">%1$d %2$s återstår</string>
+	<string name="uploading_subtitle_mixed_one">%1$d %2$s, och 1 fil återstår</string>
+	<string name="uploading_subtitle_mixed">%1$d %2$s, och %3$d av %4$d filer återstår</string>
+	<string name="uploading_title">Ladda upp…</string>
+	<string name="media_files_uploaded_write_post">Skriv inlägg</string>
+	<string name="media_file_missing_for_retry">Det går inte att försöka igen. Några av inläggets filer saknas på din enhet</string>
+	<string name="media_all_files_uploaded_successfully">%d filer har laddats upp</string>
+	<string name="media_files_uploaded_successfully">%d har laddats upp</string>
+	<string name="media_file_uploaded">1 fil har laddats upp</string>
+	<string name="media_file_not_uploaded">1 fil laddades inte upp</string>
+	<string name="media_files_uploaded">%d filer har laddats upp</string>
+	<string name="media_files_not_uploaded">%d filer har inte laddats upp</string>
+	<string name="media_file_post_mixed_not_uploaded">%1$d %2$s med %3$d filer som inte laddats upp</string>
+	<string name="wpcom_themes_header">Teman från WordPress.com</string>
+	<string name="uploaded_themes_header">Uppladdade teman</string>
+	<string name="remove_image_from_post">Ta bort ur inlägget</string>
+	<string name="confirm_remove_media_image">Ta bort denna bild ur inlägget?</string>
+	<string name="media_edit_customize_card_caption">Anpassa</string>
+	<string name="media_edit_file_details_card_caption">Filinformation</string>
 	<string name="login_error_suffix">\nDu kanske vill prova ett annat konto?</string>
 	<string name="login_error_generic">Det var något som inte stämde vid uppkoppling till Google-kontot.</string>
 	<string name="login_error_email_not_found">Google-kontot ”%s” motsvarar inte något befintligt konto på WordPress.com.</string>
@@ -57,7 +90,6 @@ Language: sv_SE
 	<string name="media_edit_filetype_caption">Filtyp</string>
 	<string name="media_edit_filename_caption">Filnamn</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_file_details_card_caption">Information om fil</string>
 	<string name="media_edit_alttext_text">Alt-text</string>
 	<string name="copy">Kopiera</string>
 	<string name="connect_site">Anslut webbplats</string>
@@ -79,7 +111,6 @@ Language: sv_SE
 	<string name="notification_settings_master_status_on">På</string>
 	<string name="max_video_resolution">Maximal videostorlek</string>
 	<string name="max_thumbnail_px_size">Maximal bildstorlek</string>
-	<string name="error_media_recover_post">Vi lyckades inte ladda upp inläggets media. Redigera inlägget och försök igen.</string>
 	<string name="error_page_does_not_exist">Denna sida finns inte längre</string>
 	<string name="error_upload_post_media_param">Ett fel inträffade vid uppladdning av media för följande inlägg: %s.</string>
 	<string name="error_upload_post_param">Ett fel inträffade vid uppladdning av följande inlägg: %s.</string>
@@ -94,7 +125,6 @@ Language: sv_SE
 	<string name="cant_open_url">Kan inte öppna länken</string>
 	<string name="error_unknown_post">Hittade inte inlägget på servern</string>
 	<string name="error_post_does_not_exist">Detta inlägg finns inte kvar</string>
-	<string name="error_media_recover_page">Det gick inte att ladda upp mediafilerna för denna sida. Redigera sidan och försök igen.</string>
 	<string name="error_media_canceled">Uppladdningen av media avbröts</string>
 	<string name="error_upload_page_media_param">Ett fel inträffade vid uppladdning av media för sidan %s.</string>
 	<string name="error_upload_page_param">Ett fel inträffade vid uppladdning av sidan %s.</string>
@@ -106,10 +136,6 @@ Language: sv_SE
 	<string name="dialog_confirm_cancel_post_media_uploading">Är du säker? Om du raderar detta inlägg kommer även mediauppladdningen att avbrytas.</string>
 	<string name="page_scheduled">Sidan har tidsinställts</string>
 	<string name="post_scheduled">Inlägget har tidsinställts</string>
-	<string name="post_draft_param">”%s” har sparats som utkast!</string>
-	<string name="post_scheduled_param">”%s” har tidsinställts!</string>
-	<string name="post_updated_param">”%s” har uppdaterats!</string>
-	<string name="post_published_param">”%s” har publicerats!</string>
 	<string name="button_retry">Försök igen</string>
 	<string name="post_queued">Inlägget i kö</string>
 	<string name="uploading_post">Laddar upp ”%s”</string>
@@ -140,7 +166,6 @@ Language: sv_SE
 	<string name="login_magic_links_sent_label">Din magiska länk är på väg! Kolla e-posten på din enhet och knacka på länken i e-postmeddelandet du just fick från WordPress.com</string>
 	<string name="login_magic_links_label">Vi skickar en magisk länk som låter dig logga in direkt, utan något lösenord. Slut på pekfingervalsandet!</string>
 	<string name="password_incorrect">Det verkar som om ditt lösenord inte stämmer. Dubbelkolla dina uppgifer och försök igen.</string>
-	<string name="email_not_registered_wpcom">Denna e-postadress finns inte registrerad på WordPress.com</string>
 	<string name="requesting_otp">Begär en verifieringskod via SMS.</string>
 	<string name="login_text_otp">Skicka mig en kod via SMS istället.</string>
 	<string name="enter_verification_code">Nästan klart! Skriv in verifieringskoden från din Authenticator-app.</string>
@@ -612,9 +637,6 @@ Language: sv_SE
 	<string name="site_timeout_error">Kunde inte ansluta till WordPress-webbplatsen eftersom servern inte svarade.</string>
 	<string name="xmlrpc_malformed_response_error">Kunde inte ansluta. WordPress-installationen svarade med ett ogiltigt XML-RPC-dokument.</string>
 	<string name="xmlrpc_missing_method_error">Kunde inte ansluta. Obligatoriska XML-RPC-metoder saknas på servern.</string>
-	<string name="theme_premium">Premium</string>
-	<string name="theme_all">Alla</string>
-	<string name="theme_free">Free</string>
 	<string name="alignment_center">Centrerat</string>
 	<string name="post_format_video">Videoklipp</string>
 	<string name="post_format_status">Status</string>
@@ -1276,7 +1298,7 @@ Language: sv_SE
 	<string name="delete_page">Radera sida</string>
 	<string name="delete_post">Radera inlägg</string>
 	<string name="post_settings">Inläggsinställningar</string>
-	<string name="file_not_found">Kunde inte hitta mediafilen att ladda upp. Har den tagits bort eller flyttats?</string>
+	<string name="file_not_found">Kunde inte hitta mediafilen att ladda upp. Kanske har den tagits bort eller flyttats?</string>
 	<string name="horizontal_alignment">Vågrät justering</string>
 	<string name="upload_failed">Uppladdning misslyckades</string>
 	<string name="local_draft">Lokalt utkast</string>

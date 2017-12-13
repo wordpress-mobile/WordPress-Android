@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.themes;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -100,11 +102,26 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     public void onAttach(Context context) {
         super.onAttach(context);
 
+        attachActivity((ThemeBrowserActivity) context);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This version of onAttach will be called for all Android versions but it's deprecated, so we only want to
+        // use it when we have to. https://github.com/wordpress-mobile/WordPress-Android/issues/6937
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            attachActivity((ThemeBrowserActivity) activity);
+        }
+    }
+
+    private void attachActivity(ThemeBrowserActivity activity) {
         try {
-            mCallback = (ThemeBrowserFragmentCallback) context;
-            mThemeBrowserActivity = (ThemeBrowserActivity) context;
+            mCallback = activity;
+            mThemeBrowserActivity = activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement ThemeBrowserFragmentCallback");
+            throw new ClassCastException(activity.toString() + " must implement ThemeBrowserFragmentCallback");
         }
     }
 
@@ -411,7 +428,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         Iterator<ThemeModel> iterator = themes.iterator();
         while (iterator.hasNext()) {
             ThemeModel theme = iterator.next();
-            if (theme.getPrice() > 0.f && !theme.getActive()) {
+            if (!theme.isFree() && !theme.getActive()) {
                 iterator.remove();
             }
         }

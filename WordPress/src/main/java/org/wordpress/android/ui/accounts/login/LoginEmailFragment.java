@@ -6,9 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -25,13 +27,13 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.ui.accounts.LoginMode;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 
@@ -99,12 +101,17 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
             @Override
             public void onClick(View view) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_CLICK);
-                WPActivityUtils.hideKeyboard(getActivity().getCurrentFocus());
+                ActivityUtils.hideKeyboardForced(getActivity().getCurrentFocus());
 
                 if (NetworkUtils.checkConnection(getActivity())) {
-                    mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
-                    isSocialLogin = true;
-                    addGoogleFragment();
+                    if (isAdded()) {
+                        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
+                        isSocialLogin = true;
+                        addGoogleFragment();
+                    } else {
+                        AppLog.e(T.NUX, "Google login could not be started.  LoginEmailFragment was not attached.");
+                        showErrorDialog(getString(R.string.login_error_generic_start));
+                    }
                 }
             }
         });
@@ -265,6 +272,14 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener>
 
     private void showEmailError(int messageId) {
         mEmailInput.setError(getString(messageId));
+    }
+
+    private void showErrorDialog(String message) {
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+                .setMessage(message)
+                .setPositiveButton(R.string.login_error_button, null)
+                .create();
+        dialog.show();
     }
 
     @Override

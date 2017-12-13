@@ -611,6 +611,26 @@ public class WordPress extends MultiDexApplication {
     }
 
     /**
+     * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
+     * are used at the project level to set custom fields.
+     * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
+     * @param activity            Used to get the Application instance
+     * @param configValueName     The name of the field-to-access
+     * @return                    The string value of the field, or empty string if the field is not found.
+     */
+    public static String getBuildConfigString(Activity activity, String configValueName) {
+        if (!BuildConfig.DEBUG) return "";
+
+        String value = (String) WordPress.getBuildConfigValue(activity.getApplication(), configValueName);
+        if (!TextUtils.isEmpty(value)) {
+            AppLog.d(AppLog.T.NUX, "Auto-filled from build config: " + configValueName);
+            return value;
+        }
+
+        return "";
+    }
+
+    /**
      * Detect when the app goes to the background and come back to the foreground.
      *
      * Turns out that when your app has no more visible UI, a callback is triggered.

@@ -27,7 +27,10 @@ import java.util.List;
 public class AppPrefs {
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
     private static final int MAX_PENDING_DRAFTS_AMOUNT = 100;
-    public static final int MAX_RECENTLY_PICKED_SITES = 5;
+
+    // store twice as many recent sites as we show
+    private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 5;
+    private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
 
     public interface PrefKey {
         String name();
@@ -648,12 +651,18 @@ public class AppPrefs {
      * returns a list of local IDs of sites recently chosen in the site picker
      */
     public static ArrayList<Integer> getRecentlyPickedSiteIds() {
+        return getRecentlyPickedSiteIds(MAX_RECENTLY_PICKED_SITES_TO_SHOW);
+    }
+    private static ArrayList<Integer> getRecentlyPickedSiteIds(int limit) {
         String idsAsString = getString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, "");
         List<String> items = Arrays.asList(idsAsString.split(","));
 
         ArrayList<Integer> siteIds = new ArrayList<>();
         for (String item : items) {
             siteIds.add(StringUtils.stringToInt(item));
+            if (siteIds.size() == limit) {
+                break;
+            }
         }
 
         return siteIds;
@@ -665,7 +674,7 @@ public class AppPrefs {
     public static void addRecentlyPickedSiteId(Integer localId) {
         if (localId == 0) return;
 
-        ArrayList<Integer> currentIds = getRecentlyPickedSiteIds();
+        ArrayList<Integer> currentIds = getRecentlyPickedSiteIds(MAX_RECENTLY_PICKED_SITES_TO_SAVE);
 
         // remove this ID if it already exists in the list
         int index = currentIds.indexOf(localId);
@@ -677,13 +686,24 @@ public class AppPrefs {
         currentIds.add(0, localId);
 
         // remove at max
-        if (currentIds.size() > MAX_RECENTLY_PICKED_SITES) {
-            currentIds.remove(MAX_RECENTLY_PICKED_SITES);
+        if (currentIds.size() > MAX_RECENTLY_PICKED_SITES_TO_SAVE) {
+            currentIds.remove(MAX_RECENTLY_PICKED_SITES_TO_SAVE);
         }
 
         // store in prefs
         String idsAsString = TextUtils.join(",", currentIds);
         setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
+    }
+
+    public static void removeRecentlyPickedSiteId(Integer localId) {
+        ArrayList<Integer> currentIds = getRecentlyPickedSiteIds(MAX_RECENTLY_PICKED_SITES_TO_SAVE);
+
+        int index = currentIds.indexOf(localId);
+        if (index > -1) {
+            currentIds.remove(index);
+            String idsAsString = TextUtils.join(",", currentIds);
+            setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
+        }
     }
 
     public static long getLastWpComThemeSync() {

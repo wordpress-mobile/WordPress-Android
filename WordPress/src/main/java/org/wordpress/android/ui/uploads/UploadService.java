@@ -605,7 +605,7 @@ public class UploadService extends Service {
             for (MediaModel media: mMediaBatchUploaded) {
                 // we need to obtain the latest copy from the Store, as it's got the remote mediaId field
                 MediaModel currentMedia = mMediaStore.getMediaWithLocalId(media.getId());
-                if (currentMedia.getLocalPostId() == 0
+                if (currentMedia != null && currentMedia.getLocalPostId() == 0
                         && MediaUploadState.fromString(currentMedia.getUploadState())
                         == MediaUploadState.UPLOADED) {
                     standAloneMediaItems.add(currentMedia);

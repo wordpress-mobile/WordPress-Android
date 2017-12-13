@@ -543,7 +543,6 @@ Language: th
 	<string name="connection_error">การเชื่อมต่อผิดพลาด</string>
 	<string name="cancel_edit">ยกเลิกการแก้ไข</string>
 	<string name="site_address">ที่อยู่เว็บแบบติดตั้งบนโฮสท์เองของคุณ (URL)</string>
-	<string name="file_not_found">ไม่สามารถหาไฟล์สื่อสำหรับการอัปโหลด  มันถูกลบหรือย้ายไปแล้วหรือไม่?</string>
 	<string name="post_settings">การตั้งค่าเรื่อง</string>
 	<string name="blog_removed_successfully">ลบเว็บสำเร็จแล้ว</string>
 	<string name="remove_account">ลบเว็บ</string>

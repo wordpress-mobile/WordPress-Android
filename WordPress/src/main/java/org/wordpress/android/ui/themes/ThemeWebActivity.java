@@ -72,7 +72,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
         intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
-        intent.putExtra(IS_PREMIUM_THEME, theme.getPrice() > 0.f);
+        intent.putExtra(IS_PREMIUM_THEME, !theme.isFree());
         intent.putExtra(IS_CURRENT_THEME, theme.getActive());
         intent.putExtra(THEME_NAME, theme.getName());
         intent.putExtra(ThemeBrowserActivity.THEME_ID, theme.getThemeId());

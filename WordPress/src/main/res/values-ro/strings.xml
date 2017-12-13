@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-11 16:48:26+0000
+Translation-Revision-Date: 2017-11-23 11:24:45+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="login_empty_password">Te rog introdu o parolă</string>
+	<string name="email_not_registered_wpcom">Hm, această adresă de email nu este înregistrată cu WordPress.com.\nÎncerci să accesezi un sit auto-găzduit? Autentifică-te folosind legătura din partea de jos a acestui ecran.</string>
+	<string name="login_text_otp_another">Trimite-mi în schimb un mesaj text cu un alt cod.</string>
+	<string name="enter_verification_code_sms">Am trimis un mesaj text către numărul de telefon care se termină cu %s. Te rog introdu codul de verificare în SMS.</string>
+	<string name="error_generic_error">Nu am putut efectua operația</string>
+	<string name="error_media_recover_page">Nu pot încărca această pagină din media</string>
+	<string name="error_media_recover_post">Nu pot încărca acest articol din media</string>
+	<string name="size_full">Dimensiune completă</string>
+	<string name="size_large">Mare</string>
+	<string name="size_medium">Medie</string>
+	<string name="size_thumbnail">Miniatură</string>
+	<string name="image_size">Dimensiune</string>
+	<string name="uploading_subtitle_media_only_one">1 fișier rămas</string>
+	<string name="uploading_subtitle_media_only">%1$d din %2$d fișiere rămase</string>
+	<string name="uploading_subtitle_posts_only">%1$d %2$s rămase</string>
+	<string name="uploading_subtitle_mixed_one">%1$d %2$s și 1 fișier rămas</string>
+	<string name="uploading_subtitle_mixed">%1$d %2$s și %3$d din %4$d fișiere rămase</string>
+	<string name="uploading_title">Încarc...</string>
+	<string name="media_files_uploaded_write_post">Scrie articol</string>
+	<string name="media_file_missing_for_retry">Reîncercarea nu este posibilă - unele fișiere din articol lipsesc de pe dispozitivul tău</string>
+	<string name="media_all_files_uploaded_successfully">%d fișiere încărcate cu succes</string>
+	<string name="media_files_uploaded_successfully">, %d încărcate cu succes</string>
+	<string name="media_file_uploaded">1 fișier încărcat</string>
+	<string name="media_file_not_uploaded">1 fișier neîncărcat</string>
+	<string name="media_files_uploaded">%d fișiere încărcate</string>
+	<string name="media_files_not_uploaded">%d fișiere neîncărcate</string>
+	<string name="media_file_post_mixed_not_uploaded">%1$d %2$s cu %3$d fișiere neîncărcate</string>
+	<string name="wpcom_themes_header">Teme WordPress.com</string>
+	<string name="uploaded_themes_header">Teme încărcate</string>
+	<string name="remove_image_from_post">Înlătură din articol</string>
+	<string name="confirm_remove_media_image">Înlături această imagine din articol?</string>
+	<string name="media_edit_customize_card_caption">Personalizare</string>
+	<string name="media_edit_file_details_card_caption">Detalii fișier</string>
 	<string name="login_error_suffix">\nPoate încerci un alt cont?</string>
 	<string name="login_error_generic">Au fost probleme cu conectarea la contul Google.</string>
 	<string name="login_error_email_not_found">Contul Google „%s” nu se potrivește cu niciun cont existent pe WordPress.com.</string>
@@ -57,7 +90,6 @@ Language: ro
 	<string name="media_edit_filetype_caption">Tip de fișier</string>
 	<string name="media_edit_filename_caption">Nume fișier</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_file_details_card_caption">Detalii fișier</string>
 	<string name="media_edit_alttext_text">Text alternativ</string>
 	<string name="copy">Copiază</string>
 	<string name="connect_site">Conectează situl</string>
@@ -79,7 +111,6 @@ Language: ro
 	<string name="notification_settings_master_status_on">Pornite</string>
 	<string name="max_video_resolution">Dimensiune maximă video</string>
 	<string name="max_thumbnail_px_size">Dimensiune maximă imagine</string>
-	<string name="error_media_recover_post">Nu am putut să încărcăm media în acest articol. Te rog editează articolul pentru a încerca din nou.</string>
 	<string name="error_page_does_not_exist">Această pagină nu mai există</string>
 	<string name="error_upload_post_media_param">A fost o eroare la încărcarea media în acest articol: %s.</string>
 	<string name="error_upload_post_param">A fost o eroare la încărcarea acestui articol: %s.</string>
@@ -94,7 +125,6 @@ Language: ro
 	<string name="cant_open_url">Nu pot deschide legătura</string>
 	<string name="error_unknown_post">N-am putut găsi articolul pe server</string>
 	<string name="error_post_does_not_exist">Acest articol nu mai există</string>
-	<string name="error_media_recover_page">Nu am putut să încărcăm media în această pagină. Te rog editează pagina pentru a încerca din nou.</string>
 	<string name="error_media_canceled">Încărcarea media a fost anulată</string>
 	<string name="error_upload_page_media_param">A fost o eroare la încărcarea media în această pagină: %s.</string>
 	<string name="error_upload_page_param">A fost o eroare la încărcarea acestei pagini: %s.</string>
@@ -106,10 +136,6 @@ Language: ro
 	<string name="dialog_confirm_cancel_post_media_uploading">Sigur? Ștergerea acestui articol va anula, de asemenea, încărcarea media.</string>
 	<string name="page_scheduled">Pagină programată</string>
 	<string name="post_scheduled">Articol programat</string>
-	<string name="post_draft_param">„%s” a fost salvat ca o ciornă!</string>
-	<string name="post_scheduled_param">„%s” a fost programat!</string>
-	<string name="post_updated_param">„%s” a fost actualizat!</string>
-	<string name="post_published_param">„%s” a fost publicat!</string>
 	<string name="button_retry">Reîncearcă</string>
 	<string name="post_queued">Articol în coada de așteptare</string>
 	<string name="uploading_post">Încarc „%s”</string>
@@ -140,7 +166,6 @@ Language: ro
 	<string name="login_magic_links_sent_label">Legătura ta magică este pe drum! Verifică-ți emailul pe acest dispozitiv și atinge legătura din emailul pe care l-ai primit de la WordPress.com.</string>
 	<string name="login_magic_links_label">Îți vom trimite prin email o legătură magică care te va autentifica instantaneu, fără nicio parolă. Nu mai trebuie să scrii nimic!</string>
 	<string name="password_incorrect">Se pare că această parolă este incorectă. Te rog verifică-ți din nou informațiile și încearcă din nou.</string>
-	<string name="email_not_registered_wpcom">Acest email nu este înregistrat pe WordPress.com</string>
 	<string name="requesting_otp">Cer un cod de verificare prin SMS.</string>
 	<string name="login_text_otp">În schimb, trimite-mi un mesaj text cu un cod.</string>
 	<string name="enter_verification_code">Aproape gata! Te rog codul de verificare din aplicația ta Authenticator.</string>
@@ -612,9 +637,6 @@ Language: ro
 	<string name="site_timeout_error">Nu ne-am putut conecta la situl WordPress datorită unei erori de expirare timp.</string>
 	<string name="xmlrpc_malformed_response_error">Nu ne-am putut conecta. Instalarea WordPress a răspuns cu un document XML-RPC invalid.</string>
 	<string name="xmlrpc_missing_method_error">Nu ne-am putut conecta. Metodele XML-RPC necesare lipsesc de pe server.</string>
-	<string name="theme_premium">Premium</string>
-	<string name="theme_all">Toate</string>
-	<string name="theme_free">Gratis</string>
 	<string name="alignment_center">Centru</string>
 	<string name="post_format_video">Video</string>
 	<string name="post_format_status">Stare</string>
@@ -1276,7 +1298,7 @@ Language: ro
 	<string name="delete_page">Șterge pagină</string>
 	<string name="delete_post">Șterge articol</string>
 	<string name="post_settings">Setări articol</string>
-	<string name="file_not_found">Nu am găsit fișierul media pentru încărcare. A fost șters sau mutat?</string>
+	<string name="file_not_found">Nu am putut găsit fișierul pentru încărcare. A fost șters sau mutat?</string>
 	<string name="horizontal_alignment">Aliniere orizontală</string>
 	<string name="upload_failed">Încărcare eșuată</string>
 	<string name="local_draft">Ciornă locală</string>
