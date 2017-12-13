@@ -12,7 +12,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.ui.accounts.GoogleFragment;
 import org.wordpress.android.util.AppLog;
 
@@ -48,7 +50,8 @@ public class SignupGoogleFragment extends GoogleFragment {
                             mGoogleEmail = account.getEmail();
                             mIdToken = account.getIdToken();
                             mPhotoUrl = removeScaleFromGooglePhotoUrl(account.getPhotoUrl().toString());
-                            // TODO: Call social signup endpoint.
+                            PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
+                            mDispatcher.dispatch(AccountActionBuilder.newPushSocialSignupAction(payload));
                         } catch (NullPointerException exception) {
                             disconnectGoogleClient();
                             AppLog.e(AppLog.T.NUX, "Cannot get ID token from Google signup account.", exception);
