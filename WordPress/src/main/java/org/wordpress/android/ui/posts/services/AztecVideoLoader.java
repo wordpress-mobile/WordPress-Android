@@ -60,9 +60,4 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
             }
         }.execute();
     }
-
-    @Override
-    public void loadVideoThumbnail(String s, Callbacks callbacks, int i, int i1) {
-        loadVideoThumbnail(s, callbacks, i);
-    }
 }

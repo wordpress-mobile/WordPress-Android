@@ -85,9 +85,4 @@ public class AztecImageLoader implements Html.ImageGetter {
             }
         }, maxWidthForEditor, 0);
     }
-
-    @Override
-    public void loadImage(String s, Callbacks callbacks, int i, int i1) {
-        loadImage(s,callbacks,i);
-    }
 }
