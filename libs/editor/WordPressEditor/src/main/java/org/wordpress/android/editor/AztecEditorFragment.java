@@ -450,11 +450,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         content.fromHtml(removeVisualEditorProgressTag(text.toString()));
 
-        //TODO partial workaround for https://github.com/wordpress-mobile/AztecEditor-Android/issues/572 until it's is fixed
-        if (content.getEditableText().getSpans(0, content.length(), CaptionShortcodeSpan.class).length > 0) {
-            content.fromHtml(content.toHtml(false));
-        }
-
         updateFailedMediaList();
         overlayFailedMedia();
 
@@ -1632,6 +1627,41 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         captionAttributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
 
                         CaptionExtensionsKt.setImageCaption(content, mTappedMediaPredicate, metaData.getCaption(), captionAttributes);
+
+                        //TODO remove when https://github.com/wordpress-mobile/AztecEditor-Android/issues/572 is fixed
+                        //Workaround removes \n before caption text and shifts span one character to the left
+                        List<IAztecAttributedSpan> tappedImageSpan =
+                                getSpansForPredicate(content.getEditableText(), mTappedMediaPredicate, true);
+
+                        if (tappedImageSpan.size() > 0) {
+                            int imageSpanEnd = content.getEditableText().getSpanEnd(tappedImageSpan.get(0));
+
+                            //look for the caption span somewhere inside tapped image
+                            CaptionShortcodeSpan[] captions = content.getEditableText().getSpans(imageSpanEnd, imageSpanEnd, CaptionShortcodeSpan.class);
+
+                            if (captions.length > 0) { //found caption span
+                                int captionStart = content.getEditableText().getSpanStart(captions[0]);
+                                int captionEnd = content.getEditableText().getSpanEnd(captions[0]);
+                                int captionFlags = content.getEditableText().getSpanFlags(captions[0]);
+
+                                //if span has text after it it will have a newline at the end, we shouldn't count it
+                                if (content.getEditableText().charAt(captionEnd - 1) == '\n') {
+                                    captionEnd--;
+                                }
+
+                                //we are looking for caption text with newline in front of it
+                                String expectedString = "\n" + metaData.getCaption();
+                                CharSequence actualContent = content.getEditableText().subSequence(imageSpanEnd, captionEnd);
+
+                                //make sure that caption ends where we expect it too, and that actual caption is right
+                                if (captionEnd == imageSpanEnd + expectedString.length() && actualContent.toString().equals(expectedString)) {
+                                    content.disableTextChangedListener();
+                                    content.getEditableText().delete(imageSpanEnd, imageSpanEnd + 1); //delete newline
+                                    content.getEditableText().setSpan(captions[0], captionStart, captionEnd - 1, captionFlags); //we have an empty space, resize span
+                                    content.enableTextChangedListener();
+                                }
+                            }
+                        }
                     } else {
                         //if no caption present apply align attribute to directly to image
                         if (!TextUtils.isEmpty(metaData.getAlign())) {
