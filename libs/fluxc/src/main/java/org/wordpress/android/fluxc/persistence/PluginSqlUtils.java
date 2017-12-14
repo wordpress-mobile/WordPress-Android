@@ -12,12 +12,16 @@ import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.List;
 
+import static com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING;
+
 public class PluginSqlUtils {
     public static List<PluginModel> getSitePlugins(@NonNull SiteModel site) {
         return WellSql.select(PluginModel.class)
                 .where()
                 .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere().getAsModel();
+                .endWhere()
+                .orderBy(PluginModelTable.DISPLAY_NAME, ORDER_ASCENDING)
+                .getAsModel();
     }
 
     public static void insertOrReplaceSitePlugins(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
