@@ -329,14 +329,18 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         mMedia = media;
 
+        mMedia.setUrl("");
+        //try to get a file without parameters so we can more reliably determine media type
+        String uriFilePath = !TextUtils.isEmpty(mMedia.getUrl()) ? Uri.parse(mMedia.getUrl()).getPath() : "";
+
         // determine media type up front, default to DOCUMENT if we can't detect it's an image, video, or audio file
-        if (MediaUtils.isValidImage(mMedia.getUrl())) {
+        if (MediaUtils.isValidImage(uriFilePath)) {
             mMediaType = MediaType.IMAGE;
             mTitle = getString(R.string.media_title_image_details);
         } else if (mMedia.isVideo()) {
             mMediaType = MediaType.VIDEO;
             mTitle = getString(R.string.media_title_video_details);
-        } else if (MediaUtils.isAudio(mMedia.getUrl())) {
+        } else if (MediaUtils.isAudio(uriFilePath)) {
             mMediaType = MediaType.AUDIO;
             mTitle = getString(R.string.media_title_audio_details);
         } else {
