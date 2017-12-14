@@ -329,7 +329,6 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         mMedia = media;
 
-        mMedia.setUrl("");
         //try to get a file without parameters so we can more reliably determine media type
         String uriFilePath = !TextUtils.isEmpty(mMedia.getUrl()) ? Uri.parse(mMedia.getUrl()).getPath() : "";
 
