@@ -52,10 +52,16 @@ public class SignupGoogleFragment extends GoogleFragment {
                     if (signInResult.isSuccess()) {
                         try {
                             GoogleSignInAccount account = signInResult.getSignInAccount();
-                            mDisplayName = account.getDisplayName();
-                            mGoogleEmail = account.getEmail();
-                            mIdToken = account.getIdToken();
-                            mPhotoUrl = removeScaleFromGooglePhotoUrl(account.getPhotoUrl().toString());
+
+                            if (account != null) {
+                                mDisplayName = account.getDisplayName() != null ? account.getDisplayName() : "";
+                                mGoogleEmail = account.getEmail() != null ? account.getEmail() : "";
+                                mIdToken = account.getIdToken() != null ? account.getIdToken() : "";
+                                mPhotoUrl = removeScaleFromGooglePhotoUrl(account.getPhotoUrl() != null ?
+                                        account.getPhotoUrl().toString() : ""
+                                );
+                            }
+
                             PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialSignupAction(payload));
                             mOldSitesIds = SiteUtils.getCurrentSiteIds(mSiteStore, false);

@@ -46,9 +46,13 @@ public class LoginGoogleFragment extends GoogleFragment {
                     if (signInResult.isSuccess()) {
                         try {
                             GoogleSignInAccount account = signInResult.getSignInAccount();
-                            mGoogleEmail = account.getEmail();
-                            mGoogleListener.onGoogleEmailSelected(mGoogleEmail);
-                            mIdToken = account.getIdToken();
+
+                            if (account != null) {
+                                mGoogleEmail = account.getEmail() != null ? account.getEmail() : "";
+                                mGoogleListener.onGoogleEmailSelected(mGoogleEmail);
+                                mIdToken = account.getIdToken() != null ? account.getIdToken() : "";
+                            }
+
                             PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
                         } catch (NullPointerException exception) {
