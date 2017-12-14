@@ -24,6 +24,7 @@ import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -278,7 +279,7 @@ public class ActivityLauncher {
     }
 
     public static void newBlogForResult(Activity activity) {
-        Intent intent = new Intent(activity, NewBlogActivity.class);
+        Intent intent = new Intent(activity, SiteCreationActivity.class);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
