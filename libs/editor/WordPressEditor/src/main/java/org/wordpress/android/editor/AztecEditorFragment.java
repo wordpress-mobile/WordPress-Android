@@ -1677,16 +1677,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
         attributesWithClass.addClass(ATTR_ALIGN + "none");
 
-        if (!attributesWithClass.hasClassStartingWith("size")) {
-            attributesWithClass.addClass("size-full");
+        if (!attributesWithClass.hasClassStartingWith(ATTR_SIZE_DASH)) {
+            attributesWithClass.addClass(ATTR_SIZE_DASH + "full");
         }
         attributes.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
     }
 
     private static void addDefaultSizeClassIfMissing(AztecAttributes attributes) {
         AttributesWithClass attrs = getAttributesWithClass(attributes);
-        if (!attrs.hasClassStartingWith("size")) {
-            attrs.addClass("size-full");
+        if (!attrs.hasClassStartingWith(ATTR_SIZE_DASH)) {
+            attrs.addClass(ATTR_SIZE_DASH + "full");
         }
         attributes.setValue(ATTR_CLASS, attrs.getAttributes().getValue(ATTR_CLASS));
     }
