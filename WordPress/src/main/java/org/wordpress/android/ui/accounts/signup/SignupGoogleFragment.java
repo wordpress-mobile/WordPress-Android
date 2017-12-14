@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.signup;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.ui.accounts.GoogleFragment;
 import org.wordpress.android.util.AppLog;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +27,8 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 public class SignupGoogleFragment extends GoogleFragment {
+    private ArrayList<Integer> mOldSitesIds;
+
     private static final int REQUEST_SIGNUP = 1002;
 
     public static final String TAG = "signup_google_fragment_tag";
@@ -128,7 +132,12 @@ public class SignupGoogleFragment extends GoogleFragment {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(AccountStore.OnAuthenticationChanged event) {
-        mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl);
+        if (event.isError()) {
+            Log.e("SignupGoogleFragment", "onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
+        // Continue with signup since account was created.
+        } else if (event.createdAccount) {
+            mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl);
+        }
     }
 
     @SuppressWarnings("unused")
