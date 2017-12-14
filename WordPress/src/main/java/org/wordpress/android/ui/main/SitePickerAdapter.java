@@ -53,7 +53,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public interface HeaderHandler {
         RecyclerView.ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent, boolean attachToRoot);
-        void onBindViewHolder(final RecyclerView.ViewHolder holder, int numberOfSites);
+        void onBindViewHolder(final RecyclerView.ViewHolder holder, SiteList sites);
     }
 
     private final int mTextColorNormal;
@@ -220,7 +220,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         int viewType = getItemViewType(position);
 
         if (viewType == VIEW_TYPE_HEADER) {
-            mHeaderHandler.onBindViewHolder(viewHolder, getItemCount() - 1);
+            mHeaderHandler.onBindViewHolder(viewHolder, mSites);
             return;
         }
 
@@ -651,7 +651,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /**
      * SiteRecord is a simplified version of the full account (blog) record
      */
-     static class SiteRecord {
+     public static class SiteRecord {
         final int localId;
         final long siteId;
         final String blogName;
@@ -677,9 +677,13 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             return blogName;
         }
+
+        public int getLocalId() {
+            return localId;
+        }
     }
 
-    static class SiteList extends ArrayList<SiteRecord> {
+    public static class SiteList extends ArrayList<SiteRecord> {
         SiteList() { }
         SiteList(List<SiteModel> siteModels) {
             if (siteModels != null) {
