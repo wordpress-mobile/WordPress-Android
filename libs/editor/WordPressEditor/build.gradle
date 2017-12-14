@@ -43,7 +43,6 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/aztec_release.kotlin_module'
     }
 }
 
@@ -54,9 +53,9 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.wordpress:utils:1.18.1'
 
-    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:0c5152d1894f36d4ea3559658730f82d2bc18ec5')
-    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:0c5152d1894f36d4ea3559658730f82d2bc18ec5')
-    compile ('com.github.wordpress-mobile.AztecEditor-Android:wordpress-comments:0c5152d1894f36d4ea3559658730f82d2bc18ec5')
+    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:7dbc5869b0ef52179249a351490aeb97b269fade')
+    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:7dbc5869b0ef52179249a351490aeb97b269fade')
+    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:7dbc5869b0ef52179249a351490aeb97b269fade')
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     compile "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
