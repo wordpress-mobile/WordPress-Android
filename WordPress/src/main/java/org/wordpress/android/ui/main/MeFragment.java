@@ -307,11 +307,10 @@ public class MeFragment extends Fragment {
             mAvatarContainer.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
-                    int padding = (mAvatarContainer.getWidth() - mAvatarImageView.getWidth()) / 2;
-                    outline.setOval(padding, padding, view.getWidth() - padding, view.getHeight() - padding);
+                    int padding = mAvatarContainer.getWidth() + 10;
+                    outline.setOval(0, 0, padding, padding);
                 }
             });
-            mAvatarContainer.setElevation(mAvatarContainer.getResources().getDimensionPixelSize(R.dimen.card_elevation));
         }
     }
 
