@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.wellsql.generated.ThemeModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -13,6 +14,10 @@ import java.util.List;
 
 public class ThemeSqlUtils {
     public static void insertOrUpdateThemeForSite(@NonNull ThemeModel theme) {
+        // Always remove WP.com flag while storing as a site associate theme as we might be saving
+        // a copy of a wp.com theme after an activation
+        theme.setIsWpComTheme(false);
+
         List<ThemeModel> existing = WellSql.select(ThemeModel.class)
                 .where().beginGroup()
                 .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
@@ -113,14 +118,33 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
-    /**
-     * @return the first theme that matches a given theme ID; null if none found
-     */
-    public static ThemeModel getThemeByThemeId(@NonNull String themeId, boolean isWpComTheme) {
+    public static ThemeModel getWpComThemeByThemeId(String themeId) {
+        if (TextUtils.isEmpty(themeId)) {
+            return null;
+        }
+
         List<ThemeModel> matches = WellSql.select(ThemeModel.class)
                 .where().beginGroup()
                 .equals(ThemeModelTable.THEME_ID, themeId)
-                .equals(ThemeModelTable.IS_WP_COM_THEME, isWpComTheme)
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
+                .endGroup().endWhere().getAsModel();
+
+        if (matches == null || matches.isEmpty()) {
+            return null;
+        }
+
+        return matches.get(0);
+    }
+
+    public static ThemeModel getSiteThemeByThemeId(SiteModel siteModel, String themeId) {
+        if (siteModel == null || TextUtils.isEmpty(themeId)) {
+            return null;
+        }
+        List<ThemeModel> matches = WellSql.select(ThemeModel.class)
+                .where().beginGroup()
+                .equals(ThemeModelTable.LOCAL_SITE_ID, siteModel.getId())
+                .equals(ThemeModelTable.THEME_ID, themeId)
+                .equals(ThemeModelTable.IS_WP_COM_THEME, false)
                 .endGroup().endWhere().getAsModel();
 
         if (matches == null || matches.isEmpty()) {
