@@ -71,6 +71,7 @@ import org.wordpress.aztec.plugins.shortcodes.AudioShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.CaptionShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.VideoShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.extensions.CaptionExtensionsKt;
+import org.wordpress.aztec.plugins.shortcodes.spans.CaptionShortcodeSpan;
 import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
@@ -448,6 +449,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         content.fromHtml(removeVisualEditorProgressTag(text.toString()));
+
+        //TODO workaround until https://github.com/wordpress-mobile/AztecEditor-Android/issues/572 is fixed
+        if (content.getEditableText().getSpans(0, content.length(), CaptionShortcodeSpan.class).length > 0) {
+            content.fromHtml(content.toHtml(false));
+        }
 
         updateFailedMediaList();
         overlayFailedMedia();
@@ -1553,6 +1559,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         editorContentBeforeImageIsRemoved = content.toFormattedHtml();
                     }
 
+                    CaptionExtensionsKt.removeImageCaption(content, mTappedMediaPredicate);
                     content.removeMedia(mTappedMediaPredicate);
 
                     if (isHistoryEnabled()) {
