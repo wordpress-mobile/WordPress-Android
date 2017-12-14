@@ -21,6 +21,7 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.login.LoginGoogleFragment;
 import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.util.AppLog;
@@ -48,6 +49,8 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
 
     @Inject
     protected Dispatcher mDispatcher;
+    @Inject
+    protected SiteStore mSiteStore;
 
     public interface GoogleListener {
         void onGoogleEmailSelected(String email);

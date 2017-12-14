@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.ui.accounts.GoogleFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.SiteUtils;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -56,6 +57,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                             mPhotoUrl = removeScaleFromGooglePhotoUrl(account.getPhotoUrl().toString());
                             PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialSignupAction(payload));
+                            mOldSitesIds = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                         } catch (NullPointerException exception) {
                             disconnectGoogleClient();
                             AppLog.e(AppLog.T.NUX, "Cannot get ID token from Google signup account.", exception);
@@ -137,6 +139,9 @@ public class SignupGoogleFragment extends GoogleFragment {
         // Continue with signup since account was created.
         } else if (event.createdAccount) {
             mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl);
+        // Continue with login since existing account was selected.
+        } else {
+            mLoginListener.loggedInViaSocialAccount(mOldSitesIds, true);
         }
     }
 
