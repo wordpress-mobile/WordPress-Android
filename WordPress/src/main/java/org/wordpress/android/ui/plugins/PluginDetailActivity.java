@@ -437,6 +437,16 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         mIsConfiguringPlugin = false;
         if (event.isError()) {
+            // The plugin was already removed in remote, there is no need to show an error to the user
+            if (mIsRemovingPlugin &&
+                    event.error.type == PluginStore.ConfigureSitePluginErrorType.UNKNOWN_PLUGIN) {
+                // We still need to dispatch the remove plugin action to remove the local copy
+                // and complete the flow gracefully
+                // We can ignore `!mPlugin.isActive()` check here since the plugin is not installed anymore on remote
+                dispatchRemovePluginAction();
+                return;
+            }
+
             ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed, event.error.message));
 
             // Refresh the UI to plugin's last known state
