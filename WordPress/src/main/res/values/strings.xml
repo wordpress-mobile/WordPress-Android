@@ -2010,22 +2010,22 @@
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
 
-    <string name="notification_login_title_success">Logged in!</string>
-    <string name="notification_logged_in">Tap to continue.</string>
-
-    <string name="notification_login_title_in_progress">Login in progress…</string>
-    <string name="notification_logging_in">Please wait while logging in.</string>
-
-    <string name="notification_login_title_stopped">Login stopped</string>
-    <string name="notification_error_wrong_password">Please double check your password to continue.</string>
-    <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
-    <string name="notification_login_failed">An error has occurred.</string>
-
+    <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
     <string name="notification_site_creation_title_in_progress">Creating site…</string>
     <string name="notification_site_creation_please_wait">Please wait while creating your site.</string>
     <string name="notification_site_creation_title_stopped">Site creation stopped</string>
     <string name="notification_site_creation_failed">An error has occurred.</string>
+
+    <!-- Login notifications -->
+    <string name="notification_login_title_success">Logged in!</string>
+    <string name="notification_logged_in">Tap to continue.</string>
+    <string name="notification_login_title_in_progress">Login in progress…</string>
+    <string name="notification_logging_in">Please wait while logging in.</string>
+    <string name="notification_login_title_stopped">Login stopped</string>
+    <string name="notification_error_wrong_password">Please double check your password to continue.</string>
+    <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
+    <string name="notification_login_failed">An error has occurred.</string>
 
 </resources>
