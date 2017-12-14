@@ -9,9 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -139,9 +141,14 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 EditTextUtils.hideSoftInput(mEmailInput.getEditText());
 
                 if (NetworkUtils.checkConnection(getActivity())) {
-                    mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
-                    isSocialLogin = true;
-                    addGoogleFragment();
+                    if (isAdded()) {
+                        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
+                        isSocialLogin = true;
+                        addGoogleFragment();
+                    } else {
+                        AppLog.e(T.NUX, "Google login could not be started.  LoginEmailFragment was not attached.");
+                        showErrorDialog(getString(R.string.login_error_generic_start));
+                    }
                 }
             }
         });
@@ -311,6 +318,14 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     private void showEmailError(int messageId) {
         mEmailInput.setError(getString(messageId));
+    }
+
+    private void showErrorDialog(String message) {
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+                .setMessage(message)
+                .setPositiveButton(R.string.login_error_button, null)
+                .create();
+        dialog.show();
     }
 
     @Override

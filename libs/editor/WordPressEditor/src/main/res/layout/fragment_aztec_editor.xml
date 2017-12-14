@@ -33,7 +33,7 @@
                 <org.wordpress.aztec.AztecText
                     android:id="@+id/title"
                     android:hint="@string/post_title"
-                    android:inputType="textCapSentences"
+                    android:inputType="textCapSentences|textMultiLine"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/title_beta"
                     android:layout_toStartOf="@+id/title_beta"

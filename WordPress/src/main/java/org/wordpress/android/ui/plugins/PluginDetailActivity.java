@@ -23,6 +23,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.PluginInfoModel;
@@ -36,6 +37,7 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -517,6 +519,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_UPDATED, mSite);
         refreshViews();
         showSuccessfulUpdateSnackbar();
     }
@@ -537,6 +540,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             ToastUtils.showToast(this, toastMessage, Duration.LONG);
             return;
         }
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_REMOVED, mSite);
+
         // Plugin removed we need to go back to the plugin list
         String toastMessage = getString(R.string.plugin_removed_successfully, mPlugin.getDisplayName());
         ToastUtils.showToast(this, toastMessage, Duration.LONG);

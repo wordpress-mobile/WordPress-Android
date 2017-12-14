@@ -19,6 +19,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.accounts.login.LoginHeaderViewHolder;
 import org.wordpress.android.ui.main.SitePickerAdapter;
+import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.HeaderHandler;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -190,20 +191,19 @@ public class ShareIntentReceiverFragment extends Fragment {
             }
 
             @Override
-            public void onBindViewHolder(ViewHolder holder, int numberOfSites) {
-                refreshAccountDetails((LoginHeaderViewHolder) holder, numberOfSites);
+            public void onBindViewHolder(ViewHolder holder, SiteList sites) {
+                refreshAccountDetails((LoginHeaderViewHolder) holder, sites);
             }
         };
     }
 
-    private void refreshAccountDetails(LoginHeaderViewHolder holder, int numberOfSites) {
+    private void refreshAccountDetails(LoginHeaderViewHolder holder, SiteList sites) {
         if (!isAdded()) {
             return;
         }
-        holder.updateLoggedInAsHeading(getContext(), mAccountStore.hasAccessToken(), mAfterLogin,
-                mAccountStore.getAccount());
+        holder.updateLoggedInAsHeading(getContext(), mAfterLogin, mAccountStore.getAccount());
         holder.showSitesHeading(
-                getString(numberOfSites == 1 ? R.string.share_intent_adding_to : R.string.share_intent_pick_site));
+                getString(sites.size() == 1 ? R.string.share_intent_adding_to : R.string.share_intent_pick_site));
     }
 
     enum ShareAction {
