@@ -1593,17 +1593,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
 
                     if (!TextUtils.isEmpty(metaData.getLinkUrl())) {
-                        String existingLink = MediaLinkExtensionsKt.getMediaLink(content, mTappedMediaPredicate);
-
-                        AztecAttributes linkAttributes;
-
-                        if (TextUtils.isEmpty(existingLink)) {
-                            linkAttributes = new AztecAttributes();
-                        } else {
-                            linkAttributes = MediaLinkExtensionsKt.getMediaLinkAttributes(content, mTappedMediaPredicate);
-                        }
+                        AztecAttributes linkAttributes = MediaLinkExtensionsKt.getMediaLinkAttributes(content, mTappedMediaPredicate);
 
                         linkAttributes.setValue("rel", "noopener");
+
+                        linkAttributes.removeAttribute("href");
 
                         if (metaData.isLinkTargetBlank()) {
                             linkAttributes.setValue(ATTR_TARGET, "_blank");
@@ -1611,7 +1605,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             linkAttributes.removeAttribute(ATTR_TARGET);
                         }
 
-                        MediaLinkExtensionsKt.removeLinkFromMedia(content, mTappedMediaPredicate);
                         MediaLinkExtensionsKt.addLinkToMedia(content, mTappedMediaPredicate,
                                 UrlUtils.addUrlSchemeIfNeeded(metaData.getLinkUrl(), false), linkAttributes);
                     } else {
