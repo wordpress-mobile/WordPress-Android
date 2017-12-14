@@ -119,8 +119,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static final int MAX_ACTION_TIME_MS = 2000;
 
-    private static final MediaFile DEFAULT_MEDIA = new MediaFile();
-
     private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_TEXT = Arrays.asList(ClipDescription
             .MIMETYPE_TEXT_PLAIN, ClipDescription.MIMETYPE_TEXT_HTML);
     private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = Arrays.asList("image/jpeg", "image/png");
