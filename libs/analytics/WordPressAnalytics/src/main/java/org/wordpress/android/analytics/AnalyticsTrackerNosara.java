@@ -150,21 +150,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_HTML:
                 predefinedEventProperties.put("button", "html");
                 break;
-            case EDITOR_AZTEC_BETA_LABEL:
-                predefinedEventProperties.put("source", "beta_label");
-                break;
-            case EDITOR_AZTEC_BETA_LINK:
-                predefinedEventProperties.put("source", "beta_link");
-                break;
-            case EDITOR_AZTEC_PROMO_LINK:
-                predefinedEventProperties.put("source", "promo_link");
-                break;
-            case EDITOR_AZTEC_PROMO_NEGATIVE:
-                predefinedEventProperties.put("source", "promo_negative");
-                break;
-            case EDITOR_AZTEC_PROMO_POSITIVE:
-                predefinedEventProperties.put("source", "promo_positive");
-                break;
             case OPENED_POSTS:
                 predefinedEventProperties.put("menu_item", "posts");
                 break;
@@ -439,16 +424,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_aztec_toggled_off";
             case EDITOR_AZTEC_TOGGLED_ON:
                 return "editor_aztec_toggled_on";
-            case EDITOR_AZTEC_BETA_LABEL:
-                return "editor_aztec_beta_label";
-            case EDITOR_AZTEC_BETA_LINK:
-                return "editor_aztec_beta_link";
-            case EDITOR_AZTEC_PROMO_LINK:
-                return "editor_aztec_promo_link";
-            case EDITOR_AZTEC_PROMO_NEGATIVE:
-                return "editor_aztec_promo_negative";
-            case EDITOR_AZTEC_PROMO_POSITIVE:
-                return "editor_aztec_promo_positive";
             case EDITOR_UPLOAD_MEDIA_FAILED:
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:
