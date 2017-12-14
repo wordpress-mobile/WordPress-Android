@@ -259,12 +259,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onSignupSheetEmailClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
-
-        if (mSignupSheet != null) {
-            mSignupSheet.dismiss();
-            mSignupSheetDisplayed = false;
-        }
-
+        dismissSignupSheet();
         NewUserFragment newUserFragment = NewUserFragment.newInstance();
         slideInFragment(newUserFragment, true, NewUserFragment.TAG);
     }
@@ -328,6 +323,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired) {
+        dismissSignupSheet();
         LoginEmailPasswordFragment loginEmailPasswordFragment =
                 LoginEmailPasswordFragment.newInstance(email, null, idToken, service, isPasswordRequired);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
@@ -383,6 +379,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
                                String nonceSms) {
+        dismissSignupSheet();
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
                 nonceAuthenticator, nonceBackup, nonceSms);
@@ -551,5 +548,12 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onGoogleSignupFinished(String name, String email, String photoUrl) {
         // TODO: Send data returned from Google API to signup epilogue.
+    }
+
+    private void dismissSignupSheet() {
+        if (mSignupSheet != null) {
+            mSignupSheet.dismiss();
+            mSignupSheetDisplayed = false;
+        }
     }
 }
