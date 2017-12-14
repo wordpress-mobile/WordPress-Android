@@ -149,7 +149,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         return mLoginMode;
     }
 
-    private void loggedInAndFinish(ArrayList<Integer> oldSitesIds) {
+    private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
             case FULL:
                 ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds);
@@ -298,7 +298,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void loggedInViaSignup(ArrayList<Integer> oldSitesIds) {
-        loggedInAndFinish(oldSitesIds);
+        loggedInAndFinish(oldSitesIds, false);
     }
 
     @Override
@@ -336,7 +336,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void loggedInViaSocialAccount(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_SUCCESS);
-        loggedInAndFinish(oldSitesIds);
+        loggedInAndFinish(oldSitesIds, doLoginUpdate);
     }
 
     @Override
@@ -398,13 +398,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void loggedInViaPassword(ArrayList<Integer> oldSitesIds) {
-        loggedInAndFinish(oldSitesIds);
+        loggedInAndFinish(oldSitesIds, false);
     }
 
     @Override
     public void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds) {
         ToastUtils.showToast(this, R.string.already_logged_in_wpcom, ToastUtils.Duration.LONG);
-        loggedInAndFinish(oldSitesIds);
+        loggedInAndFinish(oldSitesIds, false);
     }
 
     public void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl) {
@@ -440,7 +440,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds) {
-        loggedInAndFinish(oldSitesIds);
+        loggedInAndFinish(oldSitesIds, false);
     }
 
     @Override
