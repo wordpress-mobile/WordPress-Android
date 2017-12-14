@@ -96,6 +96,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnImageTappedListener,
         AztecText.OnVideoTappedListener,
         AztecText.OnMediaDeletedListener,
+        AztecText.OnVideoPressInfoRequestedListener,
         View.OnTouchListener,
         EditorMediaUploadListener,
         IAztecToolbarClickListener,
@@ -250,6 +251,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .setOnImageTappedListener(this)
                 .setOnVideoTappedListener(this)
                 .setOnMediaDeletedListener(this)
+                .setOnVideoPressInfoRequestedListener(this)
                 .addPlugin(new WordPressCommentsPlugin(content))
                 .addPlugin(new MoreToolbarButton(content))
                 .addPlugin(new CaptionShortcodePlugin())
@@ -896,6 +898,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setUrlForVideoPressId(final String videoId, final String videoUrl, final String posterUrl) {
+        //This is a test
+        AppLog.d(T.EDITOR, "This is a test");
     }
 
     @Override
@@ -1131,6 +1135,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mFailedMediaIds.add(localMediaId);
             mUploadingMediaProgressMax.remove(localMediaId);
         }
+    }
+
+    @Override
+    public void onVideoPressInfoRequested(final String videoId) {
+        mEditorFragmentListener.onVideoPressInfoRequested(videoId);
     }
 
     @Override
