@@ -18,7 +18,7 @@ public interface LoginListener {
     void gotWpcomEmail(String email);
     void loginViaSiteAddress();
     void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired);
-    void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds);
+    void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds, boolean doLoginUpdate);
     void loginViaWpcomUsernameInstead();
     void helpEmailScreen(String email);
     void helpSocialEmailScreen(String email);
