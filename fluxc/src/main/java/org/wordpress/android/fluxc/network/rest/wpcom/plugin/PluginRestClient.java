@@ -126,7 +126,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         DeleteSitePluginError deletePluginError = new DeleteSitePluginError(((WPComGsonNetworkError)
                                 networkError).apiError, networkError.message);
-                        DeletedSitePluginPayload payload = new DeletedSitePluginPayload(site, deletePluginError);
+                        DeletedSitePluginPayload payload =
+                                new DeletedSitePluginPayload(site, plugin, deletePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(payload));
                     }
                 }
