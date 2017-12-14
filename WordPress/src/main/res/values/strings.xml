@@ -2010,12 +2010,6 @@
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
 
-    <!-- Signup -->
-    <string name="sign_up">Sign Up</string>
-    <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
-    <string name="signup_with_email_button">Sign Up with Email</string>
-    <string name="signup_with_google_button">Sign Up with Google</string>
-
     <string name="notification_login_title_success">Logged in!</string>
     <string name="notification_logged_in">Tap to continue.</string>
 
@@ -2026,5 +2020,22 @@
     <string name="notification_error_wrong_password">Please double check your password to continue.</string>
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
+
+    <!-- Signup -->
+    <string name="sign_up">Sign Up</string>
+    <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="signup_with_email_button">Sign Up with Email</string>
+    <string name="signup_with_google_button">Sign Up with Google</string>
+
+    <!-- Site Creation -->
+    <string name="site_creation_title">Create New Site</string>
+    <string name="site_creation_label_category_title">Step 1 of 4</string>
+    <string name="site_creation_label_category">What kind of site do you need?\nChoose an option below:</string>
+    <string name="site_creation_title_blog">Start with a Blog</string>
+    <string name="site_creation_subtitle_blog">To share your ideas, stories and photographs with your followers.</string>
+    <string name="site_creation_title_website">Start with a Website</string>
+    <string name="site_creation_subtitle_website">To promote your business or brand and connect with your audience.</string>
+    <string name="site_creation_title_portfolio">Start with a Portfolio</string>
+    <string name="site_creation_subtitle_portfolio">To present your creative projects in a visual showcase.</string>
 
 </resources>
