@@ -156,6 +156,7 @@ public class ActivityLauncher {
 
     public static void viewCurrentBlogPlugins(Context context, SiteModel site) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGINS, site);
             Intent intent = new Intent(context, PluginListActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
