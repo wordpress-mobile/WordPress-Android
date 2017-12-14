@@ -140,9 +140,6 @@ public class AppPrefs {
         // When we need to sync IAP data with the wpcom backend
         IAP_SYNC_REQUIRED,
 
-        // When we need to show the Gravatar Change Promo Tooltip
-        GRAVATAR_CHANGE_PROMO_REQUIRED,
-
         // When we need to show the snackbar indicating how notifications can be navigated through
         SWIPE_TO_NAVIGATE_NOTIFICATIONS,
 
@@ -497,14 +494,6 @@ public class AppPrefs {
 
     public static void setImageOptimizePromoRequired(boolean required) {
         setBoolean(UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED, required);
-    }
-
-    public static boolean isGravatarChangePromoRequired() {
-        return getBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, true);
-    }
-
-    public static void setGravatarChangePromoRequired(boolean required) {
-        setBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, required);
     }
 
     // Store the number of times Stats are loaded successfully before showing the Promo Dialog

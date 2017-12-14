@@ -8,8 +8,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Outline;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +23,6 @@ import android.widget.TextView;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
-import com.github.xizzhu.simpletooltip.ToolTip;
-import com.github.xizzhu.simpletooltip.ToolTipView;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -47,7 +42,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -77,7 +71,6 @@ public class MeFragment extends Fragment {
 
     private ViewGroup mAvatarFrame;
     private View mProgressBar;
-    private ToolTipView mGravatarToolTipView;
     private View mAvatarTooltipAnchor;
     private ViewGroup mAvatarContainer;
     private WPNetworkImageView mAvatarImageView;
@@ -118,50 +111,6 @@ public class MeFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         mIsUserVisible = isVisibleToUser;
-
-        if (isResumed()) {
-            showGravatarTooltipIfNeeded();
-        }
-    }
-
-    private void showGravatarTooltipIfNeeded() {
-        if (!isAdded() || !mAccountStore.hasAccessToken() || !AppPrefs.isGravatarChangePromoRequired() ||
-                !mIsUserVisible || mGravatarToolTipView != null) {
-            return;
-        }
-
-        ToolTip toolTip = createGravatarPromoToolTip(getString(R.string.gravatar_tip), ContextCompat.getColor
-                (getActivity(), R.color.color_primary));
-        mGravatarToolTipView = new ToolTipView.Builder(getActivity())
-                .withAnchor(mAvatarTooltipAnchor)
-                .withToolTip(toolTip)
-                .withGravity(Gravity.END)
-                .build();
-        mGravatarToolTipView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_TOOLTIP_TAPPED);
-
-                mGravatarToolTipView.remove();
-                AppPrefs.setGravatarChangePromoRequired(false);
-            }
-        });
-        mGravatarToolTipView.showDelayed(500);
-    }
-
-    private ToolTip createGravatarPromoToolTip(CharSequence text, int backgroundColor) {
-        Resources resources = getResources();
-        int padding = resources.getDimensionPixelSize(R.dimen.tooltip_padding);
-        int textSize = resources.getDimensionPixelSize(R.dimen.tooltip_text_size);
-        int radius = resources.getDimensionPixelSize(R.dimen.tooltip_radius);
-        return new ToolTip.Builder()
-                .withText(text)
-                .withTextColor(Color.WHITE)
-                .withTextSize(textSize)
-                .withBackgroundColor(backgroundColor)
-                .withPadding(padding, padding, padding, padding)
-                .withCornerRadius(radius)
-                .build();
     }
 
     @Override
@@ -188,14 +137,6 @@ public class MeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED);
-
-                // User tapped the Gravatar so dismiss the tooltip
-                if (mGravatarToolTipView != null) {
-                    mGravatarToolTipView.remove();
-                }
-                // and no need to promote the feature any more
-                AppPrefs.setGravatarChangePromoRequired(false);
-
                 showPhotoPickerForGravatar();
             }
         });
@@ -286,7 +227,6 @@ public class MeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         refreshAccountDetails();
-        showGravatarTooltipIfNeeded();
     }
 
     @Override
