@@ -450,7 +450,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         content.fromHtml(removeVisualEditorProgressTag(text.toString()));
 
-        //TODO workaround until https://github.com/wordpress-mobile/AztecEditor-Android/issues/572 is fixed
+        //TODO partial workaround for https://github.com/wordpress-mobile/AztecEditor-Android/issues/572 until it's is fixed
         if (content.getEditableText().getSpans(0, content.length(), CaptionShortcodeSpan.class).length > 0) {
             content.fromHtml(content.toHtml(false));
         }
