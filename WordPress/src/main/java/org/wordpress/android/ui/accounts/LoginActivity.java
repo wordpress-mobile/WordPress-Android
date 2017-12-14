@@ -251,7 +251,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void onSignupSheetDismissed() {
+    public void onSignupSheetCanceled() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_DISMISSED);
         mSignupSheetDisplayed = false;
     }

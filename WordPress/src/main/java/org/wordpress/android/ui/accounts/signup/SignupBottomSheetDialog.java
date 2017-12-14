@@ -43,10 +43,10 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
             }
         });
 
-        setOnDismissListener(new OnDismissListener() {
+        setOnCancelListener(new OnCancelListener() {
             @Override
-            public void onDismiss(DialogInterface dialog) {
-                signupSheetListener.onSignupSheetDismissed();
+            public void onCancel(DialogInterface dialog) {
+                signupSheetListener.onSignupSheetCanceled();
             }
         });
 
@@ -64,7 +64,7 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
     }
 
     public interface SignupSheetListener {
-        void onSignupSheetDismissed();
+        void onSignupSheetCanceled();
         void onSignupSheetEmailClicked();
         void onSignupSheetGoogleClicked();
         void onSignupSheetTermsOfServiceClicked();
